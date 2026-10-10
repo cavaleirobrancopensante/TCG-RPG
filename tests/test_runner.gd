@@ -14,6 +14,7 @@ func _ready() -> void:
 	test_ai_battles()
 	test_game_state()
 	test_save_slots()
+	test_decks()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -204,3 +205,42 @@ func test_save_slots() -> void:
 	f.close()
 	check(GameState.has_save() and GameState.load_game(1) and GameState.gold == 42, "legacy save migrated")
 	GameState.delete_slot(1)
+
+
+func test_decks() -> void:
+	print("-- multiple decks")
+	GameState.new_game(6)
+	for i in 3:
+		GameState.pending_boosters = 1
+		GameState.open_booster()
+	GameState.deck = DeckTools.auto_build(GameState.owned_all())
+	var second := GameState.new_deck("Aggro", DeckTools.auto_build(GameState.owned_all(), ["revel"]))
+	check(second == 1 and GameState.decks.size() == 2, "second deck created")
+	check(GameState.unique_deck_name("Aggro") == "Aggro 2", "unique deck name")
+	GameState.active_deck = 1
+	check(GameState.deck == GameState.decks[1]["cards"], "deck follows active deck")
+	GameState.save_game()
+	GameState.decks = []
+	check(GameState.load_game(6) and GameState.decks.size() == 2 and GameState.active_deck == 1 and GameState.decks[1]["name"] == "Aggro", "decks survive save/load")
+	# a card used in either deck cannot be sold
+	var id := ""
+	for k in GameState.decks[0]["cards"]:
+		if not CardDB.is_land(k):
+			id = k
+			break
+	GameState.active_deck = 1
+	check(GameState.sellable_count(id, false) <= GameState.owned_count(id) - int(GameState.decks[0]["cards"][id]), "inactive deck protects its cards")
+	# ensure_deck switches to a legal deck instead of rebuilding
+	GameState.decks[1]["cards"] = {"land_wild": 3}
+	GameState.ensure_deck()
+	check(GameState.active_deck == 0, "ensure_deck switches to a legal deck")
+	GameState.delete_deck(1)
+	check(GameState.decks.size() == 1, "delete deck")
+	GameState.delete_deck(0)
+	check(GameState.decks.size() == 1, "last deck can't be deleted")
+	# saves from before multiple decks become a 'Starter deck'
+	var f := FileAccess.open(GameState.slot_path(6), FileAccess.WRITE)
+	f.store_string(JSON.stringify({"version": 2, "gold": 5, "collection": {"wild_c_001": 4}, "deck": {"wild_c_001": 4, "land_wild": 36}}))
+	f.close()
+	check(GameState.load_game(6) and GameState.decks.size() == 1 and GameState.decks[0]["name"] == "Starter deck" and int(GameState.deck.get("wild_c_001", 0)) == 4, "old single deck migrated")
+	GameState.delete_slot(6)

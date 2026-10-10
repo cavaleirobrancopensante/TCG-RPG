@@ -1,41 +1,117 @@
 class_name DeckBuilder
 extends Control
-## Collection on the left (tap to add), deck on the right (tap to remove), basic lands +/-.
+## Build and manage several decks.
+##  • Decks: choose, New, Copy, Rename, Delete, "Use in duels" (the active deck).
+##  • Filters: faiths (any combination), type, cost, rarity, ability, name/text search,
+##    "only cards in this deck"; sorting by faith, cost, name, rarity or power.
+##  • Tap a card to add it, hold to read it; tap a deck row to remove one copy.
 
 signal closed
 
-const SCALE := 0.55
+const SCALE := 0.52
+const COSTS := ["Any cost", "Cost 0–1", "Cost 2", "Cost 3", "Cost 4", "Cost 5", "Cost 6+"]
+const TYPES := ["Any type", "Creature", "Spell", "Relic"]
+const RARITIES := ["Any rarity", "Common", "Uncommon", "Rare", "Mythic"]
+const KEYWORDS := ["Any ability", "Flying", "Reach", "Haste", "Lifelink", "Deathtouch", "Vigilance",
+	"Trample", "Defender", "Guardian", "Enters effect", "Dies effect", "Upkeep effect"]
+const SORTS := ["Sort: faith", "Sort: cost", "Sort: name", "Sort: rarity", "Sort: power"]
 
-var deck: Dictionary = {}
-var filter := "all"
+var editing := 0                  # index of the deck being edited
+var faiths := {}                  # selected faith filters (none = all)
+var f_type := 0
+var f_cost := 0
+var f_rarity := 0
+var f_keyword := 0
+var f_sort := 0
+var f_text := ""
+var only_in_deck := false
+
+var deck_pick: OptionButton
+var active_btn: Button
 var grid: GridContainer
 var deck_list: VBoxContainer
 var count_label: Label
 var warn_label: Label
+var shown_label: Label
+var curve: _Curve
+var search: LineEdit
+var in_deck_toggle: CheckButton
+var filter_opts: Array = []       # the four filter OptionButtons (not the sort)
 var land_labels := {}
+var faith_btns := {}
 
 
 func _ready() -> void:
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
-	deck = GameState.deck.duplicate()
+	editing = GameState.active_deck
 	add_child(Backdrop.create("rings"))
-
 	var root := HBoxContainer.new()
 	UIKit.content_rect(root)
-	root.add_theme_constant_override("separation", 10)
+	root.add_theme_constant_override("separation", 12)
 	add_child(root)
 
-	# ---- left: collection
+	# ======================= left: filters + collection
 	var left := VBoxContainer.new()
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.size_flags_stretch_ratio = 2.2
+	left.size_flags_stretch_ratio = 2.1
+	left.add_theme_constant_override("separation", 6)
 	root.add_child(left)
-	var filters := HBoxContainer.new()
-	left.add_child(filters)
-	filters.add_child(_filter_btn("All", "all"))
+
+	var faith_row := HBoxContainer.new()
+	faith_row.add_theme_constant_override("separation", 4)
+	left.add_child(faith_row)
 	for f in Factions.ORDER:
-		filters.add_child(_filter_btn(Factions.info(f)["short"], f))
+		var b := Button.new()
+		b.toggle_mode = true
+		b.text = Factions.info(f)["short"]
+		b.custom_minimum_size = Vector2(0, 42)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 16)
+		b.add_theme_color_override("font_color", UIKit.faction_ink(f))
+		b.add_theme_color_override("font_pressed_color", UIKit.faction_ink(f))
+		var ff: String = f
+		b.toggled.connect(func(on):
+			if on:
+				faiths[ff] = true
+			else:
+				faiths.erase(ff)
+			_refresh())
+		faith_btns[f] = b
+		faith_row.add_child(b)
+
+	var frow := HBoxContainer.new()
+	frow.add_theme_constant_override("separation", 4)
+	left.add_child(frow)
+	filter_opts.append(_option(frow, TYPES, func(i): f_type = i))
+	filter_opts.append(_option(frow, COSTS, func(i): f_cost = i))
+	filter_opts.append(_option(frow, RARITIES, func(i): f_rarity = i))
+	filter_opts.append(_option(frow, KEYWORDS, func(i): f_keyword = i))
+	_option(frow, SORTS, func(i): f_sort = i)
+
+	var srow := HBoxContainer.new()
+	srow.add_theme_constant_override("separation", 6)
+	left.add_child(srow)
+	search = LineEdit.new()
+	search.placeholder_text = "Search name or text…"
+	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	search.custom_minimum_size.y = 42
+	search.clear_button_enabled = true
+	search.text_changed.connect(func(t):
+		f_text = t.strip_edges().to_lower()
+		_refresh())
+	srow.add_child(search)
+	in_deck_toggle = CheckButton.new()
+	in_deck_toggle.text = "In this deck"
+	in_deck_toggle.add_theme_font_size_override("font_size", 16)
+	in_deck_toggle.toggled.connect(func(on):
+		only_in_deck = on
+		_refresh())
+	srow.add_child(in_deck_toggle)
+	srow.add_child(_small("Clear filters", _clear_filters, false))
+	shown_label = UIKit.label("", 15, UIKit.DIM)
+	left.add_child(shown_label)
+
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -46,36 +122,60 @@ func _ready() -> void:
 	grid.add_theme_constant_override("v_separation", 6)
 	scroll.add_child(grid)
 
-	# ---- right: deck
+	# ======================= right: deck management + contents
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.add_theme_constant_override("separation", 6)
 	root.add_child(right)
-	count_label = UIKit.title("", 28)
+
+	var drow := HBoxContainer.new()
+	drow.add_theme_constant_override("separation", 4)
+	right.add_child(drow)
+	deck_pick = OptionButton.new()
+	deck_pick.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	deck_pick.custom_minimum_size.y = 44
+	deck_pick.clip_text = true
+	deck_pick.add_theme_font_size_override("font_size", 17)
+	deck_pick.item_selected.connect(func(i):
+		editing = i
+		_refresh())
+	drow.add_child(deck_pick)
+	active_btn = _small("Use in duels", func():
+		GameState.active_deck = editing
+		_refresh(), false)
+	drow.add_child(active_btn)
+
+	var mrow := HBoxContainer.new()
+	mrow.add_theme_constant_override("separation", 4)
+	right.add_child(mrow)
+	mrow.add_child(_small("New", _new_deck))
+	mrow.add_child(_small("Copy", _copy_deck))
+	mrow.add_child(_small("Rename", _rename_deck))
+	mrow.add_child(_small("Delete", _delete_deck))
+	mrow.add_child(_small("Auto", _auto))
+
+	count_label = UIKit.title("", 24)
 	right.add_child(count_label)
+	curve = _Curve.new()
+	curve.custom_minimum_size = Vector2(0, 54)
+	right.add_child(curve)
 	warn_label = UIKit.label("", 15, UIKit.RED, true)
 	right.add_child(warn_label)
+
 	var lands_box := GridContainer.new()
 	lands_box.columns = 2
 	right.add_child(lands_box)
 	for f in Factions.ORDER:
 		var row := HBoxContainer.new()
 		var lid := Factions.land_id(f)
-		var minus := Button.new()
-		minus.text = "−"
-		minus.custom_minimum_size = Vector2(44, 44)
-		minus.pressed.connect(func(): _change(lid, -1))
-		var plus := Button.new()
-		plus.text = "+"
-		plus.custom_minimum_size = Vector2(44, 44)
-		plus.pressed.connect(func(): _change(lid, 1))
+		row.add_child(_tiny("−", func(): _change(lid, -1)))
 		var l := UIKit.label("", 15, UIKit.faction_ink(f))
-		l.custom_minimum_size.x = 140
+		l.custom_minimum_size.x = 132
 		land_labels[f] = l
-		row.add_child(minus)
 		row.add_child(l)
-		row.add_child(plus)
+		row.add_child(_tiny("+", func(): _change(lid, 1)))
 		lands_box.add_child(row)
+
 	var dscroll := ScrollContainer.new()
 	dscroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	dscroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -83,107 +183,248 @@ func _ready() -> void:
 	deck_list = VBoxContainer.new()
 	deck_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dscroll.add_child(deck_list)
-	var btns := HBoxContainer.new()
-	right.add_child(btns)
-	btns.add_child(UIKit.button("Auto-build", _auto, 150))
-	btns.add_child(UIKit.button("Done", _done, 150))
+	right.add_child(UIKit.button("Done", _done, 150))
 	_refresh()
 
 
-func _filter_btn(text: String, f: String) -> Button:
-	var b := Button.new()
-	b.text = text
-	b.custom_minimum_size = Vector2(0, 46)
-	b.add_theme_font_size_override("font_size", 15)
-	b.pressed.connect(func():
-		filter = f
+# ------------------------------------------------------------------ small widgets
+
+func _option(parent: Control, items: Array, cb: Callable) -> OptionButton:
+	var o := OptionButton.new()
+	for it in items:
+		o.add_item(it)
+	o.custom_minimum_size.y = 42
+	o.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	o.clip_text = true
+	o.add_theme_font_size_override("font_size", 16)
+	o.item_selected.connect(func(i):
+		cb.call(i)
 		_refresh())
+	parent.add_child(o)
+	return o
+
+
+func _small(t: String, cb: Callable, expand: bool = true) -> Button:
+	var b := Button.new()
+	b.text = t
+	b.custom_minimum_size = Vector2(0, 42)
+	if expand:
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.add_theme_font_size_override("font_size", 16)
+	b.pressed.connect(cb)
 	return b
 
 
+func _tiny(t: String, cb: Callable) -> Button:
+	var b := Button.new()
+	b.text = t
+	b.custom_minimum_size = Vector2(40, 38)
+	b.pressed.connect(cb)
+	return b
+
+
+func _clear_filters() -> void:
+	faiths.clear()
+	for f in faith_btns:
+		faith_btns[f].set_pressed_no_signal(false)
+	f_type = 0
+	f_cost = 0
+	f_rarity = 0
+	f_keyword = 0
+	for o in filter_opts:
+		o.select(0)
+	search.text = ""
+	f_text = ""
+	in_deck_toggle.set_pressed_no_signal(false)
+	only_in_deck = false
+	_refresh()
+
+
+# ------------------------------------------------------------------ deck actions
+
+func _deck() -> Dictionary:
+	editing = clampi(editing, 0, GameState.decks.size() - 1)
+	return GameState.decks[editing]["cards"]
+
+
 func _change(id: String, delta: int) -> void:
-	var n := int(deck.get(id, 0)) + delta
+	var d := _deck()
+	var n := int(d.get(id, 0)) + delta
 	if delta > 0 and not CardDB.is_land(id):
 		if n > DeckTools.MAX_COPIES or n > GameState.owned_count(id):
 			return
 	if n <= 0:
-		deck.erase(id)
+		d.erase(id)
 	else:
-		deck[id] = n
+		d[id] = n
 	_refresh()
 
+
+func _new_deck() -> void:
+	UIKit.prompt(self, "New deck", GameState.unique_deck_name("New deck"), "Create", func(nm):
+		var i := GameState.new_deck(nm)
+		if i >= 0:
+			editing = i
+		else:
+			warn_label.text = "You can keep up to %d decks." % GameState.MAX_DECKS
+		_refresh())
+
+
+func _copy_deck() -> void:
+	var src: Dictionary = GameState.decks[editing]
+	var i := GameState.new_deck(GameState.unique_deck_name(src["name"] + " (copy)"), src["cards"])
+	if i >= 0:
+		editing = i
+	_refresh()
+
+
+func _rename_deck() -> void:
+	UIKit.prompt(self, "Rename deck", GameState.decks[editing]["name"], "Rename", func(nm):
+		GameState.decks[editing]["name"] = nm
+		_refresh())
+
+
+func _delete_deck() -> void:
+	if GameState.decks.size() <= 1:
+		warn_label.text = "You need at least one deck."
+		return
+	UIKit.confirm(self, "Delete \"%s\"?" % GameState.decks[editing]["name"], "The cards stay in your collection.", "Delete", func():
+		GameState.delete_deck(editing)
+		editing = clampi(editing, 0, GameState.decks.size() - 1)
+		_refresh())
+
+
+## Auto-build this deck from your cards, around the selected faiths if any.
+func _auto() -> void:
+	var focus := faiths.keys().filter(func(f): return f != "machine")
+	GameState.decks[editing]["cards"] = DeckTools.auto_build(GameState.owned_all(), focus)
+	_refresh()
+
+
+func _done() -> void:
+	var problem := DeckTools.validate(GameState.deck, GameState.owned_all())
+	if problem != "":
+		warn_label.text = "The deck used in duels (\"%s\") isn't ready: %s" % [GameState.decks[GameState.active_deck]["name"], problem]
+		warn_label.add_theme_color_override("font_color", UIKit.RED)
+		return
+	GameState.save_game()
+	closed.emit()
+
+
+# ------------------------------------------------------------------ filtering
+
+func _passes(c: Dictionary, in_deck: int) -> bool:
+	if not faiths.is_empty() and not faiths.has(c["faction"]):
+		return false
+	if f_type > 0 and c["type"] != TYPES[f_type].to_lower():
+		return false
+	if f_cost > 0:
+		var mv := int(c["mana_value"])
+		var ok := mv == f_cost
+		if f_cost == 1:
+			ok = mv <= 1
+		elif f_cost == 6:
+			ok = mv >= 6
+		if not ok:
+			return false
+	if f_rarity > 0 and c["rarity"] != RARITIES[f_rarity].to_lower():
+		return false
+	if f_keyword > 0:
+		var k: String = KEYWORDS[f_keyword]
+		if k.ends_with("effect"):
+			var trig: String = {"Enters effect": "enter", "Dies effect": "death", "Upkeep effect": "upkeep"}[k]
+			if not c["effects"].any(func(e): return e.get("trigger") == trig):
+				return false
+		elif not c["keywords"].has(k.to_lower()):
+			return false
+	if f_text != "":
+		var hay := (String(c["name"]) + " " + String(c.get("text", "")) + " " + String(c.get("subtype", ""))).to_lower()
+		if not hay.contains(f_text):
+			return false
+	if only_in_deck and in_deck <= 0:
+		return false
+	return true
+
+
+func _sort_key(c: Dictionary) -> Array:
+	var r := Factions.RARITIES.find(c["rarity"])
+	match f_sort:
+		1: return [c["mana_value"], Factions.ORDER.find(c["faction"]), c["name"]]
+		2: return [c["name"]]
+		3: return [-r, Factions.ORDER.find(c["faction"]), c["name"]]
+		4: return [-int(c.get("power", -1)), c["mana_value"], c["name"]]
+	return [Factions.ORDER.find(c["faction"]), c["mana_value"], c["name"]]
+
+
+# ------------------------------------------------------------------ refresh
 
 func _refresh() -> void:
 	_refresh_now.call_deferred()
 
 
 func _refresh_now() -> void:
-	UIKit.clear(grid)
+	var d := _deck()
 	var owned := GameState.owned_all()
-	var ids := owned.keys()
-	ids.sort_custom(func(a, b):
-		var ca := CardDB.get_card(a)
-		var cb := CardDB.get_card(b)
-		if ca["faction"] != cb["faction"]:
-			return Factions.ORDER.find(ca["faction"]) < Factions.ORDER.find(cb["faction"])
-		if ca["mana_value"] != cb["mana_value"]:
-			return ca["mana_value"] < cb["mana_value"]
-		return ca["name"] < cb["name"])
-	for id in ids:
+	# deck picker: ★ = used in duels, ✗ = not legal yet
+	deck_pick.clear()
+	for i in GameState.decks.size():
+		var dk: Dictionary = GameState.decks[i]
+		var ok := DeckTools.validate(dk["cards"], owned) == ""
+		deck_pick.add_item("%s%s  (%d)%s" % ["★ " if i == GameState.active_deck else "", dk["name"], DeckTools.count(dk["cards"]), "" if ok else "  ✗"])
+	deck_pick.select(editing)
+	active_btn.disabled = editing == GameState.active_deck
+	active_btn.text = "★ Used in duels" if editing == GameState.active_deck else "Use in duels"
+
+	# collection grid
+	UIKit.clear(grid)
+	var ids := []
+	var total := 0
+	for id in owned:
 		var c := CardDB.get_card(id)
 		if c.is_empty() or c["type"] == "land":
 			continue
-		if filter != "all" and c["faction"] != filter:
-			continue
+		total += 1
+		if _passes(c, int(d.get(id, 0))):
+			ids.append(id)
+	ids.sort_custom(func(a, b): return _sort_key(CardDB.get_card(a)) < _sort_key(CardDB.get_card(b)))
+	for id in ids:
 		var cv := CardView.create(id, SCALE, int(GameState.foils.get(id, 0)) > 0)
-		var in_deck := int(deck.get(id, 0))
+		var in_deck := int(d.get(id, 0))
 		cv.count_badge = int(owned[id]) - in_deck
 		cv.dimmed = cv.count_badge <= 0 or in_deck >= DeckTools.MAX_COPIES
 		var cid: String = id
 		cv.tapped.connect(func(_v): _change(cid, 1))
 		cv.long_pressed.connect(func(_v): _view(cid))
 		grid.add_child(cv)
+	shown_label.text = "Showing %d of the %d different cards you own" % [ids.size(), total]
 
+	# deck contents
 	UIKit.clear(deck_list)
-	var dids := deck.keys()
-	dids.sort_custom(func(a, b): return CardDB.get_card(a)["mana_value"] < CardDB.get_card(b)["mana_value"])
+	var dids := d.keys()
+	dids.sort_custom(func(a, b): return _sort_key(CardDB.get_card(a)) < _sort_key(CardDB.get_card(b)))
 	for id in dids:
 		if CardDB.is_land(id):
 			continue
 		var c := CardDB.get_card(id)
 		var b := Button.new()
-		b.text = "%d× %s  (%s)" % [deck[id], c["name"], UIKit.cost_text(c["cost"])]
+		b.text = "%d× %s  (%s)" % [d[id], c["name"], UIKit.cost_text(c["cost"])]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_size_override("font_size", 15)
 		b.add_theme_color_override("font_color", UIKit.faction_ink(c["faction"]))
-		b.custom_minimum_size.y = 40
+		b.custom_minimum_size.y = 38
 		var cid: String = id
 		b.pressed.connect(func(): _change(cid, -1))
 		deck_list.add_child(b)
 	for f in Factions.ORDER:
-		land_labels[f].text = "%s: %d" % [Factions.info(f)["land_name"], int(deck.get(Factions.land_id(f), 0))]
-	var n := DeckTools.count(deck)
-	count_label.text = "Deck: %d cards (%d lands)" % [n, DeckTools.land_count(deck)]
-	var problem := DeckTools.validate(deck, owned)
-	warn_label.text = problem if problem != "" else "Tap a card to add it, hold to read it. Tap deck rows to remove."
+		land_labels[f].text = "%s: %d" % [Factions.info(f)["land_name"], int(d.get(Factions.land_id(f), 0))]
+	count_label.text = "%d cards · %d lands" % [DeckTools.count(d), DeckTools.land_count(d)]
+	curve.set_deck(d)
+	var problem := DeckTools.validate(d, owned)
+	warn_label.text = problem if problem != "" else "Tap a card to add it, hold to read it. Tap a deck row to remove."
 	warn_label.add_theme_color_override("font_color", UIKit.RED if problem != "" else UIKit.DIM)
 
 
-func _auto() -> void:
-	deck = DeckTools.auto_build(GameState.owned_all(), [] if filter == "all" or filter == "machine" else [filter])
-	_refresh()
-
-
-func _done() -> void:
-	if DeckTools.validate(deck, GameState.owned_all()) == "":
-		GameState.deck = deck
-		GameState.save_game()
-		closed.emit()
-	else:
-		warn_label.text = "Fix the deck first: " + DeckTools.validate(deck, GameState.owned_all())
-
-
-## Long-press a card: read it and leaf through the cards currently shown.
+## Hold a card: read it and leaf through the cards currently shown.
 func _view(start_id: String) -> void:
 	var listing := []
 	for c in grid.get_children():
@@ -191,9 +432,39 @@ func _view(start_id: String) -> void:
 			listing.append(c.card_id)
 	var v := CardViewer.open(self, listing, maxi(0, listing.find(start_id)), func(e, _i):
 		var id: String = e["id"]
-		var n := int(deck.get(id, 0))
+		var n := int(_deck().get(id, 0))
 		return [
 			["Add (%d in deck)" % n, func(): _change(id, 1), n < mini(DeckTools.MAX_COPIES, GameState.owned_count(id)), false],
 			["Remove", func(): _change(id, -1), n > 0, false],
 		])
 	v.closed.connect(_refresh)
+
+
+## Mana curve: how many non-land cards at each cost.
+class _Curve extends Control:
+	var counts := {}
+
+	func set_deck(d: Dictionary) -> void:
+		counts.clear()
+		for id in d:
+			var c := CardDB.get_card(id)
+			if c.is_empty() or c["type"] == "land":
+				continue
+			var mv := mini(int(c["mana_value"]), 7)
+			counts[mv] = int(counts.get(mv, 0)) + int(d[id])
+		queue_redraw()
+
+	func _draw() -> void:
+		var font := Tapestry.font("book")
+		var top := 1
+		for k in counts:
+			top = maxi(top, counts[k])
+		var w := size.x / 8.0
+		for mv in range(0, 8):
+			var n := int(counts.get(mv, 0))
+			var h := (size.y - 18) * float(n) / top
+			var r := Rect2(mv * w + 4, size.y - 16 - h, w - 8, h)
+			if n > 0:
+				Tapestry.ink_rect(self, r, Tapestry.VERMILION, 1.2)
+				draw_string(font, Vector2(r.position.x, r.position.y - 2), str(n), HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, Tapestry.INK)
+			draw_string(font, Vector2(mv * w, size.y - 2), ("%d" % mv) if mv < 7 else "7+", HORIZONTAL_ALIGNMENT_CENTER, w, 12, Tapestry.INK)

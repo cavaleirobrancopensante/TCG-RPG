@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **1.8**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
+Version **1.9**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
@@ -108,6 +108,17 @@ One-time setup: repo **Settings → Pages → Source: GitHub Actions**.
   world (or "Save to another slot…" at an inn) saves into any slot and continues there.
   Old single-file saves move into slot I automatically.
 - Settings: music volume, music follows the game, duel animation speed, full screen, your name.
+
+## Card viewer and deck builder (1.6, 1.9)
+
+- **Card viewer**: tap a card (hand, battlefield, booster, shop, sell list) or hold one in the
+  deck builder to read it large with keyword explanations; leaf with **‹ ›**, a swipe or the
+  arrow keys. Buy, Sell, Play, Add/Remove right from the viewer.
+- **Several decks** (up to 12): New, Copy, Rename, Delete, Auto-build, and **Use in duels**
+  (★ marks the duel deck, ✗ a deck that isn't legal yet). Cards used by any deck can't be sold.
+- **Filters**: faiths (any combination), type, cost, rarity, ability (keywords or enter / dies /
+  upkeep effects), search by name or text, "in this deck"; sort by faith, cost, name, rarity or
+  power; a mana curve of the deck.
 
 ## Card set status
 

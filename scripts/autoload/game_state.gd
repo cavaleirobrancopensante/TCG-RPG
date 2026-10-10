@@ -15,7 +15,21 @@ const START_BOOSTERS := 3
 var gold: int = 0
 var collection: Dictionary = {}   # id -> count (normal copies)
 var foils: Dictionary = {}        # id -> count (foil copies)
-var deck: Dictionary = {}         # id -> count (includes basic lands)
+## Several named decks; `deck` is always the active one (the deck used in duels).
+const MAX_DECKS := 12
+var decks: Array = [{"name": "Starter deck", "cards": {}}]   # [{name, cards: {id: count}}]
+var active_deck := 0
+var deck: Dictionary:
+	get:
+		if decks.is_empty():
+			decks.append({"name": "Starter deck", "cards": {}})
+		active_deck = clampi(active_deck, 0, decks.size() - 1)
+		return decks[active_deck]["cards"]
+	set(value):
+		if decks.is_empty():
+			decks.append({"name": "Starter deck", "cards": {}})
+		active_deck = clampi(active_deck, 0, decks.size() - 1)
+		decks[active_deck]["cards"] = value
 var player_name: String = "Wanderer"
 var player_pos: Vector2 = Vector2.ZERO
 var current_city: String = ""
@@ -57,7 +71,8 @@ func new_game(into_slot: int = 1) -> void:
 	gold = START_GOLD
 	collection.clear()
 	foils.clear()
-	deck.clear()
+	decks = [{"name": "Starter deck", "cards": {}}]
+	active_deck = 0
 	cleared_lairs.clear()
 	visited_cities.clear()
 	defeated.clear()
@@ -154,7 +169,8 @@ func save_game(n: int = 0) -> void:
 	play_time = current_play_time()
 	_session_start = Time.get_ticks_msec()
 	var data := {
-		"version": 2, "gold": gold, "collection": collection, "foils": foils, "deck": deck,
+		"version": 3, "gold": gold, "collection": collection, "foils": foils, "deck": deck,
+		"decks": decks, "active_deck": active_deck,
 		"player_name": player_name, "player_pos": [player_pos.x, player_pos.y],
 		"cleared_lairs": cleared_lairs, "visited_cities": visited_cities,
 		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters,
@@ -215,7 +231,12 @@ func load_game(n: int = 0) -> bool:
 	gold = int(data.get("gold", START_GOLD))
 	collection = _int_dict(data.get("collection", {}))
 	foils = _int_dict(data.get("foils", {}))
-	deck = _int_dict(data.get("deck", {}))
+	decks = []
+	for d in data.get("decks", []):
+		decks.append({"name": String(d.get("name", "Deck")), "cards": _int_dict(d.get("cards", {}))})
+	if decks.is_empty():      # saves from before 1.9 had a single deck
+		decks.append({"name": "Starter deck", "cards": _int_dict(data.get("deck", {}))})
+	active_deck = clampi(int(data.get("active_deck", 0)), 0, decks.size() - 1)
 	player_name = data.get("player_name", "Wanderer")
 	var p: Array = data.get("player_pos", [0, 0])
 	player_pos = Vector2(p[0], p[1])
@@ -229,7 +250,10 @@ func load_game(n: int = 0) -> bool:
 	stats = data.get("stats", stats)
 	_extra_load(data)
 	# Drop cards that no longer exist in the database (set revisions).
-	for d in [collection, foils, deck]:
+	var dicts: Array = [collection, foils]
+	for dk in decks:
+		dicts.append(dk["cards"])
+	for d in dicts:
 		for id in d.keys():
 			if not CardDB.has_card(id):
 				d.erase(id)
@@ -279,9 +303,17 @@ func owned_all() -> Dictionary:
 	return out
 
 
-## Copies that can be sold without breaking the current deck.
+## Most copies of a card used by any one deck.
+func copies_in_decks(id: String) -> int:
+	var m := 0
+	for dk in decks:
+		m = maxi(m, int(dk["cards"].get(id, 0)))
+	return m
+
+
+## Copies that can be sold without breaking any of your decks.
 func sellable_count(id: String, foil: bool) -> int:
-	var spare := owned_count(id) - int(deck.get(id, 0))
+	var spare := owned_count(id) - copies_in_decks(id)
 	var have := int((foils if foil else collection).get(id, 0))
 	return clampi(spare, 0, have)
 
@@ -332,8 +364,43 @@ func open_booster() -> Array:
 
 
 func ensure_deck() -> void:
-	if DeckTools.validate(deck, owned_all()) != "":
-		deck = DeckTools.auto_build(owned_all())
+	if DeckTools.validate(deck, owned_all()) == "":
+		return
+	# Prefer switching to another legal deck over rebuilding the player's deck.
+	for i in decks.size():
+		if DeckTools.validate(decks[i]["cards"], owned_all()) == "":
+			active_deck = i
+			return
+	deck = DeckTools.auto_build(owned_all())
+
+
+# ---------------------------------------------------------------- decks
+
+func new_deck(deck_name: String, cards: Dictionary = {}) -> int:
+	if decks.size() >= MAX_DECKS:
+		return -1
+	decks.append({"name": deck_name, "cards": cards.duplicate()})
+	return decks.size() - 1
+
+
+func delete_deck(i: int) -> void:
+	if decks.size() <= 1 or i < 0 or i >= decks.size():
+		return
+	decks.remove_at(i)
+	if active_deck >= i and active_deck > 0:
+		active_deck -= 1
+
+
+func unique_deck_name(base: String) -> String:
+	var names := {}
+	for d in decks:
+		names[d["name"]] = true
+	if not names.has(base):
+		return base
+	var n := 2
+	while names.has("%s %d" % [base, n]):
+		n += 1
+	return "%s %d" % [base, n]
 
 
 # ---------------------------------------------------------------- world helpers
