@@ -71,6 +71,7 @@ func _ready() -> void:
 	# The player strip: picker, manual choice, transport, back to auto.
 	Music._bar._toggle_picker()
 	await _frames(2)
+	assert(Music._bar.picker.visible, "picker opens on first tap")
 	Music.choose("lyceum_03")
 	assert(not Music.auto and Music.current["id"] == "lyceum_03", "manual choice")
 	Music.next()

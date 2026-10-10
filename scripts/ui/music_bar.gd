@@ -6,7 +6,6 @@ extends Control
 const HEIGHT := 38
 
 var title_label: Label
-var sub_label: Label
 var play_btn: Button
 var picker: PanelContainer
 var list_box: VBoxContainer
@@ -33,24 +32,16 @@ func _ready() -> void:
 	row.add_child(sig_space)
 	var info := Button.new()
 	info.flat = true
-	info.custom_minimum_size = Vector2(300, HEIGHT - 4)
-	info.clip_text = true
+	info.custom_minimum_size = Vector2(360, HEIGHT - 4)
 	info.pressed.connect(_toggle_picker)
 	row.add_child(info)
-	var ib := HBoxContainer.new()
-	ib.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	UIKit.full_rect(ib)
-	info.add_child(ib)
-	title_label = UIKit.label("", 17, UIKit.GOLD)
+	title_label = UIKit.label("", 18, Tapestry.GILT)
 	title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	title_label.clip_text = true
-	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	ib.add_child(title_label)
-	sub_label = UIKit.label("", 13, UIKit.DIM)
-	sub_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	sub_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	ib.add_child(sub_label)
+	UIKit.full_rect(title_label)
+	info.add_child(title_label)
 	row.add_child(_small("⏮", func(): Music.prev()))
 	play_btn = _small("⏸", func(): Music.toggle_pause())
 	row.add_child(play_btn)
@@ -72,8 +63,7 @@ func _small(t: String, cb: Callable) -> Button:
 
 func _refresh() -> void:
 	var t: Dictionary = Music.current
-	title_label.text = "♪ " + (t.get("title", "—") as String)
-	sub_label.text = Music.label(t) + ("" if Music.auto else " · manual")
+	title_label.text = "♪ %s   ·   %s%s" % [t.get("title", "—"), Music.label(t), "" if Music.auto else " · manual"]
 	play_btn.text = "▶" if Music.paused else "⏸"
 	if not t.is_empty():
 		_sigil_faction = t["faction"]
@@ -83,16 +73,28 @@ func _refresh() -> void:
 
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), Color(0.08, 0.06, 0.07, 0.92))
-	draw_line(Vector2(0, size.y - 1), Vector2(size.x, size.y - 1), Color(UIKit.GOLD, 0.5), 2.0)
-	# faith sigil to the left of the title
-	var x := size.x * 0.5 - _row_width() * 0.5 + 15
-	var col := Factions.color2(_sigil_faction).lightened(0.3) if _sigil_faction != "abyss" else Color(0.85, 0.25, 0.25)
-	UIKit.draw_sigil(self, _sigil_faction, Vector2(x, size.y * 0.5), 11, col, 2)
+	# an ornamental band: ultramarine with white rings, gilt rules
+	draw_rect(Rect2(Vector2.ZERO, size), Tapestry.ULTRA_DARK)
+	var x0 := 10.0
+	while x0 < size.x:
+		draw_arc(Vector2(x0, size.y * 0.5), 5, 0, TAU, 12, Color(Tapestry.WHITE, 0.35), 1.2, true)
+		draw_circle(Vector2(x0, size.y * 0.5), 1.4, Color(Tapestry.WHITE, 0.35))
+		x0 += 22.0
+	var mid := size.x * 0.5
+	var w := _row_width() + 24
+	var plaque := Rect2(mid - w * 0.5, 2, w, size.y - 4)
+	draw_rect(plaque, Tapestry.ULTRAMARINE)
+	draw_rect(plaque, Tapestry.GILT, false, 1.5)
+	draw_line(Vector2(0, 1), Vector2(size.x, 1), Tapestry.GILT, 2.0)
+	draw_line(Vector2(0, size.y - 1), Vector2(size.x, size.y - 1), Tapestry.GILT, 2.0)
+	var x := mid - _row_width() * 0.5 + 15
+	Tapestry.ink_circle(self, Vector2(x, size.y * 0.5), 13, Tapestry.colors(_sigil_faction)[0] if _sigil_faction != "sanctum" else Tapestry.WHITE, 1.5)
+	var col: Color = Tapestry.colors(_sigil_faction)[1] if _sigil_faction != "sanctum" else Tapestry.VERMILION
+	UIKit.draw_sigil(self, _sigil_faction, Vector2(x, size.y * 0.5), 8, col, 1.6)
 
 
 func _row_width() -> float:
-	return 30 + 300 + 4 * 46 + 5 * 6
+	return 30 + 360 + 4 * 46 + 5 * 6
 
 
 # ------------------------------------------------------------------ picker
@@ -111,6 +113,7 @@ func _toggle_picker() -> void:
 
 func _build_picker() -> void:
 	picker = PanelContainer.new()
+	picker.visible = false
 	picker.custom_minimum_size = Vector2(620, 0)
 	add_child(picker)
 	var v := VBoxContainer.new()
@@ -160,7 +163,7 @@ func _fill_list() -> void:
 	for c in list_box.get_children():
 		list_box.remove_child(c)
 		c.queue_free()
-	var head := UIKit.label(Factions.info(shown_faction)["name"], 18, Factions.color2(shown_faction).lightened(0.35) if shown_faction != "abyss" else Color(0.85, 0.3, 0.3))
+	var head := UIKit.title(Factions.info(shown_faction)["name"], 26, UIKit.faction_ink(shown_faction))
 	list_box.add_child(head)
 	for id in Music.faction_tracks(shown_faction):
 		var t: Dictionary = Music.by_id[id]
@@ -171,7 +174,7 @@ func _fill_list() -> void:
 		b.custom_minimum_size.y = 38
 		b.add_theme_font_size_override("font_size", 15)
 		if playing:
-			b.add_theme_color_override("font_color", UIKit.GOLD)
+			b.add_theme_color_override("font_color", UIKit.RED)
 		var tid: String = id
 		b.pressed.connect(func(): Music.choose.call_deferred(tid))
 		list_box.add_child(b)

@@ -46,6 +46,7 @@ func _ready() -> void:
 	lairs = wd.get("lairs", [])
 	_build_terrain()
 	_build_roads()
+	_build_decor()
 	camera = Camera2D.new()
 	camera.zoom = Vector2(0.75, 0.75)
 	camera.position_smoothing_enabled = true
@@ -78,38 +79,46 @@ func faction_at(p: Vector2) -> String:
 	return best
 
 
+const REGION_COLORS := {
+	"sanctum": Color(0.70, 0.74, 0.46), "abyss": Color(0.46, 0.38, 0.34),
+	"wild": Color(0.42, 0.58, 0.30), "revel": Color(0.76, 0.60, 0.42),
+	"lyceum": Color(0.64, 0.70, 0.62), "machine": Color(0.78, 0.68, 0.48),
+}
+var _height := FastNoiseLite.new()
+var _road_pts: Array = []
+
+
+class Decor extends Node2D:
+	## Static painted scenery, drawn once.
+	var world: Overworld
+
+	func _draw() -> void:
+		world._draw_decor(self)
+
+
 func _build_terrain() -> void:
-	var cell := 25.0
+	var cell := 20.0
 	var w := int(world_size.x / cell)
 	var h := int(world_size.y / cell)
 	var img := Image.create(w, h, false, Image.FORMAT_RGB8)
-	var noise := FastNoiseLite.new()
-	noise.seed = 1717
-	noise.frequency = 0.035
-	var detail := FastNoiseLite.new()
-	detail.seed = 99
-	detail.frequency = 0.15
-	var base := {
-		"sanctum": Color(0.62, 0.68, 0.42), "abyss": Color(0.26, 0.22, 0.22),
-		"wild": Color(0.24, 0.42, 0.18), "revel": Color(0.55, 0.38, 0.32),
-		"lyceum": Color(0.48, 0.55, 0.58), "machine": Color(0.52, 0.48, 0.38),
-	}
+	_height.seed = 1717
+	_height.frequency = 0.0014
+	var parch := Tapestry.parchment().get_image()
 	for y in h:
 		for x in w:
 			var p := Vector2(x, y) * cell
 			var f := faction_at(p)
-			var n := noise.get_noise_2d(x, y)
-			var d := detail.get_noise_2d(x, y) * 0.08
-			var col: Color = base[f]
-			if n < -0.42 and f != "abyss":
-				col = Color(0.18, 0.32, 0.52).lerp(Color(0.25, 0.42, 0.6), n + 0.8)   # lakes
-			elif n < -0.42:
-				col = Color(0.35, 0.08, 0.05)   # lava pools near the Pit
-			elif n > 0.45:
-				col = col.lerp(Color(0.5, 0.48, 0.46), 0.6)   # hills / rock
-			elif n > 0.15:
-				col = col.darkened(0.18)                   # woods
-			col = col.lightened(d) if d > 0 else col.darkened(-d)
+			var n := _height.get_noise_2d(p.x, p.y)
+			var col: Color = REGION_COLORS[f]
+			if n < -0.40:
+				col = Tapestry.ULTRAMARINE.lightened(0.18) if f != "abyss" else Color(0.55, 0.18, 0.10)
+			elif n > 0.42:
+				col = col.lerp(Color(0.72, 0.70, 0.66), 0.55)
+			elif n > 0.12:
+				col = col.darkened(0.10)
+			# painted on parchment: let the leaf's grain show through
+			var pc := parch.get_pixel(x % 256, y % 256)
+			col = col * Color(pc.r / Tapestry.PARCHMENT.r, pc.g / Tapestry.PARCHMENT.g, pc.b / Tapestry.PARCHMENT.b)
 			img.set_pixel(x, y, col)
 	var spr := Sprite2D.new()
 	spr.texture = ImageTexture.create_from_image(img)
@@ -120,25 +129,124 @@ func _build_terrain() -> void:
 	add_child(spr)
 
 
+var _decor: Node2D
+
+
+## Redraw the static map (e.g. after a lair is cleared).
+func refresh_decor() -> void:
+	if _decor:
+		_decor.queue_redraw()
+
+
+func _build_decor() -> void:
+	var decor := Decor.new()
+	_decor = decor
+	decor.world = self
+	decor.z_index = -4
+	add_child(decor)
+
+
+## Trees, mountains, fields, waves, cities and lairs — the illustrated map.
+func _draw_decor(ci: CanvasItem) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 4242
+	var step := 120.0
+	var y := 60.0
+	while y < world_size.y - 40:
+		var x := 60.0
+		while x < world_size.x - 40:
+			var p := Vector2(x + rng.randf_range(-45, 45), y + rng.randf_range(-45, 45))
+			x += step
+			if _near_place(p, 260.0) or _near_road(p, 60.0):
+				continue
+			var n := _height.get_noise_2d(p.x, p.y)
+			var f := faction_at(p)
+			var r := rng.randf()
+			if n < -0.40:
+				if r < 0.35:
+					Tapestry.draw_waves(ci, p, 1.3)
+			elif n > 0.42:
+				if r < 0.75:
+					Tapestry.draw_mountain(ci, p, rng.randf_range(1.1, 1.8))
+			elif n > 0.12:
+				if f == "abyss":
+					if r < 0.5:
+						_dead_tree(ci, p, rng.randf_range(1.2, 1.7))
+				elif r < 0.85:
+					Tapestry.draw_tree(ci, p, rng.randf_range(1.5, 2.2), Tapestry.LEAF.darkened(0.1) if f == "wild" else REGION_COLORS["wild"].darkened(0.15))
+			else:
+				if r < 0.10:
+					Tapestry.draw_tree(ci, p, rng.randf_range(1.4, 2.0))
+				elif r < 0.18:
+					Tapestry.draw_bush(ci, p, 1.5)
+				elif r < 0.26 and _near_place(p, 900.0) and f != "abyss":
+					Tapestry.draw_field(ci, p, 1.8, rng.randf_range(-0.4, 0.4))
+		y += step * 0.8
+	for l in lairs:
+		var lp := Vector2(l["x"], l["y"])
+		Tapestry.draw_lair(ci, lp, 1.3, l["faction"], GameState.cleared_lairs.has(l["id"]), 0.0)
+		Tapestry.draw_scroll_label(ci, lp + Vector2(0, 52), l["name"], 22, Tapestry.RUBRIC)
+		Tapestry.draw_scroll_label(ci, lp + Vector2(0, 92), "Lair · Level %d" % int(l["level"]), 16, Tapestry.INK)
+	for c in cities:
+		var cp := Vector2(c["x"], c["y"])
+		Tapestry.draw_castle(ci, cp + Vector2(0, 30), 1.35, c["faction"])
+		Tapestry.draw_scroll_label(ci, cp + Vector2(0, 92), c["name"], 30, Tapestry.RUBRIC)
+		Tapestry.draw_scroll_label(ci, cp + Vector2(0, 136), Factions.info(c["faction"])["name"], 18, UIKit.faction_ink(c["faction"]))
+
+
+func _dead_tree(ci: CanvasItem, p: Vector2, s: float) -> void:
+	var wood := Color(0.24, 0.17, 0.14)
+	Tapestry.ink_poly(ci, PackedVector2Array([p + Vector2(-3, 0) * s, p + Vector2(3, 0) * s, p + Vector2(1, -26) * s, p + Vector2(-1, -26) * s]), wood, 1.4)
+	ci.draw_line(p + Vector2(0, -18) * s, p + Vector2(-10, -28) * s, Tapestry.INK, 2.0)
+	ci.draw_line(p + Vector2(0, -14) * s, p + Vector2(9, -24) * s, Tapestry.INK, 2.0)
+	ci.draw_line(p + Vector2(-6, -24) * s, p + Vector2(-8, -32) * s, Tapestry.INK, 1.6)
+
+
+func _near_place(p: Vector2, r: float) -> bool:
+	for c in cities:
+		if p.distance_to(Vector2(c["x"], c["y"])) < r:
+			return true
+	for l in lairs:
+		if p.distance_to(Vector2(l["x"], l["y"])) < r * 0.7:
+			return true
+	return false
+
+
+func _near_road(p: Vector2, r: float) -> bool:
+	for q in _road_pts:
+		if p.distance_squared_to(q) < r * r:
+			return true
+	return false
+
+
 func _build_roads() -> void:
 	var hub := Vector2.ZERO
 	for c in cities:
 		if c["id"] == "cogspire":
 			hub = Vector2(c["x"], c["y"])
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 99
 	for c in cities:
 		var p := Vector2(c["x"], c["y"])
 		if p == hub:
 			continue
-		var line := Line2D.new()
-		line.width = 26
-		line.default_color = Color(0.72, 0.62, 0.45, 0.85)
-		line.joint_mode = Line2D.LINE_JOINT_ROUND
-		line.z_index = -5
-		var mid := (hub + p) * 0.5 + (p - hub).orthogonal().normalized() * _rng.randf_range(-250, 250)
-		for i in 21:
-			var t := float(i) / 20.0
-			line.add_point(hub.lerp(mid, t).lerp(mid.lerp(p, t), t))
-		add_child(line)
+		var mid := (hub + p) * 0.5 + (p - hub).orthogonal().normalized() * rng.randf_range(-250, 250)
+		var pts := PackedVector2Array()
+		for i in 31:
+			var t := float(i) / 30.0
+			var q := hub.lerp(mid, t).lerp(mid.lerp(p, t), t)
+			pts.append(q)
+			_road_pts.append(q)
+		for layer in [[34.0, Tapestry.INK], [26.0, Color(0.80, 0.66, 0.44)]]:
+			var line := Line2D.new()
+			line.width = layer[0]
+			line.default_color = layer[1]
+			line.joint_mode = Line2D.LINE_JOINT_ROUND
+			line.begin_cap_mode = Line2D.LINE_CAP_ROUND
+			line.end_cap_mode = Line2D.LINE_CAP_ROUND
+			line.z_index = -6
+			line.points = pts
+			add_child(line)
 
 
 # ------------------------------------------------------------------ enemies
@@ -151,8 +259,14 @@ func _spawn_enemy() -> void:
 			continue
 		var f := faction_at(p)
 		var lvl := clampi(1 + int(p.distance_to(start) / 800.0), 1, 5)
+		var pool: Array = []
+		for r in ["common", "uncommon"]:
+			for cid in CardDB.pools[f][r]:
+				if CardDB.get_card(cid)["type"] == "creature":
+					pool.append(cid)
+		var look: String = pool[_rng.randi_range(0, pool.size() - 1)] if not pool.is_empty() else ""
 		enemies.append({
-			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl,
+			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": look,
 			"name": WorldEntities.enemy_name(f, _rng), "wander": p, "chasing": false,
 		})
 		_next_enemy_id += 1
@@ -314,36 +428,33 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # ------------------------------------------------------------------ drawing
 
+const PILGRIM := {"faction": "sanctum", "subtype": "Human Pilgrim", "name": "Wanderer"}
+
+
 func _draw() -> void:
-	var font := ThemeDB.fallback_font
-	for c in cities:
-		var p := Vector2(c["x"], c["y"])
-		draw_set_transform(p, 0, Vector2.ONE)
-		WorldEntities.draw_city(self, c["faction"], GameState.visited_cities.has(c["id"]))
-		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-		_label(font, p + Vector2(0, 85), c["name"], 30, UIKit.TEXT)
-		_label(font, p + Vector2(0, 115), Factions.info(c["faction"])["name"], 20, Factions.color2(c["faction"]).lightened(0.3))
-	for l in lairs:
-		var p := Vector2(l["x"], l["y"])
-		var cleared: bool = GameState.cleared_lairs.has(l["id"])
-		draw_set_transform(p, 0, Vector2.ONE)
-		WorldEntities.draw_lair(self, l["faction"], cleared, _t)
-		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-		_label(font, p + Vector2(0, 62), l["name"], 24, UIKit.RED.lightened(0.3) if not cleared else UIKit.DIM)
-		_label(font, p + Vector2(0, 88), "Lair · Level %d" % int(l["level"]), 18, UIKit.DIM)
+	var view := Rect2(camera.position - get_viewport_rect().size / camera.zoom * 0.6, get_viewport_rect().size / camera.zoom * 1.2)
 	for e in enemies:
-		draw_set_transform(e["pos"], 0, Vector2.ONE)
-		WorldEntities.draw_enemy(self, e["faction"], e["level"], _t, e["chasing"])
-		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-	# move target marker
+		var ep: Vector2 = e["pos"]
+		if not view.has_point(ep):
+			continue
+		var look: Dictionary = CardDB.get_card(e.get("look", ""))
+		if look.is_empty():
+			look = {"faction": e["faction"], "name": e["name"]}
+		var face := -1.0 if player_pos.x < ep.x else 1.0
+		draw_colored_polygon(Tapestry.ellipse(ep + Vector2(0, 2), 26, 7, 14), Color(0, 0, 0, 0.25))
+		if e["chasing"]:
+			draw_arc(ep + Vector2(0, -2), 30, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)
+		FigurePainter.paint(self, look, Transform2D(0, ep), 74, face, 1.0)
+		var lbl := "Lv%d" % int(e["level"]) + ("  !" if e["chasing"] else "")
+		Tapestry.draw_scroll_label(self, ep + Vector2(0, -88), lbl, 16, Tapestry.VERMILION if e["chasing"] else Tapestry.INK)
 	if moving:
-		draw_arc(move_target, 18, 0, TAU, 24, Color(UIKit.GOLD, 0.6), 2.0, true)
-	draw_set_transform(player_pos, 0, Vector2.ONE)
-	WorldEntities.draw_player(self, _t, moving)
-	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+		draw_arc(move_target, 18, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)
+		draw_line(move_target + Vector2(-8, -8), move_target + Vector2(8, 8), Color(Tapestry.VERMILION, 0.8), 2.0)
+		draw_line(move_target + Vector2(8, -8), move_target + Vector2(-8, 8), Color(Tapestry.VERMILION, 0.8), 2.0)
+	# the player: a pilgrim on a disc of gold
+	var bob := sin(_t * 10.0) * 2.0 if moving else 0.0
+	draw_colored_polygon(Tapestry.ellipse(player_pos + Vector2(0, 2), 28, 8, 16), Color(Tapestry.GILT, 0.55))
+	draw_polyline(Tapestry.ellipse(player_pos + Vector2(0, 2), 28, 8, 16), Tapestry.INK, 2.0, true)
+	var face_p := 1.0 if move_target.x >= player_pos.x else -1.0
+	FigurePainter.paint(self, PILGRIM, Transform2D(0, player_pos + Vector2(0, bob)), 84, face_p, 1.0)
 
-
-func _label(font: Font, center: Vector2, text: String, size: int, col: Color) -> void:
-	var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
-	draw_string_outline(font, center - Vector2(w * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 6, Color(0, 0, 0, 0.8))
-	draw_string(font, center - Vector2(w * 0.5, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, col)
