@@ -67,7 +67,7 @@ func start(p_info: Dictionary) -> void:
 
 func _build_ui() -> void:
 	var root := VBoxContainer.new()
-	UIKit.full_rect(root)
+	UIKit.full_rect(root, UIKit.TOP)
 	root.add_theme_constant_override("separation", 4)
 	add_child(root)
 

@@ -44,6 +44,17 @@ func _ready() -> void:
 	show_menu()
 
 
+var _music_timer := 0.0
+
+
+func _process(delta: float) -> void:
+	# In the open world the music follows the faith of the region you walk through.
+	_music_timer -= delta
+	if _music_timer <= 0.0 and world and world.active and screen == null:
+		_music_timer = 1.0
+		Music.set_context("world", world.faction_at(world.player_pos))
+
+
 # ================================================================== menu
 
 func _set_screen(c: Control) -> void:
@@ -55,6 +66,7 @@ func _set_screen(c: Control) -> void:
 
 
 func show_menu() -> void:
+	Music.set_context("menu")
 	if world:
 		world.queue_free()
 		world = null
@@ -137,14 +149,14 @@ func _build_hud() -> void:
 	hud.theme = ui_theme
 	hud_layer.add_child(hud)
 	var top := PanelContainer.new()
-	top.position = Vector2(10, 10)
+	top.position = Vector2(10, UIKit.TOP + 8)
 	hud.add_child(top)
 	hud_gold = UIKit.label("", 22, UIKit.GOLD)
 	top.add_child(hud_gold)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 8)
 	col.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	col.position = Vector2(-200, 10)
+	col.position = Vector2(-200, UIKit.TOP + 8)
 	col.custom_minimum_size.x = 190
 	hud.add_child(col)
 	hud_boosters = UIKit.button("Boosters", func(): open_boosters(false), 190)
@@ -268,6 +280,7 @@ func _on_city_entered(city_id: String) -> void:
 
 
 func _open_city(city_id: String) -> void:
+	Music.set_context("city", GameState.city(city_id).get("faction", "machine"))
 	_pause_world(true)
 	var c := CityScreen.new()
 	c.setup(city_id)
@@ -323,6 +336,7 @@ func _on_enemy_engaged(e: Dictionary) -> void:
 # ================================================================== battles
 
 func start_battle(info: Dictionary) -> void:
+	Music.set_context("lair" if info.has("lair") else "battle", info.get("faction", "abyss"))
 	GameState.ensure_deck()
 	_pause_world(true)
 	var b := BattleScene.new()

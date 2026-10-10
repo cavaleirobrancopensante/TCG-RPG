@@ -24,7 +24,7 @@ func _ready() -> void:
 	UIKit.full_rect(bg)
 	add_child(bg)
 	var v := VBoxContainer.new()
-	UIKit.full_rect(v)
+	UIKit.full_rect(v, UIKit.TOP)
 	v.add_theme_constant_override("separation", 8)
 	add_child(v)
 	var top := HBoxContainer.new()

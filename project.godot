@@ -12,7 +12,7 @@ config_version=5
 
 config/name="TCG-RPG"
 config/description="A card-battle RPG: MTG-style rules, Yu-Gi-Oh!-style summons, open world."
-config/version="0.1a"
+config/version="1.1"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
@@ -20,6 +20,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 
 CardDB="*res://scripts/autoload/card_db.gd"
 GameState="*res://scripts/autoload/game_state.gd"
+Music="*res://scripts/autoload/music.gd"
 
 [display]
 

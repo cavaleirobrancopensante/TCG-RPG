@@ -10,6 +10,8 @@ const DIM := Color(0.62, 0.58, 0.54)
 const RED := Color(0.90, 0.30, 0.25)
 const GREEN := Color(0.45, 0.85, 0.45)
 const BLUE := Color(0.45, 0.65, 1.0)
+## Height reserved at the top of every screen for the music strip.
+const TOP := 38
 
 
 static func make_theme() -> Theme:
@@ -89,10 +91,10 @@ static func clear(n: Node) -> void:
 		c.queue_free()
 
 
-static func full_rect(c: Control) -> void:
+static func full_rect(c: Control, top: int = 0) -> void:
 	c.set_anchors_preset(Control.PRESET_FULL_RECT)
 	c.offset_left = 0
-	c.offset_top = 0
+	c.offset_top = top
 	c.offset_right = 0
 	c.offset_bottom = 0
 

@@ -1,0 +1,482 @@
+[
+	{
+		"id": "sanctum_00",
+		"faction": "sanctum",
+		"kind": "anthem",
+		"title": "Lumen Ecclesiae",
+		"file": "res://music/sanctum_00.ogg",
+		"seconds": 120.8
+	},
+	{
+		"id": "sanctum_01",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "Matins at Santa Lucerna",
+		"file": "res://music/sanctum_01.ogg",
+		"seconds": 164.0
+	},
+	{
+		"id": "sanctum_02",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "The Pilgrim Road",
+		"file": "res://music/sanctum_02.ogg",
+		"seconds": 98.3
+	},
+	{
+		"id": "sanctum_03",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "Cloister Garden",
+		"file": "res://music/sanctum_03.ogg",
+		"seconds": 150.7
+	},
+	{
+		"id": "sanctum_04",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "Vespers",
+		"file": "res://music/sanctum_04.ogg",
+		"seconds": 140.6
+	},
+	{
+		"id": "sanctum_05",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "The Lamp Unfailing",
+		"file": "res://music/sanctum_05.ogg",
+		"seconds": 169.0
+	},
+	{
+		"id": "sanctum_06",
+		"faction": "sanctum",
+		"kind": "combat",
+		"title": "Deus Vult",
+		"file": "res://music/sanctum_06.ogg",
+		"seconds": 84.0
+	},
+	{
+		"id": "sanctum_07",
+		"faction": "sanctum",
+		"kind": "combat",
+		"title": "Shield of the Faithful",
+		"file": "res://music/sanctum_07.ogg",
+		"seconds": 79.4
+	},
+	{
+		"id": "sanctum_08",
+		"faction": "sanctum",
+		"kind": "combat",
+		"title": "The Exorcism",
+		"file": "res://music/sanctum_08.ogg",
+		"seconds": 56.8
+	},
+	{
+		"id": "sanctum_09",
+		"faction": "sanctum",
+		"kind": "combat",
+		"title": "Last Stand of the Templar",
+		"file": "res://music/sanctum_09.ogg",
+		"seconds": 75.4
+	},
+	{
+		"id": "abyss_00",
+		"faction": "abyss",
+		"kind": "anthem",
+		"title": "Anthem of the Ninth Pit",
+		"file": "res://music/abyss_00.ogg",
+		"seconds": 112.0
+	},
+	{
+		"id": "abyss_01",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "Ashenmouth at Dusk",
+		"file": "res://music/abyss_01.ogg",
+		"seconds": 186.1
+	},
+	{
+		"id": "abyss_02",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "The Grey Factor's Ledger",
+		"file": "res://music/abyss_02.ogg",
+		"seconds": 117.1
+	},
+	{
+		"id": "abyss_03",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "Embers Below",
+		"file": "res://music/abyss_03.ogg",
+		"seconds": 199.6
+	},
+	{
+		"id": "abyss_04",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "Litany of Debts",
+		"file": "res://music/abyss_04.ogg",
+		"seconds": 156.3
+	},
+	{
+		"id": "abyss_05",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "Smoke over the Pit",
+		"file": "res://music/abyss_05.ogg",
+		"seconds": 180.0
+	},
+	{
+		"id": "abyss_06",
+		"faction": "abyss",
+		"kind": "combat",
+		"title": "Blood Oath",
+		"file": "res://music/abyss_06.ogg",
+		"seconds": 81.6
+	},
+	{
+		"id": "abyss_07",
+		"faction": "abyss",
+		"kind": "combat",
+		"title": "The Damned March",
+		"file": "res://music/abyss_07.ogg",
+		"seconds": 59.0
+	},
+	{
+		"id": "abyss_08",
+		"faction": "abyss",
+		"kind": "combat",
+		"title": "Crypt of the Nameless Lich",
+		"file": "res://music/abyss_08.ogg",
+		"seconds": 98.3
+	},
+	{
+		"id": "abyss_09",
+		"faction": "abyss",
+		"kind": "combat",
+		"title": "Herald of Belzareth",
+		"file": "res://music/abyss_09.ogg",
+		"seconds": 73.5
+	},
+	{
+		"id": "wild_00",
+		"faction": "wild",
+		"kind": "anthem",
+		"title": "Song of the Old Ways",
+		"file": "res://music/wild_00.ogg",
+		"seconds": 64.0
+	},
+	{
+		"id": "wild_01",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Elderholt Hearth",
+		"file": "res://music/wild_01.ogg",
+		"seconds": 86.5
+	},
+	{
+		"id": "wild_02",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Standing Stones",
+		"file": "res://music/wild_02.ogg",
+		"seconds": 154.9
+	},
+	{
+		"id": "wild_03",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Oak and Antler",
+		"file": "res://music/wild_03.ogg",
+		"seconds": 81.6
+	},
+	{
+		"id": "wild_04",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Moonlit Grove",
+		"file": "res://music/wild_04.ogg",
+		"seconds": 124.0
+	},
+	{
+		"id": "wild_05",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Harvest Fire",
+		"file": "res://music/wild_05.ogg",
+		"seconds": 73.5
+	},
+	{
+		"id": "wild_06",
+		"faction": "wild",
+		"kind": "combat",
+		"title": "The Wild Hunt",
+		"file": "res://music/wild_06.ogg",
+		"seconds": 56.8
+	},
+	{
+		"id": "wild_07",
+		"faction": "wild",
+		"kind": "combat",
+		"title": "Antlered Fury",
+		"file": "res://music/wild_07.ogg",
+		"seconds": 76.3
+	},
+	{
+		"id": "wild_08",
+		"faction": "wild",
+		"kind": "combat",
+		"title": "Den of the Beast",
+		"file": "res://music/wild_08.ogg",
+		"seconds": 92.0
+	},
+	{
+		"id": "wild_09",
+		"faction": "wild",
+		"kind": "combat",
+		"title": "Thorn and Fang",
+		"file": "res://music/wild_09.ogg",
+		"seconds": 54.8
+	},
+	{
+		"id": "revel_00",
+		"faction": "revel",
+		"kind": "anthem",
+		"title": "Carnival of Vinemere",
+		"file": "res://music/revel_00.ogg",
+		"seconds": 51.0
+	},
+	{
+		"id": "revel_01",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "Lanterns of Vinemere",
+		"file": "res://music/revel_01.ogg",
+		"seconds": 70.0
+	},
+	{
+		"id": "revel_02",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "Masquerade",
+		"file": "res://music/revel_02.ogg",
+		"seconds": 84.0
+	},
+	{
+		"id": "revel_03",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "The Wine Cellar",
+		"file": "res://music/revel_03.ogg",
+		"seconds": 142.9
+	},
+	{
+		"id": "revel_04",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "Silk and Daggers",
+		"file": "res://music/revel_04.ogg",
+		"seconds": 86.5
+	},
+	{
+		"id": "revel_05",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "The Morning After",
+		"file": "res://music/revel_05.ogg",
+		"seconds": 159.3
+	},
+	{
+		"id": "revel_06",
+		"faction": "revel",
+		"kind": "combat",
+		"title": "Duel at the Feast",
+		"file": "res://music/revel_06.ogg",
+		"seconds": 54.8
+	},
+	{
+		"id": "revel_07",
+		"faction": "revel",
+		"kind": "combat",
+		"title": "Firebreather's Dance",
+		"file": "res://music/revel_07.ogg",
+		"seconds": 52.9
+	},
+	{
+		"id": "revel_08",
+		"faction": "revel",
+		"kind": "combat",
+		"title": "The Endless Banquet",
+		"file": "res://music/revel_08.ogg",
+		"seconds": 53.5
+	},
+	{
+		"id": "revel_09",
+		"faction": "revel",
+		"kind": "combat",
+		"title": "Last Toast",
+		"file": "res://music/revel_09.ogg",
+		"seconds": 51.1
+	},
+	{
+		"id": "lyceum_00",
+		"faction": "lyceum",
+		"kind": "anthem",
+		"title": "Hymn of the Stoa",
+		"file": "res://music/lyceum_00.ogg",
+		"seconds": 127.4
+	},
+	{
+		"id": "lyceum_01",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "Colonnades of Porticus",
+		"file": "res://music/lyceum_01.ogg",
+		"seconds": 164.0
+	},
+	{
+		"id": "lyceum_02",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "The Star-Reader",
+		"file": "res://music/lyceum_02.ogg",
+		"seconds": 136.0
+	},
+	{
+		"id": "lyceum_03",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "The Quiet Archive",
+		"file": "res://music/lyceum_03.ogg",
+		"seconds": 192.6
+	},
+	{
+		"id": "lyceum_04",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "Seaward Meditation",
+		"file": "res://music/lyceum_04.ogg",
+		"seconds": 98.3
+	},
+	{
+		"id": "lyceum_05",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "Discourse",
+		"file": "res://music/lyceum_05.ogg",
+		"seconds": 146.7
+	},
+	{
+		"id": "lyceum_06",
+		"faction": "lyceum",
+		"kind": "combat",
+		"title": "Phalanx",
+		"file": "res://music/lyceum_06.ogg",
+		"seconds": 86.5
+	},
+	{
+		"id": "lyceum_07",
+		"faction": "lyceum",
+		"kind": "combat",
+		"title": "Dialectic of Steel",
+		"file": "res://music/lyceum_07.ogg",
+		"seconds": 80.5
+	},
+	{
+		"id": "lyceum_08",
+		"faction": "lyceum",
+		"kind": "combat",
+		"title": "The Silent Sage",
+		"file": "res://music/lyceum_08.ogg",
+		"seconds": 95.0
+	},
+	{
+		"id": "lyceum_09",
+		"faction": "lyceum",
+		"kind": "combat",
+		"title": "Logos Unbroken",
+		"file": "res://music/lyceum_09.ogg",
+		"seconds": 77.3
+	},
+	{
+		"id": "machine_00",
+		"faction": "machine",
+		"kind": "anthem",
+		"title": "March of the Technocracy",
+		"file": "res://music/machine_00.ogg",
+		"seconds": 84.0
+	},
+	{
+		"id": "machine_01",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "Cogspire Morning",
+		"file": "res://music/machine_01.ogg",
+		"seconds": 114.0
+	},
+	{
+		"id": "machine_02",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "Gears at Rest",
+		"file": "res://music/machine_02.ogg",
+		"seconds": 174.3
+	},
+	{
+		"id": "machine_03",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "The Guild Hall",
+		"file": "res://music/machine_03.ogg",
+		"seconds": 80.2
+	},
+	{
+		"id": "machine_04",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "Rail and Rivet",
+		"file": "res://music/machine_04.ogg",
+		"seconds": 98.3
+	},
+	{
+		"id": "machine_05",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "Clocktower Night",
+		"file": "res://music/machine_05.ogg",
+		"seconds": 127.8
+	},
+	{
+		"id": "machine_06",
+		"faction": "machine",
+		"kind": "combat",
+		"title": "Iron Advance",
+		"file": "res://music/machine_06.ogg",
+		"seconds": 79.4
+	},
+	{
+		"id": "machine_07",
+		"faction": "machine",
+		"kind": "combat",
+		"title": "Overclock",
+		"file": "res://music/machine_07.ogg",
+		"seconds": 71.7
+	},
+	{
+		"id": "machine_08",
+		"faction": "machine",
+		"kind": "combat",
+		"title": "The Runaway Forge",
+		"file": "res://music/machine_08.ogg",
+		"seconds": 87.8
+	},
+	{
+		"id": "machine_09",
+		"faction": "machine",
+		"kind": "combat",
+		"title": "The Prime Engine",
+		"file": "res://music/machine_09.ogg",
+		"seconds": 74.4
+	}
+]
