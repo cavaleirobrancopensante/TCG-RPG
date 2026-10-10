@@ -197,6 +197,22 @@ Hospice) are open to most heroes.
   3 extra life. Losing a duel costs a fifth of your purse, fleeing one a tenth (and you keep
   your place on the road). Nobody is ever charged more than they have.
 
+
+## A painted world with real geography (1.20)
+
+- The world map is now a painted map (tools/map/make_map.py, baked into six tiles): a
+  coast with ships and a sea serpent, an island, a lake, two rivers, mountain ranges with
+  passes, forests, fens, lava pits, fields and vineyards, villages, windmills, churches,
+  standing stones, ruins, gallows, smokestacks and pavilions.
+- You can no longer walk everywhere. Sea, lakes, rivers, mountains and lava block the
+  way; rivers are crossed at bridges or by ferry (the ferryman asks a fare); forest and
+  marsh slow you and roads speed you up. Tap anywhere and your hero finds the way.
+- Every hero sets out from the capital of his own faith.
+- Roaming folk keep to their own lands. In your faith's lands most are friendly (green)
+  or keep to themselves (white), with the odd raiding party (red). Abroad, most are
+  hostile. Only the hostile give chase. Tap a neutral traveller to challenge him; talk to
+  a friend for advice, a card from his satchel, or a favour that pays.
+
 ## Portraits and arrows (1.16)
 
 - Each side of a duel shows its hero's portrait: your chosen hero, and the face of the

@@ -55,6 +55,7 @@ var market: Dictionary = {}       # city -> card id -> [price swing, day it was 
 var day := 0                      # one passes with every duel and every night at an inn
 var rested := false               # slept at an inn: more life in the next duel
 var last_region := ""             # the faith of the lands you are in (for tolls)
+var errand: Dictionary = {}       # a favour asked by a friend on the road: {giver, need, done, reward}
 var slot := 1                     # the slot this run auto-saves into
 var play_time := 0.0              # seconds played in this run
 var _session_start := 0
@@ -99,10 +100,17 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum") -> void:
 	day = 0
 	rested = false
 	last_region = ""
+	errand = {}
 	pending_boosters = START_BOOSTERS + 1     # three general boosters and one of the hero's faith
 	faction_packs = [hero]
 	var start: Dictionary = world_data.get("start", {})
 	player_pos = Vector2(start.get("x", 0), start.get("y", 0))
+	# a hero sets out from the capital of his own faith
+	for c in world_data.get("cities", []):
+		if c.get("faction", "") == hero:
+			player_pos = Vector2(c["x"], c["y"]) + Vector2(0, 190)
+			visited_cities.append(c["id"])
+			break
 	current_city = ""
 
 
@@ -198,7 +206,7 @@ func save_game(n: int = 0) -> void:
 		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters,
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
-		"market": market, "day": day, "rested": rested, "last_region": last_region,
+		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand,
 		"meta": _meta(),
 	}
 	_extra_save(data)
@@ -288,6 +296,7 @@ func load_game(n: int = 0) -> bool:
 	day = int(data.get("day", 0))
 	rested = bool(data.get("rested", false))
 	last_region = String(data.get("last_region", ""))
+	errand = data.get("errand", {})
 	_extra_load(data)
 	# Drop cards that no longer exist in the database (set revisions).
 	var dicts: Array = [collection, foils]
