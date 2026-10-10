@@ -148,6 +148,22 @@ still needs translating, and the tests check placeholders and coverage. Shared t
 - **Music order**: random (default) or follow the list, from the music strip or Settings.
 - **Smoother**: map figures and duel figures are no longer repainted every frame.
 
+## Draft tournaments and your own choices (1.15)
+
+- **Draft tournaments** in every city (Tournament tab, 250 gold): eight drafters, three
+  boosters each, take a card and pass the rest (left, right, left). Build a deck of at least
+  40 from your picks (basic lands free), then play quarter-final, semi-final and final.
+  You keep every drafted card and the deck; prizes grow with each win, and the champion
+  also gets a rare of the city's faith. The other seven are AI drafters who stay in their
+  faiths.
+- **You choose, never "best" or "worst"**: rummage is now "draw a card, then discard a
+  card" of your choice; foresight shows you the cards and you decide which go to the bottom;
+  you pick the creature card to raise from your graveyard, the creature that fights, and
+  what to sacrifice.
+- **Spells and relics have painted miniatures** (bells, chalices, flames, books, gears...).
+- Mulligan cards open the card viewer when tapped; roaming enemies are back on the map;
+  duel music no longer goes silent after a quick change of piece.
+
 ## Card set status (Set 2, 1.14)
 
 **300 cards**: 45 per faith (20 common, 13 uncommon, 9 rare, 3 mythic), 15 dual-faith

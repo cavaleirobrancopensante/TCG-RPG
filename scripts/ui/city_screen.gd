@@ -5,6 +5,7 @@ extends Control
 signal closed
 signal open_boosters
 signal open_deck
+signal open_tournament
 
 const SCALE := 0.55
 
@@ -42,7 +43,7 @@ func _ready() -> void:
 
 	var tabs := HBoxContainer.new()
 	root.add_child(tabs)
-	for t in [["Town", "town"], ["Shop", "shop"], ["Sell cards", "sell"], ["Deck", "deck"], ["Inn", "inn"], ["Leave", "leave"]]:
+	for t in [["Town", "town"], ["Shop", "shop"], ["Sell cards", "sell"], ["Tournament", "tour"], ["Deck", "deck"], ["Inn", "inn"], ["Leave", "leave"]]:
 		var key: String = t[1]
 		tabs.add_child(UIKit.button(t[0], func(): _on_tab(key), 130))
 
@@ -92,6 +93,22 @@ func _show_now() -> void:
 		"shop": _show_shop()
 		"sell": _show_sell()
 		"inn": _show_inn()
+		"tour": _show_tournament()
+
+
+# ------------------------------------------------------------------ tournament
+
+func _show_tournament() -> void:
+	content.add_child(UIKit.title("Draft tournament", 30))
+	var rules := I18n.t("Eight duelists sit at the table, each with three sealed boosters. Open a pack, keep one card and pass the rest; the packs go around until every card is taken. Then build a deck of at least 40 cards from what you drafted (basic lands are free) and play a knockout tournament: quarter-final, semi-final and final.")
+	content.add_child(UIKit.label(rules, 18, UIKit.TEXT, true))
+	var pz := I18n.t("You keep every card you draft. Prizes: semi-final %d gold and 1 booster, final %d gold and 2 boosters, champion %d gold, 3 boosters and a rare card of this city's faith.") % [Draft.PRIZES[1]["gold"], Draft.PRIZES[2]["gold"], Draft.PRIZES[3]["gold"]]
+	content.add_child(UIKit.label(pz, 17, UIKit.DIM, true))
+	var b := UIKit.button(I18n.t("Enter (%d gold)") % Draft.ENTRY_FEE, func(): open_tournament.emit(), 280)
+	b.disabled = GameState.gold < Draft.ENTRY_FEE
+	content.add_child(b)
+	if GameState.gold < Draft.ENTRY_FEE:
+		content.add_child(UIKit.label(I18n.t("You need %d gold to enter.") % Draft.ENTRY_FEE, 16, UIKit.RED))
 
 
 # ------------------------------------------------------------------ town / missions

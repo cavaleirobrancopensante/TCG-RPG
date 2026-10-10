@@ -503,6 +503,8 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 		var a: String = e.get("action", "")
 		var amount := int(e.get("amount", 1))
 		var chosen = null
+		if a == "fight":
+			targets.append(st.auto_target(i, BattleState.FIGHTER_SPEC))     # our fighter
 		if BattleState.TARGET_CHOICE_TYPES.has(t):
 			var opts := st.valid_targets(i, e)
 			if opts.is_empty():

@@ -352,7 +352,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Your strongest creature fights target enemy creature (each deals damage equal to its power to the other).",
+    "text": "Target creature you control fights target enemy creature (each deals damage equal to its power to the other).",
     "flavor": "In autumn the stags settle their quarrels, and the forest settles with them."
   },
   {
@@ -605,7 +605,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "When this enters, your strongest creature fights target enemy creature.",
+    "text": "When this enters, target creature you control fights target enemy creature.",
     "flavor": "He calls the beasts of the wood to his side, and they settle the matter together."
   },
   {
@@ -785,7 +785,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Target creature you control gets +2/+2 until end of turn. Then your strongest creature fights target enemy creature.",
+    "text": "Target creature you control gets +2/+2 until end of turn. Then target creature you control fights target enemy creature.",
     "flavor": "The forest holds no courts. It holds contests."
   },
   {
@@ -1106,7 +1106,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Your strongest creature fights target enemy creature. Rooted: if you control six or more lands, your strongest creature then fights another target enemy creature.",
+    "text": "Target creature you control fights target enemy creature. Rooted: if you control six or more lands, target creature you control then fights another target enemy creature.",
     "flavor": "Under the October moon the hunt rides twice before dawn."
   },
   {

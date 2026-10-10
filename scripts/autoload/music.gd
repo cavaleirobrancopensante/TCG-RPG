@@ -24,6 +24,7 @@ var context := ""             # "menu:", "world:wild", ...
 var _players: Array = []
 var _active := 0
 var _bar: Control
+var _fade: Tween
 
 
 func _ready() -> void:
@@ -238,7 +239,12 @@ func _play(track_id: String) -> void:
 	p.stream_paused = false
 	paused = false
 	p.play()
+	# A quick second change (world music, then the duel) must not let the earlier fade-out
+	# silence the player we are reusing: stop the old tween first.
+	if _fade and _fade.is_valid():
+		_fade.kill()
 	var tw := create_tween().set_parallel(true)
+	_fade = tw
 	tw.tween_property(p, "volume_db", _db(), FADE)
 	if old.playing:
 		tw.tween_property(old, "volume_db", -60.0, FADE)

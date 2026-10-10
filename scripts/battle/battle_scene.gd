@@ -64,6 +64,7 @@ func start(p_info: Dictionary) -> void:
 	var main_f := DeckTools.best_factions(GameState.deck, 1)
 	st.side_faction = [main_f[0] if not main_f.is_empty() else "sanctum", info.get("faction", "abyss")]
 	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [20, int(info.get("life", 20))], -1, 0, true)
+	st.side(0).interactive = not auto_play       # you make your own choices (discards, foresight)
 	_log(I18n.t("A duel against %s begins!") % I18n.t(info.get("name", "a stranger")))
 	BattleAI.resolve_mulligan(st, 1)
 	if auto_play:
@@ -493,7 +494,7 @@ func _update_controls() -> void:
 	if st == null:
 		return
 	var mine := st.active == 0
-	var names := {"mulligan": "Opening hand", "main1": "Main phase", "block": "Combat", "main2": "Main phase 2", "over": "Duel over"}
+	var names := {"choice": "Upkeep", "mulligan": "Opening hand", "main1": "Main phase", "block": "Combat", "main2": "Main phase 2", "over": "Duel over"}
 	phase_label.text = I18n.t("Your turn" if mine else "Enemy turn") + " · " + I18n.t(names.get(st.phase, st.phase))
 	btn_alt.visible = false
 	btn_main.disabled = busy
@@ -530,10 +531,88 @@ func play_events() -> void:
 	var evs := st.take_events()
 	for e in evs:
 		await _animate(e)
+	# choices the rules left to you: discards from rummage, foresight
+	while st.phase != "over" and st.has_owed(0):
+		await _resolve_owed()
+		for e in st.take_events():
+			await _animate(e)
 	busy = false
 	refresh()
 	if st.phase == "over":
 		_show_result()
+
+
+signal _picked(result)
+
+
+## Ask the player to choose among cards. mode "one": returns an index. mode "foresight":
+## returns the ids to keep on top in order (tap cards to send them to the bottom).
+func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "one"):
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.55)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	var panel := PanelContainer.new()
+	dim.add_child(panel)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	panel.add_child(v)
+	var t := UIKit.title(head, 30)
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(t)
+	var note := UIKit.label(note_text, 18, UIKit.TEXT, true)
+	note.custom_minimum_size.x = 640
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(note)
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 8)
+	v.add_child(row)
+	var bottom: Array = []
+	var w := minf(CardView.BASE.x * 0.62, (get_viewport_rect().size.x - 140.0) / float(maxi(1, ids.size())) - 8.0)
+	var views: Array = []
+	for k in ids.size():
+		var cv := CardView.create(ids[k], w / CardView.BASE.x)
+		var kk: int = k
+		cv.tapped.connect(func(_c):
+			if mode == "one":
+				dim.queue_free()
+				_picked.emit(kk)
+			else:
+				if bottom.has(kk):
+					bottom.erase(kk)
+				else:
+					bottom.append(kk)
+				for j in views.size():
+					views[j].dimmed = bottom.has(j)
+					views[j].queue_redraw())
+		cv.long_pressed.connect(func(_c): CardViewer.open(self, ids.duplicate(), kk))
+		row.add_child(cv)
+		views.append(cv)
+	if mode == "foresight":
+		v.add_child(UIKit.button("Confirm", func():
+			var keep_ids: Array = []
+			for j in ids.size():
+				if not bottom.has(j):
+					keep_ids.append(ids[j])
+			dim.queue_free()
+			_picked.emit(keep_ids), 200))
+	await get_tree().process_frame
+	panel.position = (get_viewport_rect().size - panel.size) * 0.5
+	return await _picked
+
+
+func _resolve_owed() -> void:
+	var me := st.side(0)
+	if me.owed_discards > 0 and not me.hand.is_empty():
+		var idx = await _pick_cards(I18n.t("Discard a card"), I18n.t("Choose a card to discard. Hold a card to read it."), me.hand.duplicate())
+		st.discard_owed(0, int(idx))
+	elif me.owed_discards > 0:
+		me.owed_discards = 0
+	elif not me.foresight_cards.is_empty():
+		var ids: Array = me.foresight_cards.duplicate()
+		var keep_ids = await _pick_cards(I18n.t("Foresight"), I18n.t("These are the top cards of your library, the first one on top. Tap the cards to send to the bottom, then confirm."), ids, "foresight")
+		st.resolve_foresight(0, keep_ids)
 
 
 func _animate(e: Dictionary) -> void:
@@ -850,6 +929,7 @@ func _player_mulligan() -> void:
 			var i2: int = idx
 			cv.tapped.connect(func(_c):
 				if not picking[0]:
+					CardViewer.open(self, hand.duplicate(), i2)      # tap to read the card up close
 					return
 				if chosen.has(i2):
 					chosen.erase(i2)
@@ -859,7 +939,7 @@ func _player_mulligan() -> void:
 			cv.long_pressed.connect(func(_c): CardViewer.open(self, hand.duplicate(), i2))
 			row.add_child(cv)
 		if picking[0]:
-			note.text = I18n.t("Choose %d card(s) to put on the bottom of your library. (%d/%d)") % [need, chosen.size(), need]
+			note.text = I18n.t("Choose %d card(s) to put on the bottom of your library. (%d/%d)") % [need, chosen.size(), need] + "\n" + I18n.t("Hold a card to read it.")
 			var ok := UIKit.button("Confirm", func():
 				st.keep(0, chosen.duplicate())
 				_mulligan_done.emit(), 200)
@@ -867,8 +947,8 @@ func _player_mulligan() -> void:
 			btns.add_child(ok)
 		else:
 			var taken: int = st.mulligans[0]
-			note.text = I18n.t("Keep these seven cards, or shuffle them away and draw seven new ones.") if taken == 0 \
-				else I18n.t("Mulligans taken: %d. If you keep, %d card(s) go to the bottom.") % [taken, need]
+			note.text = (I18n.t("Keep these seven cards, or shuffle them away and draw seven new ones.") if taken == 0 \
+				else I18n.t("Mulligans taken: %d. If you keep, %d card(s) go to the bottom.") % [taken, need]) + "\n" + I18n.t("Tap a card to read it.")
 			var mb := UIKit.button(I18n.t("Mulligan"), func():
 				st.mulligan(0)
 				st.take_events()
@@ -979,6 +1059,9 @@ func _begin_ability(uid: int, idx: int) -> void:
 	pending_ability = [uid, idx]
 	st._with_source(p.card)
 	target_specs = st.ability_specs(p, idx)
+	var sac := st.sacrifice_spec(p, idx)
+	if not sac.is_empty():
+		target_specs.push_front(sac)         # first choose what to sacrifice
 	chosen_targets = []
 	_advance_targeting()
 
@@ -1019,6 +1102,11 @@ func _advance_targeting() -> void:
 		if opts.is_empty():
 			chosen_targets.append(null)
 			continue
+		if spec.get("target") == "own_grave_creature":
+			var gids: Array = opts.map(func(o): return o["id"])
+			var gi = await _pick_cards(I18n.t("Return a creature"), I18n.t("Choose a creature card from your graveyard."), gids)
+			chosen_targets.append(opts[int(gi)])
+			continue
 		mode = "target"
 		_log(I18n.t("Choose a target: %s") % _spec_prompt(spec))
 		refresh()
@@ -1027,7 +1115,14 @@ func _advance_targeting() -> void:
 	if not pending_ability.is_empty():
 		var ab: Array = pending_ability
 		pending_ability = []
-		st.activate(0, ab[0], ab[1], chosen_targets)
+		var sac_uid := -1
+		var tg: Array = chosen_targets.duplicate()
+		var src = st.find_perm(ab[0])
+		if src and not st.sacrifice_spec(src, ab[1]).is_empty() and not tg.is_empty():
+			var first = tg.pop_front()
+			if typeof(first) == TYPE_DICTIONARY:
+				sac_uid = int(first.get("uid", -1))
+		st.activate(0, ab[0], ab[1], tg, sac_uid)
 		await play_events()
 		return
 	var idx := pending_hand_idx
@@ -1040,6 +1135,10 @@ func _advance_targeting() -> void:
 func _spec_prompt(spec: Dictionary) -> String:
 	var a: String = spec.get("action", "")
 	var t: String = spec.get("target", "")
+	if a == "fight_with":
+		return I18n.t("your creature that will fight")
+	if a == "sacrifice":
+		return I18n.t("a creature to sacrifice")
 	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures", "enemy_relic": "an enemy relic"}.get(t, t)
 	return "%s → %s" % [I18n.t(a.capitalize()), I18n.t(who)]
 
@@ -1048,7 +1147,8 @@ func _is_valid_target(ref: Dictionary) -> bool:
 	if mode != "target" or chosen_targets.size() >= target_specs.size():
 		return false
 	for v in st.valid_targets(0, target_specs[chosen_targets.size()]):
-		if v.get("kind") == ref.get("kind") and v.get("uid", -1) == ref.get("uid", -1) and v.get("side", -1) == ref.get("side", -1):
+		if v.get("kind") == ref.get("kind") and v.get("uid", -1) == ref.get("uid", -1) and v.get("side", -1) == ref.get("side", -1) \
+				and v.get("id", "") == ref.get("id", ""):
 			return true
 	return false
 

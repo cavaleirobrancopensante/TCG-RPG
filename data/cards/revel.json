@@ -102,7 +102,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (discard your worst card, then draw a card).",
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
     "flavor": "There is always work to be done, and always a shady bench beside it."
   },
   {
@@ -359,7 +359,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 1 damage to any enemy creature or the enemy player, then rummage (discard your worst card, then draw a card).",
+    "text": "Deal 1 damage to any enemy creature or the enemy player, then rummage (draw a card, then discard a card).",
     "flavor": "One clumsy elbow, one candle, and the evening became memorable."
   },
   {
@@ -824,7 +824,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Rummage twice (each time, discard your worst card, then draw a card). Then deal 2 damage to the enemy player.",
+    "text": "Rummage twice (each time, draw a card, then discard a card). Then deal 2 damage to the enemy player.",
     "flavor": "By the end of the night the cellar was empty, and so, curiously, were the guests."
   },
   {
@@ -846,7 +846,7 @@
         "trigger": "upkeep"
       }
     ],
-    "text": "At the beginning of your upkeep, rummage (discard your worst card, then draw a card).",
+    "text": "At the beginning of your upkeep, rummage (draw a card, then discard a card).",
     "flavor": "Pleasure that never ends is its own slow wound."
   },
   {
@@ -1010,7 +1010,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this, then rummage (discard your worst card, then draw a card).",
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this, then rummage (draw a card, then discard a card).",
     "flavor": "He sat down to dinner a year ago. The table has since been rebuilt around him twice."
   },
   {

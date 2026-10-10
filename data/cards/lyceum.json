@@ -342,16 +342,16 @@
     "effects": [
       {
         "trigger": "cast",
-        "action": "foresight",
-        "amount": 3
+        "action": "draw",
+        "amount": 1
       },
       {
         "trigger": "cast",
-        "action": "draw",
-        "amount": 1
+        "action": "foresight",
+        "amount": 3
       }
     ],
-    "text": "Foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom), then draw a card.",
+    "text": "Draw a card, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
     "flavor": "\"To be everywhere is to be nowhere.\" (Seneca, on reading too many books)"
   },
   {
@@ -736,16 +736,16 @@
     "effects": [
       {
         "trigger": "cast",
-        "action": "foresight",
-        "amount": 3
+        "action": "draw",
+        "amount": 2
       },
       {
         "trigger": "cast",
-        "action": "draw",
-        "amount": 2
+        "action": "foresight",
+        "amount": 3
       }
     ],
-    "text": "Foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom), then draw two cards.",
+    "text": "Draw two cards, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
     "flavor": "\"Hold every hour in your grasp.\" (Seneca, to his friend Lucilius)"
   },
   {
@@ -1132,13 +1132,13 @@
     "effects": [
       {
         "trigger": "cast",
-        "action": "foresight",
-        "amount": 5
+        "action": "draw",
+        "amount": 3
       },
       {
         "trigger": "cast",
-        "action": "draw",
-        "amount": 3
+        "action": "foresight",
+        "amount": 5
       },
       {
         "trigger": "cast",
@@ -1146,7 +1146,7 @@
         "amount": 2
       }
     ],
-    "text": "Foresight 5, then draw three cards. Tax 2 (the enemy's next non-land card costs 2 more).",
+    "text": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs 2 more).",
     "flavor": "\"Look down from above on the countless herds of men, their solemn rites, their voyages in storm and calm.\" (Marcus Aurelius)"
   }
 ]

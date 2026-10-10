@@ -104,7 +104,8 @@ attack this turn).
 
 **Targets** (`target`):
 - chosen by the player: `any_enemy` (enemy player or enemy creature),
-  `enemy_creature`, `own_creature`, `enemy_relic`
+  `enemy_creature`, `own_creature`, `enemy_relic`, `own_grave_creature` (a creature card in
+  your graveyard, with optional `max_mv`)
 - automatic: `self_player`, `enemy_player`, `self` (this creature), `all_enemy_creatures`,
   `all_own_creatures`, `other_own_creatures`, `all_creatures`
 
@@ -130,7 +131,7 @@ if it holds when it would happen.
 | `lose_life` | amount | you lose life (a price) |
 | `draw` | amount | draw cards (Stoa; Covenant only with a lose_life in the same card or ability) |
 | `discard_enemy` | amount | enemy discards at random (Covenant) |
-| `rummage` | amount | discard your worst card, then draw `amount` (Revel) |
+| `rummage` | amount | draw a card, then discard a card of your choice; `amount` times (Revel) |
 | `buff` | power, toughness, duration `turn` or `permanent`, target | +X/+Y (negative on enemies = shrink, Covenant) |
 | `destroy` | target, filters | destroy (regenerate can save it) |
 | `bounce` | target | return to owner's hand (tokens vanish) (Stoa) |
@@ -138,12 +139,12 @@ if it holds when it would happen.
 | `freeze` | target | tap it; it doesn't untap during its controller's next untap (Stoa) |
 | `summon` | token {name, power, toughness, subtype, keywords}, count | create tokens |
 | `add_mana` | color, amount | add mana until end of turn (Old Ways G, Technocracy C) |
-| `reanimate` | max_mv (optional) | return your best creature card from your graveyard to play (Covenant) |
-| `fight` | target enemy_creature | your strongest creature and the target deal damage equal to their power to each other (Old Ways) |
+| `reanimate` | target own_grave_creature, max_mv (optional) | return the chosen creature card from your graveyard to play (Covenant) |
+| `fight` | target enemy_creature | a creature you choose and the target deal damage equal to their power to each other (Old Ways) |
 | `pacify` | target enemy_creature | it can't attack for the rest of the duel (Church) |
 | `snare` | target enemy_creature | it can't attack or block while this relic stays in play (Technocracy relics only) |
 | `destroy_relic` | target enemy_relic | destroy a relic (Old Ways) |
-| `foresight` | amount | look at the top N cards of your library, keep the useful ones on top and put the rest on the bottom (Stoa) |
+| `foresight` | amount | look at the top N cards of your library and choose which stay on top (and in what order) and which go to the bottom (Stoa) |
 | `tax` | amount | the enemy's next non-land card costs N more (Stoa) |
 | `upkeep_cost` | amount | (trigger upkeep) pay N generic mana or sacrifice this (Technocracy) |
 
@@ -160,8 +161,8 @@ Used in your main phase, as often as you can pay (unless `once_per_turn`).
 
 Cost fields: `mana` (cost dictionary), `tap` (true: tap this creature or relic; creatures
 need to have been in play since your turn began unless they have haste), `life` (pay N
-life), `sacrifice`: `"self"` or `"other"` (sacrifice another creature you control; the
-least valuable is chosen), `discard` (discard N cards, the worst are chosen),
+life), `sacrifice`: `"self"` or `"other"` (sacrifice another creature you control, chosen by
+the player), `discard` (discard N cards, the worst are chosen),
 `once_per_turn` (true). Sacrifice costs are Covenant only (and Technocracy may sacrifice
 Servos with `"sacrifice": "servo"`).
 
@@ -208,3 +209,9 @@ two +1/+1 counters."
 45 cards per faith: **20 common, 13 uncommon, 9 rare, 3 mythic**. Roughly 26 creatures,
 12 spells and 7 relics, with a smooth curve (about 6 one- and two-drops among the commons).
 Plus 15 dual-faith (gold) cards and 15 dual gain-lands made separately. Total 300.
+
+## No "best" or "worst"
+
+Every choice belongs to the player: which card to discard, which creature to return, which
+creature fights, what to sacrifice, which cards foresight keeps. Card text never says "your
+best" or "your worst" card or "your strongest" creature.

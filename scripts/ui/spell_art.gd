@@ -323,7 +323,7 @@ static func _gibbet(a: _Pen) -> void:
 		a.line(x, -70, x, -40, INK, 0.8)
 	a.poly([[-30, 0], [30, 0], [20, -6], [-26, -6]], Color(0.3, 0.25, 0.2))
 	for q in [[34, -60], [40, -66]]:
-		a.poly([[q[0], q[1]], [q[0] + 6, q[1] - 3], [q[0] + 3, q[1] + 1], [q[0] + 8, q[1] + 2]], NIGHT, 0.8)
+		a.poly([[q[0], q[1]], [q[0] + 4, q[1] - 3], [q[0] + 8, q[1]], [q[0] + 4, q[1] - 1]], NIGHT, 0.8)
 
 
 static func _censer(a: _Pen) -> void:

@@ -233,6 +233,10 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Upkeep",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Opening hand",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -266,6 +270,26 @@
   },
   {
    "key": "⚔ Attack",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Confirm",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Discard a card",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose a card to discard. Hold a card to read it.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Foresight",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "These are the top cards of your library, the first one on top. Tap the cards to send to the bottom, then confirm.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -365,7 +389,7 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Confirm",
+   "key": "Hold a card to read it.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -374,6 +398,10 @@
   },
   {
    "key": "Mulligans taken: %d. If you keep, %d card(s) go to the bottom.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Tap a card to read it.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -405,7 +433,23 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Return a creature",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose a creature card from your graveyard.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Choose a target: %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "your creature that will fight",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "a creature to sacrifice",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -809,6 +853,46 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Tournament",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The entry fee is %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Draft: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The draft is over",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You drafted %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Build my deck",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You won %d match(es).",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Prize: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "No prize this time, but the drafted cards and the deck are yours to keep.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Tournament over",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Tap the cards to reveal them.",
    "note": "scripts/ui/booster_screen.gd"
   },
@@ -957,19 +1041,11 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Upkeep",
-   "note": "scripts/ui/card_viewer.gd"
-  },
-  {
    "key": "Upkeep N: at the start of your turn pay N, or it is sacrificed.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Foresight",
-   "note": "scripts/ui/card_viewer.gd"
-  },
-  {
-   "key": "Foresight N: look at the top N cards, keep the useful ones on top, put the rest on the bottom.",
+   "key": "Foresight N: look at the top N cards, choose which stay on top and which go to the bottom.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -997,11 +1073,11 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Fight: your strongest creature and the target deal damage equal to their power to each other.",
+   "key": "Fight: a creature you control and the target deal damage equal to their power to each other.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Rummage: discard your worst card, then draw.",
+   "key": "Rummage: draw a card, then discard a card.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -1042,6 +1118,26 @@
   },
   {
    "key": "◉ %d gold   ✉ %d boosters",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Draft tournament",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Eight duelists sit at the table, each with three sealed boosters. Open a pack, keep one card and pass the rest; the packs go around until every card is taken. Then build a deck of at least 40 cards from what you drafted (basic lands are free) and play a knockout tournament: quarter-final, semi-final and final.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "You keep every card you draft. Prizes: semi-final %d gold and 1 booster, final %d gold and 2 boosters, champion %d gold, 3 boosters and a rare card of this city's faith.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Enter (%d gold)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "You need %d gold to enter.",
    "note": "scripts/ui/city_screen.gd"
   },
   {
@@ -1309,6 +1405,10 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "Draft deck: only the cards you drafted, plus basic lands.",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
    "key": "Auto",
    "note": "scripts/ui/deck_builder.gd"
   },
@@ -1371,6 +1471,26 @@
   {
    "key": "Remove",
    "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Take",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Your picks",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Pack %d · Pick %d of %d",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Take one card and pass the rest to %s (%s). The other drafters are choosing at the same time.",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Nothing yet.",
+   "note": "scripts/ui/draft_screen.gd"
   },
   {
    "key": "prime engine",
@@ -1635,6 +1755,54 @@
   {
    "key": "%d h %02d min",
    "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Wolf Beast",
+   "note": "scripts/ui/spell_art.gd"
+  },
+  {
+   "key": "Wolf",
+   "note": "scripts/ui/spell_art.gd"
+  },
+  {
+   "key": "Tournament of %s",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "Play %s",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "Collect prize",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "Quarter-finals",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "Semi-finals",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "Final",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "You are the champion!",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "%s wins the tournament.",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "You are out. The rest of the bracket will be played to the end.",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
+   "key": "Next: you against %s (%s).",
+   "note": "scripts/ui/tournament_screen.gd"
   },
   {
    "key": "Button",
@@ -2623,7 +2791,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Return your best creature card with mana value 3 or less from your graveyard to play.",
+   "key": "Return target creature card with mana value 3 or less from your graveyard to play.",
    "note": "rules text of Unquiet Grave"
   },
   {
@@ -2743,7 +2911,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, return your best creature card with mana value 4 or less from your graveyard to play.",
+   "key": "When this enters, return target creature card with mana value 4 or less from your graveyard to play.",
    "note": "rules text of Grave Summoner"
   },
   {
@@ -2895,7 +3063,7 @@
    "note": "card name (abyss, spell)"
   },
   {
-   "key": "Return your best creature card from your graveyard to play. You lose 4 life.",
+   "key": "Return target creature card from your graveyard to play. You lose 4 life.",
    "note": "rules text of Profane Resurrection"
   },
   {
@@ -2959,7 +3127,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this enters, return your best creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
+   "key": "When this enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
    "note": "rules text of Malgrith, Lich of the Black Ledger"
   },
   {
@@ -3115,14 +3283,6 @@
    "note": "flavour text of Huntsman of the Weald"
   },
   {
-   "key": "Wolf",
-   "note": "token creature name"
-  },
-  {
-   "key": "Wolf Beast",
-   "note": "token subtype"
-  },
-  {
    "key": "Horned Aurochs",
    "note": "card name (wild, creature)"
   },
@@ -3171,7 +3331,7 @@
    "note": "card name (wild, spell)"
   },
   {
-   "key": "Your strongest creature fights target enemy creature (each deals damage equal to its power to the other).",
+   "key": "Target creature you control fights target enemy creature (each deals damage equal to its power to the other).",
    "note": "rules text of Test of Antlers"
   },
   {
@@ -3275,7 +3435,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "When this enters, your strongest creature fights target enemy creature.",
+   "key": "When this enters, target creature you control fights target enemy creature.",
    "note": "rules text of Spearman of the Greenwood"
   },
   {
@@ -3351,7 +3511,7 @@
    "note": "card name (wild, spell)"
   },
   {
-   "key": "Target creature you control gets +2/+2 until end of turn. Then your strongest creature fights target enemy creature.",
+   "key": "Target creature you control gets +2/+2 until end of turn. Then target creature you control fights target enemy creature.",
    "note": "rules text of Trial by Tooth and Claw"
   },
   {
@@ -3479,7 +3639,7 @@
    "note": "card name (wild, spell)"
   },
   {
-   "key": "Your strongest creature fights target enemy creature. Rooted: if you control six or more lands, your strongest creature then fights another target enemy creature.",
+   "key": "Target creature you control fights target enemy creature. Rooted: if you control six or more lands, target creature you control then fights another target enemy creature.",
    "note": "rules text of Hunter's Moon"
   },
   {
@@ -3631,7 +3791,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (discard your worst card, then draw a card).",
+   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
    "note": "rules text of Loafer of the Arbour"
   },
   {
@@ -3755,7 +3915,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 1 damage to any enemy creature or the enemy player, then rummage (discard your worst card, then draw a card).",
+   "key": "Deal 1 damage to any enemy creature or the enemy player, then rummage (draw a card, then discard a card).",
    "note": "rules text of Spilled Brandy"
   },
   {
@@ -3951,7 +4111,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Rummage twice (each time, discard your worst card, then draw a card). Then deal 2 damage to the enemy player.",
+   "key": "Rummage twice (each time, draw a card, then discard a card). Then deal 2 damage to the enemy player.",
    "note": "rules text of Empty the Cellar"
   },
   {
@@ -3963,7 +4123,7 @@
    "note": "card name (revel, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, rummage (discard your worst card, then draw a card).",
+   "key": "At the beginning of your upkeep, rummage (draw a card, then discard a card).",
    "note": "rules text of Bottomless Wine Cask"
   },
   {
@@ -4039,7 +4199,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this, then rummage (discard your worst card, then draw a card).",
+   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this, then rummage (draw a card, then discard a card).",
    "note": "rules text of Giant of the Groaning Board"
   },
   {
@@ -4323,7 +4483,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom), then draw a card.",
+   "key": "Draw a card, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
    "note": "rules text of Reading by Lamplight"
   },
   {
@@ -4511,7 +4671,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom), then draw two cards.",
+   "key": "Draw two cards, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
    "note": "rules text of Letters to Lucilius"
   },
   {
@@ -4699,7 +4859,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Foresight 5, then draw three cards. Tax 2 (the enemy's next non-land card costs 2 more).",
+   "key": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs 2 more).",
    "note": "rules text of The View from Above"
   },
   {
@@ -5435,7 +5595,7 @@
    "note": "card name (gold, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom), then draw a card. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+   "key": "At the beginning of your upkeep, draw a card, then foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom). Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
    "note": "rules text of Reckoning Engine of Rhodes"
   },
   {

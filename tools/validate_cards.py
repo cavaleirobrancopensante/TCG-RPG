@@ -32,7 +32,7 @@ ACTION_OWNERS = {
 }
 CONDITION_OWNER = {"grace": "sanctum", "composure": "lyceum", "rooted": "wild", "carouse": "revel", "bloodied": "abyss"}
 TRIGGERS = ["enter", "death", "upkeep", "attack", "cast", "idle"]
-TARGETS = ["", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "self_player", "enemy_player", "self",
+TARGETS = ["", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self_player", "enemy_player", "self",
            "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
 STATICS = {"anthem": None, "keyword": None, "assembly": "machine", "cost_reduce": "machine"}
 COUNTS = {"common": 20, "uncommon": 13, "rare": 9, "mythic": 3}
@@ -157,6 +157,9 @@ def check_card(c, owners_override=None):
         bad(cid, "contains a dash")
     if "themself" in text.lower():
         bad(cid, "singular they")
+    for w in ["worst", "your best", "strongest"]:
+        if w in str(c.get("text", "")).lower():
+            bad(cid, "the player chooses: no '%s' in rules text" % w)
     st = c.get("subtype", "")
     words = " " + (str(c.get("flavor", "")) + " " + str(c.get("name", "")) + " " + str(c.get("text", ""))).lower() + " "
     if any(f in st for f in FIGHTERS):
