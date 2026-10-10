@@ -73,7 +73,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Zombie",
+    "subtype": "Undead Zombie",
     "cost": {
       "B": 1,
       "generic": 1
@@ -93,7 +93,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Zombie",
+    "subtype": "Undead Zombie",
     "cost": {
       "B": 1,
       "generic": 1
@@ -165,7 +165,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Zombie",
+    "subtype": "Undead Zombie",
     "cost": {
       "B": 1,
       "generic": 2
@@ -228,7 +228,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Zombie",
+    "subtype": "Undead Zombie",
     "cost": {
       "B": 1,
       "generic": 3
@@ -244,13 +244,13 @@
           "name": "Restless Dead",
           "power": 1,
           "toughness": 1,
-          "subtype": "Zombie",
+          "subtype": "Undead Zombie",
           "keywords": []
         },
         "count": 1
       }
     ],
-    "text": "When this dies, create a 1/1 Restless Dead Zombie token.",
+    "text": "When this dies, create a 1/1 Restless Dead Undead Zombie token.",
     "flavor": "Break it apart and the pieces keep walking.",
     "art": "res://art/cards/abyss_c_010.webp"
   },
@@ -285,7 +285,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Spirit",
+    "subtype": "Undead Spirit",
     "cost": {
       "B": 1,
       "generic": 4
@@ -322,7 +322,8 @@
     ],
     "text": "Target enemy creature gets -2/-2 until end of turn.",
     "flavor": "The cold of the crypt does not stay in the crypt.",
-    "art": "res://art/cards/abyss_c_013.webp"
+    "art": "res://art/cards/abyss_c_013.webp",
+    "speed": "instant"
   },
   {
     "id": "abyss_c_014",
@@ -511,6 +512,195 @@
     "art": "res://art/cards/abyss_c_020.webp"
   },
   {
+    "id": "abyss_c_021",
+    "name": "Lych-Gate Shambler",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Undead Zombie",
+    "cost": {
+      "B": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Undead",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each other Undead you control.",
+    "flavor": "It waits by the lych-gate for the next funeral, and it is never alone for long.",
+    "art": "res://art/cards/abyss_c_021.webp"
+  },
+  {
+    "id": "abyss_c_022",
+    "name": "Cackling Imp",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Demon Imp",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Demon",
+        "action": "buff",
+        "target": "enemy_creature",
+        "power": -1,
+        "toughness": -1,
+        "duration": "turn"
+      }
+    ],
+    "text": "Whenever another Demon enters under your control, target enemy creature gets -1/-1 until end of turn.",
+    "flavor": "It laughs whenever a greater fiend arrives, because then someone else will suffer.",
+    "art": "res://art/cards/abyss_c_022.webp"
+  },
+  {
+    "id": "abyss_c_023",
+    "name": "Bone-Rattle Picket",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Undead Skeleton",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "summon",
+        "token": {
+          "name": "Restless Dead",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Undead Zombie",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "When this dies, create a 1/1 Restless Dead Undead Zombie token.",
+    "flavor": "Knock it down and something else climbs out of the same grave.",
+    "art": "res://art/cards/abyss_c_023.webp"
+  },
+  {
+    "id": "abyss_c_024",
+    "name": "Sulphur Brute",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Demon",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "power": 4,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "lose_life",
+        "amount": 2
+      }
+    ],
+    "text": "When this enters, you lose 2 life.",
+    "flavor": "It comes up through the cellar floor, and the whole house smells of the pit for a week.",
+    "art": "res://art/cards/abyss_c_024.webp"
+  },
+  {
+    "id": "abyss_c_025",
+    "name": "Chill of the Charnel Host",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "speed": "instant",
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "enemy_creature",
+        "power": -1,
+        "toughness": -1,
+        "duration": "turn",
+        "amount_per": "Undead"
+      }
+    ],
+    "text": "Target enemy creature gets -1/-1 until end of turn for each Undead you control.",
+    "flavor": "One dead hand is cold. A hundred of them are the grave itself.",
+    "art": "res://art/cards/abyss_c_025.webp"
+  },
+  {
+    "id": "abyss_c_026",
+    "name": "Tithe of the Pit",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Pact",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1,
+        "amount_per": "Demon"
+      },
+      {
+        "trigger": "cast",
+        "action": "lose_life",
+        "amount": 1,
+        "amount_per": "Demon"
+      }
+    ],
+    "text": "Draw a card for each Demon you control. You lose 1 life for each Demon you control.",
+    "flavor": "Every fiend brings a secret, and every secret is billed to his master.",
+    "art": "res://art/cards/abyss_c_026.webp"
+  },
+  {
+    "id": "abyss_c_027",
+    "name": "Marsh-Light Shade",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Undead Spirit",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [
+      "dread"
+    ],
+    "text": "Dread (can only be blocked by Pact creatures and Constructs).",
+    "flavor": "Travellers follow its pale lantern off the causeway, and the fen keeps them.",
+    "art": "res://art/cards/abyss_c_027.webp"
+  },
+  {
     "id": "abyss_u_001",
     "name": "Bone-Priest of the Pact",
     "faction": "abyss",
@@ -552,7 +742,7 @@
     "faction": "abyss",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Spirit",
+    "subtype": "Undead Spirit",
     "cost": {
       "B": 1,
       "generic": 2
@@ -739,7 +929,8 @@
     ],
     "text": "Destroy target enemy creature. You lose 2 life.",
     "flavor": "Every unmaking costs the maker a little of his own soul.",
-    "art": "res://art/cards/abyss_u_008.webp"
+    "art": "res://art/cards/abyss_u_008.webp",
+    "speed": "instant"
   },
   {
     "id": "abyss_u_009",
@@ -887,6 +1078,138 @@
     "art": "res://art/cards/abyss_u_013.webp"
   },
   {
+    "id": "abyss_u_014",
+    "name": "Drummer of the Dead March",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Undead Skeleton",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 0,
+        "scope": "other_own_creatures",
+        "subtype": "Undead"
+      }
+    ],
+    "text": "Other Undead you control get +1/+0.",
+    "flavor": "He beats a drum of stretched hide, and every grave in the parish keeps time.",
+    "art": "res://art/cards/abyss_u_014.webp"
+  },
+  {
+    "id": "abyss_u_015",
+    "name": "Herald of the Burning Gate",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Demon",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "cost_reduce",
+        "amount": 1,
+        "subtype": "Demon"
+      }
+    ],
+    "text": "Your Demon creature cards cost 1 less to play.",
+    "flavor": "He holds the gate open, and something larger is always waiting behind him.",
+    "art": "res://art/cards/abyss_u_015.webp"
+  },
+  {
+    "id": "abyss_u_016",
+    "name": "Gravecaller Ghast",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Undead Zombie",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Undead",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Whenever another Undead enters under your control, this gets +1/+1 for the rest of the duel.",
+    "flavor": "Each corpse that rises feeds it a little of the cold it carries.",
+    "art": "res://art/cards/abyss_u_016.webp"
+  },
+  {
+    "id": "abyss_u_017",
+    "name": "Brimstone Exhalation",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "all_enemy_creatures",
+        "power": -1,
+        "toughness": -1,
+        "duration": "turn",
+        "amount_per": "Demon"
+      }
+    ],
+    "text": "All enemy creatures get -1/-1 until end of turn for each Demon you control.",
+    "flavor": "The fiends breathe out together, and the field below them chokes.",
+    "art": "res://art/cards/abyss_u_017.webp"
+  },
+  {
+    "id": "abyss_u_018",
+    "name": "Corpse-Bell of the Barrow",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Undead",
+        "action": "drain",
+        "amount": 1
+      }
+    ],
+    "text": "Whenever another Undead enters under your control, the enemy player loses 1 life and you gain 1 life.",
+    "flavor": "It was cast to ring the dead to rest. The Pact recast it to ring them up again.",
+    "art": "res://art/cards/abyss_u_018.webp"
+  },
+  {
     "id": "abyss_r_001",
     "name": "Oathbreaker Knight",
     "faction": "abyss",
@@ -985,7 +1308,7 @@
     "faction": "abyss",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Lich",
+    "subtype": "Undead Lich",
     "cost": {
       "B": 2,
       "generic": 3
@@ -1012,7 +1335,7 @@
     "faction": "abyss",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Zombie",
+    "subtype": "Undead Zombie",
     "cost": {
       "B": 1,
       "generic": 4
@@ -1035,13 +1358,13 @@
               "name": "Restless Dead",
               "power": 2,
               "toughness": 2,
-              "subtype": "Zombie",
+              "subtype": "Undead Zombie",
               "keywords": []
             },
             "count": 1
           }
         ],
-        "text": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token."
+        "text": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Undead Zombie token."
       }
     ],
     "statics": [
@@ -1053,7 +1376,7 @@
         "subtype": "Zombie"
       }
     ],
-    "text": "Other Zombies you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
+    "text": "Other Zombies you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Undead Zombie token.",
     "flavor": "Every skull on his walls once knelt to him. Most of them still do.",
     "art": "res://art/cards/abyss_r_005.webp"
   },
@@ -1171,6 +1494,67 @@
     "art": "res://art/cards/abyss_r_009.webp"
   },
   {
+    "id": "abyss_r_010",
+    "name": "Barrow-King of the Hollow Hills",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Undead Spirit",
+    "cost": {
+      "B": 2,
+      "generic": 3
+    },
+    "power": 4,
+    "toughness": 4,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "dread",
+        "scope": "other_own_creatures",
+        "subtype": "Undead"
+      }
+    ],
+    "text": "Other Undead you control have dread (they can only be blocked by Pact creatures and Constructs).",
+    "flavor": "When he rides out of the hill at midnight, his host walks where no living man can stop it.",
+    "art": "res://art/cards/abyss_r_010.webp"
+  },
+  {
+    "id": "abyss_r_011",
+    "name": "Brimstone Marshal",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Demon",
+    "cost": {
+      "B": 2,
+      "generic": 3
+    },
+    "power": 4,
+    "toughness": 4,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Demon"
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "lose_life",
+        "amount": 1,
+        "amount_per": "Demon"
+      }
+    ],
+    "text": "Other Demons you control get +1/+1. When this enters, you lose 1 life for each Demon you control.",
+    "flavor": "He drills the legions of the pit, and every recruit is paid for in someone's blood.",
+    "art": "res://art/cards/abyss_r_011.webp"
+  },
+  {
     "id": "abyss_m_001",
     "name": "Belzareth, Prince of Cinders",
     "faction": "abyss",
@@ -1208,7 +1592,7 @@
     "faction": "abyss",
     "rarity": "mythic",
     "type": "creature",
-    "subtype": "Lich",
+    "subtype": "Undead Lich",
     "cost": {
       "B": 2,
       "generic": 4
@@ -1268,5 +1652,46 @@
     "text": "Enemy creatures get -1/-1. At the beginning of your upkeep, you lose 1 life.",
     "flavor": "Sign, and your enemies wither. Sign, and so do you.",
     "art": "res://art/cards/abyss_m_003.webp"
+  },
+  {
+    "id": "abyss_m_004",
+    "name": "Azgaroth, Duke of the Ninth Pit",
+    "faction": "abyss",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Demon Lord",
+    "cost": {
+      "B": 2,
+      "generic": 4
+    },
+    "power": 5,
+    "toughness": 5,
+    "keywords": [
+      "dread"
+    ],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "deathtouch",
+        "scope": "other_own_creatures",
+        "subtype": "Demon"
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Demon",
+        "action": "discard_enemy",
+        "amount": 1
+      },
+      {
+        "trigger": "enter",
+        "action": "lose_life",
+        "amount": 3
+      }
+    ],
+    "text": "Dread. Other Demons you control have deathtouch (any damage they deal to a creature destroys it). Whenever another Demon enters under your control, the enemy discards a card at random. When this enters, you lose 3 life.",
+    "flavor": "He keeps no court of nobles, only of debtors, and none has ever left it.",
+    "art": "res://art/cards/abyss_m_004.webp"
   }
 ]

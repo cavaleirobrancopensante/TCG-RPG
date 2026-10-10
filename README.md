@@ -214,6 +214,25 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## The stack, instants and tribes (1.23)
+
+- A stack: every spell and ability goes on it and can be answered. Instants (marked on the
+  card) and activated abilities can be used whenever you have priority, in either turn and
+  in combat; the last thing added resolves first. Abilities that only make mana resolve at
+  once; triggered effects still happen the moment they trigger.
+- A phase bar in the duel (Upkeep, Draw, Main 1, Attack, Block, Damage, Main 2, End): tap a
+  step to set a stop, tap the turn chip to set stops for the opponent's turn. The game only
+  waits when you can actually do something; the stack shows on the board with arrows to
+  its targets.
+- The AI answers too: a pump to save a creature, removal after blocks, tricks in combat.
+- 90 new cards, 15 per faith, built around two tribes each: Knights and Angels, Undead and
+  Demons, Wolves and Treefolk, Nobles and Performers, Hoplites and Philosophers, Constructs
+  and Artificers. New tribal tools: kinship (+1 for each other member), "whenever another
+  one enters", cheaper tribe members, and effects counted per member. Some older cards
+  joined the tribes and a few spells became instants.
+- More arm fixes in the Pact, Old Ways and Technocracy pictures; no women in any fighting
+  scene.
+
 ## Encounters, classic heroes and the Black Pact (1.22)
 
 - The satanists' faith is now the Black Pact (the old name belongs to Scripture).

@@ -1805,3 +1805,479 @@ def sanctum_m_002(p):
     Fig(pose='staff2', garb='habit', main=BENEDICTINE, hair='white', beard='long', age='old', halo=True,
            head='cowl', props_front=[PR.book('b', CRIMSON, open_=True)], props_back=[PR.staff('f', 'crook', 112, C.hex('6b4a2a'))],
            eyes='open', mouth='stern').draw(p, 440, 600, 480)
+
+
+# ====================================================================== tribal set (1.23)
+
+def _lazar_house(p, x, y, s=1.0):
+    """A small stone lazar house with a bell cote, outside the town walls."""
+    p.push(x, y, s)
+    p.shape([(-90, 0, 0), (-90, -70, 0), (90, -70, 0), (90, 0, 0)], ('v', STONE.light(0.2), STONE.dark(0.15)), width=1.6, smooth=False, shade=0.3)
+    p.shape([(-100, -70, 0), (0, -120, 0), (100, -70, 0)], C.hex('7a4a3a'), width=1.6, smooth=False, shade=0.6)
+    p.shape([(-12, -112, 0), (-12, -140, 0), (0, -150, 0), (12, -140, 0), (12, -112, 0)], STONE.light(0.1), width=1.4, smooth=False)
+    p.blob((0, -128), 4, 5, GOLD_DARK, width=0.8)
+    p.shape([(-14, 0, 0), (-14, -36), (0, -48), (14, -36), (14, 0, 0)], C.hex('3a2a20'), width=1.2)
+    for xx in (-56, 56):
+        p.shape([(xx - 6, -54, 0), (xx - 6, -30, 0), (xx + 6, -30, 0), (xx + 6, -54, 0)], C.hex('2a2020'), width=1.0, smooth=False)
+    p.pop()
+
+
+def sanctum_c_021(p):
+    """Knight of Saint Lazarus: at evening outside the lazar house, the knight of
+    the green cross gives bread into the hands of a hooded leper."""
+    bg.dusk_sky(p)
+    bg.clouds(p, 120, 2, xs=[240, 760], scale=0.7)
+    bg.hills(p, 400, C.hex('8a8aa8'), 40, n=6)
+    bg.town(p, 160, 400, 0.6)
+    bg.hills(p, 450, C.hex('7a9a5a'), 26, n=4)
+    _lazar_house(p, 800, 452, 1.1)
+    for x, y in ((640, 455), (930, 460), (80, 470)):
+        bg.tiny_tree(p, x, y, 1.1, C.hex('4a6a3a'), 'cypress')
+    bg.meadow(p, 470, C.hex('5a7a3a'))
+    bg.road(p, 820, 452, 560, 10, 260)
+    p.glow((240, 300), 360, C.hex('ffcf90'), 0.3)
+    # the leper, hooded and in rags, holding out his bowl
+    Fig(pose='offer', garb='rags', main=C.hex('8a8478'), head='hood', hood_col=C.hex('6a645a'), hair='short', beard='long', hair_col=C.hex('6a6050'),
+        age='old', eyes='down', belt='cord', props_front=[_bowl('f')]).draw(p, 710, 604, 400, flip=True)
+    Fig(pose='offer', garb='surcoat', main=LEAD_WHITE, second=C.hex('d8d2c4'), mail=True, head='coif', hair='short', hair_col=C.hex('7a5030'), beard='short',
+        emblem=L.plain_cross_emblem(L.ORDER_GREEN), cloak='mantle', cloak_col=C.hex('2e4a2c'), lining=C.hex('4a6a42'), belt='sword', eyes='down',
+        props_front=[PR.loaf('f')]).draw(p, 400, 604, 470)
+
+
+def sanctum_c_022(p):
+    """Teutonic Knight-Brother: in the snow before the red brick castle of the
+    Order, the knight-brother stands on guard, his brothers riding out behind him."""
+    bg.sky(p, C.hex('5a6a8a'), C.hex('a8b8cc'), C.hex('e8eef2'), 0.6)
+    bg.clouds(p, 100, 3, xs=[180, 520, 860], scale=0.8)
+    bg.hills(p, 420, C.hex('c8d2dc'), 30, n=5)
+    L.brick_castle(p, 640, 430, 0.95)
+    for i in range(9):
+        x = 40 + i * 120 + p.rng.uniform(-20, 20)
+        if 360 < x < 920:
+            continue
+        bg.tiny_tree(p, x, 440 + p.rng.uniform(0, 20), 1.2, C.hex('2e4a3a'), 'pine')
+    p.shape([(-10, 450), (W + 10, 440), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('f2f4f8'), C.hex('c8d0dc')), width=2)
+    for i in range(30):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(470, H)
+        p.line([(x, y), (x + p.rng.uniform(20, 60), y + 2)], C.hex('a8b4c4').alpha(0.5), 1.4)
+    # brothers riding out from the gate
+    for x, y, s in ((760, 470, 1.15), (870, 480, 1.25)):
+        horse(p, x, y, s, C.hex('e8e2d6'), flip=True, caparison=LEAD_WHITE, cap_charge=None)
+        k = Fig(pose='staff', garb='surcoat', main=LEAD_WHITE, mail=True, head='great_helm', emblem='cross_black', belt='sword', cloak='cape', cloak_col=LEAD_WHITE)
+        rd = rider(p, x, y, s, k, flip=True)
+        hand = fig_pt(rd, k.j['hand_f'])
+        lance(p, (hand[0] + 4, hand[1] + 40), (hand[0] - 10, hand[1] - 100), pennon=INK_SOFT, w=2.0)
+        redraw_hand(p, k, rd[0], rd[1], rd[2] * 100, rd[3] < 0)
+    # snowflakes
+    for i in range(70):
+        p.blob((p.rng.uniform(0, W), p.rng.uniform(0, H)), p.rng.uniform(1.4, 3.2), p.rng.uniform(1.4, 3.2), LEAD_WHITE.alpha(0.8), ink=False)
+    Fig(pose='guard', garb='surcoat', main=LEAD_WHITE, second=C.hex('d8d4cc'), mail=True, head='coif', hair='short', hair_col=C.hex('c8a060'), beard='short',
+        emblem='cross_black', shield='cross_black', belt='sword', cloak='mantle', cloak_col=LEAD_WHITE, lining=C.hex('e0dcd2'), mouth='stern',
+        props_front=[PR.sword(up=True)]).draw(p, 360, 604, 480)
+
+
+def sanctum_c_023(p):
+    """Angel of the Wayside Shrine: on a high mountain road a pilgrim kneels at
+    the little shrine, and the angel who keeps it stands beside him blessing."""
+    bg.sky(p, ULTRA, AZURE, C.hex('eef4f6'), 0.55)
+    bg.clouds(p, 140, 3, xs=[160, 480, 860], scale=0.8)
+    L.mountains(p, 430, C.hex('8a9ab8'), [(160, 250, 200), (420, 190, 170), (700, 280, 220), (930, 210, 170)])
+    bg.hills(p, 460, C.hex('7aa070'), 30, n=5)
+    bg.abbey(p, 860, 460, 0.45)
+    bg.meadow(p, 480, C.hex('6a9448'))
+    bg.road(p, 860, 470, 420, 6, 300)
+    for x, y in ((90, 500), (960, 500)):
+        bg.tiny_tree(p, x, y, 1.3, C.hex('3a5a3a'), 'pine')
+    L.wayside_shrine(p, 470, 590, 1.25)
+    Fig(pose='pray', garb='robe', main=C.hex('7a5a3a'), head='pilgrim', cloak='cape', cloak_col=C.hex('5a4030'), hair='short', beard='short',
+        hair_col=UMBER, kneel=True, eyes='up', belt='cord', props_back=[PR.staff('b', 'gourd', 90, OAK)]).draw(p, 300, 606, 360)
+    Fig(pose='bless', garb='alb', main=LEAD_WHITE, cloak='mantle', cloak_col=C.hex('d8a848'), lining=C.hex('f0e0a8'), halo=True, wings='white',
+        hair='curly', hair_col=C.hex('d8a850'), belt='gold', eyes='down').draw(p, 680, 600, 440, flip=True)
+
+
+def sanctum_c_024(p):
+    """Angel of the Flaming Sword: at sunset before the golden east gate of Eden,
+    the red winged angel stands guard with his sword of fire turning every way."""
+    bg.sky(p, C.hex('3a2a5a'), C.hex('d06a4a'), C.hex('f8d898'), 0.6)
+    p.glow((700, 420), 400, C.hex('ffe0a0'), 0.5)
+    bg.hills(p, 470, C.hex('8a6a8a'), 30, n=5)
+    L.eden_gate(p, 700, 540, 1.5)
+    p.shape([(-10, 540), (W + 10, 536), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('b08a5a'), C.hex('6a4a2a')), width=2)
+    # the river going out from Eden, across the dry ground
+    p.shape([(640, 538), (760, 538), (800, 580), (900, 610), (W + 20, 620), (W + 20, H + 10, 0), (820, H + 10, 0), (700, 600)], ('v', C.hex('8ac8e8'), C.hex('3a78a8')), width=1.8)
+    for i in range(10):
+        x = p.rng.uniform(720, 980)
+        y = p.rng.uniform(570, 620)
+        p.line([(x, y), (x + 24, y + 3)], LEAD_WHITE.alpha(0.6), 1.6)
+    for x, y in ((520, 560), (590, 600), (960, 560)):
+        for k in range(6):
+            a = -math.pi / 2 + (k - 2.5) * 0.35
+            p.taper([(x, y), polar((x, y), 30 + k % 2 * 10, a)], 2.2, 0.6, C.hex('5a4a2a'), width=0.9)
+    for i in range(26):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(530, H)
+        p.blob((x, y), p.rng.uniform(4, 9), p.rng.uniform(2, 4), C.hex('5a3a20').alpha(0.5), ink=False)
+    for x in (60, 140, 900):
+        p.taper([(x, 560), (x + 10, 520), (x + 4, 500)], 2, 1, C.hex('5a4a2a'), width=1.0)
+    Fig(pose='guard', garb='alb', main=LEAD_WHITE, second=C.hex('e8e0d0'), cloak='mantle', cloak_col=CRIMSON, lining=GOLD, halo=True, wings='red',
+        hair='curly', hair_col=C.hex('c8902e'), belt='gold', emblem=_breastplate, eyes='open', mouth='stern',
+        props_front=[_flaming_sword]).draw(p, 280, 604, 480)
+
+
+def _flat_sword(p, hilt, tip):
+    """A sword in world space from its hilt to its tip, held flat."""
+    d = v_norm(v_sub(tip, hilt))
+    n = v_perp(d)
+    base = v_add(hilt, v_mul(d, 14))
+    blade = [v_add(base, v_mul(n, 6)) + (0,), v_add(v_lerp(base, tip, 0.88), v_mul(n, 4.5)), tip + (0,), v_sub(v_lerp(base, tip, 0.88), v_mul(n, 4.5)), v_sub(base, v_mul(n, 6)) + (0,)]
+    p.shape(blade, ('v', STEEL.light(0.35), STEEL.dark(0.2)), width=2.0)
+    p.line([base, v_lerp(base, tip, 0.85)], STEEL.dark(0.35).alpha(0.7), 2.0)
+    p.taper([v_add(base, v_mul(n, 22)), v_sub(base, v_mul(n, 22))], 4, 4, GOLD, width=1.6)
+    p.taper([base, v_sub(hilt, v_mul(d, 8))], 4, 4, UMBER, width=1.4)
+    p.blob(v_sub(hilt, v_mul(d, 12)), 6.5, 6.5, GOLD, width=1.4, shade=0.5)
+
+
+def sanctum_c_025(p):
+    """Accolade: before the altar the old lord lays the flat of his sword upon
+    the shoulder of the young knight, who kneels in his new white surcoat."""
+    gothic_choir(p, dark=False, windows=3, saints=True)
+    L.altar(p, 500, 470, 300, 100, frontal=CRIMSON)
+    L.altar_cross(p, 500, 370, 80)
+    for x in (390, 610):
+        L.candlestick(p, x, 370, 70)
+    p.shape([(-10, 470, 0), (W + 10, 470, 0), (W + 10, 490, 0), (-10, 490, 0)], ('v', LIMESTONE.light(0.1), LIMESTONE.dark(0.2)), width=1.6, smooth=False)
+    # a witness behind, holding the new spurs
+    Fig(pose='present', garb='tunic', main=ULTRA, second=ULTRA_DEEP, hair='curly', hair_col=C.hex('8a5a2a'), belt='leather', eyes='down').draw(p, 860, 560, 300, flip=True)
+    lord = Fig(pose='guard', garb='surcoat', main=CRIMSON, second=C.hex('6a1a1a'), mail=True, hair='white', beard='long', age='old', head='coronet',
+               cloak='mantle', cloak_col=ULTRA_DEEP, lining=C.hex('e8e0d0'), fur=LEAD_WHITE, belt='sword', eyes='down', mouth='calm')
+    lord.draw(p, 300, 604, 480)
+    Fig(pose='pray', garb='surcoat', main=LEAD_WHITE, second=C.hex('d8d2c4'), mail=True, hair='curly', hair_col=C.hex('6a4422'), emblem='cross_red',
+        kneel=True, eyes='down', belt='sword', blush=0.7).draw(p, 650, 610, 500, flip=True)
+    hand = (300 + lord.j['hand_f'][0] * 4.8, 604 + lord.j['hand_f'][1] * 4.8)
+    _flat_sword(p, hand, (622, 334))
+    redraw_hand(p, lord, 300, 604, 480)
+
+
+def sanctum_c_026(p):
+    """Hospital of Saint John: in the long vaulted ward a nursing sister gives a
+    cup to a sick man, while a Hospitaller come in from the field kneels at the
+    next bed to wash a poor man's feet."""
+    wall = C.hex('e0d4b8')
+    bg.fill_all(p, ('v', wall.dark(0.3), wall))
+    L.ashlar(p, (-5, -5, W + 5, 520), wall, 38, 84, 0.7)
+    for x0 in (-60, 260, 580, 900):
+        L.pier(p, x0, 100, 520, 46, wall.light(0.1))
+    for x0 in (-60, 260, 580):
+        pts = L.pointed_opening(x0 + 23, x0 + 297, 250, 520, 0.85, 12)
+        p.shape(pts, ('v', C.hex('7a6e60'), C.hex('9a8a74')), width=2)
+        p.clip_shape(pts)
+        L.lancet(p, x0 + 160, 170, 70, 200, scheme=[LEAD_WHITE, C.hex('cfe0ee'), GOLD_LIGHT, VERMILION.light(0.3)])
+        p.unclip()
+    bg.light_shafts(p, (480, 160), 0.5, 3, C.hex('fff3c4'), strength=0.12)
+    bg.tile_floor(p, 520, C.hex('9a7a58'), C.hex('e8d8b4'))
+    PR.heater_shield(p, (420, 300), 'maltese', HOSP_RED, 3.0)
+    # far bed with a sleeper
+    L.bed(p, 160, 560, 260, 54, C.hex('a83a3a'), head_left=True, sleeper=L.sleeping_head(C.hex('5a4a3a'), beard='short', s=3.2))
+    # near bed: the sick man sits up to drink
+    L.bed(p, 740, 600, 340, 60, C.hex('b84040'), head_left=False)
+    sick = Fig(pose='cup', garb='robe', main=LEAD_WHITE.dark(0.05), hair='short', hair_col=C.hex('6a5a4a'), beard='short', belt=None, eyes='down',
+               props_front=[_cup('f')])
+    _sitting_in_bed(p, 840, 540, 300, sick, flip=True)
+    # the nursing sister, veiled, bringing the cup to him
+    Fig(pose='offer', garb='habit', main=BLACK_HABIT, head='veil', hood_col=LEAD_WHITE, belt='cord', eyes='down', sleeves='fitted',
+        scapular=BLACK_HABIT.light(0.1), props_front=[_bowl('f')]).draw(p, 620, 606, 420)
+    # the Hospitaller, mantle on, kneels at the foot of the far bed
+    Fig(pose='present', garb='surcoat', main=HOSP_BLACK, second=HOSP_BLACK, mail=True, head='coif', hair='short', hair_col=UMBER, beard='short',
+        emblem='maltese', cloak='mantle', cloak_col=HOSP_BLACK, lining=C.hex('4a4650'), kneel=True, eyes='down', belt='sword',
+        props_front=[_bowl('f')]).draw(p, 320, 610, 380)
+
+
+def sanctum_c_027(p):
+    """Gloria in Excelsis: on the hills above Bethlehem the sky opens over the
+    shepherds, and the angels sing among the stars."""
+    bg.night_sky(p, moon=False, stars=90)
+    p.glow((500, 140), 420, C.hex('fff0b0'), 0.55)
+    L.holy_rays(p, (500, 120), 40, 520, 28, GOLD_LIGHT, 0.2)
+    bg.clouds(p, 320, 4, xs=[160, 380, 620, 840], scale=1.0)
+    bg.hills(p, 420, C.hex('2a3a4a'), 40, n=6)
+    bg.town(p, 820, 430, 0.55, wall=C.hex('9a8a7a'), roof=C.hex('6a4a3a'), spires=0)
+    bg.hills(p, 470, C.hex('3a4a3a'), 30, n=4)
+    p.shape([(-10, 490), (W + 10, 480), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('4a5a3a'), C.hex('2a3424')), width=2)
+    p.blob((500, 520), 420, 60, C.hex('fff0b0').alpha(0.18), ink=False)
+    for x, y, s, fl, g in ((560, 560, 1.4, False, True), (660, 590, 1.6, True, False), (760, 550, 1.3, False, True), (860, 600, 1.7, True, False), (470, 600, 1.5, True, True)):
+        L.sheep(p, x, y, s, flip=fl, graze=g)
+    # the angels in the opened sky
+    for x, y, h, fl in ((250, 330, 200, False), (500, 300, 230, False), (750, 330, 200, True)):
+        Fig(pose='spread', garb='alb', main=LEAD_WHITE, halo=True, wings='rainbow', hair='curly', hair_col=C.hex('d8a850'), belt='gold',
+            eyes='up', mouth='open').draw(p, x, y, h, flip=fl)
+    bg.clouds(p, 325, 3, xs=[250, 500, 750], scale=1.1)
+    # the shepherds
+    Fig(pose='staff', garb='tunic', main=C.hex('8a6a3a'), second=C.hex('5a4a2a'), head='hood', hood_col=C.hex('6a5a3a'), hair='short', beard='long',
+        hair_col=C.hex('8a8070'), age='old', eyes='up', belt='leather', props_back=[PR.staff('f', 'crook', 110, OAK)]).draw(p, 190, 604, 360)
+    Fig(pose='pray', garb='tunic', main=C.hex('6a7a5a'), second=C.hex('4a5a3a'), hair='curly', hair_col=C.hex('5a3a1a'), kneel=True, eyes='up',
+        belt='cord', mouth='open').draw(p, 370, 610, 360)
+
+
+def sanctum_u_014(p):
+    """Preceptor of the Commandery: in the courtyard of the commandery the
+    preceptor reads his ledger, while a squire leads out a horse and the
+    brothers' shields hang ready along the arcade."""
+    bg.sky(p, ULTRA, AZURE, C.hex('eef2ee'), 0.5)
+    bg.clouds(p, 110, 2, xs=[300, 760], scale=0.8)
+    wall = SANDSTONE
+    L.ashlar(p, (-5, 170, W + 5, 520), wall, 36, 80, 0.7)
+    L.crenellated_wall(p, 170, 200, col=wall.light(0.05), merlon=50, gap=34)
+    bg.arcade(p, [80, 280, 480, 680, 880], 330, top=230, bottom=520, wall=wall.light(0.1))
+    for x, charge in ((180, 'cross_red'), (380, 'cross_red'), (580, 'cross_red'), (780, 'cross_red')):
+        PR.heater_shield(p, (x, 300), charge, None, 2.4)
+    p.shape([(-10, 520, 0), (W + 10, 520, 0), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('c8b088'), C.hex('9a8058')), width=2, smooth=False)
+    for i in range(40):
+        p.blob((p.rng.uniform(0, W), p.rng.uniform(530, H)), p.rng.uniform(4, 8), 2.2, C.hex('8a7050').alpha(0.5), ink=False)
+    # squire and horse
+    horse(p, 760, 580, 2.3, C.hex('3a2a22'), flip=True, caparison=LEAD_WHITE, cap_charge='cross_red')
+    Fig(pose='hold', garb='tunic', main=C.hex('6a5a40'), second=C.hex('4a3a2a'), hair='curly', hair_col=C.hex('8a5a2a'), belt='leather').draw(p, 580, 596, 300, flip=True)
+    Fig(pose='book', garb='surcoat', main=LEAD_WHITE, second=C.hex('d8d2c4'), mail=True, head='coif', hair='short', hair_col=C.hex('7a7060'), beard='long', age='old',
+        emblem='cross_red', cloak='mantle', cloak_col=LEAD_WHITE, lining=C.hex('e8e2d6'), belt='sword', eyes='down',
+        props_front=[PR.book('f', C.hex('6a3a1a'), open_=True)]).draw(p, 330, 604, 470)
+
+
+def _beauseant(p, top, w=300, h=200):
+    """The Templar war banner, black over white with a red cross, waving from a
+    lance whose top is at `top`."""
+    x, y = top
+    pts = [(x, y + 20, 0)]
+    up = []
+    lo = []
+    for i in range(9):
+        t = i / 8
+        xx = x + w * t
+        wave = math.sin(t * math.pi * 2.0) * 16 * t
+        up.append((xx, y + 20 + wave))
+        lo.append((xx, y + 20 + h - t * 26 + wave))
+    flag = up + list(reversed(lo))
+    p.shape(flag, LEAD_WHITE, width=2.2, shade=0.5)
+    top_half = up + [(lo[i][0], (up[i][1] + lo[i][1]) / 2) for i in range(8, -1, -1)]
+    p.shape(top_half, INK_SOFT, width=1.6)
+    p.clip_shape(flag)
+    for i in range(1, 8, 2):
+        p.fold_band([up[i], lo[i]], 2, 12, C(0, 0, 0, 0.18))
+        p.fold_band([up[i + 1], lo[i + 1]], 1, 8, C(1, 1, 1, 0.15))
+    p.texture((x, y, x + w, y + h + 60), strength=0.6)
+    # the red cross in the middle of the banner
+    cx0, cy0 = up[4][0], (up[4][1] + lo[4][1]) / 2
+    p.shape([(cx0 - 9, cy0 - 50, 0), (cx0 + 9, cy0 - 50, 0), (cx0 + 9, cy0 + 50, 0), (cx0 - 9, cy0 + 50, 0)], VERMILION, width=1.6, smooth=False)
+    p.shape([(cx0 - 36, cy0 - 14, 0), (cx0 + 36, cy0 - 14, 0), (cx0 + 36, cy0 + 4, 0), (cx0 - 36, cy0 + 4, 0)], VERMILION, width=1.6, smooth=False)
+    p.unclip()
+    p.shape(flag, None, ink=INK, width=2.4)
+
+
+def sanctum_u_015(p):
+    """War Banner of the Temple: the Beauceant planted on the hill at dawn, the
+    sword, shield and helm of the brothers laid at its foot, the host below."""
+    bg.dawn_sky(p)
+    p.glow((520, 360), 420, C.hex('ffe8b0'), 0.6)
+    L.holy_rays(p, (520, 300), 60, 560, 28, GOLD_LIGHT, 0.16)
+    bg.hills(p, 430, C.hex('b89a7a'), 30, n=6)
+    # tents of the host in the valley
+    for i, x in enumerate((640, 720, 800, 880, 950)):
+        y = 440 + (i % 2) * 8
+        p.shape([(x - 30, y, 0), (x, y - 40, 0), (x + 30, y, 0)], LEAD_WHITE if i % 2 else C.hex('e0d8c8'), width=1.4, smooth=False, shade=0.5)
+        p.line([(x, y - 40), (x, y - 56)], OAK, 1.6)
+        p.shape([(x, y - 56, 0), (x + 14, y - 52, 0), (x, y - 48, 0)], VERMILION, width=1.0, smooth=False)
+    bg.hills(p, 480, C.hex('8a7a50'), 20, n=4)
+    p.shape([(-10, 600), (120, 520), (300, 480), (520, 470), (720, 500), (900, 560), (W + 10, 600), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('a89060'), C.hex('6a5a38')), width=2)
+    for i in range(20):
+        x = p.rng.uniform(120, 880)
+        p.taper([(x, 520 + p.rng.uniform(0, 60)), (x + p.rng.uniform(-6, 6), 500 + p.rng.uniform(0, 60))], 1.4, 0.4, C.hex('6a7a3a'), width=0.6)
+    # the lance and banner
+    lance(p, (440, 520), (450, 70), w=5)
+    _beauseant(p, (450, 80), 330, 220)
+    p.shape([(410, 520), (430, 500), (460, 500), (480, 520)], STONE.dark(0.2), width=1.6, shade=0.6)
+    # arms laid at its foot
+    PR.heater_shield(p, (330, 540), 'cross_red', None, 4.2)
+    p.push(560, 556, 4.0)
+    PR.great_helm(p, (0, -8))
+    p.pop()
+    _flat_sword(p, (600, 588), (820, 600))
+
+
+def sanctum_u_016(p):
+    """Angel of the Choir of Virtues: on the gold ground of Heaven three angels of
+    the Virtues sing together from one great book, the centre one leading."""
+    bg.gold_ground(p)
+    L.mandorla(p, (500, 300), 260, 300, col=C.hex('fff4d0'))
+    p.stars((160, 40, 840, 260), 22, LEAD_WHITE, (2, 4))
+    bg.clouds(p, 560, 6, xs=[60, 240, 420, 600, 780, 960], scale=1.3)
+    Fig(pose='pray', garb='alb', main=LEAD_WHITE, cloak='mantle', cloak_col=C.hex('3a7a5a'), lining=GOLD_LIGHT, halo=True, wings='blue',
+        hair='curly', hair_col=C.hex('8a5a2a'), belt='gold', eyes='up', mouth='open').draw(p, 230, 580, 380)
+    Fig(pose='sa_trumpet', garb='alb', main=LEAD_WHITE, cloak='mantle', cloak_col=C.hex('8a3a6a'), lining=GOLD_LIGHT, halo=True, wings='red',
+        hair='curly', hair_col=C.hex('d8a850'), belt='gold', eyes='up', props_front=[_trumpet_blow()]).draw(p, 770, 580, 380, flip=True)
+    Fig(pose='book', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=ULTRA, trim=GOLD, halo=True, wings='rainbow',
+        hair='curly', hair_col=C.hex('c8902e'), belt='gold', eyes='down', mouth='open',
+        props_front=[PR.book('f', CRIMSON, open_=True)]).draw(p, 500, 600, 460)
+    bg.clouds(p, 610, 5, xs=[100, 300, 500, 700, 900], scale=1.2)
+
+
+def sanctum_u_017(p):
+    """Angel of the Dominions: crowned and holding the golden sceptre, the angel of
+    the Dominions stands upon the clouds and greets two lesser angels sent down
+    past him into the world."""
+    bg.sky(p, C.hex('2a3a7a'), C.hex('6a8ac8'), C.hex('f2e8d0'), 0.7)
+    p.glow((500, 260), 420, C.hex('fff4d0'), 0.6)
+    L.holy_rays(p, (500, 220), 40, 600, 30, GOLD_LIGHT, 0.18)
+    p.stars((140, 30, 860, 220), 20, GOLD_LIGHT, (2, 4))
+    bg.clouds(p, 470, 4, xs=[120, 360, 640, 900], scale=1.2)
+    # a glimpse of the world far below
+    bg.hills(p, 560, C.hex('7a9a7a'), 20, n=6)
+    bg.abbey(p, 840, 560, 0.4)
+    bg.clouds(p, 560, 6, xs=[40, 220, 400, 600, 780, 960], scale=1.4)
+    for x, y, h, fl in ((200, 520, 240, False), (800, 520, 240, True)):
+        Fig(pose='pray', garb='alb', main=LEAD_WHITE, halo=True, wings='white', hair='curly', hair_col=C.hex('c8902e'), belt='gold',
+            eyes='up').draw(p, x, y, h, flip=fl)
+    Fig(pose='staff', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=C.hex('2e6a4a'), trim=GOLD, halo=True, wings='gold', head='crown',
+        hair='curly', hair_col=C.hex('a86a2a'), belt='gold', eyes='open',
+        props_back=[PR.staff('f', 'cross', 108, GOLD_DARK)]).draw(p, 500, 590, 450)
+    bg.clouds(p, 600, 4, xs=[300, 500, 700, 900], scale=1.2)
+
+
+def sanctum_u_018(p):
+    """Angelic Intercession: on a stormy field a wounded man-at-arms kneels and
+    prays, the brigand's blow comes down, and an angel stands between them with
+    his hands spread in light, and the blow is turned aside."""
+    bg.sky(p, C.hex('2a2a3a'), C.hex('5a5a6a'), C.hex('b8a890'), 0.6)
+    bg.clouds(p, 90, 4, col=C.hex('6a6a7a').alpha(0.9), xs=[120, 380, 640, 900], scale=1.1)
+    bg.hills(p, 430, C.hex('5a6a5a'), 30, n=6)
+    bg.hills(p, 480, C.hex('6a7a4a'), 20, n=4)
+    p.shape([(-10, 500), (W + 10, 494), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('7a7a4a'), C.hex('4a4a2a')), width=2)
+    for i in range(30):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(510, H)
+        p.taper([(x, y), (x + p.rng.uniform(-6, 6), y - 14)], 1.4, 0.3, C.hex('5a6a2a'), width=0.6)
+    p.glow((500, 330), 340, C.hex('fff4c0'), 0.75)
+    L.holy_rays(p, (500, 330), 40, 420, 26, GOLD_LIGHT, 0.3)
+    # the brigand, his blow turned aside
+    Fig(pose='sword_up', garb='jerkin', main=C.hex('6a4a3a'), second=C.hex('3a2a20'), hair='short', hair_col=C.hex('2a1a10'), beard='short',
+        belt='leather', mouth='open', eyes='open', props_front=[PR.sword(up=True)]).draw(p, 800, 604, 430, flip=True)
+    Fig(pose='pray', garb='tunic', main=C.hex('b8a27a'), second=C.hex('6a5a40'), head='nasal', hair='short', beard='short', hair_col=UMBER, mail=True,
+        kneel=True, eyes='up', belt='sword').draw(p, 230, 610, 430)
+    PR.heater_shield(p, (110, 590), 'cross_red', None, 3.2)
+    Fig(pose='spread', garb='alb', main=LEAD_WHITE, cloak='mantle', cloak_col=C.hex('6f9bd1'), lining=GOLD_LIGHT, halo=True, wings='blue',
+        hair='curly', hair_col=C.hex('d8a850'), belt='gold', eyes='open').draw(p, 500, 560, 400)
+
+
+def _abacus(length=112):
+    """The Templar Grand Master's abacus: a staff topped by a disc bearing a cross."""
+    def fn(p, j):
+        x, y = j['hand_f']
+        foot = (x - 1.2, 0)
+        tip = (x + 1.2, -length + j['k'])
+        p.taper([foot, tip], 1.4, 1.2, OAK.dark(0.2), width=1.4, shade=0.6)
+        c = (tip[0], tip[1] - 6)
+        p.blob(c, 6.5, 6.5, GOLD, width=1.2, shade=0.6)
+        p.blob(c, 5, 5, LEAD_WHITE, width=0.8)
+        p.taper([(c[0], c[1] - 4), (c[0], c[1] + 4)], 1.4, 1.4, VERMILION, width=0.5)
+        p.taper([(c[0] - 4, c[1]), (c[0] + 4, c[1])], 1.4, 1.4, VERMILION, width=0.5)
+    return fn
+
+
+def sanctum_r_010(p):
+    """Grand Master of the Temple: in the round church of the Temple the old Grand
+    Master stands with the abacus of his office, and his knights kneel round him."""
+    stone = C.hex('d8ccb4')
+    bg.fill_all(p, ('v', stone.dark(0.35), stone.dark(0.05)))
+    L.ashlar(p, (-5, -5, W + 5, 500), stone.dark(0.1), 36, 80, 0.7)
+    # the ring of dark marble columns and round arches of the rotunda
+    xs = [60, 210, 380, 500, 620, 790, 940]
+    for i in range(len(xs) - 1):
+        x0, x1 = xs[i] + 16, xs[i + 1] - 16
+        pts = L.pointed_opening(x0, x1, 300, 500, 0.6, 10)
+        p.shape(pts, ('v', C.hex('5a4e44'), C.hex('8a7a64')), width=2)
+    for x in xs:
+        bg.column(p, x, 230, 500, 30, C.hex('4a4a52'))
+    for x in (295, 705):
+        L.lancet(p, x, 150, 70, 140, scheme=[VERMILION, ULTRA, GOLD_LIGHT, LEAD_WHITE])
+    bg.tile_floor(p, 500, C.hex('7a3a2a'), C.hex('e0d0ac'))
+    # the Beauceant hanging above
+    # knights kneeling round the master
+    for x, h, fl in ((150, 330, False), (850, 330, True), (250, 350, False), (750, 350, True)):
+        Fig(pose='pray', garb='surcoat', main=LEAD_WHITE, mail=True, head='coif', hair='short', hair_col=UMBER, beard='short', emblem='cross_red',
+            cloak='mantle', cloak_col=LEAD_WHITE, lining=C.hex('e0dcd2'), kneel=True, eyes='down', belt='sword').draw(p, x, 560 + (h - 330) * 0.6, h, flip=fl)
+    Fig(pose='staff', garb='surcoat', main=LEAD_WHITE, second=C.hex('d8d2c4'), mail=True, head='coif', hair='white', beard='long', age='old',
+        emblem='cross_red', cloak='mantle', cloak_col=LEAD_WHITE, lining=C.hex('e8e2d6'), belt='sword', eyes='open', mouth='stern', width=1.1,
+        props_back=[_abacus(116)]).draw(p, 500, 606, 470)
+
+
+def sanctum_r_011(p):
+    """Saint Raphael, Medicine of God: the archangel walks the bank of the Tigris
+    with his pilgrim staff beside young Tobias, who carries the great fish, and
+    the little dog runs ahead."""
+    bg.sky(p, ULTRA, AZURE, C.hex('f2eee0'), 0.58)
+    bg.clouds(p, 120, 3, xs=[200, 560, 880], scale=0.8)
+    bg.hills(p, 400, C.hex('a8b0a0'), 36, n=6)
+    bg.town(p, 860, 410, 0.6, roof=C.hex('c89a5a'), spires=0)
+    bg.hills(p, 450, C.hex('8aa860'), 24, n=4)
+    L.palm_tree(p, 90, 470, 220, 0.8)
+    L.palm_tree(p, 960, 470, 200, 0.7)
+    # the river
+    p.shape([(-10, 470), (300, 466), (700, 476), (W + 10, 470), (W + 10, 530), (600, 540), (-10, 528)], ('v', C.hex('7ab8d8'), C.hex('3a78a8')), width=2)
+    for i in range(14):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(480, 525)
+        p.line([(x, y), (x + 30, y)], LEAD_WHITE.alpha(0.6), 1.6)
+    p.shape([(-10, 528), (600, 540), (W + 10, 530), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('8aa858'), C.hex('5a7a38')), width=2)
+    for i in range(14):
+        x = p.rng.uniform(0, W)
+        p.taper([(x, 545 + p.rng.uniform(0, 50)), (x + 3, 520 + p.rng.uniform(0, 50))], 2, 0.4, C.hex('4a6a2a'), width=0.7)
+    L.dog(p, 840, 600, 2.2, col=C.hex('c8a060'))
+
+    def big_fish(p, j):
+        x, y = j['hand_f']
+        L.fish(p, (x + 3, y + 10), 0.9, rot=1.25)
+    Fig(pose='hold', garb='tunic', main=C.hex('c86a3a'), second=C.hex('7a3a20'), hair='curly', hair_col=C.hex('5a3a1a'), belt='leather', head='pilgrim',
+        eyes='up', blush=0.8, props_front=[big_fish]).draw(p, 690, 600, 320)
+    Fig(pose='staff', garb='alb', main=LEAD_WHITE, cloak='mantle', cloak_col=C.hex('3a8a6a'), lining=C.hex('e8d8a0'), halo=True, wings='rainbow',
+        hair='curly', hair_col=C.hex('c8902e'), belt='gold', eyes='down', head=None,
+        props_back=[PR.staff('f', 'gourd', 112, OAK)]).draw(p, 400, 600, 470)
+
+
+def sanctum_m_004(p):
+    """Saint Michael the Archangel: amid the golden rays of Heaven the prince of
+    the heavenly host, in armour and a red mantle, drives his spear into the
+    fallen dragon, while the rebel angels tumble into the dark below."""
+    bg.sky(p, C.hex('fff2c8'), C.hex('f2c86a'), C.hex('6a3a3a'), 0.55)
+    L.holy_rays(p, (480, 160), 40, 700, 36, LEAD_WHITE, 0.35)
+    bg.clouds(p, 150, 4, xs=[120, 320, 700, 900], scale=1.0)
+    # ranks of the host in the clouds behind
+    for x, y in ((150, 330), (230, 300), (790, 300), (870, 330)):
+        Fig(pose='pray', garb='alb', main=LEAD_WHITE, halo=True, wings='white', hair='curly', hair_col=C.hex('c8902e'), belt='gold', eyes='up').draw(p, x, y, 150, flip=x > 500)
+    bg.clouds(p, 330, 4, xs=[150, 240, 790, 880], scale=0.9)
+    # the abyss below
+    p.shape([(-10, 470), (300, 500), (600, 490), (W + 10, 470), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('3a1a1a'), C.hex('120808')), width=2)
+    for i in range(10):
+        PR.flame(p, (p.rng.uniform(560, 980), p.rng.uniform(560, 620)), p.rng.uniform(4, 7), glow_r=40)
+    for x, y, s, r in ((120, 540, 0.8, 2.6), (880, 520, 0.7, 3.4)):
+        p.push(x, y, 1.0, rot=r)
+        demon(p, 0, 0, s, cower=0.6, col=C.hex('4a2a3a'))
+        p.pop()
+    # rocky ledge he stands on
+    p.shape([(140, 640), (180, 600), (420, 592), (560, 600), (600, 640)], ('v', C.hex('8a7a6a'), C.hex('4a3e34')), width=2, shade=0.6)
+    # the dragon, cowering at the lower right
+    demon(p, 770, 620, 2.2, flip=True, col=C.hex('2a3a2a'), cower=0.3, eyes=C.hex('ff8030'))
+    mich = Fig(pose='guard', garb='surcoat', main=LEAD_WHITE, second=C.hex('d8d0c0'), mail=True, halo=True, wings='gold', hair='curly',
+               hair_col=C.hex('c8902e'), cloak='mantle', cloak_col=CRIMSON, lining=GOLD, belt='gold', trim=GOLD, emblem=_breastplate,
+               shield='cross_red', eyes='down', mouth='stern')
+    mich.draw(p, 400, 604, 500)
+    hand = (400 + mich.j['hand_f'][0] * 5, 604 + mich.j['hand_f'][1] * 5)
+    # the spear, thrust forward and down at the dragon
+    tip = (700, 446)
+    d = v_norm(v_sub(tip, hand))
+    butt = v_sub(hand, v_mul(d, 36))
+    p.taper([butt, tip], 5, 4, GOLD_DARK, width=1.6, shade=0.6)
+    n = v_perp(d)
+    head = v_add(tip, v_mul(d, 34))
+    p.shape([v_add(tip, v_mul(n, 8)), head + (0,), v_sub(tip, v_mul(n, 8))], STEEL, width=1.6, shade=0.5)
+    p.taper([v_add(v_sub(tip, v_mul(d, 4)), v_mul(n, 7)), v_sub(v_sub(tip, v_mul(d, 4)), v_mul(n, 7))], 3, 3, GOLD, width=1.2)
+    # small cross at the butt
+    p.taper([v_add(butt, v_mul(n, 10)), v_sub(butt, v_mul(n, 10))], 3, 3, GOLD, width=1.2)
+    redraw_hand(p, mich, 400, 604, 500)

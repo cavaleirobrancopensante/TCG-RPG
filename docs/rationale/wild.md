@@ -6,7 +6,7 @@ The Old Ways win by growing more than the opponent can cut down: bigger bodies f
 The faith's one-drop attacker. A 2/1 for one is the baseline rate, and trample on a body this small rarely matters, so it is a gentle bonus rather than a real point of power. The fox slipping through the hedge before the hounds arrive is the English countryside in a single picture.
 
 **Hedgerow Druid** · Common · Creature (Human Druid) · 1G · 1/2 · Tap: add G.
-The common mana creature. In set 1 she added mana at upkeep; now she taps for it, which is easier to read and means she can be attacked around or killed before she pays off. Two mana for a 1/2 that ramps by one is fair, and it lets a turn two Druid lead to a four-drop on turn three. A druidess coaxing growth from the soil is a traditional role, shown warmly.
+The common mana creature. In set 1 he added mana at upkeep; now he taps for it, which is easier to read and means he can be attacked around or killed before he pays off. Two mana for a 1/2 that ramps by one is fair, and it lets a turn two Druid lead to a four-drop on turn three. A country druid coaxing growth from the soil is a traditional figure, shown warmly.
 
 **Thornback Boar** · Common · Creature (Beast) · 1G · 2/2 · Whenever this attacks, it gets +1/+0 until end of turn.
 A two-drop that hits like a 3/2 but blocks like a 2/2. It keeps the old set 1 boar's aggressive feel without simply being above rate on both sides. A wild boar rooting up saplings is a familiar menace of the old forests.
@@ -27,7 +27,7 @@ A sturdy wall against fliers and early ground attackers alike. A 2/4 for three i
 The common that teaches regenerate. A 2/2 for three is a point under rate, which pays for a body that survives its first trade each turn and shrugs off a removal spell. Badgers are famously hard to dig out of their setts, which is exactly what the keyword does.
 
 **Barrowland Bear** · Common · Creature (Beast) · 3G · 4/4 · Rooted: as long as you control six or more lands, this gets +1/+1.
-A plain 4/4 for four early, and a 5/5 once the land runs deep. It is the simplest Rooted payoff, placed at common so every Old Ways deck meets the condition. The druids calling the old bear "grandmother" keeps the faith warm and folkloric.
+A plain 4/4 for four early, and a 5/5 once the land runs deep. It is the simplest Rooted payoff, placed at common so every Old Ways deck meets the condition. The druids calling the old bear "grandfather" keeps the faith warm and folkloric.
 
 **Huntsman of the Weald** · Common · Creature (Human Hunter) · 4G · 3/3 · When this enters, create a 2/2 Wolf token.
 Five power over two bodies for five mana, a solid common two-for-one that is slow enough not to dominate. It gives the faith a mid-curve wolf maker outside the uncommons. The huntsman is a man of the deep woods whose wolves come when he whistles, which is the Old Ways' friendship with the beasts.
@@ -41,14 +41,14 @@ A six-drop that is very hard to remove: it blocks, survives and blocks again. A 
 **Greening Rite** · Common · Spell (Rite) · G · Add GG.
 One-shot acceleration that nets a single mana and costs a card. With set 1's permanent ramp trimmed, this is how the faith makes an early big play without a lasting engine. The flavour, seed into soil and sap into power, is the faith's whole belief in one line.
 
-**Wildsurge** · Common · Spell (Rite) · G · Target creature you control gets +3/+3 until end of turn.
-The classic green pump. Since spells are cast at sorcery speed, it is used before combat to push damage through a blocker or win a trade the opponent must respect. One mana for +3/+3 is the old common rate.
+**Wildsurge** · Common · Spell (Rite, instant) · G · Target creature you control gets +3/+3 until end of turn.
+The classic green pump, now an instant (1.23): it is cast in the middle of combat, after blockers are declared, to win a fight the opponent thought was safe. One mana for an instant +3/+3 is the old Giant Growth rate that defined the era, so the cost was left alone.
 
-**Test of Antlers** · Common · Spell (Rite) · 1G · Your strongest creature fights target enemy creature (each deals damage equal to its power to the other).
+**Test of Antlers** · Common · Spell (Rite) · 1G · Target creature you control fights target enemy creature (each deals damage equal to its power to the other).
 The faith's main common removal. It is cheap but depends on having a big creature on the board, and the creature takes damage back, so it never answers a threat for free. Stags settling their quarrels in autumn is the gentlest possible picture of a fight.
 
-**Brought to Earth** · Common · Spell (Rite) · 1G · Destroy target enemy creature with flying.
-Conditional removal at two mana, in line with the spec, aimed at the Church's angels and the Pact's demons. Against a deck with no fliers it is a dead card, which is the price of the low cost. The flavour, every perch is a branch, makes the forest itself the hunter.
+**Brought to Earth** · Common · Spell (Rite, instant) · 1G · Destroy target enemy creature with flying.
+Made an instant in 1.23, so it answers an angel or demon in the air as it attacks, like the old Plummet at the same cost. Conditional removal at two mana, in line with the spec, aimed at the Church's angels and the Pact's demons. Against a deck with no fliers it is a dead card, which is the price of the low cost. The flavour, every perch is a branch, makes the forest itself the hunter.
 
 **Ivy in the Gears** · Common · Spell (Rite) · 1G · Destroy target enemy relic.
 Nature against machines. It answers Technocracy relics and the slow engines of the other faiths, and does nothing else, so two mana is right. Ivy slowly swallowing an abandoned engine is a quiet, unhurried kind of victory.
@@ -62,8 +62,8 @@ A cheap repeatable pump that turns every combat slightly in your favour. It cost
 **Sower's Basket** · Common · Relic · 1G · Tap, pay 1G: create a 1/1 Sapling token.
 A slow token engine for long games, and a use for spare mana once the Rooted lands arrive. Two mana a turn for a 1/1 is a poor rate early, which keeps it fair at common. Sowing by hand in spring and reaping by the cartload is the harvest cycle the faith celebrates.
 
-**Wolfmother of the Fen** · Uncommon · Creature (Wolf Beast) · 2G · 2/2 · When this enters, create a 2/2 Wolf token.
-Two 2/2s for three mana, a strong uncommon that is weak to sweepers. It is the clean wolf card of the set and pairs with the Antler-King. The she-wolf who never runs alone is a natural mother of the pack.
+**Wolfsire of the Fen** · Uncommon · Creature (Wolf Beast) · 2G · 2/2 · When this enters, create a 2/2 Wolf token.
+Two 2/2s for three mana, a strong uncommon that is weak to sweepers. It is the clean wolf card of the set and pairs with the Antler-King. The old dog wolf who never runs alone is the natural sire of the pack, and the name was changed from Wolfmother so that every creature in the faith is male.
 
 **Fowler of the Fens** · Uncommon · Creature (Human Hunter) · 2G · 1/2 · Reach. When this enters, destroy target enemy creature with flying.
 A creature that also removes a flier, the faith's uncommon two-for-one against air forces. The small body and the flying restriction keep three mana fair. A fowler was a hunter of wildfowl in the fens, and reading the wind over the reeds is his trade.
@@ -71,11 +71,11 @@ A creature that also removes a flier, the faith's uncommon two-for-one against a
 **Stonehide Spirit** · Uncommon · Creature (Spirit) · 2GG · 3/3 · Reach, regenerate.
 A stubborn defender that blocks fliers and keeps coming back. A 3/3 for four is under rate, paid for by two keywords that make it very hard to get rid of. The spirits patient in the standing stones are a gentle pagan idea, never set against the Church.
 
-**Spearman of the Greenwood** · Uncommon · Creature (Human Hunter) · 3G · 3/3 · When this enters, your strongest creature fights target enemy creature.
+**Spearman of the Greenwood** · Uncommon · Creature (Human Hunter) · 3G · 3/3 · When this enters, target creature you control fights target enemy creature.
 Removal on a body, the uncommon form of fight. On an empty board the Spearman fights alone as a 3/3, but next to a large beast he lets that beast do the work. The flavour has him calling the creatures of the wood to settle the matter together, which is how the faith fights.
 
 **Elder of the Oak Circle** · Uncommon · Creature (Human Druid) · 3G · 2/3 · When this enters, create two 1/1 Sapling tokens.
-Three bodies for four mana. The power is spread thin, so it shines with team pumps and Wassail. A druidess whose acorns walk beside her by evening is the sort of folk magic that makes the faith charming.
+Three bodies for four mana. The power is spread thin, so it shines with team pumps and Wassail. An old druid whose acorns walk beside him by evening is the sort of folk magic that makes the faith charming.
 
 **Green Man of the Hedgerow** · Uncommon · Creature (Spirit) · 3G · 2/4 · Tap: target creature you control gets +2/+2 until end of turn.
 A repeatable pump on a body that holds the ground well. It must tap to use its ability, so it gives up attacking to make another creature bigger. The Green Man, the leafy face carved in old buildings all over England, is a perfect gentle emblem of growth.
@@ -89,8 +89,8 @@ A 4/4 for five early, a 6/6 trampler late. It is an uncommon step up from the Ba
 **Gift of the Greenwood** · Uncommon · Spell (Rite) · 2G · Target creature you control gets +2/+2 permanently.
 A lasting pump, more expensive than Wildsurge because it never goes away. It risks being lost to removal, which is the usual price of putting everything on one creature. The oak that gives slowly and never takes back is the faith's idea of a blessing.
 
-**Trial by Tooth and Claw** · Uncommon · Spell (Rite) · 2G · Target creature you control gets +2/+2 until end of turn. Then your strongest creature fights target enemy creature.
-Fight with a pump attached, so the strongest creature usually survives and still kills. It costs a mana more than Test of Antlers for the extra reliability. "The forest holds no courts. It holds contests" sums up how the Old Ways deal with threats.
+**Trial by Tooth and Claw** · Uncommon · Spell (Rite) · 2G · Target creature you control gets +2/+2 until end of turn. Then target creature you control fights target enemy creature.
+Fight with a pump attached, so the chosen creature usually survives and still kills. It costs a mana more than Test of Antlers for the extra reliability. "The forest holds no courts. It holds contests" sums up how the Old Ways deal with threats.
 
 **Wassail the Orchard** · Uncommon · Spell (Rite) · 2G · Create two 1/1 Sapling tokens. Rooted: if you control six or more lands, create two more.
 Two bodies early, four late. The Rooted mode turns a modest card into a strong one for a deck that has let its lands build up. Wassailing the apple trees with cider and song is a real English winter custom, cheerful and harmless.
@@ -119,8 +119,8 @@ A big, simple threat: a 5/5 trampler for six that shrugs off the first removal s
 **Stampede of the Wild Hunt** · Rare · Spell (Rite) · 2GG · Creatures you control get +2/+2 until end of turn.
 A team pump finisher, best after a turn of wolves and saplings. Unlike the Revel's power-only team pumps it adds toughness as well, so it wins combats rather than just racing. The Wild Hunt riding with hooves and horns is the European folk tale at its grandest.
 
-**Hunter's Moon** · Rare · Spell (Rite) · 2GG · Your strongest creature fights target enemy creature. Rooted: if you control six or more lands, your strongest creature then fights another target enemy creature.
-Fight early, a double kill late. The second fight is only possible if your strongest creature survives the first or another big creature takes its place. The Hunter's Moon is the October full moon of country calendars.
+**Hunter's Moon** · Rare · Spell (Rite) · 2GG · Target creature you control fights target enemy creature. Rooted: if you control six or more lands, target creature you control then fights another target enemy creature.
+Fight early, a double kill late. The second fight needs a creature that survived the first or another big creature to take its place. The Hunter's Moon is the October full moon of country calendars.
 
 **Awaken the Grove** · Rare · Spell (Rite) · 3GG · Create three 2/2 Oakling tokens with reach.
 Six power over three bodies for five mana, and all of them guard the sky. It refills the board after a sweeper and shuts down flying attacks. The druid singing until the wood remembers it can walk is the faith's folk magic at full strength.
@@ -136,3 +136,52 @@ The ramp payoff: eleven power over three bodies. It costs seven and has no prote
 
 **Wheel of the Year** · Mythic · Relic · 3GG · At the beginning of your upkeep, create a 1/1 Sapling token. Rooted: if you control six or more lands, also create a 3/3 Stag token.
 A token engine that grows with the land: a sapling every turn, and a stag as well once you are Rooted. It does nothing the turn it lands and can be destroyed by relic removal, so it is strong but not unanswerable. The turning year of seed, flower, harvest and frost is the cycle at the heart of the Old Ways.
+
+### Tribal cards (1.23)
+
+The Old Ways have two tribes, and they pull the faith in two directions it already liked. The **Wolves** are the fast half: cheap Wolf Beasts that grow with the size of the pack (kinship), a lord, and tricks that count Wolves, all fed by the Wolf tokens the faith has always made (Huntsman of the Weald, Call of the Pack, Horn of the Wild Hunt, Herne). The **Treefolk** are the slow half: walls with reach that turn into an army once the land runs deep, a mana Treefolk, a cost reducer, a lord and a rare that lends reach and regenerate to the whole grove. Sapling tokens are now Treefolk (a sapling is only a young tree), so the faith's many sapling makers feed the Treefolk lords, and the Green Man of the Hedgerow became a Treefolk Spirit. Wolfmother of the Fen was renamed Wolfsire of the Fen so that every creature in the faith is male. Wildsurge and Brought to Earth became instants. Wolfwood, the Denning Oak ties the two together: the wolves den in the roots of the great tree.
+
+**Moorland Wolf** · Common · Creature (Wolf Beast) · G · 1/1 · This gets +1/+0 for each other Wolf you control.
+The Wolf one-drop. Alone it is a poor 1/1, but beside two Wolf tokens it hits as a 3/1 for a single mana, so it rewards building the pack rather than playing it alone. Kinship on power only keeps it fragile, as a lean moorland wolf should be. The grey shadow on the heather that is "seldom alone" is the whole idea of the tribe.
+
+**Ridge-Runner Wolf** · Common · Creature (Wolf Beast) · 2G · 3/2 · Whenever another Wolf enters under your control, this gets +1/+1 until end of turn.
+A 3/2 for three at the common rate, with a small bonus that makes the turn you call more wolves a turn to attack. The bonus only lasts the turn, so it never stacks into a threat by itself. Wolves running the skyline to frighten the flock is an old shepherd's complaint from the northern fells.
+
+**Run with the Pack** · Common · Spell (Rite, instant) · 1G · Target creature you control gets +1/+1 until end of turn for each Wolf you control.
+The Wolf combat trick. With one Wolf it is a weak instant pump, with three it is better than Wildsurge, so its strength depends entirely on the tribe being on the table. Two mana at instant speed follows the spec's "a little dearer" rule. The flavour line is the oldest lesson of the pack: alone a wolf starves.
+
+**Coppiced Hazel** · Common · Creature (Treefolk) · 1G · 0/3 · Tap: add G.
+A mana creature for the Treefolk deck, whose big trees want to arrive a turn early. No power and three toughness make it a wall that ramps, unlike the Hedgerow Druid who can at least chip in. Coppicing, cutting hazel to the stool so it springs again thicker, is the old woodland craft of England, and a tree that grows back stronger every time it is cut suits the faith.
+
+**Hedge-Elm of the Moot** · Common · Creature (Treefolk) · 3G · 3/4 · This gets +1/+0 for each other Treefolk you control.
+A plain 3/4 for four on its own, a point under rate, that becomes an attacker in a deck of Saplings and Oaklings. Toughness does not grow, so it stays answerable by ordinary removal. The moot was the folk assembly of the old shires, and an elm that leans in to hear the arguments is a gentle, comic picture.
+
+**Stand Like Oaks** · Common · Spell (Rite, instant) · 1G · Treefolk you control get +1/+2 until end of turn.
+The Treefolk trick: cast it after blockers are declared and the grove wins every combat it was about to lose. It touches only Treefolk, so it is weak outside the tribe, and +1/+2 is defensive by design, the tree's way of fighting. Axemen sharpening their blades by noon and wondering is the faith's quiet humour.
+
+**Dusk-Runner Wolf** · Common · Creature (Wolf Beast) · 3G · 4/3 · Trample (excess combat damage goes to the player).
+The Wolf deck's honest four-drop: a trampler that pushes damage past chump blockers and is a Wolf for every lord and kinship card. A point of toughness pays for trample, as the balance guide asks. A wolf that is over the fold wall long before the shepherd bars the gate is the plain menace of the old countryside.
+
+**Pack-Leader of the Moors** · Uncommon · Creature (Wolf Beast) · 2G · 2/2 · Other Wolves you control get +1/+1.
+The Wolf lord, the classic three-mana 2/2 that makes every other member of the tribe bigger. Every Wolf token in the faith turns into a 3/3, which makes the token cards genuinely strong in this deck, and the lord itself is small enough to die to any removal. The pack leader who eats first and sleeps last is how herdsmen have always described the alpha wolf.
+
+**Old Grey Wolf** · Uncommon · Creature (Wolf Beast) · 3G · 3/3 · Whenever another Wolf enters under your control, this gets +1/+1 permanently.
+A slow-growing threat: a 3/3 for four that gains a counter's worth of size with every Wolf that joins it, including tokens. It needs the pack to grow, so it is weak on an empty board and frightening in a long game. The proud old wolf who grows more dangerous with every cub is the uncommon twist on the kinship commons.
+
+**Old Moot-Oak** · Uncommon · Creature (Treefolk) · 3GG · 3/5 · Other Treefolk you control get +1/+1.
+The Treefolk lord. Saplings become 2/2s and Oaklings 3/3s, and the oak itself is a sturdy 3/5 that holds the ground while the grove grows. Five mana makes it a later play than the Wolf lord, which suits the slower tribe. Old law was given under great trees across the north of Europe, and a tree that remembers the laws before there were kings is the faith's long memory.
+
+**Acorn of the Elder Oak** · Uncommon · Relic · 1G · Your Treefolk creature cards cost 1 less.
+A tribal cost reducer, the Treefolk answer to the faith's ramp: big trees arrive a turn early, and a Coppiced Hazel can come down with it on turn two. It does nothing for Saplings made by spells and nothing on an empty hand, and relic removal answers it. An acorn that makes the wood owe you a favour for three hundred years keeps the faith's patient sense of time.
+
+**Pack Hunt** · Uncommon · Spell (Rite) · 2G · Target creature you control gets +1/+0 until end of turn for each Wolf you control. Then target creature you control fights target enemy creature.
+Tribal removal on the model of Trial by Tooth and Claw: the more wolves you have, the harder your chosen creature bites. The pump adds no toughness, so the fighter can still die in the exchange. Wolves bringing down a stag by surrounding it, one to hold its eye and the rest to strike, is how a real pack hunts.
+
+**Grey Sire of the Long Winter** · Rare · Creature (Wolf Beast) · 2GG · 3/3 · Trample. This gets +1/+1 for each other Wolf you control.
+The Wolf build-around: a 3/3 trampler for four that becomes huge behind a few Wolf tokens, and tramples over the chump blockers that tokens provoke. It has no protection and dies to removal like any creature, and it shrinks as the pack is killed. The great wolf coming down in a hungry winter with the whole shire's wolves behind him is the stuff of medieval chronicles.
+
+**Grandsire Hornbeam** · Rare · Creature (Treefolk) · 3GG · 3/5 · Reach, regenerate. Other Treefolk you control have reach and regenerate.
+The Treefolk build-around, sharing the faith's defensive keywords with the whole grove so that every Sapling guards the sky and shrugs off its first death each turn. The Hornbeam himself is under rate on power, so the card wins by attrition rather than by hitting hard. Hornbeam is called ironwood for its hardness, and charcoal burners did break their axes on it.
+
+**Wolfwood, the Denning Oak** · Mythic · Creature (Treefolk Spirit) · 4GG · 6/6 · Trample. Other Treefolk you control get +1/+1. Other Wolves you control get +1/+1.
+The mythic that unites the two tribes: a 6/6 trampler that is a lord of both the grove and the pack. Six mana and no protection keep it answerable, and its anthems do nothing without a board, so it rewards a deck that has already built one. Wolves denning among the roots of a great tree is a true picture of the wild wood, and the oak sheltering both is the Old Ways' idea of nature as one household.

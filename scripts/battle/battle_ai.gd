@@ -98,53 +98,63 @@ static func resolve_mulligan(st: BattleState, i: int) -> void:
 
 # ============================================================ main phase
 
-## Do everything for one main phase. Returns true if anything was played.
+## Do everything for one main phase. Returns true if anything was played. (With the engine
+## in auto mode each cast resolves before the next decision.)
 static func play_main(st: BattleState, i: int) -> bool:
 	var did := false
+	var guard := 0
+	while guard < 40 and main_action(st, i):
+		guard += 1
+		did = true
+	return did
+
+
+## One main-phase decision: play a land, fire lethal burn, ramp, cast the best card or use
+## the best ability. Returns false when there is nothing more worth doing. Instants are kept
+## for the opponent's turn (see respond()), except burn that finishes the duel.
+static func main_action(st: BattleState, i: int) -> bool:
+	if st.phase == "over" or not st.sorcery_time(i):
+		return false
 	var s := st.side(i)
 	if not s.land_played:
 		var li := _best_land(st, i)
-		if li >= 0:
-			st.play(i, li)
-			did = true
-	if st.phase == "over":
-		return did
+		if li >= 0 and st.can_play(i, li):
+			return st.play(i, li)
 	# 1. Kill: burn and drains to the face if they finish the job.
 	if _go_for_the_throat(st, i):
 		return true
 	# 2. Ramp spells, only when they unlock a card we could not cast otherwise.
-	did = _ramp(st, i) or did
-	# 3. Best play, repeatedly.
-	var guard := 0
-	while guard < 20 and st.phase != "over":
-		guard += 1
-		var best := -1
-		var best_v := 0.0
-		var best_targets: Array = []
-		var best_oc := false
-		for hi in s.hand.size():
-			if not st.can_play(i, hi):
-				continue
-			var c := CardDB.get_card(s.hand[hi])
-			if c.get("type") == "land" or _is_ramp_spell(c):
-				continue
-			var plan := _plan(st, i, c)
-			var v: float = plan[0]
-			var oc := false
-			if v > 0.0 and st.can_play(i, hi, true):
-				oc = true
-				v += 1.5 + float(CardDB.mana_value(c["overclock"].get("cost", {}))) * 0.5
-			if v > best_v:
-				best_v = v
-				best = hi
-				best_targets = plan[1]
-				best_oc = oc
-		if best < 0:
-			break
-		st.play(i, best, best_targets, best_oc)
-		did = true
-	did = use_abilities(st, i) or did
-	return did
+	if _ramp(st, i):
+		return true
+	# 3. Best play.
+	var best := -1
+	var best_v := 0.0
+	var best_targets: Array = []
+	var best_oc := false
+	for hi in s.hand.size():
+		if not st.can_play(i, hi):
+			continue
+		var c := CardDB.get_card(s.hand[hi])
+		if c.get("type") == "land" or _is_ramp_spell(c) or BattleState.is_instant(c):
+			continue
+		var plan := _plan(st, i, c)
+		var v: float = plan[0]
+		var oc := false
+		if v > 0.0 and st.can_play(i, hi, true):
+			oc = true
+			v += 1.5 + float(CardDB.mana_value(c["overclock"].get("cost", {}))) * 0.5
+		if v > best_v:
+			best_v = v
+			best = hi
+			best_targets = plan[1]
+			best_oc = oc
+	if best >= 0:
+		return st.play(i, best, best_targets, best_oc)
+	# 4. Abilities.
+	var ab := _best_ability(st, i)
+	if not ab.is_empty():
+		return st.activate(i, ab[0], ab[1])
+	return false
 
 
 # ============================================================ activated abilities
@@ -156,25 +166,27 @@ static func use_abilities(st: BattleState, i: int) -> bool:
 	var guard := 0
 	while guard < 12 and st.phase != "over":
 		guard += 1
-		var best_uid := -1
-		var best_idx := -1
-		var best_v := 0.6
-		for p in st.side(i).creatures + st.side(i).relics:
-			var list := st.abilities_of(p)
-			for idx in list.size():
-				if not st.can_activate(i, p.uid, idx):
-					continue
-				var v := _ability_value(st, i, p, list[idx])
-				if v > best_v:
-					best_v = v
-					best_uid = p.uid
-					best_idx = idx
-		if best_uid < 0:
-			break
-		if not st.activate(i, best_uid, best_idx):
+		var ab := _best_ability(st, i)
+		if ab.is_empty() or not st.activate(i, ab[0], ab[1]):
 			break
 		did = true
 	return did
+
+
+## [uid, index] of the ability most worth using now, or [].
+static func _best_ability(st: BattleState, i: int) -> Array:
+	var best: Array = []
+	var best_v := 0.6
+	for p in st.side(i).creatures + st.side(i).relics:
+		var list := st.abilities_of(p)
+		for idx in list.size():
+			if not st.can_activate(i, p.uid, idx):
+				continue
+			var v := _ability_value(st, i, p, list[idx])
+			if v > best_v:
+				best_v = v
+				best = [p.uid, idx]
+	return best
 
 
 static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
@@ -386,7 +398,6 @@ static func _go_for_the_throat(st: BattleState, i: int) -> bool:
 		combat = _sure_combat_damage(st, i)
 	if reach + combat < foe.life:
 		return false
-	var fired := false
 	for o in options:
 		var hi: int = s.hand.find(o[0])
 		if hi < 0 or not st.can_play(i, hi):
@@ -395,11 +406,8 @@ static func _go_for_the_throat(st: BattleState, i: int) -> bool:
 		var targets: Array = []
 		for e in st.target_specs(c):
 			targets.append({"kind": "player", "side": 1 - i} if e.get("target") == "any_enemy" else st.auto_target(i, e))
-		st.play(i, hi, targets)
-		fired = true
-		if st.phase == "over":
-			break
-	return fired
+		return st.play(i, hi, targets)      # one at a time: the next call fires the next
+	return false
 
 
 ## Damage our attackers deal even if the enemy blocks as well as it can.
@@ -469,8 +477,7 @@ static func _ramp(st: BattleState, i: int) -> bool:
 			if mv > st.total_available(i) and mv <= after:
 				unlocks = true
 		if unlocks:
-			st.play(i, hi)
-			return true
+			return st.play(i, hi)
 	return false
 
 
@@ -830,3 +837,387 @@ static func choose_blocks(st: BattleState, i: int) -> Dictionary:
 			incoming -= stopped
 			in_danger = incoming >= me.life
 	return result
+
+
+# ============================================================ answering (instant speed)
+
+const RESPOND_MIN := 2.0
+const RESPOND_MIN_END := 1.0
+
+
+## The AI has priority with something on the stack or in a step's window: cast an instant or
+## use an ability when it clearly helps (save a creature from removal, punish a pump, win a
+## fight after blocks, kill an attacker, finish the duel), or at the opponent's end step use
+## what it held back. Returns true if it did something. The engine caps how often a side may
+## act in one window, so this never loops.
+static func respond(st: BattleState, i: int) -> bool:
+	if st.phase == "over" or not st.has_priority(i):
+		return false
+	var s := st.side(i)
+	var best: Array = []
+	# at the opponent's end step whatever was held back and still helps may go
+	var best_v := RESPOND_MIN_END if (st.step == "end" and st.active != i and st.stack.is_empty()) else RESPOND_MIN
+	for hi in s.hand.size():
+		var c := CardDB.get_card(s.hand[hi])
+		if c.get("type") == "land":
+			continue
+		var instant := BattleState.is_instant(c)
+		if not instant and not st.sorcery_time(i):
+			continue
+		if not instant:
+			continue                 # main-phase cards are main_action()'s business
+		if not st.can_play(i, hi):
+			continue
+		st._with_source(c)
+		var list: Array = []
+		for e in c.get("effects", []):
+			if e.get("trigger") == "cast":
+				list.append(e)
+		var r := _answer_value(st, i, list, null, c)
+		var v: float = r[0] - 0.15 * float(c.get("mana_value", 0))
+		if v > best_v:
+			best_v = v
+			best = ["card", hi, r[1]]
+	for p in s.creatures + s.relics:
+		var abl := st.abilities_of(p)
+		for idx in abl.size():
+			var ab: Dictionary = abl[idx]
+			if BattleState.is_mana_ability(ab):
+				continue
+			var sac := String(ab.get("cost", {}).get("sacrifice", ""))
+			if sac == "other" or sac == "servo":
+				continue
+			if not st.can_activate(i, p.uid, idx):
+				continue
+			st._with_source(p.card)
+			var r := _answer_value(st, i, ab.get("effects", []), p, p.card)
+			var v: float = r[0]
+			var cost: Dictionary = ab.get("cost", {})
+			if cost.has("mana"):
+				v -= 0.15 * CardDB.mana_value(cost["mana"])
+			if int(cost.get("life", 0)) > 0:
+				if s.life <= int(cost["life"]) + 5:
+					continue
+				v -= 0.4 * int(cost["life"])
+			if sac == "self":
+				v -= p.value() * 0.8
+			if cost.get("tap", false) and p.is_creature() and (st.attackers.has(p.uid) or st.blocks.values().has(p.uid)):
+				v -= 0.5
+			if v > best_v:
+				best_v = v
+				best = ["ability", [p.uid, idx], r[1]]
+	if best.is_empty():
+		return false
+	if best[0] == "card":
+		return st.play(i, best[1], best[2])
+	return st.activate(i, best[1][0], best[1][1], best[2])
+
+
+## How much an instant-speed effect list helps right now, and its targets in order.
+## [0, []] when it does nothing useful or a chosen target can't be picked well.
+static func _answer_value(st: BattleState, i: int, effects: Array, source, card: Dictionary) -> Array:
+	var me := st.side(i)
+	var foe := st.side(1 - i)
+	var top: Dictionary = st.stack.back() if not st.stack.is_empty() else {}
+	var mine_turn := st.active == i
+	var their_end := st.step == "end" and not mine_turn
+	var v := 0.0
+	var targets: Array = []
+	for e in effects:
+		var a: String = e.get("action", "")
+		var t: String = e.get("target", "")
+		var amount := int(e.get("amount", 1))
+		var chosen = null
+		if a == "fight" or t == "own_grave_creature":
+			return [0.0, []]
+		if e.has("condition") and not st.cond_ok(i, String(e["condition"]), source):
+			return [0.0, []]
+		var per := 1
+		if e.has("amount_per"):
+			per = st.count_kin(i, String(e["amount_per"]))
+			if per <= 0:
+				return [0.0, []]
+			amount *= per
+		match a:
+			"buff":
+				var bp := int(e.get("power", 0)) * per
+				var bt := int(e.get("toughness", 0)) * per
+				if bp < 0 or bt < 0:
+					if t == "enemy_creature":
+						var best_g := 0.0
+						for ref in st.valid_targets(i, e):
+							var z = st.find_perm(ref["uid"])
+							var g := 0.0
+							if z.toughness() + bt <= z.damage:
+								g = _removal_gain(st, i, z, top)
+							else:
+								g = _shrink_combat_gain(st, i, z, bp, bt)
+							if g > best_g:
+								best_g = g
+								chosen = ref
+						v += best_g
+					else:
+						return [0.0, []]
+				elif t == "own_creature" or t == "self":
+					var cands: Array = []
+					if t == "self":
+						if source != null and source.is_creature():
+							cands.append(source)
+					else:
+						for ref in st.valid_targets(i, e):
+							cands.append(st.find_perm(ref["uid"]))
+					var best_g := 0.0
+					for x in cands:
+						var g := _pump_gain(st, i, x, bp, bt, top)
+						if g > best_g:
+							best_g = g
+							chosen = {"kind": "creature", "uid": x.uid}
+					v += best_g
+					if t == "self":
+						chosen = null
+				elif t in ["all_own_creatures", "other_own_creatures"]:
+					for x in me.creatures:
+						if t == "other_own_creatures" and source != null and x == source:
+							continue
+						if e.has("subtype") and not x.subtype_has(String(e["subtype"])):
+							continue
+						v += _pump_gain(st, i, x, bp, bt, top)
+			"damage":
+				if t in ["enemy_creature", "any_enemy"]:
+					if t == "any_enemy" and amount >= foe.life:
+						chosen = {"kind": "player", "side": 1 - i}
+						v += 100.0
+					else:
+						var best_g := 0.0
+						for ref in st.valid_targets(i, e):
+							if ref["kind"] != "creature":
+								continue
+							var z = st.find_perm(ref["uid"])
+							if amount >= z.toughness() - z.damage or (source != null and source.has_kw("deathtouch")):
+								var g := _removal_gain(st, i, z, top)
+								if g > best_g:
+									best_g = g
+									chosen = ref
+						v += best_g
+						if chosen == null and t == "any_enemy" and their_end:
+							chosen = {"kind": "player", "side": 1 - i}
+							v += amount * 0.5
+				elif t == "enemy_player":
+					v += 100.0 if amount >= foe.life else (amount * 0.5 if their_end else 0.0)
+				elif t == "all_enemy_creatures":
+					for z in foe.creatures:
+						if amount >= z.toughness() - z.damage:
+							v += _removal_gain(st, i, z, top, true)
+			"destroy":
+				if t == "enemy_creature":
+					var best_g := 0.0
+					for ref in st.valid_targets(i, e):
+						var z = st.find_perm(ref["uid"])
+						var g := _removal_gain(st, i, z, top)
+						if g > best_g:
+							best_g = g
+							chosen = ref
+					v += best_g
+				else:
+					return [0.0, []]
+			"bounce":
+				var best_g := 0.0
+				for ref in st.valid_targets(i, e):
+					var z = st.find_perm(ref["uid"])
+					var g := 0.0
+					if st.attackers.has(z.uid) or st.blocks.values().has(z.uid):
+						g = z.value() * 0.7
+					elif z.is_token:
+						g = z.value()
+					elif _pumped_by(st, top, z, i):
+						g = z.value() * 0.6 + 1.5
+					if g > best_g:
+						best_g = g
+						chosen = ref
+				v += best_g
+			"tap", "freeze":
+				var best_g := 0.0
+				for ref in st.valid_targets(i, e):
+					var z = st.find_perm(ref["uid"])
+					var g := 0.0
+					if st.step == "begin_combat" and not mine_turn and st.can_attack(z):
+						g = 1.5 + z.power() * 0.4
+					elif a == "freeze" and their_end:
+						g = 1.0 + z.value() * 0.3
+					if g > best_g:
+						best_g = g
+						chosen = ref
+				v += best_g
+			"summon":
+				if not mine_turn and st.step == "attackers":
+					v += 2.2 * int(e.get("count", 1))          # surprise blockers
+				elif their_end:
+					v += 1.5 * int(e.get("count", 1))
+			"draw":
+				v += 1.3 * amount if their_end else 0.0
+			"drain":
+				v += 100.0 if amount >= foe.life else (amount * 0.9 if their_end else 0.0)
+			"discard_enemy":
+				v += 1.2 * mini(amount, foe.hand.size()) if their_end else 0.0
+			"heal":
+				if me.life <= 6:
+					v += 1.0 * amount
+				elif their_end:
+					v += 0.8 * amount
+			"lose_life":
+				if amount >= me.life:
+					return [0.0, []]
+				v -= 0.5 * amount
+			"foresight", "tax", "rummage":
+				v += 0.6 if their_end else 0.0
+			"add_mana", "upkeep_cost", "reanimate", "snare", "pacify", "destroy_relic":
+				if not their_end:
+					return [0.0, []]
+				if BattleState.TARGET_CHOICE_TYPES.has(t):
+					chosen = st.auto_target(i, e)
+				v += 0.8 if chosen != null or not BattleState.TARGET_CHOICE_TYPES.has(t) else 0.0
+		if BattleState.TARGET_CHOICE_TYPES.has(t):
+			if chosen == null:
+				return [0.0, []]
+			targets.append(chosen)
+	return [v, targets]
+
+
+## The other side's stack item that pumps this creature (worth answering with removal).
+static func _pumped_by(st: BattleState, top: Dictionary, z, i: int) -> bool:
+	if top.is_empty() or int(top["side"]) == i:
+		return false
+	for pr in st.item_effect_targets(top):
+		var eff: Dictionary = pr[0]
+		var ref = pr[1]
+		if eff.get("action") == "buff" and int(eff.get("power", 0)) + int(eff.get("toughness", 0)) > 0 \
+				and typeof(ref) == TYPE_DICTIONARY and int(ref.get("uid", -1)) == z.uid:
+			return true
+	return false
+
+
+## What killing enemy creature z is worth now. Removal waits for a reason: answering a pump,
+## an attacker or a blocker in combat, or the opponent's end step for a real threat.
+static func _removal_gain(st: BattleState, i: int, z, top: Dictionary, sweep: bool = false) -> float:
+	var g := 0.0
+	var their_end := st.step == "end" and st.active != i
+	if not top.is_empty() and int(top["side"]) != i:
+		for pr in st.item_effect_targets(top):
+			var eff: Dictionary = pr[0]
+			var ref = pr[1]
+			if typeof(ref) == TYPE_DICTIONARY and int(ref.get("uid", -1)) == z.uid:
+				if eff.get("action") == "buff" and int(eff.get("power", 0)) + int(eff.get("toughness", 0)) > 0:
+					g = maxf(g, z.value() + 2.0)            # in answer to a pump
+		if top["kind"] == "ability" and int(top.get("uid", -1)) == z.uid:
+			g = maxf(g, z.value() * 0.5)                    # its ability still resolves, but it is gone
+	if st.attackers.has(z.uid):
+		var blocker = st.find_perm(int(st.blocks.get(z.uid, -1)))
+		if blocker != null:
+			var out := _fight_outcome(blocker, z)
+			g = maxf(g, z.value() + (blocker.value() if out[0] else 0.0))
+		elif st.phase in ["block", "combat"]:
+			g = maxf(g, z.value() + z.power() * 0.6)
+	for a in st.blocks:
+		if int(st.blocks[a]) == z.uid:
+			var mine = st.find_perm(int(a))
+			if mine != null:
+				var out := _fight_outcome(mine, z)
+				g = maxf(g, z.value() + (mine.value() if out[0] else 0.0) + mine.power() * 0.3)
+	if their_end and z.value() >= 2.5:
+		g = maxf(g, z.value() * (0.6 if sweep else 0.9))
+	return g
+
+
+## [x dies, y dies] if x and y deal combat damage to each other (first strike counted).
+static func _fight_outcome(x, y) -> Array:
+	var x_kills: bool = x.power() > 0 and (x.power() >= y.toughness() - y.damage or x.has_kw("deathtouch"))
+	var y_kills: bool = y.power() > 0 and (y.power() >= x.toughness() - x.damage or y.has_kw("deathtouch"))
+	var xf: bool = x.has_kw("first_strike")
+	var yf: bool = y.has_kw("first_strike")
+	if xf and not yf and x_kills:
+		y_kills = false
+	elif yf and not xf and y_kills:
+		x_kills = false
+	return [y_kills, x_kills]
+
+
+## What +bp/+bt on our creature x is worth now: saving it from the stack item on top, or
+## turning its fight in combat.
+static func _pump_gain(st: BattleState, i: int, x, bp: int, bt: int, top: Dictionary) -> float:
+	var g := 0.0
+	var left: int = x.toughness() - x.damage
+	if not top.is_empty() and int(top["side"]) != i and bt > 0:
+		var hit := 0
+		var shrink := 0
+		for pr in st.item_effect_targets(top):
+			var eff: Dictionary = pr[0]
+			var ref = pr[1]
+			var aimed: bool = typeof(ref) == TYPE_DICTIONARY and int(ref.get("uid", -1)) == x.uid
+			var sweep: bool = eff.get("target", "") in ["all_enemy_creatures", "all_creatures"]
+			if not (aimed or sweep):
+				continue
+			if eff.get("action") == "damage":
+				hit += int(eff.get("amount", 1))
+			elif eff.get("action") == "buff" and int(eff.get("toughness", 0)) < 0:
+				shrink += -int(eff.get("toughness", 0))
+		if hit + shrink > 0 and hit + shrink >= left and hit + shrink < left + bt:
+			g += x.value() + 1.0
+	if st.phase == "combat" and st.step == "blockers":
+		var foe_c = null
+		if st.attackers.has(x.uid):
+			foe_c = st.find_perm(int(st.blocks.get(x.uid, -1)))
+			if foe_c == null and not st.was_blocked.has(x.uid) and bp > 0:
+				# an unblocked attacker: more damage, maybe lethal
+				var through := 0
+				for u in st.attackers:
+					var ap = st.find_perm(u)
+					if ap != null and not st.was_blocked.has(u):
+						through += ap.power()
+				var foe_life := st.side(1 - i).life
+				if through < foe_life and through + bp >= foe_life:
+					g += 50.0
+				else:
+					g += bp * 0.6
+		else:
+			for a in st.blocks:
+				if int(st.blocks[a]) == x.uid:
+					foe_c = st.find_perm(int(a))
+		if foe_c != null:
+			var before := _fight_outcome(x, foe_c)
+			x.temp_p += bp
+			x.temp_t += bt
+			var after := _fight_outcome(x, foe_c)
+			x.temp_p -= bp
+			x.temp_t -= bt
+			if before[0] and not after[0]:
+				g += x.value()
+			if not before[1] and after[1]:
+				g += foe_c.value()
+	return g
+
+
+## A shrink that doesn't kill can still win a fight in combat.
+static func _shrink_combat_gain(st: BattleState, i: int, z, bp: int, bt: int) -> float:
+	if st.phase != "combat" or st.step != "blockers":
+		return 0.0
+	var mine = null
+	if st.attackers.has(z.uid):
+		mine = st.find_perm(int(st.blocks.get(z.uid, -1)))
+	else:
+		for a in st.blocks:
+			if int(st.blocks[a]) == z.uid:
+				mine = st.find_perm(int(a))
+	if mine == null:
+		return 0.0
+	var before := _fight_outcome(mine, z)
+	z.temp_p += bp
+	z.temp_t += bt
+	var after := _fight_outcome(mine, z)
+	z.temp_p -= bp
+	z.temp_t -= bt
+	var g := 0.0
+	if before[0] and not after[0]:
+		g += mine.value()
+	if not before[1] and after[1]:
+		g += z.value()
+	return g

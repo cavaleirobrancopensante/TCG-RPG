@@ -1086,3 +1086,215 @@ def redraw_arm(p, fig, x, y, h, flip=False, which='f'):
     else:
         fig._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
     p.pop()
+
+
+# ------------------------------------------------------------------ tribal set (1.23)
+
+ORDER_GREEN = C.hex('3f7a3a')
+BRICK = C.hex('a4472e')
+
+_orig_heater = PR.heater_shield
+
+
+def _tribal_heater(p, c, charge='cross_red', field=None, s=1.0):
+    """heater_shield with two more charges: 'cross_black' (Teutonic) and
+    'cross_green' (Saint Lazarus), both a plain cross on a white field."""
+    if charge not in ('cross_black', 'cross_green'):
+        return _orig_heater(p, c, charge, field, s)
+    x, y = c
+    pts = [(x - 9 * s, y - 13 * s, 0), (x + 9 * s, y - 13 * s, 0), (x + 9 * s, y - 2 * s), (x + 6 * s, y + 7 * s), (x, y + 13 * s, 0), (x - 6 * s, y + 7 * s), (x - 9 * s, y - 2 * s)]
+    p.shape(pts, field or LEAD_WHITE, width=2.0, shade=0.9, rim=0.4)
+    p.clip_shape(pts)
+    cc = INK_SOFT if charge == 'cross_black' else ORDER_GREEN
+    p.shape([(x - 1.8 * s, y - 14 * s, 0), (x + 1.8 * s, y - 14 * s, 0), (x + 1.8 * s, y + 14 * s, 0), (x - 1.8 * s, y + 14 * s, 0)], cc, width=1.2, smooth=False)
+    p.shape([(x - 10 * s, y - 5.5 * s, 0), (x + 10 * s, y - 5.5 * s, 0), (x + 10 * s, y - 1.9 * s, 0), (x - 10 * s, y - 1.9 * s, 0)], cc, width=1.2, smooth=False)
+    p.unclip()
+    p.shape(pts, None, ink=INK, width=2.2)
+
+
+PR.heater_shield = _tribal_heater
+
+
+def plain_cross_emblem(col):
+    """A surcoat cross in any colour, placed like figure's built in crosses."""
+    def fn(p, c):
+        cy = c[1]
+        p.shape([(-1.8, cy - 13, 0), (3.2, cy - 13, 0), (3.2, cy + 13, 0), (-1.8, cy + 13, 0)], col, width=1.4, smooth=False)
+        p.shape([(-8.5, cy - 4.5, 0), (10, cy - 4.5, 0), (10, cy + 0.5, 0), (-8.5, cy + 0.5, 0)], col, width=1.4, smooth=False)
+    return fn
+
+
+def sheep(p, x, y, s=1.0, flip=False, graze=False, col=C.hex('efe8d8')):
+    """A woolly sheep standing to the right, hooves on y, about 40 s tall."""
+    p.push(x, y, s, flip)
+    p.blob((0, -0.5), 26, 3, C(0.1, 0.05, 0.02, 0.25), ink=False)
+    for lx in (-14, 12):
+        p.taper([(lx - 2, -18), (lx - 3, 0)], 2.4, 2.0, INK_SOFT, width=1.0)
+    body = []
+    for i in range(18):
+        a = i / 18 * math.tau
+        r = 1.0 + 0.08 * math.sin(i * 2.7)
+        body.append((math.cos(a) * 24 * r, -26 + math.sin(a) * 13 * r))
+    p.shape(body, col, width=1.6, shade=0.8, rim=0.4)
+    for i in range(16):
+        q = (p.rng.uniform(-18, 18), p.rng.uniform(-34, -18))
+        p.cx.new_path()
+        p.cx.arc(q[0], q[1], 2.4, 0.3, 2.8)
+        p.stroke(col.dark(0.25).alpha(0.7), 0.9)
+    for lx in (-18, 16):
+        p.taper([(lx, -18), (lx + 1, 0)], 2.4, 2.0, C.hex('3a3030'), width=1.0)
+    hy = -18 if graze else -34
+    hx = 30 if graze else 27
+    p.blob((hx, hy), 6.5, 4.6, C.hex('3a3030'), rot=0.5 if graze else 0.2, width=1.2, shade=0.5)
+    p.blob((hx - 4, hy - 4), 3, 1.6, C.hex('3a3030'), rot=-0.6, width=0.9)
+    p.blob((hx + 1, hy - 1), 0.8, 0.8, LEAD_WHITE, ink=False)
+    p.blob((hx - 4, hy - 4.4), 5, 3.8, col, width=1.0, shade=0.5)
+    p.pop()
+
+
+def dog(p, x, y, s=1.0, flip=False, col=C.hex('b08850')):
+    """A small trotting hound to the right, paws on y, about 36 s tall."""
+    p.push(x, y, s, flip)
+    p.blob((0, -0.5), 24, 3, C(0.1, 0.05, 0.02, 0.25), ink=False)
+    dark = col.dark(0.25)
+    p.taper([(-16, -18), (-22, -8), (-20, 0)], 3, 2.2, dark, width=1.1)
+    p.taper([(14, -18), (20, -9), (22, 0)], 3, 2.2, dark, width=1.1)
+    p.taper([(-20, -24), (-30, -32), (-34, -40)], 2.8, 1, col, width=1.2)
+    p.shape([(-22, -26), (-14, -30), (8, -30), (18, -28), (20, -20), (8, -16), (-10, -16), (-22, -18)], col, width=1.6, shade=0.8, rim=0.3)
+    p.taper([(-14, -18), (-12, -8), (-14, 0)], 3, 2.2, col, width=1.1)
+    p.taper([(10, -18), (13, -9), (12, 0)], 3, 2.2, col, width=1.1)
+    p.shape([(16, -28), (20, -38), (26, -40), (34, -36), (36, -33), (28, -31), (22, -24)], col, width=1.5, shade=0.6)
+    p.shape([(21, -38), (18, -32, 0), (24, -35)], dark, width=1.0)
+    p.blob((27, -36.5), 0.9, 0.9, INK, ink=False)
+    p.blob((35.5, -34.6), 1.0, 0.8, INK, ink=False)
+    p.taper([(17, -29), (22, -27)], 1.2, 1.2, VERMILION, width=0.6)
+    p.pop()
+
+
+def fish(p, c, s=1.0, rot=0.0, col=C.hex('9aa8b0')):
+    """A large river fish, head to the right."""
+    p.push(c[0], c[1], s, rot=rot)
+    body = [(-20, 0), (-10, -6), (4, -7), (16, -4), (21, 0), (16, 4), (4, 6.5), (-10, 5)]
+    p.shape([(-19, 0, 0), (-29, -8, 0), (-26, 0), (-29, 8, 0)], col.dark(0.2), width=1.2)
+    p.shape(body, ('v', col.light(0.3), col, col.dark(0.3)), width=1.4, shade=0.5)
+    p.clip_shape(body)
+    for i in range(6):
+        p.cx.new_path()
+        p.cx.arc(-8 + i * 4, 0, 4, -1.2, 1.2)
+        p.stroke(col.dark(0.3).alpha(0.5), 0.6)
+    p.unclip()
+    p.shape([(0, -6.5), (6, -11, 0), (8, -6)], col.dark(0.2), width=1.0)
+    p.blob((15, -1.5), 1.2, 1.2, INK, ink=False)
+    p.line([(12, -4), (11, 3)], INK.alpha(0.5), 0.7)
+    p.pop()
+
+
+def brick_castle(p, x, y, s=1.0):
+    """A red brick castle of the Teutonic Order: a long hall with stepped gables,
+    a square keep and a gatehouse, base on y."""
+    p.push(x, y, s)
+    b = BRICK
+    def wall(pts, col=b):
+        p.shape(pts, ('v', col.light(0.1), col.dark(0.2)), width=1.6, smooth=False, shade=0.3)
+    wall([(-260, 0, 0), (-260, -90, 0), (260, -90, 0), (260, 0, 0)])
+    for i in range(20):
+        xx = -256 + i * 26
+        p.shape([(xx, -90, 0), (xx, -100, 0), (xx + 14, -100, 0), (xx + 14, -90, 0)], b, width=1.0, smooth=False)
+    # the hall with stepped gable
+    wall([(-170, -90, 0), (-170, -170, 0), (40, -170, 0), (40, -90, 0)], b.light(0.05))
+    p.shape([(-175, -170, 0), (-65, -240, 0), (45, -170, 0)], C.hex('7a3a2a'), width=1.6, smooth=False, shade=0.5)
+    for i in range(6):
+        p.shape([(-150 + i * 34, -140, 0), (-150 + i * 34, -110, 0), (-138 + i * 34, -110, 0), (-138 + i * 34, -140, 0)], C.hex('2a1a18'), width=1.0, smooth=False)
+        p.shape([(-150 + i * 34, -140, 0), (-144 + i * 34, -148, 0), (-138 + i * 34, -140, 0)], C.hex('2a1a18'), width=1.0, smooth=False)
+    # stepped gable end
+    gp = [(40, -90, 0), (40, -170, 0)]
+    for k in range(5):
+        gp += [(48 + k * 12, -170 - k * 14, 0), (48 + k * 12, -184 - k * 14, 0)]
+    for k in range(5):
+        gp += [(108 + k * 12, -240 + k * 14, 0), (108 + k * 12, -226 + k * 14, 0)]
+    gp += [(168, -170, 0), (168, -90, 0)]
+    wall(gp, b.light(0.08))
+    for xx in (80, 120):
+        p.shape([(xx - 6, -150, 0), (xx - 6, -112, 0), (xx + 6, -112, 0), (xx + 6, -150, 0)], C.hex('2a1a18'), width=1.0, smooth=False)
+        p.shape([(xx - 6, -150, 0), (xx, -160, 0), (xx + 6, -150, 0)], C.hex('2a1a18'), width=1.0, smooth=False)
+    p.blob((104, -196), 9, 9, LEAD_WHITE.dark(0.1), width=1.0)
+    # the keep
+    wall([(180, -90, 0), (180, -280, 0), (240, -280, 0), (240, -90, 0)], b.dark(0.05))
+    for i in range(4):
+        p.shape([(180 + i * 16, -280, 0), (180 + i * 16, -292, 0), (188 + i * 16, -292, 0), (188 + i * 16, -280, 0)], b, width=1.0, smooth=False)
+    p.shape([(178, -292, 0), (210, -340, 0), (242, -292, 0)], C.hex('5a3a3a'), width=1.4, smooth=False, shade=0.5)
+    for yy in (-250, -200, -150):
+        p.shape([(206, yy, 0), (206, yy + 20, 0), (214, yy + 20, 0), (214, yy, 0)], C.hex('2a1a18'), width=1.0, smooth=False)
+    # gatehouse
+    wall([(-240, 0, 0), (-240, -130, 0), (-190, -130, 0), (-190, 0, 0)], b.dark(0.08))
+    p.shape([(-228, 0, 0), (-228, -40), (-215, -56), (-202, -40), (-202, 0, 0)], C.hex('2a1a18'), width=1.2)
+    p.shape([(-244, -130, 0), (-215, -170, 0), (-186, -130, 0)], C.hex('5a3a3a'), width=1.4, smooth=False, shade=0.5)
+    # brick courses
+    for yy in range(-80, 0, 12):
+        p.line([(-260, yy), (260, yy)], INK.alpha(0.15), 0.8, smooth=False)
+    p.pop()
+
+
+def eden_gate(p, x, y, s=1.0):
+    """The east gate of the Garden: a golden wall with a round arched gate, the
+    green garden and the tree of life glimpsed through it. Base on y."""
+    p.push(x, y, s)
+    wall_c = C.hex('d9b766')
+    p.shape([(-400, 0, 0), (-400, -150, 0), (400, -150, 0), (400, 0, 0)], ('v', wall_c.light(0.2), wall_c.dark(0.25)), width=2, smooth=False, shade=0.3)
+    for i in range(16):
+        xx = -396 + i * 50
+        p.shape([(xx, -150, 0), (xx, -166, 0), (xx + 26, -166, 0), (xx + 26, -150, 0)], wall_c.light(0.1), width=1.2, smooth=False)
+    for yy in (-110, -70, -30):
+        p.line([(-400, yy), (400, yy)], GOLD_DARK.alpha(0.4), 1.2, smooth=False)
+    # the gate opening
+    gate = [(-70, 0, 0), (-70, -120)] + [polar((0, -120), 70, math.pi + k * math.pi / 10) for k in range(1, 10)] + [(70, -120), (70, 0, 0)]
+    p.shape(gate, ('v', C.hex('cfe8b0'), C.hex('5f9a45')), width=2.2)
+    p.clip_shape(gate)
+    p.glow((0, -120), 160, C.hex('fff6c8'), 0.7)
+    # the tree of life inside
+    p.taper([(0, 0), (-2, -70), (2, -120)], 9, 5, OAK, width=1.4, shade=0.6)
+    p.blob((0, -150), 60, 46, ('r', C.hex('8ac860'), C.hex('3a7a30')), width=1.6, shade=0.6)
+    for i in range(14):
+        q = (p.rng.uniform(-48, 48), p.rng.uniform(-186, -116))
+        p.blob(q, 4.2, 4.2, GOLD, width=0.9, shade=0.5)
+    p.blob((0, -6), 90, 10, C.hex('6aa8d8'), width=1.2)
+    p.unclip()
+    p.line(gate, GOLD_DARK, 5)
+    for xx in (-90, 90):
+        p.shape([(xx - 18, 0, 0), (xx - 18, -136, 0), (xx + 18, -136, 0), (xx + 18, 0, 0)], ('h', wall_c.light(0.3), wall_c.dark(0.2)), width=1.6, smooth=False)
+        p.blob((xx, -144), 20, 10, GOLD, width=1.4, shade=0.6)
+    # trees over the wall
+    for xx, r in ((-300, 50), (-200, 40), (220, 46), (320, 56)):
+        p.taper([(xx, -150), (xx, -190)], 6, 5, OAK, width=1.2)
+        p.blob((xx, -210), r, r * 0.8, ('r', C.hex('7ab850'), C.hex('2f6a2a')), width=1.6, shade=0.6)
+        for i in range(4):
+            p.blob((xx + p.rng.uniform(-r * 0.6, r * 0.6), -210 + p.rng.uniform(-r * 0.4, r * 0.4)), 3.4, 3.4, VERMILION.light(0.2), width=0.8)
+    p.pop()
+
+
+def wayside_shrine(p, x, y, s=1.0):
+    """A little gabled wayside shrine on a post, a painted cross inside, flowers at its foot."""
+    p.push(x, y, s)
+    p.shape([(-30, 0, 0), (30, 0, 0), (24, -16, 0), (-24, -16, 0)], STONE, width=1.6, smooth=False, shade=0.6)
+    p.shape([(-8, -16, 0), (-8, -110, 0), (8, -110, 0), (8, -16, 0)], ('h', OAK.light(0.2), OAK.dark(0.3)), width=1.5, smooth=False)
+    p.shape([(-30, -110, 0), (30, -110, 0), (30, -180, 0), (-30, -180, 0)], ('h', OAK.light(0.1), OAK.dark(0.3)), width=1.6, smooth=False)
+    p.shape([(-22, -114, 0), (22, -114, 0), (22, -172, 0), (-22, -172, 0)], ('v', ULTRA_DEEP, ULTRA), width=1.2, smooth=False)
+    p.stars((-20, -170, 20, -120), 6, GOLD_LIGHT, (1.5, 2.5))
+    p.taper([(0, -120), (0, -166)], 2.2, 2.2, GOLD, width=1.0)
+    p.taper([(-10, -154), (10, -154)], 2.2, 2.2, GOLD, width=1.0)
+    p.shape([(-42, -172, 0), (0, -214, 0), (42, -172, 0), (36, -166, 0), (0, -202, 0), (-36, -166, 0)], C.hex('5a3a2a'), width=1.6, smooth=False, shade=0.6)
+    p.line([(0, -214), (0, -226)], OAK.dark(0.3), 2.4)
+    p.line([(-6, -221), (6, -221)], OAK.dark(0.3), 2.4)
+    for i in range(9):
+        q = (p.rng.uniform(-26, 26), p.rng.uniform(-14, -4))
+        p.blob(q, 2.8, 2.8, [VERMILION, GOLD_LIGHT, LEAD_WHITE, AZURE][i % 4], width=0.7)
+    p.pop()
+
+
+def mountains(p, base_y, col, peaks, snow=True):
+    """A jagged range: peaks is a list of (x, height, half width)."""
+    for x, h, hw in peaks:
+        pts = [(x - hw, base_y, 0), (x - hw * 0.4, base_y - h * 0.6), (x - hw * 0.12, base_y - h * 0.9), (x, base_y - h, 0), (x + hw * 0.2, base_y - h * 0.85), (x + hw * 0.5, base_y - h * 0.5), (x + hw, base_y, 0)]
+        p.shape(pts, ('v', col.light(0.15), col.dark(0.2)), width=1.8, shade=0.7)
+        if snow:
+            p.shape([(x - hw * 0.22, base_y - h * 0.78), (x - hw * 0.12, base_y - h * 0.9), (x, base_y - h, 0), (x + hw * 0.2, base_y - h * 0.85), (x + hw * 0.26, base_y - h * 0.72), (x + hw * 0.1, base_y - h * 0.78), (x - hw * 0.05, base_y - h * 0.72)], LEAD_WHITE, width=1.2)

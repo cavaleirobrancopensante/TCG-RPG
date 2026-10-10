@@ -315,7 +315,7 @@
       }
     ],
     "text": "Deal 2 damage to any enemy creature or the enemy player.",
-    "flavor": "\"To your health!\" she cried, and lit the brandy.",
+    "flavor": "\"To your health!\" he cried, and lit the brandy.",
     "art": "res://art/cards/revel_c_013.webp"
   },
   {
@@ -359,6 +359,7 @@
       "R": 1,
       "generic": 1
     },
+    "speed": "instant",
     "keywords": [],
     "effects": [
       {
@@ -531,12 +532,187 @@
     "art": "res://art/cards/revel_c_020.webp"
   },
   {
+    "id": "revel_c_021",
+    "name": "Wandering Minstrel",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [],
+    "text": "Haste (this can attack the turn it comes into play).",
+    "flavor": "He sings of battles he has never seen, on his way to one.",
+    "art": "res://art/cards/revel_c_021.webp"
+  },
+  {
+    "id": "revel_c_022",
+    "name": "Tumbler of the Fair",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Performer",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each other Performer you control.",
+    "flavor": "He lands every somersault, and every somersault lands on someone.",
+    "art": "res://art/cards/revel_c_022.webp"
+  },
+  {
+    "id": "revel_c_023",
+    "name": "Mummer of the Twelfth Night",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [
+      "first_strike"
+    ],
+    "effects": [],
+    "text": "First strike (this deals combat damage before creatures without first strike).",
+    "flavor": "Every Twelfth Night he slays the paper dragon with a wooden sword. The dragon has never once won.",
+    "art": "res://art/cards/revel_c_023.webp"
+  },
+  {
+    "id": "revel_c_024",
+    "name": "Perfumed Lordling",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1
+    },
+    "power": 0,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 1,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
+    "flavor": "He has never held anything heavier than a pomander, and he means to keep it so.",
+    "art": "res://art/cards/revel_c_024.webp"
+  },
+  {
+    "id": "revel_c_025",
+    "name": "Count of the Velvet Glove",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Noble Duelist",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "first_strike"
+    ],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent",
+        "trigger": "idle"
+      }
+    ],
+    "text": "First strike (this deals combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+    "flavor": "He accepts every challenge, and names a date some time after the next feast.",
+    "art": "res://art/cards/revel_c_025.webp"
+  },
+  {
+    "id": "revel_c_026",
+    "name": "Shouts of Encore",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1
+    },
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Performer",
+        "power": 2,
+        "toughness": 0,
+        "duration": "turn",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Performers you control get +2/+0 until end of turn.",
+    "flavor": "The crowd roared for more, and the players gave it to the front rank of the enemy.",
+    "art": "res://art/cards/revel_c_026.webp"
+  },
+  {
+    "id": "revel_c_027",
+    "name": "Toast to the Peerage",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 1,
+        "amount_per": "Noble",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 1 damage to the enemy player for each Noble you control.",
+    "flavor": "Each lord rose in turn to drink to the enemy's ruin, and the enemy felt every cup.",
+    "art": "res://art/cards/revel_c_027.webp"
+  },
+  {
     "id": "revel_u_001",
     "name": "Duelist of the Velvet Court",
     "faction": "revel",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Duelist",
+    "subtype": "Human Noble Duelist",
     "cost": {
       "R": 1,
       "generic": 2
@@ -592,7 +768,7 @@
     "faction": "revel",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Jester",
+    "subtype": "Human Jester Performer",
     "cost": {
       "R": 1,
       "generic": 2
@@ -773,6 +949,7 @@
       "R": 1,
       "generic": 2
     },
+    "speed": "instant",
     "keywords": [],
     "effects": [
       {
@@ -905,6 +1082,145 @@
     "text": "Carouse (if you already played another non-land card this turn): creatures you control have first strike.",
     "flavor": "Behind a painted face, the clumsiest guest moves like a fencing master.",
     "art": "res://art/cards/revel_u_013.webp"
+  },
+  {
+    "id": "revel_u_014",
+    "name": "Master of the Revels",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "cost_reduce",
+        "subtype": "Performer",
+        "amount": 1
+      }
+    ],
+    "text": "Your Performer creature cards cost 1 less to play (this reduces only generic mana).",
+    "flavor": "He hires the jugglers, pays the fire-eaters, and sends the bill for both to the Crown.",
+    "art": "res://art/cards/revel_u_014.webp"
+  },
+  {
+    "id": "revel_u_015",
+    "name": "Master of the Pageant Wagon",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 0,
+        "scope": "other_own_creatures",
+        "subtype": "Performer"
+      },
+      {
+        "static": "keyword",
+        "keyword": "haste",
+        "scope": "other_own_creatures",
+        "subtype": "Performer"
+      }
+    ],
+    "text": "Other Performers you control get +1/+0 and have haste (they can attack the turn they come into play).",
+    "flavor": "When his wagon rolls into town, the whole company leaps down already performing.",
+    "art": "res://art/cards/revel_u_015.webp"
+  },
+  {
+    "id": "revel_u_016",
+    "name": "Gossiping Marquis",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Noble",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "text": "This gets +1/+1 for each other Noble you control.",
+    "flavor": "He knows every scandal at court, and is the subject of most of them.",
+    "art": "res://art/cards/revel_u_016.webp"
+  },
+  {
+    "id": "revel_u_017",
+    "name": "Lord of Misrule",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 1,
+        "trigger": "ally_enter",
+        "ally_subtype": "Performer"
+      }
+    ],
+    "text": "Whenever another Performer enters under your control, deal 1 damage to the enemy player.",
+    "flavor": "For the twelve nights of the feast the fool wears the paper crown, and the hall obeys him.",
+    "art": "res://art/cards/revel_u_017.webp"
+  },
+  {
+    "id": "revel_u_018",
+    "name": "Royal Command Performance",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1,
+        "amount_per": "Performer",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 1 damage to any enemy creature or the enemy player for each Performer you control.",
+    "flavor": "The king asked for something with fire in it. The players were happy to oblige.",
+    "art": "res://art/cards/revel_u_018.webp"
   },
   {
     "id": "revel_r_001",
@@ -1166,6 +1482,65 @@
     "art": "res://art/cards/revel_r_009.webp"
   },
   {
+    "id": "revel_r_010",
+    "name": "King of the Minstrels",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 2,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Performer"
+      }
+    ],
+    "text": "Haste (this can attack the turn it comes into play). Other Performers you control get +1/+1.",
+    "flavor": "Rex ministrallorum, the rolls call him, and every fiddler in the shire owes him a penny a year.",
+    "art": "res://art/cards/revel_r_010.webp"
+  },
+  {
+    "id": "revel_r_011",
+    "name": "Elector of the Endless Banquet",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Noble",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent",
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on each Noble you control.",
+    "flavor": "He gives his vote to whichever prince serves the longest dinner.",
+    "art": "res://art/cards/revel_r_011.webp"
+  },
+  {
     "id": "revel_m_001",
     "name": "Vessar, Master of the Undying Feast",
     "faction": "revel",
@@ -1203,7 +1578,7 @@
     "faction": "revel",
     "rarity": "mythic",
     "type": "creature",
-    "subtype": "Human Duelist",
+    "subtype": "Human Noble Duelist",
     "cost": {
       "R": 2,
       "generic": 3
@@ -1278,5 +1653,40 @@
     "text": "At the beginning of your upkeep, deal 1 damage to each creature and 1 damage to the enemy player, and you lose 1 life. Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn.",
     "flavor": "It was lit for one feast day. Nobody remembers which, and nobody can put it out.",
     "art": "res://art/cards/revel_m_003.webp"
+  },
+  {
+    "id": "revel_m_004",
+    "name": "Ruggiero, Patron of the Players",
+    "faction": "revel",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 2,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 5,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1,
+        "amount_per": "Performer",
+        "trigger": "idle"
+      }
+    ],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "first_strike",
+        "scope": "own_creatures",
+        "subtype": "Performer"
+      }
+    ],
+    "text": "Performers you control have first strike (they deal combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player for each Performer you control.",
+    "flavor": "He has never drawn a sword. He keeps forty players who throw fire on cue.",
+    "art": "res://art/cards/revel_m_004.webp"
   }
 ]

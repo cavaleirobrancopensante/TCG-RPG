@@ -93,9 +93,15 @@ var sides: Array = []
 var active := 0
 var turn := 0
 var first_player := 0
-var phase := "setup"     # mulligan | main1 | block | main2 | over
+## mulligan | setup | choice | upkeep | draw | main1 | begin_combat | block | combat | main2 | end | over
+## ("block": attackers declared, blocks not yet; "combat": blocks declared, before main 2)
+var phase := "setup"
+## The priority window inside the turn: upkeep, draw, main1, begin_combat, attackers,
+## blockers, damage, main2, end (the phase bar shows these).
+var step := ""
 var attackers: Array = []   # uids
 var blocks := {}            # attacker uid -> blocker uid
+var was_blocked := {}       # attacker uid -> true once blocked (stays blocked if the blocker leaves)
 var winner := -1
 var events: Array = []
 var rng := RandomNumberGenerator.new()
@@ -107,6 +113,41 @@ var cur_faction2 := ""
 
 ## The faith a side mostly plays (used for token colours from spells).
 var side_faction := ["machine", "machine"]
+
+# ------------------------------------------------------------ the stack and priority
+## Spells and non-mana abilities wait here until both players pass in a row (last in, first
+## out). Items: {"sid", "kind": "card"/"ability", "side", "id", "card", "targets",
+## "overclock", "uid", "idx", "text"}.
+var stack: Array = []
+var priority := 0                 # the side that may act now
+var window_open := false          # a step's priority window (both passing with an empty stack closes it)
+var window_actions := [0, 0]      # actions each side took in this window (the AI's loop guard)
+## true: every side is decided by the AI inside the engine, so play(), declare_attackers()
+## and end_turn() run straight through their priority windows (tests, simulations).
+## false (the duel screen): the engine stops whenever an interactive side gets priority and
+## at every step's window; the screen then calls pass_priority() and the next step.
+var auto_priority := true
+var _passes := 0
+var _settling := false
+var _next_sid := 1
+var _resolving_cast_side := -1    # carouse: the card now resolving counts itself
+const MAX_WINDOW_ACTIONS := 4     # no side acts more than this in one window
+const SETTLE_GUARD := 400
+
+
+static func is_instant(c: Dictionary) -> bool:
+	return c.get("type") == "spell" and String(c.get("speed", "")) == "instant"
+
+
+## A mana ability resolves at once and never uses the stack.
+static func is_mana_ability(ab: Dictionary) -> bool:
+	var effs: Array = ab.get("effects", [])
+	if effs.is_empty():
+		return false
+	for e in effs:
+		if e.get("action") != "add_mana":
+			return false
+	return true
 
 
 # ============================================================ setup & turn flow
@@ -223,12 +264,19 @@ func begin_turn() -> void:
 			p.tapped = false
 		p.sick = false
 		p.attacked = false
-		p.uses.clear()
 	for sd in sides:
-		for p in sd.creatures:
+		for p in sd.creatures + sd.relics:
 			p.regen_used = false
+			p.uses.clear()          # "once per turn" counts each turn, abilities work in both
 	attackers.clear()
 	blocks.clear()
+	was_blocked.clear()
+	stack.clear()
+	window_open = false
+	_passes = 0
+	priority = active
+	step = "upkeep"
+	phase = "upkeep"
 	emit({"type": "turn", "side": active, "turn": turn})
 	# Upkeep triggers (copy the list: effects may change it).
 	for p in (s.relics + s.creatures).duplicate():
@@ -246,15 +294,71 @@ func begin_turn() -> void:
 	if not s.foresight_cards.is_empty():
 		phase = "choice"            # the player decides his foresight first; then the draw
 		return
-	_turn_draw()
+	_after_upkeep()
 
 
-func _turn_draw() -> void:
+## The upkeep window (after the upkeep triggers), then the draw.
+func _after_upkeep() -> void:
+	phase = "upkeep"
+	step = "upkeep"
+	if _window():
+		return
+	to_draw()
+
+
+## Draw step: the turn's draw, then its window, then main phase 1.
+func to_draw() -> void:
+	if phase != "upkeep" or not stack.is_empty():
+		return
+	window_open = false
 	var skip_draw := turn == 1 and active == first_player
 	if not skip_draw:
 		draw_card(active)
-	if phase != "over":
-		phase = "main1"
+	if phase == "over":
+		return
+	phase = "draw"
+	step = "draw"
+	if _window():
+		return
+	to_main()
+
+
+func to_main() -> void:
+	if phase != "draw" or not stack.is_empty():
+		return
+	_main_phase("main1")
+
+
+func _main_phase(which: String) -> void:
+	window_open = false
+	phase = which
+	step = which
+	priority = active
+	_passes = 0
+	window_actions = [0, 0]
+
+
+## Combat begins (window before attackers are declared).
+func begin_combat() -> void:
+	if phase != "main1" or not stack.is_empty():
+		return
+	phase = "begin_combat"
+	step = "begin_combat"
+	_window()
+
+
+## After combat damage (or with no combat): main phase 2.
+func to_main2() -> void:
+	if phase in ["over", "mulligan", "main2", "end"] or not stack.is_empty():
+		return
+	_main_phase("main2")
+
+
+## A window in the active player's main phase (he has done what he wants and passes; the
+## other side may answer). Only the screen uses it.
+func open_main_window() -> void:
+	if is_main_phase() and stack.is_empty():
+		_window()
 
 
 ## Interactive choices still open for side i (the screen asks for them before going on).
@@ -292,22 +396,26 @@ func resolve_foresight(i: int, top: Array) -> void:
 		s.deck.append(keep_list[k])
 	emit({"type": "foresight", "side": i, "kept": keep_list.size(), "bottom": pending.size()})
 	if phase == "choice" and i == active:
-		_turn_draw()
+		_after_upkeep()
 
 
-func end_turn() -> void:
+## End step: Idle triggers, then the window (the screen calls end_turn() after it).
+func begin_end_step() -> void:
+	if phase in ["over", "mulligan", "setup", "end"]:
+		return
+	_end_step_start()
 	if phase == "over":
 		return
-	# hand limit: the computer lets go of what it needs least (the player chose already)
-	var me := side(active)
-	while me.hand.size() > me.max_hand:
-		var idx := BattleAI.worst_card(self, active)
-		if idx < 0:
-			break
-		var gone: String = me.hand[idx]
-		me.hand.remove_at(idx)
-		me.graveyard.append(gone)
-		emit({"type": "discard", "side": active, "id": gone})
+	_window()
+
+
+func _end_step_start() -> void:
+	if not stack.is_empty():
+		_force_resolve()
+	window_open = false
+	phase = "end"
+	step = "end"
+	priority = active
 	# Idle (Revel): rewards creatures that stayed untapped and did not attack.
 	var s := side(active)
 	for p in s.creatures.duplicate():
@@ -321,8 +429,35 @@ func end_turn() -> void:
 				if phase == "over":
 					return
 	check_state()
-	if phase == "over":
+
+
+## Finish the turn: the end step (if not yet), cleanup, and the next turn begins.
+func end_turn() -> void:
+	if phase == "over" or phase == "mulligan":
 		return
+	if phase != "end":
+		_end_step_start()
+		if phase == "over":
+			return
+		if auto_priority:
+			_window()
+			if phase == "over":
+				return
+	if not stack.is_empty():
+		_force_resolve()
+		if phase == "over":
+			return
+	window_open = false
+	# hand limit: the computer lets go of what it needs least (the player chose already)
+	var me := side(active)
+	while me.hand.size() > me.max_hand:
+		var idx := BattleAI.worst_card(self, active)
+		if idx < 0:
+			break
+		var gone: String = me.hand[idx]
+		me.hand.remove_at(idx)
+		me.graveyard.append(gone)
+		emit({"type": "discard", "side": active, "id": gone})
 	for sd in sides:
 		for p in sd.creatures:
 			p.damage = 0
@@ -350,6 +485,239 @@ func _with_source(card: Dictionary) -> void:
 	cur_faction2 = card.get("faction2", "")
 
 
+# ============================================================ priority and the stack
+
+## May side i cast or activate something right now?
+func has_priority(i: int) -> bool:
+	if priority != i or phase in ["mulligan", "setup", "over", "choice"]:
+		return false
+	return window_open or not stack.is_empty() or (is_main_phase() and i == active)
+
+
+## Is side i's priority decided by the engine (the AI)?
+func ai_controls(i: int) -> bool:
+	return auto_priority or not side(i).interactive
+
+
+## Open the current step's window: the active player first. Returns true when the caller
+## must stop here (the screen finishes the window and calls the next step).
+func _window() -> bool:
+	if phase == "over":
+		return true
+	window_open = true
+	priority = active
+	_passes = 0
+	window_actions = [0, 0]
+	_settle()
+	if phase == "over":
+		return true
+	if not auto_priority:
+		return true
+	if window_open or not stack.is_empty():
+		_force_resolve()       # cannot happen with every side decided by the AI; stay safe
+		window_open = false
+	return phase == "over"
+
+
+## Let the AI take its priority decisions until an interactive side has to choose, the
+## window closes or the stack is empty (outside a window).
+func settle() -> void:
+	_settle()
+
+
+func _settle() -> void:
+	if _settling:
+		return
+	_settling = true
+	var guard := 0
+	while phase != "over" and (window_open or not stack.is_empty()):
+		guard += 1
+		if guard > SETTLE_GUARD:
+			push_warning("BattleState: priority loop guard hit")
+			_force_resolve()
+			window_open = false
+			break
+		var p := priority
+		if not ai_controls(p):
+			break
+		var acted := false
+		if int(window_actions[p]) < MAX_WINDOW_ACTIONS:
+			var before := stack.size()
+			acted = BattleAI.respond(self, p) and (stack.size() > before or priority != p)
+		if acted:
+			window_actions[p] = int(window_actions[p]) + 1
+		else:
+			_pass(p)
+	_settling = false
+
+
+## Side i passes priority.
+func pass_priority(i: int) -> void:
+	if not has_priority(i):
+		return
+	_pass(i)
+	_settle()
+
+
+func _pass(p: int) -> void:
+	if p != priority:
+		return
+	_passes += 1
+	if _passes < 2:
+		priority = 1 - p
+		return
+	_passes = 0
+	if not stack.is_empty():
+		_resolve_top()
+		priority = active
+		if stack.is_empty() and not window_open:
+			window_actions = [0, 0]
+	else:
+		window_open = false
+
+
+## Something went on the stack: casting counts as the caster's pass, the other side answers.
+func _after_push(i: int) -> void:
+	priority = 1 - i
+	_passes = 1
+	_settle()
+
+
+## Resolve everything on the stack at once (end of turn safety, loop guard).
+func _force_resolve() -> void:
+	var guard := 0
+	while not stack.is_empty() and phase != "over" and guard < 100:
+		guard += 1
+		_resolve_top()
+	_passes = 0
+	priority = active
+
+
+func _resolve_top() -> void:
+	var it: Dictionary = stack.pop_back()
+	emit({"type": "resolve", "sid": it["sid"], "side": it["side"]})
+	if it["kind"] == "ability":
+		_resolve_ability(it)
+	else:
+		_resolve_card(it)
+	check_state()
+
+
+## Effect / chosen-target pairs of a stack item, in the order its targets were chosen.
+func item_effect_targets(it: Dictionary) -> Array:
+	var out: Array = []
+	var list: Array = []
+	if it["kind"] == "ability":
+		list = it.get("effects", [])
+	else:
+		var c: Dictionary = it["card"]
+		var trig := "cast" if c.get("type") == "spell" else "enter"
+		for e in c.get("effects", []):
+			if e.get("trigger") == trig:
+				list.append(e)
+		if it.get("overclock", false):
+			list = list + c.get("overclock", {}).get("effects", [])
+	var targets: Array = it.get("targets", [])
+	var ti := 0
+	for e in list:
+		if e.get("action") == "fight":
+			out.append([FIGHTER_SPEC, targets[ti] if ti < targets.size() else null])
+			ti += 1
+		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
+			out.append([e, targets[ti] if ti < targets.size() else null])
+			ti += 1
+		elif e.get("action") != "fight":
+			out.append([e, null])
+	return out
+
+
+func _resolve_card(it: Dictionary) -> void:
+	var i: int = it["side"]
+	var s := side(i)
+	var id: String = it["id"]
+	var c: Dictionary = it["card"]
+	var targets: Array = it.get("targets", [])
+	var overclock: bool = it.get("overclock", false)
+	_with_source(c)
+	_resolving_cast_side = i
+	var n_main := target_specs(c, false).size()
+	var oc_targets: Array = targets.slice(n_main)
+	match c.get("type"):
+		"creature":
+			var p := _make_perm(i, id, c)
+			s.creatures.append(p)
+			emit({"type": "summon", "side": i, "uid": p.uid, "id": id, "from_stack": true})
+			_run_effects(i, c, "enter", p, targets, true)
+			if phase != "over":
+				_entered(p)
+			if overclock and phase != "over":
+				emit({"type": "overclock", "side": i, "uid": p.uid})
+				_run_list(i, c.get("overclock", {}).get("effects", []), p, oc_targets, true)
+		"relic":
+			var r := _make_perm(i, id, c)
+			s.relics.append(r)
+			emit({"type": "relic", "side": i, "uid": r.uid, "id": id, "from_stack": true})
+			_run_effects(i, c, "enter", r, targets, true)
+			if overclock and phase != "over":
+				emit({"type": "overclock", "side": i, "uid": r.uid})
+				_run_list(i, c.get("overclock", {}).get("effects", []), r, oc_targets, true)
+		_:
+			var cast_list: Array = []
+			for e in c.get("effects", []):
+				if e.get("trigger") == "cast":
+					cast_list.append(e)
+			var oc_list: Array = c.get("overclock", {}).get("effects", []) if overclock else []
+			var g1: Array = _target_check(i, cast_list, targets)
+			var g2: Array = _target_check(i, oc_list, oc_targets)
+			if g1[0] + g2[0] > 0 and g1[1] + g2[1] == 0:
+				emit({"type": "fizzle", "side": i, "id": id, "sid": it["sid"]})
+			else:
+				emit({"type": "spell", "side": i, "id": id, "from_stack": true})
+				_run_list(i, cast_list, null, targets, true)
+				if overclock and phase != "over":
+					_run_list(i, oc_list, null, oc_targets, true)
+			s.graveyard.append(id)
+	_resolving_cast_side = -1
+
+
+func _resolve_ability(it: Dictionary) -> void:
+	var i: int = it["side"]
+	var c: Dictionary = it["card"]
+	_with_source(c)
+	var list: Array = it.get("effects", [])
+	var targets: Array = it.get("targets", [])
+	var g: Array = _target_check(i, list, targets)
+	if g[0] > 0 and g[1] == 0:
+		emit({"type": "fizzle", "side": i, "id": it["id"], "sid": it["sid"], "ability": true})
+		return
+	var src := find_perm(int(it.get("uid", -1)))
+	_run_list(i, list, src, targets, true)
+
+
+## [targets chosen, of them still legal] for an effect list (fizzle when all are gone).
+func _target_check(i: int, list: Array, targets: Array) -> Array:
+	var given := 0
+	var ok := 0
+	var ti := 0
+	for e in list:
+		if e.get("action") == "fight":
+			if ti < targets.size() and typeof(targets[ti]) == TYPE_DICTIONARY:
+				var fp := find_perm(int(targets[ti].get("uid", -1)))
+				if fp == null:
+					given += 1          # the fighter is gone
+				elif fp.owner == i:
+					given += 1
+					ok += 1
+			ti += 1
+		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
+			if ti < targets.size() and typeof(targets[ti]) == TYPE_DICTIONARY:
+				given += 1
+				if _ref_still_valid(i, e, targets[ti]):
+					ok += 1
+			ti += 1
+	return [given, ok]
+
+
 # ============================================================ conditions & statics
 
 ## Is a condition (grace, composure, rooted, carouse, bloodied) true for side i?
@@ -371,6 +739,8 @@ func cond_ok(i: int, cond: String, source = null) -> bool:
 			var need := 1
 			if source != null and source.entered_turn == turn and active == i:
 				need = 2            # the card itself does not count
+			elif source == null and _resolving_cast_side == i:
+				need = 2            # a spell resolving: it was counted when cast
 			return active == i and s.cast_count >= need
 	return false
 
@@ -629,15 +999,22 @@ func is_main_phase() -> bool:
 	return phase == "main1" or phase == "main2"
 
 
+## Sorcery speed: your own main phase with an empty stack.
+func sorcery_time(i: int) -> bool:
+	return i == active and is_main_phase() and stack.is_empty() and has_priority(i)
+
+
 func can_play(i: int, hand_idx: int, overclock: bool = false) -> bool:
-	if i != active or not is_main_phase() or phase == "over":
+	if phase == "over" or not has_priority(i):
 		return false
 	var s := side(i)
 	if hand_idx < 0 or hand_idx >= s.hand.size():
 		return false
 	var c := CardDB.get_card(s.hand[hand_idx])
 	if c.get("type") == "land":
-		return not s.land_played
+		return sorcery_time(i) and not s.land_played
+	if not is_instant(c) and not sorcery_time(i):
+		return false
 	if overclock and c.get("overclock", {}).is_empty():
 		return false
 	var extra: Dictionary = c.get("overclock", {}).get("cost", {}) if overclock else {}
@@ -736,47 +1113,59 @@ func play(i: int, hand_idx: int, targets: Array = [], overclock: bool = false) -
 	var id: String = s.hand[hand_idx]
 	var c := CardDB.get_card(id)
 	var extra: Dictionary = c.get("overclock", {}).get("cost", {}) if overclock else {}
-	if c.get("type") != "land":
-		pay(i, effective_cost(i, c, extra))
-		s.tax = 0
+	if c.get("type") == "land":
+		s.hand.remove_at(hand_idx)
+		_with_source(c)
+		var prod = c.get("produces", "C")
+		var cols: Array = prod if typeof(prod) == TYPE_ARRAY else [String(prod)]
+		s.lands.append({"id": id, "color": "".join(cols), "colors": cols, "tapped": c.get("enters_tapped", false)})
+		s.land_played = true
+		emit({"type": "land", "side": i, "id": id})
+		_run_effects(i, c, "enter", null, [])
+		check_state()
+		return true
+	# Everything else is cast: the cost (with tax) is paid now, the targets are chosen now,
+	# and it waits on the stack until both players pass.
+	pay(i, effective_cost(i, c, extra))
+	s.tax = 0
 	s.hand.remove_at(hand_idx)
-	_with_source(c)
-	var oc_targets: Array = targets.slice(target_specs(c, false).size())
-	match c.get("type"):
-		"land":
-			var prod = c.get("produces", "C")
-			var cols: Array = prod if typeof(prod) == TYPE_ARRAY else [String(prod)]
-			s.lands.append({"id": id, "color": "".join(cols), "colors": cols, "tapped": c.get("enters_tapped", false)})
-			s.land_played = true
-			emit({"type": "land", "side": i, "id": id})
-			_run_effects(i, c, "enter", null, [])
-		"creature":
-			var p := _make_perm(i, id, c)
-			s.creatures.append(p)
-			emit({"type": "summon", "side": i, "uid": p.uid, "id": id})
-			_run_effects(i, c, "enter", p, targets)
-			_entered(p)
-			if overclock:
-				emit({"type": "overclock", "side": i, "uid": p.uid})
-				_run_list(i, c.get("overclock", {}).get("effects", []), p, oc_targets)
-		"relic":
-			var r := _make_perm(i, id, c)
-			s.relics.append(r)
-			emit({"type": "relic", "side": i, "uid": r.uid, "id": id})
-			_run_effects(i, c, "enter", r, targets)
-			if overclock:
-				emit({"type": "overclock", "side": i, "uid": r.uid})
-				_run_list(i, c.get("overclock", {}).get("effects", []), r, oc_targets)
-		"spell":
-			emit({"type": "spell", "side": i, "id": id})
-			_run_effects(i, c, "cast", null, targets)
-			if overclock:
-				_run_list(i, c.get("overclock", {}).get("effects", []), null, oc_targets)
-			s.graveyard.append(id)
-	if c.get("type") != "land":
-		s.cast_count += 1
-	check_state()
+	s.cast_count += 1
+	var item := {"sid": _next_sid, "kind": "card", "side": i, "id": id, "card": c,
+		"targets": targets.duplicate(), "overclock": overclock}
+	_next_sid += 1
+	stack.append(item)
+	emit({"type": "cast", "side": i, "id": id, "sid": item["sid"], "targets": _event_targets(item), "overclock": overclock})
+	_after_push(i)
 	return true
+
+
+## The targets of a stack item worth drawing (players and permanents), for the screen.
+func _event_targets(it: Dictionary) -> Array:
+	var out: Array = []
+	for pr in item_effect_targets(it):
+		var ref = pr[1]
+		if typeof(ref) == TYPE_DICTIONARY and ref.get("kind") in ["player", "creature", "relic"]:
+			out.append(ref)
+	return out
+
+
+## Would casting this card do anything (a spell whose only targets are missing would not)?
+func has_useful_targets(i: int, c: Dictionary) -> bool:
+	if c.get("type") != "spell":
+		return true
+	_with_source(c)
+	var needs := 0
+	var found := 0
+	for e in c.get("effects", []):
+		if e.get("trigger") != "cast":
+			continue
+		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
+			needs += 1
+			if not valid_targets(i, e).is_empty():
+				found += 1
+		else:
+			return true
+	return needs == 0 or found > 0
 
 
 func _make_perm(i: int, id: String, c: Dictionary) -> Perm:
@@ -796,18 +1185,23 @@ func _make_perm(i: int, id: String, c: Dictionary) -> Perm:
 	return p
 
 
-func _run_effects(i: int, c: Dictionary, trigger: String, source: Perm, targets: Array) -> void:
+func _run_effects(i: int, c: Dictionary, trigger: String, source: Perm, targets: Array, strict: bool = false) -> void:
 	var list: Array = []
 	for e in c.get("effects", []):
 		if e.get("trigger") == trigger:
 			list.append(e)
-	_run_list(i, list, source, targets)
+	_run_list(i, list, source, targets, strict)
 
 
-func _run_list(i: int, list: Array, source: Perm, targets: Array) -> void:
+## strict (resolving from the stack): an effect whose chosen target is no longer legal does
+## nothing instead of picking another target.
+func _run_list(i: int, list: Array, source: Perm, targets: Array, strict: bool = false) -> void:
 	var ti := 0
+	var src_card: Dictionary = source.card if source else {"faction": cur_faction, "faction2": cur_faction2}
 	for e0 in list:
 		var e: Dictionary = e0
+		var skip := false
+		_with_source(src_card)      # a death trigger in between may have changed it
 		if e.get("action") == "fight":
 			# the first chosen target of a fight is your own fighter
 			if ti < targets.size() and typeof(targets[ti]) == TYPE_DICTIONARY and targets[ti].get("kind") == "creature":
@@ -816,12 +1210,19 @@ func _run_list(i: int, list: Array, source: Perm, targets: Array) -> void:
 				if fp and fp.owner == i:
 					e = e.duplicate()
 					e["_fighter"] = fp.uid
+				elif strict and fp == null:
+					skip = true         # the chosen fighter is gone
 			ti += 1
 		var chosen = null
 		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
 			if ti < targets.size():
 				chosen = targets[ti]
 			ti += 1
+			if strict and typeof(chosen) == TYPE_DICTIONARY:
+				if not _ref_still_valid(i, e, chosen):
+					skip = true
+		if skip:
+			continue
 		resolve_effect(i, e, source, chosen)
 		if phase == "over":
 			return
@@ -844,9 +1245,9 @@ func abilities_of(p: Perm) -> Array:
 	return p.card.get("abilities", [])
 
 
-## Can side i use ability `idx` of permanent `uid` now?
+## Can side i use ability `idx` of permanent `uid` now? (whenever it has priority)
 func can_activate(i: int, uid: int, idx: int) -> bool:
-	if i != active or not is_main_phase():
+	if not has_priority(i):
 		return false
 	var p := find_perm(uid)
 	if p == null or p.owner != i:
@@ -946,7 +1347,16 @@ func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1
 			emit({"type": "discard", "side": i, "id": gone})
 	var sac := String(cost.get("sacrifice", ""))
 	p.uses[idx] = int(p.uses.get(idx, 0)) + 1
-	emit({"type": "ability", "side": i, "uid": uid, "text": ab.get("text", "")})
+	var mana_ab := is_mana_ability(ab)
+	var item := {}
+	if not mana_ab:
+		item = {"sid": _next_sid, "kind": "ability", "side": i, "id": p.card_id, "card": p.card, "uid": uid, "idx": idx,
+			"text": String(ab.get("text", "")), "effects": ab.get("effects", []), "targets": targets.duplicate(), "name": p.name}
+		if p.is_token:
+			item["token"] = p.card
+		_next_sid += 1
+	emit({"type": "ability", "side": i, "uid": uid, "text": ab.get("text", ""), "sid": item.get("sid", -1),
+		"id": p.card_id, "targets": _event_targets(item) if not mana_ab else []})
 	if sac == "self":
 		destroy_perm(p, true)
 	elif sac == "other" or sac == "servo":
@@ -956,9 +1366,17 @@ func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1
 			victim = picked
 		if victim:
 			destroy_perm(victim, true)
-	_with_source(p.card)
-	_run_list(i, ab.get("effects", []), p if find_perm(uid) else null, targets)
 	check_state()
+	if phase == "over":
+		return true
+	if mana_ab:
+		# mana abilities do not use the stack
+		_with_source(p.card)
+		_run_list(i, ab.get("effects", []), p if find_perm(uid) else null, targets)
+		check_state()
+		return true
+	stack.append(item)
+	_after_push(i)
 	return true
 
 
@@ -1401,16 +1819,22 @@ func attack_candidates(i: int) -> Array:
 
 
 ## Declare attackers (uids). Empty array = skip combat and go to main2.
+## In auto mode (or from main 1) the beginning-of-combat window runs first; the screen calls
+## begin_combat() itself and then this in phase "begin_combat".
 func declare_attackers(uids: Array) -> void:
-	if phase != "main1":
+	if phase not in ["main1", "begin_combat"] or not stack.is_empty():
 		return
+	if phase == "main1" and not uids.is_empty() and auto_priority:
+		begin_combat()
+		if phase != "begin_combat":
+			return
 	attackers.clear()
 	for u in uids:
 		var p := find_perm(u)
 		if p and can_attack(p) and not attackers.has(u):
 			attackers.append(u)
 	if attackers.is_empty():
-		phase = "main2"
+		_main_phase("main2")
 		return
 	for u in attackers.duplicate():
 		var p := find_perm(u)
@@ -1425,8 +1849,11 @@ func declare_attackers(uids: Array) -> void:
 				_with_source(p.card)
 				resolve_effect(active, e, p, null)
 	check_state()
-	if phase != "over":
-		phase = "block"
+	if phase == "over":
+		return
+	phase = "block"
+	step = "attackers"
+	_window()
 
 
 func can_block(blocker: Perm, attacker: Perm) -> bool:
@@ -1441,11 +1868,16 @@ func can_block(blocker: Perm, attacker: Perm) -> bool:
 	return true
 
 
-## blocks_in: attacker uid -> blocker uid. Resolves combat damage, then main phase 2.
+## blocks_in: attacker uid -> blocker uid. Then the blockers window; in auto mode combat
+## damage and main phase 2 follow at once (the screen calls combat_damage() itself).
 func declare_blocks(blocks_in: Dictionary) -> void:
 	if phase != "block":
 		return
+	if not stack.is_empty():
+		_force_resolve()
+	window_open = false
 	blocks.clear()
+	was_blocked.clear()
 	var used := {}
 	for a in blocks_in:
 		var ap := find_perm(int(a))
@@ -1456,10 +1888,29 @@ func declare_blocks(blocks_in: Dictionary) -> void:
 			continue
 		blocks[ap.uid] = bp.uid
 		used[bp.uid] = true
+		was_blocked[ap.uid] = true
 		emit({"type": "block", "uid": bp.uid, "attacker": ap.uid})
+	phase = "combat"
+	step = "blockers"
+	if _window():
+		return
+	combat_damage()
+
+
+## Combat damage, its window, then main phase 2.
+func combat_damage() -> void:
+	if phase != "combat" or step != "blockers":
+		return
+	if not stack.is_empty():
+		_force_resolve()
+	window_open = false
 	_resolve_combat()
-	if phase != "over":
-		phase = "main2"
+	if phase == "over":
+		return
+	step = "damage"
+	if _window():
+		return
+	to_main2()
 
 
 ## Combat damage in two steps: first strikers, then everyone else still standing.
@@ -1483,7 +1934,8 @@ func _resolve_combat() -> void:
 						deal_damage(ap, active, {"kind": "player", "side": defender}, dmg - lethal)
 					else:
 						deal_damage(ap, active, {"kind": "creature", "uid": bp.uid}, dmg)
-				elif int(pr[1]) < 0:
+				elif int(pr[1]) < 0 and (not was_blocked.has(ap.uid) or ap.has_kw("trample")):
+					# a blocked attacker whose blocker left combat deals no damage (trample: all to the player)
 					deal_damage(ap, active, {"kind": "player", "side": defender}, ap.power())
 			if bp != null and find_perm(bp.uid) != null and bp.has_kw("first_strike") == step:
 				var ap2 := find_perm(pr[0])

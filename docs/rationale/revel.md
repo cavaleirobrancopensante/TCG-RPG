@@ -39,7 +39,7 @@ The common that puts the Idle question most plainly. A 3/3 haste for four is a l
 The common five-drop: a 5/4, slightly under a vanilla 5/5, that gives the team +1/+0 the turn it lands. The bull itself cannot attack that turn, so the bonus is for the creatures already on the board. The garlanded bull of the festival procession is an old classical and carnival image, and he leads the party into the fight.
 
 **Toast of Fire** · Common · Spell (Revelry) · R · Deal 2 damage to any enemy creature or the enemy player.
-The faith's basic burn: 2 damage for one mana to a creature or the face, exactly the common ceiling in the balance guide. It is removal early and reach late. The toast that becomes a flame is the Revel's joke in its simplest form.
+The faith's basic burn: 2 damage for one mana to a creature or the face, exactly the common ceiling in the balance guide. It is removal early and reach late. The toast that becomes a flame is the Revel's joke in its simplest form, raised by a lord at his own garden feast.
 
 **Firecracker Garland** · Common · Spell (Revelry) · R · Deal 1 damage to target enemy creature. Carouse (if you already played another non-land card this turn): also deal 1 damage to the enemy player.
 A cheap ping that kills x/1s and gets a little better when it is the second card of the turn. It is weaker than Toast of Fire on purpose, and its job is to be the card you play late in a busy turn. Firecrackers strung for a feast day belong to the carnival, and their carelessness is the faith's.
@@ -129,10 +129,59 @@ A symmetrical sweeper that also burns the enemy player, at the price of 1 of you
 A three-mana relic that gives every creature you control haste. It is a rare build-around because it changes how the whole deck plays, and it creates the sharpest Idle tension in the set: every creature can attack at once, so every lounger is a choice. The pleasure garden is the Revel's own land, lit for a party that never ends.
 
 **Vessar, Master of the Undying Feast** · Mythic · Creature (Human Noble) · 3RR · 0/5 · Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.
-The Idle mythic: a 0/5 hostess who sweeps every x/1 and burns the enemy each turn she lounges. She has no power because she never fights; her guests and her wine do the killing. She is answerable by any 5 damage or a determined attack. As a noblewoman and hostess she fits the tone rules, and the poisoned cup is the faith's evil side made plain.
+The Idle mythic: a 0/5 host who sweeps every x/1 and burns the enemy each turn he lounges. He has no power because he never fights; his guests and his wine do the killing. He is answerable by any 5 damage or a determined attack. A lord who poisons his own table is the faith's evil side made plain.
 
 **Brandimarte, Prince of Fire-Eaters** · Mythic · Creature (Human Duelist) · 3RR · 5/4 · Haste, first strike. Whenever this attacks, creatures you control get +1/+0 until end of turn.
 The aggressive mythic: a 5/4 with haste and first strike that attacks as a 6/4 and lifts every other attacker by one. It ends games quickly if unanswered, but 4 toughness dies to Banquet Flambe or a blocker plus a ping. The name comes from the knights of Italian romance, and a prince of fire-eaters who leads the charge is the Revel at its most glamorous.
 
 **The Undying Bonfire** · Mythic · Relic (Relic) · 2RR · At the beginning of your upkeep, deal 1 damage to each creature and 1 damage to the enemy player, and you lose 1 life. Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn.
 A splashy, dangerous relic: every upkeep it scorches every creature, including yours, and both players lose a life. Idle growers with counters and big duelists shrug it off while tokens and x/1s burn, and the once-per-turn ability turns extra life into extra damage. It cannot win alone, because it hurts its owner every turn too, which is the faith's lesson. A festival bonfire that will not go out is the party that has become a curse.
+
+### Tribal cards (1.23)
+
+The Revel's two tribes pull in the two directions the faith already pulls. Nobles are the slow half: lords who stay at home, grow fat on Idle counters and ping the enemy from their couches, so a Noble deck wants a wide table of loungers and a few walls, and its payoffs count the peerage (Toast to the Peerage, Elector of the Endless Banquet, Gossiping Marquis). Performers are the fast half: minstrels, tumblers, mummers, jesters and fire-eaters who arrive in a rush and hit at once, so a Performer deck curves out cheaply (Master of the Revels), gets haste and first strike from its leaders, and turns every new player in the troupe into damage. The two meet in the patron: the great house that keeps a company of players, which is exactly what Ruggiero rewards. Nobles are mostly existing cards (eight before this set, plus two duelists retagged as Noble Duelists); Performers needed the new cards and the Jester's retag to reach depth.
+
+**Wandering Minstrel** · Common · Creature (Human Performer) · R · 1/1 · Haste (this can attack the turn it comes into play).
+A one-drop that attacks at once, a point under the vanilla 2/1 to pay for haste. It is the cheapest Performer and the first card of the troupe curve, and it turns on Tumbler and Lord of Misrule early. The wandering minstrel on the road to a war he will only sing about is the Revel's light-hearted face.
+
+**Tumbler of the Fair** · Common · Creature (Human Performer) · 1R · 1/2 · This gets +1/+0 for each other Performer you control.
+The common kinship card: a poor 1/2 alone, a 3/2 or 4/2 in a real troupe. Kinship on power only keeps it an attacker, never a wall, which suits the Performers. Tumblers and acrobats were a fixture of every medieval fair, and the flavour keeps their danger comic.
+
+**Mummer of the Twelfth Night** · Common · Creature (Human Performer) · 2R · 3/2 · First strike (this deals combat damage before creatures without first strike).
+A 3/2 first striker for three, one toughness under a vanilla 3/3 to pay for the keyword. It is the troupe's sturdy common body. The English mummers' play, acted from house to house at Christmastide with a hero, a dragon and a wooden sword, is a real folk custom and the Revel's at its most innocent.
+
+**Perfumed Lordling** · Common · Creature (Human Noble) · R · 0/2 · Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.
+A one-mana Courtier on the Chaise: a point of toughness smaller and a mana cheaper. It gives the Noble deck a first-turn play that starts the slow clock and counts toward every Noble payoff. The scented pomander held to the nose against the stink of the street is the young fop's whole armour.
+
+**Count of the Velvet Glove** · Common · Creature (Human Noble Duelist) · 3R · 3/3 · First strike. Idle: put a +1/+1 counter on this.
+A 3/3 first striker for four that grows while it waits, the Noble answer to the Satyr. It bridges the faith's duelists and its idle nobles: it can defend well from day one and attack harder later. The count who accepts every challenge but always after the next feast is the faith's courtly cowardice played for a smile.
+
+**Shouts of Encore** · Common · Spell (Revelry), instant · R · Performers you control get +2/+0 until end of turn.
+The troupe's combat trick: one mana, power only, one turn, as the Revel's team bonuses must be. At instant speed it wins a block or adds several points after the blockers are chosen, but it does nothing without Performers. The crowd's roar for an encore is the moment a show becomes an assault.
+
+**Toast to the Peerage** · Common · Spell (Revelry) · 2R · Deal 1 damage to the enemy player for each Noble you control.
+The Noble finisher at common: three mana for as much face damage as you have lords, usually two or three. It never touches creatures, so it is reach, not removal, and it rewards the slow Noble board for having stayed alive. The round of toasts at a lord's table, each peer rising in turn, is the image.
+
+**Master of the Revels** · Uncommon · Creature (Human Noble) · 2R · 2/3 · Your Performer creature cards cost 1 less to play (this reduces only generic mana).
+The troupe's enabler and the bridge between the tribes: a Noble body who makes every Performer cheaper. It lets a Performer deck dump its hand by the fourth turn. The Master of the Revels was a real officer of the English court who hired and paid the players, and his account book is on the desk beside him.
+
+**Master of the Pageant Wagon** · Uncommon · Creature (Human Performer) · 2R · 2/2 · Other Performers you control get +1/+0 and have haste.
+The Performer lord: power and haste for the rest of the troupe, in the Revel's own colours. It does nothing for itself, a 2/2 for three, so it must be protected or answered. Pageant wagons carried the town players from street to street, and a company leaping down already performing is the haste made visible.
+
+**Gossiping Marquis** · Uncommon · Creature (Human Noble) · 2R · 1/2 · This gets +1/+1 for each other Noble you control.
+The Noble kinship card, on both power and toughness because Nobles are the faith's slow, durable half. With two other lords it is a 3/4 for three, which is a good blocker that also attacks. The courtier who knows every scandal and is the subject of most is the faith's vanity in a single line.
+
+**Lord of Misrule** · Uncommon · Creature (Human Performer) · 1R · 1/2 · Whenever another Performer enters under your control, deal 1 damage to the enemy player.
+The troupe's damage engine: every new player is a point of burn. It hits only the player, so it is a clock and never removal. The Lord of Misrule, a fool crowned for the Christmas feast while the true lord serves at table, is a real and good-humoured old custom of inversion.
+
+**Royal Command Performance** · Uncommon · Spell (Revelry) · 2R · Deal 1 damage to any enemy creature or the enemy player for each Performer you control.
+The Performer payoff spell: scaling burn that kills a big creature or ends the game when the troupe is large. With no Performers it does nothing, which keeps it honest. A command performance before the king, with all the fire thrown at once, is the troupe at its most dangerous.
+
+**King of the Minstrels** · Rare · Creature (Human Performer) · 2RR · 3/3 · Haste. Other Performers you control get +1/+1.
+The rare lord: a hasty 3/3 that makes the whole troupe bigger in both numbers, so small Performers survive pings and trade up. It is a build-around because it changes every combat the troupe takes. Rex ministrallorum is a real medieval title: the King of the Minstrels held a court for the players of his district and collected their dues.
+
+**Elector of the Endless Banquet** · Rare · Creature (Human Noble) · 3R · 2/4 · Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on each Noble you control.
+The Noble build-around: every turn he stays home, every lord at the table grows. It is slow and asks the Noble deck to stay back for several turns, which is the whole Idle bargain made tribal. The prince-electors of the Empire, wooed with dinners by every candidate, give the comic picture of a vote sold for a longer feast.
+
+**Ruggiero, Patron of the Players** · Mythic · Creature (Human Noble) · 2RR · 2/5 · Performers you control have first strike. Idle: deal 1 damage to any enemy creature or the enemy player for each Performer you control.
+The mythic that joins the tribes: a Noble patron who never fights, whose players get first strike and whose idle evenings rain fire on the enemy. It is splashy with a full troupe but needs Performers to do anything and dies to 5 damage. The Renaissance prince who kept a company of players is a real figure of the courts, and his name comes from the knights of Italian romance.

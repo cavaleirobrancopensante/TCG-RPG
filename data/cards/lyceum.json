@@ -29,7 +29,7 @@
     "faction": "lyceum",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Human Soldier",
+    "subtype": "Human Hoplite",
     "cost": {
       "U": 1
     },
@@ -102,7 +102,7 @@
     "faction": "lyceum",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Human Soldier",
+    "subtype": "Human Hoplite",
     "cost": {
       "U": 1,
       "generic": 1
@@ -159,7 +159,7 @@
     "faction": "lyceum",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Human Soldier",
+    "subtype": "Human Hoplite",
     "cost": {
       "U": 1,
       "generic": 2
@@ -255,7 +255,7 @@
     "faction": "lyceum",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Human Soldier",
+    "subtype": "Human Hoplite",
     "cost": {
       "U": 1,
       "generic": 3
@@ -290,7 +290,8 @@
     ],
     "text": "Return target enemy creature to its owner's hand.",
     "flavor": "\"Reconsider.\"",
-    "art": "res://art/cards/lyceum_c_012.webp"
+    "art": "res://art/cards/lyceum_c_012.webp",
+    "speed": "instant"
   },
   {
     "id": "lyceum_c_013",
@@ -340,7 +341,8 @@
     ],
     "text": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
     "flavor": "The northern sea does not hurry, and it does not let go.",
-    "art": "res://art/cards/lyceum_c_014.webp"
+    "art": "res://art/cards/lyceum_c_014.webp",
+    "speed": "instant"
   },
   {
     "id": "lyceum_c_015",
@@ -505,6 +507,181 @@
     "art": "res://art/cards/lyceum_c_020.webp"
   },
   {
+    "id": "lyceum_c_021",
+    "name": "Spear of the Second Rank",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Hoplite",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Hoplite",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each other Hoplite you control.",
+    "flavor": "He cannot see the enemy past the shield in front of him. He does not need to.",
+    "art": "res://art/cards/lyceum_c_021.webp"
+  },
+  {
+    "id": "lyceum_c_022",
+    "name": "Pupil of the Painted Porch",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Philosopher",
+        "action": "foresight",
+        "amount": 1
+      }
+    ],
+    "text": "Whenever another Philosopher enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+    "flavor": "He carries the master's stool and the master's water, and carries the master's questions home with him.",
+    "art": "res://art/cards/lyceum_c_022.webp"
+  },
+  {
+    "id": "lyceum_c_023",
+    "name": "Hoplite of Plataea",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Hoplite",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Vigilance (doesn't tap to attack).",
+    "flavor": "At Plataea the arrows fell like hail, and the line stood and waited for the omens. Then it came on.",
+    "art": "res://art/cards/lyceum_c_023.webp"
+  },
+  {
+    "id": "lyceum_c_024",
+    "name": "Questioner in the Agora",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "tax",
+        "amount": 1
+      }
+    ],
+    "text": "When this enters, tax 1 (the enemy's next non-land card costs 1 more).",
+    "flavor": "He asked the general what courage is. The general went home to think it over, and is thinking still.",
+    "art": "res://art/cards/lyceum_c_024.webp"
+  },
+  {
+    "id": "lyceum_c_025",
+    "name": "Farmer Called to the Muster",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Hoplite",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Vigilance (doesn't tap to attack).",
+    "flavor": "He bought the shield with two harvests of olives, and he will carry it as long as the city asks.",
+    "art": "res://art/cards/lyceum_c_025.webp"
+  },
+  {
+    "id": "lyceum_c_026",
+    "name": "Lock Shields",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discipline",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Hoplite",
+        "power": 0,
+        "toughness": 3,
+        "duration": "turn"
+      }
+    ],
+    "text": "Hoplite creatures you control get +0/+3 until end of turn.",
+    "flavor": "Each man's shield covers his own left side and the right side of the man beside him.",
+    "art": "res://art/cards/lyceum_c_026.webp"
+  },
+  {
+    "id": "lyceum_c_027",
+    "name": "Morning Lecture",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "foresight",
+        "amount": 2,
+        "amount_per": "Philosopher"
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "Foresight 2 for each Philosopher you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom), then draw a card.",
+    "flavor": "Before the market opens, the Porch is already full.",
+    "art": "res://art/cards/lyceum_c_027.webp"
+  },
+  {
     "id": "lyceum_u_001",
     "name": "Agora Inspector",
     "faction": "lyceum",
@@ -596,7 +773,7 @@
     "faction": "lyceum",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Soldier",
+    "subtype": "Human Hoplite",
     "cost": {
       "U": 1,
       "generic": 2
@@ -643,7 +820,7 @@
     "faction": "lyceum",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Soldier",
+    "subtype": "Human Hoplite",
     "cost": {
       "U": 1,
       "generic": 3
@@ -660,10 +837,10 @@
         "power": 0,
         "toughness": 1,
         "scope": "other_own_creatures",
-        "subtype": "Soldier"
+        "subtype": "Hoplite"
       }
     ],
-    "text": "Vigilance. Other Soldier creatures you control get +0/+1.",
+    "text": "Vigilance. Other Hoplite creatures you control get +0/+1.",
     "flavor": "He has studied every battle ever written down, and lost none of his own.",
     "art": "res://art/cards/lyceum_u_006.webp"
   },
@@ -851,6 +1028,149 @@
     "text": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs 1 more).",
     "flavor": "Bronze letters list what a man may spend. The enemy finds that the list includes him.",
     "art": "res://art/cards/lyceum_u_013.webp"
+  },
+  {
+    "id": "lyceum_u_014",
+    "name": "Polemarch of the Phalanx",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Hoplite",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 0,
+        "scope": "other_own_creatures",
+        "subtype": "Hoplite"
+      },
+      {
+        "static": "keyword",
+        "keyword": "vigilance",
+        "scope": "other_own_creatures",
+        "subtype": "Hoplite"
+      }
+    ],
+    "text": "Other Hoplite creatures you control get +1/+0 and have vigilance (they don't tap to attack).",
+    "flavor": "He takes his place on the right of the line, where the honour is, and the danger.",
+    "art": "res://art/cards/lyceum_u_014.webp"
+  },
+  {
+    "id": "lyceum_u_015",
+    "name": "Lochagos of the File",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Hoplite",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Hoplite",
+        "action": "tap",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "Whenever another Hoplite enters under your control, tap target enemy creature.",
+    "flavor": "Every man who steps into his file is one more reason for the enemy to hesitate.",
+    "art": "res://art/cards/lyceum_u_015.webp"
+  },
+  {
+    "id": "lyceum_u_016",
+    "name": "Lecture at the Painted Porch",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1,
+        "amount_per": "Philosopher"
+      }
+    ],
+    "text": "Draw a card for each Philosopher you control.",
+    "flavor": "One master speaks. A dozen pupils write it down. A thousand years of readers learn it.",
+    "art": "res://art/cards/lyceum_u_016.webp"
+  },
+  {
+    "id": "lyceum_u_017",
+    "name": "Scholarch of the Porch",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "cost_reduce",
+        "amount": 1,
+        "subtype": "Philosopher"
+      }
+    ],
+    "text": "Your Philosopher creature cards cost 1 less to play.",
+    "flavor": "The school passed from Zeno to Cleanthes and from Cleanthes to Chrysippus, like a lamp handed on in the dark.",
+    "art": "res://art/cards/lyceum_u_017.webp"
+  },
+  {
+    "id": "lyceum_u_018",
+    "name": "Othismos",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Discipline",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "freeze",
+        "target": "enemy_creature"
+      },
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Hoplite",
+        "power": 0,
+        "toughness": 2,
+        "duration": "turn"
+      }
+    ],
+    "text": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). Hoplite creatures you control get +0/+2 until end of turn.",
+    "flavor": "When the spears break, each rank sets its shields to the backs before it, and the whole phalanx pushes as one man.",
+    "art": "res://art/cards/lyceum_u_018.webp"
   },
   {
     "id": "lyceum_r_001",
@@ -1098,6 +1418,60 @@
     "art": "res://art/cards/lyceum_r_009.webp"
   },
   {
+    "id": "lyceum_r_010",
+    "name": "Socrates at Delium",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Hoplite Philosopher",
+    "cost": {
+      "U": 2,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [
+      "unmoved"
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Philosopher",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it). Whenever another Philosopher enters under your control, draw a card.",
+    "flavor": "In the rout he walked from the field as calmly as he crossed the agora, and no enemy cared to touch him.",
+    "art": "res://art/cards/lyceum_r_010.webp"
+  },
+  {
+    "id": "lyceum_r_011",
+    "name": "Trophy of Marathon",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "own_creatures",
+        "subtype": "Hoplite"
+      }
+    ],
+    "text": "Hoplite creatures you control get +1/+1.",
+    "flavor": "Where the enemy turned, the victors hung his arms upon a post, and the place was honoured ever after.",
+    "art": "res://art/cards/lyceum_r_011.webp"
+  },
+  {
     "id": "lyceum_m_001",
     "name": "Zeno of Citium",
     "faction": "lyceum",
@@ -1193,5 +1567,42 @@
     "text": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs 2 more).",
     "flavor": "\"Look down from above on the countless herds of men, their solemn rites, their voyages in storm and calm.\" (Marcus Aurelius)",
     "art": "res://art/cards/lyceum_m_003.webp"
+  },
+  {
+    "id": "lyceum_m_004",
+    "name": "Xenophon of the Ten Thousand",
+    "faction": "lyceum",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Hoplite Philosopher",
+    "cost": {
+      "U": 2,
+      "generic": 3
+    },
+    "power": 4,
+    "toughness": 5,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "draw",
+        "amount": 1,
+        "amount_per": "Philosopher"
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Hoplite"
+      }
+    ],
+    "text": "Vigilance (doesn't tap to attack). Other Hoplite creatures you control get +1/+1. When this enters, draw a card for each Philosopher you control.",
+    "flavor": "Their generals murdered, ten thousand Greeks far from home chose a pupil of Socrates, and he led them to the sea.",
+    "art": "res://art/cards/lyceum_m_004.webp"
   }
 ]

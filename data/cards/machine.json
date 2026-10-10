@@ -440,8 +440,9 @@
     "subtype": "Device",
     "cost": {
       "C": 1,
-      "generic": 1
+      "generic": 2
     },
+    "speed": "instant",
     "keywords": [],
     "effects": [
       {
@@ -468,6 +469,7 @@
     "cost": {
       "generic": 1
     },
+    "speed": "instant",
     "keywords": [],
     "effects": [
       {
@@ -580,6 +582,208 @@
     "text": "Tap, pay 1C: put a +1/+1 counter on target Construct you control.",
     "flavor": "Every gauge true, every spring tight, every machine a little better than yesterday.",
     "art": "res://art/cards/machine_c_020.webp"
+  },
+  {
+    "id": "machine_c_021",
+    "name": "Bellows Boy",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Construct",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn"
+      }
+    ],
+    "text": "Whenever a Construct enters under your control, this gets +1/+0 until end of turn.",
+    "flavor": "He pumps the bellows for every new machine, and runs to see it wake.",
+    "art": "res://art/cards/machine_c_021.webp"
+  },
+  {
+    "id": "machine_c_022",
+    "name": "Journeyman Riveter",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "buff",
+        "target": "own_creature",
+        "subtype": "Construct",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "When this enters, put a +1/+1 counter on target Construct you control.",
+    "flavor": "Four rivets to the plate, a plate to the hour, and never a crooked head.",
+    "art": "res://art/cards/machine_c_022.webp"
+  },
+  {
+    "id": "machine_c_023",
+    "name": "Workshop Draughtsman",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "overclock": {
+      "cost": {
+        "generic": 2
+      },
+      "effects": [
+        {
+          "action": "buff",
+          "target": "all_own_creatures",
+          "subtype": "Artificer",
+          "power": 1,
+          "toughness": 1,
+          "duration": "permanent"
+        }
+      ]
+    },
+    "text": "Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.",
+    "flavor": "His drawings are passed from bench to bench, and every man who reads them works a little better.",
+    "art": "res://art/cards/machine_c_023.webp"
+  },
+  {
+    "id": "machine_c_024",
+    "name": "Tended Automaton",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Artificer",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each Artificer you control.",
+    "flavor": "Oiled at dawn, wound at noon, and polished by a boy who calls it by a name.",
+    "art": "res://art/cards/machine_c_024.webp"
+  },
+  {
+    "id": "machine_c_025",
+    "name": "Coupling Automaton",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Construct",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Whenever another Construct enters under your control, put a +1/+1 counter on this.",
+    "flavor": "Every new machine on the floor is bolted to it, and it grows heavier with each.",
+    "art": "res://art/cards/machine_c_025.webp"
+  },
+  {
+    "id": "machine_c_026",
+    "name": "Emergency Shoring",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Order",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Construct",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Put a +1/+1 counter on each Construct you control.",
+    "flavor": "The order came down mid-battle: brace every frame, and bill the cost afterward.",
+    "art": "res://art/cards/machine_c_026.webp"
+  },
+  {
+    "id": "machine_c_027",
+    "name": "Mule-Frame Automaton",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Artificer",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "When this enters, put a +1/+1 counter on each Artificer you control.",
+    "flavor": "It carries the guild's tools from bench to bench, and the craftsmen it serves grow fat on the hours it saves.",
+    "art": "res://art/cards/machine_c_027.webp"
   },
   {
     "id": "machine_u_001",
@@ -987,6 +1191,145 @@
     "art": "res://art/cards/machine_u_013.webp"
   },
   {
+    "id": "machine_u_014",
+    "name": "Guild Fitter",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "cost_reduce",
+        "subtype": "Construct",
+        "amount": 1
+      }
+    ],
+    "text": "Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
+    "flavor": "He keeps a drawer of parts already cut, and so his machines are half built before they are ordered.",
+    "art": "res://art/cards/machine_u_014.webp"
+  },
+  {
+    "id": "machine_u_015",
+    "name": "Foundry Line-Master",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "scope": "own_creatures",
+        "subtype": "Construct",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "text": "Constructs you control get +1/+1.",
+    "flavor": "He walks the line with a lamp and a gauge, and no machine leaves it until he nods.",
+    "art": "res://art/cards/machine_u_015.webp"
+  },
+  {
+    "id": "machine_u_016",
+    "name": "Arc-Lamp Galvanist",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "overclock": {
+      "cost": {
+        "C": 1,
+        "generic": 1
+      },
+      "effects": [
+        {
+          "action": "damage",
+          "target": "enemy_creature",
+          "amount": 1,
+          "amount_per": "Artificer"
+        }
+      ]
+    },
+    "text": "Overclock 1C (you may pay 1C more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.",
+    "flavor": "He calls it natural philosophy. The guild calls it a line item.",
+    "art": "res://art/cards/machine_u_016.webp"
+  },
+  {
+    "id": "machine_u_017",
+    "name": "Field Repair",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Device",
+    "cost": {
+      "C": 1,
+      "generic": 1
+    },
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "own_creature",
+        "subtype": "Construct",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent",
+        "amount_per": "Artificer"
+      }
+    ],
+    "text": "Put a +1/+1 counter on target Construct you control for each Artificer you control.",
+    "flavor": "Three wrenches, one cracked frame, and the battle not yet over.",
+    "art": "res://art/cards/machine_u_017.webp"
+  },
+  {
+    "id": "machine_u_018",
+    "name": "Masterwork Automaton",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Artificer",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "text": "This gets +1/+1 for each Artificer you control.",
+    "flavor": "Every master in the guild added one part to it, and signed it with a punch mark.",
+    "art": "res://art/cards/machine_u_018.webp"
+  },
+  {
     "id": "machine_r_001",
     "name": "Guild Comptroller",
     "faction": "machine",
@@ -1266,6 +1609,76 @@
     "art": "res://art/cards/machine_r_009.webp"
   },
   {
+    "id": "machine_r_010",
+    "name": "Master Horologist",
+    "faction": "machine",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "scope": "other_own_creatures",
+        "subtype": "Artificer",
+        "power": 1,
+        "toughness": 1
+      },
+      {
+        "static": "cost_reduce",
+        "subtype": "Construct",
+        "amount": 1
+      }
+    ],
+    "text": "Other Artificers you control get +1/+1. Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
+    "flavor": "He set the great clock of Cogspire, and every workshop in the city keeps his time.",
+    "art": "res://art/cards/machine_r_010.webp"
+  },
+  {
+    "id": "machine_r_011",
+    "name": "Self-Winding Wright",
+    "faction": "machine",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Construct Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "assembly"
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Artificer",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Servo Construct",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "Assembly (this gets +1/+1 for each other Construct you control). Whenever another Artificer enters under your control, create a 1/1 Servo Construct token.",
+    "flavor": "The guild built a machine to build machines. It has not yet asked for wages.",
+    "art": "res://art/cards/machine_r_011.webp"
+  },
+  {
     "id": "machine_m_001",
     "name": "The Prime Engine",
     "faction": "machine",
@@ -1367,5 +1780,53 @@
     "text": "Your Technocracy cards cost 1 less to play. This reduces only generic mana. At the beginning of your upkeep, create a 1/1 Servo Construct token.",
     "flavor": "It calculates the yield of every mine, the output of every furnace, and the worth of every man. The last sum is always small.",
     "art": "res://art/cards/machine_m_003.webp"
+  },
+  {
+    "id": "machine_m_004",
+    "name": "The Archwright of Cogspire",
+    "faction": "machine",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 2,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Construct",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Artificer",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "overclock": {
+      "cost": {
+        "generic": 3
+      },
+      "effects": [
+        {
+          "action": "summon",
+          "token": {
+            "name": "Servo",
+            "power": 1,
+            "toughness": 1,
+            "subtype": "Servo Construct",
+            "keywords": []
+          },
+          "count": 3
+        }
+      ]
+    },
+    "text": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock 3 (you may pay 3 more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.",
+    "flavor": "Every machine in the city was drawn by his hand or by a hand he taught.",
+    "art": "res://art/cards/machine_m_004.webp"
   }
 ]

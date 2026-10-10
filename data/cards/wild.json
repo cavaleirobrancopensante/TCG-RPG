@@ -124,7 +124,7 @@
           "name": "Sapling",
           "power": 1,
           "toughness": 1,
-          "subtype": "Plant",
+          "subtype": "Treefolk",
           "keywords": []
         },
         "count": 1
@@ -222,7 +222,7 @@
       }
     ],
     "text": "Rooted: as long as you control six or more lands, this gets +1/+1.",
-    "flavor": "The druids call her grandmother, and wisely give her the path.",
+    "flavor": "The druids call him grandfather, and wisely give him the path.",
     "art": "res://art/cards/wild_c_009.webp"
   },
   {
@@ -345,7 +345,8 @@
     ],
     "text": "Target creature you control gets +3/+3 until end of turn.",
     "flavor": "For a moment, the beast remembers what the forest was before men.",
-    "art": "res://art/cards/wild_c_014.webp"
+    "art": "res://art/cards/wild_c_014.webp",
+    "speed": "instant"
   },
   {
     "id": "wild_c_015",
@@ -392,7 +393,8 @@
     ],
     "text": "Destroy target enemy creature with flying.",
     "flavor": "Whatever flies must perch at last, and every perch is a branch.",
-    "art": "res://art/cards/wild_c_016.webp"
+    "art": "res://art/cards/wild_c_016.webp",
+    "speed": "instant"
   },
   {
     "id": "wild_c_017",
@@ -512,7 +514,7 @@
               "name": "Sapling",
               "power": 1,
               "toughness": 1,
-              "subtype": "Plant",
+              "subtype": "Treefolk",
               "keywords": []
             },
             "count": 1
@@ -526,8 +528,201 @@
     "art": "res://art/cards/wild_c_020.webp"
   },
   {
+    "id": "wild_c_021",
+    "name": "Moorland Wolf",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Wolf Beast",
+    "cost": {
+      "G": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Wolf",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each other Wolf you control.",
+    "flavor": "Alone he is a thin grey shadow on the heather. He is seldom alone.",
+    "art": "res://art/cards/wild_c_021.webp"
+  },
+  {
+    "id": "wild_c_022",
+    "name": "Ridge-Runner Wolf",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Wolf Beast",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Wolf",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "turn"
+      }
+    ],
+    "text": "Whenever another Wolf enters under your control, this gets +1/+1 until end of turn.",
+    "flavor": "He runs the skyline so the flock below can see him coming, and lose heart.",
+    "art": "res://art/cards/wild_c_022.webp"
+  },
+  {
+    "id": "wild_c_023",
+    "name": "Run with the Pack",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Rite",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 1,
+        "duration": "turn",
+        "amount_per": "Wolf",
+        "trigger": "cast"
+      }
+    ],
+    "speed": "instant",
+    "text": "Target creature you control gets +1/+1 until end of turn for each Wolf you control.",
+    "flavor": "The lone wolf starves. The pack eats in winter.",
+    "art": "res://art/cards/wild_c_023.webp"
+  },
+  {
+    "id": "wild_c_024",
+    "name": "Coppiced Hazel",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Treefolk",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "power": 0,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "abilities": [
+      {
+        "cost": {
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "add_mana",
+            "color": "G",
+            "amount": 1
+          }
+        ],
+        "text": "Tap: add G."
+      }
+    ],
+    "text": "Tap: add G.",
+    "flavor": "Cut to the stool every seventh year, and every seventh year he comes back thicker.",
+    "art": "res://art/cards/wild_c_024.webp"
+  },
+  {
+    "id": "wild_c_025",
+    "name": "Hedge-Elm of the Moot",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Treefolk",
+    "cost": {
+      "G": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Treefolk",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each other Treefolk you control.",
+    "flavor": "When the moot is full, the old elm leans in to hear, and the boughs creak with opinions.",
+    "art": "res://art/cards/wild_c_025.webp"
+  },
+  {
+    "id": "wild_c_026",
+    "name": "Stand Like Oaks",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Rite",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Treefolk",
+        "power": 1,
+        "toughness": 2,
+        "duration": "turn",
+        "trigger": "cast"
+      }
+    ],
+    "speed": "instant",
+    "text": "Treefolk you control get +1/+2 until end of turn.",
+    "flavor": "The axemen came at dawn. By noon they were sharpening their axes and wondering.",
+    "art": "res://art/cards/wild_c_026.webp"
+  },
+  {
+    "id": "wild_c_027",
+    "name": "Dusk-Runner Wolf",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Wolf Beast",
+    "cost": {
+      "G": 1,
+      "generic": 3
+    },
+    "power": 4,
+    "toughness": 3,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "text": "Trample (excess combat damage goes to the player).",
+    "flavor": "Shepherds bar the fold at sunset. He was over the wall at noon.",
+    "art": "res://art/cards/wild_c_027.webp"
+  },
+  {
     "id": "wild_u_001",
-    "name": "Wolfmother of the Fen",
+    "name": "Wolfsire of the Fen",
     "faction": "wild",
     "rarity": "uncommon",
     "type": "creature",
@@ -554,7 +749,7 @@
       }
     ],
     "text": "When this enters, create a 2/2 Wolf token.",
-    "flavor": "Where she runs, she never runs alone.",
+    "flavor": "Where he runs, he never runs alone.",
     "art": "res://art/cards/wild_u_001.webp"
   },
   {
@@ -654,7 +849,7 @@
           "name": "Sapling",
           "power": 1,
           "toughness": 1,
-          "subtype": "Plant",
+          "subtype": "Treefolk",
           "keywords": []
         },
         "count": 2
@@ -670,7 +865,7 @@
     "faction": "wild",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Spirit",
+    "subtype": "Treefolk Spirit",
     "cost": {
       "G": 1,
       "generic": 3
@@ -837,7 +1032,7 @@
           "name": "Sapling",
           "power": 1,
           "toughness": 1,
-          "subtype": "Plant",
+          "subtype": "Treefolk",
           "keywords": []
         },
         "count": 2,
@@ -849,7 +1044,7 @@
           "name": "Sapling",
           "power": 1,
           "toughness": 1,
-          "subtype": "Plant",
+          "subtype": "Treefolk",
           "keywords": []
         },
         "count": 2,
@@ -934,6 +1129,147 @@
     "text": "Tap, pay 2G: create a 2/2 Wolf token.",
     "flavor": "Blow it once on a winter night, and something in the hills always answers.",
     "art": "res://art/cards/wild_u_013.webp"
+  },
+  {
+    "id": "wild_u_014",
+    "name": "Pack-Leader of the Moors",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Wolf Beast",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Wolf"
+      }
+    ],
+    "text": "Other Wolves you control get +1/+1.",
+    "flavor": "He eats first, sleeps last, and every wolf on the moor knows his howl.",
+    "art": "res://art/cards/wild_u_014.webp"
+  },
+  {
+    "id": "wild_u_015",
+    "name": "Old Grey Wolf",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Wolf Beast",
+    "cost": {
+      "G": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Wolf",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Whenever another Wolf enters under your control, this gets +1/+1 permanently.",
+    "flavor": "Every cub the pack raises makes him a little prouder, and a little more dangerous.",
+    "art": "res://art/cards/wild_u_015.webp"
+  },
+  {
+    "id": "wild_u_016",
+    "name": "Old Moot-Oak",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Treefolk",
+    "cost": {
+      "G": 2,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 5,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Treefolk"
+      }
+    ],
+    "text": "Other Treefolk you control get +1/+1.",
+    "flavor": "Laws were given under his boughs before there were kings to give them.",
+    "art": "res://art/cards/wild_u_016.webp"
+  },
+  {
+    "id": "wild_u_017",
+    "name": "Acorn of the Elder Oak",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "cost_reduce",
+        "amount": 1,
+        "subtype": "Treefolk"
+      }
+    ],
+    "text": "Your Treefolk creature cards cost 1 less.",
+    "flavor": "Plant it, and the wood will owe you a favour for three hundred years.",
+    "art": "res://art/cards/wild_u_017.webp"
+  },
+  {
+    "id": "wild_u_018",
+    "name": "Pack Hunt",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Rite",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn",
+        "amount_per": "Wolf",
+        "trigger": "cast"
+      },
+      {
+        "action": "fight",
+        "target": "enemy_creature",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Target creature you control gets +1/+0 until end of turn for each Wolf you control. Then target creature you control fights target enemy creature.",
+    "flavor": "The stag turned to face one wolf, and the other five did the rest.",
+    "art": "res://art/cards/wild_u_018.webp"
   },
   {
     "id": "wild_r_001",
@@ -1206,6 +1542,71 @@
     "art": "res://art/cards/wild_r_009.webp"
   },
   {
+    "id": "wild_r_010",
+    "name": "Grey Sire of the Long Winter",
+    "faction": "wild",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Wolf Beast",
+    "cost": {
+      "G": 2,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Wolf",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "text": "Trample. This gets +1/+1 for each other Wolf you control.",
+    "flavor": "In the hungry year he came down from the fells, and every wolf in the shire followed him.",
+    "art": "res://art/cards/wild_r_010.webp"
+  },
+  {
+    "id": "wild_r_011",
+    "name": "Grandsire Hornbeam",
+    "faction": "wild",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Treefolk",
+    "cost": {
+      "G": 2,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 5,
+    "keywords": [
+      "reach",
+      "regenerate"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "reach",
+        "scope": "other_own_creatures",
+        "subtype": "Treefolk"
+      },
+      {
+        "static": "keyword",
+        "keyword": "regenerate",
+        "scope": "other_own_creatures",
+        "subtype": "Treefolk"
+      }
+    ],
+    "text": "Reach, regenerate. Other Treefolk you control have reach and regenerate.",
+    "flavor": "Ironwood, the charcoal burners call him, and they have broken three axes on his kin.",
+    "art": "res://art/cards/wild_r_011.webp"
+  },
+  {
     "id": "wild_m_001",
     "name": "Herne, Lord of the Wild Hunt",
     "faction": "wild",
@@ -1294,7 +1695,7 @@
           "name": "Sapling",
           "power": 1,
           "toughness": 1,
-          "subtype": "Plant",
+          "subtype": "Treefolk",
           "keywords": []
         },
         "count": 1
@@ -1316,5 +1717,42 @@
     "text": "At the beginning of your upkeep, create a 1/1 Sapling token. Rooted: if you control six or more lands, also create a 3/3 Stag token.",
     "flavor": "Seed, flower, harvest, frost. And then, always, seed again.",
     "art": "res://art/cards/wild_m_003.webp"
+  },
+  {
+    "id": "wild_m_004",
+    "name": "Wolfwood, the Denning Oak",
+    "faction": "wild",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Treefolk Spirit",
+    "cost": {
+      "G": 2,
+      "generic": 4
+    },
+    "power": 6,
+    "toughness": 6,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Treefolk"
+      },
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Wolf"
+      }
+    ],
+    "text": "Trample. Other Treefolk you control get +1/+1. Other Wolves you control get +1/+1.",
+    "flavor": "The wolves den among his roots, and the oaks of the wood stand taller for his shade.",
+    "art": "res://art/cards/wild_m_004.webp"
   }
 ]

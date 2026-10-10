@@ -490,6 +490,180 @@
     "art": "res://art/cards/sanctum_c_020.webp"
   },
   {
+    "id": "sanctum_c_021",
+    "name": "Knight of Saint Lazarus",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1,
+        "amount_per": "Knight"
+      }
+    ],
+    "text": "When this enters, gain 1 life for each Knight you control.",
+    "flavor": "He took his vows among the lepers, and learned there that a knight's first enemy is his own fear.",
+    "art": "res://art/cards/sanctum_c_021.webp"
+  },
+  {
+    "id": "sanctum_c_022",
+    "name": "Teutonic Knight-Brother",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Knight",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each other Knight you control.",
+    "flavor": "Black cross on white mantle, he rides out with his brothers or not at all.",
+    "art": "res://art/cards/sanctum_c_022.webp"
+  },
+  {
+    "id": "sanctum_c_023",
+    "name": "Angel of the Wayside Shrine",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "text": "Flying (can only be blocked by creatures with flying or reach).",
+    "flavor": "Travellers who stop to pray at his shrine find the road shorter afterward, and never know why.",
+    "art": "res://art/cards/sanctum_c_023.webp"
+  },
+  {
+    "id": "sanctum_c_024",
+    "name": "Angel of the Flaming Sword",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "text": "Flying (can only be blocked by creatures with flying or reach).",
+    "flavor": "He was set at the east of the garden, with a flaming sword turning every way, to keep the way of the tree of life.",
+    "art": "res://art/cards/sanctum_c_024.webp"
+  },
+  {
+    "id": "sanctum_c_025",
+    "name": "Accolade",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Blessing",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "own_creature",
+        "subtype": "Knight",
+        "power": 2,
+        "toughness": 2,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Target Knight you control gets +2/+2 permanently.",
+    "flavor": "Be thou a good knight, in the name of God. The blow upon his shoulder is the last he shall take without answer.",
+    "art": "res://art/cards/sanctum_c_025.webp"
+  },
+  {
+    "id": "sanctum_c_026",
+    "name": "Hospital of Saint John",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Knight",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "text": "Whenever a Knight enters under your control, gain 2 life.",
+    "flavor": "Here the sick are our lords. The knights come in from the field and kneel to serve them.",
+    "art": "res://art/cards/sanctum_c_026.webp"
+  },
+  {
+    "id": "sanctum_c_027",
+    "name": "Gloria in Excelsis",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Prayer",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2,
+        "amount_per": "Angel"
+      }
+    ],
+    "speed": "instant",
+    "text": "Gain 2 life for each Angel you control.",
+    "flavor": "The shepherds heard it first, and the hills of Bethlehem have kept the tune ever since.",
+    "art": "res://art/cards/sanctum_c_027.webp"
+  },
+  {
     "id": "sanctum_u_001",
     "name": "Brother of Mercy",
     "faction": "sanctum",
@@ -690,7 +864,7 @@
     "subtype": "Exorcism",
     "cost": {
       "W": 1,
-      "generic": 1
+      "generic": 2
     },
     "keywords": [],
     "effects": [
@@ -704,7 +878,8 @@
     ],
     "text": "Destroy target tapped enemy creature with power 4 or greater.",
     "flavor": "He hath put down the mighty from their seat, and hath exalted the humble.",
-    "art": "res://art/cards/sanctum_u_008.webp"
+    "art": "res://art/cards/sanctum_u_008.webp",
+    "speed": "instant"
   },
   {
     "id": "sanctum_u_009",
@@ -792,7 +967,8 @@
     ],
     "text": "Creatures you control get +0/+2 permanently.",
     "flavor": "Holy Mary, pray for us. Saint Michael, pray for us. And the whole host answers.",
-    "art": "res://art/cards/sanctum_u_011.webp"
+    "art": "res://art/cards/sanctum_u_011.webp",
+    "speed": "instant"
   },
   {
     "id": "sanctum_u_012",
@@ -844,6 +1020,150 @@
     "text": "As long as you have more life than you started with, creatures you control have lifelink.",
     "flavor": "O saving Victim, opening wide the gate of Heaven to man below.",
     "art": "res://art/cards/sanctum_u_013.webp"
+  },
+  {
+    "id": "sanctum_u_014",
+    "name": "Preceptor of the Commandery",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "cost_reduce",
+        "subtype": "Knight",
+        "amount": 1
+      }
+    ],
+    "text": "Your Knight creature cards cost 1 less to play (1 less generic mana).",
+    "flavor": "He keeps the accounts, the horses and the novices, and every spring he sends the ready ones East.",
+    "art": "res://art/cards/sanctum_u_014.webp"
+  },
+  {
+    "id": "sanctum_u_015",
+    "name": "War Banner of the Temple",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "own_creatures",
+        "subtype": "Knight"
+      }
+    ],
+    "text": "Knights you control get +1/+1.",
+    "flavor": "While the black and white banner stands, no brother of the Temple may leave the field.",
+    "art": "res://art/cards/sanctum_u_015.webp"
+  },
+  {
+    "id": "sanctum_u_016",
+    "name": "Angel of the Choir of Virtues",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Angel",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "text": "Flying (can only be blocked by creatures with flying or reach). This gets +1/+1 for each other Angel you control.",
+    "flavor": "The Virtues work the wonders of Heaven, and they never work them alone.",
+    "art": "res://art/cards/sanctum_u_016.webp"
+  },
+  {
+    "id": "sanctum_u_017",
+    "name": "Angel of the Dominions",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Angel",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "text": "Flying (can only be blocked by creatures with flying or reach). Whenever another Angel enters under your control, gain 2 life.",
+    "flavor": "The Dominions govern the lesser choirs, and greet each one sent down with a hymn.",
+    "art": "res://art/cards/sanctum_u_017.webp"
+  },
+  {
+    "id": "sanctum_u_018",
+    "name": "Angelic Intercession",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Prayer",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 0,
+        "toughness": 2,
+        "duration": "turn"
+      },
+      {
+        "trigger": "cast",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1,
+        "amount_per": "Angel"
+      }
+    ],
+    "speed": "instant",
+    "text": "Creatures you control get +0/+2 until end of turn. Gain 1 life for each Angel you control.",
+    "flavor": "The blow fell, and something no one saw turned it aside.",
+    "art": "res://art/cards/sanctum_u_018.webp"
   },
   {
     "id": "sanctum_r_001",
@@ -1089,6 +1409,71 @@
     "art": "res://art/cards/sanctum_r_009.webp"
   },
   {
+    "id": "sanctum_r_010",
+    "name": "Grand Master of the Temple",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 2,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "sanctified"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Knight"
+      },
+      {
+        "static": "keyword",
+        "keyword": "sanctified",
+        "scope": "other_own_creatures",
+        "subtype": "Knight"
+      }
+    ],
+    "text": "Sanctified (protection from the Pact). Other Knights you control get +1/+1 and have sanctified.",
+    "flavor": "Non nobis, Domine, non nobis, sed nomini tuo da gloriam.",
+    "art": "res://art/cards/sanctum_r_010.webp"
+  },
+  {
+    "id": "sanctum_r_011",
+    "name": "Saint Raphael, Medicine of God",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 2,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2,
+        "amount_per": "Angel"
+      }
+    ],
+    "text": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 2 life for each Angel you control.",
+    "flavor": "I am the angel Raphael, one of the seven who stand before the Lord.",
+    "art": "res://art/cards/sanctum_r_011.webp"
+  },
+  {
     "id": "sanctum_m_001",
     "name": "Archangel of the Last Vigil",
     "faction": "sanctum",
@@ -1186,5 +1571,43 @@
     "text": "Destroy up to three target tapped enemy creatures.",
     "flavor": "He shall come again with glory to judge the living and the dead.",
     "art": "res://art/cards/sanctum_m_003.webp"
+  },
+  {
+    "id": "sanctum_m_004",
+    "name": "Saint Michael the Archangel",
+    "faction": "sanctum",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 2,
+      "generic": 4
+    },
+    "power": 4,
+    "toughness": 5,
+    "keywords": [
+      "flying",
+      "sanctified"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Angel"
+      },
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Knight"
+      }
+    ],
+    "text": "Flying, sanctified (protection from the Pact). Other Angels and Knights you control get +1/+1.",
+    "flavor": "Quis ut Deus? Who is like unto God?",
+    "art": "res://art/cards/sanctum_m_004.webp"
   }
 ]
