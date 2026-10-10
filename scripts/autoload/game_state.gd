@@ -9,7 +9,7 @@ signal mission_updated(mission_id: String)
 
 const LEGACY_SAVE := "user://save.json"
 const SLOTS := 6
-const START_GOLD := 150
+const START_GOLD := 100
 const START_BOOSTERS := 3
 
 var gold: int = 0
@@ -51,6 +51,10 @@ const HEROES := {
 	"machine": {"name": "Artificer", "subtype": "Human Artificer", "blurb": "A guild engineer with a satchel of brass and clever tools."},
 }
 var stats: Dictionary = {"wins": 0, "losses": 0, "boosters_opened": 0}
+var market: Dictionary = {}       # city -> card id -> [price swing, day it was set]
+var day := 0                      # one passes with every duel and every night at an inn
+var rested := false               # slept at an inn: more life in the next duel
+var last_region := ""             # the faith of the lands you are in (for tolls)
 var slot := 1                     # the slot this run auto-saves into
 var play_time := 0.0              # seconds played in this run
 var _session_start := 0
@@ -91,6 +95,10 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum") -> void:
 	defeated.clear()
 	missions.clear()
 	stats = {"wins": 0, "losses": 0, "boosters_opened": 0}
+	market = {}
+	day = 0
+	rested = false
+	last_region = ""
 	pending_boosters = START_BOOSTERS + 1     # three general boosters and one of the hero's faith
 	faction_packs = [hero]
 	var start: Dictionary = world_data.get("start", {})
@@ -190,6 +198,7 @@ func save_game(n: int = 0) -> void:
 		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters,
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
+		"market": market, "day": day, "rested": rested, "last_region": last_region,
 		"meta": _meta(),
 	}
 	_extra_save(data)
@@ -275,6 +284,10 @@ func load_game(n: int = 0) -> bool:
 		var bf := DeckTools.best_factions(owned_all(), 1)
 		hero = bf[0] if not bf.is_empty() else "sanctum"
 	stats = data.get("stats", stats)
+	market = data.get("market", {})
+	day = int(data.get("day", 0))
+	rested = bool(data.get("rested", false))
+	last_region = String(data.get("last_region", ""))
 	_extra_load(data)
 	# Drop cards that no longer exist in the database (set revisions).
 	var dicts: Array = [collection, foils]
@@ -345,36 +358,47 @@ func sellable_count(id: String, foil: bool) -> int:
 	return clampi(spare, 0, have)
 
 
-func sell_price(id: String, foil: bool) -> int:
-	var r: String = CardDB.get_card(id).get("rarity", "common")
-	var p: int = Factions.SELL_PRICE.get(r, 0)
-	return p * (Factions.FOIL_SELL_MULT if foil else 1)
+func sell_price(id: String, foil: bool, city_id: String = "") -> int:
+	return Economy.sell_price(city_id if city_id != "" else current_city, id, foil)
 
 
-func sell_card(id: String, foil: bool) -> bool:
+func sell_card(id: String, foil: bool, city_id: String = "") -> bool:
 	if sellable_count(id, foil) <= 0:
 		return false
+	var where := city_id if city_id != "" else current_city
+	var price := sell_price(id, foil, where)
 	var d := foils if foil else collection
 	d[id] = int(d[id]) - 1
 	if d[id] <= 0:
 		d.erase(id)
-	add_gold(sell_price(id, foil))
+	add_gold(price)
+	Economy.sold(where, id)
 	collection_changed.emit()
 	return true
 
 
-func buy_card(id: String) -> bool:
-	var r: String = CardDB.get_card(id).get("rarity", "common")
-	if not spend_gold(Factions.BUY_PRICE.get(r, 99999)):
+func buy_card(id: String, city_id: String = "") -> bool:
+	var where := city_id if city_id != "" else current_city
+	if not spend_gold(Economy.buy_price(where, id)):
 		return false
+	Economy.bought(where, id)
 	add_card(id)
 	return true
 
 
 func buy_booster() -> bool:
-	if not spend_gold(Factions.BOOSTER_PRICE):
+	if not spend_gold(Economy.BOOSTER_PRICE):
 		return false
 	pending_boosters += 1
+	return true
+
+
+## A night at the inn: the day passes and you wake rested.
+func rest_at_inn() -> bool:
+	if rested or not spend_gold(Economy.INN_PRICE):
+		return false
+	rested = true
+	day += 1
 	return true
 
 

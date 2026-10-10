@@ -149,7 +149,7 @@
 			"boss": "The Iron Foreman",
 			"life": 24,
 			"reward": {
-				"gold": 150,
+				"gold": 90,
 				"boosters": 1
 			}
 		},
@@ -163,7 +163,7 @@
 			"boss": "The Antlered One",
 			"life": 26,
 			"reward": {
-				"gold": 200,
+				"gold": 120,
 				"boosters": 1,
 				"card_rarity": "rare",
 				"faction": "wild"
@@ -179,7 +179,7 @@
 			"boss": "Duke Carnevale",
 			"life": 26,
 			"reward": {
-				"gold": 250,
+				"gold": 150,
 				"boosters": 1,
 				"card_rarity": "rare",
 				"faction": "revel"
@@ -195,7 +195,7 @@
 			"boss": "The Silent Sage",
 			"life": 26,
 			"reward": {
-				"gold": 200,
+				"gold": 120,
 				"boosters": 1,
 				"card_rarity": "rare",
 				"faction": "lyceum"
@@ -211,7 +211,7 @@
 			"boss": "Ser Gaudenz, Last Templar",
 			"life": 28,
 			"reward": {
-				"gold": 300,
+				"gold": 180,
 				"boosters": 2,
 				"card_rarity": "rare",
 				"faction": "sanctum"
@@ -227,7 +227,7 @@
 			"boss": "The Nameless Lich",
 			"life": 28,
 			"reward": {
-				"gold": 300,
+				"gold": 180,
 				"boosters": 2,
 				"card_rarity": "rare",
 				"faction": "abyss"
@@ -243,7 +243,7 @@
 			"boss": "Belzareth's Herald",
 			"life": 32,
 			"reward": {
-				"gold": 600,
+				"gold": 360,
 				"boosters": 3,
 				"card_rarity": "mythic"
 			}
@@ -255,7 +255,7 @@
 			"type": "defeat",
 			"text": "The guild only trades with duelists who can hold their own. Win two duels anywhere.",
 			"reward": {
-				"gold": 100,
+				"gold": 60,
 				"boosters": 1
 			},
 			"faction": "any",
@@ -266,7 +266,7 @@
 			"type": "visit",
 			"text": "The grove-keepers of Elderholt grow herbs the sick need. Carry a letter asking for them.",
 			"reward": {
-				"gold": 100,
+				"gold": 60,
 				"card_rarity": "uncommon",
 				"faction": "sanctum"
 			},
@@ -284,7 +284,7 @@
 			"type": "defeat",
 			"text": "Covenant cultists prey on pilgrims bound for the Cathedral of the Lamp. Defeat three of them.",
 			"reward": {
-				"gold": 150,
+				"gold": 90,
 				"boosters": 1
 			},
 			"faction": "abyss",
@@ -298,7 +298,7 @@
 			"type": "visit",
 			"text": "A party of pilgrims carries relics to the chapel of the scholars' city. See them safely to Porticus.",
 			"reward": {
-				"gold": 120,
+				"gold": 70,
 				"card_rarity": "uncommon",
 				"faction": "sanctum"
 			},
@@ -313,7 +313,7 @@
 			"type": "lair",
 			"text": "Ser Gaudenz, last of the Templars, has shut himself in his chapel and duels all who come. Overcome him and bring him to confession.",
 			"reward": {
-				"gold": 250,
+				"gold": 150,
 				"card_rarity": "rare",
 				"faction": "sanctum"
 			},
@@ -328,7 +328,7 @@
 			"type": "lair",
 			"text": "A lich has made his crypt in a ruined abbey to the south. Cleanse the holy ground.",
 			"reward": {
-				"gold": 300,
+				"gold": 180,
 				"boosters": 1,
 				"card_rarity": "rare",
 				"faction": "sanctum"
@@ -344,7 +344,7 @@
 			"type": "lair",
 			"text": "The herald of Belzareth stirs in the deepest pit. Go down with the Lamp and drive him back.",
 			"reward": {
-				"gold": 600,
+				"gold": 360,
 				"boosters": 2,
 				"card_rarity": "mythic",
 				"faction": "sanctum"
@@ -360,7 +360,7 @@
 			"type": "defeat",
 			"text": "Some scholars borrowed against their souls and now hide behind their books. Defeat three of them.",
 			"reward": {
-				"gold": 200,
+				"gold": 120,
 				"card_rarity": "uncommon",
 				"faction": "abyss"
 			},
@@ -375,7 +375,7 @@
 			"type": "defeat",
 			"text": "The Church's knights guard the roads too well. Defeat three servants of the Church.",
 			"reward": {
-				"gold": 220,
+				"gold": 130,
 				"boosters": 1
 			},
 			"faction": "sanctum",
@@ -390,7 +390,7 @@
 			"type": "lair",
 			"text": "The Nameless Lich grants nothing to the weak. Defeat him in his crypt and he will name his price.",
 			"reward": {
-				"gold": 300,
+				"gold": 180,
 				"card_rarity": "rare",
 				"faction": "abyss"
 			},
@@ -405,7 +405,7 @@
 			"type": "lair",
 			"text": "The herald of the pit tests every new servant. Survive the test.",
 			"reward": {
-				"gold": 600,
+				"gold": 360,
 				"boosters": 2,
 				"card_rarity": "mythic",
 				"faction": "abyss"
@@ -421,7 +421,7 @@
 			"type": "defeat",
 			"text": "Constructs are cutting the old woods for the furnaces of Cogspire. Stop three of them.",
 			"reward": {
-				"gold": 120,
+				"gold": 70,
 				"card_rarity": "uncommon",
 				"faction": "wild"
 			},
@@ -436,7 +436,7 @@
 			"type": "lair",
 			"text": "The great beast of the north wood has gone mad. Calm it the old way: by besting it.",
 			"reward": {
-				"gold": 180,
+				"gold": 110,
 				"boosters": 1
 			},
 			"lair": "lair_beast",
@@ -450,7 +450,7 @@
 			"type": "lair",
 			"text": "A foundry has broken loose and burns everything around it. Put out its fires.",
 			"reward": {
-				"gold": 220,
+				"gold": 130,
 				"card_rarity": "rare",
 				"faction": "wild"
 			},
@@ -465,7 +465,7 @@
 			"type": "defeat",
 			"text": "Ash from the Pit is poisoning the fields. Defeat three Covenant blighters.",
 			"reward": {
-				"gold": 250,
+				"gold": 150,
 				"boosters": 1,
 				"card_rarity": "rare",
 				"faction": "wild"
@@ -482,7 +482,7 @@
 			"type": "defeat",
 			"text": "Sour philosophers keep lecturing the guests about moderation. Beat three of them at cards.",
 			"reward": {
-				"gold": 180,
+				"gold": 110,
 				"card_rarity": "uncommon",
 				"faction": "revel"
 			},
@@ -497,7 +497,7 @@
 			"type": "visit",
 			"text": "The guildsmen of Cogspire have never heard a good song. Take the show there.",
 			"reward": {
-				"gold": 150,
+				"gold": 90,
 				"boosters": 1
 			},
 			"city": "cogspire",
@@ -511,7 +511,7 @@
 			"type": "lair",
 			"text": "Duke Carnevale's feast has lasted a year. Somebody must win the final toast.",
 			"reward": {
-				"gold": 400,
+				"gold": 240,
 				"boosters": 1,
 				"card_rarity": "rare",
 				"faction": "revel"
@@ -527,7 +527,7 @@
 			"type": "defeat",
 			"text": "The guild says the carnival is a waste of good brass. Prove them wrong against three of their machines.",
 			"reward": {
-				"gold": 250,
+				"gold": 150,
 				"card_rarity": "rare",
 				"faction": "revel"
 			},
@@ -543,7 +543,7 @@
 			"type": "visit",
 			"text": "Observe the excesses of Vinemere, and return unchanged.",
 			"reward": {
-				"gold": 100,
+				"gold": 60,
 				"card_rarity": "uncommon",
 				"faction": "lyceum"
 			},
@@ -557,7 +557,7 @@
 			"type": "defeat",
 			"text": "The revellers mock the Porch. Answer three of them in the only language they respect.",
 			"reward": {
-				"gold": 180,
+				"gold": 110,
 				"boosters": 1
 			},
 			"faction": "revel",
@@ -572,7 +572,7 @@
 			"type": "lair",
 			"text": "Our old master has stopped speaking and started duelling. Bring him back to reason.",
 			"reward": {
-				"gold": 220,
+				"gold": 130,
 				"boosters": 1,
 				"card_rarity": "rare",
 				"faction": "lyceum"
@@ -588,7 +588,7 @@
 			"type": "visit",
 			"text": "The Scholarch wishes to correspond with the Church about the soul. Carry his letters to Santa Lucerna.",
 			"reward": {
-				"gold": 200,
+				"gold": 120,
 				"card_rarity": "rare",
 				"faction": "lyceum"
 			},
@@ -603,7 +603,7 @@
 			"type": "visit",
 			"text": "Carry the guild's accounts north to Santa Lucerna.",
 			"reward": {
-				"gold": 120,
+				"gold": 70,
 				"card_rarity": "uncommon",
 				"faction": "machine"
 			},
@@ -617,7 +617,7 @@
 			"type": "defeat",
 			"text": "The druids keep sabotaging the timber carts. Defeat three of them.",
 			"reward": {
-				"gold": 180,
+				"gold": 110,
 				"boosters": 1
 			},
 			"faction": "wild",
@@ -632,7 +632,7 @@
 			"type": "lair",
 			"text": "Our best foundry has broken its governors. Shut it down before it melts the district.",
 			"reward": {
-				"gold": 250,
+				"gold": 150,
 				"card_rarity": "rare",
 				"faction": "machine"
 			},
@@ -647,7 +647,7 @@
 			"type": "lair",
 			"text": "The Silent Sage owes the guild for an orrery. Collect, by duel if necessary.",
 			"reward": {
-				"gold": 300,
+				"gold": 180,
 				"boosters": 1,
 				"card_rarity": "rare",
 				"faction": "machine"
