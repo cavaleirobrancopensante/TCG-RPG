@@ -258,8 +258,9 @@ func _refresh_relics(i: int) -> void:
 		b.text = "✧ " + r.name
 		b.custom_minimum_size = Vector2(0, 40)
 		b.add_theme_font_size_override("font_size", 14)
-		var cid: String = r.card_id
-		b.pressed.connect(func(): _show_preview(cid, -1))
+		var ruid: int = r.uid
+		var rside := i
+		b.pressed.connect(func(): _show_board(rside, ruid))
 		box.add_child(b)
 
 
@@ -600,44 +601,30 @@ func _bolt(pos: Vector2) -> void:
 
 # =================================================================== preview overlay
 
+## Read a card: from the hand (leaf through the hand, with Play) or a single card.
 func _show_preview(id: String, hand_idx: int) -> void:
 	_close_preview()
-	preview = Control.new()
-	UIKit.full_rect(preview)
-	add_child(preview)
-	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.6)
-	UIKit.full_rect(dim)
-	dim.gui_input.connect(func(ev):
-		if ev is InputEventMouseButton and ev.pressed:
-			_close_preview()
-	)
-	preview.add_child(dim)
-	var box := HBoxContainer.new()
-	box.add_theme_constant_override("separation", 30)
-	box.set_anchors_preset(Control.PRESET_CENTER)
-	preview.add_child(box)
-	var cv := CardView.create(id, 2.0)
-	box.add_child(cv)
-	var plate := PanelContainer.new()
-	plate.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	box.add_child(plate)
-	var col := VBoxContainer.new()
-	col.alignment = BoxContainer.ALIGNMENT_CENTER
-	col.add_theme_constant_override("separation", 16)
-	plate.add_child(col)
-	var c := CardDB.get_card(id)
-	var details := UIKit.label(_card_details(c), 18, UIKit.TEXT, true)
-	details.custom_minimum_size.x = 320
-	col.add_child(details)
 	if hand_idx >= 0:
-		var play := UIKit.button("Play", func(): _begin_play(hand_idx), 200)
-		play.disabled = not st.can_play(0, hand_idx) or busy or mode != "idle"
-		col.add_child(play)
-	col.add_child(UIKit.button("Close", _close_preview, 200))
-	await get_tree().process_frame
-	if is_instance_valid(box):
-		box.position = (get_viewport_rect().size - box.size) * 0.5
+		preview = CardViewer.open(self, st.side(0).hand.duplicate(), hand_idx, func(_e, i):
+			return [["Play", func(): _begin_play(i), st.can_play(0, i) and not busy and mode == "idle", true]])
+	else:
+		preview = CardViewer.open(self, [id], 0)
+
+
+## Read the cards on one side of the battlefield (creatures then relics), starting at uid.
+func _show_board(side_i: int, uid: int) -> void:
+	_close_preview()
+	var entries := []
+	var start := 0
+	for p in st.side(side_i).creatures + st.side(side_i).relics:
+		if p.uid == uid:
+			start = entries.size()
+		var e := {"id": p.card_id, "foil": false}
+		if p.is_token:
+			e["data"] = p.card
+		entries.append(e)
+	if not entries.is_empty():
+		preview = CardViewer.open(self, entries, start)
 
 
 func _card_details(c: Dictionary) -> String:
@@ -761,10 +748,7 @@ func _on_figure_tapped(fig: SummonFigure) -> void:
 					_log("That creature can't block this attacker (flying?).")
 				refresh()
 		_:
-			if p.card_id == "token":
-				_log("%s — a token %d/%d." % [p.name, p.power(), p.toughness()])
-			else:
-				_show_preview(p.card_id, -1)
+			_show_board(p.owner, p.uid)
 
 
 func _on_alt() -> void:

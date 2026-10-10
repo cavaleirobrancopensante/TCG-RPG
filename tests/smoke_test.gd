@@ -89,6 +89,30 @@ func _ready() -> void:
 	for t in ["shop", "sell", "town", "inn"]:
 		c._on_tab(t)
 		await _frames(2)
+	# Card viewer: leaf through the shop, buy from it, close.
+	c._on_tab("shop")
+	await _frames(3)
+	var shop_ids := CardDB.faction_ids("machine")
+	c._view_shop(shop_ids, 0)
+	await _frames(2)
+	var viewer: CardViewer = null
+	for n in c.get_children():
+		if n is CardViewer:
+			viewer = n
+	assert(viewer != null, "viewer opens")
+	viewer.next()
+	viewer.next()
+	assert(viewer.index == 2, "viewer next")
+	viewer.prev()
+	assert(viewer.index == 1, "viewer prev")
+	var owned_before := GameState.owned_count(shop_ids[1])
+	GameState.add_gold(1000)
+	for a in viewer.actions.call(viewer.entry(), viewer.index):
+		a[1].call()
+	assert(GameState.owned_count(shop_ids[1]) == owned_before + 1, "bought from viewer")
+	viewer.close()
+	await _frames(2)
+	print("card viewer ok")
 	GameState.add_gold(500)
 	GameState.buy_booster()
 	c._on_tab("deck")
@@ -154,6 +178,13 @@ func _interactive_battle() -> void:
 		me.lands.append({"id": "land_wild", "color": "G", "tapped": false})
 	me.hand = ["revel_c_007", "wild_c_003", "wild_c_003"]
 	b.refresh()
+	# 0) Read the hand with the viewer, leafing with the arrows.
+	b._show_preview(me.hand[0], 0)
+	await _frames(2)
+	(b.preview as CardViewer).next()
+	assert((b.preview as CardViewer).index == 1, "hand viewer next")
+	b._close_preview()
+	await _frames(2)
 	# 1) Targeted burn at the enemy's face.
 	var life_before: int = st.side(1).life
 	b._begin_play(0)

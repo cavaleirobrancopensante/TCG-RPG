@@ -169,7 +169,7 @@ func _show_shop() -> void:
 	var open := UIKit.button("Open boosters (%d)" % GameState.pending_boosters, func(): open_boosters.emit(), 240)
 	open.disabled = GameState.pending_boosters <= 0
 	top.add_child(open)
-	content.add_child(UIKit.label("Singles — %s and Technocracy cards. Tap a card to buy." % Factions.info(faction)["short"], 18, UIKit.DIM))
+	content.add_child(UIKit.label("Singles — %s and Technocracy cards. Tap a card to read it; buy from there." % Factions.info(faction)["short"], 18, UIKit.DIM))
 	var rf := HBoxContainer.new()
 	content.add_child(rf)
 	for r in ["all"] + Factions.RARITIES:
@@ -187,15 +187,20 @@ func _show_shop() -> void:
 	var ids := CardDB.faction_ids(faction)
 	if faction != "machine":
 		ids.append_array(CardDB.faction_ids("machine"))
+	var listing := []
 	for id in ids:
 		var c := CardDB.get_card(id)
 		if rarity_filter != "all" and c["rarity"] != rarity_filter:
 			continue
+		listing.append(id)
+	for li in listing.size():
+		var id: String = listing[li]
+		var c := CardDB.get_card(id)
 		var cell := VBoxContainer.new()
 		var cv := CardView.create(id, SCALE)
 		cv.count_badge = GameState.owned_count(id)
-		var cid: String = id
-		cv.tapped.connect(func(_v): _confirm_buy(cid))
+		var at := li
+		cv.tapped.connect(func(_v): _view_shop(listing, at))
 		cell.add_child(cv)
 		var price := UIKit.label("◉ %d" % Factions.BUY_PRICE[c["rarity"]], 15, UIKit.GOLD)
 		price.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -203,26 +208,28 @@ func _show_shop() -> void:
 		grid.add_child(cell)
 
 
-func _confirm_buy(id: String) -> void:
-	var c := CardDB.get_card(id)
-	var price: int = Factions.BUY_PRICE[c["rarity"]]
-	_dialog(c["name"], id, "Buy for %d gold? (you own %d)" % [price, GameState.owned_count(id)], "Buy", func():
-		if GameState.buy_card(id):
-			GameState.save_game()
-			_toast("Bought %s." % c["name"])
-		else:
-			_toast("Not enough gold.")
-		_show())
+## Leaf through the shop's cards; Buy keeps the viewer open so you can buy several.
+func _view_shop(listing: Array, at: int) -> void:
+	var v := CardViewer.open(self, listing, at, func(e, _i):
+		var id: String = e["id"]
+		var price: int = Factions.BUY_PRICE[CardDB.get_card(id)["rarity"]]
+		return [["Buy · %d gold" % price, func():
+			if GameState.buy_card(id):
+				GameState.save_game()
+				_toast("Bought %s." % CardDB.get_card(id)["name"])
+			_update_gold(), GameState.gold >= price, false]])
+	v.closed.connect(_show)
 
 
 # ------------------------------------------------------------------ sell
 
 func _show_sell() -> void:
-	content.add_child(UIKit.label("Cards in your deck are kept back. Tap a card to sell one copy.", 18, UIKit.DIM))
+	content.add_child(UIKit.label("Cards in your decks are kept back. Tap a card to read it; sell from there.", 18, UIKit.DIM))
 	var grid := GridContainer.new()
 	grid.columns = 9
 	content.add_child(grid)
 	var any := false
+	var sell_list := []
 	var ids := GameState.owned_all().keys()
 	ids.sort()
 	for id in ids:
@@ -234,9 +241,9 @@ func _show_sell() -> void:
 			var cell := VBoxContainer.new()
 			var cv := CardView.create(id, SCALE, foil)
 			cv.count_badge = n
-			var cid: String = id
-			var is_foil: bool = foil
-			cv.tapped.connect(func(_v): _confirm_sell(cid, is_foil))
+			var at := sell_list.size()
+			sell_list.append({"id": id, "foil": foil})
+			cv.tapped.connect(func(_v): _view_sell(sell_list, at))
 			cell.add_child(cv)
 			var price := UIKit.label("◉ %d" % GameState.sell_price(id, foil), 15, UIKit.GOLD)
 			price.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -246,13 +253,17 @@ func _show_sell() -> void:
 		content.add_child(UIKit.label("Nothing spare to sell.", 20))
 
 
-func _confirm_sell(id: String, foil: bool) -> void:
-	var c := CardDB.get_card(id)
-	var p := GameState.sell_price(id, foil)
-	_dialog(c["name"], id, "Sell one %scopy for %d gold?" % ["foil " if foil else "", p], "Sell", func():
-		GameState.sell_card(id, foil)
-		GameState.save_game()
-		_show(), foil)
+## Leaf through your spare cards; Sell keeps the viewer open.
+func _view_sell(listing: Array, at: int) -> void:
+	var v := CardViewer.open(self, listing, at, func(e, _i):
+		var id: String = e["id"]
+		var foil: bool = e["foil"]
+		var left := GameState.sellable_count(id, foil)
+		return [["Sell · %d gold (%d spare)" % [GameState.sell_price(id, foil), left], func():
+			GameState.sell_card(id, foil)
+			GameState.save_game()
+			_update_gold(), left > 0, false]])
+	v.closed.connect(_show)
 
 
 # ------------------------------------------------------------------ inn
