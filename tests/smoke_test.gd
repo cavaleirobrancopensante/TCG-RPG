@@ -204,6 +204,12 @@ func _interactive_battle() -> void:
 	await _wait(1.0)
 	var b: BattleScene = main.screen
 	var st := b.st
+	if st.phase == "mulligan":
+		st.mulligan(0)
+		check_mull(st)
+		st.keep(0, [0])
+		b._mulligan_done.emit()
+		await _wait(0.5)
 	while b.busy:
 		await _wait(0.2)
 	if st.active == 1:
@@ -283,3 +289,7 @@ func _settle(b: BattleScene) -> void:
 	while (b.busy or b.mode == "target") and guard < 100:
 		guard += 1
 		await _wait(0.2)
+
+
+func check_mull(st: BattleState) -> void:
+	assert(st.side(0).hand.size() == 7 and st.to_bottom(0) == 1, "mulligan in the duel screen")

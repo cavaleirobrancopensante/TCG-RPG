@@ -11,6 +11,9 @@ func _ready() -> void:
 	test_boosters()
 	test_auto_build()
 	test_enemy_decks()
+	test_mulligan()
+	test_mechanics()
+	test_ai_decisions()
 	test_ai_battles()
 	test_game_state()
 	test_save_slots()
@@ -135,7 +138,10 @@ func test_ai_battles() -> void:
 		var da := DeckTools.to_list(DeckTools.enemy_deck(fa, 2, rng))
 		var db := DeckTools.to_list(DeckTools.enemy_deck(fb, 2, rng))
 		var st := BattleState.new()
-		st.setup(da, db, ["A", "B"], [20, 20], -1, 5000 + g)
+		st.setup(da, db, ["A", "B"], [20, 20], -1, 5000 + g, true)
+		BattleAI.resolve_mulligan(st, 0)
+		BattleAI.resolve_mulligan(st, 1)
+		check(st.phase == "main1", "game %d stuck after mulligans (%s)" % [g, st.phase])
 		var guard := 0
 		while st.phase != "over" and guard < 200:
 			guard += 1
@@ -158,6 +164,347 @@ func test_ai_battles() -> void:
 		turns_total += st.turn
 	print("wins A/B %s, avg turns %.1f" % [wins, float(turns_total) / games])
 	print("wins by faith (incl. mirrors): %s" % [faction_wins])
+
+
+# ------------------------------------------------------------------ duel helpers
+
+func _id(name: String) -> String:
+	for id in CardDB.all_set_ids():
+		if CardDB.get_card(id)["name"] == name:
+			return id
+	check(false, "no card named " + name)
+	return ""
+
+
+## A duel in main phase 1 of side 0's turn with empty hands and boards.
+func _duel(lands0: int = 10, lands1: int = 10) -> BattleState:
+	var st := BattleState.new()
+	var filler: Array = []
+	for n in 30:
+		filler.append(Factions.land_id("machine"))
+	st.setup(filler.duplicate(), filler.duplicate(), ["A", "B"], [20, 20], 0, 1234)
+	st.take_events()
+	for i in 2:
+		var s := st.side(i)
+		s.hand.clear()
+		for n in (lands0 if i == 0 else lands1):
+			var m: String = Factions.MANA_ORDER[n % 6]
+			s.lands.append({"id": Factions.land_id(Factions.MANA_TO_FACTION[m]), "color": m, "tapped": false})
+	return st
+
+
+func _lands(st: BattleState, i: int, symbols: String) -> void:
+	st.side(i).lands.clear()
+	for m in symbols:
+		st.side(i).lands.append({"id": Factions.land_id(Factions.MANA_TO_FACTION[m]), "color": m, "tapped": false})
+
+
+func _put(st: BattleState, i: int, name: String, ready: bool = true) -> BattleState.Perm:
+	var id := _id(name)
+	var p := st._make_perm(i, id, CardDB.get_card(id))
+	p.sick = not ready
+	if p.is_creature():
+		st.side(i).creatures.append(p)
+	else:
+		st.side(i).relics.append(p)
+	return p
+
+
+func _hand(st: BattleState, i: int, names: Array) -> void:
+	for n in names:
+		st.side(i).hand.append(_id(n))
+
+
+func _named(st: BattleState, i: int, name: String) -> int:
+	var n := 0
+	for p in st.side(i).creatures:
+		if p.name == name:
+			n += 1
+	return n
+
+
+func test_mulligan() -> void:
+	print("-- mulligan")
+	var deck: Array = []
+	for id in CardDB.all_set_ids().slice(0, 40):
+		deck.append(id)
+	var st := BattleState.new()
+	st.setup(deck.duplicate(), deck.duplicate(), ["A", "B"], [20, 20], 0, 77, true)
+	check(st.phase == "mulligan", "starts in mulligan phase")
+	check(st.side(0).hand.size() == 7 and st.side(1).hand.size() == 7, "seven cards each")
+	st.mulligan(0)
+	st.mulligan(0)
+	check(st.side(0).hand.size() == 7, "mulligan redraws seven")
+	check(st.to_bottom(0) == 2, "two to the bottom after two mulligans")
+	var a: String = st.side(0).hand[0]
+	var b: String = st.side(0).hand[1]
+	st.keep(0, [0, 1])
+	check(st.side(0).hand.size() == 5, "kept hand of five")
+	check(st.side(0).deck.size() == 35 and st.side(0).deck.slice(0, 2).has(a) and st.side(0).deck.slice(0, 2).has(b), "chosen cards on the bottom")
+	check(st.phase == "mulligan", "waits for the other player")
+	st.keep(1)
+	check(st.side(1).hand.size() == 7, "keeping seven puts none on the bottom")
+	check(st.phase == "main1" and st.turn == 1, "turn one begins after both keep")
+	# AI: a hand with no lands is sent back.
+	var st2 := BattleState.new()
+	var spells: Array = []
+	for id in CardDB.all_set_ids().slice(0, 7):
+		spells.append(id)
+	for n in 33:
+		spells.insert(0, Factions.land_id("sanctum"))
+	st2.setup(spells.duplicate(), spells.duplicate(), ["A", "B"], [20, 20], 0, 5, true)
+	check(BattleAI.should_mulligan(st2, 0), "AI mulligans a hand with no lands")
+	BattleAI.resolve_mulligan(st2, 0)
+	BattleAI.resolve_mulligan(st2, 1)
+	check(st2.phase == "main1", "AI mulligans resolve")
+	check(st2.side(0).hand.size() == 7 - st2.mulligans[0] + (0 if st2.first_player == 0 else 1), "AI hand size matches mulligans")
+
+
+## Every rule a card can use, checked on a small board.
+func test_mechanics() -> void:
+	print("-- card mechanics")
+	# Guardian blocks with +2 toughness; deathtouch; trample; lifelink.
+	var st := _duel()
+	var knight := _put(st, 0, "Knight of the Pilgrim Way")        # 3/3 vigilance
+	var acolyte := _put(st, 1, "Lantern-Bearer Acolyte")          # 1/2 guardian
+	st.declare_attackers([knight.uid])
+	check(not knight.tapped, "vigilance keeps attacker untapped")
+	st.declare_blocks({knight.uid: acolyte.uid})
+	check(st.find_perm(acolyte.uid) != null, "a 1/2 guardian blocks as a 1/4 and survives 3")
+	st = _duel()
+	var boar := _put(st, 0, "Thornback Boar")                     # 3/2
+	var gw := _put(st, 1, "Cloister Gatewarden")                   # 2/2 guardian -> 2/4
+	st.declare_attackers([boar.uid])
+	st.declare_blocks({boar.uid: gw.uid})
+	check(st.find_perm(gw.uid) != null, "guardian survives 3 damage when blocking")
+	st = _duel()
+	var big := _put(st, 0, "Tusked Juggernaut")                   # 5/5 trample
+	var crawler := _put(st, 1, "Tomb Crawler")                     # 1/1 deathtouch
+	st.declare_attackers([big.uid])
+	st.declare_blocks({big.uid: crawler.uid})
+	check(st.find_perm(big.uid) == null, "deathtouch blocker kills a 5/5")
+	check(st.side(1).life == 16, "trample pushes 4 over a 1/1 (life %d)" % st.side(1).life)
+	st = _duel()
+	var pal := _put(st, 0, "Paladin of the Seventh Gate")          # 3/3 lifelink
+	st.declare_attackers([pal.uid])
+	st.declare_blocks({})
+	check(st.side(0).life == 23 and st.side(1).life == 17, "lifelink gains on combat damage")
+	# Flying vs reach.
+	st = _duel()
+	var shade := _put(st, 0, "Gloam Shade")
+	var fox := _put(st, 1, "Briar Fox")
+	var oak := _put(st, 1, "Oakmoot Sentinel")
+	check(not st.can_block(fox, shade) and st.can_block(oak, shade), "flying only blocked by flying/reach")
+	# Defender cannot attack, summoning sickness, haste.
+	st = _duel()
+	var hop := _put(st, 0, "Bronze-Shield Hoplite")
+	check(not st.can_attack(hop), "defender cannot attack")
+	_hand(st, 0, ["Vine-Crowned Bacchant", "Briar Fox"])
+	st.play(0, 0)
+	st.play(0, 0)
+	var bach = st.side(0).creatures[1]
+	var fox2 = st.side(0).creatures[2]
+	check(st.can_attack(bach) and not st.can_attack(fox2), "haste attacks at once, others wait")
+	# Death triggers: drain, heal, token, Abbess team buff.
+	st = _duel()
+	var ini := _put(st, 0, "Covenant Initiate")
+	var mar := _put(st, 0, "Martyr of the Pilgrim Road")
+	var gh := _put(st, 0, "Ossuary Ghoul")
+	var abb := _put(st, 0, "Abbess of the Silent Order")
+	var keeper := _put(st, 0, "Briar Fox")
+	st.destroy_perm(ini)
+	check(st.side(1).life == 19 and st.side(0).life == 21, "Initiate drains on death")
+	st.destroy_perm(mar)
+	check(st.side(0).life == 24, "Martyr heals on death")
+	st.destroy_perm(gh)
+	check(_named(st, 0, "Restless Bones") == 1, "Ghoul leaves a token")
+	st.destroy_perm(abb)
+	check(keeper.power() == 3 and keeper.toughness() == 2, "Abbess makes the team +1/+1 forever")
+	# Enter triggers with targets.
+	st = _duel()
+	var e1 := _put(st, 1, "Barrowland Bear")      # 4/4
+	var e2 := _put(st, 1, "Briar Fox")            # 2/1
+	_hand(st, 0, ["Archangel of the Last Vigil"])
+	st.play(0, 0, [{"kind": "creature", "uid": e1.uid}])
+	check(st.find_perm(e1.uid) == null and st.side(0).life == 24, "Archangel destroys power 4 and heals 4")
+	st = _duel()
+	var e3 := _put(st, 1, "Barrowland Bear")
+	_hand(st, 0, ["Word of Banishment"])
+	check(st.valid_targets(0, CardDB.get_card(_id("Word of Banishment"))["effects"][0]).is_empty(), "power limit hides a 4-power creature")
+	# Bounce: real card to hand, token gone.
+	st = _duel()
+	var wolfm := _put(st, 1, "Barrowland Bear")
+	_hand(st, 0, ["Measured Rebuke"])
+	st.play(0, 0, [{"kind": "creature", "uid": wolfm.uid}])
+	check(st.side(1).hand.has(_id("Barrowland Bear")), "bounce returns the card to hand")
+	# Tapping: Stillness taps all, Orrery taps on upkeep and it stays tapped for our attack.
+	st = _duel()
+	_put(st, 1, "Briar Fox")
+	_put(st, 1, "Barrowland Bear")
+	_hand(st, 0, ["Stillness of Mind"])
+	st.play(0, 0)
+	var all_tapped := true
+	for p in st.side(1).creatures:
+		all_tapped = all_tapped and p.tapped
+	check(all_tapped, "Stillness of Mind taps every enemy creature")
+	st = _duel()
+	_put(st, 0, "Orrery of Fixed Stars")
+	var guard := _put(st, 1, "Barrowland Bear")
+	st.end_turn()
+	st.end_turn()
+	check(guard.tapped, "Orrery taps a blocker in our upkeep")
+	# Mana: upkeep mana and ritual mana.
+	st = _duel(2, 2)
+	_put(st, 0, "Mistletoe Archdruid")
+	st.end_turn()
+	st.end_turn()
+	check(st.total_available(0) == 4, "Archdruid adds GG in upkeep (%d)" % st.total_available(0))
+	# Reanimate the best creature.
+	st = _duel()
+	st.side(0).graveyard.append(_id("Briar Fox"))
+	st.side(0).graveyard.append(_id("Tusked Juggernaut"))
+	_hand(st, 0, ["Grave Summoner"])
+	st.play(0, 0)
+	check(_named(st, 0, "Tusked Juggernaut") == 1, "Grave Summoner raises the best creature")
+	# Discard, sweep, attack triggers.
+	st = _duel()
+	_hand(st, 1, ["Briar Fox", "Briar Fox", "Briar Fox"])
+	_hand(st, 0, ["Dread Whisper"])
+	st.play(0, 0)
+	check(st.side(1).hand.size() == 1, "Dread Whisper discards two")
+	st = _duel()
+	_put(st, 1, "Briar Fox")
+	_put(st, 1, "Covenant Initiate")
+	_put(st, 1, "Barrowland Bear")
+	_hand(st, 0, ["Pyre-Dancer's Whirl"])
+	st.play(0, 0)
+	check(st.side(1).creatures.size() == 1 and st.side(0).life == 17, "Whirl kills small creatures, costs 2 life, Initiate drains 1")
+	st = _duel()
+	var duel := _put(st, 0, "Masquerade Duelist")
+	st.declare_attackers([duel.uid])
+	check(duel.power() == 3, "attack trigger pumps itself")
+	st.declare_blocks({})
+	check(st.side(1).life == 17, "pumped attacker deals 3")
+	st = _duel()
+	var dia := _put(st, 0, "Dialectician of the Porch")
+	var wall := _put(st, 1, "Barrowland Bear")
+	st.declare_attackers([dia.uid])
+	check(wall.tapped and not st.can_block(wall, dia), "Dialectician taps a blocker when attacking")
+	# Every card in the set can be cast on a busy board without breaking the rules.
+	for id in CardDB.all_set_ids():
+		var d := _duel(18, 18)
+		_put(d, 0, "Briar Fox")
+		_put(d, 1, "Barrowland Bear")
+		_put(d, 1, "Gloam Shade")
+		d.side(0).graveyard.append(_id("Thornback Boar"))
+		d.side(0).hand.append(id)
+		var ok := d.can_play(0, 0)
+		check(ok, "%s cannot be cast with 18 lands" % id)
+		if ok:
+			d.play(0, 0)
+			d.take_events()
+			check(not d.side(0).hand.has(id) or CardDB.get_card(id).get("type") == "land", "%s left the hand" % id)
+			_check_invariants(d)
+			d.end_turn()
+			d.end_turn()
+			_check_invariants(d)
+
+
+## The opponent's choices: kill first, then sensible strategy.
+func test_ai_decisions() -> void:
+	print("-- AI decisions")
+	# Burns the face for the win even with a creature to shoot.
+	var st := _duel(3, 3)
+	_lands(st, 0, "RRR")
+	st.side(1).life = 2
+	_put(st, 1, "Briar Fox")
+	_hand(st, 0, ["Toast of Fire"])
+	BattleAI.play_main(st, 0)
+	check(st.phase == "over" and st.winner == 0, "AI burns the player for lethal")
+	# Two burn spells together for lethal.
+	st = _duel(6, 6)
+	_lands(st, 0, "RRBBGG")
+	st.side(1).life = 5
+	_put(st, 1, "Barrowland Bear")
+	_hand(st, 0, ["Toast of Fire", "Siphon of Ashes", "Briar Fox"])
+	BattleAI.play_main(st, 0)
+	check(st.phase == "over" and st.winner == 0, "AI chains burn and drain for lethal")
+	# Otherwise burn goes to a creature it kills.
+	st = _duel(3, 3)
+	_lands(st, 0, "RRR")
+	var fox := _put(st, 1, "Thornback Boar")
+	_hand(st, 0, ["Toast of Fire"])
+	BattleAI.play_main(st, 0)
+	check(st.find_perm(fox.uid) == null and st.side(1).life == 20, "AI uses burn as removal when not lethal")
+	# Never pays life it does not have.
+	st = _duel(6, 6)
+	_lands(st, 0, "BBBBBB")
+	st.side(0).life = 4
+	_hand(st, 0, ["Marquis of the Wailing Pit"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).life == 4 and st.side(0).creatures.is_empty(), "AI won't cast a card whose life cost kills it")
+	# Holds tricks with nothing to attack with; uses them when attacking.
+	st = _duel(3, 3)
+	_lands(st, 0, "GGG")
+	_hand(st, 0, ["Wildsurge"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).hand.size() == 1, "AI keeps a pump spell when it cannot attack")
+	st = _duel(3, 3)
+	_lands(st, 0, "GGG")
+	var cub := _put(st, 0, "Briar Fox")
+	_put(st, 1, "Barrowland Bear")
+	_hand(st, 0, ["Wildsurge"])
+	BattleAI.play_main(st, 0)
+	var atk := BattleAI.choose_attackers(st, 0)
+	check(st.side(0).hand.is_empty() and atk.has(cub.uid), "AI pumps an attacker to win the fight")
+	# Discard into an empty hand is wasted.
+	st = _duel(3, 3)
+	_lands(st, 0, "BBB")
+	_hand(st, 0, ["Dread Whisper"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).hand.size() == 1, "AI holds discard when the enemy hand is empty")
+	# Ramp only when it unlocks a bigger card.
+	st = _duel(3, 3)
+	st.side(0).lands = [{"id": Factions.land_id("wild"), "color": "G", "tapped": false}, {"id": Factions.land_id("wild"), "color": "G", "tapped": false}, {"id": Factions.land_id("wild"), "color": "G", "tapped": false}]
+	_hand(st, 0, ["Greening Rite", "Barrowland Bear"])
+	BattleAI.play_main(st, 0)
+	check(_named(st, 0, "Barrowland Bear") == 1, "AI ramps into a four-drop on three lands")
+	st = _duel(3, 3)
+	_lands(st, 0, "GGG")
+	_hand(st, 0, ["Greening Rite", "Briar Fox"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).hand.has(_id("Greening Rite")), "AI keeps ramp when it unlocks nothing")
+	# Tappers clear the way only when there is an attack to make.
+	st = _duel(4, 4)
+	_lands(st, 0, "UUUU")
+	_put(st, 1, "Barrowland Bear")
+	_hand(st, 0, ["Stillness of Mind"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).hand.size() == 1, "AI keeps Stillness of Mind with no attackers")
+	# Lethal attack through blockers.
+	st = _duel(0, 0)
+	st.side(1).life = 5
+	_put(st, 0, "Gloam Shade")
+	_put(st, 0, "Herald of the Morning Bell")
+	_put(st, 0, "Briar Fox")
+	_put(st, 1, "Barrowland Bear")
+	check(BattleAI.choose_attackers(st, 0).size() == 3, "AI swings with everything when lethal")
+	# Holds back a blocker when the counterattack would kill it.
+	st = _duel(0, 0)
+	st.side(0).life = 4
+	var bear := _put(st, 0, "Barrowland Bear")
+	_put(st, 1, "Barrowland Bear")
+	st.side(1).creatures[0].tapped = true
+	check(not BattleAI.choose_attackers(st, 0).has(bear.uid), "AI keeps a blocker home when the swing back is lethal")
+	# Chump blocks to survive, trades when it is good.
+	st = _duel(0, 0)
+	st.active = 1
+	st.side(0).life = 3
+	var att := _put(st, 1, "Barrowland Bear")
+	var chump := _put(st, 0, "Briar Fox")
+	st.phase = "main1"
+	st.declare_attackers([att.uid])
+	check(BattleAI.choose_blocks(st, 0).get(att.uid, -1) == chump.uid, "AI chump blocks to stay alive")
 
 
 func _check_invariants(st: BattleState) -> void:
