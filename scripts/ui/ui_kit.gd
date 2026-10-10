@@ -229,20 +229,47 @@ static func cost_text(cost: Dictionary) -> String:
 # ------------------------------------------------------------------ sigils
 
 ## Draw a faith's sigil on any CanvasItem.
+## Outline colour per sigil: dark shapes get a white edge, light shapes a black one.
+const SIGIL_OUTLINE := {
+	"abyss": Color(0.98, 0.96, 0.90), "revel": Color(0.98, 0.96, 0.90),
+	"wild": Color(0.10, 0.06, 0.04), "machine": Color(0.10, 0.06, 0.04),
+}
+static var _flat := Color(0, 0, 0, 0)
+
+
+## Draw a faith's sigil. Solid sigils get an outline so they stand out on any background
+## (faint watermarks and tiny sizes are drawn without it).
 static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, col: Color, width: float = 3.0) -> void:
+	if SIGIL_OUTLINE.has(faction) and col.a > 0.5 and r >= 5.0:
+		var oc: Color = SIGIL_OUTLINE[faction]
+		var off := maxf(1.2, r * 0.09)
+		_flat = Color(oc, col.a)
+		for k in 12:
+			var a := TAU * k / 12.0
+			_sigil_shape(ci, faction, c + Vector2(cos(a), sin(a)) * off, r, _flat, width + off)
+		_flat = Color(0, 0, 0, 0)
+	_sigil_shape(ci, faction, c, r, col, width)
+
+
+## During the outline pass every colour becomes the outline colour.
+static func _k(c: Color) -> Color:
+	return _flat if _flat.a > 0 else c
+
+
+static func _sigil_shape(ci: CanvasItem, faction: String, c: Vector2, r: float, col: Color, width: float = 3.0) -> void:
 	match faction:
 		"sanctum":   # cross with halo
 			ci.draw_arc(c + Vector2(0, -r * 0.15), r * 0.95, 0, TAU, 40, Color(col, col.a * 0.6), width * 0.7, true)
 			ci.draw_rect(Rect2(c.x - r * 0.12, c.y - r * 0.8, r * 0.24, r * 1.6), col)
 			ci.draw_rect(Rect2(c.x - r * 0.5, c.y - r * 0.38, r * 1.0, r * 0.22), col)
 		"abyss":     # bloody dagger, point down
-			var blood := Color(0.55, 0.02, 0.05, col.a)
+			var blood := _k(Color(0.55, 0.02, 0.05, col.a))
 			ci.draw_circle(c + Vector2(0, -r * 0.86), r * 0.12, col)                         # pommel
 			ci.draw_rect(Rect2(c.x - r * 0.07, c.y - r * 0.78, r * 0.14, r * 0.34), col)      # grip
 			ci.draw_rect(Rect2(c.x - r * 0.42, c.y - r * 0.46, r * 0.84, r * 0.12), col)      # crossguard
 			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.15, -r * 0.34), c + Vector2(r * 0.15, -r * 0.34),
 				c + Vector2(r * 0.10, r * 0.55), c + Vector2(0, r * 0.85), c + Vector2(-r * 0.10, r * 0.55)]), col)   # blade
-			ci.draw_line(c + Vector2(0, -r * 0.30), c + Vector2(0, r * 0.62), Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.4))
+			ci.draw_line(c + Vector2(0, -r * 0.30), c + Vector2(0, r * 0.62), _k(Color(0, 0, 0, col.a * 0.35)), maxf(1.0, width * 0.4))
 			# blood running down the blade and dripping from the point
 			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.11, r * 0.30), c + Vector2(r * 0.11, r * 0.30),
 				c + Vector2(r * 0.07, r * 0.58), c + Vector2(0, r * 0.85), c + Vector2(-r * 0.07, r * 0.58)]), blood)
@@ -259,11 +286,11 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 				var t := float(i) / 20.0
 				var y := lerpf(-r * 0.9, r * 0.8, t)
 				pts.append(c + Vector2(-sin(t * PI) * r * 0.55, y))
-			_fill(ci, pts, Color(col, col.a * 0.55))
+			_fill(ci, pts, _k(Color(col, col.a * 0.55)))
 			ci.draw_polyline(pts + PackedVector2Array([pts[0]]), col, width * 0.6, true)
 			ci.draw_line(c + Vector2(0, -r * 0.8), c + Vector2(0, r * 0.95), col, width * 0.7, true)
 		"revel":     # masquerade half-mask with ribbons and a plume
-			var dark := Color(0.10, 0.06, 0.04, col.a)
+			var dark := _k(Color(0.10, 0.06, 0.04, col.a))
 			var mask := PackedVector2Array([
 				c + Vector2(-r * 0.95, -r * 0.42), c + Vector2(-r * 0.45, -r * 0.30), c + Vector2(0, -r * 0.36),
 				c + Vector2(r * 0.45, -r * 0.30), c + Vector2(r * 0.95, -r * 0.42), c + Vector2(r * 0.80, r * 0.05),
@@ -289,12 +316,12 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 			_fill(ci, PackedVector2Array([c + Vector2(r * 0.72, -r * 0.55), c + Vector2(r * 1.0, -r * 0.85),
 				c + Vector2(r * 0.86, -r * 1.0), c + Vector2(r * 0.66, -r * 0.80)]), col)
 		"lyceum":    # a column with an owl perched on top
-			var dark := Color(0.10, 0.06, 0.04, col.a)
+			var dark := _k(Color(0.10, 0.06, 0.04, col.a))
 			ci.draw_rect(Rect2(c.x - r * 0.50, c.y + r * 0.78, r * 1.0, r * 0.14), col)     # base
 			ci.draw_rect(Rect2(c.x - r * 0.40, c.y + r * 0.68, r * 0.80, r * 0.10), col)
 			ci.draw_rect(Rect2(c.x - r * 0.28, c.y - r * 0.02, r * 0.56, r * 0.70), col)    # shaft
 			for k in [-0.12, 0.0, 0.12]:
-				ci.draw_line(c + Vector2(r * k, r * 0.04), c + Vector2(r * k, r * 0.64), Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.35))
+				ci.draw_line(c + Vector2(r * k, r * 0.04), c + Vector2(r * k, r * 0.64), _k(Color(0, 0, 0, col.a * 0.35)), maxf(1.0, width * 0.35))
 			ci.draw_rect(Rect2(c.x - r * 0.50, c.y - r * 0.16, r * 1.0, r * 0.14), col)     # capital
 			ci.draw_circle(c + Vector2(-r * 0.46, -r * 0.08), r * 0.09, col)                  # volutes
 			ci.draw_circle(c + Vector2(r * 0.46, -r * 0.08), r * 0.09, col)
@@ -314,10 +341,10 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.04, -r * 0.62), c + Vector2(-r * 0.20, -r * 0.42),
 				c + Vector2(-r * 0.22, -r * 0.20), c + Vector2(-r * 0.04, -r * 0.30)]), col)
 			ci.draw_polyline(PackedVector2Array([c + Vector2(-r * 0.04, -r * 0.62), c + Vector2(-r * 0.20, -r * 0.42),
-				c + Vector2(-r * 0.22, -r * 0.20)]), Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.4), true)
+				c + Vector2(-r * 0.22, -r * 0.20)]), _k(Color(0, 0, 0, col.a * 0.35)), maxf(1.0, width * 0.4), true)
 			for k in 3:
 				ci.draw_line(c + Vector2(-r * (0.08 + k * 0.04), -r * (0.50 - k * 0.09)), c + Vector2(-r * (0.16 + k * 0.02), -r * (0.40 - k * 0.09)),
-					Color(0, 0, 0, col.a * 0.3), maxf(1.0, width * 0.3))
+					_k(Color(0, 0, 0, col.a * 0.3)), maxf(1.0, width * 0.3))
 			# round head with one ear tuft at the back
 			ci.draw_circle(c + Vector2(r * 0.06, -r * 0.76), r * 0.18, col)
 			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.10, -r * 0.84), c + Vector2(-r * 0.10, -r * 1.02),
@@ -339,7 +366,7 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 				var rr := r * (0.85 if (i % 4) < 2 else 0.62)
 				pts.append(c + Vector2(cos(a), sin(a)) * rr)
 			_fill(ci, pts, col)
-			ci.draw_circle(c, r * 0.28, Color(0.1, 0.1, 0.12, 0.9))
+			ci.draw_circle(c, r * 0.28, _k(Color(0.1, 0.1, 0.12, 0.9)))
 
 
 ## Fill that skips shapes too small to triangulate (sigils at mana-pip size).
