@@ -32,7 +32,7 @@
     "cost": {
       "U": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 1,
     "keywords": [
       "steadfast"
@@ -103,7 +103,7 @@
       "U": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 4,
     "keywords": [
       "defender"
@@ -121,10 +121,10 @@
     "subtype": "Human Philosopher",
     "cost": {
       "U": 1,
-      "generic": 2
+      "generic": 1
     },
     "power": 1,
-    "toughness": 2,
+    "toughness": 3,
     "keywords": [],
     "effects": [],
     "abilities": [
@@ -248,9 +248,9 @@
     "subtype": "Human Soldier",
     "cost": {
       "U": 1,
-      "generic": 4
+      "generic": 3
     },
-    "power": 4,
+    "power": 3,
     "toughness": 5,
     "keywords": [
       "steadfast"

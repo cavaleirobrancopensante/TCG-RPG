@@ -140,7 +140,7 @@
       "G": 1,
       "generic": 2
     },
-    "power": 3,
+    "power": 2,
     "toughness": 2,
     "keywords": [
       "trample"
@@ -278,7 +278,7 @@
       "G": 1,
       "generic": 5
     },
-    "power": 5,
+    "power": 4,
     "toughness": 6,
     "keywords": [
       "regenerate"
@@ -574,7 +574,7 @@
       "G": 2,
       "generic": 2
     },
-    "power": 3,
+    "power": 2,
     "toughness": 3,
     "keywords": [
       "reach",

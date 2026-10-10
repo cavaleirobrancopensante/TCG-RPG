@@ -543,13 +543,14 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 			var g := 15 + lvl * 10 if lair_id == "" else 40 * lvl
 			GameState.add_gold(g)
 			parts.append(I18n.t("%d gold") % g)
-			if lair_id == "" and GameState.rng.randf() < 0.35:
-				var rar := Booster.weighted_rarity(GameState.rng, {"common": 65, "uncommon": 28, "rare": 6, "mythic": 1})
-				var cid := CardDB.random_of_rarity(rar, GameState.rng, [info["faction"]])
-				GameState.add_card(cid)
-				cards.append(cid)
 		for cid in cards:
 			parts.append(I18n.t(CardDB.get_card(cid).get("name", cid)))
+		# spoils of war: one card taken at random from the beaten opponent's deck
+		var spoil := _spoils(info)
+		if spoil != "":
+			GameState.add_card(spoil)
+			cards.append(spoil)
+			parts.append(I18n.t("%s, taken from the loser's deck") % I18n.t(CardDB.get_card(spoil).get("name", spoil)))
 		GameState.save_game()
 		show_dialog("Victory", I18n.t("You gain: %s") % ", ".join(parts), [["Onward", Callable()]], cards)
 	else:
@@ -561,6 +562,19 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		GameState.save_game()
 		show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")], [["Get up", Callable()]])
 	_update_hud()
+
+
+## A random card from the opponent's deck (each copy is one chance; basic lands never).
+func _spoils(info: Dictionary) -> String:
+	var deck: Dictionary = info.get("deck", {})
+	var bag: Array = []
+	for id in deck:
+		if CardDB.has_card(id) and not CardDB.is_basic_land(id):
+			for k in int(deck[id]):
+				bag.append(id)
+	if bag.is_empty():
+		return ""
+	return bag[GameState.rng.randi_range(0, bag.size() - 1)]
 
 
 # ================================================================== draft tournaments

@@ -146,7 +146,6 @@
  "Assembly (this gets +1/+1 for each other Construct you control). Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.": "Montagem (recebe +1/+1 para cada outro Constructo que você controla). Sobrecarga 2 (você pode pagar 2 a mais ao jogar esta carta). Se sobrecarregada, quando entrar, crie duas fichas 1/1 de Servo Constructo.",
  "Assembly. At the beginning of your upkeep, create a 1/1 Servo Construct token.": "Montagem. No início da sua manutenção, crie uma ficha 1/1 de Servo Constructo.",
  "Assembly. Upkeep 2.": "Montagem. Manutenção 2.",
- "Assembly. When this enters, create three 1/1 Servo Construct tokens.": "Montagem. Quando entrar, crie três fichas 1/1 de Servo Constructo.",
  "Assembly: +1/+1 for each other Construct you control.": "Montagem: +1/+1 para cada outro Constructo que você controla.",
  "At dawn they drew the curtains and called it midnight again.": "Ao amanhecer abriram as cortinas e chamaram outra vez de meia-noite.",
  "At eighteen he swore the oath: never to shame his arms, never to desert the man beside him.": "Aos dezoito anos fez o juramento: nunca envergonhar suas armas, nunca abandonar o homem a seu lado.",
@@ -381,7 +380,6 @@
  "Create three 1/1 Servo Construct tokens.": "Crie três fichas 1/1 de Servo Constructo.",
  "Create three 2/2 Oakling tokens with reach.": "Crie três fichas 2/2 de Carvalhinho com alcance.",
  "Create two 1/1 Sapling tokens. Rooted: if you control six or more lands, create two more.": "Crie duas fichas 1/1 de Muda. Enraizado: se você controlar seis ou mais terrenos, crie mais duas.",
- "Create two 1/1 Servo Construct tokens, then put two +1/+1 counters on each creature you control.": "Crie duas fichas 1/1 de Servo Constructo e depois ponha dois marcadores +1/+1 em cada criatura que você controla.",
  "Create two 1/1 Servo Construct tokens.": "Crie duas fichas 1/1 de Servo Constructo.",
  "Create two 2/2 Wolf tokens.": "Crie duas fichas 2/2 de Lobo.",
  "Creature": "Criatura",
@@ -1753,5 +1751,8 @@
  "your creature that will fight": "sua criatura que vai lutar",
  "◉ %d gold   ✉ %d boosters": "◉ %d de ouro   ✉ %d boosters",
  "◉ %d gold   ✦ %d cards": "◉ %d de ouro   ✦ %d cartas",
- "⚔ Attack": "⚔ Atacar"
+ "⚔ Attack": "⚔ Atacar",
+ "%s, taken from the loser's deck": "%s, tomada do baralho do derrotado",
+ "Assembly. When this enters, create two 1/1 Servo Construct tokens.": "Montagem. Quando entrar, crie duas fichas 1/1 de Servo Constructo.",
+ "Create two 1/1 Servo Construct tokens, then put a +1/+1 counter on each creature you control.": "Crie duas fichas 1/1 de Servo Constructo e depois ponha um marcador +1/+1 em cada criatura que você controla."
 }
