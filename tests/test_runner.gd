@@ -37,9 +37,22 @@ func test_card_db() -> void:
 	var valid_actions := ["damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate"]
 	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "self", "all_enemy_creatures", "all_own_creatures", "all_creatures"]
 	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "guardian"]
+	var fighters := ["Soldier", "Knight", "Paladin", "Warrior", "Duelist", "Assassin", "Hoplite"]
 	for id in CardDB.all_set_ids():
 		var c := CardDB.get_card(id)
 		check(c["type"] in ["creature", "spell", "relic"], "%s bad type" % id)
+		# Tone rules (DESIGN.md): fighters are men; angels are "he"; no singular "they".
+		var words := (" " + String(c.get("flavor", "")) + " " + String(c.get("name", "")) + " ").to_lower()
+		var st: String = c.get("subtype", "")
+		for ft in fighters:
+			if st.contains(ft):
+				for w in [" she ", " her ", " hers ", "maiden", "woman", "lady"]:
+					check(not words.contains(w), "%s: fighter described as a woman (%s)" % [id, w.strip_edges()])
+		if st.contains("Angel"):
+			for w in [" she ", " her ", " it ", " its "]:
+				check(not words.contains(w), "%s: angel not referred to as he (%s)" % [id, w.strip_edges()])
+		for w in ["themself"]:
+			check(not words.contains(w), "%s: singular they (%s)" % [id, w])
 		if c["type"] == "creature":
 			check(c["toughness"] > 0, "%s toughness" % id)
 		for k in c["keywords"]:

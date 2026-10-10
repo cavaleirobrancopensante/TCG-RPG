@@ -124,7 +124,7 @@ static func archetype(card: Dictionary) -> Dictionary:
 	if has.call(["hoplite", "phalanx", "strategos"]):
 		o.merge({"helm": "crested", "shield": "round", "weapon": "spear", "mail": false}, true)
 		return o
-	if has.call(["soldier", "shieldmaiden"]):
+	if has.call(["soldier", "man-at-arms"]):
 		o.merge({"mail": true, "helm": "nasal", "shield": "kite", "weapon": "spear"}, true)
 		return o
 	if has.call(["inquisitor"]):

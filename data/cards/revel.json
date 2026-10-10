@@ -34,7 +34,7 @@
     ],
     "effects": [],
     "text": "Haste.",
-    "flavor": "She dances straight from the wine-press into the battle line."
+    "flavor": "He dances straight from the wine-press into the battle line."
   },
   {
     "id": "revel_c_003",
@@ -228,7 +228,7 @@
       }
     ],
     "text": "Haste. Whenever this attacks, it gets +1/+1 until end of turn.",
-    "flavor": "She has never lost a duel, a wager, or an argument about wine."
+    "flavor": "He has never lost a duel, a wager, or an argument about wine."
   },
   {
     "id": "revel_u_002",
@@ -445,6 +445,6 @@
       }
     ],
     "text": "Haste. Whenever this attacks, deal 2 damage to any enemy creature or the enemy player. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "She has tasted every pleasure in the world, and is bored of all but one: winning."
+    "flavor": "She raises a cup to every guest; the guests who drink do not rise again."
   }
 ]

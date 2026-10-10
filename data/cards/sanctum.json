@@ -106,7 +106,7 @@
     ],
     "effects": [],
     "text": "Flying.",
-    "flavor": "It descends at Lauds, and the frost melts from the bell-rope."
+    "flavor": "He descends at Lauds, and the frost melts from the bell-rope."
   },
   {
     "id": "sanctum_c_006",
@@ -130,7 +130,7 @@
   },
   {
     "id": "sanctum_c_007",
-    "name": "Abbey Shieldmaiden",
+    "name": "Abbey Man-at-Arms",
     "faction": "sanctum",
     "rarity": "common",
     "type": "creature",
@@ -146,7 +146,7 @@
     ],
     "effects": [],
     "text": "Guardian (gets +0/+2 while blocking).",
-    "flavor": "Behind her shield sleep the orphans of three burned villages."
+    "flavor": "Behind his shield sleep the orphans of three burned villages."
   },
   {
     "id": "sanctum_c_008",
@@ -375,7 +375,7 @@
     ],
     "effects": [],
     "text": "Flying, vigilance.",
-    "flavor": "It has kept watch over the cathedral since before the first stone was laid."
+    "flavor": "He has kept watch over the cathedral since before the first stone was laid."
   },
   {
     "id": "sanctum_r_003",
@@ -434,6 +434,6 @@
       }
     ],
     "text": "Flying, lifelink. When this enters, destroy target enemy creature with power 4 or less and gain 4 life.",
-    "flavor": "When the last candle gutters, she is the light that remains."
+    "flavor": "When the last candle gutters, he is the light that remains."
   }
 ]
