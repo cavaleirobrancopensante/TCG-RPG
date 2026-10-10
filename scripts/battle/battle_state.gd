@@ -4,6 +4,7 @@ extends RefCounted
 ## plays back `events` as animations. Sides are 0 (player) and 1 (enemy).
 
 const START_HAND := 7
+const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
 const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature"]
 
 
@@ -67,11 +68,14 @@ var winner := -1
 var events: Array = []
 var rng := RandomNumberGenerator.new()
 var _next_uid := 1
+var mulligans := [0, 0]     # how many times each side has redrawn
+var kept := [false, false]  # opening hand accepted
 
 
 # ============================================================ setup & turn flow
 
-func setup(deck0: Array, deck1: Array, names: Array, lives: Array, first: int = -1, seed_value: int = 0) -> void:
+## with_mulligan: stop in phase "mulligan" so each side can redraw (London style) before turn 1.
+func setup(deck0: Array, deck1: Array, names: Array, lives: Array, first: int = -1, seed_value: int = 0, with_mulligan: bool = false) -> void:
 	if seed_value != 0:
 		rng.seed = seed_value
 	else:
@@ -87,11 +91,73 @@ func setup(deck0: Array, deck1: Array, names: Array, lives: Array, first: int = 
 		sides.append(s)
 	first_player = first if first >= 0 else rng.randi_range(0, 1)
 	active = first_player
+	mulligans = [0, 0]
+	kept = [false, false]
 	for i in 2:
 		for n in START_HAND:
 			draw_card(i)
+	if with_mulligan:
+		phase = "mulligan"
+		return
+	kept = [true, true]
 	turn = 1
 	begin_turn()
+
+
+# ============================================================ mulligan (London style)
+# Redraw seven; when the hand is kept, put one card on the bottom of the library for
+# every mulligan taken.
+
+func can_mulligan(i: int) -> bool:
+	return phase == "mulligan" and not kept[i] and int(mulligans[i]) < MAX_MULLIGANS
+
+
+## Cards that must go to the bottom when this side keeps.
+func to_bottom(i: int) -> int:
+	return mini(int(mulligans[i]), START_HAND - 1)
+
+
+func mulligan(i: int) -> void:
+	if not can_mulligan(i):
+		return
+	var s := side(i)
+	s.deck.append_array(s.hand)
+	s.hand.clear()
+	_shuffle(s.deck)
+	mulligans[i] = int(mulligans[i]) + 1
+	for n in START_HAND:
+		var id: String = s.deck.pop_back()
+		s.hand.append(id)
+	emit({"type": "mulligan", "side": i, "count": mulligans[i]})
+
+
+## Keep the hand. `bottom` = hand indices to put on the bottom (must be to_bottom(i) of them;
+## anything else is filled in or trimmed automatically). Starts turn 1 once both have kept.
+func keep(i: int, bottom: Array = []) -> void:
+	if phase != "mulligan" or kept[i]:
+		return
+	var s := side(i)
+	var need := to_bottom(i)
+	var idxs: Array = []
+	for b in bottom:
+		if int(b) >= 0 and int(b) < s.hand.size() and not idxs.has(int(b)) and idxs.size() < need:
+			idxs.append(int(b))
+	if idxs.size() < need:
+		for b in BattleAI.choose_bottom(self, i, need):
+			if not idxs.has(int(b)) and idxs.size() < need:
+				idxs.append(int(b))
+	idxs.sort()
+	idxs.reverse()
+	for b in idxs:
+		var id: String = s.hand[b]
+		s.hand.remove_at(b)
+		s.deck.insert(0, id)       # index 0 is the bottom: draws pop from the back
+	kept[i] = true
+	emit({"type": "keep", "side": i, "bottom": idxs.size()})
+	if kept[0] and kept[1]:
+		phase = "setup"
+		turn = 1
+		begin_turn()
 
 
 func _shuffle(a: Array) -> void:

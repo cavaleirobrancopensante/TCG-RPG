@@ -9,6 +9,7 @@ extends Control
 
 signal finished(won: bool)
 signal _blocks_done
+signal _mulligan_done
 
 const HAND_SCALE := 0.62
 
@@ -58,8 +59,14 @@ func start(p_info: Dictionary) -> void:
 	var edeck := DeckTools.to_list(info.get("deck", {}))
 	var main_f := DeckTools.best_factions(GameState.deck, 1)
 	st.side_faction = [main_f[0] if not main_f.is_empty() else "sanctum", info.get("faction", "abyss")]
-	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [20, int(info.get("life", 20))])
+	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [20, int(info.get("life", 20))], -1, 0, true)
 	_log(I18n.t("A duel against %s begins!") % I18n.t(info.get("name", "a stranger")))
+	BattleAI.resolve_mulligan(st, 1)
+	if auto_play:
+		BattleAI.resolve_mulligan(st, 0)
+	else:
+		refresh()
+		await _player_mulligan()
 	await play_events()
 	if st.active == 1 and st.phase != "over":
 		await enemy_turn()
@@ -600,6 +607,92 @@ func _burst(pos: Vector2, col: Color, amount: int) -> void:
 
 func _bolt(pos: Vector2) -> void:
 	_burst(pos, Color(1, 0.85, 0.4), 20)
+
+
+# =================================================================== mulligan
+
+## Opening hand: keep it, or redraw seven and later put one card on the bottom per redraw.
+func _player_mulligan() -> void:
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.55)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	var panel := PanelContainer.new()
+	dim.add_child(panel)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
+	panel.add_child(v)
+	var head := UIKit.title("Your opening hand", 34)
+	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(head)
+	var note := UIKit.label("", 19, UIKit.TEXT, true)
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	note.custom_minimum_size.x = 700
+	v.add_child(note)
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 6)
+	v.add_child(row)
+	var btns := HBoxContainer.new()
+	btns.alignment = BoxContainer.ALIGNMENT_CENTER
+	btns.add_theme_constant_override("separation", 16)
+	v.add_child(btns)
+	var picking := [false]
+	var chosen: Array = []
+	var redraw_ref: Array = [null]      # lambdas capture by value: keep the function in an array
+	var redraw := func():
+		UIKit.clear(row)
+		UIKit.clear(btns)
+		var hand: Array = st.side(0).hand
+		var need := st.to_bottom(0)
+		var w := minf(CardView.BASE.x * 0.62, (get_viewport_rect().size.x - 120.0) / float(maxi(1, hand.size())) - 6.0)
+		var sc := w / CardView.BASE.x
+		for idx in hand.size():
+			var cv := CardView.create(hand[idx], sc)
+			cv.dimmed = chosen.has(idx)
+			cv.selected = chosen.has(idx)
+			var i2: int = idx
+			cv.tapped.connect(func(_c):
+				if not picking[0]:
+					return
+				if chosen.has(i2):
+					chosen.erase(i2)
+				elif chosen.size() < need:
+					chosen.append(i2)
+				redraw_ref[0].call())
+			cv.long_pressed.connect(func(_c): CardViewer.open(self, hand.duplicate(), i2))
+			row.add_child(cv)
+		if picking[0]:
+			note.text = I18n.t("Choose %d card(s) to put on the bottom of your library. (%d/%d)") % [need, chosen.size(), need]
+			var ok := UIKit.button("Confirm", func():
+				st.keep(0, chosen.duplicate())
+				_mulligan_done.emit(), 200)
+			ok.disabled = chosen.size() != need
+			btns.add_child(ok)
+		else:
+			var taken: int = st.mulligans[0]
+			note.text = I18n.t("Keep these seven cards, or shuffle them away and draw seven new ones.") if taken == 0 \
+				else I18n.t("Mulligans taken: %d. If you keep, %d card(s) go to the bottom.") % [taken, need]
+			var mb := UIKit.button(I18n.t("Mulligan"), func():
+				st.mulligan(0)
+				st.take_events()
+				chosen.clear()
+				redraw_ref[0].call(), 200)
+			mb.disabled = not st.can_mulligan(0)
+			btns.add_child(mb)
+			btns.add_child(UIKit.button("Keep", func():
+				if st.to_bottom(0) == 0:
+					st.keep(0)
+					_mulligan_done.emit()
+				else:
+					picking[0] = true
+					redraw_ref[0].call(), 200))
+		await get_tree().process_frame
+		panel.position = (get_viewport_rect().size - panel.size) * 0.5
+	redraw_ref[0] = redraw
+	redraw.call()
+	await _mulligan_done
+	dim.queue_free()
 
 
 # =================================================================== preview overlay
