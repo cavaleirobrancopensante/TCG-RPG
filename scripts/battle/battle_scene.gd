@@ -255,7 +255,6 @@ func refresh() -> void:
 		return
 	for i in 2:
 		var s := st.side(i)
-		var field := player_field if i == 0 else enemy_field
 		var alive := {}
 		for p in s.creatures:
 			alive[p.uid] = true
@@ -263,16 +262,14 @@ func refresh() -> void:
 				if busy:
 					continue   # its summon animation is still queued
 				_spawn_figure(p, false)
-			var fig: SummonFigure = figures[p.uid]
-			if fig.get_parent() != field:
-				fig.reparent(field)
-			fig.sync(p)
+			figures[p.uid].sync(p)
 		for uid in figures.keys():
 			var fg: SummonFigure = figures[uid]
-			if fg.get_parent() == field and not alive.has(uid):
+			if fg.enemy == (i == 1) and not alive.has(uid):
 				figures.erase(uid)
 				fg.queue_free()
 		_refresh_relics(i)
+		_restack(i)
 	_refresh_bars()
 	_fit_field(player_field)
 	_fit_field(enemy_field)
@@ -282,19 +279,94 @@ func refresh() -> void:
 	queue_redraw()
 
 
-## A crowded rank closes up: figures overlap like a hand of cards instead of running off
-## the screen. Tap any figure to read it (the viewer leafs through the whole rank).
-func _fit_field(field: HBoxContainer) -> void:
-	var n := 0
+## Identical creatures stand in one stack, each a little up and to the right of the one
+## in front: up to 4 of a kind, up to 10 tokens. Every figure peeks out, so each can still
+## be tapped and selected on its own.
+const STACK_MAX := 4
+const TOKEN_STACK_MAX := 10
+const STACK_STEP := Vector2(18, -9)
+const TOKEN_STEP := Vector2(11, -6)
+
+
+func _stack_key(p) -> String:
+	return ("token:" + p.name) if p.is_token else p.card_id
+
+
+## Rebuild the stacks of one side from the creatures in play (keeps the figure nodes).
+func _restack(i: int) -> void:
+	var field := player_field if i == 0 else enemy_field
+	var groups: Array = []          # [key, [uids]]
+	for p in st.side(i).creatures:
+		if not figures.has(p.uid):
+			continue
+		var key := _stack_key(p)
+		var cap := TOKEN_STACK_MAX if p.is_token else STACK_MAX
+		var placed := false
+		for g in groups:
+			if g[0] == key and g[1].size() < cap:
+				g[1].append(p.uid)
+				placed = true
+				break
+		if not placed:
+			groups.append([key, [p.uid]])
+	# reuse slot controls in order, add or drop as needed
+	var slots: Array = []
 	for ch in field.get_children():
-		if ch is SummonFigure and not ch.is_queued_for_deletion():
-			n += 1
+		if ch is _Stack and not ch.is_queued_for_deletion():
+			slots.append(ch)
+	while slots.size() < groups.size():
+		var sl := _Stack.new()
+		field.add_child(sl)
+		slots.append(sl)
+	for k in range(slots.size()):
+		if k >= groups.size():
+			slots[k].queue_free()      # its live figures were moved to other stacks above
+			continue
+		var uids: Array = groups[k][1]
+		var tok: bool = st.find_perm(uids[0]).is_token
+		slots[k].arrange(uids.map(func(u): return figures[u]), TOKEN_STEP if tok else STACK_STEP)
+	_fit_field(field)
+
+
+class _Stack extends Control:
+	## One pile of identical figures. Front figure bottom-left, the rest stepping up-right.
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	func arrange(figs: Array, step: Vector2) -> void:
+		var n := figs.size()
+		custom_minimum_size = SummonFigure.SIZE + Vector2(step.x * (n - 1), 0)
+		# back figures first so the front one is drawn (and clicked) on top
+		for k in range(n - 1, -1, -1):
+			var f: SummonFigure = figs[k]
+			if f.get_parent() != self:
+				if f.get_parent():
+					f.reparent(self, false)
+				else:
+					add_child(f)
+			move_child(f, get_child_count() - 1)
+			f.position = Vector2(step.x * k, step.y * k)
+			if f.in_back != (k > 0):
+				f.in_back = k > 0
+				f.queue_redraw()
+
+
+## A crowded rank closes up: stacks overlap like a hand of cards instead of running off
+## the screen.
+func _fit_field(field: HBoxContainer) -> void:
+	var widths: Array = []
+	for ch in field.get_children():
+		if ch is _Stack and not ch.is_queued_for_deletion():
+			widths.append(ch.custom_minimum_size.x)
+	var n := widths.size()
+	var total := 0.0
+	for w in widths:
+		total += w
 	var strip: LandStrip = player_lands if field == player_field else enemy_lands
 	var avail := get_viewport_rect().size.x - maxf(strip.size.x, strip.custom_minimum_size.x) - 12.0
-	var w := SummonFigure.SIZE.x
 	var sep := 6.0
-	if n > 1 and n * (w + sep) > avail:
-		sep = floorf((avail - w) / float(n - 1) - w)
+	if n > 1 and total + sep * (n - 1) > avail:
+		sep = floorf((avail - total) / float(n - 1))
 	field.add_theme_constant_override("separation", int(sep))
 
 
@@ -305,7 +377,7 @@ func _spawn_figure(p, animate: bool) -> SummonFigure:
 	fig.tapped.connect(_on_figure_tapped)
 	figures[p.uid] = fig
 	(player_field if p.owner == 0 else enemy_field).add_child(fig)
-	_fit_field(player_field if p.owner == 0 else enemy_field)
+	_restack(p.owner)
 	if not animate:
 		fig.summon_t = 1.0
 	return fig
@@ -900,7 +972,9 @@ func _on_alt() -> void:
 			if st.active == 0 and st.phase == "main1":
 				mode = "attack"
 				sel_attackers.clear()
-				_log("Tap creatures to attack with, then confirm.")
+				for p in st.attack_candidates(0):
+					sel_attackers.append(p.uid)      # everyone charges unless you hold them back
+				_log("All your ready creatures will attack. Tap any you want to hold back, then confirm.")
 				refresh()
 
 
