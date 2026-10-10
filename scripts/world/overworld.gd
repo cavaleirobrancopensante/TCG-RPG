@@ -35,6 +35,40 @@ var _t := 0.0
 var _rng := RandomNumberGenerator.new()
 var _next_enemy_id := 1
 var _pressing := false
+var _walkers := {}              # enemy id -> Walker
+var _player: Walker
+var _marker_shown := false
+
+
+## A figure on the map, painted once and then only moved. Repainted when it turns,
+## starts or stops chasing, or its label changes, so walking costs almost nothing.
+class Walker extends Node2D:
+	var look: Dictionary = {}
+	var height := 74.0
+	var face := 1.0
+	var chasing := false
+	var label := ""
+	var is_player := false
+
+	func set_state(p_face: float, p_chasing: bool, p_label: String) -> void:
+		if p_face == face and p_chasing == chasing and p_label == label:
+			return
+		face = p_face
+		chasing = p_chasing
+		label = p_label
+		queue_redraw()
+
+	func _draw() -> void:
+		if is_player:
+			draw_colored_polygon(Tapestry.ellipse(Vector2(0, 2), 28, 8, 16), Color(Tapestry.GILT, 0.55))
+			draw_polyline(Tapestry.ellipse(Vector2(0, 2), 28, 8, 16), Tapestry.INK, 2.0, true)
+		else:
+			draw_colored_polygon(Tapestry.ellipse(Vector2(0, 2), 26, 7, 14), Color(0, 0, 0, 0.25))
+			if chasing:
+				draw_arc(Vector2(0, -2), 30, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)
+		FigurePainter.paint(self, look, Transform2D(0, Vector2.ZERO), height, face, 1.0)
+		if label != "":
+			Tapestry.draw_scroll_label(self, Vector2(0, -88), label, 16, Tapestry.VERMILION if chasing else Tapestry.INK)
 
 
 ## Stages for the loading screen, in the order build() runs them.
@@ -373,6 +407,9 @@ func remove_enemy(id: int) -> void:
 	for e in enemies:
 		if e["id"] == id:
 			enemies.erase(e)
+			if _walkers.has(id):
+				_walkers[id].queue_free()
+				_walkers.erase(id)
 			respawn_queue.append(RESPAWN_TIME)
 			return
 
@@ -381,7 +418,10 @@ func remove_enemy(id: int) -> void:
 
 func _process(delta: float) -> void:
 	_t += delta
-	queue_redraw()
+	_sync_walkers()
+	if moving or _marker_shown:
+		_marker_shown = moving
+		queue_redraw()
 	if not active:
 		return
 	grace = maxf(0.0, grace - delta)
@@ -520,30 +560,48 @@ func _unhandled_input(event: InputEvent) -> void:
 const PILGRIM := {"faction": "sanctum", "subtype": "Human Pilgrim", "name": "Wanderer"}
 
 
-func _draw() -> void:
-	var view := Rect2(camera.position - get_viewport_rect().size / camera.zoom * 0.6, get_viewport_rect().size / camera.zoom * 1.2)
+## How the player looks on the map: the chosen hero, or a pilgrim for old saves.
+func player_look() -> Dictionary:
+	var h: Dictionary = GameState.hero_look() if GameState.has_method("hero_look") else {}
+	return h if not h.is_empty() else PILGRIM
+
+
+func _sync_walkers() -> void:
+	if not built:
+		return
+	var vp := get_viewport_rect().size / camera.zoom
+	var view := Rect2(camera.position - vp * 0.6, vp * 1.2)
 	for e in enemies:
-		var ep: Vector2 = e["pos"]
-		if not view.has_point(ep):
+		var w: Walker = _walkers.get(e["id"])
+		if w == null:
 			continue
-		var look: Dictionary = CardDB.get_card(e.get("look", ""))
-		if look.is_empty():
-			look = {"faction": e["faction"], "name": e["name"]}
-		var face := -1.0 if player_pos.x < ep.x else 1.0
-		draw_colored_polygon(Tapestry.ellipse(ep + Vector2(0, 2), 26, 7, 14), Color(0, 0, 0, 0.25))
-		if e["chasing"]:
-			draw_arc(ep + Vector2(0, -2), 30, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)
-		FigurePainter.paint(self, look, Transform2D(0, ep), 74, face, 1.0)
-		var lbl := I18n.t("Lv%d") % int(e["level"]) + ("  !" if e["chasing"] else "")
-		Tapestry.draw_scroll_label(self, ep + Vector2(0, -88), lbl, 16, Tapestry.VERMILION if e["chasing"] else Tapestry.INK)
+		var ep: Vector2 = e["pos"]
+		w.position = ep
+		w.visible = view.has_point(ep)
+		if w.visible:
+			w.set_state(-1.0 if player_pos.x < ep.x else 1.0, e["chasing"], I18n.t("Lv%d") % int(e["level"]) + ("  !" if e["chasing"] else ""))
+	if _player == null:
+		_player = Walker.new()
+		_player.is_player = true
+		_player.height = 84.0
+		_player.look = player_look()
+		_player.z_index = 1
+		_player.face = 0.0
+		add_child(_player)
+	var bob := sin(_t * 10.0) * 2.0 if moving else 0.0
+	_player.position = player_pos + Vector2(0, bob)
+	_player.set_state(1.0 if move_target.x >= player_pos.x else -1.0, false, "")
+
+
+## Re-dress the player after the hero changes.
+func refresh_player() -> void:
+	if _player:
+		_player.look = player_look()
+		_player.queue_redraw()
+
+
+func _draw() -> void:
 	if moving:
 		draw_arc(move_target, 18, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)
 		draw_line(move_target + Vector2(-8, -8), move_target + Vector2(8, 8), Color(Tapestry.VERMILION, 0.8), 2.0)
 		draw_line(move_target + Vector2(8, -8), move_target + Vector2(-8, 8), Color(Tapestry.VERMILION, 0.8), 2.0)
-	# the player: a pilgrim on a disc of gold
-	var bob := sin(_t * 10.0) * 2.0 if moving else 0.0
-	draw_colored_polygon(Tapestry.ellipse(player_pos + Vector2(0, 2), 28, 8, 16), Color(Tapestry.GILT, 0.55))
-	draw_polyline(Tapestry.ellipse(player_pos + Vector2(0, 2), 28, 8, 16), Tapestry.INK, 2.0, true)
-	var face_p := 1.0 if move_target.x >= player_pos.x else -1.0
-	FigurePainter.paint(self, PILGRIM, Transform2D(0, player_pos + Vector2(0, bob)), 84, face_p, 1.0)
-

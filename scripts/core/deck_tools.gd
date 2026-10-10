@@ -75,6 +75,18 @@ static func best_factions(owned: Dictionary, n: int = 2) -> Array:
 	return keys.slice(0, n)
 
 
+## The two faiths a starter deck focuses on: the hero's own, and whichever other faith answered best.
+static func starter_factions(owned: Dictionary, hero_faith: String) -> Array:
+	if hero_faith == "" or hero_faith == "machine":
+		return best_factions(owned, 2)
+	var out: Array = [hero_faith]
+	for f in best_factions(owned, 6):
+		if f != hero_faith and f != "machine":
+			out.append(f)
+			break
+	return out
+
+
 ## Build a 40-card deck out of `owned` ({id: count}), focusing on `factions` (+ machine).
 static func auto_build(owned: Dictionary, factions: Array = []) -> Dictionary:
 	if factions.is_empty():

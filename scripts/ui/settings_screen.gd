@@ -62,6 +62,14 @@ func _ready() -> void:
 	auto.toggled.connect(func(on): Music.set_auto(on))
 	g.add_child(auto)
 
+	# --- random or in order
+	g.add_child(_name("Music order"))
+	var sh := CheckButton.new()
+	sh.button_pressed = Music.shuffle
+	sh.text = "Random (off: follow the list)"
+	sh.toggled.connect(func(on): Music.set_shuffle(on))
+	g.add_child(sh)
+
 	# --- duel speed
 	g.add_child(_name("Duel animation speed"))
 	var sp := HBoxContainer.new()

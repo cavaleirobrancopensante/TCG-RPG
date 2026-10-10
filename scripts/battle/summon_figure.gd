@@ -27,6 +27,8 @@ var flash_color := Color.WHITE
 var lunge := Vector2.ZERO     # attack offset
 var _bob := 0.0
 var _texture: Texture2D = null
+var _idle_acc := 0.0
+
 
 
 func _init() -> void:
@@ -58,9 +60,18 @@ func sync(p) -> void:   # p: BattleState.Perm
 	queue_redraw()
 
 
+## Painting a figure is costly, so redraw only while something moves: every frame during
+## animations, a few times a second for the idle bob and the pulsing marks.
 func _process(delta: float) -> void:
 	_bob += delta * 2.2
-	queue_redraw()
+	var animating := summon_t < 1.0 or fade < 1.0 or flash > 0.0 or lunge != Vector2.ZERO
+	if animating:
+		queue_redraw()
+		return
+	_idle_acc += delta
+	if _idle_acc >= (0.08 if mark != "" else 0.25):
+		_idle_acc = 0.0
+		queue_redraw()
 
 
 func _gui_input(event: InputEvent) -> void:

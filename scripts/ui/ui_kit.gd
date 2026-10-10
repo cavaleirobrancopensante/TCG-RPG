@@ -315,7 +315,7 @@ static func _sigil_shape(ci: CanvasItem, faction: String, c: Vector2, r: float, 
 			ci.draw_polyline(pl, col, maxf(1.0, width * 0.9), true)
 			_fill(ci, PackedVector2Array([c + Vector2(r * 0.72, -r * 0.55), c + Vector2(r * 1.0, -r * 0.85),
 				c + Vector2(r * 0.86, -r * 1.0), c + Vector2(r * 0.66, -r * 0.80)]), col)
-		"lyceum":    # a column with an owl perched on top
+		"lyceum":    # a column with an open book resting on top
 			var dark := _k(Color(0.10, 0.06, 0.04, col.a))
 			ci.draw_rect(Rect2(c.x - r * 0.50, c.y + r * 0.78, r * 1.0, r * 0.14), col)     # base
 			ci.draw_rect(Rect2(c.x - r * 0.40, c.y + r * 0.68, r * 0.80, r * 0.10), col)
@@ -325,39 +325,27 @@ static func _sigil_shape(ci: CanvasItem, faction: String, c: Vector2, r: float, 
 			ci.draw_rect(Rect2(c.x - r * 0.50, c.y - r * 0.16, r * 1.0, r * 0.14), col)     # capital
 			ci.draw_circle(c + Vector2(-r * 0.46, -r * 0.08), r * 0.09, col)                  # volutes
 			ci.draw_circle(c + Vector2(r * 0.46, -r * 0.08), r * 0.09, col)
-			# the owl
-			# the owl, in profile facing right
-			# tail feathers spilling over the back of the capital
-			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.16, -r * 0.30), c + Vector2(-r * 0.40, -r * 0.06),
-				c + Vector2(-r * 0.30, -r * 0.02), c + Vector2(-r * 0.06, -r * 0.22)]), col)
-			# body leaning slightly forward
-			var body := PackedVector2Array()
-			for k in 19:
-				var a := TAU * k / 18.0
-				var v := Vector2(cos(a) * r * 0.21, sin(a) * r * 0.30).rotated(0.22)
-				body.append(c + Vector2(0, -r * 0.44) + v)
-			_fill(ci, body, col)
-			# folded wing along the side
-			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.04, -r * 0.62), c + Vector2(-r * 0.20, -r * 0.42),
-				c + Vector2(-r * 0.22, -r * 0.20), c + Vector2(-r * 0.04, -r * 0.30)]), col)
-			ci.draw_polyline(PackedVector2Array([c + Vector2(-r * 0.04, -r * 0.62), c + Vector2(-r * 0.20, -r * 0.42),
-				c + Vector2(-r * 0.22, -r * 0.20)]), _k(Color(0, 0, 0, col.a * 0.35)), maxf(1.0, width * 0.4), true)
-			for k in 3:
-				ci.draw_line(c + Vector2(-r * (0.08 + k * 0.04), -r * (0.50 - k * 0.09)), c + Vector2(-r * (0.16 + k * 0.02), -r * (0.40 - k * 0.09)),
-					_k(Color(0, 0, 0, col.a * 0.3)), maxf(1.0, width * 0.3))
-			# round head with one ear tuft at the back
-			ci.draw_circle(c + Vector2(r * 0.06, -r * 0.76), r * 0.18, col)
-			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.10, -r * 0.84), c + Vector2(-r * 0.10, -r * 1.02),
-				c + Vector2(r * 0.04, -r * 0.90)]), col)
-			# eye and hooked beak
-			ci.draw_circle(c + Vector2(r * 0.12, -r * 0.79), r * 0.075, dark)
-			ci.draw_circle(c + Vector2(r * 0.13, -r * 0.79), r * 0.03, col)
-			_fill(ci, PackedVector2Array([c + Vector2(r * 0.21, -r * 0.76), c + Vector2(r * 0.33, -r * 0.70),
-				c + Vector2(r * 0.27, -r * 0.62), c + Vector2(r * 0.20, -r * 0.66)]), col)
-			ci.draw_line(c + Vector2(r * 0.21, -r * 0.70), c + Vector2(r * 0.29, -r * 0.67), dark, maxf(1.0, width * 0.3))
-			# talons gripping the capital
-			for x in [0.0, 0.10]:
-				ci.draw_line(c + Vector2(r * x, -r * 0.14), c + Vector2(r * (x + 0.04), -r * 0.20), dark, maxf(1.0, width * 0.4))
+			# the open book: two pages fanning up from the spine, ruled with lines of text
+			var spine := c + Vector2(0, -r * 0.20)
+			for sgn in [-1.0, 1.0]:
+				var page := PackedVector2Array()
+				for k in 9:
+					var t := k / 8.0
+					page.append(spine + Vector2(sgn * r * 0.62 * t, -r * (0.14 * sin(t * PI) + 0.06 * t)))
+				page.append(spine + Vector2(sgn * r * 0.62, -r * 0.62))
+				for k in range(8, -1, -1):
+					var t := k / 8.0
+					page.append(spine + Vector2(sgn * r * 0.62 * t, -r * (0.56 + 0.12 * sin(t * PI) + 0.06 * t)))
+				_fill(ci, page, col)
+				for line in 4:
+					var y := 0.20 + line * 0.09
+					var l0 := spine + Vector2(sgn * r * 0.10, -r * (y + 0.05))
+					var l1 := spine + Vector2(sgn * r * 0.52, -r * (y + 0.09))
+					ci.draw_line(l0, l1, _k(Color(0, 0, 0, col.a * 0.38)), maxf(1.0, width * 0.32))
+			ci.draw_line(spine, spine + Vector2(0, -r * 0.58), dark, maxf(1.0, width * 0.45))
+			# a ribbon bookmark hanging over the capital
+			_fill(ci, PackedVector2Array([spine + Vector2(r * 0.04, -r * 0.02), spine + Vector2(r * 0.12, -r * 0.02),
+				spine + Vector2(r * 0.12, r * 0.16), spine + Vector2(r * 0.08, r * 0.11), spine + Vector2(r * 0.04, r * 0.16)]), dark)
 		_:           # machine: cog
 			var teeth := 8
 			var pts := PackedVector2Array()

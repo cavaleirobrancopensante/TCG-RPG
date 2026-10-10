@@ -15,7 +15,7 @@ Version **1.12**.  **Play in your browser: https://cavaleirobrancopensante.githu
 | The Black Covenant | bloody dagger, point down | Black & Gray | B | Profane Altar | drain, destroy, deathtouch, undeath |
 | The Old Ways | leaf | Green & Brown | G | Sacred Grove | big beasts, ramp, trample |
 | The Revel | masquerade mask | Red & Purple | R | Pleasure Garden | haste, burn, excess |
-| The Stoa | column with an owl in profile | Blue & Silver | U | Library | draw, tap, bounce, walls |
+| The Stoa | column with an open book on top | Blue & Silver | U | Library | draw, tap, bounce, walls |
 | The Technocracy | cog | Colourless | C | Foundry | constructs, relics, generic costs |
 
 ## What's playable now
@@ -128,6 +128,25 @@ towns, missions, lairs and music titles. Tables are `data/i18n/pt.json` and `es.
 ({English: translation}); `python3 tools/i18n_extract.py --missing` lists anything new that
 still needs translating, and the tests check placeholders and coverage. Shared terms are in
 `tools/i18n_glossary.md`. House style: no em or en dashes in any game text.
+
+## Heroes, mulligans and the battlefield (1.13)
+
+- **Choose a hero** at New game, one per faith. He walks the map for you, and his faith
+  gives a fourth booster with only that faith's cards (three general boosters plus one of
+  your faith). The starter deck is built around the hero's faith and stays at 40 cards;
+  decks can be bigger, never smaller.
+- **Mulligan, London style.** Redraw seven as often as you like (up to five times); when
+  you keep, put one card on the bottom for each mulligan. The opponent does the same.
+- **Lands on the battlefield.** Each side shows its lands at the edge of its rank: a small
+  stack per faith, untapped ones upright, tapped ones turned sideways, with counts.
+- **Smarter opponent.** It looks for lethal first (attacks and burn together), then plays
+  removal on real threats, keeps tricks and tappers for turns it can attack, ramps only
+  into bigger cards, never pays life it can't afford and keeps blockers home when the
+  swing back would kill it. Every card mechanic has its own test.
+- **Stacked duplicates** with a clear ×N medallion in the deck builder and shops.
+- **Card viewer**: the arrows sit at the screen edges, always clickable; swipe anywhere.
+- **Music order**: random (default) or follow the list, from the music strip or Settings.
+- **Smoother**: map figures and duel figures are no longer repainted every frame.
 
 ## Card set status
 

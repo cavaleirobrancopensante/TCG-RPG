@@ -22,9 +22,14 @@ class MenuBg extends Control:
 		{"faction": "abyss", "subtype": "Demon", "name": "Fiend", "x": 0.31, "face": -1.0},
 	]
 
+	var _acc := 0.0
+
 	func _process(delta: float) -> void:
 		t += delta
-		queue_redraw()
+		_acc += delta
+		if _acc >= 0.1:        # the gentle bob does not need 60 repaints a second
+			_acc = 0.0
+			queue_redraw()
 
 	func _draw() -> void:
 		var r := Rect2(Vector2.ZERO, size)
@@ -225,7 +230,11 @@ func set_language(code: String) -> void:
 
 func _open_new_game() -> void:
 	var sc := SlotScreen.create("new")
-	sc.chosen.connect(func(n): _new_game(n))
+	sc.chosen.connect(func(n):
+		var hs := HeroScreen.new()
+		hs.chosen.connect(func(f): _new_game(n, f))
+		hs.closed.connect(_open_new_game)
+		ui_layer.add_child(hs))
 	ui_layer.add_child(sc)
 
 
@@ -249,12 +258,12 @@ func open_save_slots() -> void:
 	ui_layer.add_child(sc)
 
 
-func _new_game(n: int = 1) -> void:
-	GameState.new_game(n)
+func _new_game(n: int = 1, hero_faith: String = "sanctum") -> void:
+	GameState.new_game(n, hero_faith)
 	await start_world()
 	show_dialog("Welcome, Wanderer",
 		I18n.t("Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.")
-		+ "\n\n" + I18n.t("You carry nothing but three sealed booster packs. Open them, and your first deck will be built from the faiths that answer you."),
+		+ "\n\n" + I18n.t("You carry four sealed booster packs: three of every faith and one of %s alone. Open them, and your first deck will be built from the faiths that answer you.") % Factions.info(hero_faith)["name"],
 		[["Open my boosters", func(): open_boosters(true)]])
 
 
@@ -360,7 +369,7 @@ func open_boosters(first_time: bool) -> void:
 	b.closed.connect(func():
 		_set_screen(null)
 		if first_time:
-			GameState.deck = DeckTools.auto_build(GameState.owned_all())
+			GameState.deck = DeckTools.auto_build(GameState.owned_all(), DeckTools.starter_factions(GameState.owned_all(), GameState.hero))
 			GameState.save_game()
 			var fs := DeckTools.best_factions(GameState.owned_all(), 2)
 			var names := []

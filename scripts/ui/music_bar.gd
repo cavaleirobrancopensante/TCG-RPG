@@ -7,6 +7,7 @@ const HEIGHT := 38
 
 var title_label: Label
 var play_btn: Button
+var shuffle_btn: Button
 var picker: PanelContainer
 var list_box: VBoxContainer
 var auto_btn: CheckButton
@@ -46,6 +47,10 @@ func _ready() -> void:
 	play_btn = _small("⏸", func(): Music.toggle_pause())
 	row.add_child(play_btn)
 	row.add_child(_small("⏭", func(): Music.next()))
+	shuffle_btn = _small("", func(): Music.set_shuffle(not Music.shuffle))
+	shuffle_btn.custom_minimum_size.x = 104
+	shuffle_btn.add_theme_font_size_override("font_size", 14)
+	row.add_child(shuffle_btn)
 	row.add_child(_small("☰", _toggle_picker))
 	Music.track_changed.connect(func(_t): _refresh())
 	Music.state_changed.connect(_refresh)
@@ -65,6 +70,8 @@ func _refresh() -> void:
 	var t: Dictionary = Music.current
 	title_label.text = "♪ %s   ·   %s%s" % [I18n.t(t.get("title", "")), Music.label(t), "" if Music.auto else " · " + I18n.t("manual")]
 	play_btn.text = "▶" if Music.paused else "⏸"
+	shuffle_btn.text = I18n.t("Random") if Music.shuffle else I18n.t("In order")
+	shuffle_btn.tooltip_text = I18n.t("Play the pieces in random order, or follow the list")
 	if not t.is_empty():
 		_sigil_faction = t["faction"]
 	queue_redraw()

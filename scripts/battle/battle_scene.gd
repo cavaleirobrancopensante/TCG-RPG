@@ -29,6 +29,8 @@ var auto_play := false          # tests: AI plays the player's side too
 # UI
 var enemy_field: HBoxContainer
 var player_field: HBoxContainer
+var enemy_lands: LandStrip
+var player_lands: LandStrip
 var enemy_life: Button
 var player_life: Button
 var enemy_info: RichTextLabel
@@ -100,7 +102,8 @@ func _build_ui() -> void:
 	ebar.add_child(flee)
 
 	enemy_field = _field()
-	root.add_child(enemy_field)
+	enemy_lands = _land_strip(1)
+	root.add_child(_field_row(enemy_lands, enemy_field))
 	_strips.append(ebar)
 	_grounds.append(enemy_field)
 
@@ -123,7 +126,8 @@ func _build_ui() -> void:
 	mid.add_child(btn_main)
 
 	player_field = _field()
-	root.add_child(player_field)
+	player_lands = _land_strip(0)
+	root.add_child(_field_row(player_lands, player_field))
 	_strips.append(mid)
 	_grounds.append(player_field)
 
@@ -162,6 +166,34 @@ func _field() -> HBoxContainer:
 	f.alignment = BoxContainer.ALIGNMENT_CENTER
 	f.add_theme_constant_override("separation", 6)
 	return f
+
+
+func _land_strip(side_i: int) -> LandStrip:
+	var ls := LandStrip.new()
+	ls.enemy = side_i == 1
+	ls.tapped.connect(func(_s): _show_lands(side_i))
+	return ls
+
+
+func _field_row(lands: LandStrip, field: HBoxContainer) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(lands)
+	row.add_child(field)
+	return row
+
+
+func _show_lands(side_i: int) -> void:
+	if busy or mode != "idle":
+		return
+	var ids: Array = []
+	for l in st.side(side_i).lands:
+		if not ids.has(l["id"]):
+			ids.append(l["id"])
+	if not ids.is_empty():
+		_close_preview()
+		preview = CardViewer.open(self, ids, 0)
 
 
 func _life_button(is_enemy: bool) -> Button:
@@ -277,6 +309,7 @@ func _refresh_relics(i: int) -> void:
 func _refresh_bars() -> void:
 	for i in 2:
 		var s := st.side(i)
+		(player_lands if i == 0 else enemy_lands).set_lands(s.lands)
 		var lb := player_life if i == 0 else enemy_life
 		lb.text = "♥ %d" % s.life
 		lb.add_theme_color_override("font_color", UIKit.RED if s.life <= 5 else UIKit.TEXT)
@@ -348,7 +381,7 @@ func _update_controls() -> void:
 	if st == null:
 		return
 	var mine := st.active == 0
-	var names := {"main1": "Main phase", "block": "Combat", "main2": "Main phase 2", "over": "Duel over"}
+	var names := {"mulligan": "Opening hand", "main1": "Main phase", "block": "Combat", "main2": "Main phase 2", "over": "Duel over"}
 	phase_label.text = I18n.t("Your turn" if mine else "Enemy turn") + " · " + I18n.t(names.get(st.phase, st.phase))
 	btn_alt.visible = false
 	btn_main.disabled = busy

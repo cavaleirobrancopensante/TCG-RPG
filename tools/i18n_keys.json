@@ -57,6 +57,78 @@
    "note": "scripts/autoload/game_state.gd"
   },
   {
+   "key": "Brother Knight",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Human Knight",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "A knight of the Lamp, sworn to keep the pilgrim roads.",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Blackguard",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Human Cultist",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "He signed the Covenant's book and means to collect on it.",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Woodward",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Human Druid",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "A keeper of the old groves, at home under the oaks.",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Minstrel",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Human Performer",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "A wandering player who has never refused a feast.",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Peripatetic",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Human Philosopher",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "A scholar of the Porch who walks while he thinks.",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Artificer",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Human Artificer",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "A guild engineer with a satchel of brass and clever tools.",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
    "key": "On the road",
    "note": "scripts/autoload/game_state.gd"
   },
@@ -157,6 +229,10 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Opening hand",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Your turn",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -226,6 +302,34 @@
   },
   {
    "key": "position:y",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Your opening hand",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose %d card(s) to put on the bottom of your library. (%d/%d)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Confirm",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Keep these seven cards, or shuffle them away and draw seven new ones.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Mulligans taken: %d. If you keep, %d card(s) go to the bottom.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Mulligan",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Keep",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -317,6 +421,10 @@
    "note": "scripts/battle/battle_state.gd"
   },
   {
+   "key": "No lands",
+   "note": "scripts/battle/land_strip.gd"
+  },
+  {
    "key": "Deck needs at least %d cards (has %d).",
    "note": "scripts/core/deck_tools.gd"
   },
@@ -397,10 +505,6 @@
    "note": "scripts/core/factions.gd"
   },
   {
-   "key": "Human Knight",
-   "note": "scripts/main.gd"
-  },
-  {
    "key": "Knight",
    "note": "scripts/main.gd"
   },
@@ -410,10 +514,6 @@
   },
   {
    "key": "Cleric lantern",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Human Cultist",
    "note": "scripts/main.gd"
   },
   {
@@ -489,7 +589,7 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "You carry nothing but three sealed booster packs. Open them, and your first deck will be built from the faiths that answer you.",
+   "key": "You carry four sealed booster packs: three of every faith and one of %s alone. Open them, and your first deck will be built from the faiths that answer you.",
    "note": "scripts/main.gd"
   },
   {
@@ -629,11 +729,15 @@
    "note": "scripts/ui/booster_screen.gd"
   },
   {
-   "key": "Booster pack (%d more after this one)",
+   "key": "%s booster",
    "note": "scripts/ui/booster_screen.gd"
   },
   {
    "key": "Booster pack",
+   "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "(%d more after this one)",
    "note": "scripts/ui/booster_screen.gd"
   },
   {
@@ -1037,12 +1141,64 @@
    "note": "scripts/ui/figure_painter.gd"
   },
   {
+   "key": "Protects, heals and endures. Angels, guardians and martyrs.",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Pays in blood for power. Sacrifice, curses and the risen dead.",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Grows huge and many. Beasts, growth and trampling giants.",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Fast and reckless. Haste, fire and the endless feast.",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Patient and in control. Knowledge, walls and clever tempo.",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Tireless machines, upgrades and engines that fit any deck.",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Choose your Hero",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Back",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Begin",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Your hero's faith gives you a fourth booster with only that faith's cards.",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
    "key": "Ready",
    "note": "scripts/ui/loading_screen.gd"
   },
   {
    "key": "Opening the book…",
    "note": "scripts/ui/loading_screen.gd"
+  },
+  {
+   "key": "Random",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "In order",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Play the pieces in random order, or follow the list",
+   "note": "scripts/ui/music_bar.gd"
   },
   {
    "key": "Auto (follow the game)",
@@ -1065,10 +1221,6 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
-   "key": "Back",
-   "note": "scripts/ui/settings_screen.gd"
-  },
-  {
    "key": "Language",
    "note": "scripts/ui/settings_screen.gd"
   },
@@ -1086,6 +1238,14 @@
   },
   {
    "key": "Change pieces by place and duel",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Music order",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Random (off: follow the list)",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -1907,10 +2067,6 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Human Druid",
-   "note": "card subtype"
-  },
-  {
    "key": "At the beginning of your upkeep, add G to your mana pool this turn.",
    "note": "rules text of Hedgerow Druid"
   },
@@ -2163,10 +2319,6 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Human Performer",
-   "note": "card subtype"
-  },
-  {
    "key": "When this enters, deal 1 damage to any enemy creature or the enemy player.",
    "note": "rules text of Fire-Eater of the Feast"
   },
@@ -2415,10 +2567,6 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Human Philosopher",
-   "note": "card subtype"
-  },
-  {
    "key": "When this enters, return target enemy creature to its owner's hand.",
    "note": "rules text of Wandering Peripatetic"
   },
@@ -2601,10 +2749,6 @@
   {
    "key": "Tinkerer's Apprentice",
    "note": "card name (machine, creature)"
-  },
-  {
-   "key": "Human Artificer",
-   "note": "card subtype"
   },
   {
    "key": "When this enters, create a 1/1 Servo token.",

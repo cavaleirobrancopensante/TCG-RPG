@@ -31,13 +31,13 @@ func _ready() -> void:
 	assert(Music.current.get("kind", "") == "anthem", "menu plays an anthem")
 	print("music ok: menu → ", Music.current["title"])
 
-	await main._new_game(2)
+	await main._new_game(2, "lyceum")
 	assert(GameState.slot == 2, "new game in slot 2")
 	await _frames(5)
 	main.open_boosters(true)
 	await _frames(3)
 	var bs: BoosterScreen = main.screen
-	for p in 3:
+	for p in 4:
 		bs._on_button()           # reveal all
 		await _wait(1.5)
 		bs._on_button()           # next pack / done
@@ -87,10 +87,13 @@ func _ready() -> void:
 	Music._bar._toggle_picker()
 	await _frames(2)
 	assert(Music._bar.picker.visible, "picker opens on first tap")
+	Music.set_shuffle(false)
 	Music.choose("lyceum_03")
 	assert(not Music.auto and Music.current["id"] == "lyceum_03", "manual choice")
 	Music.next()
-	assert(Music.current["id"] == "lyceum_04", "next")
+	assert(Music.current["id"] == "lyceum_04", "next follows the list when not random")
+	Music.set_shuffle(true)
+	assert(Music.playlist[Music.index] == "lyceum_04" and Music.playlist.size() == 10, "random keeps the piece and the faith")
 	Music.prev()
 	Music.toggle_pause()
 	assert(Music.paused, "paused")

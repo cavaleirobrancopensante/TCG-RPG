@@ -17,6 +17,7 @@ var playlist: Array = []      # ids
 var index := 0
 var current: Dictionary = {}
 var auto := true
+var shuffle := true           # random order (default) or follow the list in order
 var paused := false
 var volume := 0.8             # 0..1
 var context := ""             # "menu:", "world:wild", ...
@@ -90,26 +91,22 @@ func set_context(kind: String, faction: String = "") -> void:
 	match kind:
 		"menu":
 			list = faction_tracks_all("anthem")
-			list.shuffle()
 		"world":
 			list = faction_tracks(faction, "menu")
-			list.shuffle()
 		"city":
-			var menus := faction_tracks(faction, "menu")
-			menus.shuffle()
-			list = faction_tracks(faction, "anthem") + menus
+			list = faction_tracks(faction, "anthem") + faction_tracks(faction, "menu")
 		"battle":
 			var combat := faction_tracks(faction, "combat")
 			var boss: String = combat[2] if combat.size() > 2 else ""
 			combat.erase(boss)
-			combat.shuffle()
 			list = combat
 		"lair":
 			var c := faction_tracks(faction, "combat")
 			list = [c[2]] if c.size() > 2 else c
 	if list.is_empty():
 		return
-	_set_playlist(list, 0)
+	# a city greets you with its anthem first, even when shuffling
+	_set_playlist(list, 0, kind == "city")
 
 
 func faction_tracks_all(kind: String) -> Array:
@@ -141,6 +138,19 @@ func set_auto(on: bool) -> void:
 		var parts := c.split(":")
 		if parts.size() == 2:
 			set_context(parts[0], parts[1])
+	state_changed.emit()
+	_save_settings()
+
+
+## Random order or the list in order. Re-orders what is left of the current playlist.
+func set_shuffle(on: bool) -> void:
+	shuffle = on
+	if not current.is_empty() and not playlist.is_empty():
+		var now: String = current["id"]
+		var base: Array = playlist.duplicate()
+		base.sort_custom(func(a, b): return tracks.find(by_id[a]) < tracks.find(by_id[b]))
+		_order(base, base.find(now))
+		index = playlist.find(now)
 	state_changed.emit()
 	_save_settings()
 
@@ -180,10 +190,26 @@ func _db() -> float:
 
 # ------------------------------------------------------------------ playback
 
-func _set_playlist(list: Array, start: int) -> void:
-	playlist = list
-	index = clampi(start, 0, list.size() - 1)
+## keep_first: the track at `start` plays first even in random order.
+func _set_playlist(list: Array, start: int, keep_first: bool = true) -> void:
+	if shuffle and not keep_first:
+		start = randi() % list.size()
+	_order(list, clampi(start, 0, list.size() - 1))
 	_play(playlist[index])
+
+
+## In order: the list as given, from `start`. Random: `start` first, then the rest shuffled.
+func _order(list: Array, start: int) -> void:
+	if not shuffle:
+		playlist = list.duplicate()
+		index = start
+		return
+	var first = list[start]
+	var rest: Array = list.duplicate()
+	rest.remove_at(start)
+	rest.shuffle()
+	playlist = [first] + rest
+	index = 0
 
 
 func _load_stream(path: String) -> AudioStream:
@@ -233,6 +259,7 @@ func _load_settings() -> void:
 	if cf.load(SETTINGS) == OK:
 		volume = float(cf.get_value("music", "volume", 0.8))
 		auto = bool(cf.get_value("music", "auto", true))
+		shuffle = bool(cf.get_value("music", "shuffle", true))
 
 
 func _save_settings() -> void:
@@ -240,4 +267,5 @@ func _save_settings() -> void:
 	cf.load(SETTINGS)
 	cf.set_value("music", "volume", volume)
 	cf.set_value("music", "auto", auto)
+	cf.set_value("music", "shuffle", shuffle)
 	cf.save(SETTINGS)
