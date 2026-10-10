@@ -780,9 +780,22 @@ func test_game_state() -> void:
 	GameState.record_victory("wild")
 	check(GameState.mission_state("m_tech_1") == "done", "mission done")
 	check(GameState.claim_mission("m_tech_1") != "", "claim mission")
-	GameState.accept_mission("m_tech_2")
-	GameState.record_visit("santa_lucerna")
-	check(GameState.mission_state("m_tech_2") == "done", "visit mission")
+	GameState.accept_mission("m_church_3")
+	GameState.record_visit("elderholt")
+	check(GameState.mission_state("m_church_3") == "done", "visit mission")
+	# missions follow the hero's faith, one step at a time
+	check(GameState.mission_for_hero("ow_1") and not GameState.mission_for_hero("ow_2"), "the Old Ways chain starts at its first step")
+	check(not GameState.mission_for_hero("bc_1") and not GameState.mission_for_hero("hc_1"), "other faiths' missions are not offered")
+	GameState.accept_mission("ow_1")
+	for k in 3:
+		GameState.record_victory("machine")
+	check(GameState.claim_mission("ow_1") != "" and GameState.mission_for_hero("ow_2"), "finishing a step opens the next")
+	for f in Factions.ORDER:
+		var n := 0
+		for id in GameState.world_data["missions"]:
+			if GameState.mission_def(id).get("heroes", []).has(f):
+				n += 1
+		check(n >= 4, "%s hero has a mission chain (%d)" % [f, n])
 	for c in GameState.world_data["cities"]:
 		for npc in c["npcs"]:
 			for m in npc["missions"]:

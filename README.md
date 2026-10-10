@@ -148,6 +148,17 @@ still needs translating, and the tests check placeholders and coverage. Shared t
 - **Music order**: random (default) or follow the list, from the music strip or Settings.
 - **Smoother**: map figures and duel figures are no longer repainted every frame.
 
+## Missions for your hero (1.17)
+
+Each hero gets a story of missions from his own faith, offered one step at a time by the
+townsfolk of his faith's city: the Church's knight guards the Pilgrim Road and descends into
+the Ninth Pit; the Old Ways' woodward drives the machines from the woods; the Revel's
+minstrel takes his show to Cogspire and wins the Endless Banquet; the Stoa's scholar
+studies Vinemere and brings the Silent Sage back to reason; the Technocracy's artificer
+settles the guild's accounts; the Covenant's blackguard collects debts for the pit. Other
+faiths' townsfolk have no work for you. A few errands (Proof of Skill, Medicine for the
+Hospice) are open to most heroes.
+
 ## Portraits and arrows (1.16)
 
 - Each side of a duel shows its hero's portrait: your chosen hero, and the face of the

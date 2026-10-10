@@ -229,6 +229,14 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Human Pilgrim",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Human",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "token:",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -825,6 +833,18 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Lich",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Beast Spirit",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Human Noble",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Victory",
    "note": "scripts/main.gd"
   },
@@ -1150,6 +1170,14 @@
   },
   {
    "key": "Claim reward",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "\"Come back when you have finished what you began.\"",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "\"I have no work for one of your faith.\"",
    "note": "scripts/ui/city_screen.gd"
   },
   {
@@ -1850,10 +1878,6 @@
   },
   {
    "key": "Lair · Level %d",
-   "note": "scripts/world/overworld.gd"
-  },
-  {
-   "key": "Human Pilgrim",
    "note": "scripts/world/overworld.gd"
   },
   {
@@ -3031,10 +3055,6 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Lich",
-   "note": "card subtype"
-  },
-  {
    "key": "Deathtouch. At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
    "note": "rules text of Hollow-Crowned Lich"
   },
@@ -3571,10 +3591,6 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Beast Spirit",
-   "note": "card subtype"
-  },
-  {
    "key": "Regenerate. Whenever this attacks, target creature you control gets +1/+1 permanently.",
    "note": "rules text of White Hart of the Greenwood"
   },
@@ -3769,10 +3785,6 @@
   {
    "key": "Courtier on the Chaise",
    "note": "card name (revel, creature)"
-  },
-  {
-   "key": "Human Noble",
-   "note": "card subtype"
   },
   {
    "key": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
@@ -5953,11 +5965,11 @@
    "note": "mission description"
   },
   {
-   "key": "Letter to the Cathedral",
+   "key": "Medicine for the Hospice",
    "note": "mission title"
   },
   {
-   "key": "Carry the guild's accounts north to Santa Lucerna.",
+   "key": "The grove-keepers of Elderholt grow herbs the sick need. Carry a letter asking for them.",
    "note": "mission description"
   },
   {
@@ -5965,19 +5977,115 @@
    "note": "mission title"
   },
   {
-   "key": "Covenant cultists prey on pilgrims. Defeat three of them.",
+   "key": "Covenant cultists prey on pilgrims bound for the Cathedral of the Lamp. Defeat three of them.",
    "note": "mission description"
   },
   {
-   "key": "A lich has made a crypt of a ruined abbey in the south. Cleanse it.",
-   "note": "mission description"
-  },
-  {
-   "key": "Medicine for the Hospice",
+   "key": "Escort to Porticus",
    "note": "mission title"
   },
   {
-   "key": "The grove-keepers of Elderholt grow herbs we need. Visit them.",
+   "key": "A party of pilgrims carries relics to the chapel of the scholars' city. See them safely to Porticus.",
+   "note": "mission description"
+  },
+  {
+   "key": "The Last Templar",
+   "note": "mission title"
+  },
+  {
+   "key": "Ser Gaudenz, last of the Templars, has shut himself in his chapel and duels all who come. Overcome him and bring him to confession.",
+   "note": "mission description"
+  },
+  {
+   "key": "A lich has made his crypt in a ruined abbey to the south. Cleanse the holy ground.",
+   "note": "mission description"
+  },
+  {
+   "key": "Close the Ninth Pit",
+   "note": "mission title"
+  },
+  {
+   "key": "The herald of Belzareth stirs in the deepest pit. Go down with the Lamp and drive him back.",
+   "note": "mission description"
+  },
+  {
+   "key": "Collect a Debt",
+   "note": "mission title"
+  },
+  {
+   "key": "Some scholars borrowed against their souls and now hide behind their books. Defeat three of them.",
+   "note": "mission description"
+  },
+  {
+   "key": "Break the Pilgrims",
+   "note": "mission title"
+  },
+  {
+   "key": "The Church's knights guard the roads too well. Defeat three servants of the Church.",
+   "note": "mission description"
+  },
+  {
+   "key": "Audience with the Lich",
+   "note": "mission title"
+  },
+  {
+   "key": "The Nameless Lich grants nothing to the weak. Defeat him in his crypt and he will name his price.",
+   "note": "mission description"
+  },
+  {
+   "key": "The herald of the pit tests every new servant. Survive the test.",
+   "note": "mission description"
+  },
+  {
+   "key": "Iron in the Roots",
+   "note": "mission title"
+  },
+  {
+   "key": "Constructs are cutting the old woods for the furnaces of Cogspire. Stop three of them.",
+   "note": "mission description"
+  },
+  {
+   "key": "The great beast of the north wood has gone mad. Calm it the old way: by besting it.",
+   "note": "mission description"
+  },
+  {
+   "key": "A foundry has broken loose and burns everything around it. Put out its fires.",
+   "note": "mission description"
+  },
+  {
+   "key": "Blight from the South",
+   "note": "mission title"
+  },
+  {
+   "key": "Ash from the Pit is poisoning the fields. Defeat three Covenant blighters.",
+   "note": "mission description"
+  },
+  {
+   "key": "Hecklers at the Feast",
+   "note": "mission title"
+  },
+  {
+   "key": "Sour philosophers keep lecturing the guests about moderation. Beat three of them at cards.",
+   "note": "mission description"
+  },
+  {
+   "key": "A Song for Cogspire",
+   "note": "mission title"
+  },
+  {
+   "key": "The guildsmen of Cogspire have never heard a good song. Take the show there.",
+   "note": "mission description"
+  },
+  {
+   "key": "Duke Carnevale's feast has lasted a year. Somebody must win the final toast.",
+   "note": "mission description"
+  },
+  {
+   "key": "Masks and Gears",
+   "note": "mission title"
+  },
+  {
+   "key": "The guild says the carnival is a waste of good brass. Prove them wrong against three of their machines.",
    "note": "mission description"
   },
   {
@@ -5989,39 +6097,51 @@
    "note": "mission description"
   },
   {
+   "key": "Arguments in Vinemere",
+   "note": "mission title"
+  },
+  {
+   "key": "The revellers mock the Porch. Answer three of them in the only language they respect.",
+   "note": "mission description"
+  },
+  {
    "key": "Our old master has stopped speaking and started duelling. Bring him back to reason.",
    "note": "mission description"
   },
   {
-   "key": "Iron in the Roots",
+   "key": "Letters to the Cathedral",
    "note": "mission title"
   },
   {
-   "key": "Constructs are cutting the old woods. Stop three of them.",
+   "key": "The Scholarch wishes to correspond with the Church about the soul. Carry his letters to Santa Lucerna.",
    "note": "mission description"
   },
   {
-   "key": "The great beast has gone mad. Prove yourself against it.",
-   "note": "mission description"
-  },
-  {
-   "key": "Spoil the Sermon",
+   "key": "Letter to the Cathedral",
    "note": "mission title"
   },
   {
-   "key": "The Church's preachers are bad for business. Win three duels against them.",
+   "key": "Carry the guild's accounts north to Santa Lucerna.",
    "note": "mission description"
   },
   {
-   "key": "Duke Carnevale's feast has lasted a year. Somebody must win the final toast.",
-   "note": "mission description"
-  },
-  {
-   "key": "Collect a Debt",
+   "key": "Clearing the Woods",
    "note": "mission title"
   },
   {
-   "key": "Some scholars owe the Covenant. Defeat three of them.",
+   "key": "The druids keep sabotaging the timber carts. Defeat three of them.",
+   "note": "mission description"
+  },
+  {
+   "key": "Our best foundry has broken its governors. Shut it down before it melts the district.",
+   "note": "mission description"
+  },
+  {
+   "key": "Audit of the Observatory",
+   "note": "mission title"
+  },
+  {
+   "key": "The Silent Sage owes the guild for an orrery. Collect, by duel if necessary.",
    "note": "mission description"
   }
  ],

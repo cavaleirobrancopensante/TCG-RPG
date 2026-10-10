@@ -121,10 +121,15 @@ func _show_town() -> void:
 		var v := VBoxContainer.new()
 		panel.add_child(v)
 		v.add_child(UIKit.title("%s, %s" % [I18n.t(npc["name"]), I18n.t(npc.get("title", ""))], 26))
+		var offered := 0
 		for mid in npc.get("missions", []):
 			var m := GameState.mission_def(mid)
 			if m.is_empty():
 				continue
+			# each hero is offered the work of his own faith, one step of the story at a time
+			if GameState.mission_state(mid) == "available" and not GameState.mission_for_hero(mid):
+				continue
+			offered += 1
 			var row := HBoxContainer.new()
 			row.add_theme_constant_override("separation", 12)
 			v.add_child(row)
@@ -145,6 +150,14 @@ func _show_town() -> void:
 					GameState.save_game()
 					_show()
 					_toast(I18n.t("Reward: %s") % r), 170))
+		if offered == 0:
+			var any_for_hero := false
+			for mid in npc.get("missions", []):
+				var hs: Array = GameState.mission_def(mid).get("heroes", [])
+				if hs.is_empty() or hs.has(GameState.hero):
+					any_for_hero = true
+			v.add_child(UIKit.label(I18n.t("\"Come back when you have finished what you began.\"") if any_for_hero
+				else I18n.t("\"I have no work for one of your faith.\""), 16, UIKit.DIM, true))
 
 
 func _state_name(mid: String, state: String) -> String:
