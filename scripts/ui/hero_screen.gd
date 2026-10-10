@@ -106,6 +106,20 @@ func _ready() -> void:
 	_stats_box = VBoxContainer.new()
 	_stats_box.add_theme_constant_override("separation", 4)
 	right.add_child(_stats_box)
+	# the classic heroes, for those who want them, at the foot of the page
+	var classic := HBoxContainer.new()
+	classic.add_theme_constant_override("separation", 6)
+	root.add_child(classic)
+	classic.add_child(UIKit.label("Or a classic hero:", 17, UIKit.DIM))
+	for faith in Factions.ORDER:
+		var fx: String = faith
+		var cb := UIKit.button(Hero.CLASSIC[fx]["name"], func():
+			var d: String = sheet.get("difficulty", "knight")
+			sheet = Hero.classic_sheet(fx)
+			sheet["difficulty"] = d
+			_refresh(), 150)
+		cb.custom_minimum_size.y = 44
+		classic.add_child(cb)
 	_refresh()
 
 

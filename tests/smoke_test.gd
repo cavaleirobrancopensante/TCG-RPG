@@ -38,7 +38,9 @@ func _ready() -> void:
 	main.open_boosters(true)
 	await _frames(3)
 	var bs: BoosterScreen = main.screen
-	for p in 4:
+	for p in GameState.pending_boosters + 1:      # the hero's starting boosters (difficulty decides how many)
+		if not is_instance_valid(bs) or main.screen != bs:
+			break
 		bs._on_button()           # reveal all
 		await _wait(1.5)
 		bs._on_button()           # next pack / done
@@ -61,6 +63,10 @@ func _ready() -> void:
 		var e: Dictionary = main.world.enemies[g]
 		main._on_enemy_engaged(e)
 		await _frames(2)
+		# every meeting opens with a word first; the test chooses to fight
+		if main.screen is EncounterScreen:
+			assert((main.screen as EncounterScreen).choose("Fight"), "the encounter offers a fight")
+			await _frames(3)
 		var b: BattleScene = main.screen
 		assert(Music.current["faction"] == e["faction"] and Music.current["kind"] == "combat", "battle music follows the enemy")
 		var t := 0.0
@@ -76,6 +82,18 @@ func _ready() -> void:
 		await _frames(3)
 		_close_dialogs()
 	main.debug_auto_battles = false
+	# a bribe sends the foe on his way
+	GameState.gold = 500
+	var foe: Dictionary = main.world.enemies[0]
+	foe["disposition"] = "hostile"
+	main._on_enemy_engaged(foe)
+	await _frames(3)
+	assert(main.screen is EncounterScreen, "an encounter opens before a fight")
+	assert((main.screen as EncounterScreen).choose("Bribe"), "bribe offered")
+	await _frames(3)
+	_close_dialogs()
+	assert(GameState.gold < 500 and not main.world.enemies.has(foe), "the bribed foe takes the gold and leaves")
+	print("encounter and bribe ok")
 	print("battles ok: ", results)
 
 	await _interactive_battle()
@@ -111,7 +129,7 @@ func _ready() -> void:
 	assert(Music.paused, "paused")
 	Music.toggle_pause()
 	Music.set_auto(true)
-	assert(Music.current["faction"] == "machine", "auto resumes the city music")
+	assert(Music.current["faction"] == GameState.hero, "auto resumes the hero's own music in town")
 	Music._bar._toggle_picker()
 	print("music player ok")
 	for t in ["shop", "sell", "town", "inn"]:
@@ -338,7 +356,7 @@ func _settle(b: BattleScene) -> void:
 
 
 func check_mull(st: BattleState) -> void:
-	assert(st.side(0).hand.size() == 7 and st.to_bottom(0) == 1, "mulligan in the duel screen")
+	assert(st.side(0).hand.size() == st.side(0).max_hand and st.to_bottom(0) == 1, "mulligan in the duel screen")
 
 
 func _press_first_dialog_button() -> void:

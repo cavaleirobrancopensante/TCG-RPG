@@ -5,7 +5,7 @@ import cairo
 from core import *
 import bg
 import props as PR
-from figure import Figure, ik
+from figure import Figure
 
 FRANCISCAN = C.hex('7d6247')
 BENEDICTINE = BLACK_HABIT
@@ -22,105 +22,64 @@ PURPLE_VEST = C.hex('5a2a6e')
 
 # ------------------------------------------------------------------ figures
 
-def sa_ik(s, t, l1, l2, out_w=0.2):
-    """Elbow for a two-bone arm from shoulder s reaching for t. Of the two
-    solutions it takes the one whose elbow hangs lower, with a lighter preference
-    for pointing away from the body, so an arm reaching forward keeps its elbow
-    down by the side instead of winging out at shoulder height."""
-    d = v_len(v_sub(t, s))
-    d = min(max(d, 0.01), l1 + l2 - 0.05)
-    base = math.atan2(t[1] - s[1], t[0] - s[0])
-    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
-    a = math.acos(max(-1.0, min(1.0, cos_a)))
-    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
-    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
-    side = 1.0 if s[0] >= 0 else -1.0
-
-    def score(e):
-        return e[1] + out_w * side * e[0]
-    e = e1 if score(e1) >= score(e2) else e2
-    dirv = v_norm(v_sub(t, e))
-    return e, v_add(e, v_mul(dirv, l2))
-
-
-def sa_arm(sh, t, side, l1=16.5, l2=15.5):
-    """Natural arm: when the hand is at or below the shoulder and within reach,
-    the upper arm hangs almost straight down by the side and the forearm comes
-    forward (foreshortened) to the hand, as a man holds a book, prays or carries
-    a lantern. Raised or fully stretched arms fall back to sa_ik."""
-    if t[1] > sh[1] + 2:
-        dx = side * 1.6 + max(-5.5, min(5.5, (t[0] - sh[0]) * 0.3))
-        e = (sh[0] + dx, sh[1] + math.sqrt(l1 * l1 - dx * dx))
-        fl = v_len(v_sub(t, e))
-        if fl <= l2 + 0.5:
-            if fl < 5.0:
-                # too short a forearm reads as a stump: lift the elbow back a little
-                e = (e[0] - side * 2.0, e[1] + 1.0) if t[1] > e[1] else (e[0], e[1] + 3.0)
-            return e, t
-    return sa_ik(sh, t, l1, l2)
-
-
-# extra poses for the Church's figures (hand targets chosen for natural arms)
-SA_POSES = {
-    # sword held upright before the chest, shield on the forearm across the body
-    'sa_watch':   ((26, -60), (1, -58), True, 1, 1),
-    # spear or staff grounded at the side, shield across the body
-    'sa_spear':   ((17, -58), (1, -58), True, 1, 1),
-    # both hands resting on the cross guard of a sword planted point down
-    'sa_hilt':    ((10, -54), (6, -55), True, 1, 1),
-    # carrying a lamp or lantern low in front, the other hand at the breast
-    'sa_lamp':    ((22, -56), (3, -66), True, 1, 1),
-}
 import figure as _figure_mod
-for _k, _v in SA_POSES.items():
-    _figure_mod.POSES.setdefault(_k, _v)
+
+# Extra arm positions for scenes the approved set lacks, built exactly like
+# figure.STOCK: (front elbow, front hand, back elbow, back hand, back hand shows in
+# front of the body). The upper arm hangs about 16 from the shoulder, the elbow
+# below and a little out, and the forearm (13 to 15) does the lifting.
+SA_STOCK = {
+    # guard, but the far arm stays behind the body (a strapped kite shield covers it)
+    'sa_guard':       ((11, -62), (20.5, -64), (-8.5, -64), (-2.5, -64), False),
+    # both hands low on the cross guard of a sword planted point first in the ground
+    'sa_hilt':        ((12, -64.5), (14.5, -50), (0, -62), (11, -50.5), True),
+    # a hand laid on the shoulder of someone shorter standing or kneeling in front
+    'sa_shoulder':    ((12.5, -64.5), (17.5, -50.5), (-9.5, -62), (-10.5, -47), False),
+    # anointing a kneeling man's brow, the far hand holding the chrism at the breast
+    'sa_anoint':      ((15, -66), (28, -64), (-6, -62), (13, -61), True),
+    # blessing with the near hand, the far hand down at the side holding a crosier
+    'sa_bless_staff': ((11, -62), (18, -78), (-10, -63), (-12, -49), False),
+    # a trumpet set to the lips: elbow lifted forward, the fist round the tube
+    'sa_trumpet':     ((22, -78), (19, -94), (-9.5, -62), (-10.5, -47), False),
+    # raising a crucifix, the far hand holding the open Ritual before the breast
+    'sa_raise_book':  ((15, -90), (16.5, -104), (-6, -62), (13, -62), True),
+    # a finger laid on the lips, the far hand down at the side holding a crosier
+    'sa_silence':     ((12, -64.5), (6.5, -80), (-9.5, -62), (-12, -48), False),
+    # shrinking back, the near hand lifted with the palm out against the light
+    'sa_fend':        ((11, -62), (17, -77), (-6, -62), (13, -61), True),
+}
+for _k, _v in SA_STOCK.items():
+    _figure_mod.STOCK[_k] = _v
+
+# hand drawing borrowed from a stock pose for the near hand of an sa_ pose
+SA_HAND_STYLE = {'sa_bless_staff': 'bless', 'sa_fend': 'spread'}
 
 
 class Fig(Figure):
-    """A Figure with free hand targets: hands=((fx, fy), (bx, by), back_in_front, bend_f, bend_b).
-    elbows=((ex, ey) or None, (ex, ey) or None) pins an elbow exactly (the hand then
-    lands exactly on its target). Arms are solved with sa_ik (elbows hang down)."""
+    """The base Figure with the approved STOCK arms (and the sa_ additions above).
+    Only the near hand's drawing style is borrowed for some sa_ poses."""
 
-    def __init__(self, hands=None, elbows=None, **kw):
-        super().__init__(**kw)
-        self.hands = hands
-        self.elbows = elbows
-
-    def joints(self):
-        k = 24.0 if self.kneel else 0.0
-        if not self.hands:
-            self.hands = POSE_HANDS(self.pose)
-        k = 24.0 if self.kneel else 0.0
-        j = {
-            'head': (1.8, -91 + k),
-            'neck': (0.6, -83.5 + k),
-            'sh_f': (9.0 * self.width, -80.5 + k),
-            'sh_b': (-8.0 * self.width, -80.5 + k),
-            'waist': (0.0, -57 + k),
-            'hip': (0.0, -48 + k),
-        }
-        pf, pb = self.hands[0], self.hands[1]
-        bfront = self.hands[2] if len(self.hands) > 2 else False
-        bf = self.hands[3] if len(self.hands) > 3 else 1
-        bb = self.hands[4] if len(self.hands) > 4 else 1
-        tf = (pf[0], pf[1] + k)
-        tb = (pb[0], pb[1] + k)
-        j['el_f'], j['hand_f'] = sa_arm(j['sh_f'], tf, 1.0)
-        j['el_b'], j['hand_b'] = sa_arm(j['sh_b'], tb, -1.0)
-        if self.elbows:
-            ef, eb = self.elbows
-            if ef:
-                j['el_f'], j['hand_f'] = (ef[0], ef[1] + k), tf
-            if eb:
-                j['el_b'], j['hand_b'] = (eb[0], eb[1] + k), tb
-        j['back_front'] = bfront
-        j['k'] = k
-        return j
+    def _hand(self, at, d):
+        style = SA_HAND_STYLE.get(self.pose)
+        if style and at is self.j['hand_f']:
+            pose = self.pose
+            self.pose = style
+            try:
+                Figure._hand(self, at, d)
+            finally:
+                self.pose = pose
+            return
+        Figure._hand(self, at, d)
 
 
-def POSE_HANDS(pose):
-    import figure as fm
-    return fm.POSES[pose]
+def redraw_hand(p, fig, x, y, h, flip=False, which='f'):
+    """Paint a figure's fist again on top, after a world space object (a lance,
+    a banner pole) has been drawn through it. Same placement as fig.draw."""
+    j = fig.j
+    p.push(x, y, h / 100.0, flip)
+    hand, el = j['hand_' + which], j['el_' + which]
+    fig._hand(hand, v_norm(v_sub(hand, el)))
+    p.pop()
 
 
 def head_only(p, c, s, **opts):
@@ -922,7 +881,7 @@ def seraph(p, x, feet_y, h=400):
     # the seraph himself
     Fig(pose='spread', garb='alb', main=C.hex('fbefd6'), cloak='cope', cloak_col=VERMILION, trim=GOLD, lining=GOLD_LIGHT,
         hair='curly', hair_col=C.hex('e0a83e'), halo=True, belt='gold', eyes='open', blush=0.6,
-        hands=((20, -86), (-19, -86), False, 1, 1), sway=0.0).draw(p, x, feet_y, h)
+        sway=0.0).draw(p, x, feet_y, h)
     for sd in (-1, 1):
         X = lambda dx: x + sd * dx
         # lower pair folded down before the body, veiling the feet

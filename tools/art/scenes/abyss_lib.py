@@ -11,105 +11,109 @@ import cairo
 from core import *
 import bg
 import props as PR
-from figure import Figure, POSES
+from figure import Figure, POSES, STOCK
 import figure as _figmod
 
 
-def ik(s, t, l1, l2, bend=1.0, side=None):
-    """Elbow for a two-bone limb from s reaching for t. The elbow bends down and out
-    from the body, and never rises above the shoulder unless the hand is raised."""
-    d = v_len(v_sub(t, s))
-    d = min(max(d, 0.01), l1 + l2 - 0.05)
-    base = math.atan2(t[1] - s[1], t[0] - s[0])
-    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
-    a = math.acos(max(-1.0, min(1.0, cos_a)))
-    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
-    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
-    if side is None:
-        side = 1.0 if s[0] >= 0 else -1.0
-    raised = t[1] < s[1] - 6
-
-    def score(e):
-        sc = e[1] + 0.35 * side * (e[0] - s[0])
-        if not raised and e[1] < s[1] - 1:
-            sc -= 100
-        return sc
-    best, other = (e1, e2) if score(e1) >= score(e2) else (e2, e1)
-    e = best if bend != 0 else other
+def arm_ik(s, t, l1, l2, side=1.0):
+    """Elbow and hand for a creature's arm from shoulder s reaching for t, built like the
+    approved stock poses: for a lowered hand the upper arm hangs from the shoulder, the
+    elbow sits below it and a little out, and the forearm does the lifting; for a raised
+    hand the elbow swings out away from the body. side is +1 for the near (front) arm,
+    -1 for the far arm (its 'out' is backward)."""
+    dx, dy = t[0] - s[0], t[1] - s[1]
+    if dy < -6:
+        d = v_len((dx, dy))
+        d = min(max(d, abs(l1 - l2) + 0.2), l1 + l2 - 0.05)
+        base = math.atan2(dy, dx)
+        cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
+        a = math.acos(max(-1.0, min(1.0, cos_a)))
+        e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
+        e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
+        e = e1 if side * e1[0] + 0.3 * e1[1] >= side * e2[0] + 0.3 * e2[1] else e2
+    else:
+        pref = math.pi / 2 - side * 0.22
+        best, e = None, None
+        for i in range(161):
+            th = pref - 1.15 + i * 2.3 / 160
+            q = (s[0] + l1 * math.cos(th), s[1] + l1 * math.sin(th))
+            err = v_len(v_sub(t, q)) - l2
+            cost = 40 * err * err + 2 * (th - pref) ** 2
+            if best is None or cost < best:
+                best, e = cost, q
+    dist = v_len(v_sub(t, e))
+    if 0.6 * l2 <= dist <= 1.04 * l2:
+        return e, t
     dirv = v_norm(v_sub(t, e))
-    return e, v_add(e, v_mul(dirv, l2))
+    return e, v_add(e, v_mul(dirv, min(max(dist, 0.6 * l2), l2)))
+
+
+def claw_fist(p, at, d, col, talon=None, s=1.0):
+    """A clawed hand closed round a grip: knuckles toward d, talons curled over."""
+    talon = talon or BONE_OLD
+    ang = math.atan2(d[1], d[0])
+    n = v_perp(d)
+    c = v_add(at, v_mul(d, 0.6 * s))
+    p.blob(c, 3.0 * s, 2.6 * s, col, rot=ang, width=1.4, shade=0.6)
+    for k in (-1.4, -0.45, 0.5, 1.4):
+        b = v_add(v_add(c, v_mul(d, 2.2 * s)), v_mul(n, k * s))
+        tip = v_add(v_add(b, v_mul(d, -1.6 * s)), v_mul(n, k * 0.2 * s + 1.2 * s))
+        p.taper([b, tip], 0.55 * s, 0.1 * s, talon, width=0.8)
+    p.line([v_add(v_add(c, v_mul(d, 1.2 * s)), v_mul(n, 2.0 * s)), v_add(v_add(c, v_mul(d, 1.2 * s)), v_mul(n, -2.0 * s))], col.dark(0.45).alpha(0.7), 0.9)
+    # thumb wrapped over the front
+    p.taper([v_add(c, v_mul(n, -2.0 * s)), v_add(v_add(c, v_mul(n, -0.6 * s)), v_mul(d, 1.8 * s))], 0.9 * s, 0.6 * s, col, width=1.0)
+
+
+# Extra arm positions for human figures, built like the approved STOCK poses:
+# (front elbow, front hand, back elbow, back hand, back hand shows in front of the body).
+# Upper arms about 16 units hanging from the shoulder, forearms 13 to 15.
+_STAND_B = ((-9.5, -62), (-10.5, -47))
+AB_STOCK = {
+    # fingertip held out over the table, blood dripping from it
+    'ab_drip': ((13, -64), (25, -56)) + _STAND_B + (False,),
+    # hand stretched out over an inkwell
+    'ab_pay': ((14, -66), (28, -68)) + _STAND_B + (False,),
+    # flinging seed (ash) forward and up
+    'ab_sow': ((17, -67), (29, -74)) + _STAND_B + (False,),
+    # open book lifted before the face in both hands
+    'ab_book': ((12, -64), (22, -73), (-5.5, -63), (15, -72), True),
+    # sword raised high, far arm at the side
+    'ab_swordup': ((17, -85), (18.5, -100)) + _STAND_B + (False,),
+    # sword up in guard, far arm thrown back
+    'ab_recoil': ((11, -62), (20.5, -64), (-11, -64.5), (-15, -50), False),
+    # reaching for something offered, shield on the far arm
+    'ab_reach_sh': ((16, -67), (29, -71), (-8.5, -64), (-2.5, -64), True),
+    # one knife raised forward, the other held level before the chest
+    'ab_knives': ((12, -63), (23, -71), (-6, -63), (8, -62), True),
+    # kneeling and casting with the near hand; staff in the far hand at the side
+    'ab_cast_bones': ((14, -65), (27, -62)) + _STAND_B + (False,),
+    # knife raised high in the near hand, far hand flung out behind
+    'ab_cast': ((16, -78), (26, -89), (-14, -68), (-21, -80), False),
+    # both hands lifted high
+    'ab_high': ((15, -90), (16.5, -104), (-14, -90), (-15.5, -104), False),
+    # near hand reaching out, far arm hanging
+    'ab_reach': ((17, -72), (30, -74)) + _STAND_B + (False,),
+    # great axe raised in both hands, haft through both fists
+    'ab_axe': ((19, -68), (24, -82), (-6, -63), (9, -67), True),
+    # a dead man's arms lifted forward on threads
+    'ab_puppet': ((12, -63), (25, -70), (-5.5, -63), (21, -69), True),
+    # both hands raised forward, working the threads
+    'ab_puppeteer': ((17, -66.5), (27, -77), (-5, -63), (20, -71), True),
+    # knife raised in the near hand, far palm held out over the bowl
+    'ab_bleed': ((17, -66.5), (27, -78), (-6, -62), (14, -60), True),
+    # far hand holds the open book, near hand writes in it
+    'ab_write': ((10, -61.5), (22, -67), (-6, -62), (10, -61), True),
+    # wrists bound together before the waist
+    'ab_bound': ((10.5, -62.5), (14, -49), (-6, -62), (9, -50), True),
+    # forearm raised before the face against a blast
+    'ab_ward': ((11.5, -63), (17, -78)) + _STAND_B + (False,),
+}
+for _k, _v in AB_STOCK.items():
+    STOCK[_k] = _v
 
 
 class AbFigure(Figure):
-    """Figure whose elbows never ride up above the shoulder for a lowered hand;
-    hands=(front, back) overrides the pose's hand targets."""
-
-    def __init__(self, hands=None, **kw):
-        super().__init__(**kw)
-        self.hands = hands
-
-    def joints(self):
-        j = super().joints()
-        k = j['k']
-        pf, pb, bfront, bend_f, bend_b = POSES[self.pose]
-        if self.hands:
-            pf, pb = self.hands
-        for w, t, bend in (('f', (pf[0], pf[1] + k), bend_f), ('b', (pb[0], pb[1] + k), bend_b)):
-            s = j['sh_' + w]
-            l1, l2 = 16.5, 15.5
-            # a hand held close to the body means the arm points at the viewer:
-            # foreshorten it instead of folding the elbow out like a wing
-            d = v_len(v_sub(t, s))
-            if d < 0.86 * (l1 + l2):
-                f = max(0.7, d / (0.86 * (l1 + l2)))
-                l1, l2 = l1 * f, l2 * f
-            j['el_' + w], j['hand_' + w] = ik(s, t, l1, l2, bend)
-        return j
-
-    def draw(self, p, x, y, height=480, flip=False):
-        """As Figure.draw, but a far arm brought in front of the body is drawn with its
-        upper arm hidden behind the torso: only the forearm and hand cross over."""
-        self.p = p
-        s = height / 100.0
-        p.push(x, y, s, flip)
-        p.lw = 2.6
-        j = self.joints()
-        self.j = j
-        k = j['k']
-        p.blob((1, -0.5), 24 if not self.kneel else 30, 3.6, C(0.1, 0.05, 0.02, 0.28), ink=False)
-        if self.wings:
-            PR.wings(p, (j['sh_b'][0] + 2, j['sh_b'][1] + 2), self.wings, self.wing_col, k)
-        if self.cloak:
-            self._cloak_back(j)
-        if self.props_back:
-            for fn in self.props_back:
-                fn(p, j)
-        # the far arm, whole, behind the body
-        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
-        self._legs(j)
-        self._body(j)
-        if self.cloak:
-            self._cloak_front(j)
-        self._head(j)
-        if j['back_front']:
-            el, hd = j['el_b'], j['hand_b']
-            d = v_norm(v_sub(hd, el))
-            n = v_perp(d)
-            c0 = v_sub(el, v_mul(d, 1.2))
-            far = 40
-            clip = [v_add(c0, v_mul(n, far)), v_add(v_add(c0, v_mul(n, far)), v_mul(d, far)),
-                    v_add(v_sub(c0, v_mul(n, far)), v_mul(d, far)), v_sub(c0, v_mul(n, far))]
-            p.clip_shape(clip, smooth=False)
-            self._arm(j['sh_b'], el, hd, back=True, over=True)
-            p.unclip()
-        if self.shield:
-            hb = j['hand_b']
-            PR.heater_shield(p, (hb[0] - 3.5, hb[1] + 7), self.shield, s=1.08)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
-        if self.props_front:
-            for fn in self.props_front:
-                fn(p, j)
-        p.pop()
+    """A plain Figure: the approved STOCK arms, no arm logic of its own."""
 
 # ------------------------------------------------------------------ palette
 
@@ -873,7 +877,7 @@ class Demon:
                  tail=True, cloth=C.hex('2a1c20'), trim=OLD_GOLD, eye=C.hex('ffd23a'), crown=None, chains=None,
                  stout=1.0, mouth='grin', beard=None, robe=None, robe_trim=GOLD, props_front=None, props_back=None,
                  ears=True, cracks=None, legs='hoof', head_scale=1.0, belly=None, wing_span=1.0, wing_up=1.0,
-                 hands=None, collar=None, spikes=False, fire_hair=None, thin=1.0, claw_spread=1.0, shadow=True):
+                 hands=None, collar=None, spikes=False, fire_hair=None, thin=1.0, claw_spread=1.0, shadow=True, fist=''):
         self.__dict__.update(locals())
         del self.__dict__['self']
         self.horn_col = horn_col or BONE_OLD.dark(0.15)
@@ -885,8 +889,8 @@ class Demon:
         j = {'head': (3, -87 - (hs - 1) * 7), 'neck': (1.5, -79), 'sh_f': (11 * st, -74), 'sh_b': (-9 * st, -74),
              'hip_f': (4.5, -46), 'hip_b': (-4.5, -46)}
         hf, hb = self.hands or self.POSES[self.pose]
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], hf, 17.5, 17, 1)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], hb, 17.5, 17, 1)
+        j['el_f'], j['hand_f'] = arm_ik(j['sh_f'], hf, 17.5, 17, 1)
+        j['el_b'], j['hand_b'] = arm_ik(j['sh_b'], hb, 17.5, 17, -1)
         return j
 
     def draw(self, p, x, y, h=460, flip=False):
@@ -915,7 +919,11 @@ class Demon:
             self._torso(j)
             self._loincloth()
         self._head(j)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+        # the near arm, then what it holds, then the hand closed over it
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False, hand_too=False)
+        for fn in self.props_front or []:
+            fn(p, j)
+        self._hand(j['el_f'], j['hand_f'], back=False)
         if self.chains:
             for hand in ('hand_f', 'hand_b'):
                 hq = j[hand]
@@ -926,8 +934,6 @@ class Demon:
             p.taper([(-6.5, -79.5), (1, -77.5), (8.5, -79.5)], 2.0, 2.0, self.collar, width=1.4, shade=0.5)
             for q in ((-4, -78.6), (1, -77.6), (6, -78.6)):
                 p.shape([(q[0] - 1.2, q[1] + 1, 0), (q[0], q[1] + 4.5, 0), (q[0] + 1.2, q[1] + 1, 0)], self.collar.light(0.3), width=0.8, smooth=False)
-        for fn in self.props_front or []:
-            fn(p, j)
         p.pop()
 
     # --------------------------------------------------- parts
@@ -1056,18 +1062,31 @@ class Demon:
             p.blob(q, 1.0, 1.4, C.hex('3a3036'), ink=False)
         p.shape([(-3.6, -86), (-4, -81), (4.8, -81), (4.8, -86)], self.skin.dark(0.08), width=1.6)
 
-    def _arm(self, sh, el, hand, back=False):
+    def _hand(self, el, hand, back=False):
+        p = self.p
+        col = self.skin.dark(0.22) if back else self.skin
+        d = v_norm(v_sub(hand, el))
+        if self.robe:
+            hand = v_add(hand, v_mul(d, 1.0))
+        if ('b' if back else 'f') in self.fist:
+            claw_fist(p, hand, d, col, s=1.2 if self.robe else 1.15)
+        else:
+            claw_hand(p, hand, d, col, s=1.2 if self.robe else 1.15, spread=self.claw_spread)
+
+    def _arm(self, sh, el, hand, back=False, hand_too=True):
         p = self.p
         st = self.stout
         col = self.skin.dark(0.22) if back else self.skin
-        sh2 = (sh[0] - (1.5 if sh[0] > 0 else -1.5), sh[1] + 1.5)
+        # the shoulder joint sits inside the torso outline
+        sh2 = (sh[0] - (2.5 if sh[0] > 0 else -2.5), sh[1] + 2.0)
         pts = [sh2, v_lerp(sh2, el, 0.45), el, v_lerp(el, hand, 0.4), hand]
         d = v_norm(v_sub(hand, el))
         if self.robe:
             rc = self.robe.dark(0.2) if back else self.robe
-            out = limb(p, pts, [5.2 * st, 4.8, 4.2, 4.8, 6.0], rc, 0.9, 0.4, width=2.0)
+            limb(p, pts, [5.2 * st, 4.8, 4.2, 4.8, 6.0], rc, 0.9, 0.4, width=2.0)
             p.line([v_add(hand, v_mul(v_perp(d), 6)), v_sub(hand, v_mul(v_perp(d), 6))], self.robe_trim, 2.6)
-            claw_hand(p, v_add(hand, v_mul(d, 1.0)), d, col, s=1.2, spread=self.claw_spread)
+            if hand_too:
+                self._hand(el, hand, back)
             return
         w = self.thin
         limb(p, pts, [5.0 * st * w, 5.4 * st * w, 3.8 * w, 4.0 * w, 2.6], col, 0.9, 0.5, width=2.2)
@@ -1079,7 +1098,8 @@ class Demon:
                 b = v_lerp(el, hand, t)
                 n = v_perp(dd)
                 p.shape([v_add(b, v_mul(dd, -1.5)), v_add(v_add(b, v_mul(n, 6)), v_mul(dd, -3)) + (0,), v_add(b, v_mul(dd, 1.5))], self.horn_col, width=0.9)
-        claw_hand(p, hand, d, col, s=1.15, spread=self.claw_spread)
+        if hand_too:
+            self._hand(el, hand, back)
 
     def _horn(self, hc, kind, front=True):
         p = self.p
@@ -1214,8 +1234,8 @@ class Skeleton:
     def joints(self):
         j = {'head': (2.5, -90), 'neck': (1, -82), 'sh_f': (9, -78), 'sh_b': (-8, -78), 'pelvis': (0, -48)}
         hf, hb = self.hands or self.POSES[self.pose]
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], hf, 17, 16, 1)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], hb, 17, 16, 1)
+        j['el_f'], j['hand_f'] = arm_ik(j['sh_f'], hf, 17, 16, 1)
+        j['el_b'], j['hand_b'] = arm_ik(j['sh_b'], hb, 17, 16, -1)
         return j
 
     def draw(self, p, x, y, h=440, flip=False):
@@ -1273,19 +1293,23 @@ class Skeleton:
             cx0, cy0 = hc[0], hc[1] - 6
             p.shape([(cx0 - 6.5, cy0 - 1, 0), (cx0 - 7, cy0 - 8, 0), (cx0 - 4, cy0 - 4.5, 0), (cx0 - 1, cy0 - 10, 0), (cx0 + 1.6, cy0 - 4.6, 0), (cx0 + 4.4, cy0 - 10, 0),
                      (cx0 + 6, cy0 - 4.5, 0), (cx0 + 8, cy0 - 8, 0), (cx0 + 7.4, cy0 + 0.4, 0)], self.crown, width=1.4, shade=0.6, smooth=False)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], col)
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], col, hand_too=False)
         for fn in self.props_front or []:
             fn(p, j)
+        bone_hand(p, j['hand_f'], v_norm(v_sub(j['hand_f'], j['el_f'])), col, 1.0)
         p.pop()
 
-    def _arm(self, sh, el, hand, col):
+    def _arm(self, sh, el, hand, col, hand_too=True):
         p = self.p
+        # the shoulder joint tucks under the collarbone, inside the ribcage outline
+        sh = (sh[0] - (1.0 if sh[0] > 0 else -1.0), sh[1] + 1.0)
         long_bone(self.p, sh, el, 1.5, col)
         d = v_norm(v_sub(hand, el))
         n = v_perp(d)
         bone_line(p, [v_add(el, v_mul(n, 0.7)), v_add(hand, v_mul(n, 0.6))], 0.7, col)
         bone_line(p, [v_sub(el, v_mul(n, 0.8)), v_sub(hand, v_mul(n, 0.7))], 0.7, col.dark(0.1))
-        bone_hand(p, hand, d, col, 1.0)
+        if hand_too:
+            bone_hand(p, hand, d, col, 1.0)
 
     def _leg(self, pts, col):
         p = self.p
@@ -1335,7 +1359,7 @@ class Ghoul:
     }
 
     def __init__(self, pose='creep', skin=ROT, rags=C.hex('4a4038'), eye=SICKLY_GLOW, fat=0.0, hair=C.hex('3a3a30'),
-                 props_front=None, props_back=None, jaw=1.0, overrides=None, bones_show=False, armor=None, shirt=True):
+                 props_front=None, props_back=None, jaw=1.0, overrides=None, bones_show=False, armor=None, shirt=True, grip=False):
         self.__dict__.update(locals())
         del self.__dict__['self']
 
@@ -1348,8 +1372,8 @@ class Ghoul:
         n = v_perp(d)
         j['sh_f'] = v_add(v_lerp(ch, nk, 0.6), v_mul(n, 3))
         j['sh_b'] = v_add(v_lerp(ch, nk, 0.6), v_mul(n, -5))
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], j['hand_f'], 18, 18, 1)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], j['hand_b'], 18, 18, 1)
+        j['el_f'], j['hand_f'] = arm_ik(j['sh_f'], j['hand_f'], 18, 18, 1)
+        j['el_b'], j['hand_b'] = arm_ik(j['sh_b'], j['hand_b'], 18, 18, -1)
         return j
 
     def draw(self, p, x, y, h=420, flip=False):
@@ -1368,9 +1392,14 @@ class Ghoul:
         self._leg(j['hip'], j['knee_f'], j['ankle_f'], sk, back=False)
         self._loin(j)
         self._head(j)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], sk)
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], sk, hand_too=False)
         for fn in self.props_front or []:
             fn(p, j)
+        d = v_norm(v_sub(j['hand_f'], j['el_f']))
+        if self.grip:
+            claw_fist(p, j['hand_f'], d, sk, C.hex('3a2a1a'), s=1.05)
+        else:
+            claw_hand(p, j['hand_f'], d, sk, C.hex('3a2a1a'), s=1.1, spread=0.9, curl=0.6)
         p.pop()
 
     def _torso(self, j):
@@ -1458,12 +1487,13 @@ class Ghoul:
         for k in range(3):
             p.taper([(ankle[0] + 6 + k * 1.2, ankle[1] + 1.2), (ankle[0] + 9 + k * 1.2, ankle[1] + 2.4)], 0.6, 0.1, C.hex('3a2a1a'), width=0.7)
 
-    def _arm(self, sh, el, hand, col):
+    def _arm(self, sh, el, hand, col, hand_too=True):
         p = self.p
         limb(p, [sh, v_lerp(sh, el, 0.5), el, v_lerp(el, hand, 0.5), hand], [3.8, 3.0, 2.6, 2.2, 1.8], col, 0.9, 0.5, width=2.0)
         p.blob(el, 2.4, 2.2, col.light(0.05), width=1.1, shade=0.5)
         d = v_norm(v_sub(hand, el))
-        claw_hand(p, hand, d, col, C.hex('3a2a1a'), s=1.1, spread=0.9, curl=0.6)
+        if hand_too:
+            claw_hand(p, hand, d, col, C.hex('3a2a1a'), s=1.1, spread=0.9, curl=0.6)
 
     def _head(self, j):
         p = self.p
@@ -1542,8 +1572,8 @@ def wraith(p, x, y, h=440, flip=False, col=GHOST, alpha=0.8, glow=GHOST_GLOW, ha
     if crown:
         p.shape([(-4, -96, 0), (-5, -103, 0), (-2, -99, 0), (1, -105, 0), (3.5, -99.6, 0), (6.5, -104, 0), (8, -97, 0)], crown, width=1.2, shade=0.6, smooth=False)
     # arms
-    for (hx, hy), shp, dk in ((hands[1], (-4, -76), 0.2), (hands[0], (6, -76), 0.0)):
-        el, hd = ik(shp, (hx, hy), 18, 17, 1)
+    for (hx, hy), shp, dk, sd in ((hands[1], (-4, -76), 0.2, -1), (hands[0], (6, -76), 0.0, 1)):
+        el, hd = arm_ik(shp, (hx, hy), 18, 17, sd)
         pts = [shp, v_lerp(shp, el, 0.5), el, v_lerp(el, hd, 0.5), hd]
         limb(p, pts, [4.2, 4.0, 3.8, 4.4, 5.4], col.dark(dk).alpha(alpha), 0.7, 0.3, width=1.8)
         d = v_norm(v_sub(hd, el))
@@ -1636,6 +1666,8 @@ class Cultist(AbFigure):
 
     def __init__(self, shadow=0.55, glow_eyes=None, **kw):
         kw.setdefault('head', 'hood')
+        # cultists are men: a beard under the hood makes that plain
+        kw.setdefault('beard', 'short')
         super().__init__(**kw)
         self.shadow = shadow
         self.glow_eyes = glow_eyes
@@ -1787,6 +1819,9 @@ def dagger(which='f', length=13, glow=None, down=False):
         d = v_norm(v_sub(h, el))
         if down:
             d = v_norm((d[0] * 0.2, 1))
+        elif d[1] > -0.3:
+            # a blade is held point forward or up, never hanging
+            d = v_norm((1.0 if d[0] >= 0 else -1.0, -0.45))
         n = v_perp(d)
         base = v_add(h, v_mul(d, 2))
         tip = v_add(base, v_mul(d, length))

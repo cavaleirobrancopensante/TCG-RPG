@@ -67,7 +67,7 @@ def check_effect(cid, faith, e, where, owners):
     if a == "buff":
         if e.get("power", 0) < 0 or e.get("toughness", 0) < 0:
             if "abyss" not in owners:
-                bad(cid, "shrink (negative buff) is Covenant only")
+                bad(cid, "shrink (negative buff) is Pact only")
         if e.get("target") == "own_creature" and e.get("power", 0) > 0 and e.get("duration", "turn") == "turn" \
                 and "wild" not in owners and where == "effect" and e.get("trigger") == "cast":
             bad(cid, "single-creature pump spells belong to the Old Ways")
@@ -128,7 +128,7 @@ def check_card(c, owners_override=None):
     for ab in c.get("abilities", []):
         cost = ab.get("cost", {})
         if cost.get("sacrifice") in ["other", "self"] and "abyss" not in owners and not (cost.get("sacrifice") == "self" and "machine" in owners):
-            bad(cid, "sacrifice costs are Covenant only")
+            bad(cid, "sacrifice costs are Pact only")
         if not ab.get("text"):
             bad(cid, "ability needs text")
         for e in ab.get("effects", []):
@@ -144,7 +144,7 @@ def check_card(c, owners_override=None):
         if kind == "anthem" and s.get("scope") in ["own_creatures", "other_own_creatures"] and "sanctum" not in owners and not s.get("subtype"):
             bad(cid, "team-wide anthems are Church only (other faiths: self scope or a subtype filter)")
         if kind == "anthem" and s.get("scope") == "enemy_creatures" and "abyss" not in owners:
-            bad(cid, "enemy shrink anthem is Covenant only")
+            bad(cid, "enemy shrink anthem is Pact only")
         cnd = s.get("condition")
         if cnd and CONDITION_OWNER.get(cnd) not in owners:
             bad(cid, "condition %s not owned" % cnd)

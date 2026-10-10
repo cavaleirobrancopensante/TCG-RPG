@@ -12,7 +12,7 @@ Version **1.12**.  **Play in your browser: https://cavaleirobrancopensante.githu
 | Faith | Sigil | Colours | Mana | Land | Style |
 |---|---|---|---|---|---|
 | The Holy Church | cross with halo | Gold & White | W | Cathedral | life, guardians, angels, exorcism |
-| The Black Covenant | bloody dagger, point down | Black & Gray | B | Profane Altar | drain, destroy, deathtouch, undeath |
+| The Black Pact | bloody dagger, point down | Black & Gray | B | Profane Altar | drain, destroy, deathtouch, undeath |
 | The Old Ways | leaf | Green & Brown | G | Sacred Grove | big beasts, ramp, trample |
 | The Revel | masquerade mask | Red & Purple | R | Pleasure Garden | haste, burn, excess |
 | The Stoa | column with an open book on top | Blue & Silver | U | Library | draw, tap, bounce, walls |
@@ -43,7 +43,7 @@ organ, recorder, shawm, hurdy-gurdy, lute, harp, dulcimer, bells, frame drums, t
 | Faith | Anthem | Character |
 |---|---|---|
 | Holy Church | *Lumen Ecclesiae* (D Dorian hymn) | choir, organ, bells; cathedral reverb |
-| Black Covenant | *Anthem of the Ninth Pit* (A Phrygian dirge) | low choir, tolling bells, war drums, the tritone |
+| Black Pact | *Anthem of the Ninth Pit* (A Phrygian dirge) | low choir, tolling bells, war drums, the tritone |
 | Old Ways | *Song of the Old Ways* (G Dorian jig) | recorder, hurdy-gurdy, harp, frame drum |
 | Revel | *Carnival of Vinemere* (G Mixolydian dance) | shawm, lute, tambourine, tarantellas |
 | Stoa | *Hymn of the Stoa* (F Lydian) | harp, recorder, soft choir, steady phalanx drums |
@@ -155,7 +155,7 @@ townsfolk of his faith's city: the Church's knight guards the Pilgrim Road and d
 the Ninth Pit; the Old Ways' woodward drives the machines from the woods; the Revel's
 minstrel takes his show to Cogspire and wins the Endless Banquet; the Stoa's scholar
 studies Vinemere and brings the Silent Sage back to reason; the Technocracy's artificer
-settles the guild's accounts; the Covenant's blackguard collects debts for the pit. Other
+settles the guild's accounts; the Pact's blackguard collects debts for the pit. Other
 faiths' townsfolk have no work for you. A few errands (Proof of Skill, Medicine for the
 Hospice) are open to most heroes.
 
@@ -214,6 +214,20 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Encounters, classic heroes and the Black Pact (1.22)
+
+- The satanists' faith is now the Black Pact (the old name belongs to Scripture).
+- Every meeting on the road opens with a scene painted for the place it happens: talk,
+  trade, take a quest, or with a hostile wanderer fight, pay a bribe (cheaper with Charm)
+  or try to slip away (likelier with Wildcraft). Cities and lairs have their own painted
+  backdrops.
+- New game starts with a random hero; the six classic heroes of the faiths sit at the
+  bottom of the screen for those who would rather pick one.
+- Starting boosters by difficulty: Pilgrim 3 random and 1 of your faith, Knight 2 random
+  and 1 of your faith, Crusader 3 random.
+- Arms redrawn across the Church, Revel, Stoa, Black Pact and two-faith cards: straight
+  shoulders, raised weapons, shields carried on the far side.
+
 ## Your own hero, a clock, and the second book of music (1.21)
 
 - New game is one screen: faith, name, looks (skin, hair, beard, clothes, headgear),
@@ -271,7 +285,7 @@ either faith's mana). Each faith owns its own mechanics, with almost no overlap:
 | Faith | What it plays like | Its mechanics |
 |---|---|---|
 | Holy Church | holds the line, heals, punishes attackers | flying (angels), guardian, lifelink, sanctified, martyrdom, Grace, anthems, removal only on tapped creatures, Pacify |
-| Black Covenant | power for a price | life payments, sacrifice, unconditional destroy, shrink, discard, raise the dead, drain, deathtouch, dread, Bloodied |
+| Black Pact | power for a price | life payments, sacrifice, unconditional destroy, shrink, discard, raise the dead, drain, deathtouch, dread, Bloodied |
 | Old Ways | grows big and many | mana creatures, rituals, tokens, pumps, trample, reach, regenerate, fight, kill fliers and relics, Rooted |
 | Revel | fast, reckless, self-wounding | haste, first strike, burn, team attack bonuses, Carouse, Idle (laziness), rummage |
 | Stoa | patience and control | card draw, foresight, tap, freeze, bounce, tax, defender, vigilance, steadfast, Composure |

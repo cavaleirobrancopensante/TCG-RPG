@@ -2,7 +2,7 @@
 
 ## How the set is built
 
-Each faith has 18 cards: 9 commons, 5 uncommons, 3 rares and 1 mythic. Each faith's mechanics come from what it believes. The **Holy Church** protects and heals, with guardians, lifelink, angels and exorcism. The **Black Covenant** gets power by paying life and draining it from others, because sin always has a cost. The **Old Ways** grow big and many, like nature's abundance: ramp, tokens, trample and reach. The **Revel** is fast and burns bright, but it hurts itself, because excess wounds the reveller. The **Stoa** controls the board, draws cards and waits, which is discipline and reason. The **Technocracy** is efficient and mechanical: colourless bodies that fit any deck, priced slightly under par.
+Each faith has 18 cards: 9 commons, 5 uncommons, 3 rares and 1 mythic. Each faith's mechanics come from what it believes. The **Holy Church** protects and heals, with guardians, lifelink, angels and exorcism. The **Black Pact** gets power by paying life and draining it from others, because sin always has a cost. The **Old Ways** grow big and many, like nature's abundance: ramp, tokens, trample and reach. The **Revel** is fast and burns bright, but it hurts itself, because excess wounds the reveller. The **Stoa** controls the board, draws cards and waits, which is discipline and reason. The **Technocracy** is efficient and mechanical: colourless bodies that fit any deck, priced slightly under par.
 
 Commons are simple and efficient and form the curve. Uncommons add one twist. Rares and mythics are build-around cards. The baseline is roughly *N mana ≈ N/N*, adjusted for keywords and triggers.
 
@@ -66,22 +66,22 @@ The Church's finisher, and very strong. A 5/5 flying lifelinker alone is already
 
 ---
 
-## The Black Covenant (B)
+## The Black Pact (B)
 
-**Covenant Initiate** · Common · Creature (Human Cultist) · B · 1/1 · When this dies, the enemy player loses 1 life and you gain 1 life.
-A one-drop chump blocker that drains when it dies. It is weak in stats but always worth something, and it feeds sacrifice and drain decks. The flavour shows the Covenant's logic: even a follower's death belongs to his master.
+**Pact Initiate** · Common · Creature (Human Cultist) · B · 1/1 · When this dies, the enemy player loses 1 life and you gain 1 life.
+A one-drop chump blocker that drains when it dies. It is weak in stats but always worth something, and it feeds sacrifice and drain decks. The flavour shows the Pact's logic: even a follower's death belongs to his master.
 
 **Blood-Oath Thrall** · Common · Creature (Human Cultist) · 1B · 3/2 · When this enters, you lose 1 life.
-A 3/2 for 2 is above par, paid for with 1 life, the Covenant's bargain at its simplest. It is a good aggressive common. The fingertip of blood and the debt that "came due later" make clear that the deal is a trap.
+A 3/2 for 2 is above par, paid for with 1 life, the Pact's bargain at its simplest. It is a good aggressive common. The fingertip of blood and the debt that "came due later" make clear that the deal is a trap.
 
 **Tomb Crawler** · Common · Creature (Zombie) · 1B · 1/1 · Deathtouch.
-A cheap deterrent: nothing big wants to attack into it. It is fair at 2 mana, since deathtouch makes up for the tiny body. It shows the Covenant's habit of destroying what is greater than itself.
+A cheap deterrent: nothing big wants to attack into it. It is fair at 2 mana, since deathtouch makes up for the tiny body. It shows the Pact's habit of destroying what is greater than itself.
 
 **Grave Chanter** · Common · Creature (Human Cultist) · 2B · 2/3 · When this enters, the enemy player loses 1 life and you gain 1 life.
 An on-rate 2/3 for 3 with a small drain, a steady common that slowly tips races. Singing hymns backwards is the traditional inversion of sacred worship that marks the diabolic, making plain what this faith is.
 
 **Gloam Shade** · Common · Creature (Spirit) · 2B · 2/2 · Flying.
-The Covenant's common flier, the exact counterpart of the Church's Herald. Matching rates across faiths keeps the commons fair. A soul-shadow that "stopped caring" hints at the despair that follows damnation.
+The Pact's common flier, the exact counterpart of the Church's Herald. Matching rates across faiths keeps the commons fair. A soul-shadow that "stopped caring" hints at the despair that follows damnation.
 
 **Ossuary Ghoul** · Common · Creature (Zombie) · 3B · 3/3 · When this dies, create a 1/1 Restless Bones token.
 A 3/3 for 4 is a bit under par, made up for by the token it leaves behind, so it trades for two cards. It is a fine common for grindy decks and introduces the "raising the dead" theme gently.
@@ -90,19 +90,19 @@ A 3/3 for 4 is a bit under par, made up for by the token it leaves behind, so it
 A vanilla 4/3 for 4, an on-rate attacker that keeps the faith from being all tricks. It is plain and honest, the way a common should be. Its leash forged from screams keeps the demonic flavour unpleasant, as it should be.
 
 **Wither the Living** · Common · Spell (Curse) · 1B · Destroy target enemy creature with power 2 or less.
-Cheap, efficient removal. It is slightly better per mana than the Church's Word of Banishment but has a narrower target range. Destruction is the Covenant's specialty, so it deserves the most efficient removal. It could cost 1 life to fit the "sin costs" theme, but it is fine as it is.
+Cheap, efficient removal. It is slightly better per mana than the Church's Word of Banishment but has a narrower target range. Destruction is the Pact's specialty, so it deserves the most efficient removal. It could cost 1 life to fit the "sin costs" theme, but it is fine as it is.
 
 **Siphon of Ashes** · Common · Spell (Curse) · 2B · The enemy player loses 3 life and you gain 3 life.
-A 6-point life swing for 3 mana. It is good reach for drain decks and useless for board control, which is a fair trade. The cracked chalice deliberately profanes a sacred vessel, a sign of the Covenant's mockery of holy things.
+A 6-point life swing for 3 mana. It is good reach for drain decks and useless for board control, which is a fair trade. The cracked chalice deliberately profanes a sacred vessel, a sign of the Pact's mockery of holy things.
 
-**Veiled Blade of the Covenant** · Uncommon · Creature (Human Assassin) · 2B · 2/2 · Deathtouch. When this dies, the enemy player loses 2 life and you gain 2 life.
+**Veiled Blade of the Pact** · Uncommon · Creature (Human Assassin) · 2B · 2/2 · Deathtouch. When this dies, the enemy player loses 2 life and you gain 2 life.
 A deathtouch 2/2 for 3 that drains 2 when it dies. Blocking it or killing it both cost the opponent. That is a strong uncommon and the core of the faith's "you always pay" identity. The flavour (paid in years stolen from victims) is suitably sinister.
 
 **Cinder-Pit Fiend** · Uncommon · Creature (Demon) · 2BB · 4/4 · At the beginning of your upkeep, you lose 1 life.
-A 4/4 for 4 is slightly above par, taxed by a life drain every turn. It rewards aggressive Covenant players and punishes those who keep it too long, which is exactly the lesson: the demon serves but is always hungry.
+A 4/4 for 4 is slightly above par, taxed by a life drain every turn. It rewards aggressive Pact players and punishes those who keep it too long, which is exactly the lesson: the demon serves but is always hungry.
 
 **Grave Summoner** · Uncommon · Creature (Human Necromancer) · 4B · 2/3 · When this enters, return your best creature card from your graveyard to play.
-Value reanimation. A weak 2/3 for 5, but it can bring back a big threat. Its strength depends on the graveyard: superb late, poor early. If the "best creature" picker returns mythics too reliably, raise the cost or limit it to creatures with power 4 or less. "Your rest was never part of the bargain" shows the Covenant's contempt for the dead.
+Value reanimation. A weak 2/3 for 5, but it can bring back a big threat. Its strength depends on the graveyard: superb late, poor early. If the "best creature" picker returns mythics too reliably, raise the cost or limit it to creatures with power 4 or less. "Your rest was never part of the bargain" shows the Pact's contempt for the dead.
 
 **Dread Whisper** · Uncommon · Spell (Curse) · 1B · The enemy discards 2 cards at random.
 Discard as card advantage, a clean two-for-one for 2 mana. Comparable MTG cards cost 3 mana, so this is a little strong, but random discard and the uncommon rarity soften it. Undoing plans with a whisper fits the tempter's work.
@@ -111,7 +111,7 @@ Discard as card advantage, a clean two-for-one for 2 mana. Comparable MTG cards 
 A drain clock: 2 points of swing per turn for 3 mana, slow but relentless. It is the evil mirror of the Bell of Vespers, and the comparison is deliberate: one blesses, the other steals. The chalice "never empty" inverts the eucharistic cup.
 
 **Marquis of the Wailing Pit** · Rare · Creature (Demon) · 2BB · 5/5 · Flying. When this enters, you lose 4 life.
-A 5/5 flier for 4 mana is far above par, and 4 life is the price. It is a strong, aggressive rare and maybe a little too efficient: 4 life is cheap when you are ahead. Raise the cost to 6 life or 3BB if it dominates. "Presents his bill at the door" is the whole Covenant in one line. Marquis is a rank borrowed from old demonologies.
+A 5/5 flier for 4 mana is far above par, and 4 life is the price. It is a strong, aggressive rare and maybe a little too efficient: 4 life is cheap when you are ahead. Raise the cost to 6 life or 3BB if it dominates. "Presents his bill at the door" is the whole Pact in one line. Marquis is a rank borrowed from old demonologies.
 
 **Hollow-Crowned Lich** · Rare · Creature (Lich) · 3BB · 3/5 · Deathtouch. At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.
 A durable defensive engine: a deathtouch wall that drains every turn. It is about par in stats with a strong upside, which suits a rare. The hollow crown is a fitting picture of what sin pays: everything traded, nothing gained.
@@ -136,7 +136,7 @@ The common ramp creature. It gives an extra mana from the next turn on, so turn-
 A 3/2 for 2 is above par in vanilla stats, the faith's reward for having no tricks: bigger bodies for the cost. It is a solid common.
 
 **Oakmoot Sentinel** · Common · Creature (Treefolk) · 2G · 2/4 · Reach.
-A defensive three-drop that answers fliers, the Old Ways' answer to the Church and Covenant air forces. It is about par. A moot is the old assembly of the land, which suits a tree that "saw no need to leave".
+A defensive three-drop that answers fliers, the Old Ways' answer to the Church and Pact air forces. It is about par. A moot is the old assembly of the land, which suits a tree that "saw no need to leave".
 
 **Antlered Barrow-Stag** · Common · Creature (Beast) · 2G · 3/3 · Trample.
 An on-rate 3/3 with trample, a good common that stops chump blocks. Barrow-mounds and sleeping kings call up the prehistoric landscape the Old Ways come from.
@@ -197,7 +197,7 @@ An on-rate 2/2 that attacks as a 3/2. A good aggressive common that rewards atta
 A 2/2 for 3 with a ping, about par. It kills x/1s, and the faith's flexible burn can go face. The flavour (applause, then silence) is darkly comic, which keeps the Revel "slightly evil" rather than villainous.
 
 **Gluttonous Baron** · Common · Creature (Human Noble) · 2R · 4/3 · When this enters, you lose 2 life.
-A 4/3 for 3, a full point above par, paid for in life. The Revel's mirror of the Covenant's Thrall, but here the cost is self-indulgence rather than a pact. The gluttony makes "excess hurts the reveller" concrete.
+A 4/3 for 3, a full point above par, paid for in life. The Revel's mirror of the Pact's Thrall, but here the cost is self-indulgence rather than a pact. The gluttony makes "excess hurts the reveller" concrete.
 
 **Carousing Lancer** · Common · Creature (Human Knight) · 3R · 4/3 · Haste.
 A hasty 4/3 for 4, an on-rate surprise attacker and a good common. The knight charging with his goblet unspilt shows the faith's reckless glamour.
@@ -230,7 +230,7 @@ A one-sided sweeper. Very strong against tokens (Old Ways, Technocracy servos), 
 A hasty two-drop that deals 3 damage on turn 2. A strong rare at the bottom of the curve and the Revel's build-around for aggression. The "salamander" is the traditional elemental of fire. A juggler handling living flames is a good fantasy image.
 
 **Archduke of the Endless Feast** · Rare · Creature (Human Noble) · 2RR · 5/4 · Haste. At the beginning of your upkeep, you lose 1 life.
-A hasty 5/4 for 4 is well above par, taxed by an upkeep drain. Like the Covenant's Fiend, but hasty and more dangerous. Strong but self-defeating in long games, so it is well tuned. The eleven-year banquet and the complaining liver are the Revel's gentle self-mockery.
+A hasty 5/4 for 4 is well above par, taxed by an upkeep drain. Like the Pact's Fiend, but hasty and more dangerous. Strong but self-defeating in long games, so it is well tuned. The eleven-year banquet and the complaining liver are the Revel's gentle self-mockery.
 
 **Grand Conflagration** · Rare · Spell (Revelry) · 2RR · Deal 5 damage to any enemy creature or the enemy player.
 Big flexible burn: kills almost anything or finishes a player. Fair at 4 mana and rare. The unplanned encore after the fireworks is the faith's comic ruin.

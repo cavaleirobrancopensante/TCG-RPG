@@ -5,32 +5,38 @@ foundries, the Cogspire skyline, blueprint grounds, counting houses)."""
 import math
 from core import *
 import bg
-from figure import Figure, ik
+from figure import Figure
 import figure as _figure
 
-# Extra poses for the artificers. figure.ik keeps the "out and down" elbow when the bend
-# flag is non-zero and the other (lower, closer to the side) elbow when it is 0, which is
-# what a forearm carried forward needs. Same tuple layout as figure.POSES.
-_figure.POSES.update({
-    'ma_stand': ((12, -49), (-10, -49), False, 1, 1),       # arms hanging at the sides
-    'ma_hold': ((24, -58), (-10, -49), False, 0, 1),        # a tool carried forward at the waist
-    'ma_hold_hi': ((26, -64), (-10, -49), False, 0, 1),     # a tool held up a little higher
-    'ma_both': ((24, -58), (10, -54), True, 0, 1),          # both hands forward at the waist
-    'ma_both_hi': ((28, -66), (14, -62), True, 0, 1),       # both hands forward, chest high
-    'ma_lantern': ((19, -50), (-10, -49), False, 0, 1),     # lamp or bucket hanging forward
-    'ma_point': ((39, -73), (-10, -49), False, 0, 1),       # arm stretched out, pointing
-    'ma_raise': ((18, -104), (-10, -49), False, 1, 1),      # tool or fist raised high
-    'ma_raise_both': ((30, -84), (-28, -84), False, 1, 1),  # both arms up in wonder
-    'ma_gesture': ((32, -78), (-10, -49), False, 1, 1),     # open hand lifted toward something
+# Arm poses for the constructs, in the same layout as figure.STOCK: (front elbow, front
+# hand, back elbow, back hand, back hand shows in front of the body). They are given in
+# the Automaton's 100-unit space for a width-1 body (shoulders at (15, -76) and (-13, -76),
+# upper arm about 17, forearm about 17). The upper arm hangs from the shoulder, the elbow
+# sits below it and a little out, the forearm does the lifting; only a raised arm lifts
+# its elbow. Artificers and clerks use the plain figure.STOCK poses.
+_BOT_HANG_B = ((-15, -59), (-16.5, -42))
+_figure.STOCK.update({
+    'ma_bot_stand': ((17, -59), (18.5, -42)) + _BOT_HANG_B + (False,),       # arms hanging at the sides
+    'ma_bot_hold': ((17.5, -59), (32.5, -66)) + _BOT_HANG_B + (False,),      # forearm forward, tool raised
+    'ma_bot_low': ((17.5, -59), (31.5, -52)) + _BOT_HANG_B + (False,),       # forearm forward at the waist
+    'ma_bot_grip': ((18, -59), (27, -50)) + _BOT_HANG_B + (False,),          # hand on something just in front
+    'ma_bot_reach': ((22, -61), (38, -66)) + _BOT_HANG_B + (False,),         # whole arm out in front
+    'ma_bot_raise': ((23, -91), (26, -108)) + _BOT_HANG_B + (False,),        # front arm raised high
+    'ma_bot_carry': ((17.5, -59), (32.5, -64), (-11, -59), (5, -64), True),  # both forearms forward
+    'ma_bot_spear': ((17.5, -59), (31.5, -66), (-11, -59), (-1, -64), True), # spear upright, shield on the far arm
+    'ma_bot_lift': ((21, -92), (22, -109), (-17, -92), (-15, -109), True),   # both arms up under a load
+    # human: forearm carried forward a little below the elbow (pressing a stamp, dipping tongs)
+    'ma_press': ((11.5, -62), (22, -56.5), (-9.5, -62), (-10.5, -47), False),
 })
 
 
 class Artificer(Figure):
-    """Figure whose front hand opens (fingers fanned) for the gesturing poses."""
-    OPEN = ('ma_gesture', 'ma_point', 'ma_raise_both')
+    """Figure whose front hand opens (fingers fanned) for the gesturing poses. It only
+    changes the hand; arms and elbows are the stock ones."""
+    OPEN = ('point', 'sprinkle')
 
     def _hand(self, at, d):
-        if self.pose in self.OPEN and (at is self.j['hand_f'] or self.pose == 'ma_raise_both'):
+        if self.pose in self.OPEN and at is self.j['hand_f']:
             p = self.p
             ang = math.atan2(d[1], d[0])
             c = v_add(at, v_mul(d, 2.0))
@@ -897,10 +903,10 @@ class Automaton:
     facing right. Options mix bodies, heads, legs and arm tools for variety."""
 
     def __init__(self, torso='barrel', head='dome', legs='jointed', arm_f='hand', arm_b='hand',
-                 col=BRASS, col2=STEELC, trim=COPPER, eye_col=FURN, width=1.0, hand_f=(24, -56),
-                 hand_b=(-18, -48), stack=False, key=False, porthole=True, crest=None,
+                 col=BRASS, col2=STEELC, trim=COPPER, eye_col=FURN, width=1.0, pose='ma_bot_stand',
+                 stack=False, key=False, porthole=True, crest=None,
                  shield_col=None, spear=False, gauge_on=False, pauldron=True, neck=0.0,
-                 head_scale=1.0, extra_back=None, extra_front=None, stride=0.0, held=None, bend_f=1, bend_b=1):
+                 head_scale=1.0, extra_back=None, extra_front=None, stride=0.0, held=None):
         self.__dict__.update(locals())
         del self.__dict__['self']
 
@@ -912,16 +918,20 @@ class Automaton:
             'sh_f': (15 * w, -76 + n * 0.3), 'sh_b': (-13 * w, -76 + n * 0.3),
             'neck': (1.5, -82 + n), 'head': (2.5, -91 + n),
         }
-        # hand targets are given for a width-1 body: spread them with the shoulders so a
-        # broad construct does not end with its hands on its hips
-        def spread(h, shx):
-            # move the hand out by as much as the shoulder moved out, only if it is on that side
-            return (h[0] + (shx * (w - 1) if h[0] * shx > 0 else 0.0), h[1])
-        hf = spread(self.hand_f, 15)
-        hb = spread(self.hand_b, -13)
-        # bend 1: elbow out and down (figure.ik default); bend 0: the other, lower elbow
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], hf, 18, 17, self.bend_f)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], hb, 18, 17, self.bend_b)
+        # explicit elbows and hands from a STOCK-style pose, moved out with the shoulders
+        # so a broad construct keeps the same arm shape
+        # (a broad construct also gets proportionally longer arms)
+        ef, hf, eb, hb, bfront = _figure.STOCK[self.pose]
+        k = 1.0 + 0.5 * (w - 1.0)
+        sf, sb = j['sh_f'], j['sh_b']
+
+        def place(q, sh, sh0):
+            return (sh[0] + (q[0] - sh0[0]) * k, sh[1] + (q[1] - sh0[1]) * k)
+        j['el_f'] = place(ef, sf, (15, -76))
+        j['hand_f'] = place(hf, sf, (15, -76))
+        j['el_b'] = place(eb, sb, (-13, -76))
+        j['hand_b'] = place(hb, sb, (-13, -76))
+        j['back_front'] = bfront
         return j
 
     def draw(self, p, x, y, h, flip=False, rot=0.0):
@@ -943,9 +953,11 @@ class Automaton:
             steam(p, (sx - 2, -124), (-0.45, -1), 5, 0.42, STEAM, 0.8, step=20)
         if self.key:
             wind_key(p, (-15 * w, -64), 1.0, BRASS)
-        if self.shield_col is not None and self.arm_b == 'shield':
-            pass
-        self._arm(j['sh_b'], j['el_b'], j['hand_b'], self.arm_b, back=True)
+        bfront = j['back_front']
+        # far arm behind the body; its hand too unless it comes round in front
+        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        if not bfront and self.arm_b != 'shield':
+            self._end(j['el_b'], j['hand_b'], self.arm_b, back=True)
         self._legs(j)
         self._torso(j)
         self._head(j)
@@ -953,10 +965,14 @@ class Automaton:
             hb, eb = j['hand_b'], j['el_b']
             d = v_norm(v_sub(hb, eb))
             self._tool(v_add(hb, (6, 0)), d, v_perp(d), 'shield', 0.0)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], self.arm_f, back=False)
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
         if self.extra_front:
             for fn in self.extra_front:
                 fn(p, j)
+        # hands and tools last, so a claw closes over whatever it holds
+        if bfront and self.arm_b != 'shield':
+            self._end(j['el_b'], j['hand_b'], self.arm_b, back=True, held=False)
+        self._end(j['el_f'], j['hand_f'], self.arm_f, back=False)
         p.pop()
 
     # -------------------------------------------------------- legs
@@ -1156,23 +1172,27 @@ class Automaton:
         p.pop()
 
     # -------------------------------------------------------- arms
-    def _arm(self, sh, el, hand, tool, back=False):
+    def _arm(self, sh, el, hand, back=False):
+        """Upper arm hanging from a ball joint set inside the torso, elbow joint, forearm."""
         p = self.p
         dk = 0.2 if back else 0.0
         c1, c2 = self.col.dark(dk), self.col2.dark(dk)
         w = self.width
         aw = 3.6 * min(1.4, w)
+        # shoulder ball, tucked into the torso
+        p.blob(sh, aw * 1.25, aw * 1.25, metal(c1, 'v'), width=1.4, shade=0.8)
         p.taper([sh, el], aw, aw * 0.85, c2, width=1.6, shade=0.7, rim=0.3)
-        piston(p, v_add(sh, (2, 2)), v_add(el, (1.5, -1)), aw * 0.5, STEELC.dark(dk), body=IRONC.dark(dk))
+        u = v_norm(v_sub(el, sh))
+        piston(p, v_add(v_add(sh, v_mul(v_perp(u), aw * 0.55)), v_mul(u, 2)), v_add(v_add(el, v_mul(v_perp(u), aw * 0.55)), v_mul(u, -2.5)),
+               aw * 0.5, STEELC.dark(dk), body=IRONC.dark(dk))
         d = v_norm(v_sub(hand, el))
         n = v_perp(d)
         fore = [v_add(el, v_mul(n, aw * 1.05)), v_add(hand, v_mul(n, aw * 1.15)), v_sub(hand, v_mul(n, aw * 1.15)), v_sub(el, v_mul(n, aw * 1.05))]
         p.shape(fore, metal(c1), width=1.8, shade=0.8, rim=0.35)
         p.line([v_add(v_lerp(el, hand, 0.25), v_mul(n, aw)), v_sub(v_lerp(el, hand, 0.25), v_mul(n, aw))], c1.dark(0.4), 1.2, smooth=False)
+        p.line([v_add(v_lerp(el, hand, 0.85), v_mul(n, aw * 1.1)), v_sub(v_lerp(el, hand, 0.85), v_mul(n, aw * 1.1))], c1.dark(0.4), 1.2, smooth=False)
         p.blob(el, aw * 1.0, aw * 1.0, metal(c1, 'v'), width=1.4, shade=0.8)
         rivet(p, el, aw * 0.3, c2)
-        if not (back and tool == 'shield'):
-            self._tool(hand, d, n, tool, dk)
         if self.pauldron and not back:
             pw = min(w, 1.3)
             sx, sy = sh
@@ -1180,6 +1200,30 @@ class Automaton:
             p.shape([(sx - 1 * pw, sy + 4.6), (sx + 6 * pw, sy + 6.4), (sx + 6.6 * pw, sy + 10), (sx + 1 * pw, sy + 9)], metal(c1.dark(0.08)), width=1.4, shade=0.7)
             for kk in range(3):
                 rivet(p, (sx - 3 * pw + kk * 3.6 * pw, sy - 1.5 - (1 - abs(kk - 1)) * 1.2), 0.85, self.trim)
+
+    def _end(self, el, hand, tool, back=False, held=True):
+        """The hand or tool at the end of the forearm."""
+        dk = 0.2 if back else 0.0
+        d = v_norm(v_sub(hand, el))
+        n = v_perp(d)
+        if held and self.held and not back:
+            self.held(self.p, hand, d, n)
+        self._tool(hand, d, n, tool, dk)
+
+    def _fist(self, h, d, haft, dk):
+        """A closed claw wrapped round a haft running along `haft`, drawn over it."""
+        p = self.p
+        c1 = self.col.dark(dk)
+        st = STEELC.dark(dk)
+        ang = math.atan2(d[1], d[0])
+        p.blob(h, 3.4, 3.0, metal(c1, 'v'), rot=ang, width=1.4, shade=0.7)
+        # three steel fingers curled across the haft
+        for k in (-1.6, 0, 1.6):
+            q = v_add(h, v_mul(haft, k))
+            a = v_add(q, v_mul(d, 1.2))
+            p.taper([v_sub(a, v_mul(d, 0.2)), v_add(a, v_mul(d, 2.4)), v_add(v_add(a, v_mul(d, 2.6)), v_mul(haft, 0.0))], 1.0, 0.9, st, width=1.0)
+        tb = v_sub(h, v_mul(d, 0.5))
+        p.taper([v_add(tb, v_mul(haft, -2.4)), v_add(v_add(tb, v_mul(haft, -0.6)), v_mul(d, 2.6))], 0.9, 0.8, st, width=1.0)
 
     def _tool(self, h, d, n, tool, dk):
         p = self.p
@@ -1199,14 +1243,19 @@ class Automaton:
                 pts = [b, v_add(v_add(b, v_mul(d, 5)), v_mul(n, sg * 3)), v_add(v_add(b, v_mul(d, 10)), v_mul(n, sg * 1.0)), v_add(v_add(b, v_mul(d, 11)), v_mul(n, -sg * 1.5))]
                 p.taper(pts, 1.5, 0.5, st, width=1.2, shade=0.6)
         elif tool == 'hammer':
-            hc = v_add(h, v_mul(d, 6))
-            p.taper([h, hc], 2.2, 2.2, IRONC.dark(dk), width=1.2)
+            # haft held upright in the claw (along the arm when the arm is raised), head on top
+            u = d if d[1] < -0.7 else v_norm((0.35, -1))
+            hn = v_perp(u)
+            a0 = v_sub(h, v_mul(u, 6))
+            hc = v_add(h, v_mul(u, 17))
+            p.taper([a0, hc], 1.8, 1.8, metal(OAK.dark(dk)), width=1.2, shade=0.6)
             L = 8
-            pts = [v_add(v_add(hc, v_mul(n, L)), v_mul(d, -4)) + (0,), v_add(v_add(hc, v_mul(n, L)), v_mul(d, 5)) + (0,),
-                   v_add(v_sub(hc, v_mul(n, L)), v_mul(d, 5)) + (0,), v_add(v_sub(hc, v_mul(n, L)), v_mul(d, -4)) + (0,)]
+            pts = [v_add(v_add(hc, v_mul(hn, L)), v_mul(u, -4)) + (0,), v_add(v_add(hc, v_mul(hn, L)), v_mul(u, 5)) + (0,),
+                   v_add(v_sub(hc, v_mul(hn, L)), v_mul(u, 5)) + (0,), v_add(v_sub(hc, v_mul(hn, L)), v_mul(u, -4)) + (0,)]
             p.shape(pts, metal(IRONC.light(0.1).dark(dk)), width=1.8, smooth=False, shade=0.8, rim=0.3)
             for sg in (-1, 1):
-                rivet(p, v_add(hc, v_mul(n, sg * 5)), 1.0, st)
+                rivet(p, v_add(v_add(hc, v_mul(hn, sg * 5)), v_mul(u, 0.5)), 1.0, st)
+            self._fist(h, d, u, dk)
         elif tool == 'shield':
             sc = self.shield_col or self.col
             c = v_add(h, v_mul(d, 1))
@@ -1216,14 +1265,15 @@ class Automaton:
             for kk in range(12):
                 rivet(p, polar(c, 15.6, kk * TAU / 12), 0.8, sc.light(0.25).dark(dk))
         elif tool == 'spear':
-            foot = (h[0] - 3, -2)
-            top = (h[0] + 6, -128)
+            # upright, butt on the ground, shaft running through the closed claw
+            dd = v_norm((9, -126))
+            foot = v_add(h, v_mul(dd, (-2 - h[1]) / dd[1]))
+            top = v_add(h, v_mul(dd, (-128 - h[1]) / dd[1]))
             p.taper([foot, top], 1.1, 1.0, OAK.dark(dk), width=1.1, shade=0.6)
-            dd = v_norm(v_sub(top, foot))
             nn = v_perp(dd)
             tip = v_add(top, v_mul(dd, 12))
             p.shape([v_add(top, v_mul(nn, 2.4)), v_add(v_add(top, v_mul(dd, 5)), v_mul(nn, 2.6)), tip + (0,), v_add(v_add(top, v_mul(dd, 5)), v_mul(nn, -2.6)), v_sub(top, v_mul(nn, 2.4))], metal(BRONZE), width=1.1, shade=0.6)
-            p.blob(h, 2.8, 2.4, metal(c1, 'v'), width=1.2, shade=0.7)
+            self._fist(h, d, dd, dk)
         elif tool == 'welder':
             tip = v_add(h, v_mul(d, 9))
             p.taper([h, tip], 2.6, 1.0, metal(COPPER.dark(dk)), width=1.3, shade=0.7)
@@ -1246,8 +1296,6 @@ class Automaton:
             pts = [h, v_add(h, v_mul(d, 7)), v_add(v_add(h, v_mul(d, 10)), v_mul(n, 3)), v_add(v_add(h, v_mul(d, 8)), v_mul(n, 6))]
             p.line(pts, INK, 4.4)
             p.line(pts, st, 2.6)
-        if self.held and not dk:
-            self.held(p, h, d, n)
 
 
 def servo(p, x, y, s=1.0, col=BRASS, flip=False, kind='walk', eye_col=FURN, step=0.0, key=True, tag=False):

@@ -252,6 +252,11 @@ def land_sanctum_revel(p):
     p.shape([(150, 390), (194, 390), (194, 450), (172, 440), (150, 450)], ULTRA, width=1.4, shade=0.5)
     p.halo((172, 414), 12, tooled=False)
     tiny_person(p, 166, 568, 2.2, LEAD_WHITE)
+    # his near arm: elbow hanging by his side, the fist closed over the pole
+    arm = [(171, 524), (175, 536), (171, 530)]
+    p.line(arm, INK, 6.4, smooth=False)
+    p.line(arm, LEAD_WHITE, 4.0, smooth=False)
+    p.blob((171, 530), 2.6, 2.4, SKIN, width=1.0)
     tiny_person(p, 880, 580, 2.4, C.hex('6a4426'))
     tiny_person(p, 920, 590, 2.4, CRIMSON)
 
@@ -454,7 +459,9 @@ def land_abyss_revel(p):
         p.glow((0, -60), 70, ghost, 0.18)
         p.shape([(-18, 0, 0), (-10, -50), (-6, -76), (6, -76), (10, -50), (22, 0, 0)], ghost.alpha(0.35), ink=ghost.alpha(0.6), width=1.4)
         p.blob((0, -86), 8, 9, ghost.alpha(0.4), ink=ghost.alpha(0.6), width=1.2)
-        p.line([(6, -70), (24, -76)], ghost.alpha(0.5), 3)
+        # the near arm: elbow hanging below the shoulder, the forearm lifted to the partner's hand
+        p.line([(6, -72), (11, -60), (23, -67)], ghost.alpha(0.5), 3, smooth=False)
+        p.blob((23, -67), 2.0, 1.8, ghost.alpha(0.55), ink=False)
         p.blob((2, -88), 6, 2.6, INK.alpha(0.5), ink=False)
         p.pop()
     # ash drifting
@@ -910,7 +917,7 @@ def land_revel_lyceum(p):
         p_.blob((h[0] + 1, h[1] - 5.5), 5.5, 1.1, WINE, width=0.7)
     SeatedFigure(pose='g_lounge', main=C.hex('e8dcc4'), hair='curly', hair_col=C.hex('5a3a1a'), beard='short', belt=None, sleeves='fitted',
                  emblem=himation(C.hex('c8607a'), GOLD_DARK, 'seated'), props_front=[kylix], shoes=UMBER).draw(p, 660, 566, 200)
-    SeatedFigure(pose='g_write', main=C.hex('9ab0c8'), hair='white', beard='long', age='old', belt=None, sleeves='fitted',
+    SeatedFigure(pose='g_read', main=C.hex('9ab0c8'), hair='white', beard='long', age='old', belt=None, sleeves='fitted',
                  emblem=himation(C.hex('ece4d0'), None, 'seated'), props_front=[open_scroll_lands], eyes='down', shoes=UMBER).draw(p, 860, 566, 200, flip=True)
     # rose bushes along the left
     for x in (40, 130, 300):

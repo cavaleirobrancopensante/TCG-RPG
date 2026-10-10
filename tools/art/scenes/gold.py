@@ -5,7 +5,7 @@ import cairo
 from core import *
 import bg
 import props as PR
-from figure import Figure, POSES
+from figure import Figure, STOCK
 from gold_lib import *
 
 FRANCISCAN = C.hex('7d6247')
@@ -545,7 +545,7 @@ def gold_abyss_revel(p):
     mask_on_stick(p, (640, 604), 1.0, LEAD_WHITE, rot=0.6)
     # the demon, his gilded mask lowered from his face, his cup held aside
     def mask_lowered(p_, j):
-        h = j['hand_f']
+        h = j['hand_b']
         p_.push(h[0] - 2.2, h[1] - 9.5, 0.3)
         p_.taper([(4, 6), (10, 40)], 1.5, 1.5, GOLD_DARK, width=1.2)
         pts = [(-18, -2), (-12, -9), (-4, -8), (0, -4), (4, -8), (12, -9), (18, -2), (16, 4), (8, 7), (0, 3), (-8, 7), (-16, 4)]
@@ -555,12 +555,9 @@ def gold_abyss_revel(p):
         for i in range(4):
             p_.taper([(14, -8), (20 + i * 3, -24 - i * 3 + i * i * 0.8)], 1.6, 0.4, [VERMILION, GOLD_LIGHT, LEAD_WHITE, ROSE_PINK][i], width=0.8)
         p_.pop()
-        # the fingers closed round the stick
-        p_.blob((h[0] + 0.6, h[1] + 0.6), 2.0, 1.6, DEMON_RED, width=1.0, shade=0.5)
     def cup_aside(p_, j):
-        h = j['hand_b']
-        goblet(p_, (h[0] + 0.4, h[1] + 1.2), 0.8, GOLD)
-        p_.blob((h[0] + 0.4, h[1] + 0.8), 1.8, 1.5, DEMON_RED.dark(0.15), width=0.9, shade=0.5)
+        h = j['hand_f']
+        goblet(p_, (h[0] + 0.6, h[1] + 1.5), 0.8, GOLD)
     Figure(pose='g_unmask', garb='tunic', main=C.hex('2a1420'), second=C.hex('1a0c14'), trim=GOLD, skin=DEMON_RED, hair='none', beard=None, hair_col=C.hex('2a0c10'),
            head=demon_head(), cloak='mantle', cloak_col=CRIMSON, lining=C.hex('e0b040'), belt='gold', sleeves='fitted', mouth='stern',
            props_back=[bat_wings(C.hex('2a0c18'), 1.15), demon_tail()], props_front=[mask_lowered, cup_aside], blush=0.0,
@@ -638,20 +635,24 @@ def gold_abyss_lyceum(p):
         p.blob(e, 4.5, 2.6, SICKLY.light(0.5), ink=False)
     # the apostate
     grey = C.hex('cfc8bc')
+    def book(p_, j):
+        # the glowing book held open between his hands, the fists painted over it
+        a, b = j['hand_b'], j['hand_f']
+        c = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 - 1.5)
+        open_book(p_, c, 0.22, PARCH.mix(SICKLY, 0.3), glow=SICKLY, rot=-0.1)
     Figure(pose='g_read', garb='toga', main=C.hex('6a6478'), hair='short', hair_col=C.hex('4a3a2a'), beard='forked', belt=None, sleeves='fitted',
-           emblem=himation(grey, C.hex('3a2a4a')), eyes='down', mouth='calm', age='old', shoes=C.hex('3a2a1a')).draw(p, 470, 604, 470)
-    open_book(p, (568, 316), 1.35, PARCH.mix(SICKLY, 0.3), glow=SICKLY, rot=-0.1)
+           emblem=himation(grey, C.hex('3a2a4a')), eyes='down', mouth='calm', age='old', shoes=C.hex('3a2a1a'), props_front=[book]).draw(p, 470, 604, 470)
     for k in range(5):
         a = -math.pi / 2 + (k - 2) * 0.3
-        p.line([polar((568, 304), 30, a), polar((568, 304), 70 + k * 6, a)], SICKLY.alpha(0.45), 2)
+        p.line([polar((555, 296), 30, a), polar((555, 296), 70 + k * 6, a)], SICKLY.alpha(0.45), 2)
     for k in range(6):
-        p.star((530 + k * 18, 252 - (k % 3) * 22), 3.4, SICKLY.light(0.4), 4)
+        p.star((515 + k * 18, 248 - (k % 3) * 22), 3.4, SICKLY.light(0.4), 4)
     # the shadow's clawed hand laid over his shoulder from behind
     edge = C.hex('5a2a6a')
-    p.taper([(620, 214), (584, 226), (552, 236)], 13, 9, sh, ink=edge, width=1.4)
-    p.blob((546, 240), 11, 8, sh, rot=0.4, ink=edge, width=1.4)
+    p.taper([(620, 206), (572, 214), (530, 222)], 13, 9, sh, ink=edge, width=1.4)
+    p.blob((524, 226), 11, 8, sh, rot=0.4, ink=edge, width=1.4)
     for a in (1.0, 1.35, 1.7, 2.05):
-        k1 = polar((546, 240), 8, a)
+        k1 = polar((524, 226), 8, a)
         k2 = polar(k1, 14, a - 0.15)
         p.taper([k1, k2, polar(k2, 10, a + 0.5)], 3.2, 0.8, sh, ink=edge, width=1.0)
 
@@ -692,12 +693,12 @@ def gold_abyss_machine(p):
         p.blob((wx, 580), 20, 20, C.hex('4a2e1a'), width=2, shade=0.6)
         p.blob((wx, 580), 5, 5, IRON, width=1.2)
     for dy in (0, 6):
-        p.taper([(cart_x - 76, 524 + dy), (cart_x - 198, 430 + dy * 0.3)], 3.2, 2.6, C.hex('4a2e1a'), width=1.4, shade=0.5)
+        p.taper([(cart_x - 76, 524 + dy), (cart_x - 196, 432 + dy * 0.3)], 3.2, 2.6, C.hex('4a2e1a'), width=1.4, shade=0.5)
     Figure(pose='g_cart', garb='robe', main=C.hex('3a2430'), head='hood', hood_col=C.hex('3a2430'), eyes='down', skin=C.hex('c8b8a8'),
            belt='cord', sleeves='fitted').draw(p, 56, 604, 330)
     # the engine
     construct(p, 520, 604, 470, body=C.hex('8a7a6a'), eye=HELLFIRE, hopper=True, furnace=HELLFIRE, head='skull', wide=1.3,
-              hf=(23, -42), hb=(-16, -40))
+              arms='hang')
     # bone dust in the air
     for i in range(40):
         p.blob((p.rng.uniform(300, 900), p.rng.uniform(150, 560)), 1.6, 1.6, BONE.alpha(0.4), ink=False)
@@ -912,12 +913,11 @@ def gold_wild_machine(p):
         p_.shape([(top[0], top[1] + 7), (top[0] - 4, top[1] + 9, 0), (top[0], top[1] + 11)], IRON.mix(COPPER, 0.4), width=1.0)
         p_.shape([(top[0] - 1.5, top[1] + 4), (top[0], top[1] - 10, 0), (top[0] + 1.5, top[1] + 4)], IRON, width=1.0)
         ivy(p_, [(h[0], -4), (h[0] + 2, -30), (h[0] - 1, -50)], MOSS, s=0.35)
-    hf = (22, -43)
     p.push(470, 604, 4.7)
-    halberd(p, {'hand_f': ik((12, -74), hf, 17, 16, 1)[1]})
+    halberd(p, {'hand_f': CONSTRUCT_ARMS['halberd'][1]})
     p.pop()
     construct(p, 470, 604, 470, body=C.hex('a8884a').mix(C.hex('6a8a6a'), 0.3), eye=C.hex('9ad0ff'), moss=True,
-              hf=hf, hb=(-14, -40))
+              arms='halberd')
 
 
 # ------------------------------------------------------------------ Revel, Stoa and Technocracy
@@ -1029,7 +1029,7 @@ def gold_revel_machine(p):
     # revellers watching, masked
     guests = ((70, 586, 'gown', ROSE_PINK, 'curly_long', C.hex('c8902e'), 'spread', False, GOLD),
               (150, 596, 'tunic', VIOLET, 'short', C.hex('3a2614'), 'point', False, LEAD_WHITE),
-              (230, 590, 'gown', C.hex('d9a83a'), 'long', C.hex('6a3a1a'), 'g_alarm', False, C.hex('1a1a1a')),
+              (230, 590, 'gown', C.hex('d9a83a'), 'long', C.hex('6a3a1a'), 'spread', False, C.hex('1a1a1a')),
               (850, 590, 'tunic', CRIMSON, 'curly', C.hex('2a1a10'), 'point', True, GOLD),
               (930, 598, 'gown', C.hex('2f7a5c'), 'curly_long', C.hex('a8742e'), 'spread', True, LEAD_WHITE))
     for (x, y, garb, col, hair, hcol, pose, flip, mask) in guests:
@@ -1044,7 +1044,7 @@ def gold_revel_machine(p):
     for y in (566, 592):
         p.line([(678, y), (762, y)], IRON, 3)
     # the automaton, flinging a rocket
-    j = construct(p, 500, 604, 450, body=COPPER.light(0.1), eye=C.hex('ffd27a'), rockets=True, hf=(30, -100), hb=(-20, -44), bend_f=1)
+    j = construct(p, 500, 604, 450, body=COPPER.light(0.1), eye=C.hex('ffd27a'), rockets=True, arms='fling')
     hand = (500 + j['hand_f'][0] * 4.5, 604 + j['hand_f'][1] * 4.5)
     p.glow(hand, 80, FLAME, 0.55)
     for i in range(18):

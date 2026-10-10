@@ -282,7 +282,7 @@
 		"hc_1": {
 			"title": "Shadows on the Pilgrim Road",
 			"type": "defeat",
-			"text": "Covenant cultists prey on pilgrims bound for the Cathedral of the Lamp. Defeat three of them.",
+			"text": "Pact cultists prey on pilgrims bound for the Cathedral of the Lamp. Defeat three of them.",
 			"reward": {
 				"gold": 90,
 				"boosters": 1
@@ -463,7 +463,7 @@
 		"ow_4": {
 			"title": "Blight from the South",
 			"type": "defeat",
-			"text": "Ash from the Pit is poisoning the fields. Defeat three Covenant blighters.",
+			"text": "Ash from the Pit is poisoning the fields. Defeat three Pact blighters.",
 			"reward": {
 				"gold": 150,
 				"boosters": 1,

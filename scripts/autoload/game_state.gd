@@ -44,7 +44,7 @@ var hero := ""                    # the faith of the hero chosen at New game
 ## One hero per faith. Shown on the map and on the hero screen.
 const HEROES := {
 	"sanctum": {"name": "Brother Knight", "subtype": "Human Knight", "blurb": "A knight of the Lamp, sworn to keep the pilgrim roads."},
-	"abyss": {"name": "Blackguard", "subtype": "Human Cultist", "blurb": "He signed the Covenant's book and means to collect on it."},
+	"abyss": {"name": "Blackguard", "subtype": "Human Cultist", "blurb": "He signed the Pact's book and means to collect on it."},
 	"wild": {"name": "Woodward", "subtype": "Human Druid", "blurb": "A keeper of the old groves, at home under the oaks."},
 	"revel": {"name": "Minstrel", "subtype": "Human Performer", "blurb": "A wandering player who has never refused a feast."},
 	"lyceum": {"name": "Peripatetic", "subtype": "Human Philosopher", "blurb": "A scholar of the Porch who walks while he thinks."},
@@ -119,8 +119,12 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Diction
 	rested = false
 	last_region = ""
 	errand = {}
-	pending_boosters = START_BOOSTERS + 1     # three general boosters and one of the hero's faith
-	faction_packs = [hero]
+	# the boosters a hero sets out with depend on the difficulty
+	var packs: Array = Hero.START_PACKS.get(difficulty, [2, 1])
+	pending_boosters = int(packs[0]) + int(packs[1])
+	faction_packs = []
+	for k in int(packs[1]):
+		faction_packs.append(hero)
 	var start: Dictionary = world_data.get("start", {})
 	player_pos = Vector2(start.get("x", 0), start.get("y", 0))
 	# a hero sets out from the capital of his own faith

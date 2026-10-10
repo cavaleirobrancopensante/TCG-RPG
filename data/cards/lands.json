@@ -22,7 +22,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Covenant mana.",
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Pact mana.",
     "flavor": "A wayside cross where the road forks: one path to the chapel, one to the pit.",
     "art": "res://art/cards/land_sanctum_abyss.webp"
   },
@@ -157,7 +157,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Old Ways mana.",
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Old Ways mana.",
     "flavor": "Nothing grows on the heath but thorn and the ravens' patience.",
     "art": "res://art/cards/land_abyss_wild.webp"
   },
@@ -184,7 +184,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Revel mana.",
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Revel mana.",
     "flavor": "The music never stops, and some of the dancers never leave.",
     "art": "res://art/cards/land_abyss_revel.webp"
   },
@@ -211,7 +211,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Stoa mana.",
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Stoa mana.",
     "flavor": "Behind the locked grille are the books the scholars swore never to open.",
     "art": "res://art/cards/land_abyss_lyceum.webp"
   },
@@ -238,7 +238,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Technocracy mana.",
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Technocracy mana.",
     "flavor": "The furnaces burn day and night, and no one asks what feeds them.",
     "art": "res://art/cards/land_abyss_machine.webp"
   },

@@ -16,7 +16,7 @@ var _tour_prev_deck := 0
 
 
 class MenuBg extends Control:
-	## Title page: a framed miniature (Church vs Covenant) and the six faith roundels.
+	## Title page: a framed miniature (Church vs Pact) and the six faith roundels.
 	var t := 0.0
 	const CAST := [
 		{"faction": "sanctum", "subtype": "Human Knight", "name": "Knight", "x": -0.30, "face": 1.0},
@@ -142,12 +142,56 @@ func _process(delta: float) -> void:
 
 ## Someone who is not hostile: a friend greets you, a neutral traveller may accept a duel.
 func _on_stranger(e: Dictionary) -> void:
-	var who := "%s (%s)" % [I18n.t(e["name"]), Factions.info(e["faction"])["short"]]
 	if e.get("disposition", "") == "friendly":
-		_talk_to_friend(e, who)
+		_talk_to_friend(e)
 		return
-	show_dialog(who, I18n.t("A traveller who keeps to himself. Challenge him to a duel?"),
-		[["Challenge", func(): _on_enemy_engaged(e)], ["Leave him be", Callable()]])
+	var enc := _open_encounter(e)
+	var talk := func():
+		enc.set_line(I18n.t(NEUTRAL_LINES[GameState.rng.randi_range(0, NEUTRAL_LINES.size() - 1)]))
+	enc.set_line(I18n.t("A traveller who keeps to himself. Challenge him to a duel?"))
+	enc.set_options([["Talk", talk], ["Challenge", func(): _fight_enemy(e)], ["Leave him be", _close_encounter]])
+
+
+const NEUTRAL_LINES := [
+	"\"Fair roads to you. I keep my own counsel.\"",
+	"\"The weather is turning. I mean to be under a roof before it does.\"",
+	"\"I have nothing to sell and little to say, friend.\"",
+	"\"If it is a duel you want, I will not refuse it.\"",
+]
+
+const HOSTILE_LINES := [
+	"\"Your purse or your cards, traveller. Choose quickly.\"",
+	"\"These are our roads. Pay the toll, turn back, or draw.\"",
+	"\"I have been waiting for someone like you.\"",
+	"\"No one passes here without paying, one way or another.\"",
+]
+
+
+## The one met on the road, painted on the ground where you met him.
+func _open_encounter(e: Dictionary) -> EncounterScreen:
+	var lk: Dictionary = CardDB.get_card(String(e.get("look", ""))) if typeof(e.get("look", "")) == TYPE_STRING else e.get("look", {})
+	if lk.is_empty():
+		lk = {"faction": e["faction"], "name": e["name"]}
+	var sub := I18n.t("%s · Level %d") % [Factions.info(e["faction"])["short"], int(e.get("level", 1))]
+	var pos: Vector2 = e.get("pos", world.player_pos if world else Vector2.ZERO)
+	var enc := EncounterScreen.create(EncounterScreen.terrain_path(world, pos), lk, I18n.t(e["name"]), sub, e.get("disposition", "hostile"))
+	_show_encounter(enc)
+	return enc
+
+
+func _show_encounter(enc: EncounterScreen) -> void:
+	_pause_world(true)
+	enc.closed.connect(func():
+		if screen == enc:
+			_set_screen(null)
+			_pause_world(false))
+	_set_screen(enc)
+
+
+## Close the meeting and walk on.
+func _close_encounter() -> void:
+	if screen is EncounterScreen:
+		(screen as EncounterScreen).close()
 
 
 const ADVICE := [
@@ -165,14 +209,18 @@ const ADVICE := [
 
 
 ## A friend on the road: a word of advice, a card from his satchel, or a favour to ask.
-func _talk_to_friend(e: Dictionary, who: String) -> void:
+func _talk_to_friend(e: Dictionary) -> void:
+	var enc := _open_encounter(e)
+	var who := I18n.t(e["name"])
 	if e.get("talked", false):
-		_toast(I18n.t("%s greets you on the road.") % who)
+		enc.set_line(I18n.t("%s greets you on the road.") % who)
+		enc.set_options([["Leave", _close_encounter]])
 		return
 	e["talked"] = true
 	var r := GameState.rng.randf()
 	if r < 0.4:
-		show_dialog(who, "\"%s\"" % I18n.t(ADVICE[GameState.rng.randi_range(0, ADVICE.size() - 1)]), [["Thank you", Callable()]])
+		enc.set_line("\"%s\"" % I18n.t(ADVICE[GameState.rng.randi_range(0, ADVICE.size() - 1)]))
+		enc.set_options([["Thank you", _close_encounter]])
 	elif r < 0.75:
 		var rar := Booster.weighted_rarity(GameState.rng, {"common": 55, "uncommon": 35, "rare": 10})
 		var cid := CardDB.random_of_rarity(rar, GameState.rng, [e["faction"]])
@@ -183,20 +231,24 @@ func _talk_to_friend(e: Dictionary, who: String) -> void:
 				GameState.save_game()
 				_update_hud()
 				_toast(I18n.t("Bought %s.") % I18n.t(CardDB.get_card(cid)["name"]))
+				_close_encounter()
 			else:
 				_toast(I18n.t("Not enough gold."))
-		show_dialog(who, I18n.t("\"I have a card I could part with, for %d gold.\"") % price,
-			[[I18n.t("Buy · %d gold") % price, buy], ["No, thank you", Callable()]], [cid])
+		enc.set_line(I18n.t("\"I have a card I could part with, for %d gold.\"") % price)
+		enc.set_cards([cid])
+		enc.set_options([[I18n.t("Buy · %d gold") % price, buy, GameState.gold >= price], ["No, thank you", _close_encounter]])
 	elif GameState.errand.is_empty():
 		var need := 2 + GameState.rng.randi_range(0, 1)
 		var reward := 30 + 15 * need
 		var accept := func():
 			GameState.errand = {"giver": e["name"], "need": need, "done": 0, "reward": reward}
 			GameState.save_game()
-		show_dialog(who, I18n.t("\"Raiders trouble these roads. Beat %d hostile wanderers and I will pay you %d gold.\"") % [need, reward],
-			[["Accept", accept], ["Not now", Callable()]])
+			_close_encounter()
+		enc.set_line(I18n.t("\"Raiders trouble these roads. Beat %d hostile wanderers and I will pay you %d gold.\"") % [need, reward])
+		enc.set_options([["Accept", accept], ["Not now", _close_encounter]])
 	else:
-		_toast(I18n.t("%s greets you on the road.") % who)
+		enc.set_line(I18n.t("%s greets you on the road.") % who)
+		enc.set_options([["Leave", _close_encounter]])
 
 
 ## A favour asked on the road: count hostile wanderers beaten, pay when done.
@@ -215,12 +267,17 @@ func _errand_progress() -> void:
 func _on_ferry(index: int, from_a: bool) -> void:
 	var fe: Dictionary = world.map_data["ferries"][index]
 	var fare := int(fe.get("price", 10))
+	var region := world.faction_at(world.player_pos)
 	var cross := func():
 		GameState.add_gold(-mini(fare, GameState.gold))
 		world.ferry_across(index, from_a)
+		_close_encounter()
 		_update_hud()
-	show_dialog("Ferry", I18n.t("The ferryman will take you across for %d gold.") % fare,
-		[[I18n.t("Cross (%d gold)") % fare, cross], ["Stay", Callable()]])
+	var enc := EncounterScreen.create(EncounterScreen.terrain_path(world, world.player_pos),
+		{"faction": region, "subtype": "Human", "name": "Ferryman"}, I18n.t("Ferry"), "", "neutral")
+	_show_encounter(enc)
+	enc.set_line(I18n.t("The ferryman will take you across for %d gold.") % fare)
+	enc.set_options([[I18n.t("Cross (%d gold)") % fare, cross], ["Stay", _close_encounter]])
 
 
 ## Bridges and ferries into another faith's lands charge a toll (never into your own
@@ -368,9 +425,17 @@ func _new_game(n: int = 1, hero_faith: String = "sanctum", sheet: Dictionary = {
 	GameState.new_game(n, hero_faith, sheet)
 	await start_world()
 	show_dialog(I18n.t("Welcome, %s") % GameState.player_name,
-		I18n.t("Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.")
-		+ "\n\n" + I18n.t("You carry four sealed booster packs: three of every faith and one of %s alone. Open them, and your first deck will be built from the faiths that answer you.") % Factions.info(hero_faith)["name"],
+		I18n.t("Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.")
+		+ "\n\n" + _packs_text(hero_faith),
 		[["Open my boosters", func(): open_boosters(true)]])
+
+
+func _packs_text(hero_faith: String) -> String:
+	var packs: Array = Hero.START_PACKS.get(GameState.difficulty, [2, 1])
+	if int(packs[1]) > 0:
+		return I18n.t("You carry %d sealed booster packs: %d with cards of every faith and %d of %s alone. Open them, and your first deck will be built from the faiths that answer you.") % [
+			int(packs[0]) + int(packs[1]), int(packs[0]), int(packs[1]), Factions.info(hero_faith)["name"]]
+	return I18n.t("You carry %d sealed booster packs with cards of every faith. Open them, and your first deck will be built from the faiths that answer you.") % int(packs[0])
 
 
 func _continue_game(n: int = 0) -> void:
@@ -575,13 +640,21 @@ func _open_city(city_id: String) -> void:
 func _on_lair_reached(lair_id: String) -> void:
 	var l := GameState.lair(lair_id)
 	var cleared: bool = GameState.cleared_lairs.has(lair_id)
-	world.active = false
 	var text := I18n.t("%s awaits within.\nFaith: %s · Level %d · %d life\n\n") % [I18n.t(l["boss"]), Factions.info(l["faction"])["name"], int(l["level"]), int(l["life"])]
 	text += I18n.t("You have already conquered this lair. A rematch pays only gold.") if cleared else I18n.t("Reward: %s") % _reward_text(l.get("reward", {}))
-	show_dialog(l["name"], text, [
-		["Challenge", func(): _start_lair(lair_id)],
-		["Leave", func(): world.active = true],
-	])
+	var enc := EncounterScreen.create(EncounterScreen.lair_path(lair_id), _boss_look(l), I18n.t(l["boss"]),
+		I18n.t(l["name"]) + "  ·  " + I18n.t("Lair · Level %d") % int(l["level"]), "hostile")
+	_show_encounter(enc)
+	enc.set_line(text.strip_edges())
+	enc.set_options([["Challenge", func(): _start_lair(lair_id)], ["Leave", _close_encounter]])
+
+
+const BOSS_LOOK := {"sanctum": "Human Knight", "abyss": "Lich", "wild": "Beast Spirit", "revel": "Human Noble",
+	"lyceum": "Human Philosopher", "machine": "Construct"}
+
+
+func _boss_look(l: Dictionary) -> Dictionary:
+	return {"faction": l["faction"], "subtype": BOSS_LOOK.get(l["faction"], "Human"), "name": l["boss"]}
 
 
 func _reward_text(r: Dictionary) -> String:
@@ -598,18 +671,57 @@ func _reward_text(r: Dictionary) -> String:
 func _start_lair(lair_id: String) -> void:
 	var l := GameState.lair(lair_id)
 	var deck := DeckTools.enemy_deck(l["faction"], int(l["level"]), GameState.rng)
-	var boss_look := {"sanctum": "Human Knight", "abyss": "Lich", "wild": "Beast Spirit", "revel": "Human Noble",
-		"lyceum": "Human Philosopher", "machine": "Construct"}
 	var boss_life := maxi(8, int(round(int(l["life"]) * 0.5)) + int(GameState.diff("enemy_life")))
 	start_battle({"name": l["boss"], "faction": l["faction"], "level": int(l["level"]), "life": boss_life,
-		"deck": deck, "lair": lair_id, "look": {"faction": l["faction"], "subtype": boss_look.get(l["faction"], "Human"), "name": l["boss"]}})
+		"deck": deck, "lair": lair_id, "look": _boss_look(l)})
 
 
+## A hostile wanderer bars the way: words first, then the duel, a bribe or a dash for it.
 func _on_enemy_engaged(e: Dictionary) -> void:
+	var enc := _open_encounter(e)
+	var price := Economy.bribe_price(int(e["level"]))
+	var chance := Economy.slip_chance()
+	enc.set_line(I18n.t(HOSTILE_LINES[GameState.rng.randi_range(0, HOSTILE_LINES.size() - 1)]))
+	enc.set_options([
+		["Fight", func(): _fight_enemy(e)],
+		[I18n.t("Bribe (%d gold)") % price, func(): _bribe(e, price), GameState.gold >= price],
+		[I18n.t("Slip away (%d%%)") % int(round(chance * 100.0)), func(): _slip_away(e, chance)],
+	])
+
+
+## The duel itself, with whoever was met on the road.
+func _fight_enemy(e: Dictionary) -> void:
 	var deck := DeckTools.enemy_deck(e["faction"], int(e["level"]), GameState.rng)
 	start_battle({"name": e["name"], "faction": e["faction"], "level": int(e["level"]),
 		"life": maxi(6, 8 + int(e["level"]) * 2 + int(GameState.diff("enemy_life"))), "deck": deck, "enemy_id": e["id"], "look": e.get("look", ""),
 		"disposition": e.get("disposition", "hostile")})
+
+
+## He takes the gold and goes his way: gone from the road, but no spoils.
+func _bribe(e: Dictionary, price: int) -> void:
+	if not GameState.spend_gold(price):
+		_toast(I18n.t("Not enough gold."))
+		return
+	_close_encounter()
+	if world:
+		world.remove_enemy(int(e["id"]))
+		world.grace = 4.0
+	GameState.save_game()
+	_update_hud()
+	_toast(I18n.t("%s takes the gold and goes on his way.") % I18n.t(e["name"]))
+
+
+## A dash for it: away and a few steps back, or caught and made to fight.
+func _slip_away(e: Dictionary, chance: float) -> void:
+	if GameState.rng.randf() < chance:
+		_close_encounter()
+		if world:
+			world.nudge_out(e.get("pos", world.player_pos))
+			world.grace = 4.0
+		_toast(I18n.t("You slip away unseen."))
+	else:
+		_toast(I18n.t("You are seen! There is no escaping this duel."))
+		_fight_enemy(e)
 
 
 # ================================================================== battles

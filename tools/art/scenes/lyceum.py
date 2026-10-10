@@ -74,7 +74,7 @@ def lyceum_c_003(p):
     p.blob((210, 474), 76, 8, C.hex('6a9ac0'), width=1.4)
     marble_floor(p, H * 0.88, C.hex('8a92a6'), C.hex('4a5266'), rows=3)
     p.glow((600, 300), 420, C.hex('a0b8e8'), 0.15)
-    Greek(pose='ly_shoulder', garb='tunic', main=C.hex('b8a888'), sleeves='none', hair='curly', hair_col=HAIR_DARK,
+    Greek(pose='ly_shoulder', garb='tunic', main=C.hex('b8a888'), sleeves='none', hair='curly', hair_col=HAIR_DARK, beard='short',
           belt='cord', props_back=[hydria('b')], props_front=[pail('f')], eyes='open', age='young', width=0.95).draw(p, 520, 606, 450)
 
 
@@ -313,7 +313,7 @@ def lyceum_c_011(p):
     amphora(p, 760, 540, 0.62, TERRACOTTA, band=True)
     p.shape(rect(600, 500, 690, 540), C.hex('7a5a36'), width=2, shade=0.6, smooth=False)
     p.line([(600, 512), (690, 512)], INK.alpha(0.5), 1.6, smooth=False)
-    hoplite(pose='ly_hoplite', head=corinthian(C.hex('d8d0c0'), closed=False), main=C.hex('6a3a2a'), hair='curly', hair_col=HAIR_GREY,
+    hoplite(pose='guard', head=corinthian(C.hex('d8d0c0'), closed=False), main=C.hex('6a3a2a'), hair='curly', hair_col=HAIR_GREY,
             beard='short', age='old', mouth='stern', hoplon='bull', hoplon_field=C.hex('3a3a3a'), hoplon_r=23,
             props_front=[spear('f', 114)], chlamys=C.hex('5a2a22')).draw(p, 330, 604, 470)
     # a scar across the cheek
@@ -351,9 +351,11 @@ def lyceum_c_013(p):
     temple(p, 500, H * 0.66, 520, 170, 'doric', 8, MARBLE_WARM)
     olive_tree(p, 900, 560, 1.0)
     ground(p, H * 0.7, C.hex('b8a272'), dry=False, grass=OLIVE)
-    # the brute, chin in hand, puzzled
-    brute(pose='ly_chin', main=C.hex('5a3a2a'), fur=C.hex('9a8a70'), mouth='calm', eyes='up', width=1.3,
-          props_back=[axe('b')]).draw(p, 690, 606, 470, flip=True)
+    # his axe let fall at his feet; the brute stands still, puzzled
+    p.blob((640, 606), 70, 7, C(0.1, 0.05, 0.02, 0.25), ink=False)
+    rod(p, [(560, 600), (700, 590)], 5, 4.4, UMBER, width=1.6, shade=0.6)
+    p.shape([(560, 600), (548, 566), (530, 572), (522, 606), (536, 624), (552, 616)], IRON.light(0.2), width=1.8, shade=0.7)
+    brute(pose='stand', main=C.hex('5a3a2a'), fur=C.hex('9a8a70'), mouth='calm', eyes='up', width=1.3).draw(p, 690, 606, 470, flip=True)
     # golden threads from the scroll wrapping round him
     for k in range(5):
         y = 330 + k * 44
@@ -591,7 +593,7 @@ def lyceum_u_002(p):
         Greek(pose='book', garb='toga', main=[C.hex('c8b890'), C.hex('a8b8c8')][i], hair='curly', hair_col=HAIR_DARK, sleeves='fitted',
               kneel=True, props_front=[PR.book('both', OCHRE)], eyes='down').draw(p, x, 610, 260, flip=i == 1)
     # the sophist, scratching his head
-    Greek(pose='ly_chin', garb='toga', main=C.hex('d0a0a0'), himation=C.hex('8a3a5a'), hair='curly', hair_col=C.hex('6a4a2a'),
+    Greek(pose='ly_hand_out', garb='toga', main=C.hex('d0a0a0'), himation=C.hex('8a3a5a'), hair='curly', hair_col=C.hex('6a4a2a'),
           beard='short', eyes='up', mouth='open', sleeves='fitted').draw(p, 690, 606, 430, flip=True)
     philosopher(pose='ly_finger', himation=C.hex('2a5aa0'), main=LINEN, hair='short', hair_col=C.hex('4a3020'), beard='short',
                 eyes='open', mouth='open', lean=0.1).draw(p, 360, 606, 460)
@@ -608,7 +610,7 @@ def lyceum_u_003(p):
     marble_floor(p, H * 0.74, C.hex('ece4d2'), C.hex('b9744e'), rows=5)
     statue_plinth(p, 660, 520, 200, 130)
     statue(pose='ly_hand_out', hair='bald', beard='long', age='old').draw(p, 650, 380, 330)
-    Greek(pose='book', garb='toga', main=C.hex('e8dcc4'), himation=C.hex('3a6a5a'), hair='short', hair_col=HAIR_DARK, beard='short', sleeves='fitted',
+    Greek(pose='ly_book', garb='toga', main=C.hex('e8dcc4'), himation=C.hex('3a6a5a'), hair='short', hair_col=HAIR_DARK, beard='short', sleeves='fitted',
           props_front=[PR.book('both', CRIMSON, open_=True)], eyes='down', age='young').draw(p, 340, 606, 450)
 
 
@@ -626,7 +628,7 @@ def lyceum_u_004(p):
     # three hoplites crouched behind locked shields, front view of the shields
     devices = ['book', 'owl', 'book']
     for i, x in enumerate((275, 500, 725)):
-        hoplite(pose='ly_hoplite', head=corinthian(VERMILION if i != 1 else C.hex('1a1a22')), main=C.hex('7a2a24'), kneel=True,
+        hoplite(pose='guard', head=corinthian(VERMILION if i != 1 else C.hex('1a1a22')), main=C.hex('7a2a24'), kneel=True,
                 props_front=[spear('f', 118)]).draw(p, x + 20, 610, 480)
     for i, x in enumerate((275, 500, 725)):
         hoplon(p, (x, 470), 128, devices[i], [ULTRA, LEAD_WHITE, ULTRA][i], turn=0.96)
@@ -746,7 +748,7 @@ def lyceum_u_008(p):
     for k in range(5):
         a = -0.4 + k * 0.2
         p.line([polar((640, 260), 40, math.pi + a), polar((640, 260), 90, math.pi + a)], VERMILION.alpha(0.5), 3)
-    philosopher(pose='ly_lips', himation=C.hex('ece4d4'), main=C.hex('a8b8d0'), hair='white', beard='long', age='old',
+    philosopher(pose='ly_calm', himation=C.hex('ece4d4'), main=C.hex('a8b8d0'), hair='white', beard='long', age='old',
                 eyes='open', mouth='calm', trim=ULTRA).draw(p, 300, 606, 470)
 
 
@@ -796,7 +798,7 @@ def lyceum_u_010(p):
         p.blob((120 + k * 150, 140), 8, 12, PURPLE, width=1.2, shade=0.6)
     Greek(pose='hold', garb='tunic', main=C.hex('c8a860'), sleeves='fitted', hair='curly', hair_col=HAIR_DARK, chlamys=C.hex('8a4a2a'),
           head=petasos(), belt='leather', props_front=[held_scroll('f', length=12)], eyes='open').draw(p, 690, 606, 400, flip=True)
-    Greek(pose='hand_out' if False else 'ly_hand_out', garb='toga', main=LEAD_WHITE, himation=LEAD_WHITE.dark(0.06), hem=CRIMSON, trim=CRIMSON,
+    Greek(pose='ly_hand_out', garb='toga', main=LEAD_WHITE, himation=LEAD_WHITE.dark(0.06), hem=CRIMSON, trim=CRIMSON,
           hair='bald', hair_col=HAIR_GREY, beard='short', age='old', sleeves='fitted', eyes='open').draw(p, 380, 606, 460)
 
 
@@ -827,7 +829,7 @@ def lyceum_u_011(p):
             bare = n % 3 == 1
             head = None if bare else L.attic([LEAD_WHITE, VERMILION, C.hex('2a2a2a')][n % 3], BRONZE, None)
             L.SeatedGreek(pose='ly_knees', garb='tunic', main=tunics[n % 5], sleeves='none', hair='curly', hair_col=[HAIR_DARK, C.hex('6a4a2a'), HAIR_GREY][n % 3],
-                          beard='short' if n % 2 else None, head=head, greaves=n % 2 == 0, eyes='down' if n % 2 else 'open',
+                          beard='short' if n % 2 else 'long', head=head, greaves=n % 2 == 0, eyes='down' if n % 2 else 'open',
                           trim=None).draw(p, x, y, hgt, flip=True)
             if bare:
                 # his helmet set down on the grass
@@ -959,13 +961,14 @@ def lyceum_r_001(p):
     p.blob((260, 590), 30, 7, C(0, 0, 0, 0.3), ink=False)
     scroll_closed(p, (240, 600), 110, 12, -0.1, tag=GOLD)
     def keys(p_, j):
-        h = j['hand_b']
+        # the ring of keys hangs from his girdle below the scroll
+        h = (2.5, -54 + j['k'])
         p_.blob((h[0], h[1] + 4), 3, 3, None, ink=BRONZE, width=2)
         for k in range(3):
             rod(p_, [(h[0] - 1 + k, h[1] + 6), (h[0] - 2 + k * 2, h[1] + 16)], 0.6, 0.6, BRONZE, width=0.8)
             p_.blob((h[0] - 2 + k * 2, h[1] + 16), 1.2, 1, BRONZE, width=0.6)
     Greek(pose='ly_scroll', garb='robe', main=C.hex('5a4a3a'), himation=C.hex('8a6a3a'), hair='white', beard='long', age='old',
-          sleeves='fitted', props_front=[held_scroll('both', open_=True)], props_back=[keys], eyes='down', width=1.1).draw(p, 470, 610, 470)
+          sleeves='fitted', props_front=[keys, held_scroll('both', open_=True)], eyes='down', width=1.1).draw(p, 470, 610, 470)
 
 
 def lyceum_r_002(p):
@@ -986,7 +989,7 @@ def lyceum_r_002(p):
     p.blob((310, 594), 16, 9, None, ink=IRON.dark(0.3), width=6)
     def crutch(p_, j):
         h = j['hand_f']
-        rod(p_, [(h[0] + 2, 1), (h[0] + 1, h[1] + 6)], 1.4, 1.2, C.hex('8a6a40'), width=1.3, shade=0.6)
+        rod(p_, [(h[0] + 2, 1), (h[0] + 1, h[1] - 1)], 1.4, 1.2, C.hex('8a6a40'), width=1.3, shade=0.6)
         rod(p_, [(h[0] - 4, h[1] - 1), (h[0] + 6, h[1] - 1)], 1.3, 1.3, C.hex('8a6a40'), width=1.2)
     Greek(pose='ly_lean', garb='rags', main=C.hex('9a8a6a'), himation=C.hex('7a6a50'), hair='bald', hair_col=HAIR_GREY, beard='long',
           age='old', sleeves='fitted', props_front=[crutch], eyes='open', mouth='calm', sandals=False, lean=0.0).draw(p, 440, 606, 470)
@@ -1027,8 +1030,8 @@ def lyceum_r_004(p):
     bust(p, 820, 430, 1.4, MARBLE, helmet=False)
     scroll_closed(p, (660, 418), 110, 11, 0.0, tag=VERMILION)
     # the boy prince in a purple-bordered tunic, wreath of gold
-    Greek(pose='ly_chin', garb='tunic', main=LEAD_WHITE, hem=TYRIAN, trim=TYRIAN, hair='curly', hair_col=C.hex('a06a30'), sleeves='fitted',
-          head=gold_laurel(), eyes='up', age='young', cloak='cape', cloak_col=TYRIAN).draw(p, 620, 606, 330, flip=True)
+    Greek(pose='hold', garb='tunic', main=LEAD_WHITE, hem=TYRIAN, trim=TYRIAN, hair='curly', hair_col=C.hex('a06a30'), sleeves='fitted',
+          head=gold_laurel(), eyes='up', age='young', cloak='cape', cloak_col=TYRIAN, props_front=[held_scroll('f', length=12)]).draw(p, 620, 606, 330, flip=True)
     Greek(pose='ly_scroll', garb='toga', main=LEAD_WHITE, himation=LEAD_WHITE.dark(0.06), hem=CRIMSON, trim=CRIMSON, hair='bald',
           hair_col=HAIR_GREY, beard='short', age='old', sleeves='fitted', props_front=[held_scroll('both', open_=True)],
           eyes='open', mouth='open').draw(p, 330, 606, 470)
@@ -1107,17 +1110,17 @@ def lyceum_r_007(p):
     p.blob(c, 46, 46, ('r', LEAD_WHITE, FLAME_CORE, FLAME), width=2.4)
     p.rays(c, 50, 80, 20, GOLD_LIGHT.alpha(0.9), 3)
     # men on the rim: one climbs, one is crowned at the top, one falls away, one lies at the foot
-    Greek(pose='ly_both_up', garb='tunic', main=C.hex('5a8a4a'), sleeves='none', hair='curly', hair_col=HAIR_DARK,
+    Greek(pose='spread', garb='tunic', main=C.hex('5a8a4a'), sleeves='none', hair='curly', hair_col=HAIR_DARK,
           eyes='up').draw(p, 346, 372, 124)
     L.BenchGreek(pose='ly_hand_out', garb='toga', sleeves='fitted', main=LEAD_WHITE, himation=TYRIAN, hair='curly', hair_col=HAIR_DARK,
                  beard='short', head=gold_laurel(), eyes='open', trim=GOLD).draw(p, 530, 128, 112)
-    Greek(pose='ly_both_up', garb='toga', main=C.hex('b86a3a'), sleeves='fitted', hair='white', beard='long', age='old',
+    Greek(pose='spread', garb='toga', main=C.hex('b86a3a'), sleeves='fitted', hair='white', beard='long', age='old',
           eyes='down').draw(p, 736, 352, 124, flip=True)
     # the robes of the old king slipping down the falling side
     p.push(540, 500, 1.0, rot=0.0)
     p.shape([(-60, -6), (-20, -18), (30, -16), (66, -4), (40, 4), (-40, 4)], C.hex('6a5a8a'), width=1.8, shade=0.8)
     p.pop()
-    Greek(pose='ly_hang', garb='tunic', main=C.hex('8ab0d8'), sleeves='none', hair='short', hair_col=HAIR_DARK,
+    Greek(pose='stand', garb='tunic', main=C.hex('8ab0d8'), sleeves='none', hair='short', hair_col=HAIR_DARK,
           eyes='closed', kneel=True).draw(p, 540, 504, 100)
     # the headland where the philosopher shows his pupil the turning
     rock = [(-20, H + 10, 0), (-20, 520), (120, 506), (260, 516), (380, 560), (420, H + 10, 0)]
@@ -1211,7 +1214,7 @@ def lyceum_r_009(p):
         w = lerp(54, 5, t)
         column(p, x, top, bot, w, 'doric', MARBLE, base=False, flutes=w > 20)
     # Zeno walking with two pupils under the paintings
-    Greek(pose='book', garb='toga', main=C.hex('d8c8a8'), hair='curly', hair_col=HAIR_DARK, sleeves='fitted', props_front=[PR.book('both', OCHRE)],
+    Greek(pose='book', garb='toga', main=C.hex('d8c8a8'), hair='curly', hair_col=HAIR_DARK, beard='short', sleeves='fitted', props_front=[PR.book('both', OCHRE)],
           eyes='open').draw(p, 450, 520, 230, flip=True)
     Greek(pose='hold', garb='toga', main=C.hex('a8b8c8'), himation=C.hex('6a4a3a'), hair='short', hair_col=HAIR_DARK, beard='short', sleeves='fitted',
           eyes='open').draw(p, 540, 500, 200, flip=True)
@@ -1234,7 +1237,7 @@ def lyceum_m_001(p):
     pupils = [(110, 612, 300, False, C.hex('c8a870'), None), (250, 618, 330, False, C.hex('8aa0b8'), 'short'),
               (720, 618, 330, True, C.hex('b8786a'), 'short'), (870, 612, 300, True, C.hex('a8b890'), None)]
     for (x, y, hh, fl, col, beard) in pupils:
-        L.SeatedGreek(pose='ly_knees', garb='tunic', main=col, hair='curly', hair_col=HAIR_DARK, beard=beard, sleeves='none',
+        L.SeatedGreek(pose='ly_knees', garb='tunic', main=col, hair='curly' if beard else 'short', hair_col=HAIR_DARK, beard=beard, sleeves='none',
                       trim=None, eyes='up').draw(p, x, y, hh, flip=fl)
     philosopher(pose='ly_hand_out', himation=C.hex('1e3a8a'), main=C.hex('ece4d4'), hair='short', hair_col=C.hex('2a1a10'), beard='long',
                 skin=SKIN_OLIVE, eyes='open', trim=GOLD, width=0.92, props_back=[held_scroll('b')]).draw(p, 470, 606, 490)
@@ -1265,7 +1268,7 @@ def lyceum_m_002(p):
             p_.line([(-5, -3 + k * 2), (4, -3 + k * 2)], C.hex('c8a870').alpha(0.7), 0.6, smooth=False)
         p_.pop()
         rod(p_, [(j['hand_f'][0] + 1, j['hand_f'][1] + 1), (j['hand_f'][0] + 6, j['hand_f'][1] - 9)], 0.6, 0.3, BRONZE, width=0.6)
-    hoplite(pose='book', head=gold_laurel(), main=C.hex('6a2346'), cuirass=C.hex('c8ccd4'), hair='curly', hair_col=C.hex('5a4030'),
+    hoplite(pose='ly_book', head=gold_laurel(), main=C.hex('6a2346'), cuirass=C.hex('c8ccd4'), hair='curly', hair_col=C.hex('5a4030'),
             beard='short', age='old', cloak='mantle', cloak_col=TYRIAN, lining=C.hex('9a4a7a'), fur=C.hex('ece4d8'), greaves=False,
             props_front=[tablet], eyes='down', mouth='calm').draw(p, 380, 606, 490)
 

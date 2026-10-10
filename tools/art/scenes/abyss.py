@@ -9,21 +9,6 @@ from figure import Figure
 from abyss_lib import *
 import figure as _fig
 
-# extra arm poses for Figure (front hand, back hand, back arm in front, bends)
-_fig.POSES.setdefault('ab_drip', ((26, -53), (-9, -51), False, 1, 1))
-_fig.POSES.setdefault('ab_sow', ((29, -75), (-9, -52), False, 1, 1))
-_fig.POSES.setdefault('ab_book', ((17, -60), (9, -59), True, 1, 1))
-_fig.POSES.setdefault('ab_swordup', ((21, -104), (-11, -52), False, 1, 1))
-_fig.POSES.setdefault('ab_recoil', ((17, -54), (-17, -56), False, 1, 1))
-_fig.POSES.setdefault('ab_reach_sh', ((30, -70), (-1, -63), True, 1, 1))
-_fig.POSES.setdefault('ab_knives', ((24, -58), (-13, -55), False, 1, 1))
-_fig.POSES.setdefault('ab_cast_bones', ((28, -60), (6, -64), True, 1, 1))
-_fig.POSES.setdefault('ab_cast', ((27, -84), (-20, -70), False, 1, -1))
-_fig.POSES.setdefault('ab_high', ((14, -104), (-14, -102), False, 1, -1))
-_fig.POSES.setdefault('ab_reach', ((30, -70), (-10, -52), False, 1, 1))
-_fig.POSES.setdefault('ab_axe', ((24, -82), (7, -66), True, 1, -1))
-_fig.POSES.setdefault('ab_low', ((20, -48), (-12, -50), False, 1, 1))
-
 
 # ------------------------------------------------------------------ commons: creatures
 
@@ -79,7 +64,7 @@ def abyss_c_002(p):
     p.taper([(-10, 10), (-80, 60), (-150, 90)], 26, 34, C.hex('7a2a2a'), width=2, shade=0.8)
     p.pop()
     imp(p, 520, 470, 390, shadow=False, pose='claws', hands=((24, -74), (-18, -86)), skin=C.hex('b04a2a'),
-        props_front=[dagger('f', 12, None)])
+        props_front=[dagger('f', 12, None)], fist='f')
     embers(p, (200, 100, 800, 400), 14)
 
 
@@ -108,14 +93,16 @@ def abyss_c_003(p):
     black_candle(p, 900, 460, 90, 10, flame_col=C.hex('ff6040'))
     p.shape([(800, 462, 0), (840, 462, 0), (836, 446), (804, 446)], C.hex('1a1418'), width=1.6)
     p.taper([(820, 446), (850, 380), (860, 360)], 1.6, 0.6, LEAD_WHITE, width=1.2)
-    AbFigure(pose='ab_drip', garb='jerkin', main=C.hex('4a3a30'), second=C.hex('2a2420'), sleeves='none', hair='short', hair_col=C.hex('2a1a12'),
-           beard='short', belt='leather', width=1.25, mouth='stern', eyes='down', skin=C.hex('e0b090'),
-           emblem=lambda p, c: skull(p, (c[0], c[1] - 2), 3.2, BONE_OLD.dark(0.2), front=True, horns=BONE_OLD.dark(0.3), jaw=False)
-           ).draw(p, 380, 604, 480)
+    thrall = AbFigure(pose='ab_drip', garb='jerkin', main=C.hex('4a3a30'), second=C.hex('2a2420'), sleeves='none', hair='short', hair_col=C.hex('2a1a12'),
+                      beard='short', belt='leather', width=1.25, mouth='stern', eyes='down', skin=C.hex('e0b090'),
+                      emblem=lambda p, c: skull(p, (c[0], c[1] - 2), 3.2, BONE_OLD.dark(0.2), front=True, horns=BONE_OLD.dark(0.3), jaw=False))
+    thrall.draw(p, 380, 604, 480)
     # the drop of blood falling from his fingertip toward the page
-    p.blob((512, 384), 3.0, 4.4, BLOOD_LIGHT, width=1)
-    p.blob((514, 430), 4.0, 5.8, BLOOD_LIGHT, width=1.2)
-    p.blob((513, 427), 1.2, 1.8, ROSE.light(0.3), ink=False)
+    tip = to_world(thrall, 380, 604, 480, 'hand_f')
+    tip = (tip[0] + 20, tip[1] + 14)
+    p.blob((tip[0], tip[1] + 22), 3.0, 4.4, BLOOD_LIGHT, width=1)
+    p.blob((tip[0] + 2, tip[1] + 70), 4.0, 5.8, BLOOD_LIGHT, width=1.2)
+    p.blob((tip[0] + 1, tip[1] + 67), 1.2, 1.8, ROSE.light(0.3), ink=False)
 
 
 def abyss_c_004(p):
@@ -246,7 +233,7 @@ def abyss_c_008(p):
         h = j['hand_f']
         long_bone(p, (h[0] - 7, h[1] + 4), (h[0] + 8, h[1] - 6), 1.6, BONE_OLD)
 
-    Ghoul(pose='sit', skin=C.hex('9aa07a'), rags=C.hex('4a3e34'), eye=SICKLY_GLOW, fat=1.0, jaw=0.9, shirt=False,
+    Ghoul(pose='sit', skin=C.hex('9aa07a'), rags=C.hex('4a3e34'), eye=SICKLY_GLOW, fat=1.0, jaw=0.9, shirt=False, grip=True,
           props_front=[gnawed_bone], overrides=dict(hand_f=(16, -60), head=(8, -62))).draw(p, 470, 604, 560)
 
 
@@ -419,7 +406,7 @@ def abyss_c_013(p):
         wisp(p, [(230, 420 + k * 8), (330, 460 + k * 12), (450, 470 + k * 16), (600, 500 + k * 14), (720, 540 + k * 10)], 26 - k * 2, C.hex('d8f0ff'), 0.4)
     fog(p, 560, 50, C.hex('d8ecff'), 0.45, 8)
     AbFigure(pose='ab_recoil', garb='surcoat', main=C.hex('6a7a5a'), second=C.hex('4a5a3e'), mail=True, head='nasal', hair='short', hair_col=UMBER,
-           belt='sword', mouth='open', eyes='open', skin=C.hex('d8d0d8'), props_front=[PR.sword(up=False, length=36)]).draw(p, 620, 600, 450, flip=True)
+           belt='sword', mouth='open', eyes='open', skin=C.hex('d8d0d8'), props_front=[PR.sword(up=True, length=36)]).draw(p, 620, 600, 450, flip=True)
     # frost hands rising round his legs
     for hx, hy, ang in ((540, 600, -1.9), (600, 610, -1.6), (690, 604, -1.2), (720, 590, -1.0)):
         d = (math.cos(ang), math.sin(ang))
@@ -473,10 +460,12 @@ def abyss_c_015(p):
     p.shape([(460, 334, 0), (490, 334, 0), (494, 352, 0), (456, 352, 0)], C.hex('1a1418'), width=1.6)
     p.blob((475, 334), 15, 4, BLOOD, width=1.2)
     black_candle(p, 600, 334, 50, 7, flame_col=C.hex('ff8040'))
-    AbFigure(pose='ab_drip', hands=((36, -70), (-9, -51)), garb='gown', main=C.hex('2a4a6a'), trim=OLD_GOLD, hair='short', hair_col=C.hex('5a3a20'), beard='short', head='cap',
-           second=C.hex('8a2a2a'), fur=C.hex('6a5040'), eyes='down', belt='gold').draw(p, 310, 606, 440)
-    for q in ((472, 314), (474, 328)):
-        p.blob(q, 3.2, 4.6, BLOOD_LIGHT, width=1)
+    merchant = AbFigure(pose='ab_pay', garb='gown', main=C.hex('2a4a6a'), trim=OLD_GOLD, hair='short', hair_col=C.hex('5a3a20'), beard='short', head='cap',
+                        second=C.hex('8a2a2a'), fur=C.hex('6a5040'), eyes='down', belt='gold')
+    merchant.draw(p, 345, 606, 440)
+    mh = to_world(merchant, 345, 606, 440, 'hand_f')
+    for dy in (12, 24):
+        p.blob((mh[0] + 9, mh[1] + dy), 3.2, 4.6, BLOOD_LIGHT, width=1)
 
     def scrolls(p, j):
         h = j['hand_f']
@@ -490,7 +479,7 @@ def abyss_c_015(p):
         p.taper([h, (h[0] + 6, h[1] - 14)], 0.6, 1.8, LEAD_WHITE, width=0.9)
 
     Demon(pose='present', hands=((29, -60), (-12, -50)), skin=C.hex('7a3a3a'), robe=C.hex('2a1e24'), robe_trim=OLD_GOLD, horns='ram',
-          wings=False, tail=True, mouth='smile', eye=C.hex('ffd040'), props_front=[scrolls], props_back=[quill]).draw(p, 720, 606, 460, flip=True)
+          wings=False, tail=True, mouth='smile', eye=C.hex('ffd040'), props_front=[scrolls], props_back=[quill], fist='fb').draw(p, 720, 606, 460, flip=True)
 
 
 def abyss_c_016(p):
@@ -568,7 +557,7 @@ def abyss_c_017(p):
         wisp(p, [(x0, 440), (x0 + 10, 380), (x0 - 10, 320), (x0 + 20, 250)], 7, C.hex('a098b8'), 0.4)
     # the shade on the bedhead whispering down into his ear
     p.glow((235, 240), 130, C.hex('a060e0'), 0.35)
-    imp(p, 215, 345, 270, pose='whisper', hands=((26, -74), (14, -58)), skin=C.hex('3a2a44'), eye=C.hex('c080ff'),
+    imp(p, 215, 345, 270, pose='whisper', hands=((26, -74), (-12, -62)), skin=C.hex('3a2a44'), eye=C.hex('c080ff'),
         wing_col=C.hex('1e1626'), cloth=C.hex('120c16'), horns='bull', shadow=False)
     for k in range(5):
         q = (282 + k * 8, 210 + k * 36)
@@ -745,24 +734,13 @@ def abyss_u_002(p):
         p.line([(x, y), (x - 8, y - 16)], C.hex('6a6a4a'), 1.6)
     wraith(p, 380, 560, 470, col=C.hex('a8c0c8'), glow=C.hex('9ad8ff'), hands=((36, -74), (30, -86)), trail=-1.5)
     sound_rings(p, (440, 165), 5, 40, 44, C.hex('c8f0ff'), 1.1, 0.25, 0.6)
-    # the soldier staggering, hands over his ears, spear dropped
+    # the soldier staggering, one arm thrown up against the cry, spear dropped
     p.push(780, 612, 1.0)
     p.taper([(-120, 0), (60, -30)], 3, 3, UMBER, width=1.4)
     p.shape([(60, -36, 0), (80, -33, 0), (60, -27, 0)], STEEL, width=1.2, smooth=False)
     p.pop()
-    _fig_cover = AbFigure(pose='pray', garb='surcoat', main=C.hex('6a2a2a'), second=C.hex('4a1a1a'), mail=True, head='coif', hair='short',
-                        hair_col=UMBER, mouth='open', eyes='closed', belt='sword', skin=C.hex('d8c0b0'))
-    _fig_cover.joints_orig = _fig_cover.joints
-
-    def joints():
-        j = _fig_cover.joints_orig()
-        from figure import ik as _ik
-        j['el_f'], j['hand_f'] = _ik(j['sh_f'], (5, -90), 16.5, 15.5, 0)
-        j['el_b'], j['hand_b'] = _ik(j['sh_b'], (-5, -90), 16.5, 15.5, 0)
-        j['back_front'] = False
-        return j
-    _fig_cover.joints = joints
-    _fig_cover.draw(p, 760, 606, 380, flip=True)
+    AbFigure(pose='ab_ward', garb='surcoat', main=C.hex('6a2a2a'), second=C.hex('4a1a1a'), mail=True, head='coif', hair='short', beard='short',
+             hair_col=UMBER, mouth='open', eyes='closed', belt='sword', skin=C.hex('d8c0b0')).draw(p, 760, 606, 380, flip=True)
 
 
 def abyss_u_003(p):
@@ -797,13 +775,13 @@ def abyss_u_003(p):
 
     def veil(p, j):
         hx, hy = j['head']
-        p.shape([(hx - 3.4, hy + 0.2), (hx + 7.4, hy - 0.4), (hx + 6.8, hy + 7), (hx + 3, hy + 10.5, 0), (hx - 3.4, hy + 8)], C.hex('1a1620'), width=1.3, shade=0.6)
+        p.shape([(hx - 3.4, hy + 0.2), (hx + 7.4, hy - 0.4), (hx + 7.0, hy + 4.4), (hx + 2.4, hy + 5.4, 0), (hx - 3.4, hy + 4.4)], C.hex('1a1620'), width=1.3, shade=0.6)
         p.line([(hx - 2, hy + 3), (hx + 6, hy + 2.6)], C.hex('3a3040'), 0.9)
         hourglass(p, 7, -51, 9, 0.6, OLD_GOLD)
 
     Cultist(pose='ab_knives', garb='jerkin', main=C.hex('1e1a24'), second=C.hex('141018'), sleeves='fitted', shadow=0.35, glow_eyes=None,
             hood_col=C.hex('1a1620'), belt='leather', eyes='open', cloak='cape', cloak_col=C.hex('2a1a24'), shoes=C.hex('1a1418'),
-            props_front=[veil, dagger('f', 14, SICKLY_GLOW), dagger('b', 14, SICKLY_GLOW)]).draw(p, 470, 548, 440)
+            beard='forked', hair_col=C.hex('1a1210'), props_front=[veil, dagger('f', 14, SICKLY_GLOW), dagger('b', 14, SICKLY_GLOW)]).draw(p, 470, 548, 440)
 
 
 def abyss_u_004(p):
@@ -906,7 +884,7 @@ def abyss_u_007(p):
     p.glow((500, 300), 300, SICKLY_GLOW, 0.3)
     # the risen around him
     Skeleton(pose='climb', hands=((22, -54), (-16, -50)), glow=SICKLY_GLOW, col=BONE_OLD.dark(0.1)).draw(p, 180, 690, 330)
-    Skeleton(pose='reach', glow=SICKLY_GLOW, col=BONE_OLD.dark(0.15), rags=C.hex('3a3a30'), hands=((-18, -70), (-24, -60))).draw(p, 820, 620, 340, flip=True)
+    Skeleton(pose='reach', glow=SICKLY_GLOW, col=BONE_OLD.dark(0.15), rags=C.hex('3a3a30')).draw(p, 820, 620, 340, flip=True)
     for x0 in (60, 300, 700, 940):
         p.shape([(x0 - 60, H + 10, 0), (x0 - 50, 600), (x0, 584), (x0 + 50, 596), (x0 + 60, H + 10, 0)], ('v', C.hex('3a3020'), C.hex('1a1610')), width=1.8)
 
@@ -1193,7 +1171,7 @@ def abyss_r_001(p):
     smoke(p, [(220, hz - 40), (200, hz - 150), (250, hz - 260)], 30, 80, C.hex('1a0e0e'), 0.55)
     p.shape([(-20, H + 10, 0), (-20, hz + 30), (W + 20, hz + 20), (W + 20, H + 10, 0)], ('v', C.hex('3a2a24'), C.hex('140e0c')), ink=INK.alpha(0.5), width=2)
     # the voice
-    ghosted(p, lambda q: Demon(pose='whisper', hands=((26, -84), (14, -70)), skin=C.hex('3a1a3a'), wing_col=C.hex('1a0a1a'), horns='great',
+    ghosted(p, lambda q: Demon(pose='whisper', hands=((26, -84), (-18, -84)), skin=C.hex('3a1a3a'), wing_col=C.hex('1a0a1a'), horns='great',
                                eye=C.hex('ff5050'), mouth='smile', cloth=C.hex('120a12')).draw(q, 650, 600, 500, flip=True), 0.6)
 
     def broken_cross(p, c):
@@ -1248,7 +1226,7 @@ def abyss_r_002(p):
 
     Demon(pose='hold', hands=((24, -78), (-14, -60)), skin=C.hex('5a5068'), wing_col=C.hex('a898b8'), horns='antler', horn_col=C.hex('3a3040'),
           eye=C.hex('e0d0ff'), mouth='smile', thin=0.75, wing_span=1.05, cloth=C.hex('2a2434'), trim=None, legs='claw',
-          props_front=[jar]).draw(p, 470, 470, 380)
+          props_front=[jar], fist='f').draw(p, 470, 470, 380)
 
 
 def abyss_r_003(p):
@@ -1276,7 +1254,7 @@ def abyss_r_003(p):
 
     Demon(pose='offer', hands=((27, -70), (-14, -54)), skin=C.hex('8a2a2a'), robe=C.hex('2a0e14'), robe_trim=GOLD, horns='ram',
           wings=True, wing_span=0.9, wing_col=C.hex('2a1014'), crown=GOLD, mouth='smile', beard=C.hex('1a0a0a'), eye=C.hex('ffd040'),
-          props_front=[bill]).draw(p, 330, 600, 480)
+          props_front=[bill], fist='f').draw(p, 330, 600, 480)
     embers(p, (100, 80, 900, 500), 30)
 
 
@@ -1337,7 +1315,7 @@ def abyss_r_005(p):
         for t in (0.3, 0.55, 0.8):
             p.fold([v_lerp(v_add(sb, (-5, 4)), v_add(sf, (6, 6)), t), v_lerp(v_add(hip, (-14, 6)), v_add(hip, (16, 6)), t)], C.hex('3a1a4a'), 1.3)
 
-    Ghoul(pose='sit', skin=C.hex('8a9478'), rags=C.hex('3a2a28'), eye=SICKLY_GLOW, fat=0.25, jaw=0.6, shirt=False, props_front=[regalia], props_back=[royal_mantle],
+    Ghoul(pose='sit', skin=C.hex('8a9478'), rags=C.hex('3a2a28'), eye=SICKLY_GLOW, fat=0.25, jaw=0.6, shirt=False, grip=True, props_front=[regalia], props_back=[royal_mantle],
           overrides=dict(hip=(0, -34), chest=(2, -60), neck=(5, -72), head=(8, -78), knee_f=(16, -36), ankle_f=(17, -3),
                          knee_b=(12, -34), ankle_b=(11, -2), hand_f=(24, -52), hand_b=(-12, -48))).draw(p, 480, 606, 440)
     # kneeling subjects
@@ -1348,11 +1326,6 @@ def abyss_r_005(p):
 
 # ------------------------------------------------------------------ helpers for the rares and mythics
 
-_fig.POSES.setdefault('ab_puppet', ((25, -73), (18, -71), True, 1, 1))
-_fig.POSES.setdefault('ab_puppeteer', ((31, -82), (24, -74), True, 1, 1))
-_fig.POSES.setdefault('ab_bleed', ((30, -82), (16, -60), True, 1, 1))
-_fig.POSES.setdefault('ab_write', ((20, -61), (12, -62), True, 1, 1))
-_fig.POSES.setdefault('ab_standard', ((14, -66), (-10, -52), False, 1, 1))
 
 
 def to_world(fig, x, y, h, name, flip=False):
@@ -1565,7 +1538,7 @@ def abyss_r_007(p):
     p.taper([(578, hz - 20), (578, hz - 92)], 1.6, 1.4, C.hex('1a1014'), width=1.0)
     p.shape([(579, hz - 90, 0), (608, hz - 86), (602, hz - 74), (610, hz - 62, 0), (579, hz - 66, 0)], C.hex('3a0e14'), width=1.2)
     skull(p, (578, hz - 98), 6, BONE_OLD, front=True, horns=BONE_OLD.dark(0.2), jaw=False)
-    Cultist(pose='ab_standard', garb='robe', main=C.hex('1a1218'), shadow=0.7, belt='leather').draw(p, 568, hz - 18, 80)
+    Cultist(pose='staff', garb='robe', main=C.hex('1a1218'), shadow=0.7, belt='leather').draw(p, 568, hz - 18, 80)
     # the field
     p.shape([(-20, H + 10, 0), (-20, hz + 18), (W + 20, hz + 24), (W + 20, H + 10, 0)], ('v', C.hex('5a5a3a'), C.hex('2a281a')), ink=INK.alpha(0.5), width=2)
     r = p.rng
@@ -1632,7 +1605,7 @@ def abyss_r_008(p):
     p.blob(vort, 20, 6, PITCH, ink=False)
     # the captive, kneeling and chained
     mx, my, mh = 650, 606, 440
-    monk = AbFigure(pose='stand', hands=((10, -52), (-2, -52)), garb='habit', main=C.hex('6a4a2c'), second=C.hex('4a3020'), hair='tonsure',
+    monk = AbFigure(pose='ab_bound', garb='habit', main=C.hex('6a4a2c'), second=C.hex('4a3020'), hair='tonsure',
                     hair_col=C.hex('6a4a2a'), kneel=True, eyes='open', mouth='open', belt='cord', blush=0.0, skin=C.hex('e0c8b4'),
                     props_front=[blank_eyes()])
     monk.draw(p, mx, my, mh, flip=True)
@@ -1823,8 +1796,8 @@ def flaming_sword(length=46, bd=(0.6, 0.8)):
 
 def abyss_m_001(p):
     """Belzareth, Prince of Cinders: the demon prince strides out of the burning waste
-    he has made into a green spring valley; the grass dies under his hooves, and his
-    burning blade points at the smouldering arms of the last knight who stood in his way."""
+    he has made into a green spring valley; the grass dies under his hooves, and he
+    lifts his burning blade over the smouldering arms of the last knight who stood in his way."""
     # sky: smoke and fire behind him, a clean spring dawn ahead of him
     p.cx.new_path()
     p.cx.rectangle(0, 0, W, H)
@@ -1863,7 +1836,7 @@ def abyss_m_001(p):
         for t in (0.0, 0.5):
             q = v_lerp(a, b, t)
             flame_tongue(p, (q[0] + 6, q[1] + 6), 20 + 10 * t, 7, 0.3)
-    # the fallen knight's arms where the sword points
+    # the fallen knight's arms below the raised sword
     PR.heater_shield(p, (770, 596), 'cross_red', None, 2.2)
     p.shape([(700, 606, 0), (702, 576), (722, 562, 0), (742, 576), (744, 606, 0)], ('h', STEEL.light(0.2), IRON), width=1.8, shade=0.6)
     p.shape([(706, 584, 0), (738, 584, 0), (738, 588, 0), (706, 588, 0)], PITCH, width=1.0, smooth=False)
@@ -1876,9 +1849,9 @@ def abyss_m_001(p):
         p.shape(pts, ('v', C.hex('5a1210'), C.hex('2a0806')), width=2.0, shade=0.8, rim=0.4)
         p.line([(-17, -60), (-26, -30), (-30, -4)], EMBER.alpha(0.7), 1.6)
 
-    _ArmouredDemon(pose='point', hands=((24, -58), (-16, -58)), skin=C.hex('54383a'), horns='bull', horn_col=C.hex('2a1e1a'), wings=True,
+    _ArmouredDemon(pose='point', hands=((28, -66), (-17, -56)), fist='f', skin=C.hex('54383a'), horns='bull', horn_col=C.hex('2a1e1a'), wings=True,
                    wing_col=C.hex('4a1410'), wing_span=0.88, crown=GOLD, fire_hair=EMBER, cracks=EMBER_LIGHT, eye=FLAME_CORE, mouth='grin',
-                   cloth=C.hex('1a0e0e'), trim=OLD_GOLD, stout=1.15, props_back=[cape], props_front=[flaming_sword()]).draw(p, 420, 612, 520)
+                   cloth=C.hex('1a0e0e'), trim=OLD_GOLD, stout=1.15, props_back=[cape], props_front=[flaming_sword(46, (0.72, -0.69))]).draw(p, 420, 612, 520)
     # scorched hoofprints in the grass and embers on the wind
     for q in ((520, 616), (560, 604)):
         p.blob(q, 16, 5, C.hex('1a1210'), ink=EMBER.alpha(0.7), width=1.4)

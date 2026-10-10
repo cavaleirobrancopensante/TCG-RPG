@@ -1,7 +1,7 @@
 [
   {
     "id": "abyss_c_001",
-    "name": "Covenant Initiate",
+    "name": "Pact Initiate",
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
@@ -38,7 +38,7 @@
     "keywords": [
       "dread"
     ],
-    "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
+    "text": "Dread (can only be blocked by Pact creatures and Constructs).",
     "flavor": "It is small, it is spiteful, and it is never where you swing.",
     "art": "res://art/cards/abyss_c_002.webp"
   },
@@ -130,7 +130,7 @@
     "keywords": [
       "dread"
     ],
-    "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
+    "text": "Dread (can only be blocked by Pact creatures and Constructs).",
     "flavor": "Honest dogs bolt at its scent. Only the damned dare stand in its path.",
     "art": "res://art/cards/abyss_c_006.webp"
   },
@@ -295,7 +295,7 @@
     "keywords": [
       "dread"
     ],
-    "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
+    "text": "Dread (can only be blocked by Pact creatures and Constructs).",
     "flavor": "It still wears the gold it was buried with, and it wants yours.",
     "art": "res://art/cards/abyss_c_012.webp"
   },
@@ -443,7 +443,7 @@
       }
     ],
     "text": "Return target creature card with mana value 3 or less from your graveyard to play.",
-    "flavor": "Rest was promised to him. The Covenant does not honour other men's promises.",
+    "flavor": "Rest was promised to him. The Pact does not honour other men's promises.",
     "art": "res://art/cards/abyss_c_018.webp"
   },
   {
@@ -512,7 +512,7 @@
   },
   {
     "id": "abyss_u_001",
-    "name": "Bone-Priest of the Covenant",
+    "name": "Bone-Priest of the Pact",
     "faction": "abyss",
     "rarity": "uncommon",
     "type": "creature",
@@ -576,7 +576,7 @@
   },
   {
     "id": "abyss_u_003",
-    "name": "Veiled Blade of the Covenant",
+    "name": "Veiled Blade of the Pact",
     "faction": "abyss",
     "rarity": "uncommon",
     "type": "creature",
@@ -592,7 +592,7 @@
       "dread"
     ],
     "text": "Deathtouch, dread.",
-    "flavor": "The Covenant pays its assassins in years taken from their victims.",
+    "flavor": "The Pact pays its assassins in years taken from their victims.",
     "art": "res://art/cards/abyss_u_003.webp"
   },
   {
@@ -1105,7 +1105,7 @@
       }
     ],
     "text": "Destroy all creatures.",
-    "flavor": "By dawn the field was quiet, and the Covenant counted it a victory.",
+    "flavor": "By dawn the field was quiet, and the Pact counted it a victory.",
     "art": "res://art/cards/abyss_r_007.webp"
   },
   {

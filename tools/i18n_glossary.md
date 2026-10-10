@@ -7,7 +7,7 @@ with reverence. Angels are masculine. Soldiers/knights/fighters are men. No gend
 | English | Português (BR) | Español |
 |---|---|---|
 | The Holy Church / Church | A Santa Igreja / Igreja | La Santa Iglesia / Iglesia |
-| The Black Covenant / Covenant | O Pacto Negro / Pacto | El Pacto Negro / Pacto |
+| The Black Pact / Pact | O Pacto Negro / Pacto | El Pacto Negro / Pacto |
 | The Old Ways / Old Ways | Os Velhos Caminhos / Velhos Caminhos | Los Viejos Caminos / Viejos Caminos |
 | The Revel / Revel | O Festim / Festim | El Festín / Festín |
 | The Stoa / Stoa | A Stoa / Stoa | La Estoa / Estoa |

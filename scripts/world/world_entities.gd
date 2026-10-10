@@ -4,7 +4,7 @@ extends RefCounted
 
 const ENEMY_NAMES := {
 	"sanctum": ["Zealous Inquisitor", "Wandering Templar", "Stern Abbot", "Militant Friar", "Pilgrim Champion"],
-	"abyss": ["Covenant Cultist", "Grave Acolyte", "Hollow-Eyed Warlock", "Bone Collector", "Ash Witch"],
+	"abyss": ["Pact Cultist", "Grave Acolyte", "Hollow-Eyed Warlock", "Bone Collector", "Ash Sorcerer"],
 	"wild": ["Antler Druid", "Feral Hunter", "Stone Circle Warden", "Thornwild Shaman", "Beastcaller"],
 	"revel": ["Masked Duelist", "Drunken Firebrand", "Bacchant Reveler", "Silk Assassin", "Decadent Baron"],
 	"lyceum": ["Wandering Sophist", "Stoic Hoplite", "Star-Reader", "Archive Warden", "Peripatetic Master"],
