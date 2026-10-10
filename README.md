@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **1.9**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
+Version **1.10**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
