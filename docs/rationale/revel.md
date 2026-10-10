@@ -95,8 +95,8 @@ A one-sided sweeper that wipes tokens and small creatures, priced at three mana 
 **Empty the Cellar** · Uncommon · Spell (Revelry) · 1R · Rummage twice (each time, discard your worst card, then draw a card). Then deal 2 damage to the enemy player.
 Two rummages and 2 damage to the face for two mana. It digs for burn and threats while chipping at the enemy, but never gives an extra card. Emptying the cellar in one night is the impulsive spending of the Revel, the whole inheritance poured out at once.
 
-**Bottomless Wine Cask** · Uncommon · Relic (Relic) · 2R · At the beginning of your upkeep, rummage (discard your worst card, then draw a card) and you lose 1 life.
-Set 1's Cask drew a card every turn, which was too strong for uncommon and is plain card draw the Revel no longer has. Now it rummages every turn for 1 life: steady card quality, never card advantage, with a steady bleed. The flavour line remains the clearest moral statement in the faith.
+**Bottomless Wine Cask** · Uncommon · Relic (Relic) · 2R · At the beginning of your upkeep, rummage (discard your worst card, then draw a card).
+Set 1's Cask drew a card every turn, which was too strong for uncommon and is plain card draw the Revel no longer has. Now it rummages every turn: steady card quality, never card advantage. The flavour line remains the clearest moral statement in the faith.
 
 **Carnival Masks** · Uncommon · Relic (Relic) · 1R · Carouse (if you already played another non-land card this turn): creatures you control have first strike.
 A two-mana relic that gives the whole team first strike on any turn you have played another non-land card. It rewards busy turns and makes attacks into bigger blockers safe. The carnival mask, which hides who you are and makes you bolder, is the Revel's emblem.
@@ -122,14 +122,14 @@ Big flexible burn: it kills almost any creature or takes a quarter of a player's
 **Night Without End** · Rare · Spell (Revelry) · 2RR · Creatures you control get +3/+0 until end of turn. You lose 3 life.
 The Revel's finisher: +3/+0 to the whole team for one turn, paid for with 3 life. With three attackers it is nine extra damage, but it does nothing for defence and the life is gone either way. A night that refuses to end is the Epicurean motto, "tonight there is no tomorrow", pushed to its ruinous conclusion.
 
-**Carnival of Cinders** · Rare · Spell (Revelry) · 3RR · Deal 3 damage to each creature and 3 damage to the enemy player. You lose 3 life.
-A symmetrical sweeper that also burns the enemy player, at the price of 3 of your own life. It clears a stalled board when the Revel's quick start has run out, and Idle growers with counters may survive it. The carnival burning down at the end of the season is the faith's slow ruin arriving all at once.
+**Carnival of Cinders** · Rare · Spell (Revelry) · 3RR · Deal 3 damage to each creature and 3 damage to the enemy player. You lose 1 life.
+A symmetrical sweeper that also burns the enemy player, at the price of 1 of your own life and your own small creatures. It clears a stalled board when the Revel's quick start has run out, and Idle growers with counters may survive it. The carnival burning down at the end of the season is the faith's slow ruin arriving all at once.
 
 **Lanterns of the Pleasure Garden** · Rare · Relic (Relic) · 2R · Creatures you control have haste.
 A three-mana relic that gives every creature you control haste. It is a rare build-around because it changes how the whole deck plays, and it creates the sharpest Idle tension in the set: every creature can attack at once, so every lounger is a choice. The pleasure garden is the Revel's own land, lit for a party that never ends.
 
-**Vessaria, Mistress of the Undying Feast** · Mythic · Creature (Human Noble) · 3RR · 0/5 · Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 1 damage to the enemy player. At the beginning of your upkeep, you lose 1 life.
-The Idle mythic: a 0/5 hostess who sweeps every x/1 and burns the enemy each turn she lounges, while her endless feast costs you a life every upkeep. She has no power because she never fights; her guests and her wine do the killing. She is answerable by any 5 damage or a determined attack, and her own upkeep cost limits how long you can keep her. As a noblewoman and hostess she fits the tone rules, and the poisoned cup is the faith's evil side made plain.
+**Vessaria, Mistress of the Undying Feast** · Mythic · Creature (Human Noble) · 3RR · 0/5 · Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.
+The Idle mythic: a 0/5 hostess who sweeps every x/1 and burns the enemy each turn she lounges. She has no power because she never fights; her guests and her wine do the killing. She is answerable by any 5 damage or a determined attack. As a noblewoman and hostess she fits the tone rules, and the poisoned cup is the faith's evil side made plain.
 
 **Brandimarte, Prince of Fire-Eaters** · Mythic · Creature (Human Duelist) · 3RR · 5/4 · Haste, first strike. Whenever this attacks, creatures you control get +1/+0 until end of turn.
 The aggressive mythic: a 5/4 with haste and first strike that attacks as a 6/4 and lifts every other attacker by one. It ends games quickly if unanswered, but 4 toughness dies to Banquet Flambe or a blocker plus a ping. The name comes from the knights of Italian romance, and a prince of fire-eaters who leads the charge is the Revel at its most glamorous.
