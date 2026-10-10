@@ -17,8 +17,8 @@ An early answer to the two-mana fliers of the Church and the Covenant. One power
 **Acorn Gatherer** · Common · Creature (Human Druid) · 1G · 1/1 · When this enters, create a 1/1 Sapling token.
 Two bodies for two mana, the cheapest way into the token side of the faith. Each body is small, but together they feed pumps and the Stampede. The flavour treats planting oaks as a gift to the far future, which is the patient way this faith thinks.
 
-**Antlered Barrow-Stag** · Common · Creature (Beast) · 2G · 3/3 · Trample (excess combat damage goes to the player).
-The spec allows the Old Ways a 3/3 for three with a small bonus, and trample is that bonus. It is the faith's honest three-drop attacker and stops chump blocks from working. Barrow mounds and sleeping kings set it in the old landscape of Britain.
+**Antlered Barrow-Stag** · Common · Creature (Beast) · 2G · 3/2 · Trample (excess combat damage goes to the player).
+A 3/2 trampler for three, the early-2000s rate for a common with a keyword. It is the faith's honest three-drop attacker and stops chump blocks from working. Barrow mounds and sleeping kings set it in the old landscape of Britain.
 
 **Oakmoot Sentinel** · Common · Creature (Treefolk) · 2G · 2/4 · Reach (can block creatures with flying).
 A sturdy wall against fliers and early ground attackers alike. A 2/4 for three is the faith's defensive rate, and reach is the small bonus. A moot was the old gathering of the land, and a tree that "saw no need to leave" suits it well.
@@ -26,14 +26,14 @@ A sturdy wall against fliers and early ground attackers alike. A 2/4 for three i
 **Sett Badger** · Common · Creature (Beast) · 2G · 2/2 · Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).
 The common that teaches regenerate. A 2/2 for three is a point under rate, which pays for a body that survives its first trade each turn and shrugs off a removal spell. Badgers are famously hard to dig out of their setts, which is exactly what the keyword does.
 
-**Barrowland Bear** · Common · Creature (Beast) · 3G · 4/4 · Rooted: as long as you control six or more lands, this gets +2/+2.
-A plain 4/4 for four early, and a 6/6 once the land runs deep. It is the simplest Rooted payoff, placed at common so every Old Ways deck meets the condition. The druids calling the old bear "grandmother" keeps the faith warm and folkloric.
+**Barrowland Bear** · Common · Creature (Beast) · 3G · 4/4 · Rooted: as long as you control six or more lands, this gets +1/+1.
+A plain 4/4 for four early, and a 5/5 once the land runs deep. It is the simplest Rooted payoff, placed at common so every Old Ways deck meets the condition. The druids calling the old bear "grandmother" keeps the faith warm and folkloric.
 
 **Huntsman of the Weald** · Common · Creature (Human Hunter) · 4G · 3/3 · When this enters, create a 2/2 Wolf token.
 Five power over two bodies for five mana, a solid common two-for-one that is slow enough not to dominate. It gives the faith a mid-curve wolf maker outside the uncommons. The huntsman is a man of the deep woods whose wolves come when he whistles, which is the Old Ways' friendship with the beasts.
 
-**Horned Aurochs** · Common · Creature (Beast) · 4G · 5/4 · Trample (excess combat damage goes to the player).
-The common top-end beater. A 5/4 trampler for five gives up a point of toughness for the keyword, so it hits hard but trades with a 4/4. The aurochs was the great wild ox of old Europe, and its size suits a faith of big bodies.
+**Horned Aurochs** · Common · Creature (Beast) · 4G · 4/4 · Trample (excess combat damage goes to the player).
+The common top-end beater. A 4/4 trampler for five pays a point of stats for the keyword, so it hits hard and pushes damage past chump blockers. The aurochs was the great wild ox of old Europe, and its size suits a faith of big bodies.
 
 **Old Hollow Oak** · Common · Creature (Treefolk) · 5G · 5/6 · Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).
 A six-drop that is very hard to remove: it blocks, survives and blocks again. A point of power under a 6/6 pays for regenerate. Ancient hollow oaks struck by lightning and still growing are a common sight in English parkland.
@@ -104,7 +104,7 @@ A wolf every turn for three mana, a strong engine in long games and too slow to 
 **Mistletoe Archdruid** · Rare · Creature (Human Druid) · 2G · 2/3 · At the beginning of your upkeep, add G. Tap, pay G: target creature you control gets +1/+1 permanently.
 The set 1 Archdruid made GG every turn and was the clearest balance problem in the faith, so now he adds a single G. The build-around side is his blessing: each turn he can spend that mana to grow a creature permanently. Cutting the sacred mistletoe with a golden sickle is the druidic rite Pliny describes.
 
-**White Hart of the Greenwood** · Rare · Creature (Beast Spirit) · 1GG · 3/3 · Regenerate. Whenever this attacks, target creature you control gets +1/+1 permanently.
+**White Hart of the Greenwood** · Rare · Creature (Beast Spirit) · 1GG · 2/3 · Regenerate. Whenever this attacks, target creature you control gets +1/+1 permanently.
 A three-drop that attacks freely because regenerate makes it hard to block profitably, and every attack strengthens the herd. Left alone it grows a board quickly, which is the right weight for a rare. The white hart that no king could ever catch is a beloved figure of English legend.
 
 **Antler-King of the Fens** · Rare · Creature (Beast Spirit) · 3GG · 5/5 · Trample. Other Beasts you control get +1/+1.
@@ -113,8 +113,8 @@ A 5/5 trampler for five that makes the Beast deck a real archetype. Wolves and S
 **Yew of a Thousand Winters** · Rare · Creature (Treefolk) · 3GG · 3/6 · Reach, regenerate. Rooted: as long as you control six or more lands, this gets +3/+0.
 A wall that almost nothing gets past, which turns into a 6/6 attacker once the land is deep. It gives defensive decks a way to win late. Yews live for thousands of years, and one older than the barrows fits the faith's long view of time.
 
-**Fen-Worm of the Wear** · Rare · Creature (Wyrm) · 5G · 6/6 · Trample, regenerate.
-A big, simple threat: a 6/6 trampler for six that shrugs off the first removal spell each turn. It is the faith's answer to decks that rely on one kill spell. The worm that rejoins itself when cut in two comes from the North of England's old worm legends.
+**Fen-Worm of the Wear** · Rare · Creature (Wyrm) · 5G · 5/5 · Trample, regenerate.
+A big, simple threat: a 5/5 trampler for six that shrugs off the first removal spell each turn. It is the faith's answer to decks that rely on one kill spell. The worm that rejoins itself when cut in two comes from the North of England's old worm legends.
 
 **Stampede of the Wild Hunt** · Rare · Spell (Rite) · 2GG · Creatures you control get +2/+2 until end of turn.
 A team pump finisher, best after a turn of wolves and saplings. Unlike the Revel's power-only team pumps it adds toughness as well, so it wins combats rather than just racing. The Wild Hunt riding with hooves and horns is the European folk tale at its grandest.

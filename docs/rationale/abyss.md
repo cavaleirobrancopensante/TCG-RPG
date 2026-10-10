@@ -59,8 +59,8 @@ Common reanimation, held to creatures of mana value 3 or less so it brings back 
 **Black Altar** · Common · Relic · 1B · Sacrifice a creature: the enemy player loses 1 life and you gain 1 life.
 A cheap sacrifice outlet that turns every creature about to die into a point of drain. It does nothing alone, which keeps it a common, but with Initiates and Restless Dead it becomes a steady leak of the enemy's life. The black altar is the heart of the Covenant's worship, and its stone is never dry.
 
-**Gibbet of the Forsworn** · Common · Relic · 2B · Tap, pay 2 life: target enemy creature gets -1/-1 until end of turn.
-A slow, life-hungry removal engine: 2 life a turn to shrink an enemy creature. It kills x/1s and swings combats, and the life cost makes it a real decision every turn. A gibbet hanging an oathbreaker in the wind is a warning to every man who passes below.
+**Gibbet of the Forsworn** · Common · Relic · 2B · Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.
+A slow, life-hungry removal engine: 1 life a turn to shrink an enemy creature. It kills x/1s and swings combats, and the life cost makes it a real decision every turn. A gibbet hanging an oathbreaker in the wind is a warning to every man who passes below.
 
 **Bone-Priest of the Covenant** · Uncommon · Creature (Human Cultist) · 1B · 1/2 · Sacrifice another creature: draw a card and you lose 1 life.
 A two-drop that turns sacrifices into cards, each one costing a point of life. It does nothing without fodder, so it is an uncommon engine for decks built around Initiates and tokens. A priest who reads the future in knucklebones and never runs short of them needs no further comment.
@@ -101,8 +101,8 @@ A sacrifice outlet that turns your creatures into shrink effects. It makes chump
 **Censer of Bitter Ash** · Uncommon · Relic · 2B · Tap, pay 2 and 2 life: the enemy discards a card at random.
 Repeatable hand attack at a steep price: two mana and 2 life for each random discard. It grinds out long games and is too slow to matter in short ones. The censer mocks the incense of the sanctuary, carrying thoughts away instead of prayers up, a profanation that shows its evil plainly.
 
-**Oathbreaker Knight** · Rare · Creature (Human Knight) · 2B · 3/2 · As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.
-The Bloodied build-around. A 3/2 for three becomes a 5/4 with dread and deathtouch once you are at 10 life or less, which is a real threat that only Covenant creatures can block and that kills them when they do. He swore to guard the weak and sold the oath for strength, the clearest picture of the broken vow.
+**Oathbreaker Knight** · Rare · Creature (Human Knight) · 2B · 3/3 · As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.
+The Bloodied build-around. A 3/3 for three becomes a 5/5 with dread and deathtouch once you are at 10 life or less, which is a real threat that only Covenant creatures can block and that kills them when they do. He swore to guard the weak and sold the oath for strength, the clearest picture of the broken vow.
 
 **Dream-Thief Fiend** · Rare · Creature (Demon) · 2BB · 2/2 · Dread. Whenever this attacks, the enemy discards a card at random.
 A dread 2/2 for four that strips a card each time it attacks. It is a slow lock that every turn it survives makes worse, and its small body leaves it open to removal, which keeps it fair at rare. Forgetting your plan by morning is a quiet horror that fits a demon of the night.
@@ -125,8 +125,8 @@ Destroy all creatures for five mana, the Covenant's sweeper. It is the faith of 
 **Rite of the Emptied Mind** · Rare · Spell (Curse) · 1BB · The enemy discards three cards at random. You lose 3 life.
 Three random discards for three mana and 3 life, a heavy hand attack that can empty a player's options in one stroke. The randomness and the life keep it from being oppressive. The order of loss in the flavour, friends then prayers then the reason for prayer, is the path of despair.
 
-**Ledger of the Damned** · Rare · Relic · 3B · Tap: draw a card and you lose 2 life.
-The repeatable draw engine, kept at rare as the spec asks. A card a turn for 2 life is strong, but it does nothing to the board and it drains its owner steadily into Bloodied range. Every page a soul, every soul overdue: the Covenant as a moneylender of the damned.
+**Ledger of the Damned** · Rare · Relic · 3B · Tap: draw a card and you lose 1 life.
+The repeatable draw engine, kept at rare as the spec asks. A card a turn for 1 life is strong, but it does nothing to the board and it drains its owner steadily into Bloodied range. Every page a soul, every soul overdue: the Covenant as a moneylender of the damned.
 
 **Belzareth, Prince of Cinders** · Mythic · Creature (Demon Lord) · 4BB · 5/5 · Dread. When this enters, destroy target enemy creature and you lose 3 life.
 The faith's bomb, rebalanced. He keeps his removal on entry, loses the death drain, trades flying for dread, and now costs 3 life when he arrives. A 5/5 evasive body plus a kill is still a mythic swing, but the price is real. The name echoes Beelzebub, and the earth forgetting it was ever green shows him as blight, not glamour.
