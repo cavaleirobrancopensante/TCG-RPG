@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **1.3**. Full design: [DESIGN.md](DESIGN.md).
+Version **1.4**. Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
@@ -15,7 +15,7 @@ Version **1.3**. Full design: [DESIGN.md](DESIGN.md).
 | The Black Covenant | bloody dagger, point down | Black & Gray | B | Profane Altar | drain, destroy, deathtouch, undeath |
 | The Old Ways | leaf | Green & Brown | G | Sacred Grove | big beasts, ramp, trample |
 | The Revel | masquerade mask | Red & Purple | R | Pleasure Garden | haste, burn, excess |
-| The Stoa | column with an owl | Blue & Silver | U | Library | draw, tap, bounce, walls |
+| The Stoa | column with an owl in profile | Blue & Silver | U | Library | draw, tap, bounce, walls |
 | The Technocracy | cog | Colourless | C | Foundry | constructs, relics, generic costs |
 
 ## What's playable now
