@@ -7,6 +7,9 @@ extends Control
 signal tapped(fig: SummonFigure)
 
 const SIZE := Vector2(118, 158)
+const KW_ICONS := {"flying": "✈", "reach": "R", "haste": "»", "lifelink": "♥", "deathtouch": "☠",
+	"vigilance": "◉", "trample": "T", "defender": "▣", "guardian": "⛨", "sanctified": "✚",
+	"dread": "☾", "regenerate": "↻", "first_strike": "‼", "steadfast": "▲"}
 
 var uid := -1
 var card: Dictionary = {}
@@ -19,7 +22,9 @@ var sick := false
 var enemy := false            # enemy figures face down the screen
 var mark := ""                # "", "attack", "block", "target", "select"
 var block_link := Vector2.ZERO
-var in_back := false          # behind another figure in a stack: no name scroll
+var in_back := false
+var status: Array = []        # "pacified", "snared", "frozen"
+var kw_now: Array = []        # keywords it has right now (printed and granted)          # behind another figure in a stack: no name scroll
 
 var summon_t := 1.0           # 0 → 1 during the summon animation
 var fade := 1.0               # death dissolve
@@ -58,6 +63,17 @@ func sync(p) -> void:   # p: BattleState.Perm
 	damage = p.damage
 	is_tapped = p.tapped
 	sick = p.sick and not p.has_kw("haste")
+	status = []
+	if p.pacified:
+		status.append("pacified")
+	if p.snared_by >= 0 and p._state() and p._state().find_perm(p.snared_by) != null:
+		status.append("snared")
+	if p.frozen:
+		status.append("frozen")
+	kw_now = []
+	for k in KW_ICONS:
+		if p.has_kw(k):
+			kw_now.append(k)
 	queue_redraw()
 
 
@@ -198,15 +214,21 @@ func _draw() -> void:
 	draw_string(Tapestry.font("book"), sc_pos + Vector2(-18, 5), "%d/%d" % [power, toughness - damage],
 		HORIZONTAL_ALIGNMENT_CENTER, 36, 16, Color(pt_col, a))
 	# keywords on a small plaque
-	var kws: Array = card.get("keywords", [])
+	var kws: Array = kw_now
 	if not kws.is_empty():
 		var txt := ""
 		for kw in kws:
-			txt += {"flying": "✈", "reach": "R", "haste": "»", "lifelink": "♥", "deathtouch": "☠",
-				"vigilance": "◉", "trample": "T", "defender": "▣", "guardian": "⛨"}.get(kw, "?")
+			txt += KW_ICONS.get(kw, "?")
 		var pr := Rect2(4, 5, 12 + 13 * kws.size(), 20)
 		Tapestry.ink_rect(self, pr, Color(Tapestry.PARCHMENT_LIGHT, 0.95 * a), 1.4)
 		draw_string(Tapestry.font("book"), pr.position + Vector2(5, 15), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(Tapestry.RUBRIC, a))
+	# status: pacified (dove), snared (chain), frozen (snowflake)
+	var sy := 70.0
+	for stt in status:
+		var glyph: String = {"pacified": "☮", "snared": "⛓", "frozen": "❄"}.get(stt, "?")
+		Tapestry.ink_circle(self, Vector2(14, sy), 11, Color(Tapestry.PARCHMENT_LIGHT, 0.95 * a), 1.4)
+		draw_string(Tapestry.font("book"), Vector2(6, sy + 6), glyph, HORIZONTAL_ALIGNMENT_CENTER, 16, 15, Color(Tapestry.ULTRAMARINE, a))
+		sy += 24
 	if sick and not is_tapped and rise_done():
 		draw_string(Tapestry.font("italic"), Vector2(6, 46), "zz", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(Tapestry.WHITE, 0.85 * a))
 

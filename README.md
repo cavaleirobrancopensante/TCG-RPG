@@ -148,12 +148,26 @@ still needs translating, and the tests check placeholders and coverage. Shared t
 - **Music order**: random (default) or follow the list, from the music strip or Settings.
 - **Smoother**: map figures and duel figures are no longer repainted every frame.
 
-## Card set status
+## Card set status (Set 2, 1.14)
 
-Seed set: **18 cards per faith (108 total)**. Target per faith: 101 C · 60 U · 53 R · 15 M
-(229, so 1,374 overall). Add cards to `data/cards/<faith>.json` — the schema, triggers,
-actions and keywords are in DESIGN.md §6. The test runner validates every card and prints
-progress against the targets.
+**300 cards**: 45 per faith (20 common, 13 uncommon, 9 rare, 3 mythic), 15 dual-faith
+cards (one per pair of faiths) and 15 dual gain-lands (enter tapped, gain 1 life, tap for
+either faith's mana). Each faith owns its own mechanics, with almost no overlap:
+
+| Faith | What it plays like | Its mechanics |
+|---|---|---|
+| Holy Church | holds the line, heals, punishes attackers | flying (angels), guardian, lifelink, sanctified, martyrdom, Grace, anthems, removal only on tapped creatures, Pacify |
+| Black Covenant | power for a price | life payments, sacrifice, unconditional destroy, shrink, discard, raise the dead, drain, deathtouch, dread, Bloodied |
+| Old Ways | grows big and many | mana creatures, rituals, tokens, pumps, trample, reach, regenerate, fight, kill fliers and relics, Rooted |
+| Revel | fast, reckless, self-wounding | haste, first strike, burn, team attack bonuses, Carouse, Idle (laziness), rummage |
+| Stoa | patience and control | card draw, foresight, tap, freeze, bounce, tax, defender, vigilance, steadfast, Composure |
+| Technocracy | an engine you assemble | Overclock (kicker), Assembly, upkeep costs, cost reducers, Snare relics, Servos |
+
+The full rules format is in `docs/CARD_SPEC.md`; `python3 tools/validate_cards.py
+data/cards/*.json` checks every card against it (including which faith may use which
+mechanic and the tone rules). Design notes for every card are in `docs/rationale/`.
+`res://tests/balance.tscn` plays every faith against every other with the AI on both
+sides and reports win rates and the strongest and weakest cards.
 
 Optional art: add `"art": "res://art/cards/<id>.png"` for the card picture and
 `"figure": "res://art/figures/<id>.png"` for the summoned figure; without them the game

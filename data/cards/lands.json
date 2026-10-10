@@ -1,0 +1,392 @@
+[
+  {
+    "id": "land_sanctum_abyss",
+    "name": "Penitents' Crossroads",
+    "faction": "sanctum",
+    "faction2": "abyss",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "W",
+      "B"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Covenant mana.",
+    "flavor": "A wayside cross where the road forks: one path to the chapel, one to the pit."
+  },
+  {
+    "id": "land_sanctum_wild",
+    "name": "Hermitage Spring",
+    "faction": "sanctum",
+    "faction2": "wild",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "W",
+      "G"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Old Ways mana.",
+    "flavor": "The hermit blessed the spring, and the spring has never failed him."
+  },
+  {
+    "id": "land_sanctum_revel",
+    "name": "Feast-Day Square",
+    "faction": "sanctum",
+    "faction2": "revel",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "W",
+      "R"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Revel mana.",
+    "flavor": "On the saint's day the bells ring first and the taverns open after."
+  },
+  {
+    "id": "land_sanctum_lyceum",
+    "name": "Cloister Library",
+    "faction": "sanctum",
+    "faction2": "lyceum",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "W",
+      "U"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Stoa mana.",
+    "flavor": "The monks copied the old philosophers and kept what was true."
+  },
+  {
+    "id": "land_sanctum_machine",
+    "name": "Bell Foundry",
+    "faction": "sanctum",
+    "faction2": "machine",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "W",
+      "C"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Technocracy mana.",
+    "flavor": "Every bell cast here is blessed before it is hung."
+  },
+  {
+    "id": "land_abyss_wild",
+    "name": "Gallows Heath",
+    "faction": "abyss",
+    "faction2": "wild",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "B",
+      "G"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Old Ways mana.",
+    "flavor": "Nothing grows on the heath but thorn and the ravens' patience."
+  },
+  {
+    "id": "land_abyss_revel",
+    "name": "Masque of Ashes",
+    "faction": "abyss",
+    "faction2": "revel",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "B",
+      "R"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Revel mana.",
+    "flavor": "The music never stops, and some of the dancers never leave."
+  },
+  {
+    "id": "land_abyss_lyceum",
+    "name": "Forbidden Stacks",
+    "faction": "abyss",
+    "faction2": "lyceum",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "B",
+      "U"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Stoa mana.",
+    "flavor": "Behind the locked grille are the books the scholars swore never to open."
+  },
+  {
+    "id": "land_abyss_machine",
+    "name": "Charnel Works",
+    "faction": "abyss",
+    "faction2": "machine",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "B",
+      "C"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Technocracy mana.",
+    "flavor": "The furnaces burn day and night, and no one asks what feeds them."
+  },
+  {
+    "id": "land_wild_revel",
+    "name": "Vineyard Terraces",
+    "faction": "wild",
+    "faction2": "revel",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "G",
+      "R"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Revel mana.",
+    "flavor": "The vines were planted by the old druids and are harvested by the Revel."
+  },
+  {
+    "id": "land_wild_lyceum",
+    "name": "Philosophers' Grove",
+    "faction": "wild",
+    "faction2": "lyceum",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "G",
+      "U"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Stoa mana.",
+    "flavor": "Under the plane trees the students walk and argue until dusk."
+  },
+  {
+    "id": "land_wild_machine",
+    "name": "Mill Weir",
+    "faction": "wild",
+    "faction2": "machine",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "G",
+      "C"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Technocracy mana.",
+    "flavor": "The river turns the wheel and the wheel grinds the grain."
+  },
+  {
+    "id": "land_revel_lyceum",
+    "name": "Garden of Epicurus",
+    "faction": "revel",
+    "faction2": "lyceum",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "R",
+      "U"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Revel or Stoa mana.",
+    "flavor": "A quiet garden for pleasant conversation, if the guests stay quiet."
+  },
+  {
+    "id": "land_revel_machine",
+    "name": "Fireworks Workshop",
+    "faction": "revel",
+    "faction2": "machine",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "R",
+      "C"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Revel or Technocracy mana.",
+    "flavor": "Brass tubes, black powder and a guild licence signed in haste."
+  },
+  {
+    "id": "land_lyceum_machine",
+    "name": "Observatory Tower",
+    "faction": "lyceum",
+    "faction2": "machine",
+    "rarity": "common",
+    "type": "land",
+    "subtype": "Land",
+    "cost": {},
+    "produces": [
+      "U",
+      "C"
+    ],
+    "enters_tapped": true,
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "keywords": [],
+    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Stoa or Technocracy mana.",
+    "flavor": "The great orrery turns, and the astronomers write down what it says."
+  }
+]

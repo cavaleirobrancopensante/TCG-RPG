@@ -121,6 +121,7 @@ static func play_main(st: BattleState, i: int) -> bool:
 		var best := -1
 		var best_v := 0.0
 		var best_targets: Array = []
+		var best_oc := false
 		for hi in s.hand.size():
 			if not st.can_play(i, hi):
 				continue
@@ -129,22 +130,190 @@ static func play_main(st: BattleState, i: int) -> bool:
 				continue
 			var plan := _plan(st, i, c)
 			var v: float = plan[0]
+			var oc := false
+			if v > 0.0 and st.can_play(i, hi, true):
+				oc = true
+				v += 1.5 + float(CardDB.mana_value(c["overclock"].get("cost", {}))) * 0.5
 			if v > best_v:
 				best_v = v
 				best = hi
 				best_targets = plan[1]
+				best_oc = oc
 		if best < 0:
 			break
-		st.play(i, best, best_targets)
+		st.play(i, best, best_targets, best_oc)
+		did = true
+	did = use_abilities(st, i) or did
+	return did
+
+
+# ============================================================ activated abilities
+
+## Use the abilities of our creatures and relics when they help. In main phase 1 only those
+## that help the attack (tapping or shrinking blockers, pumping attackers); the rest after combat.
+static func use_abilities(st: BattleState, i: int) -> bool:
+	var did := false
+	var guard := 0
+	while guard < 12 and st.phase != "over":
+		guard += 1
+		var best_uid := -1
+		var best_idx := -1
+		var best_v := 0.6
+		for p in st.side(i).creatures + st.side(i).relics:
+			var list := st.abilities_of(p)
+			for idx in list.size():
+				if not st.can_activate(i, p.uid, idx):
+					continue
+				var v := _ability_value(st, i, p, list[idx])
+				if v > best_v:
+					best_v = v
+					best_uid = p.uid
+					best_idx = idx
+		if best_uid < 0:
+			break
+		if not st.activate(i, best_uid, best_idx):
+			break
 		did = true
 	return did
+
+
+static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
+	var me := st.side(i)
+	var cost: Dictionary = ab.get("cost", {})
+	var v := 0.0
+	var helps_attack := false
+	for e in ab.get("effects", []):
+		var a: String = e.get("action", "")
+		var t: String = e.get("target", "")
+		match a:
+			"add_mana":
+				return 0.0          # mana abilities are used by the payment step only when needed
+			"draw":
+				v += 1.4 * int(e.get("amount", 1))
+			"summon":
+				v += 1.6 * int(e.get("count", 1))
+			"damage":
+				var ref = st.auto_target(i, e)
+				if ref != null:
+					v += 1.5 + (2.0 if ref.get("kind") == "creature" else 0.0)
+					helps_attack = true
+			"drain":
+				v += 1.4 * int(e.get("amount", 1))
+			"discard_enemy":
+				if st.side(1 - i).hand.is_empty():
+					return 0.0
+				v += 1.6
+			"tap", "freeze":
+				if st.valid_targets_for(i, p, e).is_empty():
+					return 0.0
+				v += 1.5
+				helps_attack = true
+			"buff":
+				var pw := int(e.get("power", 0))
+				var tg := int(e.get("toughness", 0))
+				if pw < 0 or tg < 0:
+					var ref = st.auto_target(i, e)
+					if ref == null:
+						return 0.0
+					var victim = st.find_perm(ref.get("uid", -1))
+					v += 1.0 + (victim.value() if victim and victim.toughness() + tg <= victim.damage else 0.0)
+					helps_attack = true
+				elif e.get("duration", "turn") == "permanent":
+					v += 1.5 * (pw + tg) * 0.5 * (1.0 if t != "all_own_creatures" else maxf(1.0, me.creatures.size()))
+				else:
+					if st.phase != "main1" or st.attack_candidates(i).is_empty():
+						return 0.0
+					v += 0.9 * (pw + tg) * 0.5
+					helps_attack = true
+			"foresight":
+				v += 0.5
+			"tax":
+				v += 0.6
+			"heal":
+				v += 0.4 * int(e.get("amount", 1))
+			"lose_life":
+				v -= 0.5 * int(e.get("amount", 1))
+			_:
+				v += 0.8
+	# costs
+	var life := int(cost.get("life", 0))
+	if life > 0:
+		if me.life <= life + 5:
+			return 0.0
+		v -= 0.4 * life
+	match String(cost.get("sacrifice", "")):
+		"other", "servo":
+			var victim = st._sacrifice_choice(i, p, String(cost["sacrifice"]))
+			if victim == null:
+				return 0.0
+			v -= victim.value() * (0.4 if victim.is_token else 0.9)
+		"self":
+			v -= p.value() * 0.8
+	if cost.get("tap", false) and p.is_creature():
+		if st.phase == "main1" and st.can_attack(p) and not helps_attack:
+			return 0.0      # attack first, use it after combat
+		v -= 0.3
+	if cost.has("mana"):
+		v -= 0.2 * CardDB.mana_value(cost["mana"])
+	if st.phase == "main1" and not helps_attack:
+		v -= 0.5            # most abilities wait for main phase 2
+	return v
+
+
+# ============================================================ card choices for rummage / foresight / costs
+
+## The hand card we'd most like to get rid of (-1 if the hand is empty).
+static func worst_card(st: BattleState, i: int) -> int:
+	var s := st.side(i)
+	if s.hand.is_empty():
+		return -1
+	var lands_total := s.lands.size()
+	for id in s.hand:
+		if CardDB.get_card(id).get("type") == "land":
+			lands_total += 1
+	var worst := 0
+	var worst_v := -1e9
+	for hi in s.hand.size():
+		var c := CardDB.get_card(s.hand[hi])
+		var v := 0.0
+		if c.get("type") == "land":
+			v = 5.0 if lands_total >= 6 else -5.0
+		else:
+			v = float(c.get("mana_value", 0)) - float(s.lands.size()) - DeckTools.card_score(c) * 0.2
+		if v > worst_v:
+			worst_v = v
+			worst = hi
+	return worst
+
+
+## Foresight: keep this card on top?
+static func wants_on_top(st: BattleState, i: int, id: String) -> bool:
+	var s := st.side(i)
+	var c := CardDB.get_card(id)
+	var lands := s.lands.size()
+	for h in s.hand:
+		if CardDB.get_card(h).get("type") == "land":
+			lands += 1
+	if c.get("type") == "land":
+		return lands < 5
+	return int(c.get("mana_value", 0)) <= s.lands.size() + 2
+
+
+## Foresight order among kept cards: higher = drawn sooner.
+static func card_priority(st: BattleState, i: int, id: String) -> float:
+	var s := st.side(i)
+	var c := CardDB.get_card(id)
+	if c.get("type") == "land":
+		return 10.0 if s.lands.size() < 3 else 1.0
+	return DeckTools.card_score(c) + (2.0 if int(c.get("mana_value", 0)) <= s.lands.size() + 1 else 0.0)
 
 
 static func _best_land(st: BattleState, i: int) -> int:
 	var s := st.side(i)
 	var have := {}
 	for l in s.lands:
-		have[l["color"]] = int(have.get(l["color"], 0)) + 1
+		for col in BattleState.land_colors(l):
+			have[col] = int(have.get(col, 0)) + 1
 	var demand := _demand(s.hand, range(s.hand.size()))
 	var best := -1
 	var best_v := -999.0
@@ -152,8 +321,14 @@ static func _best_land(st: BattleState, i: int) -> int:
 		var c := CardDB.get_card(s.hand[hi])
 		if c.get("type") != "land":
 			continue
-		var col: String = c["produces"]
-		var v := float(demand.get(col, 0)) - float(have.get(col, 0)) * 0.5
+		var prod = c.get("produces", "C")
+		var cols: Array = prod if typeof(prod) == TYPE_ARRAY else [String(prod)]
+		var v := 0.0
+		for col in cols:
+			v = maxf(v, float(demand.get(col, 0)) - float(have.get(col, 0)) * 0.5)
+		v += 0.3 * (cols.size() - 1)
+		if c.get("enters_tapped", false):
+			v -= 0.6      # a tapped land costs tempo; play it when nothing else needs the mana
 		if v > best_v:
 			best_v = v
 			best = hi
@@ -375,7 +550,32 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 						return [0.0, []]
 					v += 2.0 * (foe_untapped if t == "all_enemy_creatures" else 1)
 			"buff":
-				if is_spell:
+				var bp := int(e.get("power", 0))
+				var bt := int(e.get("toughness", 0))
+				if bp < 0 or bt < 0:
+					# shrink: worth it when it kills something (or weakens a big threat)
+					if t == "all_creatures":
+						var net := 0.0
+						for q in foe.creatures:
+							if q.toughness() + bt <= q.damage:
+								net += q.value()
+						for q in me.creatures:
+							if q.toughness() + bt <= q.damage:
+								net -= q.value()
+						if net <= 1.0:
+							return [0.0, []]
+						v += net
+					elif chosen != null:
+						var q := st.find_perm(chosen["uid"])
+						if q and q.toughness() + bt <= q.damage:
+							v += q.value()
+						elif is_spell:
+							return [0.0, []]
+				elif e.get("duration", "turn") == "permanent":
+					if t in ["all_own_creatures", "other_own_creatures"] and me.creatures.is_empty() and is_spell:
+						return [0.0, []]
+					v += (bp + bt) * (maxf(1.0, me.creatures.size()) if t in ["all_own_creatures", "other_own_creatures"] else 1.0) * 0.6
+				elif is_spell:
 					if st.phase != "main1":
 						return [0.0, []]
 					if t == "own_creature":
@@ -384,6 +584,48 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 							return [0.0, []]
 					elif not _pump_all_helps(st, i, int(e.get("power", 0)), int(e.get("toughness", 0))):
 						return [0.0, []]
+			"pacify", "snare":
+				if chosen != null:
+					var p := st.find_perm(chosen["uid"])
+					if p:
+						if is_spell and p.value() < 2.5:
+							return [0.0, []]
+						v += p.value() * 0.8
+			"freeze":
+				if chosen != null:
+					var p := st.find_perm(chosen["uid"])
+					if p:
+						v += 1.0 + p.value() * 0.3
+			"fight":
+				var mine = st._strongest(i)
+				if mine == null or chosen == null:
+					if is_spell:
+						return [0.0, []]
+				else:
+					var p := st.find_perm(chosen["uid"])
+					if p:
+						var kills: bool = mine.power() >= p.toughness() - p.damage or mine.has_kw("deathtouch")
+						var dies: bool = p.power() >= mine.toughness() - mine.damage
+						if is_spell and not kills:
+							return [0.0, []]
+						v += (p.value() if kills else 0.0) - (mine.value() if dies else 0.0)
+			"destroy_relic":
+				if chosen != null:
+					var r := st.find_perm(chosen["uid"])
+					if r:
+						v += 2.0 + float(r.card.get("mana_value", 0))
+			"foresight":
+				v += 0.4 * amount
+			"tax":
+				if foe.hand.is_empty():
+					v -= 0.5
+				else:
+					v += 0.5 * amount
+			"rummage":
+				v += 0.6
+			"upkeep_cost":
+				if st.side(i).lands.size() < amount + 2:
+					v -= 2.0
 			"discard_enemy":
 				if foe.hand.is_empty():
 					if is_spell:
@@ -481,6 +723,12 @@ static func choose_attackers(st: BattleState, i: int) -> Array:
 			var i_kill: bool = ap >= b_t or p.has_kw("deathtouch")
 			if kills_me and not i_kill:
 				dies_badly = true
+		var lazy := false          # Idle creatures prefer to lounge unless the attack matters
+		for e in p.card.get("effects", []):
+			if e.get("trigger") == "idle":
+				lazy = true
+		if lazy and (can_be_blocked or ap <= 1):
+			continue
 		if not can_be_blocked or not dies_badly:
 			out.append(p.uid)
 	# Far ahead on life: race.

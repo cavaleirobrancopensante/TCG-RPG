@@ -225,7 +225,7 @@ func _interactive_battle() -> void:
 	for i in 4:
 		me.lands.append({"id": "land_revel", "color": "R", "tapped": false})
 		me.lands.append({"id": "land_wild", "color": "G", "tapped": false})
-	me.hand = ["revel_c_007", "wild_c_003", "wild_c_003"]
+	me.hand = ["revel_c_013", "wild_c_003", "wild_c_003"]
 	b.refresh()
 	# 0) Read the hand with the viewer, leafing with the arrows.
 	b._show_preview(me.hand[0], 0)
@@ -270,9 +270,11 @@ func _interactive_battle() -> void:
 		# 3) Attack by tapping our creatures.
 		b._on_alt()
 		assert(b.mode == "attack", "attack mode")
-		for p in st.side(0).creatures:
-			if st.can_attack(p):
-				b._on_figure_tapped(b.figures[p.uid])
+		var ready := st.attack_candidates(0).size()
+		assert(b.sel_attackers.size() == ready, "everyone is selected to attack by default")
+		if ready > 1:
+			b._on_figure_tapped(b.figures[b.sel_attackers[0]])     # hold one back
+			assert(b.sel_attackers.size() == ready - 1, "tapping holds a creature back")
 		var n := b.sel_attackers.size()
 		b._on_main()
 		await _settle(b)

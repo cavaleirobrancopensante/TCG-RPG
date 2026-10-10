@@ -114,6 +114,18 @@ func _draw() -> void:
 	# leaf + faith border band
 	Tapestry.draw_parchment(self, r)
 	Tapestry.draw_band(self, r, 9 * k, Tapestry.band_for(f))
+	var f2: String = card.get("faction2", "")
+	if f2 != "":
+		# dual faith: the second faith's colours run down the right edge and along the foot
+		var c2: Color = Tapestry.colors(f2)[0] if f2 != "sanctum" else Tapestry.WHITE
+		var right := Rect2(r.end.x - 9 * k, r.position.y + r.size.y * 0.5, 9 * k, r.size.y * 0.5)
+		var foot := Rect2(r.position.x + r.size.x * 0.5, r.end.y - 9 * k, r.size.x * 0.5, 9 * k)
+		draw_rect(right, c2)
+		draw_rect(foot, c2)
+		draw_rect(right, INK, false, lw * 0.6)
+		draw_rect(foot, INK, false, lw * 0.6)
+		var sc2: Color = Tapestry.colors(f2)[1] if f2 != "sanctum" else Tapestry.VERMILION
+		UIKit.draw_sigil(self, f2, Vector2(r.end.x - 4.5 * k, r.end.y - 4.5 * k), 6 * k, sc2, maxf(1.0, k))
 	var inner := r.grow(-9 * k)
 
 	# name plate

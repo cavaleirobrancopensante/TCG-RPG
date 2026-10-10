@@ -9,22 +9,38 @@ func _ready() -> void:
 	bg.color = Color(0.3, 0.25, 0.2)
 	bg.size = Vector2(1280, 720)
 	add_child(bg)
+	var pages := {}
 	for f in Factions.ORDER:
-		var grid := GridContainer.new()
-		grid.columns = 9
-		grid.position = Vector2(8, 8)
-		grid.add_theme_constant_override("h_separation", 6)
-		grid.add_theme_constant_override("v_separation", 6)
-		add_child(grid)
-		var ids := CardDB.faction_ids(f)
+		var ids: Array = []
+		for id in CardDB.faction_ids(f):
+			if CardDB.get_card(id).get("faction", "") == f and not id.begins_with("gold_") and not CardDB.is_land(id):
+				ids.append(id)
 		ids.append(Factions.land_id(f))
-		for id in ids:
-			grid.add_child(CardView.create(id, 0.66, false))
-		await RenderingServer.frame_post_draw
-		await RenderingServer.frame_post_draw
-		get_viewport().get_texture().get_image().save_png(dir + "gallery_%s.png" % f)
-		grid.queue_free()
-		await get_tree().process_frame
+		pages[f] = ids
+	var extra: Array = []
+	for id in CardDB.all_set_ids():
+		if id.begins_with("gold_"):
+			extra.append(id)
+	extra.append_array(CardDB.dual_land_ids())
+	pages["gold"] = extra
+	for f in pages:
+		var ids: Array = pages[f]
+		var page := 0
+		while page * 40 < ids.size():
+			var grid := GridContainer.new()
+			grid.columns = 10
+			grid.position = Vector2(6, 4)
+			grid.add_theme_constant_override("h_separation", 6)
+			grid.add_theme_constant_override("v_separation", 4)
+			add_child(grid)
+			for id in ids.slice(page * 40, page * 40 + 40):
+				grid.add_child(CardView.create(id, 0.6, false))
+			await RenderingServer.frame_post_draw
+			await RenderingServer.frame_post_draw
+			get_viewport().get_texture().get_image().save_png(dir + "gallery_%s_%d.png" % [f, page + 1])
+			grid.queue_free()
+			await get_tree().process_frame
+			page += 1
 	# one big card for detail
 	var big := CardView.create("sanctum_m_001", 2.4, true)
 	big.position = Vector2(40, 20)

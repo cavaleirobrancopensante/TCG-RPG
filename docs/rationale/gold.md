@@ -1,0 +1,48 @@
+## Dual-faith cards
+
+There is one gold card for each of the fifteen pairs of faiths: ten uncommons and five rares. Each costs at least one mana of both its faiths (C for the Technocracy) and joins one mechanic owned by each, so the card can only exist where the two worldviews meet. Pairs that sit close together, like the Old Ways and the Revel, meet in a shared feast; opposed pairs meet in a struggle, a debate or a slow corruption. The Church and the Covenant never cooperate: their card is a sinner climbing out of the pit, and the Covenant's only part in it is the debt he has to pay off.
+
+**Penitent of the Broken Pact** · Rare · Creature (Human Penitent) · 2WB · 3/3 · Lifelink. When this enters, you lose 3 life. As long as you have more life than you started with, this gets +2/+2 and has sanctified (protection from the Covenant).
+The Covenant half is only the price: he arrives 3 life in debt, the old pact coming due. The Church half is the way out: lifelink is his penance, and once it carries you back above your starting life he is a 5/5 lifelinker in Grace with sanctified. Sanctified then shuts out Covenant cards, your own included, so once he is absolved the pit can no longer touch him. Good and evil are not equal here; the card is the story of leaving one for the other.
+
+**Rogationtide Friar** · Uncommon · Creature (Human Friar) · 1WG · 2/3 · When this enters, create a 1/1 Sapling token and gain 2 life.
+A friendly value creature: a 2/3, a Sapling and 2 life for three mana, slightly above rate as gold uncommons should be. The Old Ways supply the token and the Church the life, which also pushes toward Grace. Rogation days, when the parish walked its bounds and blessed the crops, are how the Church took up the old reverence for the land and gave it to God.
+
+**Lord of the Last Pew** · Uncommon · Creature (Human Noble) · 1WR · 1/4 · Idle (at the end of your turn, if this is untapped and didn't attack): gain 2 life.
+The Revel's laziness meets the Church's patience, and the joke is on the Revel. A 1/4 that gains 2 life every turn it stays home makes a sturdy blocker and a steady Grace engine, but it never adds to the attack. The tension is comic: the noble sleeps through the sermon, and the friar's prayers do the real work.
+
+**Boethius in the Tower** · Rare · Creature (Human Philosopher) · 2WU · 2/4 · Steadfast (prevent 1 of the damage dealt to it by each source). As long as you have more life than you started with, other creatures you control have steadfast. When this dies, draw two cards and gain 3 life.
+Stoic discipline made strong by Grace: in a Church deck that stays ahead on life, every creature gains steadfast, and his martyrdom refills the hand and the life total. Four mana for a 2/4 is modest, so the value lies in the team ability and the death trigger, which makes him a rare build-around for a defensive W/U deck. Saint Severinus Boethius wrote the Consolation of Philosophy in prison before his execution, the very place where the classical Stoic inheritance passed into Christian hands.
+
+**Abbot's Astronomical Clock** · Uncommon · Relic (Engine) · WC · At the beginning of your upkeep, gain 2 life. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).
+Two life every turn for one mana every turn: a steady but costly Grace engine for a Church deck splashing Foundries. Compared with Votive Candles it gains more but must be fed, which is the Technocracy's way. Medieval abbots really built great clocks for the Hours, and the flavour keeps the order right: the machine counts the Office, but only men can pray it.
+
+**Gallows Oak** · Uncommon · Creature (Treefolk) · 2BG · 2/4 · Deathtouch (any damage this deals to a creature destroys it). Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).
+A defensive wall that kills whatever it blocks and survives the first attempt to remove it. Four mana for a 2/4 with two strong keywords is fair at uncommon because it does little on offence. The Old Ways supply the endurance and the Covenant the poison: this is nature corrupted, a sacred oak turned into a gallows tree, not an alliance.
+
+**Demon at the Masked Ball** · Uncommon · Creature (Demon) · 1BR · 3/2 · Haste. Dread (can only be blocked by Covenant creatures and Constructs). When this enters, you lose 2 life.
+A fast, evasive beater for aggressive B/R decks: three hasty damage at once and hard to block afterwards, paid for with 2 life and a fragile body. The Revel's haste and the Covenant's dread and life payment fit the slow ruin of excess. The demon is not glamorous; he is simply what was waiting at the end of the party.
+
+**Apostate of the Porch** · Uncommon · Creature (Human Philosopher) · 1BU · 1/2 · When this enters, draw two cards and you lose 2 life. As long as you have four or more cards in hand, this has deathtouch.
+A card advantage creature: draw two for three mana and 2 life, on a small body that becomes a deathtouch blocker while your hand stays full. The Covenant's draw for life fills the hand, and the Stoa's Composure turns that full hand into a threat. The story is a cautionary one: a philosopher who left discipline for forbidden learning, and found the Covenant's lessons always carry a fee.
+
+**Bone Mill Engine** · Rare · Creature (Construct) · 2BC · 2/2 · Dread (can only be blocked by Covenant creatures and Constructs). Assembly (this gets +1/+1 for each other Construct you control). Sacrifice another creature: put a +1/+1 counter on this.
+A build-around that turns a wide board into one huge evasive threat: it grows with every Construct beside it, then eats Servos, Zombies or anything else to grow permanently. Sacrificing Constructs shrinks its Assembly bonus while adding counters, so the player must judge when to feed it. The Technocracy's cold efficiency and the Covenant's sacrifice meet in the same horror: men treated as raw material.
+
+**Satyr-King of the Vintage** · Rare · Creature (Satyr) · 3GR · 4/4 · Trample. When this enters, create two 1/1 Goat Beast tokens with haste. Whenever this attacks, creatures you control get +1/+0 until end of turn.
+The friendliest pairing in the set, the wild vintage and the feast. Five mana brings a 4/4 trampler and two goats that attack at once, and from the next turn every attack pumps the whole team. The Old Ways give the tokens and trample, the Revel the haste and the team bonus, and the flavour shows the Revel's excess ruining even the vineyard that fed it.
+
+**Planter of Slow Oaks** · Uncommon · Creature (Human Philosopher) · 1GU · 1/3 · At the beginning of your upkeep, if you have four or more cards in hand, create a 1/1 Sapling token.
+A slow engine that rewards patience twice over: hold your cards and the board grows by a Sapling each turn. A 1/3 for three is weak on its own, so it only pays off in a deck that keeps Composure. Zeno taught that the good life is life in agreement with nature, and the old man planting oaks he will never sit under is that teaching in one figure.
+
+**Moss-Grown Sentry** · Uncommon · Creature (Construct) · 1GC · 1/3 · Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead). Assembly (this gets +1/+1 for each other Construct you control).
+A durable Construct that grows with the machine army and shrugs off the first removal each turn. Three mana for a 1/3 is under rate alone, and it becomes strong only beside other Constructs. The two faiths are opposed, and the card shows the green winning: an abandoned machine overgrown by ivy, now guarding the grove that claimed it.
+
+**Epicurean on the Porch Steps** · Uncommon · Creature (Human Philosopher) · 1RU · 1/3 · Idle (at the end of your turn, if this is untapped and didn't attack): tax 1 (the enemy's next non-land card costs 1 more).
+A cheap blocker that slows the enemy every turn it stays home, a little stronger than Sumptuary Tablet because it needs a body to keep sitting there. The Garden and the Porch were the great rival schools of Athens, and here they meet as an endless argument: the Epicurean lounges (Idle), the Stoics answer him, and the enemy waits (tax). The struggle is real but comic, as the Revel always is.
+
+**Pyrotechnic Automaton** · Uncommon · Creature (Construct) · 1RC · 2/2 · Haste. Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, deal 2 damage to any enemy creature or the enemy player.
+A flexible aggressive Construct: a hasty 2/2 on turn three, or a 2/2 plus a Toast of Fire on turn five. Damage to a player is Revel's, so the burn rides on its Revel half while Overclock is the Technocracy's. The hedonists pay for spectacle and the guild sells it by the invoice, two worldviews that agree on fireworks and nothing else.
+
+**Reckoning Engine of Rhodes** · Rare · Relic (Engine) · 1UC · At the beginning of your upkeep, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom), then draw a card. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).
+A repeatable draw engine, rare and slow as the spec asks: three mana up front and one mana every turn, which taxes the curve for as long as you keep it. The Stoa brings foresight and card draw, which the Technocracy may never have on its own, and the Technocracy brings the upkeep. The Stoics called the cosmos a rational order, and the Antikythera mechanism, a bronze calculator of the heavens from the ancient Greek world, is that order built by hand.

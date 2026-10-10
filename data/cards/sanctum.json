@@ -15,16 +15,35 @@
       "guardian"
     ],
     "effects": [],
-    "text": "Guardian (gets +0/+2 while blocking).",
+    "text": "Guardian (blocks as if it had +0/+2).",
     "flavor": "He carries the light so that others may walk without stumbling."
   },
   {
     "id": "sanctum_c_002",
+    "name": "Cloister Dove",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Bird",
+    "cost": {
+      "W": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "text": "Flying (can only be blocked by creatures with flying or reach).",
+    "flavor": "The brothers leave crumbs on the sill at Prime, and the dove keeps the hours better than the novices."
+  },
+  {
+    "id": "sanctum_c_003",
     "name": "Novice of the Choir",
     "faction": "sanctum",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Human Cleric",
+    "subtype": "Human Nun",
     "cost": {
       "W": 1,
       "generic": 1
@@ -44,7 +63,7 @@
     "flavor": "Her voice was the first thing the dark ever feared."
   },
   {
-    "id": "sanctum_c_003",
+    "id": "sanctum_c_004",
     "name": "Cloister Gatewarden",
     "faction": "sanctum",
     "rarity": "common",
@@ -60,11 +79,11 @@
       "guardian"
     ],
     "effects": [],
-    "text": "Guardian (gets +0/+2 while blocking).",
-    "flavor": "No one passes the cloister gate unless the bell has rung for them."
+    "text": "Guardian (blocks as if it had +0/+2).",
+    "flavor": "No one passes the cloister gate unless the bell has rung for him."
   },
   {
-    "id": "sanctum_c_004",
+    "id": "sanctum_c_005",
     "name": "Martyr of the Pilgrim Road",
     "faction": "sanctum",
     "rarity": "common",
@@ -89,7 +108,27 @@
     "flavor": "He fell on the road, and the road itself remembered him as holy."
   },
   {
-    "id": "sanctum_c_005",
+    "id": "sanctum_c_006",
+    "name": "Barefoot Friar",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Friar",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 1,
+    "keywords": [
+      "lifelink"
+    ],
+    "effects": [],
+    "text": "Lifelink (damage this deals also gains you that much life).",
+    "flavor": "He owns a rope belt, a bowl and a breviary, and he gives away the bowl."
+  },
+  {
+    "id": "sanctum_c_007",
     "name": "Herald of the Morning Bell",
     "faction": "sanctum",
     "rarity": "common",
@@ -105,11 +144,11 @@
       "flying"
     ],
     "effects": [],
-    "text": "Flying.",
+    "text": "Flying (can only be blocked by creatures with flying or reach).",
     "flavor": "He descends at Lauds, and the frost melts from the bell-rope."
   },
   {
-    "id": "sanctum_c_006",
+    "id": "sanctum_c_008",
     "name": "Knight of the Pilgrim Way",
     "faction": "sanctum",
     "rarity": "common",
@@ -119,17 +158,51 @@
       "W": 1,
       "generic": 2
     },
-    "power": 3,
+    "power": 2,
     "toughness": 3,
-    "keywords": [
-      "vigilance"
-    ],
+    "keywords": [],
     "effects": [],
-    "text": "Vigilance (doesn't tap to attack).",
-    "flavor": "Sworn to keep the roads open from Lent to Pentecost and beyond."
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "self",
+        "condition": "grace"
+      }
+    ],
+    "text": "As long as you have more life than you started with, this gets +1/+1.",
+    "flavor": "Sworn to keep the roads open from Lent to Pentecost, he rides bolder with every pilgrim who comes home."
   },
   {
-    "id": "sanctum_c_007",
+    "id": "sanctum_c_009",
+    "name": "Thurifer of the Procession",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Cleric",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "When this dies, target creature you control gets +1/+1 permanently.",
+    "flavor": "When he fell, the censer kept swinging, and the smoke rose straight to Heaven."
+  },
+  {
+    "id": "sanctum_c_010",
     "name": "Abbey Man-at-Arms",
     "faction": "sanctum",
     "rarity": "common",
@@ -145,12 +218,102 @@
       "guardian"
     ],
     "effects": [],
-    "text": "Guardian (gets +0/+2 while blocking).",
+    "text": "Guardian (blocks as if it had +0/+2).",
     "flavor": "Behind his shield sleep the orphans of three burned villages."
   },
   {
-    "id": "sanctum_c_008",
-    "name": "Rite of Benediction",
+    "id": "sanctum_c_011",
+    "name": "Knight Hospitaller",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "lifelink"
+    ],
+    "effects": [],
+    "text": "Lifelink (damage this deals also gains you that much life).",
+    "flavor": "He nurses the sick by day and stands guard over their beds by night."
+  },
+  {
+    "id": "sanctum_c_012",
+    "name": "Almoner of the Great Abbey",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Monk",
+    "cost": {
+      "W": 1,
+      "generic": 4
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 4
+      }
+    ],
+    "text": "When this enters, gain 4 life.",
+    "flavor": "Every loaf that leaves his hands comes back as a prayer."
+  },
+  {
+    "id": "sanctum_c_013",
+    "name": "Asperges",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Sacramental",
+    "cost": {
+      "W": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 4
+      }
+    ],
+    "text": "Gain 4 life.",
+    "flavor": "Thou shalt sprinkle me with hyssop, O Lord, and I shall be cleansed."
+  },
+  {
+    "id": "sanctum_c_014",
+    "name": "Rebuke the Wicked",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Exorcism",
+    "cost": {
+      "W": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "destroy",
+        "target": "enemy_creature",
+        "tapped": true,
+        "max_power": 2
+      }
+    ],
+    "text": "Destroy target tapped enemy creature with power 2 or less.",
+    "flavor": "\"You were warned at the threshold. Begone.\""
+  },
+  {
+    "id": "sanctum_c_015",
+    "name": "Sign of Peace",
     "faction": "sanctum",
     "rarity": "common",
     "type": "spell",
@@ -162,25 +325,47 @@
     "keywords": [],
     "effects": [
       {
-        "action": "buff",
-        "target": "own_creature",
-        "power": 2,
-        "toughness": 2,
-        "duration": "turn",
-        "trigger": "cast"
-      },
-      {
-        "action": "heal",
-        "target": "self_player",
-        "amount": 2,
-        "trigger": "cast"
+        "trigger": "cast",
+        "action": "pacify",
+        "target": "enemy_creature"
       }
     ],
-    "text": "Target creature you control gets +2/+2 until end of turn. Gain 2 life.",
-    "flavor": "\"Go forth, and fear nothing that walks beneath the sun.\""
+    "text": "Pacify target enemy creature (it can't attack for the rest of the duel).",
+    "flavor": "\"Peace be with you.\" The brute lowered his axe and could not remember why he had raised it."
   },
   {
-    "id": "sanctum_c_009",
+    "id": "sanctum_c_016",
+    "name": "Sacrament of Confirmation",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Sacrament",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      },
+      {
+        "trigger": "cast",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "text": "Target creature you control gets +1/+1 permanently. Gain 2 life.",
+    "flavor": "Sealed with the gift of the Holy Spirit, he rose a soldier of Christ."
+  },
+  {
+    "id": "sanctum_c_017",
     "name": "Word of Banishment",
     "faction": "sanctum",
     "rarity": "common",
@@ -193,14 +378,96 @@
     "keywords": [],
     "effects": [
       {
+        "trigger": "cast",
         "action": "destroy",
         "target": "enemy_creature",
-        "max_power": 3,
-        "trigger": "cast"
+        "tapped": true
       }
     ],
-    "text": "Destroy target enemy creature with power 3 or less.",
+    "text": "Destroy target tapped enemy creature.",
     "flavor": "Spoken once, in the old tongue, and the thing was simply gone."
+  },
+  {
+    "id": "sanctum_c_018",
+    "name": "Votive Candles",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "text": "At the beginning of your upkeep, gain 1 life.",
+    "flavor": "Each flame is a prayer that keeps burning after the pilgrim has gone home."
+  },
+  {
+    "id": "sanctum_c_019",
+    "name": "Holy Water Stoup",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [],
+    "abilities": [
+      {
+        "cost": {
+          "mana": {
+            "generic": 2
+          },
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "buff",
+            "target": "own_creature",
+            "power": 0,
+            "toughness": 1,
+            "duration": "permanent"
+          }
+        ],
+        "text": "2, Tap: target creature you control gets +0/+1 permanently."
+      }
+    ],
+    "text": "2, Tap: target creature you control gets +0/+1 permanently.",
+    "flavor": "Every brother signs himself on the way in, and goes out a little stronger than he came."
+  },
+  {
+    "id": "sanctum_c_020",
+    "name": "Processional Cross",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 0,
+        "toughness": 1,
+        "scope": "own_creatures"
+      }
+    ],
+    "text": "Creatures you control get +0/+1.",
+    "flavor": "Where the cross goes first, the faithful follow, and none of them walks alone."
   },
   {
     "id": "sanctum_u_001",
@@ -208,7 +475,7 @@
     "faction": "sanctum",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Cleric",
+    "subtype": "Human Nun",
     "cost": {
       "W": 1,
       "generic": 2
@@ -227,10 +494,94 @@
       }
     ],
     "text": "Lifelink. When this enters, gain 2 life.",
-    "flavor": "She tends the wounded of both armies, and asks no one their banner."
+    "flavor": "She tends the wounded of both armies, and asks no one his banner."
   },
   {
     "id": "sanctum_u_002",
+    "name": "Martyr of the Far Mission",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Friar",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "pacify",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "When this dies, pacify target enemy creature (it can't attack for the rest of the duel).",
+    "flavor": "The chieftain who killed him knelt at his grave a year later and asked to be baptised."
+  },
+  {
+    "id": "sanctum_u_003",
+    "name": "Templar of the Red Cross",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [
+      "sanctified"
+    ],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1
+      }
+    ],
+    "text": "Sanctified (protection from the Covenant). Whenever this attacks, gain 1 life.",
+    "flavor": "Non nobis, Domine, non nobis, sed nomini tuo da gloriam."
+  },
+  {
+    "id": "sanctum_u_004",
+    "name": "Cistercian Abbot",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Monk",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 0,
+        "toughness": 1,
+        "scope": "other_own_creatures"
+      },
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 0,
+        "scope": "other_own_creatures",
+        "condition": "grace"
+      }
+    ],
+    "text": "Other creatures you control get +0/+1. As long as you have more life than you started with, they get +1/+1 instead.",
+    "flavor": "Ora et labora. Under his rule the fields grew green and the brothers grew strong."
+  },
+  {
+    "id": "sanctum_u_005",
     "name": "Inquisitor of the Pale Flame",
     "faction": "sanctum",
     "rarity": "uncommon",
@@ -248,59 +599,88 @@
         "trigger": "enter",
         "action": "destroy",
         "target": "enemy_creature",
-        "max_power": 2
+        "tapped": true
       }
     ],
-    "text": "When this enters, destroy target enemy creature with power 2 or less.",
+    "text": "When this enters, destroy target tapped enemy creature.",
     "flavor": "He seeks the truth patiently, and the lie cannot endure his gaze."
   },
   {
-    "id": "sanctum_u_003",
-    "name": "Paladin of the Seventh Gate",
+    "id": "sanctum_u_006",
+    "name": "Guardian Angel of the Parish",
     "faction": "sanctum",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Paladin",
+    "subtype": "Angel",
     "cost": {
       "W": 1,
       "generic": 3
     },
-    "power": 3,
-    "toughness": 3,
+    "power": 2,
+    "toughness": 4,
     "keywords": [
-      "vigilance",
-      "lifelink"
+      "flying",
+      "guardian"
     ],
     "effects": [],
-    "text": "Vigilance, lifelink.",
-    "flavor": "Each wound he takes for the weak is counted in Heaven as a prayer."
+    "text": "Flying, guardian.",
+    "flavor": "Angel of God, my guardian dear, to whom God's love commits me here."
   },
   {
-    "id": "sanctum_u_004",
-    "name": "Bell of Vespers",
+    "id": "sanctum_u_007",
+    "name": "Angel of Compline",
     "faction": "sanctum",
     "rarity": "uncommon",
-    "type": "relic",
-    "subtype": "Relic",
+    "type": "creature",
+    "subtype": "Angel",
     "cost": {
       "W": 1,
-      "generic": 2
+      "generic": 4
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "lifelink",
+        "scope": "self",
+        "condition": "grace"
+      }
+    ],
+    "text": "Flying. As long as you have more life than you started with, this has lifelink.",
+    "flavor": "May Thy holy angels dwell herein, to keep us in peace."
+  },
+  {
+    "id": "sanctum_u_008",
+    "name": "Smite the Proud",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Exorcism",
+    "cost": {
+      "W": 1,
+      "generic": 1
     },
     "keywords": [],
     "effects": [
       {
-        "trigger": "upkeep",
-        "action": "heal",
-        "target": "self_player",
-        "amount": 2
+        "trigger": "cast",
+        "action": "destroy",
+        "target": "enemy_creature",
+        "tapped": true,
+        "min_power": 4
       }
     ],
-    "text": "At the beginning of your upkeep, gain 2 life.",
-    "flavor": "Its evening toll calls the weary home and the restless dead to rest."
+    "text": "Destroy target tapped enemy creature with power 4 or greater.",
+    "flavor": "He hath put down the mighty from their seat, and hath exalted the humble."
   },
   {
-    "id": "sanctum_u_005",
-    "name": "Litany of the Faithful",
+    "id": "sanctum_u_009",
+    "name": "Truce of God",
     "faction": "sanctum",
     "rarity": "uncommon",
     "type": "spell",
@@ -312,16 +692,125 @@
     "keywords": [],
     "effects": [
       {
+        "trigger": "cast",
+        "action": "pacify",
+        "target": "enemy_creature"
+      },
+      {
+        "trigger": "cast",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 3
+      }
+    ],
+    "text": "Pacify target enemy creature (it can't attack for the rest of the duel). Gain 3 life.",
+    "flavor": "From Thursday evening until Monday dawn, no lord may lift his sword. The bishops have spoken."
+  },
+  {
+    "id": "sanctum_u_010",
+    "name": "Te Deum",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Prayer",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 3
+      },
+      {
+        "trigger": "cast",
         "action": "buff",
         "target": "all_own_creatures",
         "power": 1,
-        "toughness": 2,
-        "duration": "turn",
-        "trigger": "cast"
+        "toughness": 1,
+        "duration": "permanent",
+        "condition": "grace"
       }
     ],
-    "text": "Creatures you control get +1/+2 until end of turn.",
-    "flavor": "One voice begins the litany; a hundred answer; the line does not break."
+    "text": "Gain 3 life. Then, if you have more life than you started with, creatures you control get +1/+1 permanently.",
+    "flavor": "We praise Thee, O God; we acknowledge Thee to be the Lord."
+  },
+  {
+    "id": "sanctum_u_011",
+    "name": "Litany of the Saints",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Prayer",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 0,
+        "toughness": 2,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Creatures you control get +0/+2 permanently.",
+    "flavor": "Holy Mary, pray for us. Saint Michael, pray for us. And the whole host answers."
+  },
+  {
+    "id": "sanctum_u_012",
+    "name": "Icon of the Heavenly Host",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "own_creatures",
+        "subtype": "Angel"
+      }
+    ],
+    "text": "Angels you control get +1/+1.",
+    "flavor": "Painted in gold leaf by a monk who fasted forty days, it shows the nine choirs at worship."
+  },
+  {
+    "id": "sanctum_u_013",
+    "name": "Monstrance of the Blessed Sacrament",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "lifelink",
+        "scope": "own_creatures",
+        "condition": "grace"
+      }
+    ],
+    "text": "As long as you have more life than you started with, creatures you control have lifelink.",
+    "flavor": "O saving Victim, opening wide the gate of Heaven to man below."
   },
   {
     "id": "sanctum_r_001",
@@ -329,7 +818,7 @@
     "faction": "sanctum",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Human Cleric",
+    "subtype": "Human Nun",
     "cost": {
       "W": 2,
       "generic": 2
@@ -347,13 +836,13 @@
       {
         "trigger": "death",
         "action": "buff",
-        "target": "all_own_creatures",
+        "target": "other_own_creatures",
         "power": 1,
         "toughness": 1,
         "duration": "permanent"
       }
     ],
-    "text": "When this enters, gain 3 life. When this dies, creatures you control get +1/+1 permanently.",
+    "text": "When this enters, gain 3 life. When this dies, other creatures you control get +1/+1 permanently.",
     "flavor": "Forty years without a word; at her death, her sisters heard everything."
   },
   {
@@ -371,14 +860,168 @@
     "toughness": 4,
     "keywords": [
       "flying",
-      "vigilance"
+      "sanctified"
     ],
     "effects": [],
-    "text": "Flying, vigilance.",
+    "text": "Flying, sanctified.",
     "flavor": "He has kept watch over the cathedral since before the first stone was laid."
   },
   {
     "id": "sanctum_r_003",
+    "name": "Knight of the Holy Grail",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 2,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 2,
+        "toughness": 2,
+        "scope": "self",
+        "condition": "grace"
+      },
+      {
+        "static": "keyword",
+        "keyword": "lifelink",
+        "scope": "self",
+        "condition": "grace"
+      }
+    ],
+    "text": "As long as you have more life than you started with, this gets +2/+2 and has lifelink.",
+    "flavor": "Only the pure of heart may find the Grail, and only the pure of heart are strong enough to carry it home."
+  },
+  {
+    "id": "sanctum_r_004",
+    "name": "Castellan of the Krak",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "guardian",
+        "scope": "other_own_creatures"
+      }
+    ],
+    "text": "Other creatures you control have guardian.",
+    "flavor": "Two thousand men held the Krak for a hundred years, because each man held the one beside him."
+  },
+  {
+    "id": "sanctum_r_005",
+    "name": "Grand Prior of the Hospital",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 2,
+      "generic": 3
+    },
+    "power": 4,
+    "toughness": 5,
+    "keywords": [
+      "guardian",
+      "lifelink"
+    ],
+    "effects": [],
+    "text": "Guardian, lifelink.",
+    "flavor": "Our lords the sick, the Rule calls them, and he guards his lords as a knight should."
+  },
+  {
+    "id": "sanctum_r_006",
+    "name": "Rite of Exorcism",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Exorcism",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "destroy",
+        "target": "enemy_creature",
+        "tapped": true
+      },
+      {
+        "trigger": "cast",
+        "action": "pacify",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "Destroy target tapped enemy creature. Then pacify target enemy creature (it can't attack for the rest of the duel).",
+    "flavor": "Exorcizo te, immundissime spiritus. The words are old, and the thing that hears them is older, and still it must obey."
+  },
+  {
+    "id": "sanctum_r_007",
+    "name": "Year of Jubilee",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Blessing",
+    "cost": {
+      "W": 2,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 10
+      }
+    ],
+    "text": "Gain 10 life.",
+    "flavor": "In the fiftieth year debts are forgiven, the land rests, and every pilgrim at the Holy Door goes home made new."
+  },
+  {
+    "id": "sanctum_r_008",
+    "name": "Relic of the True Cross",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "own_creatures"
+      }
+    ],
+    "text": "Creatures you control get +1/+1.",
+    "flavor": "Behold the wood of the Cross, on which hung the salvation of the world."
+  },
+  {
+    "id": "sanctum_r_009",
     "name": "Reliquary of the First Martyr",
     "faction": "sanctum",
     "rarity": "rare",
@@ -396,10 +1039,11 @@
         "target": "own_creature",
         "power": 1,
         "toughness": 1,
-        "duration": "permanent"
+        "duration": "permanent",
+        "condition": "grace"
       }
     ],
-    "text": "At the beginning of your upkeep, target creature you control gets +1/+1 permanently.",
+    "text": "At the beginning of your upkeep, if you have more life than you started with, target creature you control gets +1/+1 permanently.",
     "flavor": "Behind the gold and crystal lies a single bone, and it is enough."
   },
   {
@@ -413,7 +1057,7 @@
       "W": 2,
       "generic": 4
     },
-    "power": 5,
+    "power": 4,
     "toughness": 5,
     "keywords": [
       "flying",
@@ -424,16 +1068,78 @@
         "trigger": "enter",
         "action": "destroy",
         "target": "enemy_creature",
-        "max_power": 4
-      },
-      {
-        "trigger": "enter",
-        "action": "heal",
-        "target": "self_player",
-        "amount": 4
+        "tapped": true
       }
     ],
-    "text": "Flying, lifelink. When this enters, destroy target enemy creature with power 4 or less and gain 4 life.",
+    "text": "Flying, lifelink. When this enters, destroy target tapped enemy creature.",
     "flavor": "When the last candle gutters, he is the light that remains."
+  },
+  {
+    "id": "sanctum_m_002",
+    "name": "Saint Benedict, Father of Monks",
+    "faction": "sanctum",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Monk",
+    "cost": {
+      "W": 2,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [
+      "sanctified"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures"
+      },
+      {
+        "static": "keyword",
+        "keyword": "sanctified",
+        "scope": "other_own_creatures"
+      }
+    ],
+    "text": "Sanctified. Other creatures you control get +1/+1 and have sanctified.",
+    "flavor": "Vade retro, Satana. Never tempt me with thy vanities."
+  },
+  {
+    "id": "sanctum_m_003",
+    "name": "The Last Judgment",
+    "faction": "sanctum",
+    "rarity": "mythic",
+    "type": "spell",
+    "subtype": "Exorcism",
+    "cost": {
+      "W": 2,
+      "generic": 4
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "destroy",
+        "target": "enemy_creature",
+        "tapped": true
+      },
+      {
+        "trigger": "cast",
+        "action": "destroy",
+        "target": "enemy_creature",
+        "tapped": true
+      },
+      {
+        "trigger": "cast",
+        "action": "destroy",
+        "target": "enemy_creature",
+        "tapped": true
+      }
+    ],
+    "text": "Destroy up to three target tapped enemy creatures.",
+    "flavor": "He shall come again with glory to judge the living and the dead."
   }
 ]

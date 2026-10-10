@@ -10,10 +10,11 @@ signal closed
 
 const SCALE := 0.52
 const COSTS := ["Any cost", "Cost 0-1", "Cost 2", "Cost 3", "Cost 4", "Cost 5", "Cost 6+"]
-const TYPES := ["Any type", "Creature", "Spell", "Relic"]
+const TYPES := ["Any type", "Creature", "Spell", "Relic", "Land"]
 const RARITIES := ["Any rarity", "Common", "Uncommon", "Rare", "Mythic"]
-const KEYWORDS := ["Any ability", "Flying", "Reach", "Haste", "Lifelink", "Deathtouch", "Vigilance",
-	"Trample", "Defender", "Guardian", "Enters effect", "Dies effect", "Upkeep effect"]
+const KEYWORDS := ["Any ability", "Flying", "Guardian", "Lifelink", "Sanctified", "Deathtouch", "Dread",
+	"Trample", "Reach", "Regenerate", "Haste", "First strike", "Vigilance", "Defender", "Steadfast",
+	"Enters effect", "Dies effect", "Upkeep effect", "Attack effect", "Idle effect", "Activated ability", "Overclock"]
 const SORTS := ["Sort: faith", "Sort: cost", "Sort: name", "Sort: rarity", "Sort: power"]
 
 var editing := 0                  # index of the deck being edited
@@ -250,7 +251,7 @@ func _deck() -> Dictionary:
 func _change(id: String, delta: int) -> void:
 	var d := _deck()
 	var n := int(d.get(id, 0)) + delta
-	if delta > 0 and not CardDB.is_land(id):
+	if delta > 0 and not CardDB.is_basic_land(id):
 		if n > DeckTools.MAX_COPIES or n > GameState.owned_count(id):
 			return
 	if n <= 0:
@@ -314,7 +315,7 @@ func _done() -> void:
 # ------------------------------------------------------------------ filtering
 
 func _passes(c: Dictionary, in_deck: int) -> bool:
-	if not faiths.is_empty() and not faiths.has(c["faction"]):
+	if not faiths.is_empty() and not faiths.has(c["faction"]) and not faiths.has(c.get("faction2", "")):
 		return false
 	if f_type > 0 and c["type"] != TYPES[f_type].to_lower():
 		return false
@@ -332,10 +333,17 @@ func _passes(c: Dictionary, in_deck: int) -> bool:
 	if f_keyword > 0:
 		var k: String = KEYWORDS[f_keyword]
 		if k.ends_with("effect"):
-			var trig: String = {"Enters effect": "enter", "Dies effect": "death", "Upkeep effect": "upkeep"}[k]
+			var trig: String = {"Enters effect": "enter", "Dies effect": "death", "Upkeep effect": "upkeep",
+				"Attack effect": "attack", "Idle effect": "idle"}[k]
 			if not c["effects"].any(func(e): return e.get("trigger") == trig):
 				return false
-		elif not c["keywords"].has(k.to_lower()):
+		elif k == "Activated ability":
+			if c.get("abilities", []).is_empty():
+				return false
+		elif k == "Overclock":
+			if c.get("overclock", {}).is_empty():
+				return false
+		elif not c["keywords"].has(k.to_lower().replace(" ", "_")):
 			return false
 	if f_text != "":
 		var hay := (String(c["name"]) + " " + String(c.get("text", "")) + " " + String(c.get("subtype", "")) + " "
@@ -382,7 +390,7 @@ func _refresh_now() -> void:
 	var total := 0
 	for id in owned:
 		var c := CardDB.get_card(id)
-		if c.is_empty() or c["type"] == "land":
+		if c.is_empty() or CardDB.is_basic_land(id):
 			continue
 		total += 1
 		if _passes(c, int(d.get(id, 0))):
@@ -404,7 +412,7 @@ func _refresh_now() -> void:
 	var dids := d.keys()
 	dids.sort_custom(func(a, b): return _sort_key(CardDB.get_card(a)) < _sort_key(CardDB.get_card(b)))
 	for id in dids:
-		if CardDB.is_land(id):
+		if CardDB.is_basic_land(id):
 			continue
 		var c := CardDB.get_card(id)
 		var b := Button.new()

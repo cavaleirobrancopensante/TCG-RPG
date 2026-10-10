@@ -24,6 +24,24 @@
   },
   {
     "id": "abyss_c_002",
+    "name": "Pit Imp",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Demon Imp",
+    "cost": {
+      "B": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [
+      "dread"
+    ],
+    "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
+    "flavor": "It is small, it is spiteful, and it is never where you swing."
+  },
+  {
+    "id": "abyss_c_003",
     "name": "Blood-Oath Thrall",
     "faction": "abyss",
     "rarity": "common",
@@ -38,16 +56,16 @@
     "keywords": [],
     "effects": [
       {
-        "trigger": "enter",
         "action": "lose_life",
-        "amount": 1
+        "amount": 1,
+        "trigger": "enter"
       }
     ],
     "text": "When this enters, you lose 1 life.",
     "flavor": "The oath was signed in a fingertip of blood. The rest came due later."
   },
   {
-    "id": "abyss_c_003",
+    "id": "abyss_c_004",
     "name": "Tomb Crawler",
     "faction": "abyss",
     "rarity": "common",
@@ -62,12 +80,56 @@
     "keywords": [
       "deathtouch"
     ],
-    "effects": [],
-    "text": "Deathtouch.",
+    "text": "Deathtouch (any damage this deals to a creature destroys it).",
     "flavor": "Its touch carries the cold of every grave it has crawled from."
   },
   {
-    "id": "abyss_c_004",
+    "id": "abyss_c_005",
+    "name": "Famished Ghoul",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Zombie",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "self",
+        "condition": "bloodied"
+      }
+    ],
+    "text": "As long as you have 10 or less life (Bloodied), this gets +1/+1.",
+    "flavor": "The closer you come to the grave, the better it can smell you."
+  },
+  {
+    "id": "abyss_c_006",
+    "name": "Hellmaw Hound",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Demon Hound",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [
+      "dread"
+    ],
+    "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
+    "flavor": "Honest dogs bolt at its scent. Only the damned dare stand in its path."
+  },
+  {
+    "id": "abyss_c_007",
     "name": "Grave Chanter",
     "faction": "abyss",
     "rarity": "common",
@@ -88,30 +150,71 @@
       }
     ],
     "text": "When this enters, the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "Her hymns are sung backwards, and every note takes something."
+    "flavor": "His hymns are sung backwards, and every note takes something."
   },
   {
-    "id": "abyss_c_005",
-    "name": "Gloam Shade",
+    "id": "abyss_c_008",
+    "name": "Charnel Glutton",
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Spirit",
+    "subtype": "Zombie",
     "cost": {
       "B": 1,
       "generic": 2
     },
     "power": 2,
     "toughness": 2,
-    "keywords": [
-      "flying"
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "sacrifice": "other"
+        },
+        "effects": [
+          {
+            "action": "buff",
+            "target": "self",
+            "power": 2,
+            "toughness": 2,
+            "duration": "turn"
+          }
+        ],
+        "text": "Sacrifice another creature: this gets +2/+2 until end of turn."
+      }
     ],
-    "effects": [],
-    "text": "Flying.",
-    "flavor": "A shadow that forgot which body it belonged to, and stopped caring."
+    "text": "Sacrifice another creature: this gets +2/+2 until end of turn.",
+    "flavor": "It is never full. It is only, for a moment, less empty."
   },
   {
-    "id": "abyss_c_006",
+    "id": "abyss_c_009",
+    "name": "Blight-Sower Cultist",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Cultist",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "enemy_creature",
+        "power": -2,
+        "toughness": -2,
+        "duration": "turn",
+        "trigger": "enter"
+      }
+    ],
+    "text": "When this enters, target enemy creature gets -2/-2 until end of turn.",
+    "flavor": "He scatters ash on the furrows and calls it a blessing."
+  },
+  {
+    "id": "abyss_c_010",
     "name": "Ossuary Ghoul",
     "faction": "abyss",
     "rarity": "common",
@@ -129,37 +232,87 @@
         "trigger": "death",
         "action": "summon",
         "token": {
-          "name": "Restless Bones",
+          "name": "Restless Dead",
           "power": 1,
           "toughness": 1,
+          "subtype": "Zombie",
           "keywords": []
         },
         "count": 1
       }
     ],
-    "text": "When this dies, create a 1/1 Restless Bones token.",
+    "text": "When this dies, create a 1/1 Restless Dead Zombie token.",
     "flavor": "Break it apart and the pieces keep walking."
   },
   {
-    "id": "abyss_c_007",
-    "name": "Hellmaw Hound",
+    "id": "abyss_c_011",
+    "name": "Pit-Chained Fiend",
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Demon Hound",
+    "subtype": "Demon",
     "cost": {
       "B": 1,
       "generic": 3
     },
-    "power": 4,
-    "toughness": 3,
+    "power": 5,
+    "toughness": 4,
     "keywords": [],
-    "effects": [],
-    "text": "",
-    "flavor": "Its master's leash is forged from the screams of the hunted."
+    "effects": [
+      {
+        "action": "lose_life",
+        "amount": 2,
+        "trigger": "enter"
+      }
+    ],
+    "text": "When this enters, you lose 2 life.",
+    "flavor": "The chain holds the fiend. Nothing holds the price."
   },
   {
-    "id": "abyss_c_008",
+    "id": "abyss_c_012",
+    "name": "Barrow Wight",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Spirit",
+    "cost": {
+      "B": 1,
+      "generic": 4
+    },
+    "power": 4,
+    "toughness": 3,
+    "keywords": [
+      "dread"
+    ],
+    "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
+    "flavor": "It still wears the gold it was buried with, and it wants yours."
+  },
+  {
+    "id": "abyss_c_013",
+    "name": "Grave Chill",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "enemy_creature",
+        "power": -2,
+        "toughness": -2,
+        "duration": "turn",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Target enemy creature gets -2/-2 until end of turn.",
+    "flavor": "The cold of the crypt does not stay in the crypt."
+  },
+  {
+    "id": "abyss_c_014",
     "name": "Wither the Living",
     "faction": "abyss",
     "rarity": "common",
@@ -172,18 +325,67 @@
     "keywords": [],
     "effects": [
       {
+        "trigger": "cast",
         "action": "destroy",
         "target": "enemy_creature",
-        "max_power": 2,
-        "trigger": "cast"
+        "max_power": 2
       }
     ],
     "text": "Destroy target enemy creature with power 2 or less.",
     "flavor": "The flesh remembers that it is only borrowed."
   },
   {
-    "id": "abyss_c_009",
+    "id": "abyss_c_015",
+    "name": "Bargain in Blood",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Pact",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 2
+      },
+      {
+        "action": "lose_life",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Draw two cards. You lose 2 life.",
+    "flavor": "Two secrets for two drops. The scribe never mentions the interest."
+  },
+  {
+    "id": "abyss_c_016",
     "name": "Siphon of Ashes",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "drain",
+        "amount": 2
+      }
+    ],
+    "text": "The enemy player loses 2 life and you gain 2 life.",
+    "flavor": "Their warmth drains out like wine from a cracked chalice."
+  },
+  {
+    "id": "abyss_c_017",
+    "name": "Dread Whisper",
     "faction": "abyss",
     "rarity": "common",
     "type": "spell",
@@ -195,16 +397,162 @@
     "keywords": [],
     "effects": [
       {
-        "action": "drain",
-        "amount": 3,
-        "trigger": "cast"
+        "trigger": "cast",
+        "action": "discard_enemy",
+        "amount": 2
       }
     ],
-    "text": "The enemy player loses 3 life and you gain 3 life.",
-    "flavor": "Their warmth drains out like wine from a cracked chalice."
+    "text": "The enemy discards two cards at random.",
+    "flavor": "A single word in the night, and every plan they had unravels."
+  },
+  {
+    "id": "abyss_c_018",
+    "name": "Unquiet Grave",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Necromancy",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "reanimate",
+        "max_mv": 3
+      }
+    ],
+    "text": "Return your best creature card with mana value 3 or less from your graveyard to play.",
+    "flavor": "Rest was promised to him. The Covenant does not honour other men's promises."
+  },
+  {
+    "id": "abyss_c_019",
+    "name": "Black Altar",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "sacrifice": "other"
+        },
+        "effects": [
+          {
+            "action": "drain",
+            "amount": 1
+          }
+        ],
+        "text": "Sacrifice a creature: the enemy player loses 1 life and you gain 1 life."
+      }
+    ],
+    "text": "Sacrifice a creature: the enemy player loses 1 life and you gain 1 life.",
+    "flavor": "Its stone is never dry, and its keepers never ask whose turn is next."
+  },
+  {
+    "id": "abyss_c_020",
+    "name": "Gibbet of the Forsworn",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "tap": true,
+          "life": 1
+        },
+        "effects": [
+          {
+            "action": "buff",
+            "target": "enemy_creature",
+            "power": -1,
+            "toughness": -1,
+            "duration": "turn"
+          }
+        ],
+        "text": "Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn."
+      }
+    ],
+    "text": "Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.",
+    "flavor": "The broken oath swings in the wind, and every man below remembers his own."
   },
   {
     "id": "abyss_u_001",
+    "name": "Bone-Priest of the Covenant",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Cultist",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "sacrifice": "other"
+        },
+        "effects": [
+          {
+            "action": "draw",
+            "amount": 1
+          },
+          {
+            "action": "lose_life",
+            "amount": 1
+          }
+        ],
+        "text": "Sacrifice another creature: draw a card and you lose 1 life."
+      }
+    ],
+    "text": "Sacrifice another creature: draw a card and you lose 1 life.",
+    "flavor": "He reads the future in knucklebones, and he is never short of knucklebones."
+  },
+  {
+    "id": "abyss_u_002",
+    "name": "Wailing Wraith",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Spirit",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "enemy_creature",
+        "power": -1,
+        "toughness": -1,
+        "duration": "turn",
+        "trigger": "attack"
+      }
+    ],
+    "text": "Whenever this attacks, target enemy creature gets -1/-1 until end of turn.",
+    "flavor": "Its cry finds the weak place in every heart and widens it."
+  },
+  {
+    "id": "abyss_u_003",
     "name": "Veiled Blade of the Covenant",
     "faction": "abyss",
     "rarity": "uncommon",
@@ -215,22 +563,16 @@
       "generic": 2
     },
     "power": 2,
-    "toughness": 2,
+    "toughness": 1,
     "keywords": [
-      "deathtouch"
+      "deathtouch",
+      "dread"
     ],
-    "effects": [
-      {
-        "trigger": "death",
-        "action": "drain",
-        "amount": 2
-      }
-    ],
-    "text": "Deathtouch. When this dies, the enemy player loses 2 life and you gain 2 life.",
+    "text": "Deathtouch, dread.",
     "flavor": "The Covenant pays its assassins in years taken from their victims."
   },
   {
-    "id": "abyss_u_002",
+    "id": "abyss_u_004",
     "name": "Cinder-Pit Fiend",
     "faction": "abyss",
     "rarity": "uncommon",
@@ -242,19 +584,84 @@
     },
     "power": 4,
     "toughness": 4,
-    "keywords": [],
+    "keywords": [
+      "dread"
+    ],
     "effects": [
       {
-        "trigger": "upkeep",
         "action": "lose_life",
-        "amount": 1
+        "amount": 1,
+        "trigger": "upkeep"
       }
     ],
-    "text": "At the beginning of your upkeep, you lose 1 life.",
+    "text": "Dread. At the beginning of your upkeep, you lose 1 life.",
     "flavor": "It serves well, and it is always, always hungry."
   },
   {
-    "id": "abyss_u_003",
+    "id": "abyss_u_005",
+    "name": "Tempter of Broken Vows",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Demon",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "discard_enemy",
+        "amount": 1
+      },
+      {
+        "trigger": "death",
+        "action": "discard_enemy",
+        "amount": 1
+      }
+    ],
+    "text": "When this enters, the enemy discards a card at random. When this dies, the enemy discards a card at random.",
+    "flavor": "He never lies. He simply lets you hear what you wanted to hear."
+  },
+  {
+    "id": "abyss_u_006",
+    "name": "Blood-Bound Reaver",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Warrior",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "life": 2
+        },
+        "effects": [
+          {
+            "action": "buff",
+            "target": "self",
+            "power": 1,
+            "toughness": 1,
+            "duration": "turn"
+          }
+        ],
+        "text": "Pay 2 life: this gets +1/+1 until end of turn."
+      }
+    ],
+    "text": "Pay 2 life: this gets +1/+1 until end of turn.",
+    "flavor": "Every wound he takes, he takes on credit."
+  },
+  {
+    "id": "abyss_u_007",
     "name": "Grave Summoner",
     "faction": "abyss",
     "rarity": "uncommon",
@@ -270,36 +677,95 @@
     "effects": [
       {
         "trigger": "enter",
-        "action": "reanimate"
+        "action": "reanimate",
+        "max_mv": 4
       }
     ],
-    "text": "When this enters, return your best creature card from your graveyard to play.",
+    "text": "When this enters, return your best creature card with mana value 4 or less from your graveyard to play.",
     "flavor": "\"Rise. Your rest was never part of the bargain.\""
   },
   {
-    "id": "abyss_u_004",
-    "name": "Dread Whisper",
+    "id": "abyss_u_008",
+    "name": "Unmaking Rite",
     "faction": "abyss",
     "rarity": "uncommon",
     "type": "spell",
     "subtype": "Curse",
     "cost": {
       "B": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "destroy",
+        "target": "enemy_creature"
+      },
+      {
+        "action": "lose_life",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Destroy target enemy creature. You lose 2 life.",
+    "flavor": "Every unmaking costs the maker a little of his own soul."
+  },
+  {
+    "id": "abyss_u_009",
+    "name": "Breath of the Ossuary",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 2,
       "generic": 1
     },
     "keywords": [],
     "effects": [
       {
-        "action": "discard_enemy",
-        "amount": 2,
+        "action": "buff",
+        "target": "all_creatures",
+        "power": -2,
+        "toughness": -2,
+        "duration": "turn",
         "trigger": "cast"
       }
     ],
-    "text": "The enemy discards 2 cards at random.",
-    "flavor": "A single word in the night, and every plan they had unravels."
+    "text": "All creatures get -2/-2 until end of turn.",
+    "flavor": "The old bones sigh, and everything that lives grows a little lighter."
   },
   {
-    "id": "abyss_u_005",
+    "id": "abyss_u_010",
+    "name": "The Debt Comes Due",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "drain",
+        "amount": 2,
+        "condition": "bloodied"
+      },
+      {
+        "trigger": "cast",
+        "action": "drain",
+        "amount": 2
+      }
+    ],
+    "text": "If you have 10 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
+    "flavor": "The contract was always clear. It was only written very small."
+  },
+  {
+    "id": "abyss_u_011",
     "name": "Chalice of Black Vows",
     "faction": "abyss",
     "rarity": "uncommon",
@@ -321,8 +787,111 @@
     "flavor": "It is never empty, and no one asks what it is filled with."
   },
   {
+    "id": "abyss_u_012",
+    "name": "Knife of the Black Tithe",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "sacrifice": "other"
+        },
+        "effects": [
+          {
+            "action": "buff",
+            "target": "enemy_creature",
+            "power": -2,
+            "toughness": -2,
+            "duration": "turn"
+          }
+        ],
+        "text": "Sacrifice a creature: target enemy creature gets -2/-2 until end of turn."
+      }
+    ],
+    "text": "Sacrifice a creature: target enemy creature gets -2/-2 until end of turn.",
+    "flavor": "One life for the knife, one for the curse. The arithmetic of the pit is simple."
+  },
+  {
+    "id": "abyss_u_013",
+    "name": "Censer of Bitter Ash",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "tap": true,
+          "mana": {
+            "generic": 2
+          },
+          "life": 2
+        },
+        "effects": [
+          {
+            "action": "discard_enemy",
+            "amount": 1
+          }
+        ],
+        "text": "Tap, pay 2 and 2 life: the enemy discards a card at random."
+      }
+    ],
+    "text": "Tap, pay 2 and 2 life: the enemy discards a card at random.",
+    "flavor": "Its smoke mocks the incense of the sanctuary. It carries no prayers up, only thoughts away."
+  },
+  {
     "id": "abyss_r_001",
-    "name": "Marquis of the Wailing Pit",
+    "name": "Oathbreaker Knight",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 2,
+        "toughness": 2,
+        "scope": "self",
+        "condition": "bloodied"
+      },
+      {
+        "static": "keyword",
+        "keyword": "dread",
+        "scope": "self",
+        "condition": "bloodied"
+      },
+      {
+        "static": "keyword",
+        "keyword": "deathtouch",
+        "scope": "self",
+        "condition": "bloodied"
+      }
+    ],
+    "text": "As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
+    "flavor": "He swore to guard the weak. Then a voice offered to make him strong."
+  },
+  {
+    "id": "abyss_r_002",
+    "name": "Dream-Thief Fiend",
     "faction": "abyss",
     "rarity": "rare",
     "type": "creature",
@@ -331,23 +900,49 @@
       "B": 2,
       "generic": 2
     },
-    "power": 5,
-    "toughness": 5,
+    "power": 2,
+    "toughness": 2,
     "keywords": [
-      "flying"
+      "dread"
     ],
     "effects": [
       {
-        "trigger": "enter",
-        "action": "lose_life",
-        "amount": 4
+        "trigger": "attack",
+        "action": "discard_enemy",
+        "amount": 1
       }
     ],
-    "text": "Flying. When this enters, you lose 4 life.",
-    "flavor": "He arrives on wings of smoke, and presents his bill at the door."
+    "text": "Dread. Whenever this attacks, the enemy discards a card at random.",
+    "flavor": "In the morning you remember that you had a plan. You cannot remember what it was."
   },
   {
-    "id": "abyss_r_002",
+    "id": "abyss_r_003",
+    "name": "Marquis of the Wailing Pit",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Demon",
+    "cost": {
+      "B": 2,
+      "generic": 3
+    },
+    "power": 5,
+    "toughness": 5,
+    "keywords": [
+      "dread"
+    ],
+    "effects": [
+      {
+        "action": "lose_life",
+        "amount": 3,
+        "trigger": "enter"
+      }
+    ],
+    "text": "Dread. When this enters, you lose 3 life.",
+    "flavor": "He arrives on a tide of smoke, and presents his bill at the door."
+  },
+  {
+    "id": "abyss_r_004",
     "name": "Hollow-Crowned Lich",
     "faction": "abyss",
     "rarity": "rare",
@@ -373,12 +968,62 @@
     "flavor": "It traded its heart for a crown, and found the crown was hollow too."
   },
   {
-    "id": "abyss_r_003",
-    "name": "Unmaking Rite",
+    "id": "abyss_r_005",
+    "name": "Bone-Lord of the Ossuary",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Zombie",
+    "cost": {
+      "B": 1,
+      "generic": 4
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "mana": {
+            "B": 1
+          },
+          "sacrifice": "other"
+        },
+        "effects": [
+          {
+            "action": "summon",
+            "token": {
+              "name": "Restless Dead",
+              "power": 2,
+              "toughness": 2,
+              "subtype": "Zombie",
+              "keywords": []
+            },
+            "count": 1
+          }
+        ],
+        "text": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token."
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Zombie"
+      }
+    ],
+    "text": "Other Zombies you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
+    "flavor": "Every skull on his walls once knelt to him. Most of them still do."
+  },
+  {
+    "id": "abyss_r_006",
+    "name": "Profane Resurrection",
     "faction": "abyss",
     "rarity": "rare",
     "type": "spell",
-    "subtype": "Curse",
+    "subtype": "Necromancy",
     "cost": {
       "B": 1,
       "generic": 2
@@ -386,18 +1031,99 @@
     "keywords": [],
     "effects": [
       {
-        "action": "destroy",
-        "target": "enemy_creature",
-        "trigger": "cast"
+        "trigger": "cast",
+        "action": "reanimate"
       },
       {
         "action": "lose_life",
-        "amount": 2,
+        "amount": 4,
         "trigger": "cast"
       }
     ],
-    "text": "Destroy target enemy creature. You lose 2 life.",
-    "flavor": "Every unmaking costs the maker a little of his own soul."
+    "text": "Return your best creature card from your graveyard to play. You lose 4 life.",
+    "flavor": "A mockery of the true rising. The body walks, and nothing looks out of its eyes."
+  },
+  {
+    "id": "abyss_r_007",
+    "name": "Night of Unmaking",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 2,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "destroy",
+        "target": "all_creatures"
+      }
+    ],
+    "text": "Destroy all creatures.",
+    "flavor": "By dawn the field was quiet, and the Covenant counted it a victory."
+  },
+  {
+    "id": "abyss_r_008",
+    "name": "Rite of the Emptied Mind",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 2,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "discard_enemy",
+        "amount": 3
+      },
+      {
+        "action": "lose_life",
+        "amount": 3,
+        "trigger": "cast"
+      }
+    ],
+    "text": "The enemy discards three cards at random. You lose 3 life.",
+    "flavor": "First the names of friends go, then the prayers, then the reason for prayer."
+  },
+  {
+    "id": "abyss_r_009",
+    "name": "Ledger of the Damned",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "abilities": [
+      {
+        "cost": {
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "draw",
+            "amount": 1
+          },
+          {
+            "action": "lose_life",
+            "amount": 1
+          }
+        ],
+        "text": "Tap: draw a card and you lose 1 life."
+      }
+    ],
+    "text": "Tap: draw a card and you lose 1 life.",
+    "flavor": "Every page is a soul, and every soul is overdue."
   },
   {
     "id": "abyss_m_001",
@@ -413,7 +1139,7 @@
     "power": 5,
     "toughness": 5,
     "keywords": [
-      "flying"
+      "dread"
     ],
     "effects": [
       {
@@ -422,12 +1148,76 @@
         "target": "enemy_creature"
       },
       {
-        "trigger": "death",
-        "action": "drain",
-        "amount": 3
+        "action": "lose_life",
+        "amount": 3,
+        "trigger": "enter"
       }
     ],
-    "text": "Flying. When this enters, destroy target enemy creature. When this dies, the enemy player loses 3 life and you gain 3 life.",
+    "text": "Dread. When this enters, destroy target enemy creature and you lose 3 life.",
     "flavor": "Where he walks, the ground forgets it was ever green."
+  },
+  {
+    "id": "abyss_m_002",
+    "name": "Malgrith, Lich of the Black Ledger",
+    "faction": "abyss",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Lich",
+    "cost": {
+      "B": 2,
+      "generic": 4
+    },
+    "power": 5,
+    "toughness": 5,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "reanimate",
+        "max_mv": 4
+      },
+      {
+        "trigger": "upkeep",
+        "action": "draw",
+        "amount": 1
+      },
+      {
+        "action": "lose_life",
+        "amount": 1,
+        "trigger": "upkeep"
+      }
+    ],
+    "text": "When this enters, return your best creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
+    "flavor": "He has outlived every debtor, and he collects from their sons."
+  },
+  {
+    "id": "abyss_m_003",
+    "name": "The Black Contract",
+    "faction": "abyss",
+    "rarity": "mythic",
+    "type": "relic",
+    "subtype": "Pact",
+    "cost": {
+      "B": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "lose_life",
+        "amount": 1,
+        "trigger": "upkeep"
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": -1,
+        "toughness": -1,
+        "scope": "enemy_creatures"
+      }
+    ],
+    "text": "Enemy creatures get -1/-1. At the beginning of your upkeep, you lose 1 life.",
+    "flavor": "Sign, and your enemies wither. Sign, and so do you."
   }
 ]

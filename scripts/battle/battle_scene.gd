@@ -24,6 +24,8 @@ var block_pick := -1
 var target_specs: Array = []
 var chosen_targets: Array = []
 var pending_hand_idx := -1
+var pending_ability := []       # [uid, index] while choosing targets for an ability
+var pending_overclock := false
 var auto_play := false          # tests: AI plays the player's side too
 
 # UI
@@ -393,7 +395,20 @@ func _refresh_relics(i: int) -> void:
 		b.add_theme_font_size_override("font_size", 14)
 		var ruid: int = r.uid
 		var rside := i
-		b.pressed.connect(func(): _show_board(rside, ruid))
+		b.pressed.connect(func():
+			if mode == "target":
+				_choose_target({"kind": "relic", "uid": ruid})
+			else:
+				_show_board(rside, ruid))
+		if _is_valid_target({"kind": "relic", "uid": ruid}):
+			b.modulate = Color(1.4, 1.2, 0.6)
+		var has_ab := false
+		for k in st.abilities_of(r).size():
+			if rside == 0 and st.can_activate(0, ruid, k):
+				has_ab = true
+		if has_ab:
+			b.text = "✦ " + I18n.t(r.name)
+			b.add_theme_color_override("font_color", UIKit.GREEN)
 		box.add_child(b)
 
 
@@ -410,9 +425,10 @@ func _refresh_bars() -> void:
 		var tot := {}
 		var free := {}
 		for l in s.lands:
-			tot[l["color"]] = int(tot.get(l["color"], 0)) + 1
-			if not l["tapped"]:
-				free[l["color"]] = int(free.get(l["color"], 0)) + 1
+			for col in BattleState.land_colors(l):
+				tot[col] = int(tot.get(col, 0)) + 1
+				if not l["tapped"]:
+					free[col] = int(free.get(col, 0)) + 1
 		for k in s.pool:
 			if int(s.pool[k]) > 0:
 				free[k] = int(free.get(k, 0)) + int(s.pool[k])
@@ -466,6 +482,11 @@ func _update_marks() -> void:
 			"target":
 				if _is_valid_target({"kind": "creature", "uid": uid}):
 					fig.mark = "target"
+			"idle":
+				if p.owner == 0 and st.active == 0 and not busy:
+					for k in st.abilities_of(p).size():
+						if st.can_activate(0, uid, k):
+							fig.mark = "select"      # it has an ability ready: tap it to use it
 
 
 func _update_controls() -> void:
@@ -621,6 +642,57 @@ func _animate(e: Dictionary) -> void:
 			_refresh_bars()
 		"message":
 			_log(e["text"])
+		"mulligan":
+			if e["side"] == 1:
+				_log(I18n.t("%s takes a mulligan.") % st.side(1).name)
+				await _wait(0.4)
+		"keep":
+			if e["side"] == 1 and int(e.get("bottom", 0)) > 0:
+				_log(I18n.t("%s keeps and puts %d card(s) on the bottom.") % [st.side(1).name, int(e["bottom"])])
+				await _wait(0.4)
+		"regenerate":
+			if figures.has(e["uid"]):
+				var f: SummonFigure = figures[e["uid"]]
+				var p = st.find_perm(e["uid"])
+				if p:
+					f.sync(p)
+				_float_text(I18n.t("Regenerates"), f.global_position + SummonFigure.SIZE * 0.5, UIKit.GREEN)
+				await f.play_buff()
+		"pacify", "snare":
+			if figures.has(e["uid"]):
+				var f: SummonFigure = figures[e["uid"]]
+				_float_text(I18n.t("Pacified") if e["type"] == "pacify" else I18n.t("Snared"), f.global_position + SummonFigure.SIZE * 0.5, Tapestry.GILT)
+				var p = st.find_perm(e["uid"])
+				if p:
+					f.sync(p)
+				await _wait(0.3)
+		"prevented":
+			if figures.has(e["uid"]):
+				_float_text(I18n.t("Prevented"), figures[e["uid"]].global_position + SummonFigure.SIZE * 0.5, UIKit.DIM)
+				await _wait(0.15)
+		"idle":
+			if figures.has(e["uid"]):
+				_float_text(I18n.t("Idle"), figures[e["uid"]].global_position + Vector2(SummonFigure.SIZE.x * 0.5, 20), Tapestry.GILT)
+				await _wait(0.25)
+		"fight":
+			var fp = st.find_perm(e["uid"])
+			_log(I18n.t("%s fights!") % (I18n.t(fp.name) if fp else ""))
+		"overclock":
+			if figures.has(e["uid"]):
+				_burst(figures[e["uid"]].global_position + SummonFigure.SIZE * 0.5, Tapestry.GILT, 30)
+			_log(I18n.t("Overclocked!"))
+		"ability":
+			_log(I18n.t("%s uses: %s") % [st.side(e["side"]).name, I18n.t(String(e.get("text", "")))])
+			_refresh_relics(e["side"])
+			_refresh_bars()
+			await _wait(0.35 if e["side"] == 1 else 0.1)
+		"tax":
+			_log(I18n.t("%s's next card costs %d more.") % [st.side(e["side"]).name, int(e["amount"])])
+		"foresight":
+			if e["side"] == 0:
+				_log(I18n.t("Foresight: %d kept on top, %d sent to the bottom.") % [int(e["kept"]), int(e["bottom"])])
+		"upkeep_paid":
+			_refresh_bars()
 		"game_over":
 			pass
 
@@ -839,12 +911,24 @@ func _show_board(side_i: int, uid: int) -> void:
 	for p in st.side(side_i).creatures + st.side(side_i).relics:
 		if p.uid == uid:
 			start = entries.size()
-		var e := {"id": p.card_id, "foil": false}
+		var e := {"id": p.card_id, "foil": false, "uid": p.uid}
 		if p.is_token:
 			e["data"] = p.card
 		entries.append(e)
 	if not entries.is_empty():
-		preview = CardViewer.open(self, entries, start)
+		preview = CardViewer.open(self, entries, start, func(entry, _i):
+			var out := []
+			var q = st.find_perm(int(entry.get("uid", -1)))
+			if q == null or q.owner != 0:
+				return out
+			var list: Array = st.abilities_of(q)
+			for k in list.size():
+				var ab: Dictionary = list[k]
+				var kk: int = k
+				var quid: int = q.uid
+				out.append([I18n.t("Use") + ": " + I18n.t(String(ab.get("text", ""))).left(38), func(): _begin_ability(quid, kk),
+					st.can_activate(0, q.uid, k) and not busy and mode == "idle", true])
+			return out)
 
 
 func _close_preview() -> void:
@@ -867,9 +951,64 @@ func _begin_play(idx: int) -> void:
 		return
 	var c := CardDB.get_card(st.side(0).hand[idx])
 	pending_hand_idx = idx
-	target_specs = st.target_specs(c)
+	pending_ability = []
+	pending_overclock = false
+	if not c.get("overclock", {}).is_empty() and st.can_play(0, idx, true):
+		var extra := UIKit.cost_text(c["overclock"].get("cost", {}))
+		_ask(I18n.t("Overclock"), I18n.t("Pay %s more to overclock it?") % extra, I18n.t("Overclock"), I18n.t("Play normally"), func(yes: bool):
+			pending_overclock = yes
+			_start_targets(c))
+		return
+	_start_targets(c)
+
+
+func _start_targets(c: Dictionary) -> void:
+	st._with_source(c)
+	target_specs = st.target_specs(c, pending_overclock)
 	chosen_targets = []
 	_advance_targeting()
+
+
+## Use an ability of one of our permanents (chosen in the card viewer).
+func _begin_ability(uid: int, idx: int) -> void:
+	_close_preview()
+	var p = st.find_perm(uid)
+	if busy or p == null or not st.can_activate(0, uid, idx):
+		return
+	pending_hand_idx = -1
+	pending_ability = [uid, idx]
+	st._with_source(p.card)
+	target_specs = st.ability_specs(p, idx)
+	chosen_targets = []
+	_advance_targeting()
+
+
+## A two-button question over the duel.
+func _ask(head: String, body: String, yes_label: String, no_label: String, cb: Callable) -> void:
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.5)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	var panel := PanelContainer.new()
+	dim.add_child(panel)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
+	panel.add_child(v)
+	v.add_child(UIKit.title(head, 30))
+	var l := UIKit.label(body, 20, UIKit.TEXT, true)
+	l.custom_minimum_size.x = 420
+	v.add_child(l)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	v.add_child(row)
+	row.add_child(UIKit.button(yes_label, func():
+		dim.queue_free()
+		cb.call(true), 180))
+	row.add_child(UIKit.button(no_label, func():
+		dim.queue_free()
+		cb.call(false), 180))
+	await get_tree().process_frame
+	panel.position = (get_viewport_rect().size - panel.size) * 0.5
 
 
 ## Ask for the next target, or play the card once all are chosen.
@@ -885,16 +1024,23 @@ func _advance_targeting() -> void:
 		refresh()
 		return
 	mode = "idle"
+	if not pending_ability.is_empty():
+		var ab: Array = pending_ability
+		pending_ability = []
+		st.activate(0, ab[0], ab[1], chosen_targets)
+		await play_events()
+		return
 	var idx := pending_hand_idx
 	pending_hand_idx = -1
-	st.play(0, idx, chosen_targets)
+	st.play(0, idx, chosen_targets, pending_overclock)
+	pending_overclock = false
 	await play_events()
 
 
 func _spec_prompt(spec: Dictionary) -> String:
 	var a: String = spec.get("action", "")
 	var t: String = spec.get("target", "")
-	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures"}.get(t, t)
+	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures", "enemy_relic": "an enemy relic"}.get(t, t)
 	return "%s → %s" % [I18n.t(a.capitalize()), I18n.t(who)]
 
 
@@ -985,6 +1131,8 @@ func _on_main() -> void:
 		"target":
 			mode = "idle"
 			pending_hand_idx = -1
+			pending_ability = []
+			pending_overclock = false
 			_log("Cancelled.")
 			refresh()
 		"attack":

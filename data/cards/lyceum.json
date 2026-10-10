@@ -1,7 +1,7 @@
 [
   {
     "id": "lyceum_c_001",
-    "name": "Owl Familiar of the Archive",
+    "name": "Owl of the Archive",
     "faction": "lyceum",
     "rarity": "common",
     "type": "creature",
@@ -11,15 +11,65 @@
     },
     "power": 1,
     "toughness": 1,
-    "keywords": [
-      "flying"
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "foresight",
+        "amount": 2
+      }
     ],
-    "effects": [],
-    "text": "Flying.",
+    "text": "When this enters, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom).",
     "flavor": "It has read every book in the archive, mostly by sitting on them."
   },
   {
     "id": "lyceum_c_002",
+    "name": "Ephebe of the Phalanx",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Soldier",
+    "cost": {
+      "U": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [
+      "steadfast"
+    ],
+    "effects": [],
+    "text": "Steadfast (prevent 1 of the damage dealt to it by each source).",
+    "flavor": "At eighteen he swore the oath: never to shame his arms, never to desert the man beside him."
+  },
+  {
+    "id": "lyceum_c_003",
+    "name": "Water-Carrier Pupil",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "self",
+        "condition": "composure"
+      }
+    ],
+    "text": "As long as you have four or more cards in hand (composure), this gets +1/+1.",
+    "flavor": "Like Cleanthes before him, he hauls water by night so that he may sit at the Porch by day."
+  },
+  {
+    "id": "lyceum_c_004",
     "name": "Lamp-Lit Scribe",
     "faction": "lyceum",
     "rarity": "common",
@@ -43,7 +93,7 @@
     "flavor": "Copy the text, and the text copies something into you."
   },
   {
-    "id": "lyceum_c_003",
+    "id": "lyceum_c_005",
     "name": "Bronze-Shield Hoplite",
     "faction": "lyceum",
     "rarity": "common",
@@ -60,10 +110,45 @@
     ],
     "effects": [],
     "text": "Defender (can't attack).",
-    "flavor": "\"What is in my power is to hold this ground. I hold it.\""
+    "flavor": "\"Be like the headland against which the waves break without ceasing. It stands firm.\" (Marcus Aurelius)"
   },
   {
-    "id": "lyceum_c_004",
+    "id": "lyceum_c_006",
+    "name": "Logician of the Porch",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "abilities": [
+      {
+        "cost": {
+          "mana": {
+            "U": 1
+          },
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "tap",
+            "target": "enemy_creature"
+          }
+        ],
+        "text": "Tap, pay U: tap target enemy creature."
+      }
+    ],
+    "text": "Tap, pay U: tap target enemy creature.",
+    "flavor": "\"If it is day, it is light. It is day. Therefore, sir, you may stand still.\""
+  },
+  {
+    "id": "lyceum_c_007",
     "name": "Disciplined Phalanx",
     "faction": "lyceum",
     "rarity": "common",
@@ -83,7 +168,7 @@
     "flavor": "Forty shields, one mind, no fear."
   },
   {
-    "id": "lyceum_c_005",
+    "id": "lyceum_c_008",
     "name": "Tower Stargazer",
     "faction": "lyceum",
     "rarity": "common",
@@ -91,26 +176,24 @@
     "subtype": "Human Astronomer",
     "cost": {
       "U": 1,
-      "generic": 3
+      "generic": 2
     },
     "power": 2,
-    "toughness": 3,
-    "keywords": [
-      "flying"
-    ],
+    "toughness": 2,
+    "keywords": [],
     "effects": [
       {
         "trigger": "enter",
-        "action": "draw",
-        "amount": 1
+        "action": "foresight",
+        "amount": 3
       }
     ],
-    "text": "Flying. When this enters, draw a card.",
-    "flavor": "He charts the heavens from a balcony of silver and glass."
+    "text": "When this enters, foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom).",
+    "flavor": "He charts the heavens from a balcony of silver and glass, and reads tomorrow in their order."
   },
   {
-    "id": "lyceum_c_006",
-    "name": "Wandering Peripatetic",
+    "id": "lyceum_c_009",
+    "name": "Wandering Cynic",
     "faction": "lyceum",
     "rarity": "common",
     "type": "creature",
@@ -130,11 +213,76 @@
       }
     ],
     "text": "When this enters, return target enemy creature to its owner's hand.",
-    "flavor": "He argues while he walks, and his opponents find themselves walking home."
+    "flavor": "He owns a cloak, a staff and a satchel, and he has argued kings out of their own halls."
   },
   {
-    "id": "lyceum_c_007",
+    "id": "lyceum_c_010",
+    "name": "Shipwrecked Merchant",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Merchant",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "freeze",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+    "flavor": "\"I made a prosperous voyage when I suffered shipwreck.\" (Zeno of Citium)"
+  },
+  {
+    "id": "lyceum_c_011",
+    "name": "Veteran of the Long Walls",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Soldier",
+    "cost": {
+      "U": 1,
+      "generic": 4
+    },
+    "power": 4,
+    "toughness": 5,
+    "keywords": [
+      "steadfast"
+    ],
+    "effects": [],
+    "text": "Steadfast (prevent 1 of the damage dealt to it by each source).",
+    "flavor": "\"It is difficulties that show what men are.\" (Epictetus)"
+  },
+  {
+    "id": "lyceum_c_012",
     "name": "Measured Rebuke",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "bounce",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "Return target enemy creature to its owner's hand.",
+    "flavor": "\"Reconsider.\""
+  },
+  {
+    "id": "lyceum_c_013",
+    "name": "Binding Argument",
     "faction": "lyceum",
     "rarity": "common",
     "type": "spell",
@@ -146,17 +294,118 @@
     "keywords": [],
     "effects": [
       {
-        "action": "bounce",
-        "target": "enemy_creature",
-        "trigger": "cast"
+        "trigger": "cast",
+        "action": "tap",
+        "target": "enemy_creature"
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1
       }
     ],
-    "text": "Return target enemy creature to its owner's hand.",
-    "flavor": "\"Reconsider.\""
+    "text": "Tap target enemy creature. Draw a card.",
+    "flavor": "The brute paused to consider the premise, and the moment was lost."
   },
   {
-    "id": "lyceum_c_008",
+    "id": "lyceum_c_014",
+    "name": "Grip of the Cold Sea",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "freeze",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+    "flavor": "The northern sea does not hurry, and it does not let go."
+  },
+  {
+    "id": "lyceum_c_015",
+    "name": "Reading by Lamplight",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "foresight",
+        "amount": 3
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "Foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom), then draw a card.",
+    "flavor": "\"To be everywhere is to be nowhere.\" (Seneca, on reading too many books)"
+  },
+  {
+    "id": "lyceum_c_016",
     "name": "Hour of Contemplation",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 2
+      }
+    ],
+    "text": "Draw two cards.",
+    "flavor": "Stillness first. Then clarity. Then the answer."
+  },
+  {
+    "id": "lyceum_c_017",
+    "name": "Question of First Principles",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "tax",
+        "amount": 2
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "Tax 2 (the enemy's next non-land card costs 2 more). Draw a card.",
+    "flavor": "\"Before we march,\" said the logician, \"define victory.\""
+  },
+  {
+    "id": "lyceum_c_018",
+    "name": "Sent Back to the Gate",
     "faction": "lyceum",
     "rarity": "common",
     "type": "spell",
@@ -168,42 +417,101 @@
     "keywords": [],
     "effects": [
       {
-        "action": "draw",
-        "amount": 2,
-        "trigger": "cast"
+        "trigger": "cast",
+        "action": "bounce",
+        "target": "enemy_creature"
+      },
+      {
+        "trigger": "cast",
+        "action": "tax",
+        "amount": 1
       }
     ],
-    "text": "Draw two cards.",
-    "flavor": "Stillness first. Then clarity. Then the answer."
+    "text": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs 1 more).",
+    "flavor": "\"The greatest remedy for anger is delay.\" (Seneca)"
   },
   {
-    "id": "lyceum_c_009",
-    "name": "Binding Argument",
+    "id": "lyceum_c_019",
+    "name": "Scholar's Lamp",
     "faction": "lyceum",
     "rarity": "common",
-    "type": "spell",
-    "subtype": "Discourse",
+    "type": "relic",
+    "subtype": "Relic",
     "cost": {
       "U": 1
     },
     "keywords": [],
     "effects": [
       {
-        "action": "tap",
-        "target": "enemy_creature",
-        "trigger": "cast"
-      },
-      {
-        "action": "draw",
-        "amount": 1,
-        "trigger": "cast"
+        "trigger": "upkeep",
+        "action": "foresight",
+        "amount": 1
       }
     ],
-    "text": "Tap target enemy creature. Draw a card.",
-    "flavor": "The brute paused to consider the premise, and the moment was lost."
+    "text": "At the beginning of your upkeep, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+    "flavor": "A little oil, a little wick, and the whole night given to Chrysippus."
+  },
+  {
+    "id": "lyceum_c_020",
+    "name": "Harbour Chain",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [],
+    "abilities": [
+      {
+        "cost": {
+          "mana": {
+            "generic": 2
+          },
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "tap",
+            "target": "enemy_creature"
+          }
+        ],
+        "text": "Tap, pay 2: tap target enemy creature."
+      }
+    ],
+    "text": "Tap, pay 2: tap target enemy creature.",
+    "flavor": "Stretched across the harbour mouth at dusk, it teaches impatient captains to wait."
   },
   {
     "id": "lyceum_u_001",
+    "name": "Agora Inspector",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Official",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "tax",
+        "amount": 1
+      }
+    ],
+    "text": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs 1 more).",
+    "flavor": "Every scale in the market is honest while he is near, and every price a little dearer."
+  },
+  {
+    "id": "lyceum_u_002",
     "name": "Dialectician of the Porch",
     "faction": "lyceum",
     "rarity": "uncommon",
@@ -224,11 +532,65 @@
       }
     ],
     "text": "Whenever this attacks, tap target enemy creature.",
-    "flavor": "Thesis, antithesis, and the defender left standing in confusion."
+    "flavor": "Premise, rebuttal, and the defender left standing in confusion."
   },
   {
-    "id": "lyceum_u_002",
-    "name": "Archive Great-Owl",
+    "id": "lyceum_u_003",
+    "name": "Disciple of Chrysippus",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "self",
+        "condition": "composure"
+      },
+      {
+        "static": "keyword",
+        "keyword": "steadfast",
+        "scope": "self",
+        "condition": "composure"
+      }
+    ],
+    "text": "As long as you have four or more cards in hand, this gets +1/+1 and has steadfast.",
+    "flavor": "\"Had there been no Chrysippus, there would have been no Stoa.\" (Diogenes Laertius)"
+  },
+  {
+    "id": "lyceum_u_004",
+    "name": "Unbroken Shieldwall",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Soldier",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 5,
+    "keywords": [
+      "defender",
+      "steadfast"
+    ],
+    "effects": [],
+    "text": "Defender. Steadfast.",
+    "flavor": "\"What is in my power is to hold this ground. I hold it.\""
+  },
+  {
+    "id": "lyceum_u_005",
+    "name": "Great-Owl of the Archive",
     "faction": "lyceum",
     "rarity": "uncommon",
     "type": "creature",
@@ -237,17 +599,21 @@
       "U": 1,
       "generic": 3
     },
-    "power": 3,
+    "power": 2,
     "toughness": 3,
-    "keywords": [
-      "flying"
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "foresight",
+        "amount": 2
+      }
     ],
-    "effects": [],
-    "text": "Flying.",
-    "flavor": "It keeps the night-hours of the library, and suffers no careless readers."
+    "text": "At the beginning of your upkeep, foresight 2.",
+    "flavor": "It keeps the night hours of the library, and suffers no careless readers."
   },
   {
-    "id": "lyceum_u_003",
+    "id": "lyceum_u_006",
     "name": "Strategos of the Shieldwall",
     "faction": "lyceum",
     "rarity": "uncommon",
@@ -258,22 +624,159 @@
       "generic": 3
     },
     "power": 3,
-    "toughness": 5,
+    "toughness": 3,
     "keywords": [
       "vigilance"
     ],
-    "effects": [
+    "effects": [],
+    "statics": [
       {
-        "trigger": "enter",
-        "action": "tap",
-        "target": "enemy_creature"
+        "static": "anthem",
+        "power": 0,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Soldier"
       }
     ],
-    "text": "Vigilance. When this enters, tap target enemy creature.",
+    "text": "Vigilance. Other Soldier creatures you control get +0/+1.",
     "flavor": "He has studied every battle ever written down, and lost none of his own."
   },
   {
-    "id": "lyceum_u_004",
+    "id": "lyceum_u_007",
+    "name": "Navarch of the Cold Sea",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Sailor",
+    "cost": {
+      "U": 1,
+      "generic": 4
+    },
+    "power": 3,
+    "toughness": 5,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "freeze",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "When this enters, freeze target enemy creature.",
+    "flavor": "\"If a man does not know to which port he sails, no wind is favourable.\" (Seneca)"
+  },
+  {
+    "id": "lyceum_u_008",
+    "name": "Considered Reply",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "bounce",
+        "target": "enemy_creature"
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1,
+        "condition": "composure"
+      }
+    ],
+    "text": "Return target enemy creature to its owner's hand. Then, if you have four or more cards in hand, draw a card.",
+    "flavor": "\"Let silence be the rule, or say only what is needed, and in few words.\" (Epictetus)"
+  },
+  {
+    "id": "lyceum_u_009",
+    "name": "Humbling Lesson",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "bounce",
+        "target": "enemy_creature",
+        "min_power": 4
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "Return target enemy creature with power 4 or greater to its owner's hand. Draw a card.",
+    "flavor": "\"Alexander of Macedon and his mule driver were brought to the same end by death.\" (Marcus Aurelius)"
+  },
+  {
+    "id": "lyceum_u_010",
+    "name": "Letters to Lucilius",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "foresight",
+        "amount": 3
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 2
+      }
+    ],
+    "text": "Foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom), then draw two cards.",
+    "flavor": "\"Hold every hour in your grasp.\" (Seneca, to his friend Lucilius)"
+  },
+  {
+    "id": "lyceum_u_011",
+    "name": "Stillness of Mind",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "tap",
+        "target": "all_enemy_creatures"
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "Tap all enemy creatures. Draw a card.",
+    "flavor": "The philosopher spoke of the vanity of striving, and the whole army sat down."
+  },
+  {
+    "id": "lyceum_u_012",
     "name": "Orrery of Fixed Stars",
     "faction": "lyceum",
     "rarity": "uncommon",
@@ -295,34 +798,94 @@
     "flavor": "As the brass planets turn, the enemy feels the weight of a fixed order."
   },
   {
-    "id": "lyceum_u_005",
-    "name": "Stillness of Mind",
+    "id": "lyceum_u_013",
+    "name": "Sumptuary Tablet",
     "faction": "lyceum",
     "rarity": "uncommon",
-    "type": "spell",
-    "subtype": "Discourse",
+    "type": "relic",
+    "subtype": "Relic",
     "cost": {
       "U": 1,
-      "generic": 3
+      "generic": 2
     },
     "keywords": [],
     "effects": [
       {
-        "action": "tap",
-        "target": "all_enemy_creatures",
-        "trigger": "cast"
-      },
-      {
-        "action": "draw",
-        "amount": 1,
-        "trigger": "cast"
+        "trigger": "upkeep",
+        "action": "tax",
+        "amount": 1
       }
     ],
-    "text": "Tap all enemy creatures. Draw a card.",
-    "flavor": "The philosopher spoke of the vanity of striving, and the whole army sat down."
+    "text": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs 1 more).",
+    "flavor": "Bronze letters list what a man may spend. The enemy finds that the list includes him."
   },
   {
     "id": "lyceum_r_001",
+    "name": "Keeper of the Stacks",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Scholar",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 4,
+    "keywords": [
+      "defender"
+    ],
+    "effects": [],
+    "abilities": [
+      {
+        "cost": {
+          "mana": {
+            "generic": 2
+          },
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "draw",
+            "amount": 1
+          }
+        ],
+        "text": "Tap, pay 2: draw a card."
+      }
+    ],
+    "text": "Defender. Tap, pay 2: draw a card.",
+    "flavor": "He has never left the library, and he has never needed to."
+  },
+  {
+    "id": "lyceum_r_002",
+    "name": "Epictetus, the Unbroken",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 2,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [
+      "steadfast"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "steadfast",
+        "scope": "other_own_creatures",
+        "condition": "composure"
+      }
+    ],
+    "text": "Steadfast. As long as you have four or more cards in hand, other creatures you control have steadfast.",
+    "flavor": "\"You will break it,\" he said, as his master twisted his leg. When it broke: \"Did I not tell you?\""
+  },
+  {
+    "id": "lyceum_r_003",
     "name": "Sage of the Long Patience",
     "faction": "lyceum",
     "rarity": "rare",
@@ -345,31 +908,110 @@
       }
     ],
     "text": "Vigilance. When this enters, draw two cards.",
-    "flavor": "\"The obstacle is the way, and I am in no hurry.\""
+    "flavor": "\"The impediment to action advances action. What stands in the way becomes the way.\" (Marcus Aurelius)"
   },
   {
-    "id": "lyceum_r_002",
-    "name": "Skywarden of the Upper Stoa",
+    "id": "lyceum_r_004",
+    "name": "Seneca, Tutor of the Prince",
     "faction": "lyceum",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Bird Spirit",
+    "subtype": "Human Philosopher",
     "cost": {
-      "U": 1,
-      "generic": 3
+      "U": 2,
+      "generic": 2
     },
-    "power": 3,
-    "toughness": 4,
-    "keywords": [
-      "flying",
-      "vigilance"
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "draw",
+        "amount": 1,
+        "condition": "composure"
+      }
     ],
-    "effects": [],
-    "text": "Flying, vigilance.",
-    "flavor": "It circles the colonnade at dusk, a silver thought in a silver sky."
+    "text": "At the beginning of your upkeep, if you have four or more cards in hand, draw a card.",
+    "flavor": "\"While we are postponing, life speeds by.\" (Seneca)"
   },
   {
-    "id": "lyceum_r_003",
+    "id": "lyceum_r_005",
+    "name": "Aristeon, the Unmoved Sage",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 2,
+      "generic": 4
+    },
+    "power": 4,
+    "toughness": 5,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "bounce",
+        "target": "enemy_creature"
+      },
+      {
+        "trigger": "enter",
+        "action": "draw",
+        "amount": 2
+      }
+    ],
+    "text": "Vigilance. When this enters, return target enemy creature to its owner's hand and draw two cards.",
+    "flavor": "Kings came to the Porch to move him. They went home moved."
+  },
+  {
+    "id": "lyceum_r_006",
+    "name": "Apatheia",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "freeze",
+        "target": "all_enemy_creatures"
+      }
+    ],
+    "text": "Freeze all enemy creatures (tap them; they don't untap during their controller's next untap step).",
+    "flavor": "Freedom from passion, the Stoics called it. The enemy called it a long winter."
+  },
+  {
+    "id": "lyceum_r_007",
+    "name": "All Things Return",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 2,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "bounce",
+        "target": "all_creatures"
+      }
+    ],
+    "text": "Return all creatures to their owners' hands.",
+    "flavor": "Chrysippus taught that the cosmos returns at last to its source and begins again, the same in every part."
+  },
+  {
+    "id": "lyceum_r_008",
     "name": "Codex of the Unshaken Mind",
     "faction": "lyceum",
     "rarity": "rare",
@@ -391,35 +1033,120 @@
     "flavor": "Each morning it opens to a page no one has read before."
   },
   {
+    "id": "lyceum_r_009",
+    "name": "The Painted Porch",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "vigilance",
+        "scope": "own_creatures"
+      }
+    ],
+    "text": "Creatures you control have vigilance.",
+    "flavor": "Under the painted battles of Marathon and Troy, Zeno walked and taught, and the school took its name from the porch."
+  },
+  {
     "id": "lyceum_m_001",
-    "name": "Aristeon, the Unmoved Sage",
+    "name": "Zeno of Citium",
     "faction": "lyceum",
     "rarity": "mythic",
     "type": "creature",
     "subtype": "Human Philosopher",
     "cost": {
       "U": 2,
-      "generic": 4
+      "generic": 2
     },
-    "power": 4,
-    "toughness": 5,
+    "power": 3,
+    "toughness": 4,
     "keywords": [
-      "flying",
       "vigilance"
     ],
     "effects": [
       {
         "trigger": "enter",
-        "action": "bounce",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Philosopher"
+      }
+    ],
+    "text": "Vigilance. Other Philosopher creatures you control get +1/+1. When this enters, draw a card.",
+    "flavor": "\"We have two ears and one mouth, so that we may listen more and speak less.\""
+  },
+  {
+    "id": "lyceum_m_002",
+    "name": "Marcus Aurelius",
+    "faction": "lyceum",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Noble Philosopher",
+    "cost": {
+      "U": 2,
+      "generic": 4
+    },
+    "power": 5,
+    "toughness": 6,
+    "keywords": [
+      "vigilance",
+      "steadfast"
+    ],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "freeze",
         "target": "enemy_creature"
+      }
+    ],
+    "text": "Vigilance, steadfast. Whenever this attacks, freeze target enemy creature.",
+    "flavor": "\"Waste no more time arguing what a good man should be. Be one.\""
+  },
+  {
+    "id": "lyceum_m_003",
+    "name": "The View from Above",
+    "faction": "lyceum",
+    "rarity": "mythic",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 2,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "foresight",
+        "amount": 5
       },
       {
-        "trigger": "enter",
+        "trigger": "cast",
         "action": "draw",
+        "amount": 3
+      },
+      {
+        "trigger": "cast",
+        "action": "tax",
         "amount": 2
       }
     ],
-    "text": "Flying, vigilance. When this enters, return target enemy creature to its owner's hand and draw two cards.",
-    "flavor": "He rose above passion so completely that one day he simply kept rising."
+    "text": "Foresight 5, then draw three cards. Tax 2 (the enemy's next non-land card costs 2 more).",
+    "flavor": "\"Look down from above on the countless herds of men, their solemn rites, their voyages in storm and calm.\" (Marcus Aurelius)"
   }
 ]

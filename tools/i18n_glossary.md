@@ -55,3 +55,76 @@ Keep unchanged: city names (Cogspire, Santa Lucerna, Porticus, Elderholt, Vineme
 names (Father Anselm → keep the name but translate the title separately), Latin (Lumen Ecclesiae, Deus Vult,
 Victoria, Clades, Aurea), "TCG · RPG", symbols (♥ ◉ ✦ ✉ ⚔ ★ ✗ ▶ ♪), and any card/creature proper name like
 "Belzareth", "Cernoth", "Vessaria", "Aristeon" (translate only the epithet after the comma).
+
+## Set 2 terms (es)
+
+| English | Español |
+|---|---|
+| Sanctified | Santificado (protección contra el Pacto) |
+| Dread | Pavor |
+| Regenerate | Regenerar |
+| First strike | Primer golpe |
+| Steadfast | Firmeza |
+| Grace (condition) | Gracia |
+| Bloodied | Ensangrentado |
+| Rooted | Arraigado |
+| Carouse | Jolgorio |
+| Composure | Compostura |
+| Idle | Ocio |
+| Overclock / "overclocked" | Sobremarcha / "se jugó con Sobremarcha" |
+| Assembly | Ensamblaje |
+| Upkeep N (keyword) | Mantenimiento N |
+| Foresight | Previsión |
+| Freeze | Congelar |
+| Tax | Tributo |
+| Rummage | Rebuscar |
+| Pacify | Pacificar |
+| Snare | Cepo |
+| Fight | Luchar (lucha contra) |
+| Servo / Servo Construct | Servo / Servo Autómata |
+| Construct / Automaton | Autómata |
+| Sapling | Retoño |
+| Restless Dead | Muerto Inquieto |
+| counter (+1/+1) | contador |
+| permanently | de forma permanente |
+| mana value | valor de maná |
+| power | fuerza |
+| Wyrm / Woodwose | Sierpe / Hombre Salvaje |
+| Porch (the Stoa) | Pórtico |
+
+## Set 2 terms (pt)
+
+Keyword names are written in sentence case, and lowercase inside running rules text ("tem ímpeto"). Reminder text uses "ela" for a creature and "sacrifique-a" / "esta carta" for a card.
+
+| English | Português (BR) | Notes |
+|---|---|---|
+| Guardian | Guardião | existing |
+| Sanctified | Santificado | "Santificado (proteção contra o Pacto)" |
+| Dread | Pavor | "Pavor (só pode ser bloqueada por criaturas do Pacto e Constructos)" |
+| Regenerate | Regenerar | reminder: "ela é virada e curada em vez disso" |
+| First strike | Golpe inicial | |
+| Steadfast | Firmeza | "Firmeza (previna 1 do dano causado a esta criatura por cada fonte)" |
+| Vigilance / Defender / Trample / Reach / Haste / Lifelink / Deathtouch / Flying | Vigilância / Defensor / Atropelar / Alcance / Ímpeto / Vínculo vital / Toque mortal / Voo | existing |
+| Grace (more life than at the start) | Graça (written as "mais vida do que no início do duelo") | |
+| Bloodied (10 or less life) | Ensanguentado | |
+| Rooted (six or more lands) | Enraizado | |
+| Carouse | Farra | "Farra (se você já jogou outra carta que não seja terreno neste turno)" |
+| Composure (four or more cards in hand) | Compostura | |
+| Idle | Ócio | "Ócio (no fim do seu turno, se esta criatura estiver desvirada e não tiver atacado)" |
+| Overclock / overclocked | Sobrecarga / sobrecarregada | existing |
+| Assembly | Montagem | "Montagem (recebe +1/+1 para cada outro Constructo que você controla)" |
+| Upkeep N (keyword) | Manutenção N | "pague N ou sacrifique-a" |
+| Foresight | Previsão | "olhe as N cartas do topo do seu grimório, ponha quantas quiser de volta no topo e as demais no fundo" |
+| Freeze | Congelar (congele) | "vire-a; ela não desvira durante a próxima etapa de desvirar de seu controlador" |
+| Tax | Tributo | "a próxima carta do inimigo que não seja terreno custa N a mais" |
+| Rummage | Vasculhar (vasculhe) | "descarte sua pior carta e depois compre uma carta" |
+| Pacify | Pacificar (pacifique) | "ela não pode atacar pelo resto do duelo" |
+| Snare (subtype) | Laço | |
+| Fight | Lutar (luta contra) | "sua criatura mais forte luta contra a criatura inimiga alvo" |
+| Servo (token) | Servo | "ficha 1/1 de Servo Constructo" |
+| Sapling (token) | Muda | "ficha 1/1 de Muda" (subtype Plant: Planta) |
+| Restless Dead (token) | Morto Inquieto | "ficha 2/2 de Morto Inquieto Zumbi" |
+| counter (+1/+1) | marcador | |
+| mana value | valor de mana | |
+| library (zone) | grimório | existing |
+| Stag / Goat / Wolf tokens | Cervo / Bode / Lobo | subtypes: Bode Fera, Lobo Fera |

@@ -78,15 +78,23 @@ def main():
     for s, where in code_strings().items():
         add("interface", s, where)
 
-    for f in ["sanctum", "abyss", "wild", "revel", "lyceum", "machine"]:
-        for c in json.load(open(os.path.join(ROOT, "data/cards/%s.json" % f), encoding="utf-8")):
+    for f in ["sanctum", "abyss", "wild", "revel", "lyceum", "machine", "gold", "lands"]:
+        path = os.path.join(ROOT, "data/cards/%s.json" % f)
+        if not os.path.exists(path):
+            continue
+        for c in json.load(open(path, encoding="utf-8")):
             add("cards", c["name"], "card name (%s, %s)" % (f, c["type"]))
             add("cards", c.get("subtype", ""), "card subtype")
             add("cards", c.get("text", ""), "rules text of " + c["name"])
             add("cards", c.get("flavor", ""), "flavour text of " + c["name"])
-            for e in c.get("effects", []):
+            effs = list(c.get("effects", [])) + list(c.get("overclock", {}).get("effects", []))
+            for ab in c.get("abilities", []):
+                add("cards", ab.get("text", ""), "activated ability text of " + c["name"])
+                effs += ab.get("effects", [])
+            for e in effs:
                 if "token" in e:
                     add("cards", e["token"]["name"], "token creature name")
+                    add("cards", e["token"].get("subtype", ""), "token subtype")
     for short in ["Church", "Covenant", "Old Ways", "Revel", "Stoa", "Technocracy"]:
         add("cards", "Tap: add one %s mana." % short, "basic land rules text")
 
@@ -119,6 +127,12 @@ def main():
             print(code, "missing", len(missing))
             for k in missing[:40]:
                 print("   ", repr(k))
+            notes = {}
+            for g in groups.values():
+                for item in g:
+                    notes[item["key"]] = item["note"]
+            json.dump([{"key": k, "note": notes.get(k, "")} for k in missing],
+                      open(os.path.join(ROOT, "tools/i18n_missing_%s.json" % code), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
 
 
 if __name__ == "__main__":
