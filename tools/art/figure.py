@@ -18,9 +18,13 @@ def ik(s, t, l1, l2, bend=1.0):
     a = math.acos(max(-1.0, min(1.0, cos_a)))
     e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
     e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
-    # elbows hang: take the lower solution unless the pose asks for the other (bend 0)
-    lo, hi = (e1, e2) if e1[1] >= e2[1] else (e2, e1)
-    e = lo if bend != 0 else hi
+    # elbows hang down and out, away from the body, never folded into the chest
+    side = 1.0 if s[0] >= 0 else -1.0
+
+    def score(e):
+        return e[1] + 1.4 * side * e[0]
+    best, other = (e1, e2) if score(e1) >= score(e2) else (e2, e1)
+    e = best if bend != 0 else other
     # actual hand (clamped)
     dirv = v_norm(v_sub(t, e))
     return e, v_add(e, v_mul(dirv, l2))
@@ -38,8 +42,9 @@ POSES = {
     'lantern': ((20, -58), (-9, -51), False, 1, 1),
     'staff':   ((13, -66), (-9, -52), False, 1, 1),
     'staff2':  ((13, -66), (6, -60), True, 1, -1),
-    'sword_up': ((15, -97), (-13, -62), False, 1, 1),
-    'guard':   ((16, -63), (-13, -62), False, 1, 1),
+    'sword_up': ((16, -96), (-1, -63), True, 1, 1),
+    'guard':   ((19, -62), (-1, -63), True, 1, 1),
+    'shield_rest': ((14, -52), (-1, -63), True, 1, 1),
     'spread':  ((24, -76), (-22, -76), False, 1, -1),
     'sprinkle': ((24, -82), (5, -61), True, 1, -1),
     'offer':   ((19, -72), (8, -66), True, 1, -1),
@@ -105,11 +110,13 @@ class Figure:
         self._body(j)
         if self.cloak:
             self._cloak_front(j)
-        if self.shield:
-            PR.heater_shield(p, (j['hand_b'][0] - 1, j['hand_b'][1] + 6), self.shield)
         self._head(j)
         if j['back_front']:
             self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
+        if self.shield:
+            # strapped to the forearm, held square in front of the body
+            hb = j['hand_b']
+            PR.heater_shield(p, (hb[0] - 3.5, hb[1] + 7), self.shield, s=1.08)
         self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
         if self.props_front:
             for fn in self.props_front:

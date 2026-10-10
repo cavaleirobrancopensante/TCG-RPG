@@ -127,7 +127,7 @@
       "C": 1,
       "generic": 1
     },
-    "power": 4,
+    "power": 3,
     "toughness": 3,
     "keywords": [],
     "effects": [
@@ -259,7 +259,7 @@
       "generic": 3
     },
     "power": 3,
-    "toughness": 5,
+    "toughness": 4,
     "keywords": [],
     "text": "(No abilities.)",
     "flavor": "The Stoa taught discipline. The Technocracy simply built it."
@@ -306,7 +306,7 @@
       "generic": 4
     },
     "power": 4,
-    "toughness": 4,
+    "toughness": 3,
     "keywords": [],
     "effects": [
       {
@@ -712,7 +712,7 @@
       "C": 1,
       "generic": 3
     },
-    "power": 3,
+    "power": 2,
     "toughness": 4,
     "keywords": [],
     "effects": [
@@ -796,7 +796,8 @@
     "type": "spell",
     "subtype": "Order",
     "cost": {
-      "C": 2
+      "C": 1,
+      "generic": 1
     },
     "keywords": [],
     "effects": [
@@ -986,8 +987,8 @@
       "C": 1,
       "generic": 3
     },
-    "power": 7,
-    "toughness": 7,
+    "power": 6,
+    "toughness": 6,
     "keywords": [],
     "effects": [
       {
@@ -1008,7 +1009,7 @@
     "subtype": "Construct",
     "cost": {
       "C": 1,
-      "generic": 3
+      "generic": 4
     },
     "power": 2,
     "toughness": 2,
@@ -1160,12 +1161,12 @@
         "trigger": "cast",
         "action": "buff",
         "target": "all_own_creatures",
-        "power": 2,
-        "toughness": 2,
+        "power": 1,
+        "toughness": 1,
         "duration": "permanent"
       }
     ],
-    "text": "Create two 1/1 Servo Construct tokens, then put two +1/+1 counters on each creature you control.",
+    "text": "Create two 1/1 Servo Construct tokens, then put a +1/+1 counter on each creature you control.",
     "flavor": "The guild unveiled its new models to the public. The public was invited to stand well back."
   },
   {
@@ -1247,7 +1248,7 @@
           "subtype": "Servo Construct",
           "keywords": []
         },
-        "count": 3
+        "count": 2
       }
     ],
     "statics": [
@@ -1255,7 +1256,7 @@
         "static": "assembly"
       }
     ],
-    "text": "Assembly. When this enters, create three 1/1 Servo Construct tokens.",
+    "text": "Assembly. When this enters, create two 1/1 Servo Construct tokens.",
     "flavor": "The heart of the Foundry, beating in iron time. Every other machine is its echo."
   },
   {

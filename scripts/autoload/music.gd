@@ -20,6 +20,7 @@ var auto := true
 var shuffle := true           # random order (default) or follow the list in order
 var paused := false
 var volume := 0.8             # 0..1
+var _resume := {}              # context -> where its music was when we left
 var context := ""             # "menu:", "world:wild", ...
 var _players: Array = []
 var _active := 0
@@ -85,8 +86,26 @@ func set_context(kind: String, faction: String = "") -> void:
 	var key := kind + ":" + faction
 	if key == context:
 		return
+	# remember where the old place's music was, so coming back continues it
+	if context != "" and not current.is_empty() and not playlist.is_empty():
+		var op: AudioStreamPlayer = _players[_active]
+		_resume[context] = {"playlist": playlist.duplicate(), "index": index,
+			"id": current["id"], "pos": op.get_playback_position() if op.playing else 0.0}
 	context = key
 	if not auto and not current.is_empty():
+		return
+	if _resume.has(key):
+		var r: Dictionary = _resume[key]
+		playlist = r["playlist"]
+		index = clampi(int(r["index"]), 0, playlist.size() - 1)
+		if kind == "battle" or kind == "lair":
+			# a new fight moves on to the next song rather than replaying the last one
+			index = (index + 1) % playlist.size()
+			_play(playlist[index])
+			return
+		if not current.is_empty() and current["id"] == r["id"]:
+			return
+		_play(r["id"], float(r["pos"]))
 		return
 	var list := []
 	match kind:
@@ -105,6 +124,10 @@ func set_context(kind: String, faction: String = "") -> void:
 			var c := faction_tracks(faction, "combat")
 			list = [c[2]] if c.size() > 2 else c
 	if list.is_empty():
+		return
+	# the song already playing carries on if it belongs here too
+	if not current.is_empty() and list.has(current["id"]) and _players[_active].playing:
+		_order(list, list.find(current["id"]))
 		return
 	# a city greets you with its anthem first, even when shuffling
 	_set_playlist(list, 0, kind == "city")
@@ -222,7 +245,7 @@ func _load_stream(path: String) -> AudioStream:
 	return null
 
 
-func _play(track_id: String) -> void:
+func _play(track_id: String, from_pos: float = 0.0) -> void:
 	var t: Dictionary = by_id.get(track_id, {})
 	if t.is_empty():
 		return
@@ -238,7 +261,7 @@ func _play(track_id: String) -> void:
 	p.volume_db = -40.0
 	p.stream_paused = false
 	paused = false
-	p.play()
+	p.play(from_pos)
 	# A quick second change (world music, then the duel) must not let the earlier fade-out
 	# silence the player we are reusing: stop the old tween first.
 	if _fade and _fade.is_valid():

@@ -91,4 +91,10 @@ func _ready() -> void:
 	print("lowest:")
 	for r in rows.slice(rows.size() - 12):
 		print("  %s %s %.0f%% (%d)" % [r[0], CardDB.get_card(r[0])["name"], r[1] * 100, r[2]])
+	var only := OS.get_environment("ROWS")
+	if only != "":
+		print("all %s cards:" % only)
+		for r in rows:
+			if String(r[0]).begins_with(only):
+				print("  %s %s %.0f%% (%d)" % [r[0], CardDB.get_card(r[0])["name"], r[1] * 100, r[2]])
 	get_tree().quit()

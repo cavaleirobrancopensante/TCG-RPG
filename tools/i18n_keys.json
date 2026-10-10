@@ -845,6 +845,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "%s, taken from the loser's deck",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Victory",
    "note": "scripts/main.gd"
   },
@@ -5351,7 +5355,7 @@
    "note": "card name (machine, spell)"
   },
   {
-   "key": "Create two 1/1 Servo Construct tokens, then put two +1/+1 counters on each creature you control.",
+   "key": "Create two 1/1 Servo Construct tokens, then put a +1/+1 counter on each creature you control.",
    "note": "rules text of Cogspire Exhibition"
   },
   {
@@ -5387,7 +5391,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Assembly. When this enters, create three 1/1 Servo Construct tokens.",
+   "key": "Assembly. When this enters, create two 1/1 Servo Construct tokens.",
    "note": "rules text of The Prime Engine"
   },
   {

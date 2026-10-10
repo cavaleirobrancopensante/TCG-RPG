@@ -180,15 +180,10 @@ static func add_lands(deck: Dictionary, total: int) -> void:
 		given += 1
 	var weight := {}
 	var wsum := 0.0
+	# every faith (the Technocracy included) gets lands in proportion to its symbols
 	for k in symbols:
-		if k != "C" or symbols.size() == 1:
-			weight[k] = float(symbols[k])
-			wsum += weight[k]
-	# Colourless gets a small fixed share: 1 Foundry per ~3 symbols, max 3.
-	if symbols.has("C") and symbols.size() > 1:
-		var extra := mini(2, int(symbols["C"]) / 3)
-		alloc["C"] += extra
-		given += extra
+		weight[k] = float(symbols[k])
+		wsum += weight[k]
 	var remaining := total - given
 	var rema := {}
 	for k in weight:
@@ -216,9 +211,12 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 		"rare": 6 + level * 3,
 		"mythic": maxi(0, level - 1) * 2,
 	}
-	var factions := [faction]
-	if faction != "machine":
-		factions = [faction, faction, faction, "machine"]   # mostly own faith
+	# mostly its own faith with a splash: the Technocracy for everyone else, and a
+	# random other faith for the Technocracy, so every deck has the same two-faith mana
+	var factions := [faction, faction, faction, "machine"]
+	if faction == "machine":
+		var others: Array = Factions.ORDER.filter(func(x): return x != "machine")
+		factions = [faction, faction, faction, others[rng.randi_range(0, others.size() - 1)]]
 	var owned := {}
 	var spells := 0
 	var guard := 0
@@ -229,8 +227,10 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 		var id := CardDB.random_of_rarity(r, rng, [f])
 		if id == "" or int(owned.get(id, 0)) >= MAX_COPIES or CardDB.is_land(id):
 			continue
-		var c2: String = CardDB.get_card(id).get("faction2", "")
-		if c2 != "" and not factions.has(c2):
+		var cd := CardDB.get_card(id)
+		var c2: String = cd.get("faction2", "")
+		# a two-faith card only when both of its faiths are in this deck
+		if c2 != "" and not (factions.has(c2) and factions.has(cd.get("faction", ""))):
 			continue
 		owned[id] = int(owned.get(id, 0)) + 1
 		spells += 1

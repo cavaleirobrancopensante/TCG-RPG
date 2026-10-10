@@ -59,6 +59,8 @@ var _pressing := false
 var _card_scale := 2.0
 var _home := Vector2.ZERO
 var _swiping := false
+var _slide: Tween
+var _info_dirty := false
 
 
 static func open(parent: Node, p_entries: Array, p_index: int, p_actions: Callable = Callable()) -> CardViewer:
@@ -168,14 +170,25 @@ func _show(dir: int) -> void:
 	card_view.set_card(e["id"], e.get("foil", false), e.get("data", {}))
 	if dir != 0:
 		var home := _home
+		if _slide != null and _slide.is_valid():
+			_slide.kill()
 		card_view.position = home + Vector2(60 * dir, 0)
 		card_view.modulate.a = 0.3
-		var tw := create_tween().set_parallel(true)
-		tw.tween_property(card_view, "position", home, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		tw.tween_property(card_view, "modulate:a", 1.0, 0.16)
+		_slide = create_tween().set_parallel(true)
+		_slide.tween_property(card_view, "position", home, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_slide.tween_property(card_view, "modulate:a", 1.0, 0.16)
 	left_btn.disabled = index <= 0
 	right_btn.disabled = index >= entries.size() - 1
-	_fill_info(e)
+	# the text plate is rebuilt once per frame at most, however fast the cards are flipped
+	if not _info_dirty:
+		_info_dirty = true
+		_flush_info.call_deferred()
+
+
+func _flush_info() -> void:
+	_info_dirty = false
+	if is_inside_tree() and not is_queued_for_deletion():
+		_fill_info(entry())
 
 
 func refresh() -> void:
