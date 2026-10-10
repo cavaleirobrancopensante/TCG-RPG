@@ -10,6 +10,9 @@ var hud_boosters: Button
 var screen: Control          # current full-screen UI (menu, city, battle, ...)
 var ui_theme: Theme
 var debug_auto_battles := false   # tests: AI plays the player's side
+var tournament: Draft = null       # the city draft in progress
+var _tour_deck := -1               # index of the draft deck in GameState.decks
+var _tour_prev_deck := 0
 
 
 class MenuBg extends Control:
@@ -444,6 +447,7 @@ func _open_city(city_id: String) -> void:
 		_set_screen(null)
 		_pause_world(false))
 	c.open_deck.connect(func(): open_deck_builder(city_id))
+	c.open_tournament.connect(func(): open_tournament(city_id))
 	c.open_boosters.connect(func():
 		var b := BoosterScreen.new()
 		b.closed.connect(func():
@@ -503,6 +507,9 @@ func start_battle(info: Dictionary) -> void:
 
 
 func _on_battle_finished(won: bool, info: Dictionary) -> void:
+	if info.get("tournament", false):
+		_tournament_match_done(won)
+		return
 	_set_screen(null)
 	_pause_world(false)
 	world.grace = 3.0
@@ -552,6 +559,103 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		GameState.save_game()
 		show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")], [["Get up", Callable()]])
 	_update_hud()
+
+
+# ================================================================== draft tournaments
+
+## Pay the entry, draft with seven others, build a deck, then play the bracket.
+func open_tournament(city_id: String) -> void:
+	if not GameState.spend_gold(Draft.ENTRY_FEE):
+		show_dialog("Tournament", I18n.t("The entry fee is %d gold.") % Draft.ENTRY_FEE, [["OK", Callable()]])
+		return
+	tournament = Draft.new()
+	tournament.start(city_id, GameState.player_name)
+	GameState.save_game()
+	var ds := DraftScreen.new()
+	ds.draft = tournament
+	ds.finished.connect(_draft_finished)
+	_set_screen(ds)
+
+
+func _draft_finished() -> void:
+	var d := tournament
+	d.finish_draft()
+	for e in d.picks[0]:
+		GameState.add_card(e["id"], e.get("foil", false))      # the drafted cards are yours to keep
+	var pool := d.pool(0)
+	var deck_name := GameState.unique_deck_name(I18n.t("Draft: %s") % GameState.city(d.city).get("name", ""))
+	var cards := DeckTools.auto_build(pool, DeckTools.best_factions(pool, 2))
+	_tour_deck = GameState.new_deck(deck_name, cards)
+	if _tour_deck < 0:      # all deck slots used: the draft deck still gets one
+		GameState.decks.append({"name": deck_name, "cards": cards})
+		_tour_deck = GameState.decks.size() - 1
+	_tour_prev_deck = GameState.active_deck
+	GameState.save_game()
+	show_dialog("The draft is over", I18n.t("You drafted %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.") % d.picks[0].size(),
+		[["Build my deck", _tournament_deck]])
+
+
+func _tournament_deck() -> void:
+	var db := DeckBuilder.new()
+	db.pool = tournament.pool(0)
+	db.draft_deck = _tour_deck
+	db.closed.connect(_show_bracket)
+	_set_screen(db)
+
+
+func _show_bracket() -> void:
+	var ts := TournamentScreen.new()
+	ts.draft = tournament
+	ts.play_match.connect(func(opp: int):
+		GameState.active_deck = _tour_deck
+		var d := tournament
+		start_battle({"name": d.names[opp], "faction": d.main_faith(opp), "level": 3, "life": 20,
+			"deck": d.decks[opp], "tournament": true}))
+	ts.edit_deck.connect(_tournament_deck)
+	ts.done.connect(_tournament_prize)
+	_set_screen(ts)
+
+
+func _tournament_match_done(won: bool) -> void:
+	var d := tournament
+	var deck: Dictionary = GameState.decks[_tour_deck]["cards"]
+	GameState.active_deck = _tour_prev_deck
+	d.resolve_stage(won, deck)
+	while d.player_out and d.stage < 3:
+		d.resolve_stage(false, deck)      # the rest of the bracket plays on without you
+	if won:
+		GameState.stats["wins"] = int(GameState.stats.get("wins", 0)) + 1
+	GameState.save_game()
+	_show_bracket()
+
+
+func _tournament_prize() -> void:
+	var d := tournament
+	var pz := d.prize()
+	var parts: Array = []
+	var cards: Array = []
+	if int(pz["gold"]) > 0:
+		GameState.add_gold(int(pz["gold"]))
+		parts.append(I18n.t("%d gold") % int(pz["gold"]))
+	if int(pz["boosters"]) > 0:
+		GameState.pending_boosters += int(pz["boosters"])
+		parts.append(I18n.t("%d booster(s)") % int(pz["boosters"]))
+	if pz.get("rare", false):
+		var rar := "mythic" if GameState.rng.randf() < 0.25 else "rare"
+		var cid := CardDB.random_of_rarity(rar, GameState.rng, [GameState.city(d.city).get("faction", "machine")])
+		GameState.add_card(cid)
+		cards.append(cid)
+		parts.append(I18n.t(CardDB.get_card(cid).get("name", cid)))
+	if d.champion() == 0:
+		GameState.stats["tournaments_won"] = int(GameState.stats.get("tournaments_won", 0)) + 1
+	var wins := d.player_stage
+	var city_id := d.city
+	tournament = null
+	GameState.save_game()
+	var body := I18n.t("You won %d match(es).") % wins
+	body += "\n\n" + (I18n.t("Prize: %s") % ", ".join(parts) if not parts.is_empty() else I18n.t("No prize this time, but the drafted cards and the deck are yours to keep."))
+	_open_city(city_id)
+	show_dialog("Tournament over", body, [["OK", Callable()]], cards)
 
 
 func _nearest_visited_city() -> String:

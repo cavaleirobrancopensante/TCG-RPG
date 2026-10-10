@@ -388,10 +388,18 @@ func _spawn_enemy() -> void:
 				if CardDB.get_card(cid)["type"] == "creature":
 					pool.append(cid)
 		var look: String = pool[_rng.randi_range(0, pool.size() - 1)] if not pool.is_empty() else ""
-		enemies.append({
+		var e := {
 			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": look,
 			"name": WorldEntities.enemy_name(f, _rng), "wander": p, "chasing": false,
-		})
+		}
+		enemies.append(e)
+		var w := Walker.new()
+		var lk: Dictionary = CardDB.get_card(look)
+		w.look = lk if not lk.is_empty() else {"faction": f, "name": e["name"]}
+		w.position = p
+		w.face = 0.0           # forces the first paint
+		add_child(w)
+		_walkers[e["id"]] = w
 		_next_enemy_id += 1
 		return
 

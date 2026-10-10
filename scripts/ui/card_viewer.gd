@@ -37,13 +37,13 @@ const MECHANICS := {
 	"Overclock": "Overclock: you may pay more as you play it for the bonus.",
 	"Assembly": "Assembly: +1/+1 for each other Construct you control.",
 	"Upkeep": "Upkeep N: at the start of your turn pay N, or it is sacrificed.",
-	"Foresight": "Foresight N: look at the top N cards, keep the useful ones on top, put the rest on the bottom.",
+	"Foresight": "Foresight N: look at the top N cards, choose which stay on top and which go to the bottom.",
 	"Freeze": "Freeze: tap it; it doesn't untap next turn.",
 	"Pacif": "Pacify: it can't attack for the rest of the duel.",
 	"Snare": "Snare: it can't attack or block while this relic stays.",
-	"fights": "Fight: your strongest creature and the target deal damage equal to their power to each other.",
-	"rummage": "Rummage: discard your worst card, then draw.",
-	"Rummage": "Rummage: discard your worst card, then draw.",
+	"fights": "Fight: a creature you control and the target deal damage equal to their power to each other.",
+	"rummage": "Rummage: draw a card, then discard a card.",
+	"Rummage": "Rummage: draw a card, then discard a card.",
 }
 const SWIPE := 70.0
 

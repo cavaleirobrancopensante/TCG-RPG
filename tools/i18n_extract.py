@@ -21,6 +21,8 @@ def ui_like(s):
         return False
     if not re.search(r"[A-Za-z]{2,}", s):
         return False
+    if "|" in s:                                  # keyword lists for matching, not shown
+        return False
     if re.fullmatch(r"[a-z0-9_]+", s):          # identifiers / dict keys
         return False
     if re.fullmatch(r"[A-Za-z]+_[A-Za-z_]+", s):

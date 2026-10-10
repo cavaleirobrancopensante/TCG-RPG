@@ -532,13 +532,13 @@
     "effects": [
       {
         "trigger": "upkeep",
-        "action": "foresight",
-        "amount": 2
+        "action": "draw",
+        "amount": 1
       },
       {
         "trigger": "upkeep",
-        "action": "draw",
-        "amount": 1
+        "action": "foresight",
+        "amount": 2
       },
       {
         "trigger": "upkeep",
@@ -549,7 +549,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "At the beginning of your upkeep, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom), then draw a card. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+    "text": "At the beginning of your upkeep, draw a card, then foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom). Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
     "flavor": "The Stoics called the cosmos a perfect mechanism. The guild took them at their word and built one."
   }
 ]

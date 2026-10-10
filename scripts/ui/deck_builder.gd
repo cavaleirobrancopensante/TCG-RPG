@@ -18,6 +18,8 @@ const KEYWORDS := ["Any ability", "Flying", "Guardian", "Lifelink", "Sanctified"
 const SORTS := ["Sort: faith", "Sort: cost", "Sort: name", "Sort: rarity", "Sort: power"]
 
 var editing := 0                  # index of the deck being edited
+var pool := {}                    # draft mode: build only from these cards ({id: n})
+var draft_deck := -1              # draft mode: the deck being built (no deck management)
 var faiths := {}                  # selected faith filters (none = all)
 var f_type := 0
 var f_cost := 0
@@ -45,7 +47,7 @@ var faith_btns := {}
 func _ready() -> void:
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
-	editing = GameState.active_deck
+	editing = GameState.active_deck if draft_deck < 0 else draft_deck
 	add_child(Backdrop.create("rings"))
 	var root := HBoxContainer.new()
 	UIKit.content_rect(root)
@@ -145,14 +147,21 @@ func _ready() -> void:
 		GameState.active_deck = editing
 		_refresh(), false)
 	drow.add_child(active_btn)
+	if draft_deck >= 0:
+		drow.visible = false
 
 	var mrow := HBoxContainer.new()
 	mrow.add_theme_constant_override("separation", 4)
 	right.add_child(mrow)
-	mrow.add_child(_small("New", _new_deck))
-	mrow.add_child(_small("Copy", _copy_deck))
-	mrow.add_child(_small("Rename", _rename_deck))
-	mrow.add_child(_small("Delete", _delete_deck))
+	if draft_deck < 0:
+		mrow.add_child(_small("New", _new_deck))
+		mrow.add_child(_small("Copy", _copy_deck))
+		mrow.add_child(_small("Rename", _rename_deck))
+		mrow.add_child(_small("Delete", _delete_deck))
+	else:
+		var dl := UIKit.label("Draft deck: only the cards you drafted, plus basic lands.", 15, UIKit.DIM, true)
+		dl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		mrow.add_child(dl)
 	mrow.add_child(_small("Auto", _auto))
 
 	count_label = UIKit.title("", 24)
@@ -252,7 +261,7 @@ func _change(id: String, delta: int) -> void:
 	var d := _deck()
 	var n := int(d.get(id, 0)) + delta
 	if delta > 0 and not CardDB.is_basic_land(id):
-		if n > DeckTools.MAX_COPIES or n > GameState.owned_count(id):
+		if n > DeckTools.MAX_COPIES or n > _count_owned(id):
 			return
 	if n <= 0:
 		d.erase(id)
@@ -298,11 +307,31 @@ func _delete_deck() -> void:
 ## Auto-build this deck from your cards, around the selected faiths if any.
 func _auto() -> void:
 	var focus := faiths.keys().filter(func(f): return f != "machine")
-	GameState.decks[editing]["cards"] = DeckTools.auto_build(GameState.owned_all(), focus)
+	if draft_deck >= 0 and focus.is_empty():
+		focus = DeckTools.best_factions(_owned(), 2)
+	GameState.decks[editing]["cards"] = DeckTools.auto_build(_owned(), focus)
 	_refresh()
 
 
+## The cards available: the whole collection, or the draft pool.
+func _owned() -> Dictionary:
+	return pool if draft_deck >= 0 else GameState.owned_all()
+
+
+func _count_owned(id: String) -> int:
+	return int(pool.get(id, 0)) if draft_deck >= 0 else GameState.owned_count(id)
+
+
 func _done() -> void:
+	if draft_deck >= 0:
+		var dp := DeckTools.validate(GameState.decks[draft_deck]["cards"], pool)
+		if dp != "":
+			warn_label.text = dp
+			warn_label.add_theme_color_override("font_color", UIKit.RED)
+			return
+		GameState.save_game()
+		closed.emit()
+		return
 	var problem := DeckTools.validate(GameState.deck, GameState.owned_all())
 	if problem != "":
 		warn_label.text = I18n.t("The deck used in duels (\"%s\") isn't ready: %s") % [I18n.t(GameState.decks[GameState.active_deck]["name"]), problem]
@@ -373,7 +402,7 @@ func _refresh() -> void:
 
 func _refresh_now() -> void:
 	var d := _deck()
-	var owned := GameState.owned_all()
+	var owned := _owned()
 	# deck picker: ★ = used in duels, ✗ = not legal yet
 	deck_pick.clear()
 	for i in GameState.decks.size():
@@ -443,7 +472,7 @@ func _view(start_id: String) -> void:
 		var id: String = e["id"]
 		var n := int(_deck().get(id, 0))
 		return [
-			[I18n.t("Add (%d in deck)") % n, func(): _change(id, 1), n < mini(DeckTools.MAX_COPIES, GameState.owned_count(id)), false],
+			[I18n.t("Add (%d in deck)") % n, func(): _change(id, 1), n < mini(DeckTools.MAX_COPIES, _count_owned(id)), false],
 			["Remove", func(): _change(id, -1), n > 0, false],
 		])
 	v.closed.connect(_refresh)

@@ -421,10 +421,11 @@
       {
         "trigger": "cast",
         "action": "reanimate",
-        "max_mv": 3
+        "max_mv": 3,
+        "target": "own_grave_creature"
       }
     ],
-    "text": "Return your best creature card with mana value 3 or less from your graveyard to play.",
+    "text": "Return target creature card with mana value 3 or less from your graveyard to play.",
     "flavor": "Rest was promised to him. The Covenant does not honour other men's promises."
   },
   {
@@ -678,10 +679,11 @@
       {
         "trigger": "enter",
         "action": "reanimate",
-        "max_mv": 4
+        "max_mv": 4,
+        "target": "own_grave_creature"
       }
     ],
-    "text": "When this enters, return your best creature card with mana value 4 or less from your graveyard to play.",
+    "text": "When this enters, return target creature card with mana value 4 or less from your graveyard to play.",
     "flavor": "\"Rise. Your rest was never part of the bargain.\""
   },
   {
@@ -1032,7 +1034,8 @@
     "effects": [
       {
         "trigger": "cast",
-        "action": "reanimate"
+        "action": "reanimate",
+        "target": "own_grave_creature"
       },
       {
         "action": "lose_life",
@@ -1040,7 +1043,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Return your best creature card from your graveyard to play. You lose 4 life.",
+    "text": "Return target creature card from your graveyard to play. You lose 4 life.",
     "flavor": "A mockery of the true rising. The body walks, and nothing looks out of its eyes."
   },
   {
@@ -1174,7 +1177,8 @@
       {
         "trigger": "enter",
         "action": "reanimate",
-        "max_mv": 4
+        "max_mv": 4,
+        "target": "own_grave_creature"
       },
       {
         "trigger": "upkeep",
@@ -1187,7 +1191,7 @@
         "trigger": "upkeep"
       }
     ],
-    "text": "When this enters, return your best creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
+    "text": "When this enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
     "flavor": "He has outlived every debtor, and he collects from their sons."
   },
   {

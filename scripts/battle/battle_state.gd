@@ -6,7 +6,7 @@ extends RefCounted
 
 const START_HAND := 7
 const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
-const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic"]
+const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature"]
 
 
 class Perm:
@@ -82,6 +82,9 @@ class BattleSide:
 	var is_ai := false
 	var tax := 0                   # extra generic cost on the next non-land card
 	var cast_count := 0            # non-land cards played this turn
+	var interactive := false       # a person decides this side's choices (discards, foresight)
+	var owed_discards := 0         # interactive: cards still to discard (rummage)
+	var foresight_cards: Array = []  # interactive: cards lifted off the top, waiting for a decision
 
 
 var sides: Array = []
@@ -237,11 +240,56 @@ func begin_turn() -> void:
 	check_state()
 	if phase == "over":
 		return
+	if not s.foresight_cards.is_empty():
+		phase = "choice"            # the player decides his foresight first; then the draw
+		return
+	_turn_draw()
+
+
+func _turn_draw() -> void:
 	var skip_draw := turn == 1 and active == first_player
 	if not skip_draw:
 		draw_card(active)
 	if phase != "over":
 		phase = "main1"
+
+
+## Interactive choices still open for side i (the screen asks for them before going on).
+func has_owed(i: int) -> bool:
+	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty()
+
+
+## The player discards hand card `idx` for a rummage.
+func discard_owed(i: int, idx: int) -> void:
+	var s := side(i)
+	if s.owed_discards <= 0 or idx < 0 or idx >= s.hand.size():
+		return
+	var gone: String = s.hand[idx]
+	s.hand.remove_at(idx)
+	s.graveyard.append(gone)
+	s.owed_discards -= 1
+	emit({"type": "discard", "side": i, "id": gone})
+
+
+## The player's foresight decision: `top` (in the order they will be drawn) and the rest to the bottom.
+func resolve_foresight(i: int, top: Array) -> void:
+	var s := side(i)
+	if s.foresight_cards.is_empty():
+		return
+	var pending: Array = s.foresight_cards.duplicate()
+	s.foresight_cards.clear()
+	var keep_list: Array = []
+	for id in top:
+		if pending.has(id):
+			pending.erase(id)
+			keep_list.append(id)
+	for id in pending:
+		s.deck.insert(0, id)
+	for k in range(keep_list.size() - 1, -1, -1):
+		s.deck.append(keep_list[k])
+	emit({"type": "foresight", "side": i, "kept": keep_list.size(), "bottom": pending.size()})
+	if phase == "choice" and i == active:
+		_turn_draw()
 
 
 func end_turn() -> void:
@@ -365,6 +413,13 @@ func granted_keyword(p: Perm, k: String) -> bool:
 
 func draw_card(i: int) -> void:
 	var s := side(i)
+	if not s.foresight_cards.is_empty():
+		# a draw before the decision: the looked-at cards simply stay on top, in order
+		var keep_all: Array = s.foresight_cards.duplicate()
+		var was := phase
+		phase = "main1" if was == "choice" else was
+		resolve_foresight(i, keep_all)
+		phase = was
 	if s.deck.is_empty():
 		emit({"type": "message", "text": I18n.t("%s has no cards left to draw!") % s.name})
 		_lose(i)
@@ -547,14 +602,21 @@ func can_play(i: int, hand_idx: int, overclock: bool = false) -> bool:
 func target_specs(card: Dictionary, overclock: bool = false) -> Array:
 	var specs := []
 	var trig := "cast" if card.get("type") == "spell" else "enter"
+	var list: Array = []
 	for e in card.get("effects", []):
-		if e.get("trigger") == trig and TARGET_CHOICE_TYPES.has(e.get("target", "")):
-			specs.append(e)
+		if e.get("trigger") == trig:
+			list.append(e)
 	if overclock:
-		for e in card.get("overclock", {}).get("effects", []):
-			if TARGET_CHOICE_TYPES.has(e.get("target", "")):
-				specs.append(e)
+		list.append_array(card.get("overclock", {}).get("effects", []))
+	for e in list:
+		if e.get("action") == "fight":
+			specs.append(FIGHTER_SPEC)
+		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
+			specs.append(e)
 	return specs
+
+
+const FIGHTER_SPEC := {"action": "fight_with", "target": "own_creature"}
 
 
 func _protected_from_current(p: Perm) -> bool:
@@ -571,6 +633,8 @@ func _passes_filters(p: Perm, e: Dictionary) -> bool:
 	if e.get("flying", false) and not p.has_kw("flying"):
 		return false
 	if e.has("subtype") and not p.subtype_has(String(e["subtype"])):
+		return false
+	if e.has("not_uid") and p.uid == int(e["not_uid"]):
 		return false
 	return true
 
@@ -604,6 +668,14 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 		"enemy_relic":
 			for r in enemy.relics:
 				out.append({"kind": "relic", "uid": r.uid})
+		"own_grave_creature":
+			var cap := int(e.get("max_mv", 99))
+			for gid in me.graveyard:
+				var gc := CardDB.get_card(gid)
+				if gc.get("type") == "creature" and int(gc.get("mana_value", 0)) <= cap:
+					var ref := {"kind": "grave", "id": gid}
+					if not out.has(ref):
+						out.append(ref)
 	return out
 
 
@@ -685,7 +757,17 @@ func _run_effects(i: int, c: Dictionary, trigger: String, source: Perm, targets:
 
 func _run_list(i: int, list: Array, source: Perm, targets: Array) -> void:
 	var ti := 0
-	for e in list:
+	for e0 in list:
+		var e: Dictionary = e0
+		if e.get("action") == "fight":
+			# the first chosen target of a fight is your own fighter
+			if ti < targets.size() and typeof(targets[ti]) == TYPE_DICTIONARY and targets[ti].get("kind") == "creature":
+				var mine_ref: Dictionary = targets[ti]
+				var fp := find_perm(int(mine_ref.get("uid", -1)))
+				if fp and fp.owner == i:
+					e = e.duplicate()
+					e["_fighter"] = fp.uid
+			ti += 1
 		var chosen = null
 		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
 			if ti < targets.size():
@@ -761,9 +843,21 @@ func valid_targets_for(i: int, source: Perm, e: Dictionary) -> Array:
 func ability_specs(p: Perm, idx: int) -> Array:
 	var specs := []
 	for e in abilities_of(p)[idx].get("effects", []):
+		if e.get("action") == "fight":
+			specs.append(FIGHTER_SPEC)
 		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
 			specs.append(e)
 	return specs
+
+
+## What a sacrifice cost may take, for the player to choose ({} if none).
+func sacrifice_spec(p: Perm, idx: int) -> Dictionary:
+	var kind := String(abilities_of(p)[idx].get("cost", {}).get("sacrifice", ""))
+	if kind == "other":
+		return {"action": "sacrifice", "target": "own_creature", "not_uid": p.uid}
+	if kind == "servo":
+		return {"action": "sacrifice", "target": "own_creature", "not_uid": p.uid, "subtype": "Servo"}
+	return {}
 
 
 ## The creature a sacrifice cost takes: the least valuable eligible one.
@@ -782,7 +876,7 @@ func _sacrifice_choice(i: int, source: Perm, kind: String):
 	return best
 
 
-func activate(i: int, uid: int, idx: int, targets: Array = []) -> bool:
+func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1) -> bool:
 	if not can_activate(i, uid, idx):
 		return false
 	var p := find_perm(uid)
@@ -808,6 +902,9 @@ func activate(i: int, uid: int, idx: int, targets: Array = []) -> bool:
 		destroy_perm(p, true)
 	elif sac == "other" or sac == "servo":
 		var victim = _sacrifice_choice(i, p, sac)
+		var picked := find_perm(sac_uid) if sac_uid >= 0 else null
+		if picked and picked.owner == i and picked != p and (sac == "other" or picked.subtype_has("Servo")):
+			victim = picked
 		if victim:
 			destroy_perm(victim, true)
 	_with_source(p.card)
@@ -859,16 +956,21 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				enemy.graveyard.append(gone)
 				emit({"type": "discard", "side": 1 - i, "id": gone})
 		"rummage":
-			var wi := BattleAI.worst_card(self, i)
-			if wi >= 0:
-				var gone: String = me.hand[wi]
-				me.hand.remove_at(wi)
-				me.graveyard.append(gone)
-				emit({"type": "discard", "side": i, "id": gone})
+			# draw, then discard a card of your choice
 			for n in amount:
 				draw_card(i)
 				if phase == "over":
 					return
+				if me.interactive:
+					me.owed_discards += 1
+					emit({"type": "owe_discard", "side": i})
+				else:
+					var wi := BattleAI.worst_card(self, i)
+					if wi >= 0:
+						var gone: String = me.hand[wi]
+						me.hand.remove_at(wi)
+						me.graveyard.append(gone)
+						emit({"type": "discard", "side": i, "id": gone})
 		"buff":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p: Perm = find_perm(int(ref.get("uid", -1))) if ref.get("kind") == "creature" else null
@@ -921,6 +1023,9 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 					emit({"type": "snare", "uid": p.uid, "by": source.uid})
 		"fight":
 			var mine = _strongest(i)
+			var fu := int(e.get("_fighter", -1))
+			if fu >= 0 and find_perm(fu) != null and find_perm(fu).owner == i:
+				mine = find_perm(fu)
 			for ref in _expand_targets(i, t, chosen, source):
 				var foe := find_perm(ref.get("uid", -1))
 				if mine == null or foe == null:
@@ -952,7 +1057,11 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 			var best := ""
 			var best_mv := -1
 			var cap := int(e.get("max_mv", 99))
+			if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") == "grave" and me.graveyard.has(chosen.get("id", "")):
+				best = chosen["id"]
 			for gid in me.graveyard:
+				if best != "":
+					break
 				var gc := CardDB.get_card(gid)
 				var mv := int(gc.get("mana_value", 0))
 				if gc.get("type") == "creature" and mv <= cap and mv > best_mv:
@@ -983,6 +1092,12 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 ## Look at the top N cards, keep the useful ones on top (best first), bottom the rest.
 func _foresight(i: int, n: int) -> void:
 	var s := side(i)
+	if s.interactive:
+		for k in mini(n, s.deck.size()):
+			s.foresight_cards.append(s.deck.pop_back())
+		if not s.foresight_cards.is_empty():
+			emit({"type": "owe_foresight", "side": i, "cards": s.foresight_cards.duplicate()})
+		return
 	var top: Array = []
 	for k in mini(n, s.deck.size()):
 		top.append(s.deck.pop_back())
@@ -1017,7 +1132,8 @@ func _ref_still_valid(i: int, e: Dictionary, ref) -> bool:
 	if typeof(ref) != TYPE_DICTIONARY:
 		return false
 	for v in valid_targets(i, e):
-		if v.get("kind") == ref.get("kind") and v.get("uid", -1) == ref.get("uid", -1) and v.get("side", -1) == ref.get("side", -1):
+		if v.get("kind") == ref.get("kind") and v.get("uid", -1) == ref.get("uid", -1) and v.get("side", -1) == ref.get("side", -1) \
+				and v.get("id", "") == ref.get("id", ""):
 			return true
 	return false
 
@@ -1346,6 +1462,18 @@ func auto_target(i: int, e: Dictionary):
 				best_v = v
 				best = ref
 		return best
+	if e.get("target") == "own_grave_creature":
+		var best = null
+		var best_mv := -1
+		for ref in opts:
+			var mv := int(CardDB.get_card(ref["id"]).get("mana_value", 0))
+			if mv > best_mv:
+				best_mv = mv
+				best = ref
+		return best
+	if action == "fight_with":
+		var sp = _strongest(i)
+		return {"kind": "creature", "uid": sp.uid} if sp else null
 	if action == "destroy_relic":
 		var best = null
 		var best_v := -1.0

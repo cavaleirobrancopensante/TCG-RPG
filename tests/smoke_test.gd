@@ -50,6 +50,7 @@ func _ready() -> void:
 	# Walk around the world a bit.
 	main.world.move_target = main.world.player_pos + Vector2(300, 0)
 	await _wait(2.0)
+	assert(main.world._walkers.size() == main.world.enemies.size(), "every roaming enemy has a figure on the map")
 	print("world ok, player at ", main.world.player_pos, ", enemies ", main.world.enemies.size())
 
 	# Several full duels with the AI playing both sides.
@@ -87,6 +88,16 @@ func _ready() -> void:
 	Music._bar._toggle_picker()
 	await _frames(2)
 	assert(Music._bar.picker.visible, "picker opens on first tap")
+	# Two quick changes (the world, then a duel) must leave the duel music playing.
+	Music.set_auto(true)
+	Music.context = ""
+	Music.set_context("world", "wild")
+	await _frames(5)
+	Music.set_context("battle", "abyss")
+	await _wait(2.2)
+	assert(Music._players[Music._active].playing and Music.current["kind"] == "combat", "duel music keeps playing after a quick change")
+	Music.context = ""
+	Music.set_context("city", "machine")
 	Music.set_shuffle(false)
 	Music.choose("lyceum_03")
 	assert(not Music.auto and Music.current["id"] == "lyceum_03", "manual choice")
@@ -175,6 +186,28 @@ func _ready() -> void:
 	await _frames(2)
 	assert(GameState.load_game(2), "load slot 2")
 	print("save/load ok")
+	# Draft tournament: enter, draft, build, one match, prize.
+	GameState.add_gold(400)
+	main.open_tournament("cogspire")
+	await _frames(3)
+	var ds: DraftScreen = main.screen
+	assert(ds is DraftScreen, "draft screen")
+	while main.tournament.is_drafting():
+		ds._take_index(0)
+	await _frames(3)
+	_press_first_dialog_button()
+	await _frames(3)
+	var db: DeckBuilder = main.screen
+	assert(db is DeckBuilder and db.draft_deck >= 0, "draft deck builder")
+	db._done()
+	await _frames(3)
+	assert(main.screen is TournamentScreen, "bracket shown")
+	main._tournament_match_done(false)
+	await _frames(3)
+	(main.screen as TournamentScreen).done.emit()
+	await _frames(3)
+	_close_dialogs()
+	print("tournament ok")
 	print("SMOKE TEST PASSED")
 	get_tree().quit(0)
 
@@ -298,3 +331,14 @@ func _settle(b: BattleScene) -> void:
 
 func check_mull(st: BattleState) -> void:
 	assert(st.side(0).hand.size() == 7 and st.to_bottom(0) == 1, "mulligan in the duel screen")
+
+
+func _press_first_dialog_button() -> void:
+	for c in main.ui_layer.get_children():
+		if not c is ColorRect:
+			continue
+		var btns: Array = c.find_children("*", "Button", true, false)
+		for b in btns:
+			if b.visible and not b.disabled and b.text != "":
+				b.pressed.emit()
+				return

@@ -15,6 +15,7 @@ func _ready() -> void:
 	test_mechanics()
 	test_ai_decisions()
 	test_ai_battles()
+	test_draft()
 	test_game_state()
 	test_save_slots()
 	test_decks()
@@ -40,7 +41,7 @@ func test_card_db() -> void:
 		print(line)
 	var valid_actions := ["damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate",
 		"rummage", "freeze", "pacify", "snare", "fight", "destroy_relic", "foresight", "tax", "upkeep_cost"]
-	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
+	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
 	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "guardian",
 		"sanctified", "dread", "regenerate", "first_strike", "steadfast"]
 	var fighters := ["Soldier", "Knight", "Paladin", "Warrior", "Duelist", "Assassin", "Hoplite"]
@@ -220,6 +221,7 @@ func _lib() -> void:
 		"Whisper": {"faction": "abyss", "type": "spell", "cost": {"B": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "discard_enemy", "amount": 2}]},
 		"Marquis": {"faction": "abyss", "type": "creature", "cost": {"B": 2, "generic": 2}, "power": 5, "toughness": 5, "effects": [{"trigger": "enter", "action": "lose_life", "amount": 4}]},
 		"Summoner": {"faction": "abyss", "type": "creature", "cost": {"B": 1, "generic": 3}, "power": 2, "toughness": 2, "effects": [{"trigger": "enter", "action": "reanimate", "max_mv": 4}]},
+		"Lens": {"faction": "lyceum", "type": "relic", "cost": {"U": 1}, "effects": [{"trigger": "upkeep", "action": "foresight", "amount": 2}]},
 		"Duelist": {"faction": "revel", "type": "creature", "cost": {"R": 1, "generic": 1}, "power": 2, "toughness": 2, "effects": [{"trigger": "attack", "action": "buff", "target": "self", "power": 1, "toughness": 0}]},
 	}
 	for n in L:
@@ -514,6 +516,52 @@ func test_mechanics() -> void:
 	st.side(0).deck = [_id("Bear")]
 	st.play(0, 0)
 	check(st.side(0).hand.has(_id("Bear")), "rummage draws after discarding")
+	# The player's own choices: discard, foresight, graveyard, fighter, sacrifice.
+	st = _duel()
+	st.side(0).interactive = true
+	st.side(0).deck = [_id("Bear"), _id("Ogre"), _id("Toast"), _id("Wall")]
+	_hand(st, 0, ["Brandy", "Ogre", "Bear"])
+	st.play(0, 0)
+	check(st.has_owed(0) and st.side(0).owed_discards == 1 and st.side(0).hand.size() == 3, "rummage draws, then waits for the player's discard")
+	var keep_id: String = st.side(0).hand[0]
+	st.discard_owed(0, 1)
+	check(not st.has_owed(0) and st.side(0).hand.size() == 2 and st.side(0).hand.has(keep_id), "the chosen card is discarded")
+	_hand(st, 0, ["Lamp"])
+	st.play(0, st.side(0).hand.size() - 1)
+	var seen: Array = st.side(0).foresight_cards.duplicate()
+	check(seen.size() == 3, "foresight shows the top three")
+	st.resolve_foresight(0, [seen[2]])
+	check(st.side(0).deck[st.side(0).deck.size() - 1] == seen[2] and st.side(0).deck[0] in [seen[0], seen[1]], "kept card on top, the rest at the bottom")
+	st = _duel()
+	st.side(0).interactive = true
+	_put(st, 0, "Lens")
+	st.side(0).deck = [_id("Bear"), _id("Ogre"), _id("Toast"), _id("Wall"), _id("Bear")]
+	st.end_turn()
+	st.end_turn()
+	check(st.phase == "choice" and st.side(0).foresight_cards.size() == 2, "upkeep foresight waits before the draw")
+	var hand_before := st.side(0).hand.size()
+	var fc: Array = st.side(0).foresight_cards.duplicate()
+	st.resolve_foresight(0, [fc[1], fc[0]])
+	check(st.phase == "main1" and st.side(0).hand.size() == hand_before + 1 and st.side(0).hand.has(fc[1]), "then draws the card chosen to be on top")
+	st = _duel()
+	st.side(0).graveyard = [_id("Bear"), _id("Ogre")]
+	_hand(st, 0, ["Summoner"])
+	st.play(0, 0, [{"kind": "grave", "id": _id("Bear")}])
+	check(_named(st, 0, "Bear") == 1 and st.side(0).graveyard.has(_id("Ogre")), "reanimate returns the chosen card, not the biggest")
+	st = _duel()
+	var small := _put(st, 0, "Bear")
+	_put(st, 0, "Juggernaut")
+	var foe2 := _put(st, 1, "Martyr")
+	_hand(st, 0, ["Antlers"])
+	check(st.target_specs(CardDB.get_card(_id("Antlers"))).size() == 2, "fight asks for your fighter and the enemy")
+	st.play(0, 0, [{"kind": "creature", "uid": small.uid}, {"kind": "creature", "uid": foe2.uid}])
+	check(st.find_perm(foe2.uid) == null and small.damage == 1, "the chosen creature fights")
+	st = _duel()
+	var alt2 := _put(st, 0, "Altar")
+	var keepme := _put(st, 0, "Ogre")
+	var fodder := _put(st, 0, "Bear")
+	st.activate(0, alt2.uid, 0, [], keepme.uid)
+	check(st.find_perm(keepme.uid) == null and st.find_perm(fodder.uid) != null, "the player picks what to sacrifice")
 	# Dual lands: enter tapped, gain 1, pay either colour.
 	if not CardDB.dual_land_ids().is_empty():
 		st = _duel(0, 0)
@@ -665,6 +713,38 @@ func test_ai_decisions() -> void:
 	var lz := _put(st, 0, "Lounger")
 	_put(st, 1, "Wall")
 	check(not BattleAI.choose_attackers(st, 0).has(lz.uid), "AI lets an idle creature lounge instead of a pointless attack")
+
+
+func test_draft() -> void:
+	print("-- draft tournament")
+	var d := Draft.new()
+	d.start("cogspire", "Me", 4242)
+	var guard := 0
+	while d.is_drafting() and guard < 100:
+		guard += 1
+		d.player_pick(0)
+	check(guard == Draft.ROUNDS * Draft.PACK_SIZE, "45 picks (%d)" % guard)
+	for s in Draft.SEATS:
+		check(d.picks[s].size() == 45, "seat %d drafted %d" % [s, d.picks[s].size()])
+	d.finish_draft()
+	for s in range(1, Draft.SEATS):
+		check(DeckTools.validate(d.decks[s], d.pool(s)) == "", "bot %d deck: %s" % [s, DeckTools.validate(d.decks[s], d.pool(s))])
+		var fc := d.faith_counts(s)
+		var top := 0
+		for f in fc:
+			top = maxi(top, int(fc[f]))
+		check(top >= 10, "bot %d stayed in its faiths (best faith only %d)" % [s, top])
+	check(d.bracket.size() == 8 and d.bracket.has(0), "bracket of eight")
+	var opp := d.player_opponent()
+	check(opp > 0, "player has an opponent")
+	var mine := DeckTools.auto_build(d.pool(0), DeckTools.best_factions(d.pool(0), 2))
+	d.resolve_stage(true, mine)
+	check(d.player_stage == 1 and d.bracket.size() == 4 and not d.player_out, "won the quarter-final")
+	d.resolve_stage(false, mine)
+	check(d.player_out and d.prize()["boosters"] == 1, "lost the semi-final: one booster")
+	while d.stage < 3:
+		d.resolve_stage(false, mine)
+	check(d.champion() > 0, "someone else is champion")
 
 
 func _check_invariants(st: BattleState) -> void:
