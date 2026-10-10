@@ -16,7 +16,8 @@
     ],
     "effects": [],
     "text": "Guardian (blocks as if it had +0/+2).",
-    "flavor": "He carries the light so that others may walk without stumbling."
+    "flavor": "He carries the light so that others may walk without stumbling.",
+    "art": "res://art/cards/sanctum_c_001.webp"
   },
   {
     "id": "sanctum_c_002",
@@ -35,7 +36,8 @@
     ],
     "effects": [],
     "text": "Flying (can only be blocked by creatures with flying or reach).",
-    "flavor": "The brothers leave crumbs on the sill at Prime, and the dove keeps the hours better than the novices."
+    "flavor": "The brothers leave crumbs on the sill at Prime, and the dove keeps the hours better than the novices.",
+    "art": "res://art/cards/sanctum_c_002.webp"
   },
   {
     "id": "sanctum_c_003",
@@ -145,7 +147,8 @@
     ],
     "effects": [],
     "text": "Flying (can only be blocked by creatures with flying or reach).",
-    "flavor": "He descends at Lauds, and the frost melts from the bell-rope."
+    "flavor": "He descends at Lauds, and the frost melts from the bell-rope.",
+    "art": "res://art/cards/sanctum_c_007.webp"
   },
   {
     "id": "sanctum_c_008",
@@ -239,7 +242,8 @@
     ],
     "effects": [],
     "text": "Lifelink (damage this deals also gains you that much life).",
-    "flavor": "He nurses the sick by day and stands guard over their beds by night."
+    "flavor": "He nurses the sick by day and stands guard over their beds by night.",
+    "art": "res://art/cards/sanctum_c_011.webp"
   },
   {
     "id": "sanctum_c_012",
@@ -286,7 +290,8 @@
       }
     ],
     "text": "Gain 4 life.",
-    "flavor": "Thou shalt sprinkle me with hyssop, O Lord, and I shall be cleansed."
+    "flavor": "Thou shalt sprinkle me with hyssop, O Lord, and I shall be cleansed.",
+    "art": "res://art/cards/sanctum_c_013.webp"
   },
   {
     "id": "sanctum_c_014",
@@ -467,7 +472,8 @@
       }
     ],
     "text": "Creatures you control get +0/+1.",
-    "flavor": "Where the cross goes first, the faithful follow, and none of them walks alone."
+    "flavor": "Where the cross goes first, the faithful follow, and none of them walks alone.",
+    "art": "res://art/cards/sanctum_c_020.webp"
   },
   {
     "id": "sanctum_u_001",
@@ -843,7 +849,8 @@
       }
     ],
     "text": "When this enters, gain 3 life. When this dies, other creatures you control get +1/+1 permanently.",
-    "flavor": "Forty years without a word; at her death, her sisters heard everything."
+    "flavor": "Forty years without a word; at her death, her sisters heard everything.",
+    "art": "res://art/cards/sanctum_r_001.webp"
   },
   {
     "id": "sanctum_r_002",
@@ -1105,7 +1112,8 @@
       }
     ],
     "text": "Sanctified. Other creatures you control get +1/+1 and have sanctified.",
-    "flavor": "Vade retro, Satana. Never tempt me with thy vanities."
+    "flavor": "Vade retro, Satana. Never tempt me with thy vanities.",
+    "art": "res://art/cards/sanctum_m_002.webp"
   },
   {
     "id": "sanctum_m_003",

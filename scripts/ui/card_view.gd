@@ -41,6 +41,7 @@ static func create(id: String, s: float = 1.0, is_foil: bool = false) -> CardVie
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	custom_minimum_size = BASE
 
 
@@ -245,8 +246,9 @@ func _draw_miniature(art_r: Rect2, f: String, k: float, is_land: bool) -> void:
 	_mask_outside(arch, art_r, n, cell)
 	var ground := Rect2(art_r.position.x, art_r.end.y - 20 * k, art_r.size.x, 20 * k)
 	var art_path: String = card.get("art", "")
-	if art_path != "" and ResourceLoader.exists(art_path):
-		draw_texture_rect(load(art_path), art_r, false)
+	var art_tex := _art_texture(art_path)
+	if art_tex != null:
+		draw_texture_rect(art_tex, art_r, false)
 	elif is_land:
 		_draw_land_scene(art_r, ground, f, k)
 	else:
@@ -264,6 +266,18 @@ func _draw_miniature(art_r: Rect2, f: String, k: float, is_land: bool) -> void:
 	var frame := arch.duplicate()
 	frame.append(arch[0])
 	draw_polyline(frame, INK, maxf(1.2, 2.0 * k), true)
+
+
+static var _art_cache := {}
+
+
+## The painted miniature for a card, loaded once and kept.
+static func _art_texture(path: String) -> Texture2D:
+	if path == "":
+		return null
+	if not _art_cache.has(path):
+		_art_cache[path] = load(path) if ResourceLoader.exists(path) else null
+	return _art_cache[path]
 
 
 func _mask_outside(arch: PackedVector2Array, art_r: Rect2, _n: int, _cell: float) -> void:
