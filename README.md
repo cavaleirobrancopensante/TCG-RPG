@@ -148,6 +148,13 @@ still needs translating, and the tests check placeholders and coverage. Shared t
 - **Music order**: random (default) or follow the list, from the music strip or Settings.
 - **Smoother**: map figures and duel figures are no longer repainted every frame.
 
+## Portraits and arrows (1.16)
+
+- Each side of a duel shows its hero's portrait: your chosen hero, and the face of the
+  wanderer, lair boss or drafter you face. Tap a portrait to target that player.
+- Arrows show what is doing what: attackers point at the hero they strike, blockers point at
+  the attacker they stop, and every spell, ability or trigger points at its target.
+
 ## Draft tournaments and your own choices (1.15)
 
 - **Draft tournaments** in every city (Tournament tab, 250 gold): eight drafters, three

@@ -483,14 +483,16 @@ func _reward_text(r: Dictionary) -> String:
 func _start_lair(lair_id: String) -> void:
 	var l := GameState.lair(lair_id)
 	var deck := DeckTools.enemy_deck(l["faction"], int(l["level"]), GameState.rng)
+	var boss_look := {"sanctum": "Human Knight", "abyss": "Lich", "wild": "Beast Spirit", "revel": "Human Noble",
+		"lyceum": "Human Philosopher", "machine": "Construct"}
 	start_battle({"name": l["boss"], "faction": l["faction"], "level": int(l["level"]), "life": int(l["life"]),
-		"deck": deck, "lair": lair_id})
+		"deck": deck, "lair": lair_id, "look": {"faction": l["faction"], "subtype": boss_look.get(l["faction"], "Human"), "name": l["boss"]}})
 
 
 func _on_enemy_engaged(e: Dictionary) -> void:
 	var deck := DeckTools.enemy_deck(e["faction"], int(e["level"]), GameState.rng)
 	start_battle({"name": e["name"], "faction": e["faction"], "level": int(e["level"]),
-		"life": 16 + int(e["level"]) * 2, "deck": deck, "enemy_id": e["id"]})
+		"life": 16 + int(e["level"]) * 2, "deck": deck, "enemy_id": e["id"], "look": e.get("look", "")})
 
 
 # ================================================================== battles
@@ -609,8 +611,9 @@ func _show_bracket() -> void:
 	ts.play_match.connect(func(opp: int):
 		GameState.active_deck = _tour_deck
 		var d := tournament
-		start_battle({"name": d.names[opp], "faction": d.main_faith(opp), "level": 3, "life": 20,
-			"deck": d.decks[opp], "tournament": true}))
+		var mf := d.main_faith(opp)
+		start_battle({"name": d.names[opp], "faction": mf, "level": 3, "life": 20,
+			"deck": d.decks[opp], "tournament": true, "look": {"faction": mf, "subtype": GameState.HEROES.get(mf, {}).get("subtype", "Human"), "name": d.names[opp]}}))
 	ts.edit_deck.connect(_tournament_deck)
 	ts.done.connect(_tournament_prize)
 	_set_screen(ts)

@@ -46,6 +46,9 @@ var btn_main: Button
 var btn_alt: Button
 var fx: Control
 var preview: Control
+var enemy_portrait: _Portrait
+var player_portrait: _Portrait
+var arrows: _Arrows
 var _strips: Array = []          # parchment strips drawn behind these containers
 var _grounds: Array = []         # earth bands under the two fields
 
@@ -91,9 +94,13 @@ func _build_ui() -> void:
 
 	# Enemy bar
 	var ebar := HBoxContainer.new()
-	ebar.custom_minimum_size.y = 48
+	ebar.custom_minimum_size.y = 58
 	root.add_child(ebar)
 	enemy_life = _life_button(true)
+	enemy_portrait = _Portrait.new()
+	enemy_portrait.look = _enemy_look()
+	enemy_portrait.pressed.connect(func(): _on_player_target(1))
+	ebar.add_child(enemy_portrait)
 	ebar.add_child(enemy_life)
 	enemy_info = _rich()
 	enemy_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -135,9 +142,14 @@ func _build_ui() -> void:
 	_grounds.append(player_field)
 
 	var pbar := HBoxContainer.new()
-	pbar.custom_minimum_size.y = 46
+	pbar.custom_minimum_size.y = 58
 	root.add_child(pbar)
 	player_life = _life_button(false)
+	player_portrait = _Portrait.new()
+	var hl: Dictionary = GameState.hero_look()
+	player_portrait.look = hl if not hl.is_empty() else {"faction": "sanctum", "subtype": "Human Pilgrim", "name": "Wanderer"}
+	player_portrait.pressed.connect(func(): _on_player_target(0))
+	pbar.add_child(player_portrait)
 	pbar.add_child(player_life)
 	player_info = _rich()
 	player_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -157,6 +169,11 @@ func _build_ui() -> void:
 	hand_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	hand_scroll.add_child(hand_box)
 
+	arrows = _Arrows.new()
+	arrows.scene = self
+	UIKit.full_rect(arrows)
+	arrows.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(arrows)
 	fx = Control.new()
 	UIKit.full_rect(fx)
 	fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -197,6 +214,122 @@ func _show_lands(side_i: int) -> void:
 	if not ids.is_empty():
 		_close_preview()
 		preview = CardViewer.open(self, ids, 0)
+
+
+func _enemy_look() -> Dictionary:
+	var lk = info.get("look", "")
+	if typeof(lk) == TYPE_DICTIONARY and not lk.is_empty():
+		return lk
+	if typeof(lk) == TYPE_STRING and CardDB.has_card(lk):
+		return CardDB.get_card(lk)
+	var f: String = info.get("faction", "abyss")
+	return {"faction": f, "subtype": GameState.HEROES.get(f, {}).get("subtype", "Human"), "name": info.get("name", "")}
+
+
+## The centre of a side's portrait (where attacks and burn aimed at a player point).
+func portrait_pos(side_i: int) -> Vector2:
+	var pp: Control = player_portrait if side_i == 0 else enemy_portrait
+	return pp.global_position + pp.size * 0.5
+
+
+## A hero's face in its bar: painted like the figures, in a gilt frame with its faith's field.
+class _Portrait extends Button:
+	var look: Dictionary = {}
+	var glow := false
+
+	func _init() -> void:
+		custom_minimum_size = Vector2(66, 56)
+		flat = true
+		focus_mode = Control.FOCUS_NONE
+		clip_contents = true
+
+	func _draw() -> void:
+		var r := Rect2(Vector2.ZERO, size)
+		var f: String = look.get("faction", "sanctum")
+		draw_rect(r, Tapestry.field(f))
+		# the figure, large, so the head and shoulders fill the frame
+		FigurePainter.paint(self, look, Transform2D(0, Vector2(size.x * 0.5, size.y * 3.55)), size.y * 3.5, 1.0, 1.0)
+		draw_rect(r.grow(-1), Tapestry.GILT if not glow else Color(1.0, 0.9, 0.4), false, 3.0)
+		draw_rect(r.grow(-4), Tapestry.INK, false, 1.0)
+
+
+## Arrows over the field: attackers to the hero they strike, blockers to their attacker,
+## and quick arrows from spells and abilities to their targets.
+class _Arrows extends Control:
+	var scene: BattleScene
+	var flashes: Array = []          # [from, to, colour, time left]
+	var _redraw := false
+
+	func flash(from: Vector2, to: Vector2, col: Color, t: float = 0.9) -> void:
+		flashes.append([from, to, col, t])
+		queue_redraw()
+
+	func _process(delta: float) -> void:
+		var live := false
+		for fl in flashes:
+			fl[3] -= delta
+			live = true
+		flashes = flashes.filter(func(fl): return fl[3] > 0.0)
+		if live or _redraw:
+			_redraw = flashes.size() > 0
+			queue_redraw()
+
+	func _draw() -> void:
+		if scene == null or scene.st == null:
+			return
+		var off := global_position
+		var list: Array = scene.persistent_arrows()
+		var thin := list.size() > 4              # many attackers: lighter arrows so the field stays readable
+		for a in list:
+			_arrow(a[0] - off, a[1] - off, Color(a[2], 0.55) if thin else a[2], thin)
+		for fl in flashes:
+			_arrow(fl[0] - off, fl[1] - off, Color(fl[2], clampf(fl[3] * 2.0, 0.0, 1.0)))
+
+	func _arrow(a: Vector2, b: Vector2, col: Color, thin: bool = false) -> void:
+		var d := b - a
+		if d.length() < 12.0:
+			return
+		var mid := (a + b) * 0.5 + d.orthogonal().normalized() * minf(60.0, d.length() * 0.18)
+		var pts := PackedVector2Array()
+		for i in 21:
+			var t := i / 20.0
+			pts.append(a.lerp(mid, t).lerp(mid.lerp(b, t), t))
+		var tip := pts[pts.size() - 1]
+		var dir := (tip - pts[pts.size() - 3]).normalized()
+		var end := tip - dir * 14.0
+		pts[pts.size() - 1] = end
+		draw_polyline(pts, Color(Tapestry.INK, col.a), 6.0 if thin else 9.0, true)
+		draw_polyline(pts, col, 3.0 if thin else 5.0, true)
+		var head := PackedVector2Array([tip + dir * 4.0, end + dir.orthogonal() * 11.0, end - dir.orthogonal() * 11.0])
+		draw_colored_polygon(head, col)
+		var closed := head.duplicate()
+		closed.append(head[0])
+		draw_polyline(closed, Color(Tapestry.INK, col.a), 2.0, true)
+
+
+## Arrows that stay while combat is being decided.
+func persistent_arrows() -> Array:
+	var out: Array = []
+	var red := Color(Tapestry.VERMILION, 0.9)
+	var blue := Color(Tapestry.ULTRAMARINE.lightened(0.25), 0.95)
+	if mode == "attack":
+		for u in sel_attackers:
+			if figures.has(u):
+				out.append([_fig_center(figures[u]), portrait_pos(1), red])
+	elif st.phase == "block":
+		var defender := 1 - st.active
+		for u in st.attackers:
+			if figures.has(u) and not pending_blocks.has(u):
+				out.append([_fig_center(figures[u]), portrait_pos(defender), red])
+		for a in pending_blocks:
+			var b: int = pending_blocks[a]
+			if figures.has(a) and figures.has(b):
+				out.append([_fig_center(figures[b]), _fig_center(figures[a]), blue])
+	return out
+
+
+func _fig_center(f: SummonFigure) -> Vector2:
+	return f.global_position + Vector2(SummonFigure.SIZE.x * 0.5, SummonFigure.SIZE.y * 0.42)
 
 
 func _life_button(is_enemy: bool) -> Button:
@@ -461,6 +594,8 @@ func _rebuild_hand() -> void:
 
 
 func _update_marks() -> void:
+	if arrows:
+		arrows.queue_redraw()
 	for uid in figures:
 		var fig: SummonFigure = figures[uid]
 		var p = st.find_perm(uid)
@@ -655,11 +790,33 @@ func _animate(e: Dictionary) -> void:
 		"attack":
 			if figures.has(e["uid"]):
 				figures[e["uid"]].mark = "attack"
+				arrows.flash(_fig_center(figures[e["uid"]]), portrait_pos(1 - int(e["side"])), Color(Tapestry.VERMILION, 0.9), 1.6)
 			await _wait(0.12)
 		"block":
 			if figures.has(e["uid"]):
 				figures[e["uid"]].mark = "block"
-			await _wait(0.12)
+				if figures.has(e.get("attacker", -1)):
+					arrows.flash(_fig_center(figures[e["uid"]]), _fig_center(figures[e["attacker"]]), Color(Tapestry.ULTRAMARINE.lightened(0.25), 0.95), 1.4)
+			await _wait(0.2)
+		"aim":
+			var src: int = int(e.get("source", -1))
+			var from := get_viewport_rect().size * 0.5        # a spell: from the card shown in the middle
+			if src >= 0 and figures.has(src):
+				from = _fig_center(figures[src])
+			elif src >= 0:
+				from = (player_portrait if int(e["side"]) == 0 else enemy_portrait).global_position + Vector2(27, 23)
+			var tg: Dictionary = e["target"]
+			var to := Vector2.ZERO
+			if tg.get("kind") == "player":
+				to = portrait_pos(int(tg["side"]))
+			elif tg.get("kind") == "creature" and figures.has(int(tg["uid"])):
+				to = _fig_center(figures[int(tg["uid"])])
+			if to != Vector2.ZERO:
+				var col := Tapestry.GILT
+				if e.get("action") in ["damage", "destroy", "buff"] and int(e["side"]) == 1:
+					col = Tapestry.VERMILION
+				arrows.flash(from, to, Color(col, 0.95), 1.1)
+				await _wait(0.35)
 		"damage":
 			var tgt: Dictionary = e["target"]
 			var tpos := _ref_pos(tgt)
@@ -780,8 +937,7 @@ func _ref_pos(ref: Dictionary) -> Vector2:
 	if ref.get("kind") == "creature" and figures.has(ref["uid"]):
 		var f: SummonFigure = figures[ref["uid"]]
 		return f.global_position + Vector2(SummonFigure.SIZE.x * 0.5, SummonFigure.SIZE.y * 0.45)
-	var lb := player_life if ref.get("side", 0) == 0 else enemy_life
-	return lb.global_position + lb.size * 0.5
+	return portrait_pos(int(ref.get("side", 0)))
 
 
 # =================================================================== effects (fx layer)
