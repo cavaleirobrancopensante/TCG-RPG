@@ -22,6 +22,17 @@ Colours are not landscapes — they are religions of the setting.
 `generic` mana in a cost can be paid by any land. Machine cards are mostly generic,
 with occasional `C` symbols that need a Foundry.
 
+### Tone (applies to every card, character and line of text)
+
+A traditional, Catholic-minded medieval fantasy:
+- **The Holy Church is treated with reverence**, never mocked; its saints, priests, religious and
+  angels are shown as good and holy. The Black Covenant is plainly evil, not sympathetic.
+- **Soldiers, knights and fighters are men.** Women appear in traditional roles — nuns, abbesses,
+  hospitallers, noblewomen, druidesses, villagers — never as warriors.
+- **Angels are referred to as "he"**, as in Scripture and tradition.
+- No modern ideology or anachronisms (no singular "they", no modern social themes).
+  The test suite checks fighters' flavour text for this.
+
 ## 2. Set structure (target)
 
 Each faith: **101 Commons · 60 Uncommons · 53 Rares · 15 Mythic Rares = 229 cards.**
