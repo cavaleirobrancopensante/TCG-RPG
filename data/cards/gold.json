@@ -1,0 +1,555 @@
+[
+  {
+    "id": "gold_sanctum_abyss",
+    "name": "Penitent of the Broken Pact",
+    "faction": "sanctum",
+    "faction2": "abyss",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Penitent",
+    "cost": {
+      "W": 1,
+      "B": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "lifelink"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "lose_life",
+        "amount": 3
+      }
+    ],
+    "abilities": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 2,
+        "toughness": 2,
+        "scope": "self",
+        "condition": "grace"
+      },
+      {
+        "static": "keyword",
+        "keyword": "sanctified",
+        "scope": "self",
+        "condition": "grace"
+      }
+    ],
+    "overclock": {},
+    "text": "Lifelink. When this enters, you lose 3 life. As long as you have more life than you started with, this gets +2/+2 and has sanctified (protection from the Covenant).",
+    "flavor": "He signed the pact in blood. He tore it up on his knees, and the long road home began with a single Confiteor."
+  },
+  {
+    "id": "gold_sanctum_wild",
+    "name": "Rogationtide Friar",
+    "faction": "sanctum",
+    "faction2": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Friar",
+    "cost": {
+      "W": 1,
+      "G": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Sapling",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Plant",
+          "keywords": []
+        },
+        "count": 1
+      },
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "When this enters, create a 1/1 Sapling token and gain 2 life.",
+    "flavor": "He walks the bounds of the parish with cross and banner, and every sapling in the hedgerow hears the Litany before the spring rain."
+  },
+  {
+    "id": "gold_sanctum_revel",
+    "name": "Lord of the Last Pew",
+    "faction": "sanctum",
+    "faction2": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "W": 1,
+      "R": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "idle",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): gain 2 life.",
+    "flavor": "He sleeps through every sermon of Lent, and the old friar prays for him through every one."
+  },
+  {
+    "id": "gold_sanctum_lyceum",
+    "name": "Boethius in the Tower",
+    "faction": "sanctum",
+    "faction2": "lyceum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "W": 1,
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [
+      "steadfast"
+    ],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "draw",
+        "amount": 2
+      },
+      {
+        "trigger": "death",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 3
+      }
+    ],
+    "abilities": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "steadfast",
+        "scope": "other_own_creatures",
+        "condition": "grace"
+      }
+    ],
+    "overclock": {},
+    "text": "Steadfast (prevent 1 of the damage dealt to it by each source). As long as you have more life than you started with, other creatures you control have steadfast. When this dies, draw two cards and gain 3 life.",
+    "flavor": "In his cell he wrote that Philosophy came to console him. Then he went out to his death a Christian, and Pavia keeps his feast."
+  },
+  {
+    "id": "gold_sanctum_machine",
+    "name": "Abbot's Astronomical Clock",
+    "faction": "sanctum",
+    "faction2": "machine",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Engine",
+    "cost": {
+      "W": 1,
+      "C": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      },
+      {
+        "trigger": "upkeep",
+        "action": "upkeep_cost",
+        "amount": 1
+      }
+    ],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "At the beginning of your upkeep, gain 2 life. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+    "flavor": "The abbot built it to ring the Hours. The brothers still rise to pray them, for a clock can count the Office but never say it."
+  },
+  {
+    "id": "gold_abyss_wild",
+    "name": "Gallows Oak",
+    "faction": "abyss",
+    "faction2": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Treefolk",
+    "cost": {
+      "B": 1,
+      "G": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [
+      "deathtouch",
+      "regenerate"
+    ],
+    "effects": [],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "Deathtouch (any damage this deals to a creature destroys it). Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+    "flavor": "The Covenant hanged its oathbreakers from the oldest oak in the wood, and the oak learned the wrong lesson."
+  },
+  {
+    "id": "gold_abyss_revel",
+    "name": "Demon at the Masked Ball",
+    "faction": "abyss",
+    "faction2": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Demon",
+    "cost": {
+      "B": 1,
+      "R": 1,
+      "generic": 1
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [
+      "haste",
+      "dread"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "lose_life",
+        "amount": 2
+      }
+    ],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "Haste. Dread (can only be blocked by Covenant creatures and Constructs). When this enters, you lose 2 life.",
+    "flavor": "Every guest wore a mask, so no one remarked on his until the music stopped."
+  },
+  {
+    "id": "gold_abyss_lyceum",
+    "name": "Apostate of the Porch",
+    "faction": "abyss",
+    "faction2": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "B": 1,
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "draw",
+        "amount": 2
+      },
+      {
+        "trigger": "enter",
+        "action": "lose_life",
+        "amount": 2
+      }
+    ],
+    "abilities": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "deathtouch",
+        "scope": "self",
+        "condition": "composure"
+      }
+    ],
+    "overclock": {},
+    "text": "When this enters, draw two cards and you lose 2 life. As long as you have four or more cards in hand, this has deathtouch.",
+    "flavor": "He left the Porch for the sealed books. The Covenant taught him gladly, and named the fee only afterwards."
+  },
+  {
+    "id": "gold_abyss_machine",
+    "name": "Bone Mill Engine",
+    "faction": "abyss",
+    "faction2": "machine",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "B": 1,
+      "C": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [
+      "dread"
+    ],
+    "effects": [],
+    "abilities": [
+      {
+        "cost": {
+          "sacrifice": "other"
+        },
+        "effects": [
+          {
+            "action": "buff",
+            "target": "self",
+            "power": 1,
+            "toughness": 1,
+            "duration": "permanent"
+          }
+        ],
+        "text": "Sacrifice another creature: put a +1/+1 counter on this."
+      }
+    ],
+    "statics": [
+      {
+        "static": "assembly"
+      }
+    ],
+    "overclock": {},
+    "text": "Dread (can only be blocked by Covenant creatures and Constructs). Assembly (this gets +1/+1 for each other Construct you control). Sacrifice another creature: put a +1/+1 counter on this.",
+    "flavor": "The guild bought bones by the cartload and asked no questions. The Covenant sold them by the cartload and answered none."
+  },
+  {
+    "id": "gold_wild_revel",
+    "name": "Satyr-King of the Vintage",
+    "faction": "wild",
+    "faction2": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Satyr",
+    "cost": {
+      "G": 1,
+      "R": 1,
+      "generic": 3
+    },
+    "power": 4,
+    "toughness": 4,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Goat",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Goat Beast",
+          "keywords": [
+            "haste"
+          ]
+        },
+        "count": 2
+      },
+      {
+        "trigger": "attack",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn"
+      }
+    ],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "Trample. When this enters, create two 1/1 Goat Beast tokens with haste. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
+    "flavor": "By the end of the vintage the grapes were trampled, the wine was drunk, and the vineyard was gone."
+  },
+  {
+    "id": "gold_wild_lyceum",
+    "name": "Planter of Slow Oaks",
+    "faction": "wild",
+    "faction2": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "G": 1,
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "summon",
+        "token": {
+          "name": "Sapling",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Plant",
+          "keywords": []
+        },
+        "count": 1,
+        "condition": "composure"
+      }
+    ],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "At the beginning of your upkeep, if you have four or more cards in hand, create a 1/1 Sapling token.",
+    "flavor": "Asked why an old man plants oaks, he said that Nature asks him only to plant, not to sit in the shade."
+  },
+  {
+    "id": "gold_wild_machine",
+    "name": "Moss-Grown Sentry",
+    "faction": "wild",
+    "faction2": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "G": 1,
+      "C": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [
+      "regenerate"
+    ],
+    "effects": [],
+    "abilities": [],
+    "statics": [
+      {
+        "static": "assembly"
+      }
+    ],
+    "overclock": {},
+    "text": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead). Assembly (this gets +1/+1 for each other Construct you control).",
+    "flavor": "Its guild was dissolved a century ago. The ivy holds its joints together now, and it guards the grove instead of the gate."
+  },
+  {
+    "id": "gold_revel_lyceum",
+    "name": "Epicurean on the Porch Steps",
+    "faction": "revel",
+    "faction2": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "R": 1,
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "idle",
+        "action": "tax",
+        "amount": 1
+      }
+    ],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): tax 1 (the enemy's next non-land card costs 1 more).",
+    "flavor": "\"Pleasure is the highest good,\" he says from his cushion. The Stoics have been refuting him since noon, and the enemy envoy is still waiting for a hearing."
+  },
+  {
+    "id": "gold_revel_machine",
+    "name": "Pyrotechnic Automaton",
+    "faction": "revel",
+    "faction2": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "R": 1,
+      "C": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [],
+    "abilities": [],
+    "statics": [],
+    "overclock": {
+      "cost": {
+        "generic": 2
+      },
+      "effects": [
+        {
+          "action": "damage",
+          "target": "any_enemy",
+          "amount": 2
+        }
+      ]
+    },
+    "text": "Haste. Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, deal 2 damage to any enemy creature or the enemy player.",
+    "flavor": "The Revel ordered a spectacle. The guild delivered one, itemised, with a surcharge for the burns."
+  },
+  {
+    "id": "gold_lyceum_machine",
+    "name": "Reckoning Engine of Rhodes",
+    "faction": "lyceum",
+    "faction2": "machine",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Engine",
+    "cost": {
+      "U": 1,
+      "C": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "foresight",
+        "amount": 2
+      },
+      {
+        "trigger": "upkeep",
+        "action": "draw",
+        "amount": 1
+      },
+      {
+        "trigger": "upkeep",
+        "action": "upkeep_cost",
+        "amount": 1
+      }
+    ],
+    "abilities": [],
+    "statics": [],
+    "overclock": {},
+    "text": "At the beginning of your upkeep, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom), then draw a card. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+    "flavor": "The Stoics called the cosmos a perfect mechanism. The guild took them at their word and built one."
+  }
+]

@@ -63,6 +63,10 @@ func _load_file(path: String) -> void:
 		if pools.has(f) and pools[f].has(r):
 			pools[f][r].append(id)
 			by_rarity[r].append(id)
+			# dual-faith cards and dual lands belong to both faiths' pools
+			var f2: String = c.get("faction2", "")
+			if f2 != "" and pools.has(f2):
+				pools[f2][r].append(id)
 		else:
 			errors.append("Unknown faction/rarity on " + id)
 
@@ -119,6 +123,7 @@ func is_land(id: String) -> bool:
 	return cards.get(id, {}).get("type", "") == "land"
 
 
+## Every collectible non-land card.
 func all_set_ids() -> Array:
 	var out := []
 	for id in cards:
@@ -128,10 +133,26 @@ func all_set_ids() -> Array:
 	return out
 
 
+## Collectible lands (the dual lands; basic lands are free and unlimited).
+func dual_land_ids() -> Array:
+	var out := []
+	for id in cards:
+		if is_land(id) and cards[id].get("rarity", "") != "basic":
+			out.append(id)
+	out.sort()
+	return out
+
+
+func is_basic_land(id: String) -> bool:
+	return is_land(id) and cards.get(id, {}).get("rarity", "") == "basic"
+
+
 func faction_ids(faction: String) -> Array:
 	var out := []
 	for r in Factions.RARITIES:
-		out.append_array(pools[faction][r])
+		for id in pools[faction][r]:
+			if not out.has(id):
+				out.append(id)
 	return out
 
 

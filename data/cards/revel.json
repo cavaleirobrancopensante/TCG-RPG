@@ -13,7 +13,7 @@
     "toughness": 1,
     "keywords": [],
     "effects": [],
-    "text": "",
+    "text": "No abilities.",
     "flavor": "He starts every fight with a toast and ends it with a stool."
   },
   {
@@ -33,7 +33,7 @@
       "haste"
     ],
     "effects": [],
-    "text": "Haste.",
+    "text": "Haste (this can attack the turn it comes into play).",
     "flavor": "He dances straight from the wine-press into the battle line."
   },
   {
@@ -48,23 +48,92 @@
       "generic": 1
     },
     "power": 2,
-    "toughness": 2,
-    "keywords": [],
-    "effects": [
-      {
-        "trigger": "attack",
-        "action": "buff",
-        "target": "self",
-        "power": 1,
-        "toughness": 0,
-        "duration": "turn"
-      }
+    "toughness": 1,
+    "keywords": [
+      "first_strike"
     ],
-    "text": "Whenever this attacks, it gets +1/+0 until end of turn.",
+    "effects": [],
+    "text": "First strike (this deals combat damage before creatures without first strike).",
     "flavor": "Behind the gilded mask, a smile; behind the smile, a blade."
   },
   {
     "id": "revel_c_004",
+    "name": "Courtier on the Chaise",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 0,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 1,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
+    "flavor": "He has not stood up since the spring, and his wit has only grown sharper."
+  },
+  {
+    "id": "revel_c_005",
+    "name": "Loafer of the Arbour",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Peasant",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "rummage",
+        "amount": 1,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (discard your worst card, then draw a card).",
+    "flavor": "There is always work to be done, and always a shady bench beside it."
+  },
+  {
+    "id": "revel_c_006",
+    "name": "Sleepy Baronet",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent",
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+    "flavor": "Each day he wakes a little later and a little heavier."
+  },
+  {
+    "id": "revel_c_007",
     "name": "Fire-Eater of the Feast",
     "faction": "revel",
     "rarity": "common",
@@ -79,17 +148,17 @@
     "keywords": [],
     "effects": [
       {
-        "trigger": "enter",
         "action": "damage",
         "target": "any_enemy",
-        "amount": 1
+        "amount": 1,
+        "trigger": "enter"
       }
     ],
     "text": "When this enters, deal 1 damage to any enemy creature or the enemy player.",
     "flavor": "The guests applaud. The guest nearest the stage stops applauding."
   },
   {
-    "id": "revel_c_005",
+    "id": "revel_c_008",
     "name": "Gluttonous Baron",
     "faction": "revel",
     "rarity": "common",
@@ -104,16 +173,42 @@
     "keywords": [],
     "effects": [
       {
-        "trigger": "enter",
         "action": "lose_life",
-        "amount": 2
+        "amount": 2,
+        "trigger": "enter"
       }
     ],
     "text": "When this enters, you lose 2 life.",
     "flavor": "Seven courses, nine vintages, and still he rises hungry for more."
   },
   {
-    "id": "revel_c_006",
+    "id": "revel_c_009",
+    "name": "Masked Reveller",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Reveller",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "haste",
+        "scope": "self",
+        "condition": "carouse"
+      }
+    ],
+    "text": "Carouse (if you already played another non-land card this turn): this has haste.",
+    "flavor": "Behind a mask, every man is braver and none of them is sober."
+  },
+  {
+    "id": "revel_c_010",
     "name": "Carousing Lancer",
     "faction": "revel",
     "rarity": "common",
@@ -129,11 +224,67 @@
       "haste"
     ],
     "effects": [],
-    "text": "Haste.",
+    "text": "Haste (this can attack the turn it comes into play).",
     "flavor": "He charged the enemy line still holding his goblet, and never spilled a drop."
   },
   {
-    "id": "revel_c_007",
+    "id": "revel_c_011",
+    "name": "Satyr of the Drowsy Vineyard",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Satyr",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent",
+        "trigger": "idle"
+      }
+    ],
+    "text": "Haste (this can attack the turn it comes into play). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+    "flavor": "He meant to join the raid. Then the afternoon grew warm."
+  },
+  {
+    "id": "revel_c_012",
+    "name": "Garlanded Festival Bull",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "R": 1,
+      "generic": 4
+    },
+    "power": 5,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn",
+        "trigger": "enter"
+      }
+    ],
+    "text": "When this enters, creatures you control get +1/+0 until end of turn.",
+    "flavor": "They lead him through the streets in flowers, and the crowd follows him into battle."
+  },
+  {
+    "id": "revel_c_013",
     "name": "Toast of Fire",
     "faction": "revel",
     "rarity": "common",
@@ -155,8 +306,8 @@
     "flavor": "\"To your health!\" she cried, and lit the brandy."
   },
   {
-    "id": "revel_c_008",
-    "name": "Liquid Courage",
+    "id": "revel_c_014",
+    "name": "Firecracker Garland",
     "faction": "revel",
     "rarity": "common",
     "type": "spell",
@@ -167,20 +318,110 @@
     "keywords": [],
     "effects": [
       {
-        "action": "buff",
-        "target": "own_creature",
-        "power": 3,
-        "toughness": 1,
-        "duration": "turn",
+        "action": "damage",
+        "target": "enemy_creature",
+        "amount": 1,
+        "trigger": "cast"
+      },
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 1,
+        "trigger": "cast",
+        "condition": "carouse"
+      }
+    ],
+    "text": "Deal 1 damage to target enemy creature. Carouse (if you already played another non-land card this turn): also deal 1 damage to the enemy player.",
+    "flavor": "Strung across the square for the feast day, lit one at a time, aimed carelessly."
+  },
+  {
+    "id": "revel_c_015",
+    "name": "Spilled Brandy",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1,
+        "trigger": "cast"
+      },
+      {
+        "action": "rummage",
+        "amount": 1,
         "trigger": "cast"
       }
     ],
-    "text": "Target creature you control gets +3/+1 until end of turn.",
-    "flavor": "One cup for luck, two for nerve, three for glory."
+    "text": "Deal 1 damage to any enemy creature or the enemy player, then rummage (discard your worst card, then draw a card).",
+    "flavor": "One clumsy elbow, one candle, and the evening became memorable."
   },
   {
-    "id": "revel_c_009",
-    "name": "Banquet Flambé",
+    "id": "revel_c_016",
+    "name": "Rowdy Chorus",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn",
+        "trigger": "cast"
+      },
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn",
+        "trigger": "cast",
+        "condition": "carouse"
+      }
+    ],
+    "text": "Creatures you control get +1/+0 until end of turn. Carouse (if you already played another non-land card this turn): they get an additional +1/+0 until end of turn.",
+    "flavor": "Nobody remembers the second verse, so they sing the first one louder."
+  },
+  {
+    "id": "revel_c_017",
+    "name": "Flaming Flagon",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 3,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 3 damage to the enemy player.",
+    "flavor": "It was poured for him. It simply arrived faster than he expected."
+  },
+  {
+    "id": "revel_c_018",
+    "name": "Banquet Flambe",
     "faction": "revel",
     "rarity": "common",
     "type": "spell",
@@ -202,6 +443,74 @@
     "flavor": "The chef insists it is meant to burn that brightly."
   },
   {
+    "id": "revel_c_019",
+    "name": "Carnival Brazier",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [],
+    "abilities": [
+      {
+        "cost": {
+          "tap": true,
+          "life": 1
+        },
+        "effects": [
+          {
+            "action": "damage",
+            "target": "enemy_player",
+            "amount": 1
+          }
+        ],
+        "text": "Tap, pay 1 life: deal 1 damage to the enemy player."
+      }
+    ],
+    "text": "Tap, pay 1 life: deal 1 damage to the enemy player.",
+    "flavor": "It warms the dancers, lights the masks, and singes everyone who stands too close."
+  },
+  {
+    "id": "revel_c_020",
+    "name": "Festival Drum",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [],
+    "abilities": [
+      {
+        "cost": {
+          "mana": {
+            "R": 1
+          },
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "buff",
+            "target": "all_own_creatures",
+            "power": 1,
+            "toughness": 0,
+            "duration": "turn"
+          }
+        ],
+        "text": "R, Tap: creatures you control get +1/+0 until end of turn."
+      }
+    ],
+    "text": "R, Tap: creatures you control get +1/+0 until end of turn.",
+    "flavor": "When the drum begins, even the sleepiest baron finds his feet."
+  },
+  {
     "id": "revel_u_001",
     "name": "Duelist of the Velvet Court",
     "faction": "revel",
@@ -212,23 +521,23 @@
       "R": 1,
       "generic": 2
     },
-    "power": 3,
+    "power": 2,
     "toughness": 2,
     "keywords": [
-      "haste"
+      "first_strike"
     ],
     "effects": [
       {
-        "trigger": "attack",
         "action": "buff",
         "target": "self",
         "power": 1,
         "toughness": 1,
-        "duration": "turn"
+        "duration": "turn",
+        "trigger": "attack"
       }
     ],
-    "text": "Haste. Whenever this attacks, it gets +1/+1 until end of turn.",
-    "flavor": "He has never lost a duel, a wager, or an argument about wine."
+    "text": "First strike. Whenever this attacks, it gets +1/+1 until end of turn.",
+    "flavor": "He has never lost a duel, nor an argument about wine."
   },
   {
     "id": "revel_u_002",
@@ -246,10 +555,10 @@
     "keywords": [],
     "effects": [
       {
-        "trigger": "attack",
         "action": "damage",
         "target": "any_enemy",
-        "amount": 1
+        "amount": 1,
+        "trigger": "attack"
       }
     ],
     "text": "Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
@@ -257,6 +566,86 @@
   },
   {
     "id": "revel_u_003",
+    "name": "Jester of the Lazy Court",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Jester",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player.",
+    "flavor": "His jokes are cruel, his aim is crueller, and he delivers both lying down."
+  },
+  {
+    "id": "revel_u_004",
+    "name": "Hostess of the Lantern Garden",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 0,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 0,
+        "duration": "permanent",
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+0 counter on target creature you control.",
+    "flavor": "She never leaves her couch, yet no guest ever leaves her table hungry."
+  },
+  {
+    "id": "revel_u_005",
+    "name": "Fencing Master of the Masque",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Duelist",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "first_strike"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "haste",
+        "scope": "self",
+        "condition": "carouse"
+      }
+    ],
+    "text": "First strike. Carouse (if you already played another non-land card this turn): this has haste.",
+    "flavor": "He teaches only at night, and only to students who arrive already drunk."
+  },
+  {
+    "id": "revel_u_006",
     "name": "Hierophant of the Bacchanal",
     "faction": "revel",
     "rarity": "uncommon",
@@ -273,24 +662,85 @@
     ],
     "effects": [
       {
-        "trigger": "enter",
         "action": "buff",
         "target": "all_own_creatures",
-        "power": 2,
+        "power": 1,
         "toughness": 0,
-        "duration": "turn"
+        "duration": "turn",
+        "trigger": "enter"
       }
     ],
-    "text": "Haste. When this enters, creatures you control get +2/+0 until end of turn.",
+    "text": "Haste. When this enters, creatures you control get +1/+0 until end of turn.",
     "flavor": "\"Tonight there is no tomorrow. Drink, and charge!\""
   },
   {
-    "id": "revel_u_004",
-    "name": "Bottomless Wine Cask",
+    "id": "revel_u_007",
+    "name": "Margrave of the Long Table",
     "faction": "revel",
     "rarity": "uncommon",
-    "type": "relic",
-    "subtype": "Relic",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "self",
+        "power": 2,
+        "toughness": 2,
+        "duration": "permanent",
+        "trigger": "idle"
+      },
+      {
+        "action": "lose_life",
+        "amount": 2,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put two +1/+1 counters on this and you lose 2 life.",
+    "flavor": "Every evening he swears it will be his last feast, and every evening he is right about nothing."
+  },
+  {
+    "id": "revel_u_008",
+    "name": "Second Bottle",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1,
+        "trigger": "cast"
+      },
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 2,
+        "trigger": "cast",
+        "condition": "carouse"
+      }
+    ],
+    "text": "Deal 1 damage to any enemy creature or the enemy player. Carouse (if you already played another non-land card this turn): also deal 2 damage to the enemy player.",
+    "flavor": "The first bottle is for the guests. The second is for the host's enemies."
+  },
+  {
+    "id": "revel_u_009",
+    "name": "Satisfaction at Dawn",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Revelry",
     "cost": {
       "R": 1,
       "generic": 2
@@ -298,21 +748,26 @@
     "keywords": [],
     "effects": [
       {
-        "trigger": "upkeep",
-        "action": "draw",
-        "amount": 1
+        "action": "damage",
+        "target": "enemy_creature",
+        "amount": 3,
+        "trigger": "cast"
       },
       {
-        "trigger": "upkeep",
-        "action": "lose_life",
-        "amount": 1
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn",
+        "trigger": "cast",
+        "condition": "carouse"
       }
     ],
-    "text": "At the beginning of your upkeep, draw a card and you lose 1 life.",
-    "flavor": "Pleasure that never ends is its own slow wound."
+    "text": "Deal 3 damage to target enemy creature. Carouse (if you already played another non-land card this turn): creatures you control get +1/+0 until end of turn.",
+    "flavor": "Insulted at supper, challenged at midnight, buried by breakfast."
   },
   {
-    "id": "revel_u_005",
+    "id": "revel_u_010",
     "name": "Pyre-Dancer's Whirl",
     "faction": "revel",
     "rarity": "uncommon",
@@ -340,6 +795,85 @@
     "flavor": "The dancers spin closer to the bonfire with every verse."
   },
   {
+    "id": "revel_u_011",
+    "name": "Empty the Cellar",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "rummage",
+        "amount": 1,
+        "trigger": "cast"
+      },
+      {
+        "action": "rummage",
+        "amount": 1,
+        "trigger": "cast"
+      },
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Rummage twice (each time, discard your worst card, then draw a card). Then deal 2 damage to the enemy player.",
+    "flavor": "By the end of the night the cellar was empty, and so, curiously, were the guests."
+  },
+  {
+    "id": "revel_u_012",
+    "name": "Bottomless Wine Cask",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "rummage",
+        "amount": 1,
+        "trigger": "upkeep"
+      }
+    ],
+    "text": "At the beginning of your upkeep, rummage (discard your worst card, then draw a card).",
+    "flavor": "Pleasure that never ends is its own slow wound."
+  },
+  {
+    "id": "revel_u_013",
+    "name": "Carnival Masks",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "first_strike",
+        "scope": "own_creatures",
+        "condition": "carouse"
+      }
+    ],
+    "text": "Carouse (if you already played another non-land card this turn): creatures you control have first strike.",
+    "flavor": "Behind a painted face, the clumsiest guest moves like a fencing master."
+  },
+  {
     "id": "revel_r_001",
     "name": "Salamander Juggler",
     "faction": "revel",
@@ -351,16 +885,16 @@
       "generic": 1
     },
     "power": 2,
-    "toughness": 2,
+    "toughness": 1,
     "keywords": [
       "haste"
     ],
     "effects": [
       {
-        "trigger": "attack",
         "action": "damage",
         "target": "any_enemy",
-        "amount": 1
+        "amount": 1,
+        "trigger": "attack"
       }
     ],
     "text": "Haste. Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
@@ -368,6 +902,61 @@
   },
   {
     "id": "revel_r_002",
+    "name": "Prince of Idle Hours",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 2,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 2 damage to any enemy creature or the enemy player.",
+    "flavor": "He has not lifted a finger in years. He has never needed to."
+  },
+  {
+    "id": "revel_r_003",
+    "name": "Master of the Midnight Duel",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Duelist",
+    "cost": {
+      "R": 2,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "first_strike",
+      "haste"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 2,
+        "toughness": 0,
+        "scope": "self",
+        "condition": "carouse"
+      }
+    ],
+    "text": "First strike, haste. Carouse (if you already played another non-land card this turn): this gets +2/+0.",
+    "flavor": "He fights only after the last dance, when the candles gutter and the witnesses are asleep."
+  },
+  {
+    "id": "revel_r_004",
     "name": "Archduke of the Endless Feast",
     "faction": "revel",
     "rarity": "rare",
@@ -384,16 +973,48 @@
     ],
     "effects": [
       {
-        "trigger": "upkeep",
         "action": "lose_life",
-        "amount": 1
+        "amount": 1,
+        "trigger": "upkeep"
       }
     ],
     "text": "Haste. At the beginning of your upkeep, you lose 1 life.",
     "flavor": "His banquet has lasted eleven years. His liver has filed several complaints."
   },
   {
-    "id": "revel_r_003",
+    "id": "revel_r_005",
+    "name": "Giant of the Groaning Board",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Giant",
+    "cost": {
+      "R": 2,
+      "generic": 4
+    },
+    "power": 6,
+    "toughness": 6,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent",
+        "trigger": "idle"
+      },
+      {
+        "action": "rummage",
+        "amount": 1,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this, then rummage (discard your worst card, then draw a card).",
+    "flavor": "He sat down to dinner a year ago. The table has since been rebuilt around him twice."
+  },
+  {
+    "id": "revel_r_006",
     "name": "Grand Conflagration",
     "faction": "revel",
     "rarity": "rare",
@@ -416,6 +1037,93 @@
     "flavor": "The fireworks were the finale. Nobody had planned for the encore."
   },
   {
+    "id": "revel_r_007",
+    "name": "Night Without End",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 3,
+        "toughness": 0,
+        "duration": "turn",
+        "trigger": "cast"
+      },
+      {
+        "action": "lose_life",
+        "amount": 3,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Creatures you control get +3/+0 until end of turn. You lose 3 life.",
+    "flavor": "At dawn they drew the curtains and called it midnight again."
+  },
+  {
+    "id": "revel_r_008",
+    "name": "Carnival of Cinders",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 2,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "all_creatures",
+        "amount": 3,
+        "trigger": "cast"
+      },
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 3,
+        "trigger": "cast"
+      },
+      {
+        "action": "lose_life",
+        "amount": 1,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 3 damage to each creature and 3 damage to the enemy player. You lose 1 life.",
+    "flavor": "The carnival ended as all carnivals end: in ashes, and someone else's house."
+  },
+  {
+    "id": "revel_r_009",
+    "name": "Lanterns of the Pleasure Garden",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "haste",
+        "scope": "own_creatures"
+      }
+    ],
+    "text": "Creatures you control have haste.",
+    "flavor": "Under the paper lanterns no one waits for anything."
+  },
+  {
     "id": "revel_m_001",
     "name": "Vessaria, Mistress of the Undying Feast",
     "faction": "revel",
@@ -426,25 +1134,104 @@
       "R": 2,
       "generic": 3
     },
-    "power": 5,
+    "power": 0,
     "toughness": 5,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "all_enemy_creatures",
+        "amount": 1,
+        "trigger": "idle"
+      },
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 2,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.",
+    "flavor": "She raises a cup to every guest; the guests who drink do not rise again."
+  },
+  {
+    "id": "revel_m_002",
+    "name": "Brandimarte, Prince of Fire-Eaters",
+    "faction": "revel",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Duelist",
+    "cost": {
+      "R": 2,
+      "generic": 3
+    },
+    "power": 5,
+    "toughness": 4,
     "keywords": [
-      "haste"
+      "haste",
+      "first_strike"
     ],
     "effects": [
       {
-        "trigger": "attack",
-        "action": "damage",
-        "target": "any_enemy",
-        "amount": 2
-      },
-      {
-        "trigger": "upkeep",
-        "action": "lose_life",
-        "amount": 1
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn",
+        "trigger": "attack"
       }
     ],
-    "text": "Haste. Whenever this attacks, deal 2 damage to any enemy creature or the enemy player. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "She raises a cup to every guest; the guests who drink do not rise again."
+    "text": "Haste, first strike. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
+    "flavor": "He drinks fire, duels for sport, and has never once been on time for his own wedding."
+  },
+  {
+    "id": "revel_m_003",
+    "name": "The Undying Bonfire",
+    "faction": "revel",
+    "rarity": "mythic",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "R": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "all_creatures",
+        "amount": 1,
+        "trigger": "upkeep"
+      },
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 1,
+        "trigger": "upkeep"
+      },
+      {
+        "action": "lose_life",
+        "amount": 1,
+        "trigger": "upkeep"
+      }
+    ],
+    "abilities": [
+      {
+        "cost": {
+          "life": 2,
+          "once_per_turn": true
+        },
+        "effects": [
+          {
+            "action": "damage",
+            "target": "any_enemy",
+            "amount": 1
+          }
+        ],
+        "text": "Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn."
+      }
+    ],
+    "text": "At the beginning of your upkeep, deal 1 damage to each creature and 1 damage to the enemy player, and you lose 1 life. Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn.",
+    "flavor": "It was lit for one feast day. Nobody remembers which, and nobody can put it out."
   }
 ]

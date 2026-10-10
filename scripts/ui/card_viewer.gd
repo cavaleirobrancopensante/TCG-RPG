@@ -20,6 +20,30 @@ const KEYWORDS := {
 	"trample": "Trample: damage beyond what kills its blocker hits the player.",
 	"defender": "Defender: cannot attack.",
 	"guardian": "Guardian: gets +0/+2 while blocking.",
+	"sanctified": "Sanctified: Covenant cards can't target it, Covenant creatures can't block it, and damage from the Covenant is prevented.",
+	"dread": "Dread: can only be blocked by Covenant creatures and Constructs.",
+	"regenerate": "Regenerate: the first time each turn it would be destroyed, it is tapped and healed instead.",
+	"first_strike": "First strike: deals combat damage before creatures without it.",
+	"steadfast": "Steadfast: prevent 1 of the damage dealt to it by each source.",
+}
+## Mechanics named in rules text, explained under the card.
+const MECHANICS := {
+	"Grace": "Grace: you have more life than you started the duel with.",
+	"Bloodied": "Bloodied: you have 10 or less life.",
+	"Rooted": "Rooted: you control six or more lands.",
+	"Carouse": "Carouse: you already played another card this turn.",
+	"Composure": "Composure: you hold four or more cards.",
+	"Idle": "Idle: at the end of your turn, if this is untapped and didn't attack.",
+	"Overclock": "Overclock: you may pay more as you play it for the bonus.",
+	"Assembly": "Assembly: +1/+1 for each other Construct you control.",
+	"Upkeep": "Upkeep N: at the start of your turn pay N, or it is sacrificed.",
+	"Foresight": "Foresight N: look at the top N cards, keep the useful ones on top, put the rest on the bottom.",
+	"Freeze": "Freeze: tap it; it doesn't untap next turn.",
+	"Pacif": "Pacify: it can't attack for the rest of the duel.",
+	"Snare": "Snare: it can't attack or block while this relic stays.",
+	"fights": "Fight: your strongest creature and the target deal damage equal to their power to each other.",
+	"rummage": "Rummage: discard your worst card, then draw.",
+	"Rummage": "Rummage: discard your worst card, then draw.",
 }
 const SWIPE := 70.0
 
@@ -181,6 +205,12 @@ func _fill_info(e: Dictionary) -> void:
 	for kw in c.get("keywords", []):
 		if KEYWORDS.has(kw):
 			info_box.add_child(UIKit.label(I18n.t(KEYWORDS[kw]), 15, UIKit.DIM, true))
+	var shown := {}
+	for word in MECHANICS:
+		var line2: String = MECHANICS[word]
+		if String(c.get("text", "")).contains(word) and not shown.has(line2):
+			shown[line2] = true
+			info_box.add_child(UIKit.label(I18n.t(line2), 15, UIKit.DIM, true))
 	if c.get("rarity") != "token" and c.get("type") != "land":
 		info_box.add_child(UIKit.label(I18n.t("You own %d") % GameState.owned_count(e["id"]), 16, UIKit.DIM))
 	info_box.add_child(UIKit.label("%d / %d" % [index + 1, entries.size()], 17, UIKit.DIM))

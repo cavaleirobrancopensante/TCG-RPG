@@ -29,7 +29,7 @@ static func validate(deck: Dictionary, owned: Dictionary) -> String:
 	if n < MIN_DECK:
 		return I18n.t("Deck needs at least %d cards (has %d).") % [MIN_DECK, n]
 	for id in deck:
-		if CardDB.is_land(id):
+		if CardDB.is_basic_land(id):
 			continue
 		if int(deck[id]) > MAX_COPIES:
 			return I18n.t("Max %d copies of %s.") % [MAX_COPIES, CardDB.get_card(id).get("name", id)]
@@ -68,8 +68,9 @@ static func best_factions(owned: Dictionary, n: int = 2) -> Array:
 		var c := CardDB.get_card(id)
 		if c.is_empty() or c["type"] == "land":
 			continue
-		if score.has(c["faction"]):
-			score[c["faction"]] += card_score(c) * int(owned[id])
+		for f in [c["faction"], c.get("faction2", "")]:
+			if score.has(f):
+				score[f] += card_score(c) * int(owned[id])
 	var keys := score.keys()
 	keys.sort_custom(func(a, b): return score[a] > score[b])
 	return keys.slice(0, n)
@@ -98,6 +99,8 @@ static func auto_build(owned: Dictionary, factions: Array = []) -> Dictionary:
 		var c := CardDB.get_card(id)
 		if c.is_empty() or c["type"] == "land" or not allowed.has(c["faction"]):
 			continue
+		if c.get("faction2", "") != "" and not allowed.has(c["faction2"]):
+			continue
 		for i in mini(int(owned[id]), MAX_COPIES):
 			candidates.append(id)
 	# Prefer good cards, and keep the curve sane by penalising very expensive ones.
@@ -122,8 +125,30 @@ static func auto_build(owned: Dictionary, factions: Array = []) -> Dictionary:
 			while picked < TARGET_SPELLS and int(deck.get(id, 0)) < mini(int(owned[id]), MAX_COPIES):
 				deck[id] = int(deck.get(id, 0)) + 1
 				picked += 1
-	add_lands(deck, TARGET_LANDS + (TARGET_SPELLS - picked))
+	var duals := add_dual_lands(deck, owned)
+	add_lands(deck, TARGET_LANDS + (TARGET_SPELLS - picked) - duals)
 	return deck
+
+
+## Put owned dual lands that match the deck's colours into it (up to 4 copies each, 6 in
+## all). Returns how many were added.
+static func add_dual_lands(deck: Dictionary, owned: Dictionary) -> int:
+	var used := {}
+	for id in deck:
+		for k in CardDB.get_card(id).get("cost", {}):
+			if k != "generic":
+				used[k] = true
+	var added := 0
+	for id in CardDB.dual_land_ids():
+		var cols: Array = CardDB.get_card(id).get("produces", [])
+		var fits := cols.size() == 2 and used.has(cols[0]) and used.has(cols[1])
+		if not fits:
+			continue
+		var n := mini(mini(int(owned.get(id, 0)), MAX_COPIES), 6 - added)
+		if n > 0:
+			deck[id] = int(deck.get(id, 0)) + n
+			added += n
+	return added
 
 
 static func _build_value(c: Dictionary) -> float:
@@ -202,7 +227,10 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 		var f: String = factions[rng.randi_range(0, factions.size() - 1)]
 		var r := Booster.weighted_rarity(rng, weights)
 		var id := CardDB.random_of_rarity(r, rng, [f])
-		if id == "" or int(owned.get(id, 0)) >= MAX_COPIES:
+		if id == "" or int(owned.get(id, 0)) >= MAX_COPIES or CardDB.is_land(id):
+			continue
+		var c2: String = CardDB.get_card(id).get("faction2", "")
+		if c2 != "" and not factions.has(c2):
 			continue
 		owned[id] = int(owned.get(id, 0)) + 1
 		spells += 1

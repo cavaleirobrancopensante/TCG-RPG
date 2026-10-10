@@ -46,7 +46,7 @@ const RARITY_COLOR := {
 	"rare": Color(1.0, 0.82, 0.30), "mythic": Color(1.0, 0.45, 0.15),
 }
 ## Target number of cards per faith per rarity in the full set.
-const SET_TARGET := {"common": 101, "uncommon": 60, "rare": 53, "mythic": 15}
+const SET_TARGET := {"common": 20, "uncommon": 13, "rare": 9, "mythic": 3}
 
 const BUY_PRICE := {"common": 30, "uncommon": 90, "rare": 300, "mythic": 1000}
 const SELL_PRICE := {"common": 2, "uncommon": 8, "rare": 30, "mythic": 100}

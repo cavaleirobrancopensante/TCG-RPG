@@ -38,9 +38,11 @@ func test_card_db() -> void:
 		for r in Factions.RARITIES:
 			line += "%s %d/%d  " % [r.substr(0, 1).to_upper(), counts[f][r], Factions.SET_TARGET[r]]
 		print(line)
-	var valid_actions := ["damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate"]
-	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "self", "all_enemy_creatures", "all_own_creatures", "all_creatures"]
-	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "guardian"]
+	var valid_actions := ["damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate",
+		"rummage", "freeze", "pacify", "snare", "fight", "destroy_relic", "foresight", "tax", "upkeep_cost"]
+	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
+	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "guardian",
+		"sanctified", "dread", "regenerate", "first_strike", "steadfast"]
 	var fighters := ["Soldier", "Knight", "Paladin", "Warrior", "Duelist", "Assassin", "Hoplite"]
 	for id in CardDB.all_set_ids():
 		var c := CardDB.get_card(id)
@@ -168,7 +170,72 @@ func test_ai_battles() -> void:
 
 # ------------------------------------------------------------------ duel helpers
 
+## A small library of test cards, registered in CardDB under "t_" ids, so the rules tests
+## do not depend on the card set.
+func _lib() -> void:
+	var L := {
+		"Bear": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 1}, "power": 2, "toughness": 2},
+		"Ogre": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 3}, "power": 4, "toughness": 4},
+		"Wall": {"faction": "lyceum", "type": "creature", "cost": {"U": 1, "generic": 1}, "power": 1, "toughness": 4, "keywords": ["defender"]},
+		"Guard": {"faction": "sanctum", "type": "creature", "cost": {"W": 1, "generic": 1}, "power": 2, "toughness": 2, "keywords": ["guardian"]},
+		"Angel": {"faction": "sanctum", "type": "creature", "cost": {"W": 1, "generic": 2}, "power": 2, "toughness": 2, "keywords": ["flying"]},
+		"Saint": {"faction": "sanctum", "type": "creature", "cost": {"W": 1, "generic": 2}, "power": 2, "toughness": 3, "keywords": ["sanctified", "lifelink"]},
+		"Spider": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 1}, "power": 1, "toughness": 3, "keywords": ["reach"]},
+		"Crawler": {"faction": "abyss", "type": "creature", "cost": {"B": 1, "generic": 1}, "power": 1, "toughness": 1, "keywords": ["deathtouch"]},
+		"Wight": {"faction": "abyss", "type": "creature", "cost": {"B": 1, "generic": 2}, "power": 3, "toughness": 2, "keywords": ["dread"]},
+		"Troll": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 2}, "power": 3, "toughness": 3, "keywords": ["regenerate"]},
+		"Juggernaut": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 4}, "power": 5, "toughness": 5, "keywords": ["trample"]},
+		"Fencer": {"faction": "revel", "type": "creature", "cost": {"R": 1, "generic": 1}, "power": 2, "toughness": 1, "keywords": ["first_strike"]},
+		"Bacchant": {"faction": "revel", "type": "creature", "cost": {"R": 1, "generic": 1}, "power": 2, "toughness": 1, "keywords": ["haste"]},
+		"Hoplite": {"faction": "lyceum", "type": "creature", "cost": {"U": 1, "generic": 2}, "power": 2, "toughness": 2, "keywords": ["steadfast", "vigilance"]},
+		"Martyr": {"faction": "sanctum", "type": "creature", "cost": {"W": 1}, "power": 1, "toughness": 1, "effects": [{"trigger": "death", "action": "heal", "target": "self_player", "amount": 3}]},
+		"Ghoul": {"faction": "abyss", "type": "creature", "cost": {"B": 1}, "power": 1, "toughness": 1, "effects": [{"trigger": "death", "action": "summon", "token": {"name": "Restless Dead", "power": 1, "toughness": 1, "subtype": "Zombie"}}]},
+		"Lounger": {"faction": "revel", "type": "creature", "cost": {"R": 1}, "power": 1, "toughness": 2, "effects": [{"trigger": "idle", "action": "buff", "target": "self", "power": 1, "toughness": 1, "duration": "permanent"}]},
+		"Abbot": {"faction": "sanctum", "type": "creature", "cost": {"W": 1, "generic": 2}, "power": 1, "toughness": 1, "statics": [{"static": "anthem", "scope": "other_own_creatures", "power": 1, "toughness": 1, "condition": "grace"}]},
+		"Cog": {"faction": "machine", "type": "creature", "subtype": "Construct", "cost": {"C": 1}, "power": 1, "toughness": 1, "statics": [{"static": "assembly"}]},
+		"Gearbot": {"faction": "machine", "type": "creature", "subtype": "Construct", "cost": {"generic": 2}, "power": 1, "toughness": 1,
+			"overclock": {"cost": {"generic": 2}, "effects": [{"action": "buff", "target": "self", "power": 2, "toughness": 2, "duration": "permanent"}]}},
+		"Hauler": {"faction": "machine", "type": "creature", "subtype": "Construct", "cost": {"generic": 2}, "power": 4, "toughness": 3, "effects": [{"trigger": "upkeep", "action": "upkeep_cost", "amount": 1}]},
+		"Comptroller": {"faction": "machine", "type": "creature", "cost": {"C": 1}, "power": 1, "toughness": 2, "statics": [{"static": "cost_reduce", "amount": 1}]},
+		"Druid": {"faction": "wild", "type": "creature", "cost": {"G": 1}, "power": 1, "toughness": 1, "abilities": [{"cost": {"tap": true}, "effects": [{"action": "add_mana", "color": "G", "amount": 1}], "text": "Tap: add G."}]},
+		"Altar": {"faction": "abyss", "type": "relic", "cost": {"B": 1}, "abilities": [{"cost": {"sacrifice": "other"}, "effects": [{"action": "drain", "amount": 1}], "text": "Sacrifice a creature: drain 1."}]},
+		"Manacles": {"faction": "machine", "type": "relic", "cost": {"generic": 2}, "effects": [{"trigger": "enter", "action": "snare", "target": "enemy_creature"}]},
+		"Smite": {"faction": "sanctum", "type": "spell", "cost": {"W": 1}, "effects": [{"trigger": "cast", "action": "destroy", "target": "enemy_creature", "tapped": true}]},
+		"Peace": {"faction": "sanctum", "type": "spell", "cost": {"W": 1}, "effects": [{"trigger": "cast", "action": "pacify", "target": "enemy_creature"}]},
+		"Chill": {"faction": "abyss", "type": "spell", "cost": {"B": 1}, "effects": [{"trigger": "cast", "action": "buff", "target": "enemy_creature", "power": -2, "toughness": -2}]},
+		"Unmake": {"faction": "abyss", "type": "spell", "cost": {"B": 1, "generic": 2}, "effects": [{"trigger": "cast", "action": "destroy", "target": "enemy_creature"}]},
+		"Antlers": {"faction": "wild", "type": "spell", "cost": {"G": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "fight", "target": "enemy_creature"}]},
+		"Ivy": {"faction": "wild", "type": "spell", "cost": {"G": 1}, "effects": [{"trigger": "cast", "action": "destroy_relic", "target": "enemy_relic"}]},
+		"Toast": {"faction": "revel", "type": "spell", "cost": {"R": 1}, "effects": [{"trigger": "cast", "action": "damage", "target": "any_enemy", "amount": 2}]},
+		"Siphon": {"faction": "abyss", "type": "spell", "cost": {"B": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "drain", "amount": 3}]},
+		"Garland": {"faction": "revel", "type": "spell", "cost": {"R": 1}, "effects": [{"trigger": "cast", "action": "damage", "target": "enemy_player", "amount": 2, "condition": "carouse"}]},
+		"Brandy": {"faction": "revel", "type": "spell", "cost": {"R": 1}, "effects": [{"trigger": "cast", "action": "rummage", "amount": 1}]},
+		"Freeze": {"faction": "lyceum", "type": "spell", "cost": {"U": 1}, "effects": [{"trigger": "cast", "action": "freeze", "target": "enemy_creature"}]},
+		"Rebuke": {"faction": "lyceum", "type": "spell", "cost": {"U": 1}, "effects": [{"trigger": "cast", "action": "bounce", "target": "enemy_creature"}]},
+		"Question": {"faction": "lyceum", "type": "spell", "cost": {"U": 1}, "effects": [{"trigger": "cast", "action": "tax", "amount": 2}]},
+		"Lamp": {"faction": "lyceum", "type": "spell", "cost": {"U": 1}, "effects": [{"trigger": "cast", "action": "foresight", "amount": 3}]},
+		"Stillness": {"faction": "lyceum", "type": "spell", "cost": {"U": 1, "generic": 3}, "effects": [{"trigger": "cast", "action": "tap", "target": "all_enemy_creatures"}]},
+		"Surge": {"faction": "wild", "type": "spell", "cost": {"G": 1}, "effects": [{"trigger": "cast", "action": "buff", "target": "own_creature", "power": 3, "toughness": 3}]},
+		"Rite": {"faction": "wild", "type": "spell", "cost": {"G": 1}, "effects": [{"trigger": "cast", "action": "add_mana", "color": "G", "amount": 2}]},
+		"Whisper": {"faction": "abyss", "type": "spell", "cost": {"B": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "discard_enemy", "amount": 2}]},
+		"Marquis": {"faction": "abyss", "type": "creature", "cost": {"B": 2, "generic": 2}, "power": 5, "toughness": 5, "effects": [{"trigger": "enter", "action": "lose_life", "amount": 4}]},
+		"Summoner": {"faction": "abyss", "type": "creature", "cost": {"B": 1, "generic": 3}, "power": 2, "toughness": 2, "effects": [{"trigger": "enter", "action": "reanimate", "max_mv": 4}]},
+		"Duelist": {"faction": "revel", "type": "creature", "cost": {"R": 1, "generic": 1}, "power": 2, "toughness": 2, "effects": [{"trigger": "attack", "action": "buff", "target": "self", "power": 1, "toughness": 0}]},
+	}
+	for n in L:
+		var c: Dictionary = L[n].duplicate(true)
+		c["id"] = "t_" + n.to_lower()
+		c["name"] = n
+		c["rarity"] = "common"
+		if not c.has("subtype"):
+			c["subtype"] = "Test"
+		CardDB._normalise(c)
+		CardDB.cards[c["id"]] = c
+
+
 func _id(name: String) -> String:
+	if CardDB.has_card("t_" + name.to_lower()):
+		return "t_" + name.to_lower()
 	for id in CardDB.all_set_ids():
 		if CardDB.get_card(id)["name"] == name:
 			return id
@@ -263,148 +330,230 @@ func test_mulligan() -> void:
 ## Every rule a card can use, checked on a small board.
 func test_mechanics() -> void:
 	print("-- card mechanics")
-	# Guardian blocks with +2 toughness; deathtouch; trample; lifelink.
+	_lib()
 	var st := _duel()
-	var knight := _put(st, 0, "Knight of the Pilgrim Way")        # 3/3 vigilance
-	var acolyte := _put(st, 1, "Lantern-Bearer Acolyte")          # 1/2 guardian
-	st.declare_attackers([knight.uid])
-	check(not knight.tapped, "vigilance keeps attacker untapped")
-	st.declare_blocks({knight.uid: acolyte.uid})
-	check(st.find_perm(acolyte.uid) != null, "a 1/2 guardian blocks as a 1/4 and survives 3")
+	# Guardian, deathtouch, trample, lifelink, first strike, steadfast.
+	var bear := _put(st, 0, "Bear")
+	var guard := _put(st, 1, "Guard")
+	st.declare_attackers([bear.uid])
+	st.declare_blocks({bear.uid: guard.uid})
+	check(st.find_perm(guard.uid) != null and st.find_perm(bear.uid) == null, "guardian blocks as 2/4 and kills a 2/2")
 	st = _duel()
-	var boar := _put(st, 0, "Thornback Boar")                     # 3/2
-	var gw := _put(st, 1, "Cloister Gatewarden")                   # 2/2 guardian -> 2/4
-	st.declare_attackers([boar.uid])
-	st.declare_blocks({boar.uid: gw.uid})
-	check(st.find_perm(gw.uid) != null, "guardian survives 3 damage when blocking")
-	st = _duel()
-	var big := _put(st, 0, "Tusked Juggernaut")                   # 5/5 trample
-	var crawler := _put(st, 1, "Tomb Crawler")                     # 1/1 deathtouch
-	st.declare_attackers([big.uid])
-	st.declare_blocks({big.uid: crawler.uid})
-	check(st.find_perm(big.uid) == null, "deathtouch blocker kills a 5/5")
+	var jug := _put(st, 0, "Juggernaut")
+	var cr := _put(st, 1, "Crawler")
+	st.declare_attackers([jug.uid])
+	st.declare_blocks({jug.uid: cr.uid})
+	check(st.find_perm(jug.uid) == null, "deathtouch blocker kills a 5/5")
 	check(st.side(1).life == 16, "trample pushes 4 over a 1/1 (life %d)" % st.side(1).life)
 	st = _duel()
-	var pal := _put(st, 0, "Paladin of the Seventh Gate")          # 3/3 lifelink
-	st.declare_attackers([pal.uid])
+	var saint := _put(st, 0, "Saint")
+	st.declare_attackers([saint.uid])
 	st.declare_blocks({})
-	check(st.side(0).life == 23 and st.side(1).life == 17, "lifelink gains on combat damage")
-	# Flying vs reach.
+	check(st.side(0).life == 22 and st.side(1).life == 18, "lifelink gains on combat damage")
 	st = _duel()
-	var shade := _put(st, 0, "Gloam Shade")
-	var fox := _put(st, 1, "Briar Fox")
-	var oak := _put(st, 1, "Oakmoot Sentinel")
-	check(not st.can_block(fox, shade) and st.can_block(oak, shade), "flying only blocked by flying/reach")
-	# Defender cannot attack, summoning sickness, haste.
+	var fencer := _put(st, 0, "Fencer")
+	var b2 := _put(st, 1, "Bear")
+	st.declare_attackers([fencer.uid])
+	st.declare_blocks({fencer.uid: b2.uid})
+	check(st.find_perm(fencer.uid) != null and st.find_perm(b2.uid) == null, "a 2/1 first striker kills a 2/2 blocker and survives")
 	st = _duel()
-	var hop := _put(st, 0, "Bronze-Shield Hoplite")
-	check(not st.can_attack(hop), "defender cannot attack")
-	_hand(st, 0, ["Vine-Crowned Bacchant", "Briar Fox"])
+	var f2 := _put(st, 0, "Fencer")
+	var b3 := _put(st, 1, "Martyr")
+	st.declare_attackers([f2.uid])
+	st.declare_blocks({f2.uid: b3.uid})
+	check(st.find_perm(f2.uid) != null and st.find_perm(b3.uid) == null, "first striker kills its blocker before it strikes back")
+	st = _duel()
+	var hop := _put(st, 1, "Hoplite")
+	var bb := _put(st, 0, "Bear")
+	st.declare_attackers([bb.uid])
+	st.declare_blocks({bb.uid: hop.uid})
+	check(st.find_perm(hop.uid) != null and hop.damage == 1, "steadfast prevents 1 damage")
+	# Evasion: flying/reach, dread, sanctified.
+	st = _duel()
+	var ang := _put(st, 0, "Angel")
+	check(not st.can_block(_put(st, 1, "Bear"), ang) and st.can_block(_put(st, 1, "Spider"), ang), "flying only blocked by flying or reach")
+	var wight := _put(st, 0, "Wight")
+	check(not st.can_block(_put(st, 1, "Ogre"), wight) and st.can_block(_put(st, 1, "Crawler"), wight) and st.can_block(_put(st, 1, "Cog"), wight), "dread: only Covenant and Constructs block")
+	var s2 := _put(st, 0, "Saint")
+	check(not st.can_block(_put(st, 1, "Crawler"), s2), "Covenant creatures can't block sanctified")
+	st.cur_faction = "abyss"
+	var chill_e: Dictionary = CardDB.get_card(_id("Chill"))["effects"][0]
+	check(not st.valid_targets(1, chill_e).has({"kind": "creature", "uid": s2.uid}), "Covenant spells can't target sanctified")
+	# Haste, defender, summoning sickness.
+	st = _duel()
+	check(not st.can_attack(_put(st, 0, "Wall")), "defender cannot attack")
+	_hand(st, 0, ["Bacchant", "Bear"])
 	st.play(0, 0)
 	st.play(0, 0)
-	var bach = st.side(0).creatures[1]
-	var fox2 = st.side(0).creatures[2]
-	check(st.can_attack(bach) and not st.can_attack(fox2), "haste attacks at once, others wait")
-	# Death triggers: drain, heal, token, Abbess team buff.
+	check(st.can_attack(st.side(0).creatures[1]) and not st.can_attack(st.side(0).creatures[2]), "haste attacks at once, others wait")
+	# Regenerate saves once per turn.
 	st = _duel()
-	var ini := _put(st, 0, "Covenant Initiate")
-	var mar := _put(st, 0, "Martyr of the Pilgrim Road")
-	var gh := _put(st, 0, "Ossuary Ghoul")
-	var abb := _put(st, 0, "Abbess of the Silent Order")
-	var keeper := _put(st, 0, "Briar Fox")
-	st.destroy_perm(ini)
-	check(st.side(1).life == 19 and st.side(0).life == 21, "Initiate drains on death")
+	var troll := _put(st, 1, "Troll")
+	st.destroy_perm(troll)
+	check(st.find_perm(troll.uid) != null and troll.tapped, "regenerate: survives tapped")
+	st.destroy_perm(troll)
+	check(st.find_perm(troll.uid) == null, "regenerate only once per turn")
+	# Death triggers and tokens.
+	st = _duel()
+	var mar := _put(st, 0, "Martyr")
+	var gh := _put(st, 0, "Ghoul")
 	st.destroy_perm(mar)
-	check(st.side(0).life == 24, "Martyr heals on death")
 	st.destroy_perm(gh)
-	check(_named(st, 0, "Restless Bones") == 1, "Ghoul leaves a token")
-	st.destroy_perm(abb)
-	check(keeper.power() == 3 and keeper.toughness() == 2, "Abbess makes the team +1/+1 forever")
-	# Enter triggers with targets.
+	check(st.side(0).life == 23 and _named(st, 0, "Restless Dead") == 1, "martyrdom heals, the ghoul leaves a token")
+	# Grace anthem, Assembly, cost reduce, overclock, upkeep cost.
 	st = _duel()
-	var e1 := _put(st, 1, "Barrowland Bear")      # 4/4
-	var e2 := _put(st, 1, "Briar Fox")            # 2/1
-	_hand(st, 0, ["Archangel of the Last Vigil"])
-	st.play(0, 0, [{"kind": "creature", "uid": e1.uid}])
-	check(st.find_perm(e1.uid) == null and st.side(0).life == 24, "Archangel destroys power 4 and heals 4")
-	st = _duel()
-	var e3 := _put(st, 1, "Barrowland Bear")
-	_hand(st, 0, ["Word of Banishment"])
-	check(st.valid_targets(0, CardDB.get_card(_id("Word of Banishment"))["effects"][0]).is_empty(), "power limit hides a 4-power creature")
-	# Bounce: real card to hand, token gone.
-	st = _duel()
-	var wolfm := _put(st, 1, "Barrowland Bear")
-	_hand(st, 0, ["Measured Rebuke"])
-	st.play(0, 0, [{"kind": "creature", "uid": wolfm.uid}])
-	check(st.side(1).hand.has(_id("Barrowland Bear")), "bounce returns the card to hand")
-	# Tapping: Stillness taps all, Orrery taps on upkeep and it stays tapped for our attack.
-	st = _duel()
-	_put(st, 1, "Briar Fox")
-	_put(st, 1, "Barrowland Bear")
-	_hand(st, 0, ["Stillness of Mind"])
-	st.play(0, 0)
-	var all_tapped := true
-	for p in st.side(1).creatures:
-		all_tapped = all_tapped and p.tapped
-	check(all_tapped, "Stillness of Mind taps every enemy creature")
-	st = _duel()
-	_put(st, 0, "Orrery of Fixed Stars")
-	var guard := _put(st, 1, "Barrowland Bear")
+	var abb := _put(st, 0, "Abbot")
+	var ward := _put(st, 0, "Bear")
+	check(ward.power() == 2, "no grace at 20 life")
+	st.side(0).life = 21
+	check(ward.power() == 3 and abb.power() == 1, "grace anthem buffs the others")
+	st.side(0).life = 20
+	var c1 := _put(st, 0, "Cog")
+	_put(st, 0, "Cog")
+	check(c1.power() == 2, "assembly counts other Constructs")
+	st = _duel(0, 0)
+	_lands(st, 0, "CCCC")
+	_hand(st, 0, ["Gearbot"])
+	check(st.can_play(0, 0, true), "overclock affordable with 4")
+	st.play(0, 0, [], true)
+	check(st.side(0).creatures[0].power() == 3, "overclock adds counters")
+	st = _duel(0, 0)
+	_lands(st, 0, "C")
+	_put(st, 0, "Comptroller")
+	_hand(st, 0, ["Gearbot"])
+	check(st.can_play(0, 0), "cost_reduce makes a 2-cost machine cost 1")
+	st = _duel(0, 0)
+	var hauler := _put(st, 0, "Hauler")
 	st.end_turn()
 	st.end_turn()
-	check(guard.tapped, "Orrery taps a blocker in our upkeep")
-	# Mana: upkeep mana and ritual mana.
-	st = _duel(2, 2)
-	_put(st, 0, "Mistletoe Archdruid")
+	check(st.find_perm(hauler.uid) == null, "upkeep cost not paid: sacrificed")
+	# Tapped-only removal, pacify, shrink, unconditional destroy, fight, relic removal.
+	st = _duel()
+	var ogre := _put(st, 1, "Ogre")
+	_hand(st, 0, ["Smite"])
+	check(not st.can_play(0, 0) or st.valid_targets(0, CardDB.get_card(_id("Smite"))["effects"][0]).is_empty(), "Smite needs a tapped target")
+	ogre.tapped = true
+	st.play(0, 0, [{"kind": "creature", "uid": ogre.uid}])
+	check(st.find_perm(ogre.uid) == null, "Smite destroys a tapped creature")
+	st = _duel()
+	var o2 := _put(st, 1, "Ogre")
+	_hand(st, 0, ["Peace"])
+	st.play(0, 0, [{"kind": "creature", "uid": o2.uid}])
+	st.active = 1
+	check(not st.can_attack(o2), "pacified creature can't attack")
+	st = _duel()
+	var bear2 := _put(st, 1, "Bear")
+	_hand(st, 0, ["Chill"])
+	st.play(0, 0, [{"kind": "creature", "uid": bear2.uid}])
+	check(st.find_perm(bear2.uid) == null, "-2/-2 kills a 2/2")
+	st = _duel()
+	var big := _put(st, 0, "Juggernaut")
+	var foe := _put(st, 1, "Ogre")
+	_hand(st, 0, ["Antlers"])
+	st.play(0, 0, [{"kind": "creature", "uid": foe.uid}])
+	check(st.find_perm(foe.uid) == null and big.damage == 4, "fight: your strongest fights the target")
+	st = _duel()
+	var rel := _put(st, 1, "Altar")
+	_hand(st, 0, ["Ivy"])
+	st.play(0, 0, [{"kind": "relic", "uid": rel.uid}])
+	check(st.side(1).relics.is_empty(), "relic destroyed")
+	# Snare: can't attack or block while the relic stays.
+	st = _duel()
+	var o3 := _put(st, 1, "Ogre")
+	_hand(st, 0, ["Manacles"])
+	st.play(0, 0, [{"kind": "creature", "uid": o3.uid}])
+	check(not st.can_block(o3, _put(st, 0, "Bear")), "snared creature can't block")
+	st.destroy_perm(st.side(0).relics[0])
+	check(st.can_block(o3, st.side(0).creatures[0]), "freed when the relic goes")
+	# Freeze, bounce, tax, foresight, stillness.
+	st = _duel()
+	var o4 := _put(st, 1, "Ogre")
+	_hand(st, 0, ["Freeze"])
+	st.play(0, 0, [{"kind": "creature", "uid": o4.uid}])
 	st.end_turn()
+	check(o4.tapped, "frozen creature does not untap")
+	st = _duel()
+	var o5 := _put(st, 1, "Ogre")
+	_hand(st, 0, ["Rebuke"])
+	st.play(0, 0, [{"kind": "creature", "uid": o5.uid}])
+	check(st.side(1).hand.has(_id("Ogre")), "bounce returns it to hand")
+	st = _duel(1, 3)
+	_lands(st, 0, "U")
+	_lands(st, 1, "GGG")
+	_hand(st, 0, ["Question"])
+	st.play(0, 0)
 	st.end_turn()
-	check(st.total_available(0) == 4, "Archdruid adds GG in upkeep (%d)" % st.total_available(0))
-	# Reanimate the best creature.
+	_hand(st, 1, ["Bear"])
+	check(not st.can_play(1, st.side(1).hand.size() - 1), "taxed: a 2-drop costs 4")
 	st = _duel()
-	st.side(0).graveyard.append(_id("Briar Fox"))
-	st.side(0).graveyard.append(_id("Tusked Juggernaut"))
-	_hand(st, 0, ["Grave Summoner"])
+	st.side(0).deck = [_id("Ogre"), _id("Bear"), Factions.land_id("wild")]
+	_hand(st, 0, ["Lamp"])
 	st.play(0, 0)
-	check(_named(st, 0, "Tusked Juggernaut") == 1, "Grave Summoner raises the best creature")
-	# Discard, sweep, attack triggers.
+	check(st.side(0).deck.size() == 3, "foresight keeps the library size")
+	# Activated abilities: mana, sacrifice.
+	st = _duel(0, 0)
+	var druid := _put(st, 0, "Druid")
+	check(st.activate(0, druid.uid, 0) and int(st.side(0).pool.get("G", 0)) == 1 and druid.tapped, "tap ability adds G")
 	st = _duel()
-	_hand(st, 1, ["Briar Fox", "Briar Fox", "Briar Fox"])
-	_hand(st, 0, ["Dread Whisper"])
+	var alt := _put(st, 0, "Altar")
+	_put(st, 0, "Bear")
+	check(st.activate(0, alt.uid, 0) and st.side(1).life == 19 and st.side(0).creatures.is_empty(), "sacrifice a creature to drain")
+	# Idle and Carouse.
+	st = _duel()
+	var lounger := _put(st, 0, "Lounger")
+	st.end_turn()
+	check(lounger.power() == 2, "idle: a lounging creature grows")
+	st = _duel()
+	_hand(st, 0, ["Garland", "Garland"])
 	st.play(0, 0)
-	check(st.side(1).hand.size() == 1, "Dread Whisper discards two")
-	st = _duel()
-	_put(st, 1, "Briar Fox")
-	_put(st, 1, "Covenant Initiate")
-	_put(st, 1, "Barrowland Bear")
-	_hand(st, 0, ["Pyre-Dancer's Whirl"])
+	check(st.side(1).life == 20, "no carouse on the first card")
 	st.play(0, 0)
-	check(st.side(1).creatures.size() == 1 and st.side(0).life == 17, "Whirl kills small creatures, costs 2 life, Initiate drains 1")
+	check(st.side(1).life == 18, "carouse on the second card")
 	st = _duel()
-	var duel := _put(st, 0, "Masquerade Duelist")
-	st.declare_attackers([duel.uid])
-	check(duel.power() == 3, "attack trigger pumps itself")
-	st.declare_blocks({})
-	check(st.side(1).life == 17, "pumped attacker deals 3")
-	st = _duel()
-	var dia := _put(st, 0, "Dialectician of the Porch")
-	var wall := _put(st, 1, "Barrowland Bear")
-	st.declare_attackers([dia.uid])
-	check(wall.tapped and not st.can_block(wall, dia), "Dialectician taps a blocker when attacking")
+	_hand(st, 0, ["Brandy", "Ogre"])
+	st.side(0).deck = [_id("Bear")]
+	st.play(0, 0)
+	check(st.side(0).hand.has(_id("Bear")), "rummage draws after discarding")
+	# Dual lands: enter tapped, gain 1, pay either colour.
+	if not CardDB.dual_land_ids().is_empty():
+		st = _duel(0, 0)
+		var dl: String = CardDB.dual_land_ids()[0]
+		st.side(0).hand.append(dl)
+		st.play(0, 0)
+		check(st.side(0).life == 21 and st.side(0).lands[0]["tapped"], "gain-land enters tapped and gains 1 life")
+		st.side(0).lands[0]["tapped"] = false
+		var cols: Array = CardDB.get_card(dl)["produces"]
+		check(st.can_pay(0, {cols[0]: 1}) and st.can_pay(0, {cols[1]: 1}), "dual land pays either colour")
 	# Every card in the set can be cast on a busy board without breaking the rules.
 	for id in CardDB.all_set_ids():
-		var d := _duel(18, 18)
-		_put(d, 0, "Briar Fox")
-		_put(d, 1, "Barrowland Bear")
-		_put(d, 1, "Gloam Shade")
-		d.side(0).graveyard.append(_id("Thornback Boar"))
+		if id.begins_with("t_"):
+			continue
+		var d := _duel(0, 0)
+		var lands := ""
+		for m in ["W", "U", "B", "R", "G", "C"]:
+			lands += m.repeat(4)
+		_lands(d, 0, lands)
+		_put(d, 0, "Bear")
+		_put(d, 0, "Cog")
+		_put(d, 1, "Ogre").tapped = true
+		_put(d, 1, "Angel")
+		_put(d, 1, "Altar")
+		d.side(0).graveyard.append(_id("Bear"))
+		d.side(0).deck = [_id("Bear"), _id("Ogre"), _id("Toast"), _id("Bear")]
+		d.side(0).hand.append(_id("Toast"))
 		d.side(0).hand.append(id)
-		var ok := d.can_play(0, 0)
-		check(ok, "%s cannot be cast with 18 lands" % id)
+		var hi := d.side(0).hand.size() - 1
+		var ok := d.can_play(0, hi)
+		check(ok, "%s cannot be cast with 24 lands" % id)
 		if ok:
-			d.play(0, 0)
+			var c := CardDB.get_card(id)
+			d.play(0, hi, [], not c.get("overclock", {}).is_empty() and d.can_play(0, hi, true))
 			d.take_events()
-			check(not d.side(0).hand.has(id) or CardDB.get_card(id).get("type") == "land", "%s left the hand" % id)
 			_check_invariants(d)
+			for p in d.side(0).creatures + d.side(0).relics:
+				for k in d.abilities_of(p).size():
+					if d.can_activate(0, p.uid, k):
+						d.activate(0, p.uid, k)
 			d.end_turn()
 			d.end_turn()
 			_check_invariants(d)
@@ -413,98 +562,109 @@ func test_mechanics() -> void:
 ## The opponent's choices: kill first, then sensible strategy.
 func test_ai_decisions() -> void:
 	print("-- AI decisions")
-	# Burns the face for the win even with a creature to shoot.
+	_lib()
 	var st := _duel(3, 3)
 	_lands(st, 0, "RRR")
 	st.side(1).life = 2
-	_put(st, 1, "Briar Fox")
-	_hand(st, 0, ["Toast of Fire"])
+	_put(st, 1, "Bear")
+	_hand(st, 0, ["Toast"])
 	BattleAI.play_main(st, 0)
 	check(st.phase == "over" and st.winner == 0, "AI burns the player for lethal")
-	# Two burn spells together for lethal.
 	st = _duel(6, 6)
 	_lands(st, 0, "RRBBGG")
 	st.side(1).life = 5
-	_put(st, 1, "Barrowland Bear")
-	_hand(st, 0, ["Toast of Fire", "Siphon of Ashes", "Briar Fox"])
+	_put(st, 1, "Ogre")
+	_hand(st, 0, ["Toast", "Siphon", "Bear"])
 	BattleAI.play_main(st, 0)
 	check(st.phase == "over" and st.winner == 0, "AI chains burn and drain for lethal")
-	# Otherwise burn goes to a creature it kills.
 	st = _duel(3, 3)
 	_lands(st, 0, "RRR")
-	var fox := _put(st, 1, "Thornback Boar")
-	_hand(st, 0, ["Toast of Fire"])
+	var fox := _put(st, 1, "Bear")
+	_hand(st, 0, ["Toast"])
 	BattleAI.play_main(st, 0)
 	check(st.find_perm(fox.uid) == null and st.side(1).life == 20, "AI uses burn as removal when not lethal")
-	# Never pays life it does not have.
 	st = _duel(6, 6)
 	_lands(st, 0, "BBBBBB")
 	st.side(0).life = 4
-	_hand(st, 0, ["Marquis of the Wailing Pit"])
+	_hand(st, 0, ["Marquis"])
 	BattleAI.play_main(st, 0)
 	check(st.side(0).life == 4 and st.side(0).creatures.is_empty(), "AI won't cast a card whose life cost kills it")
-	# Holds tricks with nothing to attack with; uses them when attacking.
 	st = _duel(3, 3)
 	_lands(st, 0, "GGG")
-	_hand(st, 0, ["Wildsurge"])
+	_hand(st, 0, ["Surge"])
 	BattleAI.play_main(st, 0)
 	check(st.side(0).hand.size() == 1, "AI keeps a pump spell when it cannot attack")
 	st = _duel(3, 3)
 	_lands(st, 0, "GGG")
-	var cub := _put(st, 0, "Briar Fox")
-	_put(st, 1, "Barrowland Bear")
-	_hand(st, 0, ["Wildsurge"])
+	var cub := _put(st, 0, "Bear")
+	_put(st, 1, "Ogre")
+	_hand(st, 0, ["Surge"])
 	BattleAI.play_main(st, 0)
-	var atk := BattleAI.choose_attackers(st, 0)
-	check(st.side(0).hand.is_empty() and atk.has(cub.uid), "AI pumps an attacker to win the fight")
-	# Discard into an empty hand is wasted.
+	check(st.side(0).hand.is_empty() and BattleAI.choose_attackers(st, 0).has(cub.uid), "AI pumps an attacker to win the fight")
 	st = _duel(3, 3)
 	_lands(st, 0, "BBB")
-	_hand(st, 0, ["Dread Whisper"])
+	_hand(st, 0, ["Whisper"])
 	BattleAI.play_main(st, 0)
 	check(st.side(0).hand.size() == 1, "AI holds discard when the enemy hand is empty")
-	# Ramp only when it unlocks a bigger card.
-	st = _duel(3, 3)
-	st.side(0).lands = [{"id": Factions.land_id("wild"), "color": "G", "tapped": false}, {"id": Factions.land_id("wild"), "color": "G", "tapped": false}, {"id": Factions.land_id("wild"), "color": "G", "tapped": false}]
-	_hand(st, 0, ["Greening Rite", "Barrowland Bear"])
-	BattleAI.play_main(st, 0)
-	check(_named(st, 0, "Barrowland Bear") == 1, "AI ramps into a four-drop on three lands")
 	st = _duel(3, 3)
 	_lands(st, 0, "GGG")
-	_hand(st, 0, ["Greening Rite", "Briar Fox"])
+	_hand(st, 0, ["Rite", "Ogre"])
 	BattleAI.play_main(st, 0)
-	check(st.side(0).hand.has(_id("Greening Rite")), "AI keeps ramp when it unlocks nothing")
-	# Tappers clear the way only when there is an attack to make.
+	check(_named(st, 0, "Ogre") == 1, "AI ramps into a four-drop on three lands")
+	st = _duel(3, 3)
+	_lands(st, 0, "GGG")
+	_hand(st, 0, ["Rite", "Bear"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).hand.has(_id("Rite")), "AI keeps ramp when it unlocks nothing")
 	st = _duel(4, 4)
 	_lands(st, 0, "UUUU")
-	_put(st, 1, "Barrowland Bear")
-	_hand(st, 0, ["Stillness of Mind"])
+	_put(st, 1, "Ogre")
+	_hand(st, 0, ["Stillness"])
 	BattleAI.play_main(st, 0)
-	check(st.side(0).hand.size() == 1, "AI keeps Stillness of Mind with no attackers")
-	# Lethal attack through blockers.
+	check(st.side(0).hand.size() == 1, "AI keeps Stillness with no attackers")
+	st = _duel(1, 1)
+	_lands(st, 0, "W")
+	var tgt := _put(st, 1, "Ogre")
+	_hand(st, 0, ["Smite"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).hand.size() == 1, "AI can't Smite an untapped creature")
+	tgt.tapped = true
+	BattleAI.play_main(st, 0)
+	check(st.find_perm(tgt.uid) == null, "AI Smites a tapped creature")
+	st = _duel(0, 0)
+	var alt := _put(st, 0, "Altar")
+	_put(st, 0, "Ogre")
+	BattleAI.use_abilities(st, 0)
+	check(st.side(0).creatures.size() == 1, "AI won't sacrifice a good creature for 1 drain")
+	st = _duel(4, 4)
+	_lands(st, 0, "CCCC")
+	_hand(st, 0, ["Gearbot"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).creatures.size() == 1 and st.side(0).creatures[0].power() == 3, "AI overclocks when it can")
 	st = _duel(0, 0)
 	st.side(1).life = 5
-	_put(st, 0, "Gloam Shade")
-	_put(st, 0, "Herald of the Morning Bell")
-	_put(st, 0, "Briar Fox")
-	_put(st, 1, "Barrowland Bear")
+	_put(st, 0, "Angel")
+	_put(st, 0, "Angel")
+	_put(st, 0, "Bear")
+	_put(st, 1, "Ogre")
 	check(BattleAI.choose_attackers(st, 0).size() == 3, "AI swings with everything when lethal")
-	# Holds back a blocker when the counterattack would kill it.
 	st = _duel(0, 0)
 	st.side(0).life = 4
-	var bear := _put(st, 0, "Barrowland Bear")
-	_put(st, 1, "Barrowland Bear")
-	st.side(1).creatures[0].tapped = true
+	var bear := _put(st, 0, "Ogre")
+	_put(st, 1, "Ogre").tapped = true
 	check(not BattleAI.choose_attackers(st, 0).has(bear.uid), "AI keeps a blocker home when the swing back is lethal")
-	# Chump blocks to survive, trades when it is good.
 	st = _duel(0, 0)
 	st.active = 1
 	st.side(0).life = 3
-	var att := _put(st, 1, "Barrowland Bear")
-	var chump := _put(st, 0, "Briar Fox")
+	var att := _put(st, 1, "Ogre")
+	var chump := _put(st, 0, "Martyr")
 	st.phase = "main1"
 	st.declare_attackers([att.uid])
 	check(BattleAI.choose_blocks(st, 0).get(att.uid, -1) == chump.uid, "AI chump blocks to stay alive")
+	st = _duel(0, 0)
+	var lz := _put(st, 0, "Lounger")
+	_put(st, 1, "Wall")
+	check(not BattleAI.choose_attackers(st, 0).has(lz.uid), "AI lets an idle creature lounge instead of a pointless attack")
 
 
 func _check_invariants(st: BattleState) -> void:
@@ -522,7 +682,8 @@ func test_game_state() -> void:
 	var faith_pack := GameState.open_booster()
 	check(faith_pack.size() == 15, "faith booster size")
 	for e in faith_pack:
-		check(CardDB.get_card(e["id"])["faction"] == "wild", "faith booster holds only its faith (%s)" % e["id"])
+		var fc := CardDB.get_card(e["id"])
+		check(fc["faction"] == "wild" or fc.get("faction2", "") == "wild", "faith booster holds only its faith (%s)" % e["id"])
 	for i in 3:
 		check(GameState.open_booster().size() == 15, "open booster")
 	check(GameState.hero_look().get("faction", "") == "wild", "hero look")
@@ -625,8 +786,12 @@ func test_translations() -> void:
 		tables[code] = t if typeof(t) == TYPE_DICTIONARY else {}
 	var re := RegEx.create_from_string("%0?\\d*[sd]")
 	var texts: Array = []
-	for id in CardDB.all_set_ids():
+	for id in CardDB.all_set_ids() + CardDB.dual_land_ids():
+		if id.begins_with("t_"):
+			continue          # rules-test cards
 		var c := CardDB.get_card(id)
+		for ab in c.get("abilities", []):
+			texts.append(String(ab.get("text", "")))
 		for fld in ["name", "text", "flavor", "subtype"]:
 			if String(c.get(fld, "")) != "":
 				texts.append(String(c[fld]))

@@ -1,0 +1,138 @@
+## The Stoa (U)
+
+The Stoa plays the long game. It draws and sorts its cards, taps, freezes and bounces the enemy to buy time, and wins with sturdy vigilant soldiers and philosophers who never have to choose between attacking and guarding. Its Composure payoffs reward the player who holds four or more cards instead of emptying his hand, and it has no damage, no destruction and no life gain: only patience.
+
+**Owl of the Archive** · Common · Creature (Bird) · U · 1/1 · When this enters, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom).
+A one-drop that smooths your next draws. The set 1 owl lost its wings with the Stoa's flying, so it becomes what owls in a library really are: quiet watchers. A 1/1 for U with a small foresight is fair, and it gives the faith an early play that is not just a body.
+
+**Ephebe of the Phalanx** · Common · Creature (Human Soldier) · U · 1/1 · Steadfast (prevent 1 of the damage dealt to it by each source).
+A 1/1 for one with steadfast, which makes it a surprisingly durable early blocker: other one-power creatures cannot hurt it at all. It is the smallest lesson in the faith's indifference to pain. The ephebes were young Athenians in military training, and their oath really did promise not to abandon a comrade in the line.
+
+**Water-Carrier Pupil** · Common · Creature (Human Philosopher) · 1U · 1/2 · As long as you have four or more cards in hand (composure), this gets +1/+1.
+The common introduction to Composure: a 1/2 for two that becomes a 2/3 while you hold your cards. It teaches the Stoa player early that patience is paid. Cleanthes, Zeno's successor, famously worked nights drawing water to pay for his lessons.
+
+**Lamp-Lit Scribe** · Common · Creature (Human Scholar) · 1U · 1/2 · When this enters, draw a card.
+The classic two-drop that replaces itself, kept from set 1 because it is exactly right. A 1/2 plus a card for two mana is fair and keeps the hand full for Composure. Scribes and copied scrolls are how the Stoa's teaching survives.
+
+**Bronze-Shield Hoplite** · Common · Creature (Human Soldier) · 1U · 1/4 · Defender (can't attack).
+The faith's cheap wall: a 1/4 defender for two stops most early attackers cold. Defender is a real drawback, so the extra toughness is earned. The headland line is from the Meditations (4.49), the Stoic image of steadiness under constant assault.
+
+**Logician of the Porch** · Common · Creature (Human Philosopher) · 2U · 1/2 · Tap, pay U: tap target enemy creature.
+The common tapper. A fragile 1/2 for three whose ability removes a blocker every turn, at the price of mana and its own attack. Because abilities work in your main phase, it is an offensive tool that helps your vigilant bodies get through. "If it is day, it is light" is the standard example in Chrysippus's logic.
+
+**Disciplined Phalanx** · Common · Creature (Human Soldier) · 2U · 2/4 · Vigilance (doesn't tap to attack).
+The Stoa's signature common body: it attacks and still stands guard. A 2/4 vigilance for three is a point over the vanilla rate, which is acceptable because two power is a slow clock and the faith has no other way to win. Kept from set 1.
+
+**Tower Stargazer** · Common · Creature (Human Astronomer) · 2U · 2/2 · When this enters, foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom).
+A 2/2 for three that sets up the next few turns. Without flying it moves down to three mana and swaps its card for a deeper foresight, which keeps it distinct from the Scribe. Stoic physics held the heavens to be the clearest sign of a rational order, so the astronomer belongs here.
+
+**Wandering Cynic** · Common · Creature (Human Philosopher) · 3U · 3/3 · When this enters, return target enemy creature to its owner's hand.
+A tempo creature: an on-rate 3/3 that also sets back the enemy's best play. Bounce is temporary, so this is fine at common. Renamed from the Peripatetic, because the Stoa descends from the Cynics: Zeno learned from Crates, who owned exactly a cloak, a staff and a satchel.
+
+**Shipwrecked Merchant** · Common · Creature (Human Merchant) · 3U · 2/4 · When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).
+The defensive twin of the Cynic. The freeze on arrival keeps the enemy's best attacker home for a turn, and the 2/4 body holds the ground afterwards. Zeno was a merchant whose cargo sank off Athens; he wandered into a bookshop and found philosophy instead.
+
+**Veteran of the Long Walls** · Common · Creature (Human Soldier) · 4U · 4/5 · Steadfast (prevent 1 of the damage dealt to it by each source).
+The common top end. A 4/5 with steadfast for five is on rate and very hard to wear down in combat, since every blocker and attacker deals one less. It gives the faith a real body to finish games. The Long Walls joined Athens to its harbour, and the line is from the Discourses (1.24).
+
+**Measured Rebuke** · Common · Spell (Discourse) · U · Return target enemy creature to its owner's hand.
+Plain bounce, now at one mana as the set 1 notes asked. It saves a turn against a big threat or clears a blocker for the vigilant line. The one-word flavour is the faith's whole manner.
+
+**Binding Argument** · Common · Spell (Discourse) · 1U · Tap target enemy creature. Draw a card.
+A cantrip that removes a blocker for a turn. It moved up to two mana because a free tap plus a card at one mana outclassed the rest of the commons. Reason halting force for a moment is the Stoa in one image.
+
+**Grip of the Cold Sea** · Common · Spell (Discourse) · U · Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).
+The cheapest freeze. Cast it on your turn and the target can neither block now nor attack on the enemy's turn, which makes it both offence and defence for a single mana. The cold silver sea is part of the faith's palette.
+
+**Reading by Lamplight** · Common · Spell (Meditation) · U · Foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom), then draw a card.
+Card selection for one mana: dig three deep, then draw. It replaces itself, so it never costs Composure. Seneca's second letter warns against skimming many books instead of reading a few well, which is what foresight does with your library.
+
+**Hour of Contemplation** · Common · Spell (Meditation) · 2U · Draw two cards.
+Plain draw two for three, the standard rate from the spec. It is the faith's simplest way to reach four cards in hand. Kept from set 1.
+
+**Question of First Principles** · Common · Spell (Discourse) · 1U · Tax 2 (the enemy's next non-land card costs 2 more). Draw a card.
+The common tax spell. It replaces itself and slows the enemy's next play by two mana, which can push a big creature back a whole turn. Stoic logic began every argument by fixing its terms, a habit that maddens men in a hurry.
+
+**Sent Back to the Gate** · Common · Spell (Discourse) · 2U · Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs 1 more).
+Bounce with a sting: the enemy has to recast the creature and pay one more for it. At three mana it costs more than the Rebuke but gains a real extra turn of tempo. The quotation is from On Anger, and delay is exactly what this card sells.
+
+**Scholar's Lamp** · Common · Relic · U · At the beginning of your upkeep, foresight 1 (look at the top card of your library; you may put it on the bottom).
+A tiny engine: it improves every draw for the rest of the duel. It does nothing to the board, so one mana is right. Lamps and night study are the faith's quiet imagery.
+
+**Harbour Chain** · Common · Relic · 1U · Tap, pay 2: tap target enemy creature.
+A cheap relic with an expensive ability, so it costs you tempo every time you use it. It gives decks without a Logician a repeatable way to clear a blocker. Greek harbours really were closed with chains.
+
+**Agora Inspector** · Uncommon · Creature (Human Official) · 1U · 1/3 · Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs 1 more).
+A two-drop that taxes the enemy each time it attacks, and vigilance lets it do so without leaving you open. A 1/3 is hard to block profitably early but never a real threat. The agoranomoi were the officials who checked weights and measures in Greek markets.
+
+**Dialectician of the Porch** · Uncommon · Creature (Human Philosopher) · 2U · 2/2 · Whenever this attacks, tap target enemy creature.
+An attacker that removes a blocker every time it attacks, so it protects itself and the rest of the line. On-rate stats for three. "The Porch" is the Stoa Poikile in Athens, where Zeno taught.
+
+**Disciple of Chrysippus** · Uncommon · Creature (Human Philosopher) · 2U · 2/2 · As long as you have four or more cards in hand, this gets +1/+1 and has steadfast.
+The uncommon Composure payoff: a plain 2/2 that becomes a steadfast 3/3 while you hold your cards. It rewards the deck for drawing rather than dumping its hand. The quotation is the ancient verdict on Chrysippus, who systematised the school.
+
+**Unbroken Shieldwall** · Uncommon · Creature (Human Soldier) · 2U · 1/5 · Defender. Steadfast.
+A wall built to outlast: a 1/5 defender that also shrugs off one damage from every source. Two keywords take it to uncommon, but defender keeps it honest. The flavour is Epictetus's distinction between what is in our power and what is not, set in a soldier's mouth.
+
+**Great-Owl of the Archive** · Uncommon · Creature (Bird) · 3U · 2/3 · At the beginning of your upkeep, foresight 2.
+A slow card quality engine on a body. The set 1 Great-Owl was a plain flier; without flight it becomes the archive's familiar, sorting your library every turn. A 2/3 for four is under rate because the trigger is worth a great deal over a long game.
+
+**Strategos of the Shieldwall** · Uncommon · Creature (Human Soldier) · 3U · 3/3 · Vigilance. Other Soldier creatures you control get +0/+1.
+A small Soldier lord. The +0/+1 is modest, but on a line of hoplites it puts every wall out of reach of the enemy's removal and blockers. A strategos was a Greek general, elected for his judgement.
+
+**Navarch of the Cold Sea** · Uncommon · Creature (Human Sailor) · 4U · 3/5 · When this enters, freeze target enemy creature.
+A five-drop that buys two turns from the enemy's best creature and leaves a sturdy 3/5 behind. Slightly under the vanilla rate to pay for the freeze. A navarch commanded a fleet, and the line is from Seneca's Letters (71).
+
+**Considered Reply** · Uncommon · Spell (Discourse) · 2U · Return target enemy creature to its owner's hand. Then, if you have four or more cards in hand, draw a card.
+Bounce that turns into a two-for-one when you keep your hand full. It asks the Stoa player to hold cards rather than play everything. The quotation paraphrases the Enchiridion (33).
+
+**Humbling Lesson** · Uncommon · Spell (Discourse) · 1U · Return target enemy creature with power 4 or greater to its owner's hand. Draw a card.
+A cheap answer to the big threats the Stoa cannot destroy, with a card attached. The power restriction keeps it from being better than the Rebuke in every case. Marcus used the king and the mule driver to humble his own pride (Meditations 6.24).
+
+**Letters to Lucilius** · Uncommon · Spell (Meditation) · 3U · Foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom), then draw two cards.
+One mana more than the Hour of Contemplation for a deep look before drawing. It finds the right two cards rather than any two. Seneca's moral letters to Lucilius are the most widely read Stoic book, and this is their first piece of advice.
+
+**Stillness of Mind** · Uncommon · Spell (Meditation) · 3U · Tap all enemy creatures. Draw a card.
+The finishing blow for a patient deck: every blocker taps and your vigilant line walks in. It replaces itself, but it does nothing on defence, so four mana is fair. Kept from set 1.
+
+**Orrery of Fixed Stars** · Uncommon · Relic · 3U · At the beginning of your upkeep, tap target enemy creature.
+A repeatable tap that clears one blocker every turn without costing mana after it lands. It is slow and does nothing on defence, which keeps it at uncommon. Stoic cosmology saw the turning heavens as reason made visible.
+
+**Sumptuary Tablet** · Uncommon · Relic · 2U · At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs 1 more).
+A steady drag on the enemy's development: every turn, the first card the enemy plays costs one more. It never wins alone, but it buys the slow deck time. Sumptuary laws limited luxury and display, a very Stoic kind of statute.
+
+**Keeper of the Stacks** · Rare · Creature (Human Scholar) · 2U · 1/4 · Defender. Tap, pay 2: draw a card.
+The faith's repeatable draw engine on a body, slow on purpose: three mana and a tap for each card. A 1/4 defender also holds the ground while it works. Rare, as the spec asks for repeatable engines.
+
+**Epictetus, the Unbroken** · Rare · Creature (Human Philosopher) · 1UU · 2/3 · Steadfast. As long as you have four or more cards in hand, other creatures you control have steadfast.
+The steadfast build-around. A 2/3 for three is a fair body, and with Composure your whole army ignores one damage from every source, which shuts down small attackers and tokens. The story of the leg comes from Origen and is the purest picture of Stoic indifference to pain.
+
+**Sage of the Long Patience** · Rare · Creature (Human Philosopher) · 2UU · 2/4 · Vigilance. When this enters, draw two cards.
+A sturdy vigilant body plus two cards for four mana: strong value and an easy way into Composure. Kept from set 1 as the faith's long-game card. The line is Meditations 5.20.
+
+**Seneca, Tutor of the Prince** · Rare · Creature (Human Philosopher) · 2UU · 2/3 · At the beginning of your upkeep, if you have four or more cards in hand, draw a card.
+The Composure engine: keep four cards and he draws you an extra one every turn. The 2/3 body is weak for four mana, so he must be protected, and an enemy who forces you to empty your hand turns him off. Seneca tutored Nero, and the line opens his first letter to Lucilius.
+
+**Aristeon, the Unmoved Sage** · Rare · Creature (Human Philosopher) · 4UU · 4/5 · Vigilance. When this enters, return target enemy creature to its owner's hand and draw two cards.
+The set 1 mythic, now a rare without flying. A vigilant 4/5 is under rate for six, but the bounce and two cards make it a huge tempo and card swing. His name means "the best", and "Unmoved" is Stoic apatheia.
+
+**Apatheia** · Rare · Spell (Meditation) · 2UU · Freeze all enemy creatures (tap them; they don't untap during their controller's next untap step).
+The faith's great tempo swing: the enemy can't block this turn, can't attack on their turn, and is still tapped on your next turn. It deals no damage itself, so it only wins with a board already in place. Apatheia is the Stoic ideal of freedom from disordered passion.
+
+**All Things Return** · Rare · Spell (Meditation) · 3UU · Return all creatures to their owners' hands.
+A symmetrical reset. The Stoa benefits more than most: its creatures have useful enter triggers, its hand grows toward Composure, and the enemy loses tokens for good. It is fair at five because you lose your board too. The flavour is the Stoic doctrine of the cosmic cycle.
+
+**Codex of the Unshaken Mind** · Rare · Relic · 2UU · At the beginning of your upkeep, draw a card.
+An extra card every turn with no drawback, slow because it does nothing the turn it lands. Kept from set 1. It is discipline's answer to the Revel's cask: the cards without the wound.
+
+**The Painted Porch** · Rare · Relic · 2U · Creatures you control have vigilance.
+The vigilance build-around: every creature you control attacks and still guards. It lets the walls of the faith join the attack without leaving you open, though defenders still cannot attack. The Stoa Poikile was decorated by Polygnotus, Micon and Panaenus with famous battles, Marathon and the fall of Troy among them.
+
+**Zeno of Citium** · Mythic · Creature (Human Philosopher) · 2UU · 3/4 · Vigilance. Other Philosopher creatures you control get +1/+1. When this enters, draw a card.
+The founder as a Philosopher lord. A vigilant 3/4 that draws a card is already good for four, and every pupil, sage and logician becomes a real threat beside him. The saying is attributed to Zeno by Diogenes Laertius.
+
+**Marcus Aurelius** · Mythic · Creature (Human Noble Philosopher) · 4UU · 5/6 · Vigilance, steadfast. Whenever this attacks, freeze target enemy creature.
+The emperor who wrote the Meditations in camp on the Danube. A 5/6 with vigilance and steadfast is a wall that attacks, and each attack takes the enemy's best creature out of two turns. It is splashy, but it is still one creature that destroy and chump blocks can answer. The line is Meditations 10.16.
+
+**The View from Above** · Mythic · Spell (Meditation) · 3UU · Foresight 5, then draw three cards. Tax 2 (the enemy's next non-land card costs 2 more).
+The Stoa's great sorcery: the deepest foresight in the faith, three cards, and a tax that slows the enemy's answer. It touches no creature, so it cannot win alone, but it fills the hand for every Composure payoff. The view from above is a meditation Marcus returns to again and again (9.30).
