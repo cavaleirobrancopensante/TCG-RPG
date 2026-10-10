@@ -21,6 +21,14 @@ func _ready() -> void:
 	add_child(main)
 	if not main.is_booted:
 		await main.booted
+	if OS.get_environment("ONLY_FIELD") == "":
+		await _menus()
+	await _field()
+	GameState.delete_slot(6)
+	get_tree().quit()
+
+
+func _menus() -> void:
 	var hs := HeroScreen.new()
 	main.ui_layer.add_child(hs)
 	print("hero"); await _shot("a_hero_screen")
@@ -34,6 +42,9 @@ func _ready() -> void:
 	d._view(d.grid.get_child(2).card_id)
 	await _shot("c_viewer")
 	d.queue_free()
+
+
+func _field() -> void:
 	# duel: mulligan overlay, then lands on the field
 	main.start_battle({"name": "Grey Brother", "faction": "abyss", "level": 2, "life": 20, "deck": DeckTools.enemy_deck("abyss", 2, GameState.rng)})
 	for i in 30:
@@ -58,5 +69,10 @@ func _ready() -> void:
 	b.busy = false
 	b.refresh()
 	await _shot("e_lands_field")
-	GameState.delete_slot(6)
-	get_tree().quit()
+	for n in 12:
+		var id: String = ["wild_c_001", "wild_c_003", "sanctum_c_003", "lyceum_c_002"][n % 4]
+		var p := st._make_perm(0, id, CardDB.get_card(id))
+		p.sick = false
+		st.side(0).creatures.append(p)
+	b.refresh()
+	await _shot("f_crowded")

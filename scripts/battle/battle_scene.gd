@@ -274,10 +274,28 @@ func refresh() -> void:
 				fg.queue_free()
 		_refresh_relics(i)
 	_refresh_bars()
+	_fit_field(player_field)
+	_fit_field(enemy_field)
 	_rebuild_hand()
 	_update_marks()
 	_update_controls()
 	queue_redraw()
+
+
+## A crowded rank closes up: figures overlap like a hand of cards instead of running off
+## the screen. Tap any figure to read it (the viewer leafs through the whole rank).
+func _fit_field(field: HBoxContainer) -> void:
+	var n := 0
+	for ch in field.get_children():
+		if ch is SummonFigure and not ch.is_queued_for_deletion():
+			n += 1
+	var strip: LandStrip = player_lands if field == player_field else enemy_lands
+	var avail := get_viewport_rect().size.x - maxf(strip.size.x, strip.custom_minimum_size.x) - 12.0
+	var w := SummonFigure.SIZE.x
+	var sep := 6.0
+	if n > 1 and n * (w + sep) > avail:
+		sep = floorf((avail - w) / float(n - 1) - w)
+	field.add_theme_constant_override("separation", int(sep))
 
 
 func _spawn_figure(p, animate: bool) -> SummonFigure:
@@ -287,6 +305,7 @@ func _spawn_figure(p, animate: bool) -> SummonFigure:
 	fig.tapped.connect(_on_figure_tapped)
 	figures[p.uid] = fig
 	(player_field if p.owner == 0 else enemy_field).add_child(fig)
+	_fit_field(player_field if p.owner == 0 else enemy_field)
 	if not animate:
 		fig.summon_t = 1.0
 	return fig
