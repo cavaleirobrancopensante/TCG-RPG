@@ -1,0 +1,421 @@
+[
+  {
+    "id": "wild_c_001",
+    "name": "Briar Fox",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "G": 1
+    },
+    "power": 2,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [],
+    "text": "",
+    "flavor": "Through the thorn-hedge and gone before the hounds catch the scent."
+  },
+  {
+    "id": "wild_c_002",
+    "name": "Hedgerow Druid",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Druid",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "add_mana",
+        "color": "G",
+        "amount": 1
+      }
+    ],
+    "text": "At the beginning of your upkeep, add G to your mana pool this turn.",
+    "flavor": "She coaxes the green out of the soil the way one coaxes a shy child."
+  },
+  {
+    "id": "wild_c_003",
+    "name": "Thornback Boar",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "text": "",
+    "flavor": "Its tusks have uprooted more saplings than any woodsman's axe."
+  },
+  {
+    "id": "wild_c_004",
+    "name": "Oakmoot Sentinel",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Treefolk",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [
+      "reach"
+    ],
+    "effects": [],
+    "text": "Reach.",
+    "flavor": "It stood guard at the moot for a hundred years, and saw no need to leave."
+  },
+  {
+    "id": "wild_c_005",
+    "name": "Antlered Barrow-Stag",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "text": "Trample.",
+    "flavor": "It leaps the barrow-mounds where the old kings sleep."
+  },
+  {
+    "id": "wild_c_006",
+    "name": "Barrowland Bear",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "G": 1,
+      "generic": 3
+    },
+    "power": 4,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [],
+    "text": "",
+    "flavor": "The druids call it grandmother, and wisely give it the path."
+  },
+  {
+    "id": "wild_c_007",
+    "name": "Call of the Pack",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Rite",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "summon",
+        "token": {
+          "name": "Wolf",
+          "power": 2,
+          "toughness": 2,
+          "keywords": []
+        },
+        "count": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Create two 2/2 Wolf tokens.",
+    "flavor": "One howl at moonrise, and the hills answer."
+  },
+  {
+    "id": "wild_c_008",
+    "name": "Wildsurge",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Rite",
+    "cost": {
+      "G": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "own_creature",
+        "power": 3,
+        "toughness": 3,
+        "duration": "turn",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Target creature you control gets +3/+3 until end of turn.",
+    "flavor": "For a moment, the beast remembers what the forest was before men."
+  },
+  {
+    "id": "wild_c_009",
+    "name": "Greening Rite",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Rite",
+    "cost": {
+      "G": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "add_mana",
+        "color": "G",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Add GG to your mana pool this turn.",
+    "flavor": "Seed into soil, soil into sap, sap into power."
+  },
+  {
+    "id": "wild_u_001",
+    "name": "Wolfmother of the Fen",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Wolf",
+          "power": 2,
+          "toughness": 2,
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "When this enters, create a 2/2 Wolf token.",
+    "flavor": "Where she runs, she never runs alone."
+  },
+  {
+    "id": "wild_u_002",
+    "name": "Elder of the Oak Circle",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Druid",
+    "cost": {
+      "G": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Oakling",
+          "power": 1,
+          "toughness": 1,
+          "keywords": []
+        },
+        "count": 2
+      }
+    ],
+    "text": "When this enters, create two 1/1 Oakling tokens.",
+    "flavor": "She plants acorns as she walks; by evening they walk beside her."
+  },
+  {
+    "id": "wild_u_003",
+    "name": "Stonehide Spirit",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Spirit",
+    "cost": {
+      "G": 2,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 5,
+    "keywords": [
+      "reach"
+    ],
+    "effects": [],
+    "text": "Reach.",
+    "flavor": "The standing stones are not empty. They are only patient."
+  },
+  {
+    "id": "wild_u_004",
+    "name": "Tusked Juggernaut",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "G": 1,
+      "generic": 4
+    },
+    "power": 5,
+    "toughness": 5,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "text": "Trample.",
+    "flavor": "Palisades, shield-walls, siege towers: all just more underbrush."
+  },
+  {
+    "id": "wild_u_005",
+    "name": "Circle of Standing Stones",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "G": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "add_mana",
+        "color": "G",
+        "amount": 2
+      }
+    ],
+    "text": "At the beginning of your upkeep, add GG to your mana pool this turn.",
+    "flavor": "Raised by no hand anyone remembers, aligned to no star anyone can name."
+  },
+  {
+    "id": "wild_r_001",
+    "name": "Mistletoe Archdruid",
+    "faction": "wild",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Druid",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "add_mana",
+        "color": "G",
+        "amount": 2
+      }
+    ],
+    "text": "At the beginning of your upkeep, add GG to your mana pool this turn.",
+    "flavor": "His golden sickle has cut the sacred bough for sixty winters."
+  },
+  {
+    "id": "wild_r_002",
+    "name": "Antler-King of the Fens",
+    "faction": "wild",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Beast Spirit",
+    "cost": {
+      "G": 2,
+      "generic": 3
+    },
+    "power": 5,
+    "toughness": 5,
+    "keywords": [
+      "trample",
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Trample, vigilance.",
+    "flavor": "Crowned with twelve tines, it judges every hunter who enters the marsh."
+  },
+  {
+    "id": "wild_r_003",
+    "name": "Stampede of the Wild Hunt",
+    "faction": "wild",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Rite",
+    "cost": {
+      "G": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 2,
+        "toughness": 2,
+        "duration": "turn",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Creatures you control get +2/+2 until end of turn.",
+    "flavor": "Hooves, horns and howling, and the earth itself rides with them."
+  },
+  {
+    "id": "wild_m_001",
+    "name": "Cernoth, the Thousand-Year Oak",
+    "faction": "wild",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Treefolk Spirit",
+    "cost": {
+      "G": 3,
+      "generic": 4
+    },
+    "power": 7,
+    "toughness": 7,
+    "keywords": [
+      "trample",
+      "reach"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Oakling",
+          "power": 2,
+          "toughness": 2,
+          "keywords": []
+        },
+        "count": 2
+      }
+    ],
+    "text": "Trample, reach. When this enters, create two 2/2 Oakling tokens.",
+    "flavor": "Empires rose and fell in the span of a single ring of its wood."
+  }
+]

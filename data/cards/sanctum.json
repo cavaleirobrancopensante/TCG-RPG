@@ -1,0 +1,439 @@
+[
+  {
+    "id": "sanctum_c_001",
+    "name": "Lantern-Bearer Acolyte",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Cleric",
+    "cost": {
+      "W": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [
+      "guardian"
+    ],
+    "effects": [],
+    "text": "Guardian (gets +0/+2 while blocking).",
+    "flavor": "He carries the light so that others may walk without stumbling."
+  },
+  {
+    "id": "sanctum_c_002",
+    "name": "Novice of the Choir",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Cleric",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "text": "When this enters, gain 2 life.",
+    "flavor": "Her voice was the first thing the dark ever feared."
+  },
+  {
+    "id": "sanctum_c_003",
+    "name": "Cloister Gatewarden",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Monk",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [
+      "guardian"
+    ],
+    "effects": [],
+    "text": "Guardian (gets +0/+2 while blocking).",
+    "flavor": "No one passes the cloister gate unless the bell has rung for them."
+  },
+  {
+    "id": "sanctum_c_004",
+    "name": "Martyr of the Pilgrim Road",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Pilgrim",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 3
+      }
+    ],
+    "text": "When this dies, gain 3 life.",
+    "flavor": "He fell on the road, and the road itself remembered him as holy."
+  },
+  {
+    "id": "sanctum_c_005",
+    "name": "Herald of the Morning Bell",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "text": "Flying.",
+    "flavor": "It descends at Lauds, and the frost melts from the bell-rope."
+  },
+  {
+    "id": "sanctum_c_006",
+    "name": "Knight of the Pilgrim Way",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Vigilance (doesn't tap to attack).",
+    "flavor": "Sworn to keep the roads open from Lent to Pentecost and beyond."
+  },
+  {
+    "id": "sanctum_c_007",
+    "name": "Abbey Shieldmaiden",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Soldier",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [
+      "guardian"
+    ],
+    "effects": [],
+    "text": "Guardian (gets +0/+2 while blocking).",
+    "flavor": "Behind her shield sleep the orphans of three burned villages."
+  },
+  {
+    "id": "sanctum_c_008",
+    "name": "Rite of Benediction",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Blessing",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "own_creature",
+        "power": 2,
+        "toughness": 2,
+        "duration": "turn",
+        "trigger": "cast"
+      },
+      {
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Target creature you control gets +2/+2 until end of turn. Gain 2 life.",
+    "flavor": "\"Go forth, and fear nothing that walks beneath the sun.\""
+  },
+  {
+    "id": "sanctum_c_009",
+    "name": "Word of Banishment",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Exorcism",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "destroy",
+        "target": "enemy_creature",
+        "max_power": 3,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Destroy target enemy creature with power 3 or less.",
+    "flavor": "Spoken once, in the old tongue, and the thing was simply gone."
+  },
+  {
+    "id": "sanctum_u_001",
+    "name": "Sister of Mercy",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Cleric",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [
+      "lifelink"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "text": "Lifelink. When this enters, gain 2 life.",
+    "flavor": "She tends the wounded of both armies, and asks no one their banner."
+  },
+  {
+    "id": "sanctum_u_002",
+    "name": "Inquisitor of the Pale Flame",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Inquisitor",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "destroy",
+        "target": "enemy_creature",
+        "max_power": 2
+      }
+    ],
+    "text": "When this enters, destroy target enemy creature with power 2 or less.",
+    "flavor": "He seeks the truth patiently, and the lie cannot endure his gaze."
+  },
+  {
+    "id": "sanctum_u_003",
+    "name": "Paladin of the Seventh Gate",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Paladin",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "vigilance",
+      "lifelink"
+    ],
+    "effects": [],
+    "text": "Vigilance, lifelink.",
+    "flavor": "Each wound he takes for the weak is counted in Heaven as a prayer."
+  },
+  {
+    "id": "sanctum_u_004",
+    "name": "Bell of Vespers",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "text": "At the beginning of your upkeep, gain 2 life.",
+    "flavor": "Its evening toll calls the weary home and the restless dead to rest."
+  },
+  {
+    "id": "sanctum_u_005",
+    "name": "Litany of the Faithful",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Blessing",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 1,
+        "toughness": 2,
+        "duration": "turn",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Creatures you control get +1/+2 until end of turn.",
+    "flavor": "One voice begins the litany; a hundred answer; the line does not break."
+  },
+  {
+    "id": "sanctum_r_001",
+    "name": "Abbess of the Silent Order",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Cleric",
+    "cost": {
+      "W": 2,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 3
+      },
+      {
+        "trigger": "death",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "When this enters, gain 3 life. When this dies, creatures you control get +1/+1 permanently.",
+    "flavor": "Forty years without a word; at her death, her sisters heard everything."
+  },
+  {
+    "id": "sanctum_r_002",
+    "name": "Seraph of the Dawn Watch",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 2,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [
+      "flying",
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Flying, vigilance.",
+    "flavor": "It has kept watch over the cathedral since before the first stone was laid."
+  },
+  {
+    "id": "sanctum_r_003",
+    "name": "Reliquary of the First Martyr",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "At the beginning of your upkeep, target creature you control gets +1/+1 permanently.",
+    "flavor": "Behind the gold and crystal lies a single bone, and it is enough."
+  },
+  {
+    "id": "sanctum_m_001",
+    "name": "Archangel of the Last Vigil",
+    "faction": "sanctum",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Angel",
+    "cost": {
+      "W": 2,
+      "generic": 4
+    },
+    "power": 5,
+    "toughness": 5,
+    "keywords": [
+      "flying",
+      "lifelink"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "destroy",
+        "target": "enemy_creature",
+        "max_power": 4
+      },
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 4
+      }
+    ],
+    "text": "Flying, lifelink. When this enters, destroy target enemy creature with power 4 or less and gain 4 life.",
+    "flavor": "When the last candle gutters, she is the light that remains."
+  }
+]

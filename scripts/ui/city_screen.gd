@@ -1,0 +1,317 @@
+class_name CityScreen
+extends Control
+## A safe city: shop (boosters & singles), selling, townsfolk with missions, inn, deck.
+
+signal closed
+signal open_boosters
+signal open_deck
+
+const SCALE := 0.55
+
+var city: Dictionary
+var faction := "machine"
+var content: VBoxContainer
+var gold_label: Label
+var tab := "town"
+var rarity_filter := "all"
+
+
+func setup(city_id: String) -> void:
+	city = GameState.city(city_id)
+	faction = city.get("faction", "machine")
+
+
+func _ready() -> void:
+	UIKit.full_rect(self)
+	theme = UIKit.make_theme()
+	var bg := ColorRect.new()
+	bg.color = Factions.color(faction).darkened(0.82) if faction != "abyss" else Color(0.07, 0.03, 0.04)
+	bg.color.a = 0.97
+	UIKit.full_rect(bg)
+	add_child(bg)
+	var root := VBoxContainer.new()
+	UIKit.full_rect(root)
+	root.add_theme_constant_override("separation", 6)
+	add_child(root)
+
+	var head := HBoxContainer.new()
+	root.add_child(head)
+	var title := UIKit.label(city.get("name", "City"), 34, UIKit.GOLD)
+	head.add_child(title)
+	var sub := UIKit.label("  " + Factions.info(faction)["name"], 20, Factions.color2(faction).lightened(0.3) if faction != "abyss" else Color(0.75, 0.7, 0.8))
+	sub.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(sub)
+	gold_label = UIKit.label("", 24, UIKit.GOLD)
+	head.add_child(gold_label)
+
+	var tabs := HBoxContainer.new()
+	root.add_child(tabs)
+	for t in [["Town", "town"], ["Shop", "shop"], ["Sell cards", "sell"], ["Deck", "deck"], ["Inn", "inn"], ["Leave", "leave"]]:
+		var key: String = t[1]
+		tabs.add_child(UIKit.button(t[0], func(): _on_tab(key), 130))
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	root.add_child(scroll)
+	content = VBoxContainer.new()
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("separation", 10)
+	scroll.add_child(content)
+	GameState.gold_changed.connect(func(_g): _update_gold())
+	_update_gold()
+	_show()
+
+
+func _update_gold() -> void:
+	gold_label.text = "◉ %d gold   ✉ %d boosters" % [GameState.gold, GameState.pending_boosters]
+
+
+func _on_tab(t: String) -> void:
+	match t:
+		"leave":
+			GameState.save_game()
+			closed.emit()
+		"deck":
+			open_deck.emit()
+		_:
+			tab = t
+			_show()
+
+
+func _clear() -> void:
+	UIKit.clear(content)
+
+
+## Rebuilds are deferred: the button that triggered them may live inside `content`.
+func _show() -> void:
+	_show_now.call_deferred()
+
+
+func _show_now() -> void:
+	_clear()
+	_update_gold()
+	match tab:
+		"town": _show_town()
+		"shop": _show_shop()
+		"sell": _show_sell()
+		"inn": _show_inn()
+
+
+# ------------------------------------------------------------------ town / missions
+
+func _show_town() -> void:
+	content.add_child(UIKit.label(city.get("description", ""), 19, UIKit.TEXT, true))
+	for npc in city.get("npcs", []):
+		var panel := PanelContainer.new()
+		content.add_child(panel)
+		var v := VBoxContainer.new()
+		panel.add_child(v)
+		v.add_child(UIKit.label("%s — %s" % [npc["name"], npc.get("title", "")], 22, UIKit.GOLD))
+		for mid in npc.get("missions", []):
+			var m := GameState.mission_def(mid)
+			if m.is_empty():
+				continue
+			var row := HBoxContainer.new()
+			row.add_theme_constant_override("separation", 12)
+			v.add_child(row)
+			var state := GameState.mission_state(mid)
+			var txt := "[%s] %s\n%s\nReward: %s" % [_state_name(mid, state), m["title"], m.get("text", ""), _reward_text(m.get("reward", {}))]
+			var l := UIKit.label(txt, 16, UIKit.TEXT if state != "claimed" else UIKit.DIM, true)
+			l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			row.add_child(l)
+			var m_id: String = mid
+			if state == "available":
+				row.add_child(UIKit.button("Accept", func():
+					GameState.accept_mission(m_id)
+					GameState.save_game()
+					_show(), 140))
+			elif state == "done":
+				row.add_child(UIKit.button("Claim reward", func():
+					var r := GameState.claim_mission(m_id)
+					GameState.save_game()
+					_show()
+					_toast("Reward: " + r), 170))
+
+
+func _state_name(mid: String, state: String) -> String:
+	var m := GameState.mission_def(mid)
+	match state:
+		"active":
+			if m.get("type") == "defeat":
+				return "In progress %d/%d" % [int(GameState.missions[mid]["progress"]), int(m.get("count", 1))]
+			return "In progress"
+		"done": return "Complete!"
+		"claimed": return "Finished"
+	return "New"
+
+
+func _reward_text(r: Dictionary) -> String:
+	var parts := []
+	if r.has("gold"):
+		parts.append("%d gold" % int(r["gold"]))
+	if r.has("boosters"):
+		parts.append("%d booster(s)" % int(r["boosters"]))
+	if r.has("card_rarity"):
+		var who: String = Factions.info(r["faction"])["short"] + " " if r.has("faction") else ""
+		parts.append("a %s%s card" % [who, r["card_rarity"]])
+	return ", ".join(parts)
+
+
+# ------------------------------------------------------------------ shop
+
+func _show_shop() -> void:
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 12)
+	content.add_child(top)
+	top.add_child(UIKit.button("Buy booster (%d)" % Factions.BOOSTER_PRICE, func():
+		if GameState.buy_booster():
+			_toast("Booster bought.")
+		else:
+			_toast("Not enough gold.")
+		_show(), 240))
+	var open := UIKit.button("Open boosters (%d)" % GameState.pending_boosters, func(): open_boosters.emit(), 240)
+	open.disabled = GameState.pending_boosters <= 0
+	top.add_child(open)
+	content.add_child(UIKit.label("Singles — %s and Technocracy cards. Tap a card to buy." % Factions.info(faction)["short"], 18, UIKit.DIM))
+	var rf := HBoxContainer.new()
+	content.add_child(rf)
+	for r in ["all"] + Factions.RARITIES:
+		var rr: String = r
+		var b := Button.new()
+		b.text = rr.capitalize() + ("" if rr == "all" else " (%d)" % Factions.BUY_PRICE[rr])
+		b.custom_minimum_size = Vector2(0, 44)
+		b.pressed.connect(func():
+			rarity_filter = rr
+			_show())
+		rf.add_child(b)
+	var grid := GridContainer.new()
+	grid.columns = 9
+	content.add_child(grid)
+	var ids := CardDB.faction_ids(faction)
+	if faction != "machine":
+		ids.append_array(CardDB.faction_ids("machine"))
+	for id in ids:
+		var c := CardDB.get_card(id)
+		if rarity_filter != "all" and c["rarity"] != rarity_filter:
+			continue
+		var cell := VBoxContainer.new()
+		var cv := CardView.create(id, SCALE)
+		cv.count_badge = GameState.owned_count(id)
+		var cid: String = id
+		cv.tapped.connect(func(_v): _confirm_buy(cid))
+		cell.add_child(cv)
+		var price := UIKit.label("◉ %d" % Factions.BUY_PRICE[c["rarity"]], 15, UIKit.GOLD)
+		price.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cell.add_child(price)
+		grid.add_child(cell)
+
+
+func _confirm_buy(id: String) -> void:
+	var c := CardDB.get_card(id)
+	var price: int = Factions.BUY_PRICE[c["rarity"]]
+	_dialog(c["name"], id, "Buy for %d gold? (you own %d)" % [price, GameState.owned_count(id)], "Buy", func():
+		if GameState.buy_card(id):
+			GameState.save_game()
+			_toast("Bought %s." % c["name"])
+		else:
+			_toast("Not enough gold.")
+		_show())
+
+
+# ------------------------------------------------------------------ sell
+
+func _show_sell() -> void:
+	content.add_child(UIKit.label("Cards in your deck are kept back. Tap a card to sell one copy.", 18, UIKit.DIM))
+	var grid := GridContainer.new()
+	grid.columns = 9
+	content.add_child(grid)
+	var any := false
+	var ids := GameState.owned_all().keys()
+	ids.sort()
+	for id in ids:
+		for foil in [false, true]:
+			var n := GameState.sellable_count(id, foil)
+			if n <= 0:
+				continue
+			any = true
+			var cell := VBoxContainer.new()
+			var cv := CardView.create(id, SCALE, foil)
+			cv.count_badge = n
+			var cid: String = id
+			var is_foil: bool = foil
+			cv.tapped.connect(func(_v): _confirm_sell(cid, is_foil))
+			cell.add_child(cv)
+			var price := UIKit.label("◉ %d" % GameState.sell_price(id, foil), 15, UIKit.GOLD)
+			price.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			cell.add_child(price)
+			grid.add_child(cell)
+	if not any:
+		content.add_child(UIKit.label("Nothing spare to sell.", 20))
+
+
+func _confirm_sell(id: String, foil: bool) -> void:
+	var c := CardDB.get_card(id)
+	var p := GameState.sell_price(id, foil)
+	_dialog(c["name"], id, "Sell one %scopy for %d gold?" % ["foil " if foil else "", p], "Sell", func():
+		GameState.sell_card(id, foil)
+		GameState.save_game()
+		_show(), foil)
+
+
+# ------------------------------------------------------------------ inn
+
+func _show_inn() -> void:
+	content.add_child(UIKit.label("A warm fire, a bed and a ledger. Your progress is saved whenever you rest here.", 20, UIKit.TEXT, true))
+	content.add_child(UIKit.button("Rest & save", func():
+		GameState.save_game()
+		_toast("Game saved."), 220))
+	var s: Dictionary = GameState.stats
+	content.add_child(UIKit.label("Duels won: %d   lost: %d   boosters opened: %d   cards owned: %d" % [
+		int(s.get("wins", 0)), int(s.get("losses", 0)), int(s.get("boosters_opened", 0)), _owned_total()], 18, UIKit.DIM))
+
+
+func _owned_total() -> int:
+	var n := 0
+	var o := GameState.owned_all()
+	for k in o:
+		n += int(o[k])
+	return n
+
+
+# ------------------------------------------------------------------ helpers
+
+func _dialog(title: String, card_id: String, text: String, ok: String, cb: Callable, foil: bool = false) -> void:
+	var overlay := ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.7)
+	UIKit.full_rect(overlay)
+	add_child(overlay)
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 24)
+	overlay.add_child(h)
+	h.add_child(CardView.create(card_id, 1.7, foil))
+	var v := VBoxContainer.new()
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_theme_constant_override("separation", 14)
+	h.add_child(v)
+	v.add_child(UIKit.label(title, 26, UIKit.GOLD))
+	v.add_child(UIKit.label(text, 20))
+	v.add_child(UIKit.button(ok, func():
+		overlay.queue_free()
+		cb.call(), 200))
+	v.add_child(UIKit.button("Cancel", overlay.queue_free, 200))
+	await get_tree().process_frame
+	if is_instance_valid(h):
+		h.position = (get_viewport_rect().size - h.size) * 0.5
+
+
+func _toast(t: String) -> void:
+	var l := UIKit.label(t, 22, UIKit.GOLD)
+	l.add_theme_color_override("font_outline_color", Color.BLACK)
+	l.add_theme_constant_override("outline_size", 8)
+	add_child(l)
+	l.position = Vector2(30, get_viewport_rect().size.y - 70)
+	var tw := create_tween()
+	tw.tween_interval(1.6)
+	tw.tween_property(l, "modulate:a", 0.0, 0.4)
+	tw.tween_callback(l.queue_free)

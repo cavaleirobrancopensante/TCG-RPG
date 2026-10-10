@@ -1,0 +1,425 @@
+[
+  {
+    "id": "lyceum_c_001",
+    "name": "Owl Familiar of the Archive",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Bird",
+    "cost": {
+      "U": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "text": "Flying.",
+    "flavor": "It has read every book in the archive, mostly by sitting on them."
+  },
+  {
+    "id": "lyceum_c_002",
+    "name": "Lamp-Lit Scribe",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Scholar",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "When this enters, draw a card.",
+    "flavor": "Copy the text, and the text copies something into you."
+  },
+  {
+    "id": "lyceum_c_003",
+    "name": "Bronze-Shield Hoplite",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Soldier",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 4,
+    "keywords": [
+      "defender"
+    ],
+    "effects": [],
+    "text": "Defender (can't attack).",
+    "flavor": "\"What is in my power is to hold this ground. I hold it.\""
+  },
+  {
+    "id": "lyceum_c_004",
+    "name": "Disciplined Phalanx",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Soldier",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Vigilance (doesn't tap to attack).",
+    "flavor": "Forty shields, one mind, no fear."
+  },
+  {
+    "id": "lyceum_c_005",
+    "name": "Tower Stargazer",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Astronomer",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "Flying. When this enters, draw a card.",
+    "flavor": "She charts the heavens from a balcony of silver and glass."
+  },
+  {
+    "id": "lyceum_c_006",
+    "name": "Wandering Peripatetic",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "bounce",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "When this enters, return target enemy creature to its owner's hand.",
+    "flavor": "He argues while he walks, and his opponents find themselves walking home."
+  },
+  {
+    "id": "lyceum_c_007",
+    "name": "Measured Rebuke",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "bounce",
+        "target": "enemy_creature",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Return target enemy creature to its owner's hand.",
+    "flavor": "\"Reconsider.\""
+  },
+  {
+    "id": "lyceum_c_008",
+    "name": "Hour of Contemplation",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "draw",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Draw two cards.",
+    "flavor": "Stillness first. Then clarity. Then the answer."
+  },
+  {
+    "id": "lyceum_c_009",
+    "name": "Binding Argument",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "tap",
+        "target": "enemy_creature",
+        "trigger": "cast"
+      },
+      {
+        "action": "draw",
+        "amount": 1,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Tap target enemy creature. Draw a card.",
+    "flavor": "The brute paused to consider the premise, and the moment was lost."
+  },
+  {
+    "id": "lyceum_u_001",
+    "name": "Dialectician of the Porch",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "tap",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "Whenever this attacks, tap target enemy creature.",
+    "flavor": "Thesis, antithesis, and the defender left standing in confusion."
+  },
+  {
+    "id": "lyceum_u_002",
+    "name": "Archive Great-Owl",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Bird",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "text": "Flying.",
+    "flavor": "It keeps the night-hours of the library, and suffers no careless readers."
+  },
+  {
+    "id": "lyceum_u_003",
+    "name": "Strategos of the Shieldwall",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Soldier",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 5,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "tap",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "Vigilance. When this enters, tap target enemy creature.",
+    "flavor": "He has studied every battle ever written down, and lost none of his own."
+  },
+  {
+    "id": "lyceum_u_004",
+    "name": "Orrery of Fixed Stars",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "tap",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "At the beginning of your upkeep, tap target enemy creature.",
+    "flavor": "As the brass planets turn, the enemy feels the weight of a fixed order."
+  },
+  {
+    "id": "lyceum_u_005",
+    "name": "Stillness of Mind",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "tap",
+        "target": "all_enemy_creatures",
+        "trigger": "cast"
+      },
+      {
+        "action": "draw",
+        "amount": 1,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Tap all enemy creatures. Draw a card.",
+    "flavor": "The philosopher spoke of the vanity of striving, and the whole army sat down."
+  },
+  {
+    "id": "lyceum_r_001",
+    "name": "Sage of the Long Patience",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 2,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "draw",
+        "amount": 2
+      }
+    ],
+    "text": "Vigilance. When this enters, draw two cards.",
+    "flavor": "\"The obstacle is the way, and I am in no hurry.\""
+  },
+  {
+    "id": "lyceum_r_002",
+    "name": "Skywarden of the Upper Stoa",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Bird Spirit",
+    "cost": {
+      "U": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [
+      "flying",
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Flying, vigilance.",
+    "flavor": "It circles the colonnade at dusk, a silver thought in a silver sky."
+  },
+  {
+    "id": "lyceum_r_003",
+    "name": "Codex of the Unshaken Mind",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "U": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "draw",
+        "amount": 1
+      }
+    ],
+    "text": "At the beginning of your upkeep, draw a card.",
+    "flavor": "Each morning it opens to a page no one has read before."
+  },
+  {
+    "id": "lyceum_m_001",
+    "name": "Aristeon, the Unmoved Sage",
+    "faction": "lyceum",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Philosopher",
+    "cost": {
+      "U": 2,
+      "generic": 4
+    },
+    "power": 4,
+    "toughness": 5,
+    "keywords": [
+      "flying",
+      "vigilance"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "bounce",
+        "target": "enemy_creature"
+      },
+      {
+        "trigger": "enter",
+        "action": "draw",
+        "amount": 2
+      }
+    ],
+    "text": "Flying, vigilance. When this enters, return target enemy creature to its owner's hand and draw two cards.",
+    "flavor": "He rose above passion so completely that one day he simply kept rising."
+  }
+]
