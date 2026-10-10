@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://deo7o6twpot03"
-path="res://.godot/imported/IMFeENit28P.ttf-87677a5c07851e6b391e294ce234d9ee.fontdata"
+uid="uid://20mqhpbm6dq7"
+path="res://.godot/imported/Alegreya-Italic.ttf-9b3b73c12b2f0a9270954da2bfe100ad.fontdata"
 
 [deps]
 
-source_file="res://art/fonts/IMFeENit28P.ttf"
-dest_files=["res://.godot/imported/IMFeENit28P.ttf-87677a5c07851e6b391e294ce234d9ee.fontdata"]
+source_file="res://art/fonts/Alegreya-Italic.ttf"
+dest_files=["res://.godot/imported/Alegreya-Italic.ttf-9b3b73c12b2f0a9270954da2bfe100ad.fontdata"]
 
 [params]
 

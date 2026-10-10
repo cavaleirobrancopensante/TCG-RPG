@@ -64,21 +64,28 @@ static func symbol_fonts() -> Array:
 	return _symbols
 
 
+## Titles: Grenze Gotisch (a readable gothic). Text: Alegreya (a calligraphic book face).
+## Both are variable fonts; the weight is chosen here. Symbols fall back to Noto.
 static func font(kind: String = "book") -> Font:
 	if not _fonts.has(kind):
-		var path: String = {
-			"black": "res://art/fonts/UnifrakturMaguntia-Book.ttf",
-			"book": "res://art/fonts/IMFeENrm28P.ttf",
-			"italic": "res://art/fonts/IMFeENit28P.ttf",
-		}.get(kind, "")
-		var f: Font = null
-		if path != "" and ResourceLoader.exists(path):
-			f = load(path)
-		if f is FontFile:
+		var spec: Array = {
+			"black": ["res://art/fonts/GrenzeGotisch.ttf", 620],
+			"book": ["res://art/fonts/Alegreya.ttf", 460],
+			"bold": ["res://art/fonts/Alegreya.ttf", 700],
+			"italic": ["res://art/fonts/Alegreya-Italic.ttf", 440],
+		}.get(kind, ["", 400])
+		var f: Font = ThemeDB.fallback_font
+		if spec[0] != "" and ResourceLoader.exists(spec[0]):
+			var base: FontFile = load(spec[0])
 			# Symbols (♥ ✦ ⏮ ♪ …) come from bundled Noto fonts: browsers give Godot no
 			# system fonts, so without these the icons would show as empty boxes.
-			(f as FontFile).fallbacks = symbol_fonts()
-		_fonts[kind] = f if f else ThemeDB.fallback_font
+			base.fallbacks = symbol_fonts()
+			var fv := FontVariation.new()
+			fv.base_font = base
+			var ts := TextServerManager.get_primary_interface()
+			fv.variation_opentype = {ts.name_to_tag("wght"): spec[1]}
+			f = fv
+		_fonts[kind] = f
 	return _fonts[kind]
 
 

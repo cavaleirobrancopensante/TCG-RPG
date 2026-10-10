@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bca3b2n0bg5e2"
-path="res://.godot/imported/UnifrakturMaguntia-Book.ttf-e12e363d784bc733d901f5528b7b3304.fontdata"
+uid="uid://cu61rsb7kbe0r"
+path="res://.godot/imported/Alegreya.ttf-d042bd5467fcd14b21b287d3903dd179.fontdata"
 
 [deps]
 
-source_file="res://art/fonts/UnifrakturMaguntia-Book.ttf"
-dest_files=["res://.godot/imported/UnifrakturMaguntia-Book.ttf-e12e363d784bc733d901f5528b7b3304.fontdata"]
+source_file="res://art/fonts/Alegreya.ttf"
+dest_files=["res://.godot/imported/Alegreya.ttf-d042bd5467fcd14b21b287d3903dd179.fontdata"]
 
 [params]
 
