@@ -41,6 +41,8 @@ var btn_main: Button
 var btn_alt: Button
 var fx: Control
 var preview: Control
+var _strips: Array = []          # parchment strips drawn behind these containers
+var _grounds: Array = []         # earth bands under the two fields
 
 
 func start(p_info: Dictionary) -> void:
@@ -70,6 +72,7 @@ func _build_ui() -> void:
 	UIKit.full_rect(root, UIKit.TOP)
 	root.add_theme_constant_override("separation", 4)
 	add_child(root)
+	root.resized.connect(queue_redraw)
 
 	# Enemy bar
 	var ebar := HBoxContainer.new()
@@ -88,13 +91,15 @@ func _build_ui() -> void:
 
 	enemy_field = _field()
 	root.add_child(enemy_field)
+	_strips.append(ebar)
+	_grounds.append(enemy_field)
 
 	# Middle bar: phase, log, buttons
 	var mid := HBoxContainer.new()
 	mid.custom_minimum_size.y = 60
 	mid.add_theme_constant_override("separation", 10)
 	root.add_child(mid)
-	phase_label = UIKit.label("", 20, UIKit.GOLD)
+	phase_label = UIKit.title("", 24)
 	phase_label.custom_minimum_size.x = 210
 	phase_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	mid.add_child(phase_label)
@@ -109,6 +114,8 @@ func _build_ui() -> void:
 
 	player_field = _field()
 	root.add_child(player_field)
+	_strips.append(mid)
+	_grounds.append(player_field)
 
 	var pbar := HBoxContainer.new()
 	pbar.custom_minimum_size.y = 46
@@ -126,6 +133,8 @@ func _build_ui() -> void:
 	hand_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	hand_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(hand_scroll)
+	_strips.append(pbar)
+	_strips.append(hand_scroll)
 	hand_box = HBoxContainer.new()
 	hand_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hand_box.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -167,20 +176,34 @@ func _rich() -> RichTextLabel:
 
 
 func _draw() -> void:
-	var r := get_rect()
+	var r := Rect2(Vector2.ZERO, size)
 	var ef: String = info.get("faction", "abyss")
 	var pf: String = st.side_faction[0] if st else "sanctum"
-	var top := Factions.color(ef).darkened(0.75)
-	var bottom := Factions.color(pf).darkened(0.75)
-	if ef == "abyss":
-		top = Color(0.12, 0.03, 0.05)
-	var pts := PackedVector2Array([Vector2.ZERO, Vector2(r.size.x, 0), r.size, Vector2(0, r.size.y)])
-	draw_polygon(pts, PackedColorArray([top, top, bottom, bottom]))
-	# table runes
-	var cy := r.size.y * 0.42
-	draw_line(Vector2(0, cy), Vector2(r.size.x, cy), Color(UIKit.GOLD, 0.15), 2.0)
-	UIKit.draw_sigil(self, ef, Vector2(r.size.x * 0.5, r.size.y * 0.2), 70, Color(Factions.color2(ef), 0.06), 4)
-	UIKit.draw_sigil(self, pf, Vector2(r.size.x * 0.5, r.size.y * 0.62), 70, Color(Factions.color2(pf), 0.06), 4)
+	# the illuminated field: enemy half in their colour, ours in ultramarine
+	var mid_y := r.size.y * 0.45
+	if _strips.size() > 1:
+		mid_y = _local(_strips[1]).get_center().y
+	Tapestry.draw_diaper(self, Rect2(0, 0, r.size.x, mid_y), Tapestry.field(ef), Color(Tapestry.GILT, 0.45), 30)
+	Tapestry.draw_diaper(self, Rect2(0, mid_y, r.size.x, r.size.y - mid_y), Tapestry.field(pf) if pf != "lyceum" else Tapestry.ULTRA_DARK, Color(Tapestry.GILT, 0.45), 30)
+	UIKit.draw_sigil(self, ef, Vector2(r.size.x * 0.5, mid_y * 0.55), 64, Color(Tapestry.GILT, 0.18), 4)
+	UIKit.draw_sigil(self, pf, Vector2(r.size.x * 0.5, mid_y + (r.size.y - mid_y) * 0.25), 64, Color(Tapestry.GILT, 0.18), 4)
+	# earth under each rank of figures
+	for g in _grounds:
+		var fr := _local(g)
+		Tapestry.draw_ground(self, Rect2(0, fr.end.y - 34, r.size.x, 30), Tapestry.EARTH)
+	# parchment strips for the bars and the hand
+	for c in _strips:
+		var cr := _local(c).grow_individual(0, 2, 0, 2)
+		cr.position.x = 0
+		cr.size.x = r.size.x
+		Tapestry.draw_parchment(self, cr)
+		draw_line(cr.position, Vector2(cr.end.x, cr.position.y), Tapestry.INK, 2.0)
+		draw_line(Vector2(cr.position.x, cr.end.y), cr.end, Tapestry.INK, 2.0)
+		draw_line(cr.position + Vector2(0, 4), Vector2(cr.end.x, cr.position.y + 4), Color(Tapestry.VERMILION, 0.7), 1.0)
+
+
+func _local(c: Control) -> Rect2:
+	return Rect2(c.global_position - global_position, c.size)
 
 
 # =================================================================== refresh
@@ -246,6 +269,7 @@ func _refresh_bars() -> void:
 		var lb := player_life if i == 0 else enemy_life
 		lb.text = "♥ %d" % s.life
 		lb.add_theme_color_override("font_color", UIKit.RED if s.life <= 5 else UIKit.TEXT)
+		lb.add_theme_color_override("font_hover_color", UIKit.RED)
 		var t := "[b]%s[/b]   ✋%d  📚%d  ⚰%d   " % [s.name, s.hand.size(), s.deck.size(), s.graveyard.size()]
 		# Lands: untapped/total per colour.
 		var tot := {}
@@ -261,10 +285,8 @@ func _refresh_bars() -> void:
 					tot[k] = 0
 		for m in Factions.MANA_ORDER:
 			if tot.has(m):
-				var col := Factions.mana_color(m)
-				if m == "B":
-					col = Color(0.65, 0.6, 0.7)
-				t += "[color=#%s]●%s %d/%d[/color]  " % [col.to_html(false), m, int(free.get(m, 0)), int(tot[m])]
+				var col := UIKit.faction_ink(Factions.MANA_TO_FACTION[m])
+				t += "[color=#%s]%s %d/%d[/color]   " % [col.to_html(false), Factions.info(Factions.MANA_TO_FACTION[m])["short"], int(free.get(m, 0)), int(tot[m])]
 		(player_info if i == 0 else enemy_info).text = t
 
 
@@ -487,9 +509,9 @@ func _log(t: String) -> void:
 
 
 func _banner(text: String) -> void:
-	var l := UIKit.label(text, 46, UIKit.GOLD)
+	var l := UIKit.title(text, 58, Tapestry.GILT)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.add_theme_color_override("font_outline_color", Color.BLACK)
+	l.add_theme_color_override("font_outline_color", Tapestry.INK)
 	l.add_theme_constant_override("outline_size", 10)
 	fx.add_child(l)
 	l.size = Vector2(get_viewport_rect().size.x, 70)
@@ -539,7 +561,7 @@ func _flash(col: Color) -> void:
 
 func _float_text(t: String, pos: Vector2, col: Color) -> void:
 	var l := UIKit.label(t, 30, col)
-	l.add_theme_color_override("font_outline_color", Color.BLACK)
+	l.add_theme_color_override("font_outline_color", Tapestry.PARCHMENT_LIGHT)
 	l.add_theme_constant_override("outline_size", 8)
 	fx.add_child(l)
 	l.position = pos - Vector2(30, 20)
@@ -597,10 +619,13 @@ func _show_preview(id: String, hand_idx: int) -> void:
 	preview.add_child(box)
 	var cv := CardView.create(id, 2.0)
 	box.add_child(cv)
+	var plate := PanelContainer.new()
+	plate.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	box.add_child(plate)
 	var col := VBoxContainer.new()
 	col.alignment = BoxContainer.ALIGNMENT_CENTER
 	col.add_theme_constant_override("separation", 16)
-	box.add_child(col)
+	plate.add_child(col)
 	var c := CardDB.get_card(id)
 	var details := UIKit.label(_card_details(c), 18, UIKit.TEXT, true)
 	details.custom_minimum_size.x = 320
@@ -876,7 +901,7 @@ func _show_result() -> void:
 	v.add_theme_constant_override("separation", 18)
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	panel.add_child(v)
-	var title := UIKit.label("VICTORY" if won else "DEFEAT", 54, UIKit.GOLD if won else UIKit.RED)
+	var title := UIKit.title("Victoria" if won else "Clades", 64, UIKit.GOLD if won else UIKit.TEXT)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(title)
 	var sub := UIKit.label(("%s is defeated." % st.side(1).name) if won else "You are driven back to safety.", 22)
@@ -887,4 +912,4 @@ func _show_result() -> void:
 	await get_tree().process_frame
 	panel.position = (get_viewport_rect().size - panel.size) * 0.5
 	if won:
-		_burst(get_viewport_rect().size * 0.5, UIKit.GOLD, 60)
+		_burst(get_viewport_rect().size * 0.5, Tapestry.GILT, 60)

@@ -71,6 +71,9 @@ func _ready() -> void:
 	c._on_tab("deck")
 	await _wait(0.4)
 	await _shot("12_deck_builder")
+	Music._bar._toggle_picker()
+	await _wait(0.4)
+	await _shot("13_music_picker")
 	get_tree().quit()
 
 

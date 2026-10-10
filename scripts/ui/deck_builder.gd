@@ -19,13 +19,10 @@ func _ready() -> void:
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
 	deck = GameState.deck.duplicate()
-	var bg := ColorRect.new()
-	bg.color = Color(0.07, 0.06, 0.07, 0.98)
-	UIKit.full_rect(bg)
-	add_child(bg)
+	add_child(Backdrop.create("rings"))
 
 	var root := HBoxContainer.new()
-	UIKit.full_rect(root, UIKit.TOP)
+	UIKit.content_rect(root)
 	root.add_theme_constant_override("separation", 10)
 	add_child(root)
 
@@ -54,7 +51,7 @@ func _ready() -> void:
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.add_theme_constant_override("separation", 6)
 	root.add_child(right)
-	count_label = UIKit.label("", 24, UIKit.GOLD)
+	count_label = UIKit.title("", 28)
 	right.add_child(count_label)
 	warn_label = UIKit.label("", 15, UIKit.RED, true)
 	right.add_child(warn_label)
@@ -72,7 +69,7 @@ func _ready() -> void:
 		plus.text = "+"
 		plus.custom_minimum_size = Vector2(44, 44)
 		plus.pressed.connect(func(): _change(lid, 1))
-		var l := UIKit.label("", 15, Factions.color2(f).lightened(0.3) if f != "abyss" else Color(0.75, 0.7, 0.8))
+		var l := UIKit.label("", 15, UIKit.faction_ink(f))
 		l.custom_minimum_size.x = 140
 		land_labels[f] = l
 		row.add_child(minus)
@@ -157,7 +154,7 @@ func _refresh_now() -> void:
 		b.text = "%d× %s  (%s)" % [deck[id], c["name"], UIKit.cost_text(c["cost"])]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_size_override("font_size", 15)
-		b.add_theme_color_override("font_color", Factions.color2(c["faction"]).lightened(0.35) if c["faction"] != "abyss" else Color(0.8, 0.75, 0.85))
+		b.add_theme_color_override("font_color", UIKit.faction_ink(c["faction"]))
 		b.custom_minimum_size.y = 40
 		var cid: String = id
 		b.pressed.connect(func(): _change(cid, -1))

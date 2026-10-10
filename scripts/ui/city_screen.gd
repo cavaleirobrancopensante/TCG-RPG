@@ -24,21 +24,17 @@ func setup(city_id: String) -> void:
 func _ready() -> void:
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
-	var bg := ColorRect.new()
-	bg.color = Factions.color(faction).darkened(0.82) if faction != "abyss" else Color(0.07, 0.03, 0.04)
-	bg.color.a = 0.97
-	UIKit.full_rect(bg)
-	add_child(bg)
+	add_child(Backdrop.create(Tapestry.band_for(faction), faction))
 	var root := VBoxContainer.new()
-	UIKit.full_rect(root, UIKit.TOP)
+	UIKit.content_rect(root)
 	root.add_theme_constant_override("separation", 6)
 	add_child(root)
 
 	var head := HBoxContainer.new()
 	root.add_child(head)
-	var title := UIKit.label(city.get("name", "City"), 34, UIKit.GOLD)
+	var title := UIKit.title(city.get("name", "City"), 40)
 	head.add_child(title)
-	var sub := UIKit.label("  " + Factions.info(faction)["name"], 20, Factions.color2(faction).lightened(0.3) if faction != "abyss" else Color(0.75, 0.7, 0.8))
+	var sub := UIKit.label("  " + Factions.info(faction)["name"], 20, UIKit.faction_ink(faction))
 	sub.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(sub)
 	gold_label = UIKit.label("", 24, UIKit.GOLD)
@@ -107,7 +103,7 @@ func _show_town() -> void:
 		content.add_child(panel)
 		var v := VBoxContainer.new()
 		panel.add_child(v)
-		v.add_child(UIKit.label("%s — %s" % [npc["name"], npc.get("title", "")], 22, UIKit.GOLD))
+		v.add_child(UIKit.title("%s — %s" % [npc["name"], npc.get("title", "")], 26))
 		for mid in npc.get("missions", []):
 			var m := GameState.mission_def(mid)
 			if m.is_empty():
@@ -294,7 +290,7 @@ func _dialog(title: String, card_id: String, text: String, ok: String, cb: Calla
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_theme_constant_override("separation", 14)
 	h.add_child(v)
-	v.add_child(UIKit.label(title, 26, UIKit.GOLD))
+	v.add_child(UIKit.title(title, 30))
 	v.add_child(UIKit.label(text, 20))
 	v.add_child(UIKit.button(ok, func():
 		overlay.queue_free()
@@ -306,8 +302,8 @@ func _dialog(title: String, card_id: String, text: String, ok: String, cb: Calla
 
 
 func _toast(t: String) -> void:
-	var l := UIKit.label(t, 22, UIKit.GOLD)
-	l.add_theme_color_override("font_outline_color", Color.BLACK)
+	var l := UIKit.label(t, 24, UIKit.GOLD)
+	l.add_theme_color_override("font_outline_color", Tapestry.PARCHMENT_LIGHT)
 	l.add_theme_constant_override("outline_size", 8)
 	add_child(l)
 	l.position = Vector2(30, get_viewport_rect().size.y - 70)

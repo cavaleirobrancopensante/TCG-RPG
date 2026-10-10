@@ -13,23 +13,55 @@ var debug_auto_battles := false   # tests: AI plays the player's side
 
 
 class MenuBg extends Control:
+	## Title page: a framed miniature (Church vs Covenant) and the six faith roundels.
 	var t := 0.0
+	const CAST := [
+		{"faction": "sanctum", "subtype": "Human Knight", "name": "Knight", "x": -0.30, "face": 1.0},
+		{"faction": "sanctum", "subtype": "Human Cleric", "name": "Cleric lantern", "x": -0.14, "face": 1.0},
+		{"faction": "abyss", "subtype": "Human Cultist", "name": "Cultist", "x": 0.14, "face": -1.0},
+		{"faction": "abyss", "subtype": "Demon", "name": "Fiend", "x": 0.31, "face": -1.0},
+	]
 
 	func _process(delta: float) -> void:
 		t += delta
 		queue_redraw()
 
 	func _draw() -> void:
-		var r := get_rect()
-		draw_rect(r, UIKit.BG)
-		var c := r.size * Vector2(0.5, 0.42)
+		var r := Rect2(Vector2.ZERO, size)
+		Tapestry.draw_parchment(self, r)
+		Tapestry.draw_band(self, r, 16, "rings")
+		# the miniature
+		var pw := minf(size.x * 0.5, 640.0)
+		var panel := Rect2(Vector2((size.x - pw) * 0.5, UIKit.TOP + 30), Vector2(pw, size.y * 0.40))
+		Tapestry.draw_diaper(self, panel, Tapestry.ULTRAMARINE, Color(Tapestry.GILT, 0.5), 26)
+		var ground := Rect2(panel.position.x, panel.end.y - 36, panel.size.x, 36)
+		Tapestry.draw_ground(self, ground)
+		Tapestry.draw_tree(self, Vector2(panel.position.x + 30, ground.position.y + 8), 1.6)
+		Tapestry.draw_tree(self, Vector2(panel.end.x - 30, ground.position.y + 8), 1.6)
+		# a falling star between the two hosts
+		var star := Vector2(panel.get_center().x + 10, panel.position.y + 44 + sin(t * 0.8) * 4)
+		draw_colored_polygon(PackedVector2Array([star + Vector2(-70, -18), star + Vector2(-6, -8), star + Vector2(-6, 8), star + Vector2(-60, 4)]), Color(1, 0.7, 0.2, 0.75))
+		Tapestry.ink_circle(self, star, 14, Color(1.0, 0.55, 0.18), 2)
+		Tapestry.ink_circle(self, star, 7, Color(1.0, 0.85, 0.35), 1.5)
+		for c in CAST:
+			var feet := Vector2(panel.get_center().x + float(c["x"]) * panel.size.x, ground.position.y + 14)
+			FigurePainter.paint(self, c, Transform2D(0, feet), panel.size.y * 0.62, c["face"], 1.0)
+		Tapestry.draw_band(self, panel.grow(10), 10, "dots")
+		# faith roundels down both sides
 		for i in Factions.ORDER.size():
 			var f: String = Factions.ORDER[i]
-			var a := t * 0.15 + TAU * i / Factions.ORDER.size()
-			var p := c + Vector2(cos(a), sin(a)) * minf(r.size.y * 0.33, 230)
-			draw_circle(p, 46, Color(Factions.color(f) if f != "abyss" else Color(0.45, 0.1, 0.12), 0.35))
-			UIKit.draw_sigil(self, f, p, 30, Factions.color2(f).lightened(0.3) if f != "abyss" else Color(0.8, 0.2, 0.2), 3)
-		draw_arc(c, minf(r.size.y * 0.33, 230), 0, TAU, 64, Color(UIKit.GOLD, 0.25), 2, true)
+			var left := i < 3
+			var row := i % 3
+			var p := Vector2(90 if left else size.x - 90, size.y * 0.30 + row * size.y * 0.2)
+			var bob := sin(t * 1.2 + i) * 2.0
+			Tapestry.ink_circle(self, p + Vector2(0, bob), 40, Tapestry.colors(f)[0] if f != "sanctum" else Tapestry.WHITE, 2.5)
+			Tapestry.ink_circle(self, p + Vector2(0, bob), 33, Color(0, 0, 0, 0), 1.2)
+			var sc: Color = Tapestry.colors(f)[1] if f != "sanctum" else Tapestry.VERMILION
+			UIKit.draw_sigil(self, f, p + Vector2(0, bob), 22, sc, 3)
+			var nm: String = Factions.info(f)["short"]
+			var font := Tapestry.font("book")
+			var w := font.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 18).x
+			draw_string(font, p + Vector2(-w * 0.5, 64), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, UIKit.faction_ink(f))
 
 
 func _ready() -> void:
@@ -84,12 +116,10 @@ func show_menu() -> void:
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_theme_constant_override("separation", 16)
 	m.add_child(v)
-	var title := UIKit.label("TCG · RPG", 64, UIKit.GOLD)
+	var title := UIKit.title("TCG · RPG", 72)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_color_override("font_outline_color", Color.BLACK)
-	title.add_theme_constant_override("outline_size", 12)
 	v.add_child(title)
-	var sub := UIKit.label("Six faiths. One deck. Version " + str(ProjectSettings.get_setting("application/config/version", "")), 20, UIKit.TEXT)
+	var sub := UIKit.label("Six faiths. One deck.  ·  Version " + str(ProjectSettings.get_setting("application/config/version", "")), 20, UIKit.DIM)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(sub)
 	if GameState.has_save():
@@ -98,7 +128,7 @@ func show_menu() -> void:
 	_set_screen(m)
 	await get_tree().process_frame
 	if is_instance_valid(v):
-		v.position = (m.size - v.size) * 0.5 + Vector2(0, 40)
+		v.position = Vector2((m.size.x - v.size.x) * 0.5, m.size.y * 0.40 + UIKit.TOP + 46)
 
 
 func _confirm_new_game() -> void:
@@ -355,6 +385,8 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		var lair_id: String = info.get("lair", "")
 		var first_clear := lair_id != "" and not GameState.cleared_lairs.has(lair_id)
 		GameState.record_victory(info["faction"], lair_id)
+		if first_clear:
+			world.refresh_decor()
 		var parts := []
 		var cards := []
 		if info.has("enemy_id"):
@@ -425,7 +457,7 @@ func show_dialog(title: String, body: String, buttons: Array, card_ids: Array = 
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 14)
 	panel.add_child(v)
-	v.add_child(UIKit.label(title, 32, UIKit.GOLD))
+	v.add_child(UIKit.title(title, 36))
 	var l := UIKit.label(body, 19, UIKit.TEXT, true)
 	l.custom_minimum_size.x = 640
 	v.add_child(l)

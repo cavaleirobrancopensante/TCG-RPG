@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **1.1**. Full design: [DESIGN.md](DESIGN.md).
+Version **1.2**. Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
@@ -56,6 +56,28 @@ the region's faith while you walk, the city's anthem then its town pieces in cit
 enemy's combat music in duels and the boss piece in lairs.
 
 Regenerate with `python3 tools/music/compose.py [faith ...]` (numpy, scipy, ffmpeg).
+
+## Art style (1.2)
+
+Inspired by medieval manuscript illumination and tapestry: ink outlines, flat colour,
+parchment, ultramarine and vermilion, gold leaf. Everything is drawn procedurally in code —
+no image files — so it stays crisp on any screen and new cards are illustrated automatically.
+
+- **Type**: UnifrakturMaguntia (blackletter titles) and IM Fell English (text), both SIL OFL, in `art/fonts/`.
+- **Cards**: parchment leaves with a faith border band (crosses, thorns, leaves, dots, rings, rivets),
+  a blackletter name, an arched miniature on a gilt-diapered field, rubricated type line, a red
+  drop capital, and power/toughness on a heater shield. Card backs show the six faiths in a roundel.
+- **Figures** (`scripts/ui/figure_painter.gd`): each card is painted from its type and name —
+  knights, hoplites, clerics, nuns, monks, pilgrims, inquisitors, cultists, necromancers, liches,
+  zombies, skeletons, demons with bat wings, angels with raised wings and haloes, druids, bacchants,
+  duellists, fire-eaters, nobles, scholars, philosophers, astronomers, artificers, foxes, wolves,
+  boars, bears, stags, owls, treefolk, stone spirits, shades and many kinds of constructs.
+- **Duels**: diapered fields in each side's faith colour, earth bands under the ranks, parchment
+  bars; summoned creatures rise inside a golden mandorla, names on scrolls.
+- **World**: a painted map on parchment — lollipop trees, snow-capped mountains, wheat fields,
+  waves, inked roads, castles with conical roofs and faith banners, cave lairs, scroll labels;
+  enemies and the pilgrim player walk the map as small figures.
+- `tests/gallery.tscn` renders every card, one page per faith.
 
 ## Card set status
 
