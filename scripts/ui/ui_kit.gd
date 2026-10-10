@@ -156,11 +156,20 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 			ci.draw_arc(c + Vector2(0, -r * 0.15), r * 0.95, 0, TAU, 40, Color(col, col.a * 0.6), width * 0.7, true)
 			ci.draw_rect(Rect2(c.x - r * 0.12, c.y - r * 0.8, r * 0.24, r * 1.6), col)
 			ci.draw_rect(Rect2(c.x - r * 0.5, c.y - r * 0.38, r * 1.0, r * 0.22), col)
-		"abyss":     # horned circle
-			ci.draw_arc(c + Vector2(0, r * 0.15), r * 0.55, 0, TAU, 32, col, width, true)
-			ci.draw_arc(c + Vector2(-r * 0.55, -r * 0.2), r * 0.55, -PI * 0.15, PI * 0.55, 16, col, width, true)
-			ci.draw_arc(c + Vector2(r * 0.55, -r * 0.2), r * 0.55, PI * 0.45, PI * 1.15, 16, col, width, true)
-			ci.draw_circle(c + Vector2(0, r * 0.15), r * 0.14, col)
+		"abyss":     # bloody dagger, point down
+			var blood := Color(0.55, 0.02, 0.05, col.a)
+			ci.draw_circle(c + Vector2(0, -r * 0.86), r * 0.12, col)                         # pommel
+			ci.draw_rect(Rect2(c.x - r * 0.07, c.y - r * 0.78, r * 0.14, r * 0.34), col)      # grip
+			ci.draw_rect(Rect2(c.x - r * 0.42, c.y - r * 0.46, r * 0.84, r * 0.12), col)      # crossguard
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.15, -r * 0.34), c + Vector2(r * 0.15, -r * 0.34),
+				c + Vector2(r * 0.10, r * 0.55), c + Vector2(0, r * 0.85), c + Vector2(-r * 0.10, r * 0.55)]), col)   # blade
+			ci.draw_line(c + Vector2(0, -r * 0.30), c + Vector2(0, r * 0.62), Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.4))
+			# blood running down the blade and dripping from the point
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.11, r * 0.30), c + Vector2(r * 0.11, r * 0.30),
+				c + Vector2(r * 0.07, r * 0.58), c + Vector2(0, r * 0.85), c + Vector2(-r * 0.07, r * 0.58)]), blood)
+			ci.draw_line(c + Vector2(-r * 0.06, r * 0.05), c + Vector2(-r * 0.06, r * 0.32), blood, maxf(1.0, width * 0.6))
+			ci.draw_circle(c + Vector2(0, r * 1.0), r * 0.08, blood)
+			ci.draw_circle(c + Vector2(0, r * 0.94), r * 0.05, blood)
 		"wild":      # leaf with vein
 			var pts := PackedVector2Array()
 			for i in 21:
@@ -174,19 +183,58 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 			ci.draw_colored_polygon(pts, Color(col, col.a * 0.55))
 			ci.draw_polyline(pts + PackedVector2Array([pts[0]]), col, width * 0.6, true)
 			ci.draw_line(c + Vector2(0, -r * 0.8), c + Vector2(0, r * 0.95), col, width * 0.7, true)
-		"revel":     # chalice
-			var cup := PackedVector2Array([
-				c + Vector2(-r * 0.6, -r * 0.7), c + Vector2(r * 0.6, -r * 0.7),
-				c + Vector2(r * 0.35, -r * 0.1), c + Vector2(-r * 0.35, -r * 0.1)])
-			ci.draw_colored_polygon(cup, col)
-			ci.draw_rect(Rect2(c.x - r * 0.08, c.y - r * 0.1, r * 0.16, r * 0.6), col)
-			ci.draw_rect(Rect2(c.x - r * 0.4, c.y + r * 0.5, r * 0.8, r * 0.16), col)
-			ci.draw_circle(c + Vector2(0, -r * 0.95), r * 0.12, col)
-		"lyceum":    # eye of reason
-			ci.draw_arc(c + Vector2(0, r * 0.55), r * 0.95, PI * 1.2, PI * 1.8, 20, col, width, true)
-			ci.draw_arc(c + Vector2(0, -r * 0.55), r * 0.95, PI * 0.2, PI * 0.8, 20, col, width, true)
-			ci.draw_circle(c, r * 0.24, col)
-			ci.draw_line(c + Vector2(-r * 0.6, r * 0.75), c + Vector2(r * 0.6, r * 0.75), col, width * 0.6, true)
+		"revel":     # masquerade half-mask with ribbons and a plume
+			var dark := Color(0.10, 0.06, 0.04, col.a)
+			var mask := PackedVector2Array([
+				c + Vector2(-r * 0.95, -r * 0.42), c + Vector2(-r * 0.45, -r * 0.30), c + Vector2(0, -r * 0.36),
+				c + Vector2(r * 0.45, -r * 0.30), c + Vector2(r * 0.95, -r * 0.42), c + Vector2(r * 0.80, r * 0.05),
+				c + Vector2(r * 0.45, r * 0.28), c + Vector2(r * 0.12, r * 0.22), c + Vector2(0, r * 0.05),
+				c + Vector2(-r * 0.12, r * 0.22), c + Vector2(-r * 0.45, r * 0.28), c + Vector2(-r * 0.80, r * 0.05)])
+			ci.draw_colored_polygon(mask, col)
+			for sgn in [-1.0, 1.0]:
+				var e := c + Vector2(sgn * r * 0.42, -r * 0.05)
+				ci.draw_colored_polygon(PackedVector2Array([e + Vector2(-r * 0.24, 0), e + Vector2(0, -r * 0.12),
+					e + Vector2(r * 0.24, 0), e + Vector2(0, r * 0.10)]), dark)
+				# ribbons fluttering outward from the ties
+				var rb := PackedVector2Array()
+				for k in 7:
+					var t := k / 6.0
+					rb.append(c + Vector2(sgn * r * (0.88 + 0.22 * t), -r * 0.18 + r * 0.42 * t + sin(t * 5.0) * r * 0.06))
+				ci.draw_polyline(rb, col, maxf(1.0, width * 0.6), true)
+			# plume rising from one corner
+			var pl := PackedVector2Array()
+			for k in 9:
+				var t := k / 8.0
+				pl.append(c + Vector2(r * (0.70 + 0.10 * sin(t * 3.0)), -r * (0.42 + 0.55 * t)))
+			ci.draw_polyline(pl, col, maxf(1.0, width * 0.9), true)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(r * 0.72, -r * 0.55), c + Vector2(r * 1.0, -r * 0.85),
+				c + Vector2(r * 0.86, -r * 1.0), c + Vector2(r * 0.66, -r * 0.80)]), col)
+		"lyceum":    # a column with an owl perched on top
+			var dark := Color(0.10, 0.06, 0.04, col.a)
+			ci.draw_rect(Rect2(c.x - r * 0.50, c.y + r * 0.78, r * 1.0, r * 0.14), col)     # base
+			ci.draw_rect(Rect2(c.x - r * 0.40, c.y + r * 0.68, r * 0.80, r * 0.10), col)
+			ci.draw_rect(Rect2(c.x - r * 0.28, c.y - r * 0.02, r * 0.56, r * 0.70), col)    # shaft
+			for k in [-0.12, 0.0, 0.12]:
+				ci.draw_line(c + Vector2(r * k, r * 0.04), c + Vector2(r * k, r * 0.64), Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.35))
+			ci.draw_rect(Rect2(c.x - r * 0.50, c.y - r * 0.16, r * 1.0, r * 0.14), col)     # capital
+			ci.draw_circle(c + Vector2(-r * 0.46, -r * 0.08), r * 0.09, col)                  # volutes
+			ci.draw_circle(c + Vector2(r * 0.46, -r * 0.08), r * 0.09, col)
+			# the owl
+			# body: a tall egg, folded wings marked by two curves
+			ci.draw_colored_polygon(Tapestry.ellipse(c + Vector2(0, -r * 0.44), r * 0.24, r * 0.32, 18), col)
+			ci.draw_arc(c + Vector2(-r * 0.30, -r * 0.42), r * 0.22, -PI * 0.25, PI * 0.35, 8, Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.4), true)
+			ci.draw_arc(c + Vector2(r * 0.30, -r * 0.42), r * 0.22, PI * 0.65, PI * 1.25, 8, Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.4), true)
+			# head: broad and flat with small ear tufts
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.24, -r * 0.62), c + Vector2(-r * 0.24, -r * 0.84),
+				c + Vector2(-r * 0.17, -r * 0.94), c + Vector2(-r * 0.10, -r * 0.86), c + Vector2(r * 0.10, -r * 0.86),
+				c + Vector2(r * 0.17, -r * 0.94), c + Vector2(r * 0.24, -r * 0.84), c + Vector2(r * 0.24, -r * 0.62)]), col)
+			for sgn in [-1.0, 1.0]:
+				ci.draw_circle(c + Vector2(sgn * r * 0.10, -r * 0.74), r * 0.085, dark)
+				ci.draw_circle(c + Vector2(sgn * r * 0.10, -r * 0.74), r * 0.035, col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.04, -r * 0.67), c + Vector2(r * 0.04, -r * 0.67), c + Vector2(0, -r * 0.58)]), dark)
+			# talons gripping the capital
+			for x in [-0.08, 0.08]:
+				ci.draw_line(c + Vector2(r * x, -r * 0.14), c + Vector2(r * x, -r * 0.20), dark, maxf(1.0, width * 0.4))
 		_:           # machine: cog
 			var teeth := 8
 			var pts := PackedVector2Array()
