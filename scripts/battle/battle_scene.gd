@@ -58,8 +58,8 @@ func start(p_info: Dictionary) -> void:
 	var edeck := DeckTools.to_list(info.get("deck", {}))
 	var main_f := DeckTools.best_factions(GameState.deck, 1)
 	st.side_faction = [main_f[0] if not main_f.is_empty() else "sanctum", info.get("faction", "abyss")]
-	st.setup(pdeck, edeck, [GameState.player_name, info.get("name", "Foe")], [20, int(info.get("life", 20))])
-	_log("A duel against %s begins!" % info.get("name", "a stranger"))
+	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [20, int(info.get("life", 20))])
+	_log(I18n.t("A duel against %s begins!") % I18n.t(info.get("name", "a stranger")))
 	await play_events()
 	if st.active == 1 and st.phase != "over":
 		await enemy_turn()
@@ -258,7 +258,7 @@ func _refresh_relics(i: int) -> void:
 	UIKit.clear(box)
 	for r in st.side(i).relics:
 		var b := Button.new()
-		b.text = "✧ " + r.name
+		b.text = "✧ " + I18n.t(r.name)
 		b.custom_minimum_size = Vector2(0, 40)
 		b.add_theme_font_size_override("font_size", 14)
 		var ruid: int = r.uid
@@ -342,13 +342,13 @@ func _update_controls() -> void:
 		return
 	var mine := st.active == 0
 	var names := {"main1": "Main phase", "block": "Combat", "main2": "Main phase 2", "over": "Duel over"}
-	phase_label.text = ("Your turn · " if mine else "Enemy turn · ") + names.get(st.phase, st.phase)
+	phase_label.text = I18n.t("Your turn" if mine else "Enemy turn") + " · " + I18n.t(names.get(st.phase, st.phase))
 	btn_alt.visible = false
 	btn_main.disabled = busy
 	btn_alt.disabled = busy
 	match mode:
 		"attack":
-			btn_main.text = "Attack! (%d)" % sel_attackers.size() if not sel_attackers.is_empty() else "No attack"
+			btn_main.text = I18n.t("Attack! (%d)") % sel_attackers.size() if not sel_attackers.is_empty() else I18n.t("No attack")
 			btn_alt.text = "Cancel"
 			btn_alt.visible = true
 		"block":
@@ -388,11 +388,11 @@ func _animate(e: Dictionary) -> void:
 	match e["type"]:
 		"turn":
 			refresh()
-			await _banner("Your turn" if e["side"] == 0 else "%s's turn" % st.side(1).name)
+			await _banner("Your turn" if e["side"] == 0 else I18n.t("%s's turn") % st.side(1).name)
 		"land":
 			_refresh_bars()
 			if e["side"] == 1:
-				_log("%s plays %s." % [st.side(1).name, CardDB.get_card(e["id"]).get("name", "")])
+				_log(I18n.t("%s plays %s.") % [st.side(1).name, I18n.t(CardDB.get_card(e["id"]).get("name", ""))])
 				await _wait(0.25)
 			else:
 				_rebuild_hand()
@@ -402,7 +402,7 @@ func _animate(e: Dictionary) -> void:
 				return
 			if e.get("id") != "token":
 				await _show_cast(e["id"], e["side"])
-			_log("%s %s %s." % [st.side(e["side"]).name, "raises" if e.get("reanimated") else "summons", p.name])
+			_log(I18n.t("%s raises %s." if e.get("reanimated") else "%s summons %s.") % [st.side(e["side"]).name, I18n.t(p.name)])
 			_rebuild_hand()
 			_refresh_bars()
 			var fig: SummonFigure = figures[p.uid] if figures.has(p.uid) else _spawn_figure(p, true)
@@ -412,12 +412,12 @@ func _animate(e: Dictionary) -> void:
 			await fig.play_summon()
 		"relic":
 			await _show_cast(e["id"], e["side"])
-			_log("%s sets out %s." % [st.side(e["side"]).name, CardDB.get_card(e["id"]).get("name", "")])
+			_log(I18n.t("%s sets out %s.") % [st.side(e["side"]).name, I18n.t(CardDB.get_card(e["id"]).get("name", ""))])
 			_refresh_relics(e["side"])
 			_rebuild_hand()
 		"spell":
 			var c := CardDB.get_card(e["id"])
-			_log("%s casts %s." % [st.side(e["side"]).name, c.get("name", "")])
+			_log(I18n.t("%s casts %s.") % [st.side(e["side"]).name, I18n.t(c.get("name", ""))])
 			_rebuild_hand()
 			_flash(Factions.color(c.get("faction", "machine")))
 			await _show_cast(e["id"], e["side"], 0.9)
@@ -481,7 +481,7 @@ func _animate(e: Dictionary) -> void:
 				figures[e["uid"]].sync(p)
 			await _wait(0.1)
 		"discard":
-			_log("%s discards %s." % [st.side(e["side"]).name, CardDB.get_card(e["id"]).get("name", "")])
+			_log(I18n.t("%s discards %s.") % [st.side(e["side"]).name, I18n.t(CardDB.get_card(e["id"]).get("name", ""))])
 			_rebuild_hand()
 		"draw":
 			if e["side"] == 0 and st.turn > 1:
@@ -630,17 +630,6 @@ func _show_board(side_i: int, uid: int) -> void:
 		preview = CardViewer.open(self, entries, start)
 
 
-func _card_details(c: Dictionary) -> String:
-	var s: String = c.get("name", "")
-	s += "\n" + Factions.info(c.get("faction", "machine"))["name"] + " · " + String(c.get("rarity", "")).capitalize()
-	if c.get("type") != "land":
-		s += "\nCost: " + UIKit.cost_text(c.get("cost", {}))
-	var kws: Array = c.get("keywords", [])
-	if not kws.is_empty():
-		s += "\nKeywords: " + ", ".join(kws)
-	return s
-
-
 func _close_preview() -> void:
 	if preview and is_instance_valid(preview):
 		preview.queue_free()
@@ -675,7 +664,7 @@ func _advance_targeting() -> void:
 			chosen_targets.append(null)
 			continue
 		mode = "target"
-		_log("Choose a target: " + _spec_prompt(spec))
+		_log(I18n.t("Choose a target: %s") % _spec_prompt(spec))
 		refresh()
 		return
 	mode = "idle"
@@ -689,7 +678,7 @@ func _spec_prompt(spec: Dictionary) -> String:
 	var a: String = spec.get("action", "")
 	var t: String = spec.get("target", "")
 	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures"}.get(t, t)
-	return "%s → %s" % [a.capitalize(), who]
+	return "%s → %s" % [I18n.t(a.capitalize()), I18n.t(who)]
 
 
 func _is_valid_target(ref: Dictionary) -> bool:
@@ -891,7 +880,7 @@ func _show_result() -> void:
 	var title := UIKit.title("Victoria" if won else "Clades", 64, UIKit.GOLD if won else UIKit.TEXT)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(title)
-	var sub := UIKit.label(("%s is defeated." % st.side(1).name) if won else "You are driven back to safety.", 22)
+	var sub := UIKit.label((I18n.t("%s is defeated.") % st.side(1).name) if won else I18n.t("You are driven back to safety."), 22)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(sub)
 	v.add_child(UIKit.button("Continue", func(): finished.emit(won), 240))

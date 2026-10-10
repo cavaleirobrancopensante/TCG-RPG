@@ -188,17 +188,21 @@ func _meta() -> Dictionary:
 	for id in owned_all():
 		owned += int(owned_all()[id])
 	var place := "On the road"
+	var city_name := ""
+	var near := true
 	var best_d := INF
 	for c in world_data.get("cities", []):
 		var d := player_pos.distance_to(Vector2(c["x"], c["y"]))
 		if d < best_d:
 			best_d = d
-			place = ("In " if d < 160 else "Near ") + String(c["name"])
+			city_name = String(c["name"])
+			near = d >= 160
+			place = ("In " if not near else "Near ") + city_name
 	var t := Time.get_datetime_dict_from_system()
 	var months := ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 	return {
 		"player_name": player_name, "gold": gold, "cards": owned, "wins": int(stats.get("wins", 0)),
-		"lairs": cleared_lairs.size(), "place": place, "play_time": play_time,
+		"lairs": cleared_lairs.size(), "place": place, "city": city_name, "near": near, "play_time": play_time,
 		"faiths": DeckTools.best_factions(deck, 2),
 		"saved_at": "%d %s %d, %02d:%02d" % [t["day"], months[t["month"] - 1], t["year"], t["hour"], t["minute"]],
 		"saved_unix": Time.get_unix_time_from_system(),
@@ -485,15 +489,15 @@ func claim_mission(id: String) -> String:
 	var parts := []
 	if reward.has("gold"):
 		add_gold(int(reward["gold"]))
-		parts.append("%d gold" % int(reward["gold"]))
+		parts.append(I18n.t("%d gold") % int(reward["gold"]))
 	if reward.has("boosters"):
 		pending_boosters += int(reward["boosters"])
-		parts.append("%d booster(s)" % int(reward["boosters"]))
+		parts.append(I18n.t("%d booster(s)") % int(reward["boosters"]))
 	if reward.has("card_rarity"):
 		var fs: Array = [reward["faction"]] if reward.has("faction") else []
 		var cid := CardDB.random_of_rarity(reward["card_rarity"], rng, fs)
 		add_card(cid)
-		parts.append(CardDB.get_card(cid).get("name", cid))
+		parts.append(I18n.t(CardDB.get_card(cid).get("name", cid)))
 	missions[id]["state"] = "claimed"
 	mission_updated.emit(id)
 	return ", ".join(parts)

@@ -88,8 +88,8 @@ static func confirm(parent: Node, heading: String, text: String, ok_label: Strin
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 14)
 	plate.add_child(v)
-	v.add_child(title(heading, 32))
-	var l := label(text, 20, TEXT, true)
+	v.add_child(title(I18n.t(heading), 32))
+	var l := label(I18n.t(text), 20, TEXT, true)
 	l.custom_minimum_size.x = 460
 	v.add_child(l)
 	var row := HBoxContainer.new()
@@ -116,7 +116,7 @@ static func prompt(parent: Node, heading: String, initial: String, ok_label: Str
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 14)
 	plate.add_child(v)
-	v.add_child(title(heading, 32))
+	v.add_child(title(I18n.t(heading), 32))
 	var edit := LineEdit.new()
 	edit.text = initial
 	edit.max_length = 28
@@ -373,3 +373,51 @@ static func _sigil_shape(ci: CanvasItem, faction: String, c: Vector2, r: float, 
 static func _fill(ci: CanvasItem, pts: PackedVector2Array, col: Color) -> void:
 	if Tapestry.poly_ok(pts):
 		ci.draw_colored_polygon(pts, col)
+
+
+## A flag button for choosing the language (USA for English, Brazil, Spain).
+class Flag extends Button:
+	var lang := "en"
+	var selected := false
+
+	func _draw() -> void:
+		var r := Rect2(Vector2(6, 6), size - Vector2(12, 12))
+		match lang:
+			"en":   # USA: stripes and a blue canton with stars
+				for k in 7:
+					draw_rect(Rect2(r.position.x, r.position.y + k * r.size.y / 7.0, r.size.x, r.size.y / 7.0 + 0.5), Color(0.7, 0.13, 0.2) if k % 2 == 0 else Color.WHITE)
+				var c := Rect2(r.position, Vector2(r.size.x * 0.42, r.size.y * 4.0 / 7.0))
+				draw_rect(c, Color(0.24, 0.23, 0.43))
+				for y in 3:
+					for x in 4:
+						draw_circle(c.position + Vector2((x + 0.5) * c.size.x / 4.0, (y + 0.5) * c.size.y / 3.0), 1.4, Color.WHITE)
+			"pt":   # Brazil: green, yellow diamond, blue globe
+				draw_rect(r, Color(0.0, 0.6, 0.29))
+				var m := r.get_center()
+				draw_colored_polygon(PackedVector2Array([Vector2(r.position.x + 5, m.y), Vector2(m.x, r.position.y + 4),
+						Vector2(r.end.x - 5, m.y), Vector2(m.x, r.end.y - 4)]), Color(1.0, 0.87, 0.0))
+				draw_circle(m, r.size.y * 0.26, Color(0.0, 0.15, 0.5))
+				draw_line(m + Vector2(-r.size.y * 0.25, -1), m + Vector2(r.size.y * 0.25, 2), Color.WHITE, 1.5)
+			"es":   # Spain: red, yellow, red
+				draw_rect(r, Color(0.78, 0.07, 0.11))
+				draw_rect(Rect2(r.position.x, r.position.y + r.size.y * 0.25, r.size.x, r.size.y * 0.5), Color(1.0, 0.77, 0.0))
+		draw_rect(r, Tapestry.INK, false, 2.0)
+		if selected:
+			draw_rect(Rect2(Vector2(1, 1), size - Vector2(2, 2)), Tapestry.VERMILION, false, 3.0)
+
+
+## A row of the three language flags; on_pick(lang) is called when one is chosen.
+static func flag_row(on_pick: Callable, flag_size: Vector2 = Vector2(70, 50)) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	for code in I18n.LANGS:
+		var f := Flag.new()
+		f.lang = code
+		f.selected = I18n.lang == code
+		f.custom_minimum_size = flag_size
+		f.flat = true
+		f.focus_mode = Control.FOCUS_NONE
+		f.tooltip_text = I18n.NAMES[code]
+		f.pressed.connect(func(): on_pick.call(code))
+		row.add_child(f)
+	return row

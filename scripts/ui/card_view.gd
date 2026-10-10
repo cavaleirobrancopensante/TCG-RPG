@@ -110,7 +110,7 @@ func _draw() -> void:
 	var name_r := Rect2(inner.position + Vector2(3, 3) * k, Vector2(inner.size.x - 6 * k, 24 * k))
 	var cost_w := _draw_cost(Vector2(name_r.end.x - 2 * k, name_r.get_center().y), k)
 	var name_size := int(15 * k)
-	var nm: String = card.get("name", "?")
+	var nm: String = I18n.t(card.get("name", "?"))
 	var max_name_w := name_r.size.x - cost_w - 6 * k
 	while name_size > 8 and black.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, name_size).x > max_name_w:
 		name_size -= 1
@@ -123,9 +123,7 @@ func _draw() -> void:
 
 	# type line (rubricated)
 	var type_y := art_r.end.y + 14 * k
-	var type_txt: String = String(card.get("type", "")).capitalize()
-	if card.get("subtype", "") != "":
-		type_txt += " — " + card["subtype"]
+	var type_txt := I18n.type_line(card)
 	draw_string(book, Vector2(inner.position.x + 6 * k, type_y), type_txt, HORIZONTAL_ALIGNMENT_LEFT, inner.size.x - 28 * k, int(11 * k), Tapestry.RUBRIC)
 	var rar: String = card.get("rarity", "common")
 	if Factions.RARITY_COLOR.has(rar):
@@ -137,7 +135,7 @@ func _draw() -> void:
 	var text_r := Rect2(inner.position.x + 6 * k, type_y + 4 * k, inner.size.x - 12 * k, inner.end.y - type_y - 8 * k)
 	draw_rect(text_r, Color(Tapestry.PARCHMENT_LIGHT, 0.55))
 	draw_rect(text_r, Color(INK, 0.5), false, lw * 0.6)
-	var body: String = card.get("text", "")
+	var body: String = I18n.t(card.get("text", ""))
 	var fs := int(10.5 * k)
 	if body.length() > 100:
 		fs = int(9.2 * k)
@@ -155,7 +153,7 @@ func _draw() -> void:
 			var x := tx.x + (cap_w if i < 2 else 0.0)
 			draw_string(book, Vector2(x, y), lines[i], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
 			y += fs * 1.12
-		var flavor: String = card.get("flavor", "")
+		var flavor: String = I18n.t(card.get("flavor", ""))
 		if flavor != "" and k >= 0.9 and y + fs * 2.2 < text_r.end.y:
 			var it := Tapestry.font("italic")
 			for line in _wrap(it, flavor, int(fs * 0.9), text_r.size.x - 8 * k, text_r.size.x - 8 * k, 0):

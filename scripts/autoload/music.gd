@@ -41,6 +41,14 @@ func _ready() -> void:
 	_load_settings()
 
 
+## Redraw the strip (e.g. after the language changes).
+func refresh_bar() -> void:
+	if _bar:
+		_bar._refresh()
+		if _bar.picker and _bar.picker.visible:
+			_bar._fill_list()
+
+
 ## Called by the game once its look (parchment, fonts, theme) is prepared.
 func attach_bar() -> void:
 	if _bar:
@@ -64,8 +72,8 @@ func faction_tracks(faction: String, kind: String = "") -> Array:
 
 func label(t: Dictionary) -> String:
 	if t.is_empty():
-		return "—"
-	return "%s · %s" % [Factions.info(t["faction"])["short"], KIND_LABEL.get(t["kind"], "")]
+		return ""
+	return "%s · %s" % [Factions.info(t["faction"])["short"], I18n.t(KIND_LABEL.get(t["kind"], ""))]
 
 
 # ------------------------------------------------------------------ context (auto mode)

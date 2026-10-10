@@ -162,7 +162,7 @@ func take_events() -> Array:
 func draw_card(i: int) -> void:
 	var s := side(i)
 	if s.deck.is_empty():
-		emit({"type": "message", "text": "%s has no cards left to draw!" % s.name})
+		emit({"type": "message", "text": I18n.t("%s has no cards left to draw!") % s.name})
 		_lose(i)
 		return
 	var id: String = s.deck.pop_back()

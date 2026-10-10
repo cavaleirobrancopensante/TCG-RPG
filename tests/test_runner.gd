@@ -15,6 +15,7 @@ func _ready() -> void:
 	test_game_state()
 	test_save_slots()
 	test_decks()
+	test_translations()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -257,3 +258,46 @@ func test_decks() -> void:
 	f.close()
 	check(GameState.load_game(6) and GameState.decks.size() == 1 and GameState.decks[0]["name"] == "Starter deck" and int(GameState.deck.get("wild_c_001", 0)) == 4, "old single deck migrated")
 	GameState.delete_slot(6)
+
+
+func test_translations() -> void:
+	print("-- translations and text style")
+	var tables := {}
+	for code in ["pt", "es"]:
+		var t = JSON.parse_string(FileAccess.get_file_as_string("res://data/i18n/%s.json" % code))
+		check(typeof(t) == TYPE_DICTIONARY, "%s table loads" % code)
+		tables[code] = t if typeof(t) == TYPE_DICTIONARY else {}
+	var re := RegEx.create_from_string("%0?\\d*[sd]")
+	var texts: Array = []
+	for id in CardDB.all_set_ids():
+		var c := CardDB.get_card(id)
+		for fld in ["name", "text", "flavor", "subtype"]:
+			if String(c.get(fld, "")) != "":
+				texts.append(String(c[fld]))
+	for code in tables:
+		var t: Dictionary = tables[code]
+		for k in texts:
+			check(t.has(k), "%s: missing translation of %s" % [code, k])
+		for k in t:
+			var a := re.search_all(String(k)).map(func(m): return m.get_string())
+			var b := re.search_all(String(t[k])).map(func(m): return m.get_string())
+			check(a == b, "%s: placeholders differ in %s" % [code, k])
+	# No em or en dashes anywhere in the game's text (house style).
+	var dash := ["\u2014", "\u2013"]
+	for code in tables:
+		for k in tables[code]:
+			for d in dash:
+				check(not String(tables[code][k]).contains(d) and not String(k).contains(d), "dash in %s: %s" % [code, k])
+	for k in texts:
+		for d in dash:
+			check(not k.contains(d), "dash in card text: %s" % k)
+	var world := FileAccess.get_file_as_string("res://data/world.json") + FileAccess.get_file_as_string("res://data/music.json")
+	for d in dash:
+		check(not world.contains(d), "dash in world/music data")
+	# switching language really changes what is shown
+	I18n.setup("pt")
+	check(I18n.t("New game") != "New game" and Factions.info("sanctum")["name"] != "The Holy Church", "Portuguese active")
+	I18n.setup("es")
+	check(I18n.t("Load game") != "Load game", "Spanish active")
+	I18n.setup("en")
+	check(I18n.t("New game") == "New game", "back to English")

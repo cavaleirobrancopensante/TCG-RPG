@@ -83,6 +83,6 @@ static func draw_enemy(ci: CanvasItem, faction: String, level: int, t: float, ch
 	ci.draw_arc(Vector2.ZERO, 26, 0, TAU, 32, ring, 3.0, true)
 	var sig := c2.lightened(0.4) if faction != "abyss" else Color(0.85, 0.2, 0.2)
 	UIKit.draw_sigil(ci, faction, Vector2.ZERO, 14, sig, 2.0)
-	ci.draw_string(ThemeDB.fallback_font, Vector2(-30, -32), "Lv%d" % level, HORIZONTAL_ALIGNMENT_CENTER, 60, 18, UIKit.TEXT)
+	ci.draw_string(ThemeDB.fallback_font, Vector2(-30, -32), I18n.t("Lv%d") % level, HORIZONTAL_ALIGNMENT_CENTER, 60, 18, UIKit.TEXT)
 	if chasing:
 		ci.draw_string(ThemeDB.fallback_font, Vector2(18, -18), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, UIKit.RED)

@@ -54,8 +54,15 @@ const FOIL_SELL_MULT := 3
 const BOOSTER_PRICE := 100
 
 
+## Faith data; names come back in the player's language.
 static func info(faction: String) -> Dictionary:
-	return DATA.get(faction, DATA["machine"])
+	var d: Dictionary = DATA.get(faction, DATA["machine"])
+	if I18n.lang == "en":
+		return d
+	var c := d.duplicate()
+	for k in ["name", "short", "land_name", "alignment"]:
+		c[k] = I18n.t(c[k])
+	return c
 
 
 static func color(faction: String) -> Color:
