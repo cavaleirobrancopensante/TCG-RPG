@@ -689,6 +689,118 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "A traveller who keeps to himself. Challenge him to a duel?",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Challenge",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Leave him be",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Rivers can only be crossed at bridges, or by ferry where the ferrymen keep their boats.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Forest and marsh slow your step; the roads are quickest.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Sell cards of other faiths in a foreign city: they fetch more there.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Every copy you buy in a city raises its price there. Buy one, travel, buy another.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "A night at the inn sends you into your next duel stronger.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Raiders cross the border now and then. They wear red on their banners.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Fleeing a duel costs less than losing it, and you keep your place on the road.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The lairs hold the strongest foes, and the richest rewards the first time.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Those who keep to themselves will take up a challenge if you ask them.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The tournament is costly to enter, but you keep every card you draft.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s greets you on the road.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Thank you",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Bought %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Not enough gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"I have a card I could part with, for %d gold.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Buy · %d gold",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "No, thank you",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"Raiders trouble these roads. Beat %d hostile wanderers and I will pay you %d gold.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Accept",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Not now",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Favour done: %s pays you %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Ferry",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The ferryman will take you across for %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Cross (%d gold)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Stay",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Toll into the lands of %s: %d gold.",
    "note": "scripts/main.gd"
   },
@@ -826,10 +938,6 @@
   },
   {
    "key": "Reward: %s",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Challenge",
    "note": "scripts/main.gd"
   },
   {
@@ -1185,10 +1293,6 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
-   "key": "Accept",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
    "key": "Claim reward",
    "note": "scripts/ui/city_screen.gd"
   },
@@ -1233,10 +1337,6 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
-   "key": "Not enough gold.",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
    "key": "Open boosters (%d)",
    "note": "scripts/ui/city_screen.gd"
   },
@@ -1246,14 +1346,6 @@
   },
   {
    "key": "%s cards are cheaper here. Every copy you buy raises the price here; prices settle back day by day. ▲ dearer than usual, ▼ cheaper.",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
-   "key": "Buy · %d gold",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
-   "key": "Bought %s.",
    "note": "scripts/ui/city_screen.gd"
   },
   {

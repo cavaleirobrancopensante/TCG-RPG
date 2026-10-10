@@ -6,6 +6,8 @@ extends Node2D
 signal city_entered(city_id: String)
 signal lair_reached(lair_id: String)
 signal enemy_engaged(enemy: Dictionary)
+signal stranger_met(enemy: Dictionary)
+signal ferry_reached(index: int, from_a: bool)
 
 const PLAYER_SPEED := 430.0
 const ENEMY_SPEED := 150.0
@@ -17,6 +19,17 @@ const SAFE_RADIUS := 480.0
 const LAIR_RADIUS := 110.0
 const ENEMY_COUNT := 28
 const RESPAWN_TIME := 40.0
+const LEASH := 520.0            # how far a roaming enemy strays from home
+const CHASE_LEASH := 900.0      # and how far it follows you before turning back
+
+# walking grid codes (see tools/map/make_map.py)
+const BLOCKED := 0
+const OPEN := 1
+const SLOW := 2
+const ROAD := 3
+const BRIDGE := 4
+const LANDING := 5
+const SPEED_BY_CODE := {OPEN: 1.0, SLOW: 0.6, ROAD: 1.3, BRIDGE: 1.1, LANDING: 1.0}
 
 var world_size := Vector2(6000, 4000)
 var player_pos := Vector2.ZERO
@@ -38,6 +51,15 @@ var _pressing := false
 var _walkers := {}              # enemy id -> Walker
 var _player: Walker
 var _marker_shown := false
+var map_data: Dictionary = {}
+var cell := 25.0
+var grid_size := Vector2i(240, 160)
+var walk := PackedByteArray()
+var astar := AStarGrid2D.new()
+var path := PackedVector2Array()
+var _path_i := 0
+var _repath_t := 0.0
+var _ferry_lock := -1           # the landing we arrived on, until we step off it
 
 
 ## A figure on the map, painted once and then only moved. Repainted when it turns,
@@ -49,6 +71,7 @@ class Walker extends Node2D:
 	var chasing := false
 	var label := ""
 	var is_player := false
+	var disposition := "hostile"
 
 	func set_state(p_face: float, p_chasing: bool, p_label: String) -> void:
 		if p_face == face and p_chasing == chasing and p_label == label:
@@ -68,7 +91,14 @@ class Walker extends Node2D:
 				draw_arc(Vector2(0, -2), 30, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)
 		FigurePainter.paint(self, look, Transform2D(0, Vector2.ZERO), height, face, 1.0)
 		if label != "":
-			Tapestry.draw_scroll_label(self, Vector2(0, -88), label, 16, Tapestry.VERMILION if chasing else Tapestry.INK)
+			# red for the hostile, green for friends, plain white for those who keep to themselves
+			match disposition:
+				"friendly":
+					Tapestry.draw_scroll_label(self, Vector2(0, -88), label, 16, Tapestry.WHITE, Color(0.22, 0.48, 0.22))
+				"neutral":
+					Tapestry.draw_scroll_label(self, Vector2(0, -88), label, 16, Tapestry.INK, Tapestry.WHITE)
+				_:
+					Tapestry.draw_scroll_label(self, Vector2(0, -88), label, 16, Tapestry.WHITE, Tapestry.VERMILION.darkened(0.1))
 
 
 ## Stages for the loading screen, in the order build() runs them.
@@ -111,10 +141,10 @@ func build(ls: LoadingScreen = null, first: int = 0) -> void:
 	_stage(ls, first)
 	await _build_terrain(ls)
 	_stage(ls, first + 1)
-	_build_roads()
 	await _tick(ls, 1.0)
 	_stage(ls, first + 2)
-	await _plan_decor(ls)
+	_items.clear()            # the painted map carries its own forests and mountains
+	await _tick(ls, 1.0)
 	_stage(ls, first + 3)
 	await _build_decor(ls)
 	_stage(ls, first + 4)
@@ -173,37 +203,105 @@ class Decor extends Node2D:
 
 
 func _build_terrain(ls: LoadingScreen = null) -> void:
-	var cell := 20.0
-	var w := int(world_size.x / cell)
-	var h := int(world_size.y / cell)
-	var img := Image.create(w, h, false, Image.FORMAT_RGB8)
-	_height.seed = 1717
-	_height.frequency = 0.0014
-	var parch := Tapestry.parchment().get_image()
-	for y in h:
-		for x in w:
-			var p := Vector2(x, y) * cell
-			var f := faction_at(p)
-			var n := _height.get_noise_2d(p.x, p.y)
-			var col: Color = REGION_COLORS[f]
-			if n < -0.40:
-				col = Tapestry.ULTRAMARINE.lightened(0.18) if f != "abyss" else Color(0.55, 0.18, 0.10)
-			elif n > 0.42:
-				col = col.lerp(Color(0.72, 0.70, 0.66), 0.55)
-			elif n > 0.12:
-				col = col.darkened(0.10)
-			# painted on parchment: let the leaf's grain show through
-			var pc := parch.get_pixel(x % 256, y % 256)
-			col = col * Color(pc.r / Tapestry.PARCHMENT.r, pc.g / Tapestry.PARCHMENT.g, pc.b / Tapestry.PARCHMENT.b)
-			img.set_pixel(x, y, col)
-		await _tick(ls, float(y + 1) / h)
-	var spr := Sprite2D.new()
-	spr.texture = ImageTexture.create_from_image(img)
-	spr.centered = false
-	spr.scale = Vector2(cell, cell)
-	spr.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	spr.z_index = -10
-	add_child(spr)
+	var f := FileAccess.open("res://data/map.json", FileAccess.READ)
+	map_data = JSON.parse_string(f.get_as_text()) if f else {}
+	cell = float(map_data.get("cell", 25))
+	var gs: Array = map_data.get("grid", [240, 160])
+	grid_size = Vector2i(int(gs[0]), int(gs[1]))
+	# the painted map, in tiles
+	var tiles: Array = map_data.get("tiles", [3, 2])
+	var tw := float(map_data.get("tile_world", 2000.0))
+	var n := int(tiles[0]) * int(tiles[1])
+	var k := 0
+	for ty in int(tiles[1]):
+		for tx in int(tiles[0]):
+			var spr := Sprite2D.new()
+			spr.texture = load("res://art/map/tile_%d_%d.webp" % [tx, ty])
+			spr.centered = false
+			spr.position = Vector2(tx, ty) * tw
+			spr.scale = Vector2.ONE * tw / float(spr.texture.get_width())
+			spr.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+			spr.z_index = -10
+			add_child(spr)
+			k += 1
+			await _tick(ls, 0.6 * k / n)
+	# where one can walk
+	walk.resize(grid_size.x * grid_size.y)
+	var rows: Array = map_data.get("walk", [])
+	astar.region = Rect2i(Vector2i.ZERO, grid_size)
+	astar.cell_size = Vector2(cell, cell)
+	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
+	astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
+	astar.update()
+	for y in grid_size.y:
+		var row: String = rows[y] if y < rows.size() else ""
+		for x in grid_size.x:
+			var code := row.unicode_at(x) - 48 if x < row.length() else OPEN
+			walk[y * grid_size.x + x] = code
+			if code == BLOCKED:
+				astar.set_point_solid(Vector2i(x, y), true)
+			elif code == ROAD or code == BRIDGE:
+				astar.set_point_weight_scale(Vector2i(x, y), 0.7)
+			elif code == SLOW:
+				astar.set_point_weight_scale(Vector2i(x, y), 1.7)
+		if y % 16 == 0:
+			await _tick(ls, 0.6 + 0.4 * float(y) / grid_size.y)
+	player_pos = nearest_walkable(player_pos)
+	move_target = player_pos
+
+
+## The grid cell of a world position, and what kind of ground it is.
+func cell_of(p: Vector2) -> Vector2i:
+	return Vector2i(clampi(int(p.x / cell), 0, grid_size.x - 1), clampi(int(p.y / cell), 0, grid_size.y - 1))
+
+
+func ground_at(p: Vector2) -> int:
+	if walk.is_empty():
+		return OPEN
+	if p.x < 0 or p.y < 0 or p.x >= world_size.x or p.y >= world_size.y:
+		return BLOCKED
+	var c := cell_of(p)
+	return walk[c.y * grid_size.x + c.x]
+
+
+func walkable(p: Vector2) -> bool:
+	return ground_at(p) != BLOCKED
+
+
+## The closest open ground to p (searching outward ring by ring).
+func nearest_walkable(p: Vector2) -> Vector2:
+	if walkable(p):
+		return p
+	var c := cell_of(p)
+	for r in range(1, 60):
+		var best := Vector2.INF
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if absi(dx) != r and absi(dy) != r:
+					continue
+				var q := Vector2((c.x + dx + 0.5) * cell, (c.y + dy + 0.5) * cell)
+				if walkable(q) and (best == Vector2.INF or q.distance_squared_to(p) < best.distance_squared_to(p)):
+					best = q
+		if best != Vector2.INF:
+			return best
+	return p
+
+
+## Walk to a point: plan a path around water and mountains.
+func go_to(target: Vector2) -> void:
+	target = nearest_walkable(target.clamp(Vector2(30, 30), world_size - Vector2(30, 30)))
+	move_target = target
+	var from := cell_of(player_pos)
+	var to := cell_of(target)
+	if not walk.is_empty() and not astar.is_point_solid(from):
+		path = astar.get_point_path(from, to)
+		if path.size() > 0:
+			path[path.size() - 1] = target
+			path[0] = player_pos
+	else:
+		path = PackedVector2Array([target])
+	_path_i = 0
 
 
 var _decor: Node2D          # the cities-and-lairs layer
@@ -214,49 +312,6 @@ var _items: Array = []      # planned scenery: [kind, pos, scale, extra]
 func refresh_decor() -> void:
 	if _decor:
 		_decor.queue_redraw()
-
-
-## Decide where every tree, mountain, field and wave goes (row by row).
-func _plan_decor(ls: LoadingScreen = null) -> void:
-	_items.clear()
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 4242
-	var step := 120.0
-	var y := 60.0
-	var rows := int((world_size.y - 100) / (step * 0.8)) + 1
-	var row := 0
-	while y < world_size.y - 40:
-		var x := 60.0
-		while x < world_size.x - 40:
-			var p := Vector2(x + rng.randf_range(-45, 45), y + rng.randf_range(-45, 45))
-			x += step
-			if _near_place(p, 260.0) or _near_road(p, 60.0):
-				continue
-			var n := _height.get_noise_2d(p.x, p.y)
-			var f := faction_at(p)
-			var r := rng.randf()
-			if n < -0.40:
-				if r < 0.35:
-					_items.append(["waves", p, 1.3, null])
-			elif n > 0.42:
-				if r < 0.75:
-					_items.append(["mountain", p, rng.randf_range(1.1, 1.8), null])
-			elif n > 0.12:
-				if f == "abyss":
-					if r < 0.5:
-						_items.append(["dead", p, rng.randf_range(1.2, 1.7), null])
-				elif r < 0.85:
-					_items.append(["tree", p, rng.randf_range(1.5, 2.2), Tapestry.LEAF.darkened(0.1) if f == "wild" else REGION_COLORS["wild"].darkened(0.15)])
-			else:
-				if r < 0.10:
-					_items.append(["tree", p, rng.randf_range(1.4, 2.0), Tapestry.LEAF])
-				elif r < 0.18:
-					_items.append(["bush", p, 1.5, null])
-				elif r < 0.26 and _near_place(p, 900.0) and f != "abyss":
-					_items.append(["field", p, 1.8, rng.randf_range(-0.4, 0.4)])
-		y += step * 0.8
-		row += 1
-		await _tick(ls, float(row) / rows)
 
 
 ## Add the scenery in bands, one per frame, so the drawing cost is spread and measured.
@@ -342,45 +397,29 @@ func _near_road(p: Vector2, r: float) -> bool:
 	return false
 
 
-func _build_roads() -> void:
-	var hub := Vector2.ZERO
-	for c in cities:
-		if c["id"] == "cogspire":
-			hub = Vector2(c["x"], c["y"])
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 99
-	for c in cities:
-		var p := Vector2(c["x"], c["y"])
-		if p == hub:
-			continue
-		var mid := (hub + p) * 0.5 + (p - hub).orthogonal().normalized() * rng.randf_range(-250, 250)
-		var pts := PackedVector2Array()
-		for i in 31:
-			var t := float(i) / 30.0
-			var q := hub.lerp(mid, t).lerp(mid.lerp(p, t), t)
-			pts.append(q)
-			_road_pts.append(q)
-		for layer in [[34.0, Tapestry.INK], [26.0, Color(0.80, 0.66, 0.44)]]:
-			var line := Line2D.new()
-			line.width = layer[0]
-			line.default_color = layer[1]
-			line.joint_mode = Line2D.LINE_JOINT_ROUND
-			line.begin_cap_mode = Line2D.LINE_CAP_ROUND
-			line.end_cap_mode = Line2D.LINE_CAP_ROUND
-			line.z_index = -6
-			line.points = pts
-			add_child(line)
-
-
 # ------------------------------------------------------------------ enemies
 
 func _spawn_enemy() -> void:
 	var start := Vector2(GameState.world_data.get("start", {}).get("x", 3000), GameState.world_data.get("start", {}).get("y", 2200))
 	for attempt in 40:
 		var p := Vector2(_rng.randf_range(150, world_size.x - 150), _rng.randf_range(150, world_size.y - 150))
-		if _in_safe_zone(p) or p.distance_to(player_pos) < 700:
+		if _in_safe_zone(p) or p.distance_to(player_pos) < 700 or not walkable(p) or ground_at(p) == LANDING:
 			continue
-		var f := faction_at(p)
+		var region := faction_at(p)
+		var f := region
+		var disposition := "hostile"
+		if region == GameState.hero:
+			# at home: mostly friends and folk who keep to themselves, now and then raiders
+			var r := _rng.randf()
+			if r < 0.5:
+				disposition = "friendly"
+			elif r < 0.82:
+				disposition = "neutral"
+			else:
+				var others: Array = Factions.ORDER.filter(func(x): return x != region)
+				f = others[_rng.randi_range(0, others.size() - 1)]
+		elif _rng.randf() < 0.25:
+			disposition = "neutral"
 		var lvl := clampi(1 + int(p.distance_to(start) / 800.0), 1, 5)
 		var pool: Array = []
 		for r in ["common", "uncommon"]:
@@ -391,12 +430,14 @@ func _spawn_enemy() -> void:
 		var e := {
 			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": look,
 			"name": WorldEntities.enemy_name(f, _rng), "wander": p, "chasing": false,
+			"region": region, "disposition": disposition,
 		}
 		enemies.append(e)
 		var w := Walker.new()
 		var lk: Dictionary = CardDB.get_card(look)
 		w.look = lk if not lk.is_empty() else {"faction": f, "name": e["name"]}
 		w.position = p
+		w.disposition = disposition
 		w.face = 0.0           # forces the first paint
 		add_child(w)
 		_walkers[e["id"]] = w
@@ -447,14 +488,77 @@ func _process(delta: float) -> void:
 
 
 func _move_player(delta: float) -> void:
+	var speed := PLAYER_SPEED * float(SPEED_BY_CODE.get(ground_at(player_pos), 1.0))
 	var kb := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	if kb != Vector2.ZERO:
-		move_target = player_pos + kb * 200.0
-	var to := move_target - player_pos
-	moving = to.length() > 6.0
-	if moving:
-		player_pos += to.normalized() * minf(PLAYER_SPEED * delta, to.length())
-		player_pos = player_pos.clamp(Vector2(40, 40), world_size - Vector2(40, 40))
+		# keys: walk straight, sliding along shores and cliffs
+		path = PackedVector2Array()
+		var stepv := kb * speed * delta
+		var np := player_pos + stepv
+		if walkable(np):
+			player_pos = np
+		elif walkable(player_pos + Vector2(stepv.x, 0)):
+			player_pos += Vector2(stepv.x, 0)
+		elif walkable(player_pos + Vector2(0, stepv.y)):
+			player_pos += Vector2(0, stepv.y)
+		move_target = player_pos
+		moving = true
+		_check_ferry()
+		return
+	moving = _path_i < path.size()
+	var budget := speed * delta
+	while _path_i < path.size() and budget > 0.0:
+		var to := path[_path_i] - player_pos
+		var d := to.length()
+		if d <= budget:
+			player_pos = path[_path_i]
+			budget -= d
+			_path_i += 1
+		else:
+			player_pos += to / d * budget
+			budget = 0.0
+	player_pos = player_pos.clamp(Vector2(30, 30), world_size - Vector2(30, 30))
+	_check_ferry()
+
+
+## Stepping onto a ferry landing offers the crossing.
+func _check_ferry() -> void:
+	if ground_at(player_pos) != LANDING:
+		if _ferry_lock >= 0 and not _near_landing(player_pos, 120.0):
+			_ferry_lock = -1
+		return
+	var ferries: Array = map_data.get("ferries", [])
+	for i in ferries.size():
+		var fe: Dictionary = ferries[i]
+		for side in ["a", "b"]:
+			var q := Vector2(fe[side][0], fe[side][1])
+			if player_pos.distance_to(q) < 70.0 and _ferry_lock != i:
+				_ferry_lock = i
+				path = PackedVector2Array()
+				moving = false
+				move_target = player_pos
+				ferry_reached.emit(i, side == "a")
+				return
+
+
+func _near_landing(p: Vector2, r: float) -> bool:
+	for fe in map_data.get("ferries", []):
+		for side in ["a", "b"]:
+			if p.distance_to(Vector2(fe[side][0], fe[side][1])) < r:
+				return true
+	return false
+
+
+## Carried across by the ferryman.
+func ferry_across(index: int, from_a: bool) -> void:
+	var fe: Dictionary = map_data["ferries"][index]
+	var q: Array = fe["b"] if from_a else fe["a"]
+	player_pos = Vector2(q[0], q[1])
+	move_target = player_pos
+	path = PackedVector2Array()
+	_ferry_lock = index
+	camera.position = player_pos
+	camera.reset_smoothing()
 
 
 func _move_enemies(delta: float) -> void:
@@ -462,7 +566,9 @@ func _move_enemies(delta: float) -> void:
 	for e in enemies:
 		var p: Vector2 = e["pos"]
 		var d := p.distance_to(player_pos)
-		e["chasing"] = d < CHASE_RADIUS and not player_safe and grace <= 0.0
+		e["chasing"] = e.get("disposition", "hostile") == "hostile" and d < CHASE_RADIUS and not player_safe and grace <= 0.0 \
+			and faction_at(player_pos) == e.get("region", e["faction"]) \
+			and player_pos.distance_to(e["home"]) < CHASE_LEASH
 		var target: Vector2
 		var speed := ENEMY_SPEED
 		if e["chasing"]:
@@ -470,14 +576,21 @@ func _move_enemies(delta: float) -> void:
 			speed = CHASE_SPEED
 		else:
 			if p.distance_to(e["wander"]) < 20.0 or _rng.randf() < 0.002:
-				e["wander"] = (e["home"] as Vector2) + Vector2(_rng.randf_range(-350, 350), _rng.randf_range(-350, 350))
+				var w := (e["home"] as Vector2) + Vector2(_rng.randf_range(-LEASH, LEASH), _rng.randf_range(-LEASH, LEASH))
+				if walkable(w) and faction_at(w) == e.get("region", e["faction"]):
+					e["wander"] = w
 			target = e["wander"]
 		var step := (target - p)
 		if step.length() > 1.0:
-			var np := p + step.normalized() * minf(speed * delta, step.length())
-			if not _in_safe_zone(np):
+			var np := p + step.normalized() * minf(speed * float(SPEED_BY_CODE.get(ground_at(p), 1.0)) * delta, step.length())
+			# roaming foes keep to their own lands: no water, no cliffs, no foreign soil
+			var ok: bool = walkable(np) and not _in_safe_zone(np) and faction_at(np) == e.get("region", e["faction"]) \
+				and np.distance_to(e["home"]) < CHASE_LEASH and ground_at(np) != LANDING
+			if ok:
 				e["pos"] = np
-		if d < ENGAGE_RADIUS and grace <= 0.0 and not player_safe:
+			elif not e["chasing"]:
+				e["wander"] = e["home"]
+		if d < ENGAGE_RADIUS and grace <= 0.0 and not player_safe and e.get("disposition", "hostile") == "hostile":
 			active = false
 			moving = false
 			move_target = player_pos
@@ -523,16 +636,18 @@ func nudge_out(from: Vector2) -> void:
 	var dir := (player_pos - from)
 	if dir.length() < 1.0:
 		dir = Vector2(0, 1)
-	player_pos = from + dir.normalized() * (CITY_RADIUS + 20)
+	player_pos = nearest_walkable(from + dir.normalized() * (CITY_RADIUS + 20))
 	move_target = player_pos
+	path = PackedVector2Array()
 
 
 func respawn_at_city(city_id: String) -> void:
 	var c := GameState.city(city_id)
 	if c.is_empty():
 		return
-	player_pos = Vector2(c["x"], c["y"]) + Vector2(0, CITY_RADIUS + 30)
+	player_pos = nearest_walkable(Vector2(c["x"], c["y"]) + Vector2(0, CITY_RADIUS + 30))
 	move_target = player_pos
+	path = PackedVector2Array()
 	camera.position = player_pos
 	camera.reset_smoothing()
 	inside_city = ""
@@ -551,9 +666,19 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		_pressing = event.pressed
 		if event.pressed:
-			move_target = get_global_mouse_position()
+			var at := get_global_mouse_position()
+			for e in enemies:
+				if e.get("disposition", "hostile") != "hostile" and (e["pos"] as Vector2).distance_to(at + Vector2(0, 30)) < 50.0 \
+						and (e["pos"] as Vector2).distance_to(player_pos) < 260.0:
+					_pressing = false
+					path = PackedVector2Array()
+					stranger_met.emit(e)
+					return
+			go_to(at)
 	elif event is InputEventMouseMotion and _pressing:
-		move_target = get_global_mouse_position()
+		if _t - _repath_t > 0.15:
+			_repath_t = _t
+			go_to(get_global_mouse_position())
 	elif event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			zoom_by(1.1)

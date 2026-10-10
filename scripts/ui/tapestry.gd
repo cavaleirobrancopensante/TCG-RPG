@@ -471,7 +471,7 @@ static func draw_lair(ci: CanvasItem, p: Vector2, s: float, faction: String, cle
 
 
 ## Ribbon scroll label (map names).
-static func draw_scroll_label(ci: CanvasItem, center: Vector2, text: String, size: int, col: Color = INK) -> void:
+static func draw_scroll_label(ci: CanvasItem, center: Vector2, text: String, size: int, col: Color = INK, fill: Color = PARCHMENT_LIGHT) -> void:
 	var f := font("book")
 	var w := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x + size * 1.2
 	var h := size * 1.35
@@ -481,5 +481,5 @@ static func draw_scroll_label(ci: CanvasItem, center: Vector2, text: String, siz
 		var ex: float = center.x + sgn * w * 0.5
 		ink_poly(ci, PackedVector2Array([Vector2(ex, r.position.y + h * 0.25), Vector2(ex + sgn * h * 0.7, r.position.y + h * 0.3),
 			Vector2(ex + sgn * h * 0.45, r.position.y + h * 0.75), Vector2(ex + sgn * h * 0.7, r.end.y + h * 0.15), Vector2(ex, r.end.y)]), PARCHMENT_DARK, 1.4)
-	ink_rect(ci, r, PARCHMENT_LIGHT, 1.6)
+	ink_rect(ci, r, fill, 1.6)
 	ci.draw_string(f, Vector2(r.position.x + size * 0.6, r.position.y + h * 0.78), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, col)

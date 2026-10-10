@@ -138,6 +138,89 @@ func _process(delta: float) -> void:
 		_region_toll(region)
 
 
+## Someone who is not hostile: a friend greets you, a neutral traveller may accept a duel.
+func _on_stranger(e: Dictionary) -> void:
+	var who := "%s (%s)" % [I18n.t(e["name"]), Factions.info(e["faction"])["short"]]
+	if e.get("disposition", "") == "friendly":
+		_talk_to_friend(e, who)
+		return
+	show_dialog(who, I18n.t("A traveller who keeps to himself. Challenge him to a duel?"),
+		[["Challenge", func(): _on_enemy_engaged(e)], ["Leave him be", Callable()]])
+
+
+const ADVICE := [
+	"Rivers can only be crossed at bridges, or by ferry where the ferrymen keep their boats.",
+	"Forest and marsh slow your step; the roads are quickest.",
+	"Sell cards of other faiths in a foreign city: they fetch more there.",
+	"Every copy you buy in a city raises its price there. Buy one, travel, buy another.",
+	"A night at the inn sends you into your next duel stronger.",
+	"Raiders cross the border now and then. They wear red on their banners.",
+	"Fleeing a duel costs less than losing it, and you keep your place on the road.",
+	"The lairs hold the strongest foes, and the richest rewards the first time.",
+	"Those who keep to themselves will take up a challenge if you ask them.",
+	"The tournament is costly to enter, but you keep every card you draft.",
+]
+
+
+## A friend on the road: a word of advice, a card from his satchel, or a favour to ask.
+func _talk_to_friend(e: Dictionary, who: String) -> void:
+	if e.get("talked", false):
+		_toast(I18n.t("%s greets you on the road.") % who)
+		return
+	e["talked"] = true
+	var r := GameState.rng.randf()
+	if r < 0.4:
+		show_dialog(who, "\"%s\"" % I18n.t(ADVICE[GameState.rng.randi_range(0, ADVICE.size() - 1)]), [["Thank you", Callable()]])
+	elif r < 0.75:
+		var rar := Booster.weighted_rarity(GameState.rng, {"common": 55, "uncommon": 35, "rare": 10})
+		var cid := CardDB.random_of_rarity(rar, GameState.rng, [e["faction"]])
+		var price := int(round(Economy.BUY.get(rar, 40) * 0.85))
+		var buy := func():
+			if GameState.spend_gold(price):
+				GameState.add_card(cid)
+				GameState.save_game()
+				_update_hud()
+				_toast(I18n.t("Bought %s.") % I18n.t(CardDB.get_card(cid)["name"]))
+			else:
+				_toast(I18n.t("Not enough gold."))
+		show_dialog(who, I18n.t("\"I have a card I could part with, for %d gold.\"") % price,
+			[[I18n.t("Buy · %d gold") % price, buy], ["No, thank you", Callable()]], [cid])
+	elif GameState.errand.is_empty():
+		var need := 2 + GameState.rng.randi_range(0, 1)
+		var reward := 30 + 15 * need
+		var accept := func():
+			GameState.errand = {"giver": e["name"], "need": need, "done": 0, "reward": reward}
+			GameState.save_game()
+		show_dialog(who, I18n.t("\"Raiders trouble these roads. Beat %d hostile wanderers and I will pay you %d gold.\"") % [need, reward],
+			[["Accept", accept], ["Not now", Callable()]])
+	else:
+		_toast(I18n.t("%s greets you on the road.") % who)
+
+
+## A favour asked on the road: count hostile wanderers beaten, pay when done.
+func _errand_progress() -> void:
+	if GameState.errand.is_empty():
+		return
+	GameState.errand["done"] = int(GameState.errand.get("done", 0)) + 1
+	if int(GameState.errand["done"]) >= int(GameState.errand.get("need", 2)):
+		var reward := int(GameState.errand.get("reward", 40))
+		GameState.add_gold(reward)
+		_toast(I18n.t("Favour done: %s pays you %d gold.") % [I18n.t(GameState.errand.get("giver", "")), reward])
+		GameState.errand = {}
+
+
+## The ferryman takes you across for a fare (or for nothing, if you have nothing).
+func _on_ferry(index: int, from_a: bool) -> void:
+	var fe: Dictionary = world.map_data["ferries"][index]
+	var fare := int(fe.get("price", 10))
+	var cross := func():
+		GameState.add_gold(-mini(fare, GameState.gold))
+		world.ferry_across(index, from_a)
+		_update_hud()
+	show_dialog("Ferry", I18n.t("The ferryman will take you across for %d gold.") % fare,
+		[[I18n.t("Cross (%d gold)") % fare, cross], ["Stay", Callable()]])
+
+
 ## Bridges and ferries into another faith's lands charge a toll (never into your own
 ## faith's lands, and never more than you have).
 func _region_toll(region: String) -> void:
@@ -313,6 +396,8 @@ func start_world() -> void:
 	world.city_entered.connect(_on_city_entered)
 	world.lair_reached.connect(_on_lair_reached)
 	world.enemy_engaged.connect(_on_enemy_engaged)
+	world.ferry_reached.connect(_on_ferry)
+	world.stranger_met.connect(_on_stranger)
 	await world.build(ls, 0)
 	_build_hud()
 	await ls.close()
@@ -516,7 +601,8 @@ func _start_lair(lair_id: String) -> void:
 func _on_enemy_engaged(e: Dictionary) -> void:
 	var deck := DeckTools.enemy_deck(e["faction"], int(e["level"]), GameState.rng)
 	start_battle({"name": e["name"], "faction": e["faction"], "level": int(e["level"]),
-		"life": 16 + int(e["level"]) * 2, "deck": deck, "enemy_id": e["id"], "look": e.get("look", "")})
+		"life": 16 + int(e["level"]) * 2, "deck": deck, "enemy_id": e["id"], "look": e.get("look", ""),
+		"disposition": e.get("disposition", "hostile")})
 
 
 # ================================================================== battles
@@ -557,6 +643,8 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		var cards := []
 		if info.has("enemy_id"):
 			world.remove_enemy(info["enemy_id"])
+			if info.get("disposition", "hostile") == "hostile":
+				_errand_progress()
 		if lair_id != "" and first_clear:
 			var r: Dictionary = GameState.lair(lair_id).get("reward", {})
 			if r.has("gold"):
