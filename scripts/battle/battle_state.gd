@@ -930,6 +930,8 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 			chosen = auto_target(i, e)
 		if chosen == null:
 			return   # nothing to target: effect fizzles
+		if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") in ["creature", "player", "relic"]:
+			emit({"type": "aim", "side": i, "source": source.uid if source else -1, "target": chosen, "action": e.get("action", "")})
 	match e.get("action", ""):
 		"damage":
 			for ref in _expand_targets(i, t, chosen, source):

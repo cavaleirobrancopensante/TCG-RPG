@@ -76,3 +76,26 @@ func _field() -> void:
 		st.side(0).creatures.append(p)
 	b.refresh()
 	await _shot("f_crowded")
+	# arrows: choose attackers
+	b._on_alt()
+	b.refresh()
+	await _shot("g_attack_arrows")
+	b.mode = "idle"
+	b.sel_attackers.clear()
+	# arrows: the enemy attacks, we assign a block
+	st.active = 1
+	st.phase = "main1"
+	var att: Array = []
+	for p in st.side(1).creatures:
+		p.sick = false
+		att.append(p.uid)
+	st.declare_attackers(att)
+	st.take_events()
+	b.mode = "block"
+	if not st.attackers.is_empty():
+		for p in st.side(0).creatures:
+			if st.can_block(p, st.find_perm(st.attackers[0])):
+				b.pending_blocks[st.attackers[0]] = p.uid
+				break
+	b.refresh()
+	await _shot("h_block_arrows")
