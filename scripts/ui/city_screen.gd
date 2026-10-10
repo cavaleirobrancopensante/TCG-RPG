@@ -28,13 +28,27 @@ func _ready() -> void:
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
 	add_child(Backdrop.create(Tapestry.band_for(faction), faction))
+	# the city itself, painted behind the panels (dimmed a little so the text stays clear)
+	var tex := EncounterScreen.load_backdrop(EncounterScreen.city_path(city_id))
+	if tex:
+		var pic := TextureRect.new()
+		pic.texture = tex
+		pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		pic.modulate = Color(0.86, 0.84, 0.8)
+		pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		UIKit.full_rect(pic)
+		add_child(pic)
 	var root := VBoxContainer.new()
 	UIKit.content_rect(root)
 	root.add_theme_constant_override("separation", 6)
 	add_child(root)
 
+	var head_panel := PanelContainer.new()
+	head_panel.self_modulate = Color(1, 1, 1, 0.94)
+	root.add_child(head_panel)
 	var head := HBoxContainer.new()
-	root.add_child(head)
+	head_panel.add_child(head)
 	var title := UIKit.title(city.get("name", "City"), 40)
 	head.add_child(title)
 	var sub := UIKit.label("  " + Factions.info(faction)["name"], 20, UIKit.faction_ink(faction))
@@ -49,10 +63,15 @@ func _ready() -> void:
 		var key: String = t[1]
 		tabs.add_child(UIKit.button(t[0], func(): _on_tab(key), 130))
 
+	# the page of the open tab: parchment laid over the picture
+	var page := PanelContainer.new()
+	page.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	page.self_modulate = Color(1, 1, 1, 0.93)
+	root.add_child(page)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	root.add_child(scroll)
+	page.add_child(scroll)
 	content = VBoxContainer.new()
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 10)

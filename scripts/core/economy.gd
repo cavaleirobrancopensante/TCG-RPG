@@ -118,3 +118,15 @@ static func spoils_card_chance() -> float:
 ## Gold won, after the difficulty's measure.
 static func income(g: int) -> int:
 	return int(round(g * float(GameState.diff("income"))))
+
+
+## What a hostile wanderer takes to let you pass: more for a stronger foe, less
+## for a silver tongue (a tenth off per point of Charm).
+static func bribe_price(level: int) -> int:
+	var base := 12 + 8 * level
+	return maxi(1, int(round(base * maxf(0.0, 1.0 - 0.1 * GameState.stat("charm")))))
+
+
+## The chance of slipping away from a hostile wanderer before blows are struck.
+static func slip_chance() -> float:
+	return clampf(0.25 + 0.1 * GameState.stat("wildcraft"), 0.0, 0.95)

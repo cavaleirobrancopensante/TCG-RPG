@@ -11,7 +11,7 @@ const DATA := {
 		"land_name": "Cathedral", "alignment": "Good",
 	},
 	"abyss": {
-		"name": "The Black Covenant", "short": "Covenant", "mana": "B",
+		"name": "The Black Pact", "short": "Pact", "mana": "B",
 		"primary": Color(0.16, 0.14, 0.18), "secondary": Color(0.55, 0.55, 0.58),
 		"land_name": "Profane Altar", "alignment": "Evil",
 	},

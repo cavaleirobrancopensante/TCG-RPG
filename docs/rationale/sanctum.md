@@ -68,8 +68,8 @@ A strong three drop for life decks: a 2/3 lifelinker with 2 life up front. It is
 **Martyr of the Far Mission** · Uncommon · Creature (Human Friar) · 1W · 1/2 · When this dies, pacify target enemy creature (it can't attack for the rest of the duel).
 A two drop that punishes whoever kills it: when it dies, an enemy creature can never attack again. Opponents must choose between leaving a blocker alone and losing their best attacker. The missionary friar whose death converts his killer is a story told of many martyrs in the far missions, and it is martyrdom as victory.
 
-**Templar of the Red Cross** · Uncommon · Creature (Human Knight) · 2W · 3/2 · Sanctified (protection from the Covenant). Whenever this attacks, gain 1 life.
-The Church's cheapest sanctified creature, a 3/2 attacker that Covenant decks cannot block, target or damage. Each attack also gains a life, so he pushes toward Grace while pressing the opponent. The Latin is the Templars' motto from Psalm 113: not to us, O Lord, but to Thy name give glory.
+**Templar of the Red Cross** · Uncommon · Creature (Human Knight) · 2W · 3/2 · Sanctified (protection from the Pact). Whenever this attacks, gain 1 life.
+The Church's cheapest sanctified creature, a 3/2 attacker that Pact decks cannot block, target or damage. Each attack also gains a life, so he pushes toward Grace while pressing the opponent. The Latin is the Templars' motto from Psalm 113: not to us, O Lord, but to Thy name give glory.
 
 **Cistercian Abbot** · Uncommon · Creature (Human Monk) · 3W · 2/3 · Other creatures you control get +0/+1. As long as you have more life than you started with, they get +1/+1 instead.
 An anthem on a body, and the uncommon that ties the congregation theme to Grace. Out of Grace he gives a modest +0/+1, but above your starting life the whole team gets +1/+1. His own 2/3 body is weak for four mana, which is the cost of the effect. The Cistercians reformed Benedictine life around prayer and hard labour, and the flavour is the Benedictine motto they lived by.
@@ -105,7 +105,7 @@ A Grace engine: while you are ahead of your starting life, every creature gains 
 The rare martyr. She stabilises when she arrives, and her death makes the whole congregation stronger for good, so opponents would rather leave her alone. A 2/4 body with two strong triggers for four mana is a build around for wide Church boards. The silent order evokes the Carthusians and Trappists, and the card recalls Tertullian: the blood of the martyrs is the seed of the Church.
 
 **Seraph of the Dawn Watch** · Rare · Creature (Angel) · 2WW · 3/4 · Flying, sanctified.
-A four mana 3/4 flier that the Covenant simply cannot touch: no targeting, no blocking, no damage. Against other faiths he is a clean, strong evasive threat. Vigilance from set 1 is now a Stoa keyword, so sanctified takes its place. Seraphim are the highest of the nine choirs, and a seraph watching over the cathedral is a fine image of the guardian angels of places.
+A four mana 3/4 flier that the Pact simply cannot touch: no targeting, no blocking, no damage. Against other faiths he is a clean, strong evasive threat. Vigilance from set 1 is now a Stoa keyword, so sanctified takes its place. Seraphim are the highest of the nine choirs, and a seraph watching over the cathedral is a fine image of the guardian angels of places.
 
 **Knight of the Holy Grail** · Rare · Creature (Human Knight) · 1WW · 2/2 · As long as you have more life than you started with, this gets +2/+2 and has lifelink.
 The rare Grace payoff on a three drop. Out of Grace he is a plain 2/2, but in Grace he is a 4/4 lifelinker, and lifelink keeps him there. It rewards Church decks that gain life early and punishes them if they fall behind. The Grail knights, Galahad above all, found the Grail through purity rather than strength.
@@ -132,7 +132,7 @@ A slow growth engine, now gated by Grace so it only works for the Church player 
 The Church's finisher, toned down from set 1. He is now a 4/5 rather than a 5/5, the bonus life is gone, and his removal only hits a creature that has tapped, so an opponent who holds back keeps his board. He is still a flying lifelinker that swings races hard, and an answerable one. The vigil is the night watch before a great feast, and the name naturally recalls Saint Michael.
 
 **Saint Benedict, Father of Monks** · Mythic · Creature (Human Monk) · 2WW · 2/3 · Sanctified. Other creatures you control get +1/+1 and have sanctified.
-A mythic lord: every other creature gets +1/+1 and protection from the Covenant. Against the Black Covenant he shuts off most of their removal and blockers, and against everyone else he is a strong anthem on a fragile 2/3 body that dies to ordinary damage. The flavour is the opening of the prayer on the Saint Benedict medal, long treasured as protection against evil, which is why he grants sanctified.
+A mythic lord: every other creature gets +1/+1 and protection from the Pact. Against the Black Pact he shuts off most of their removal and blockers, and against everyone else he is a strong anthem on a fragile 2/3 body that dies to ordinary damage. The flavour is the opening of the prayer on the Saint Benedict medal, long treasured as protection against evil, which is why he grants sanctified.
 
 **The Last Judgment** · Mythic · Spell (Exorcism) · 4WW · Destroy up to three target tapped enemy creatures.
 The Church's one sided sweeper, and it only judges the guilty. After an all out attack it can wipe three attackers at once, but against an opponent who keeps his creatures home it does nothing. That makes it splashy and answerable, as a mythic should be. The flavour is from the Nicene Creed, said at every Sunday Mass.

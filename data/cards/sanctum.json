@@ -566,7 +566,7 @@
         "amount": 1
       }
     ],
-    "text": "Sanctified (protection from the Covenant). Whenever this attacks, gain 1 life.",
+    "text": "Sanctified (protection from the Pact). Whenever this attacks, gain 1 life.",
     "flavor": "Non nobis, Domine, non nobis, sed nomini tuo da gloriam.",
     "art": "res://art/cards/sanctum_u_003.webp"
   },

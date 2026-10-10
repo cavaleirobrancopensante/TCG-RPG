@@ -17,7 +17,7 @@ describe exactly what the fields do.
     assassins, guards and warriors are men. Women may appear in traditional roles
     (nuns, abbesses, nursing sisters, mothers, queens, hostesses) and never as fighters.
   - No modern politics, no progressive messaging, no singular "they".
-  - The Black Covenant is plainly evil (pacts, demons, the damned) and is never
+  - The Black Pact is plainly evil (pacts, demons, the damned) and is never
     glamorised. No real occult instructions, no real demon-summoning formulas.
   - The Revel is hedonism and Epicurean excess shown as a slow ruin, often comic.
   - The Old Ways are pagan nature-reverence, shown gently, never as a rival church.
@@ -36,7 +36,7 @@ creatures through its own mechanics, and its basic land.
 | Faith (mana) | Owns | Never has |
 |---|---|---|
 | **Holy Church** (W) | `flying` (angels, heralds, doves), `martyr`, `lifelink`, `sanctified`; life gain (`heal`); martyrdom (`death` triggers that help you); **Grace** condition; permanent anthems (`static` anthem); removal only against the guilty: `destroy` with `tapped: true`, and `pacify`; token soldiers are NOT allowed (tokens belong to the Old Ways) | burn, discard, sacrifice, drain, card draw, tap/bounce, haste, trample |
-| **Black Covenant** (B) | `deathtouch`, `dread`; paying life (`lose_life` on enter/cast, `life` in costs); **sacrifice** (`sacrifice` in costs); unconditional `destroy`; shrink (`buff` with negative numbers on enemies); `discard_enemy`; `reanimate`; `drain`; drawing cards for life (`draw` paired with `lose_life` only) | flying, life gain other than drain, tokens other than the dead it raises (allowed: "Restless Dead" 1/1 or 2/2 Zombie tokens only from death or sacrifice), haste |
+| **Black Pact** (B) | `deathtouch`, `dread`; paying life (`lose_life` on enter/cast, `life` in costs); **sacrifice** (`sacrifice` in costs); unconditional `destroy`; shrink (`buff` with negative numbers on enemies); `discard_enemy`; `reanimate`; `drain`; drawing cards for life (`draw` paired with `lose_life` only) | flying, life gain other than drain, tokens other than the dead it raises (allowed: "Restless Dead" 1/1 or 2/2 Zombie tokens only from death or sacrifice), haste |
 | **Old Ways** (G) | `trample`, `reach`, `regenerate`; mana creatures and rituals (`add_mana` with G); tokens (beasts, wolves, oaklings, saplings); +X/+X pumps on its own creatures (`buff` own_creature); `fight`; destroying fliers (`destroy` with `flying: true`); destroying relics (`destroy_relic`); **Rooted** condition | flying, card draw, life gain, burn, tapping |
 | **Revel** (R) | `haste`, `first_strike`; `damage` (burn, the only faith that hits players directly); temporary team attack bonuses (`buff` all_own_creatures with duration turn, power only); **Carouse** condition; **Idle** trigger (laziness: rewards creatures that stay untapped and did not attack); `rummage` (discard then draw); paying its own life for excess | flying, life gain, destroy, card draw without discarding first |
 | **Stoa** (U) | `vigilance`, `defender`, `unmoved`; plain card draw (`draw`); `foresight`; `tap`; `freeze`; `bounce`; `tax`; **Composure** condition | flying (no birds that fly), damage, destroy, life gain, haste |
@@ -80,9 +80,9 @@ creatures through its own mechanics, and its basic land.
 | `flying` | can only be blocked by flying or reach | Church |
 | `martyr` | when it dies, another creature you control gets +1/+1 (the player chooses) | Church |
 | `lifelink` | damage it deals also gains you that much life | Church |
-| `sanctified` | protection from the Covenant: Covenant cards can't target it, Covenant creatures can't block it, damage from Covenant sources is prevented | Church |
-| `deathtouch` | any damage it deals to a creature destroys it | Covenant |
-| `dread` | can only be blocked by Covenant creatures and Constructs | Covenant |
+| `sanctified` | protection from the Pact: Pact cards can't target it, Pact creatures can't block it, damage from Pact sources is prevented | Church |
+| `deathtouch` | any damage it deals to a creature destroys it | Pact |
+| `dread` | can only be blocked by Pact creatures and Constructs | Pact |
 | `trample` | excess combat damage goes to the player | Old Ways |
 | `reach` | can block fliers | Old Ways |
 | `regenerate` | the first time each turn it would be destroyed, instead it is tapped and all damage is removed | Old Ways |
@@ -119,7 +119,7 @@ if it holds when it would happen.
 - `composure`: you hold four or more cards in hand (Stoa)
 - `rooted`: you control six or more lands (Old Ways)
 - `carouse`: you already played another non-land card this turn (Revel)
-- `bloodied`: you have 10 or less life (Covenant)
+- `bloodied`: you have 10 or less life (Pact)
 
 **Actions** (`action`):
 
@@ -127,19 +127,19 @@ if it holds when it would happen.
 |---|---|---|
 | `damage` | amount, target | deals damage (Revel; Technocracy only to creatures, and only via relic/overclock, sparingly) |
 | `heal` | amount | you gain life (Church) |
-| `drain` | amount | enemy loses, you gain (Covenant) |
+| `drain` | amount | enemy loses, you gain (Pact) |
 | `lose_life` | amount | you lose life (a price) |
-| `draw` | amount | draw cards (Stoa; Covenant only with a lose_life in the same card or ability) |
-| `discard_enemy` | amount | enemy discards at random (Covenant) |
+| `draw` | amount | draw cards (Stoa; Pact only with a lose_life in the same card or ability) |
+| `discard_enemy` | amount | enemy discards at random (Pact) |
 | `rummage` | amount | draw a card, then discard a card of your choice; `amount` times (Revel) |
-| `buff` | power, toughness, duration `turn` or `permanent`, target | +X/+Y (negative on enemies = shrink, Covenant) |
+| `buff` | power, toughness, duration `turn` or `permanent`, target | +X/+Y (negative on enemies = shrink, Pact) |
 | `destroy` | target, filters | destroy (regenerate can save it) |
 | `bounce` | target | return to owner's hand (tokens vanish) (Stoa) |
 | `tap` | target | tap it (Stoa) |
 | `freeze` | target | tap it; it doesn't untap during its controller's next untap (Stoa) |
 | `summon` | token {name, power, toughness, subtype, keywords}, count | create tokens |
 | `add_mana` | color, amount | add mana until end of turn (Old Ways G, Technocracy C) |
-| `reanimate` | target own_grave_creature, max_mv (optional) | return the chosen creature card from your graveyard to play (Covenant) |
+| `reanimate` | target own_grave_creature, max_mv (optional) | return the chosen creature card from your graveyard to play (Pact) |
 | `fight` | target enemy_creature | a creature you choose and the target deal damage equal to their power to each other (Old Ways) |
 | `pacify` | target enemy_creature | it can't attack for the rest of the duel (Church) |
 | `snare` | target enemy_creature | it can't attack or block while this relic stays in play (Technocracy relics only) |
@@ -163,7 +163,7 @@ Cost fields: `mana` (cost dictionary), `tap` (true: tap this creature or relic; 
 need to have been in play since your turn began unless they have haste), `life` (pay N
 life), `sacrifice`: `"self"` or `"other"` (sacrifice another creature you control, chosen by
 the player), `discard` (discard N cards, the worst are chosen),
-`once_per_turn` (true). Sacrifice costs are Covenant only (and Technocracy may sacrifice
+`once_per_turn` (true). Sacrifice costs are Pact only (and Technocracy may sacrifice
 Servos with `"sacrifice": "servo"`).
 
 ## Statics (continuous)
@@ -178,7 +178,7 @@ Servos with `"sacrifice": "servo"`).
 ```
 
 - `anthem`: scope `self`, `own_creatures`, `other_own_creatures`, `enemy_creatures`
-  (negative numbers there, Covenant only); optional `subtype` filter. Church owns
+  (negative numbers there, Pact only); optional `subtype` filter. Church owns
   team-wide permanent anthems; other faiths may use `self` scope with their own condition.
 - `keyword`: grants a keyword (must be one the faith owns) to `self` or a scope.
 - `assembly`: this creature gets +1/+1 for each other Construct you control (Technocracy).

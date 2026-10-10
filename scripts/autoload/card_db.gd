@@ -3,7 +3,7 @@ extends Node
 ## Basic lands are generated here (one per faith) and are not part of the set.
 
 const CARD_DIR := "res://data/cards/"
-const DATA_SHORT := {"sanctum": "Church", "abyss": "Covenant", "wild": "Old Ways", "revel": "Revel", "lyceum": "Stoa", "machine": "Technocracy"}
+const DATA_SHORT := {"sanctum": "Church", "abyss": "Pact", "wild": "Old Ways", "revel": "Revel", "lyceum": "Stoa", "machine": "Technocracy"}
 
 var cards: Dictionary = {}          # id -> card Dictionary
 var pools: Dictionary = {}          # faction -> rarity -> Array[id]

@@ -22,7 +22,7 @@ func _ready() -> void:
 				var lvl := 2 + (g % 3)
 				var st := BattleState.new()
 				st.setup(DeckTools.to_list(DeckTools.enemy_deck(a, lvl, rng)), DeckTools.to_list(DeckTools.enemy_deck(b, lvl, rng)),
-					["A", "B"], [20, 20], g % 2, 1 + g + total * 7, true)
+					["A", "B"], [10, 10], g % 2, 1 + g + total * 7, true)
 				BattleAI.resolve_mulligan(st, 0)
 				BattleAI.resolve_mulligan(st, 1)
 				var seen := [{}, {}]

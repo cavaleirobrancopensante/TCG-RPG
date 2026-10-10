@@ -285,7 +285,7 @@ static func _blessing(a: _Pen) -> void:
 	a.rect(-30, -60, 6, 6, Tapestry.VERMILION, 0.8)
 
 
-# ------------------------------------------------------------------ Covenant
+# ------------------------------------------------------------------ Pact
 
 static func _ledger(a: _Pen) -> void:
 	a.rect(-30, -8, 60, 8, NIGHT)

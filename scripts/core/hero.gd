@@ -87,6 +87,37 @@ static func random_look(rng: RandomNumberGenerator, faith: String) -> Dictionary
 	}
 
 
+## The six classic heroes, for those who would rather not roll the dice.
+const CLASSIC := {
+	"sanctum": {"name": "Brother Knight", "stats": {"devotion": 3, "reason": 1, "wildcraft": 0, "charm": 1, "industry": 1, "dread": 0},
+		"look": {"skin": 0, "hair": "short", "hair_col": 1, "beard": "short", "main": 0, "second": 3, "head": "nasal"}},
+	"abyss": {"name": "Blackguard", "stats": {"devotion": 0, "reason": 1, "wildcraft": 1, "charm": 0, "industry": 1, "dread": 3},
+		"look": {"skin": 1, "hair": "long", "hair_col": 0, "beard": "short", "main": 6, "second": 5, "head": "hood"}},
+	"wild": {"name": "Woodward", "stats": {"devotion": 1, "reason": 0, "wildcraft": 3, "charm": 0, "industry": 1, "dread": 1},
+		"look": {"skin": 2, "hair": "long", "hair_col": 2, "beard": "long", "main": 4, "second": 1, "head": "hood"}},
+	"revel": {"name": "Minstrel", "stats": {"devotion": 0, "reason": 1, "wildcraft": 1, "charm": 3, "industry": 1, "dread": 0},
+		"look": {"skin": 1, "hair": "curly", "hair_col": 3, "beard": "", "main": 3, "second": 7, "head": "plume"}},
+	"lyceum": {"name": "Peripatetic", "stats": {"devotion": 1, "reason": 3, "wildcraft": 1, "charm": 0, "industry": 1, "dread": 0},
+		"look": {"skin": 2, "hair": "curly", "hair_col": 4, "beard": "long", "main": 0, "second": 2, "head": ""}},
+	"machine": {"name": "Artificer", "stats": {"devotion": 0, "reason": 1, "wildcraft": 0, "charm": 1, "industry": 3, "dread": 1},
+		"look": {"skin": 1, "hair": "short", "hair_col": 1, "beard": "short", "main": 1, "second": 7, "head": "cap"}},
+}
+
+
+static func classic_sheet(faith: String) -> Dictionary:
+	var c: Dictionary = CLASSIC[faith]
+	var lk: Dictionary = c["look"]
+	return {
+		"faith": faith, "name": c["name"], "stats": Dictionary(c["stats"]).duplicate(), "difficulty": "knight",
+		"look": {"skin": SKINS[int(lk["skin"])], "hair": lk["hair"], "hair_col": HAIR_COLS[int(lk["hair_col"])], "beard": lk["beard"],
+			"main": CLOTHES[int(lk["main"])], "second": CLOTHES[int(lk["second"])], "head": lk["head"]},
+	}
+
+
+## Starting boosters by difficulty: [random boosters, boosters of the hero's faith].
+const START_PACKS := {"pilgrim": [3, 1], "knight": [2, 1], "crusader": [3, 0]}
+
+
 const FIRST := ["Aldric", "Benedict", "Cuthbert", "Dunstan", "Edmund", "Fulk", "Gregory", "Hugh", "Ivo", "Jocelyn", "Lambert",
 	"Martin", "Odo", "Piers", "Ranulf", "Simon", "Theobald", "Walter", "Anselm", "Bernard", "Godfrey", "Roland", "Tancred", "Osric"]
 const BY := ["of the Marches", "of Elderholt", "the Wanderer", "of the Pilgrim Road", "of Cogspire", "the Bold", "of the Fens",

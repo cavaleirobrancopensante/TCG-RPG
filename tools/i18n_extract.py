@@ -97,7 +97,7 @@ def main():
                 if "token" in e:
                     add("cards", e["token"]["name"], "token creature name")
                     add("cards", e["token"].get("subtype", ""), "token subtype")
-    for short in ["Church", "Covenant", "Old Ways", "Revel", "Stoa", "Technocracy"]:
+    for short in ["Church", "Pact", "Old Ways", "Revel", "Stoa", "Technocracy"]:
         add("cards", "Tap: add one %s mana." % short, "basic land rules text")
 
     world = json.load(open(os.path.join(ROOT, "data/world.json"), encoding="utf-8"))

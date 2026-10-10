@@ -41,7 +41,7 @@
       }
     ],
     "overclock": {},
-    "text": "Lifelink. When this enters, you lose 3 life. As long as you have more life than you started with, this gets +2/+2 and has sanctified (protection from the Covenant).",
+    "text": "Lifelink. When this enters, you lose 3 life. As long as you have more life than you started with, this gets +2/+2 and has sanctified (protection from the Pact).",
     "flavor": "He signed the pact in blood. He tore it up on his knees, and the long road home began with a single Confiteor.",
     "art": "res://art/cards/gold_sanctum_abyss.webp"
   },
@@ -221,7 +221,7 @@
     "statics": [],
     "overclock": {},
     "text": "Deathtouch (any damage this deals to a creature destroys it). Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
-    "flavor": "The Covenant hanged its oathbreakers from the oldest oak in the wood, and the oak learned the wrong lesson.",
+    "flavor": "The Pact hanged its oathbreakers from the oldest oak in the wood, and the oak learned the wrong lesson.",
     "art": "res://art/cards/gold_abyss_wild.webp"
   },
   {
@@ -253,7 +253,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Haste. Dread (can only be blocked by Covenant creatures and Constructs). When this enters, you lose 2 life.",
+    "text": "Haste. Dread (can only be blocked by Pact creatures and Constructs). When this enters, you lose 2 life.",
     "flavor": "Every guest wore a mask, so no one remarked on his until the music stopped.",
     "art": "res://art/cards/gold_abyss_revel.webp"
   },
@@ -296,7 +296,7 @@
     ],
     "overclock": {},
     "text": "When this enters, draw two cards and you lose 2 life. As long as you have four or more cards in hand, this has deathtouch.",
-    "flavor": "He left the Porch for the sealed books. The Covenant taught him gladly, and named the fee only afterwards.",
+    "flavor": "He left the Porch for the sealed books. The Pact taught him gladly, and named the fee only afterwards.",
     "art": "res://art/cards/gold_abyss_lyceum.webp"
   },
   {
@@ -341,8 +341,8 @@
       }
     ],
     "overclock": {},
-    "text": "Dread (can only be blocked by Covenant creatures and Constructs). Assembly (this gets +1/+1 for each other Construct you control). Sacrifice another creature: put a +1/+1 counter on this.",
-    "flavor": "The guild bought bones by the cartload and asked no questions. The Covenant sold them by the cartload and answered none.",
+    "text": "Dread (can only be blocked by Pact creatures and Constructs). Assembly (this gets +1/+1 for each other Construct you control). Sacrifice another creature: put a +1/+1 counter on this.",
+    "flavor": "The guild bought bones by the cartload and asked no questions. The Pact sold them by the cartload and answered none.",
     "art": "res://art/cards/gold_abyss_machine.webp"
   },
   {

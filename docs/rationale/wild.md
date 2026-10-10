@@ -12,7 +12,7 @@ The common mana creature. In set 1 she added mana at upkeep; now she taps for it
 A two-drop that hits like a 3/2 but blocks like a 2/2. It keeps the old set 1 boar's aggressive feel without simply being above rate on both sides. A wild boar rooting up saplings is a familiar menace of the old forests.
 
 **Bramble Spider** · Common · Creature (Spider) · 1G · 1/3 · Reach (can block creatures with flying).
-An early answer to the two-mana fliers of the Church and the Covenant. One power keeps it purely defensive, and three toughness lets it block a 2/2 flier all day. Webs strung in the blackthorn hedge are a small, homely image for a faith that guards its sky with its branches.
+An early answer to the two-mana fliers of the Church and the Pact. One power keeps it purely defensive, and three toughness lets it block a 2/2 flier all day. Webs strung in the blackthorn hedge are a small, homely image for a faith that guards its sky with its branches.
 
 **Acorn Gatherer** · Common · Creature (Human Druid) · 1G · 1/1 · When this enters, create a 1/1 Sapling token.
 Two bodies for two mana, the cheapest way into the token side of the faith. Each body is small, but together they feed pumps and the Stampede. The flavour treats planting oaks as a gift to the far future, which is the patient way this faith thinks.
@@ -48,7 +48,7 @@ The classic green pump. Since spells are cast at sorcery speed, it is used befor
 The faith's main common removal. It is cheap but depends on having a big creature on the board, and the creature takes damage back, so it never answers a threat for free. Stags settling their quarrels in autumn is the gentlest possible picture of a fight.
 
 **Brought to Earth** · Common · Spell (Rite) · 1G · Destroy target enemy creature with flying.
-Conditional removal at two mana, in line with the spec, aimed at the Church's angels and the Covenant's demons. Against a deck with no fliers it is a dead card, which is the price of the low cost. The flavour, every perch is a branch, makes the forest itself the hunter.
+Conditional removal at two mana, in line with the spec, aimed at the Church's angels and the Pact's demons. Against a deck with no fliers it is a dead card, which is the price of the low cost. The flavour, every perch is a branch, makes the forest itself the hunter.
 
 **Ivy in the Gears** · Common · Spell (Rite) · 1G · Destroy target enemy relic.
 Nature against machines. It answers Technocracy relics and the slow engines of the other faiths, and does nothing else, so two mana is right. Ivy slowly swallowing an abandoned engine is a quiet, unhurried kind of victory.

@@ -3,15 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ckri83c5caxdw"
-path="res://.godot/imported/land_wild.webp-fe1bdfa853ad074dbdd56f9b94134cf8.ctex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://art/cards/land_wild.webp"
-dest_files=["res://.godot/imported/land_wild.webp-fe1bdfa853ad074dbdd56f9b94134cf8.ctex"]
 
 [params]
 

@@ -5,7 +5,7 @@
    "note": "scripts/autoload/card_db.gd"
   },
   {
-   "key": "Covenant",
+   "key": "Pact",
    "note": "scripts/autoload/card_db.gd"
   },
   {
@@ -77,7 +77,7 @@
    "note": "scripts/autoload/game_state.gd"
   },
   {
-   "key": "He signed the Covenant's book and means to collect on it.",
+   "key": "He signed the Pact's book and means to collect on it.",
    "note": "scripts/autoload/game_state.gd"
   },
   {
@@ -605,7 +605,7 @@
    "note": "scripts/core/factions.gd"
   },
   {
-   "key": "The Black Covenant",
+   "key": "The Black Pact",
    "note": "scripts/core/factions.gd"
   },
   {
@@ -921,11 +921,51 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Talk",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Challenge",
    "note": "scripts/main.gd"
   },
   {
    "key": "Leave him be",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"Fair roads to you. I keep my own counsel.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"The weather is turning. I mean to be under a roof before it does.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"I have nothing to sell and little to say, friend.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"If it is a duel you want, I will not refuse it.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"Your purse or your cards, traveller. Choose quickly.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"These are our roads. Pay the toll, turn back, or draw.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"I have been waiting for someone like you.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"No one passes here without paying, one way or another.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s · Level %d",
    "note": "scripts/main.gd"
   },
   {
@@ -973,6 +1013,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Leave",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Thank you",
    "note": "scripts/main.gd"
   },
@@ -1010,6 +1054,10 @@
   },
   {
    "key": "Favour done: %s pays you %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Ferryman",
    "note": "scripts/main.gd"
   },
   {
@@ -1069,15 +1117,19 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "You carry four sealed booster packs: three of every faith and one of %s alone. Open them, and your first deck will be built from the faiths that answer you.",
+   "key": "Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.",
    "note": "scripts/main.gd"
   },
   {
    "key": "Open my boosters",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You carry %d sealed booster packs: %d with cards of every faith and %d of %s alone. Open them, and your first deck will be built from the faiths that answer you.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You carry %d sealed booster packs with cards of every faith. Open them, and your first deck will be built from the faiths that answer you.",
    "note": "scripts/main.gd"
   },
   {
@@ -1173,11 +1225,7 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Leave",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "a %s card",
+   "key": "Lair · Level %d",
    "note": "scripts/main.gd"
   },
   {
@@ -1190,6 +1238,34 @@
   },
   {
    "key": "Human Noble",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "a %s card",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Fight",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Bribe (%d gold)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Slip away (%d%%)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s takes the gold and goes on his way.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You slip away unseen.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You are seen! There is no escaping this duel.",
    "note": "scripts/main.gd"
   },
   {
@@ -1349,11 +1425,11 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Sanctified: Covenant cards can't target it, Covenant creatures can't block it, and damage from the Covenant is prevented.",
+   "key": "Sanctified: Pact cards can't target it, Pact creatures can't block it, and damage from the Pact is prevented.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Dread: can only be blocked by Covenant creatures and Constructs.",
+   "key": "Dread: can only be blocked by Pact creatures and Constructs.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -2033,6 +2109,10 @@
    "note": "scripts/ui/hero_screen.gd"
   },
   {
+   "key": "Or a classic hero:",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
    "key": "%d points left",
    "note": "scripts/ui/hero_screen.gd"
   },
@@ -2345,10 +2425,6 @@
    "note": "scripts/world/overworld.gd"
   },
   {
-   "key": "Lair · Level %d",
-   "note": "scripts/world/overworld.gd"
-  },
-  {
    "key": "Lv%d",
    "note": "scripts/world/overworld.gd"
   },
@@ -2373,7 +2449,7 @@
    "note": "scripts/world/world_entities.gd"
   },
   {
-   "key": "Covenant Cultist",
+   "key": "Pact Cultist",
    "note": "scripts/world/world_entities.gd"
   },
   {
@@ -2389,7 +2465,7 @@
    "note": "scripts/world/world_entities.gd"
   },
   {
-   "key": "Ash Witch",
+   "key": "Ash Sorcerer",
    "note": "scripts/world/world_entities.gd"
   },
   {
@@ -2767,7 +2843,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Sanctified (protection from the Covenant). Whenever this attacks, gain 1 life.",
+   "key": "Sanctified (protection from the Pact). Whenever this attacks, gain 1 life.",
    "note": "rules text of Templar of the Red Cross"
   },
   {
@@ -3047,16 +3123,16 @@
    "note": "flavour text of The Last Judgment"
   },
   {
-   "key": "Covenant Initiate",
+   "key": "Pact Initiate",
    "note": "card name (abyss, creature)"
   },
   {
    "key": "When this dies, the enemy player loses 1 life and you gain 1 life.",
-   "note": "rules text of Covenant Initiate"
+   "note": "rules text of Pact Initiate"
   },
   {
    "key": "Even his last breath was promised to someone else.",
-   "note": "flavour text of Covenant Initiate"
+   "note": "flavour text of Pact Initiate"
   },
   {
    "key": "Pit Imp",
@@ -3067,7 +3143,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Dread (can only be blocked by Covenant creatures and Constructs).",
+   "key": "Dread (can only be blocked by Pact creatures and Constructs).",
    "note": "rules text of Pit Imp"
   },
   {
@@ -3235,10 +3311,6 @@
    "note": "card name (abyss, spell)"
   },
   {
-   "key": "Pact",
-   "note": "card subtype"
-  },
-  {
    "key": "Draw two cards. You lose 2 life.",
    "note": "rules text of Bargain in Blood"
   },
@@ -3283,7 +3355,7 @@
    "note": "rules text of Unquiet Grave"
   },
   {
-   "key": "Rest was promised to him. The Covenant does not honour other men's promises.",
+   "key": "Rest was promised to him. The Pact does not honour other men's promises.",
    "note": "flavour text of Unquiet Grave"
   },
   {
@@ -3311,16 +3383,16 @@
    "note": "flavour text of Gibbet of the Forsworn"
   },
   {
-   "key": "Bone-Priest of the Covenant",
+   "key": "Bone-Priest of the Pact",
    "note": "card name (abyss, creature)"
   },
   {
    "key": "Sacrifice another creature: draw a card and you lose 1 life.",
-   "note": "rules text of Bone-Priest of the Covenant"
+   "note": "rules text of Bone-Priest of the Pact"
   },
   {
    "key": "He reads the future in knucklebones, and he is never short of knucklebones.",
-   "note": "flavour text of Bone-Priest of the Covenant"
+   "note": "flavour text of Bone-Priest of the Pact"
   },
   {
    "key": "Wailing Wraith",
@@ -3335,7 +3407,7 @@
    "note": "flavour text of Wailing Wraith"
   },
   {
-   "key": "Veiled Blade of the Covenant",
+   "key": "Veiled Blade of the Pact",
    "note": "card name (abyss, creature)"
   },
   {
@@ -3344,11 +3416,11 @@
   },
   {
    "key": "Deathtouch, dread.",
-   "note": "rules text of Veiled Blade of the Covenant"
+   "note": "rules text of Veiled Blade of the Pact"
   },
   {
-   "key": "The Covenant pays its assassins in years taken from their victims.",
-   "note": "flavour text of Veiled Blade of the Covenant"
+   "key": "The Pact pays its assassins in years taken from their victims.",
+   "note": "flavour text of Veiled Blade of the Pact"
   },
   {
    "key": "Cinder-Pit Fiend",
@@ -3563,7 +3635,7 @@
    "note": "rules text of Night of Unmaking"
   },
   {
-   "key": "By dawn the field was quiet, and the Covenant counted it a victory.",
+   "key": "By dawn the field was quiet, and the Pact counted it a victory.",
    "note": "flavour text of Night of Unmaking"
   },
   {
@@ -5891,7 +5963,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Lifelink. When this enters, you lose 3 life. As long as you have more life than you started with, this gets +2/+2 and has sanctified (protection from the Covenant).",
+   "key": "Lifelink. When this enters, you lose 3 life. As long as you have more life than you started with, this gets +2/+2 and has sanctified (protection from the Pact).",
    "note": "rules text of Penitent of the Broken Pact"
   },
   {
@@ -5955,7 +6027,7 @@
    "note": "rules text of Gallows Oak"
   },
   {
-   "key": "The Covenant hanged its oathbreakers from the oldest oak in the wood, and the oak learned the wrong lesson.",
+   "key": "The Pact hanged its oathbreakers from the oldest oak in the wood, and the oak learned the wrong lesson.",
    "note": "flavour text of Gallows Oak"
   },
   {
@@ -5963,7 +6035,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Haste. Dread (can only be blocked by Covenant creatures and Constructs). When this enters, you lose 2 life.",
+   "key": "Haste. Dread (can only be blocked by Pact creatures and Constructs). When this enters, you lose 2 life.",
    "note": "rules text of Demon at the Masked Ball"
   },
   {
@@ -5979,7 +6051,7 @@
    "note": "rules text of Apostate of the Porch"
   },
   {
-   "key": "He left the Porch for the sealed books. The Covenant taught him gladly, and named the fee only afterwards.",
+   "key": "He left the Porch for the sealed books. The Pact taught him gladly, and named the fee only afterwards.",
    "note": "flavour text of Apostate of the Porch"
   },
   {
@@ -5987,11 +6059,11 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Dread (can only be blocked by Covenant creatures and Constructs). Assembly (this gets +1/+1 for each other Construct you control). Sacrifice another creature: put a +1/+1 counter on this.",
+   "key": "Dread (can only be blocked by Pact creatures and Constructs). Assembly (this gets +1/+1 for each other Construct you control). Sacrifice another creature: put a +1/+1 counter on this.",
    "note": "rules text of Bone Mill Engine"
   },
   {
-   "key": "The guild bought bones by the cartload and asked no questions. The Covenant sold them by the cartload and answered none.",
+   "key": "The guild bought bones by the cartload and asked no questions. The Pact sold them by the cartload and answered none.",
    "note": "flavour text of Bone Mill Engine"
   },
   {
@@ -6083,7 +6155,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Covenant mana.",
+   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Pact mana.",
    "note": "rules text of Penitents' Crossroads"
   },
   {
@@ -6143,7 +6215,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Old Ways mana.",
+   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Old Ways mana.",
    "note": "rules text of Gallows Heath"
   },
   {
@@ -6155,7 +6227,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Revel mana.",
+   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Revel mana.",
    "note": "rules text of Masque of Ashes"
   },
   {
@@ -6167,7 +6239,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Stoa mana.",
+   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Stoa mana.",
    "note": "rules text of Forbidden Stacks"
   },
   {
@@ -6179,7 +6251,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Technocracy mana.",
+   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Technocracy mana.",
    "note": "rules text of Charnel Works"
   },
   {
@@ -6263,7 +6335,7 @@
    "note": "basic land rules text"
   },
   {
-   "key": "Tap: add one Covenant mana.",
+   "key": "Tap: add one Pact mana.",
    "note": "basic land rules text"
   },
   {
@@ -6441,7 +6513,7 @@
    "note": "mission title"
   },
   {
-   "key": "Covenant cultists prey on pilgrims bound for the Cathedral of the Lamp. Defeat three of them.",
+   "key": "Pact cultists prey on pilgrims bound for the Cathedral of the Lamp. Defeat three of them.",
    "note": "mission description"
   },
   {
@@ -6521,7 +6593,7 @@
    "note": "mission title"
   },
   {
-   "key": "Ash from the Pit is poisoning the fields. Defeat three Covenant blighters.",
+   "key": "Ash from the Pit is poisoning the fields. Defeat three Pact blighters.",
    "note": "mission description"
   },
   {

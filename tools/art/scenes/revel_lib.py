@@ -6,7 +6,7 @@ import math
 from core import *
 import bg
 import props as PR
-from figure import Figure, POSES, ik
+from figure import Figure, POSES, STOCK
 
 WINE = C.hex('6e1424')
 WINE_LIGHT = C.hex('a02236')
@@ -29,51 +29,64 @@ SHORT_GARB = ('tunic', 'surcoat', 'jerkin')
 
 # ====================================================================== figures
 
-def rik(s, t, l1, l2, bend=1.0, out=1.4):
-    """Like figure.ik, but `out` weighs how far the elbow swings out from the body
-    against how low it hangs (1.4 is figure.ik; 0 means simply the lowest elbow, as
-    for a cup at the lips; a negative value tucks the elbow back, as for a couched lance)."""
-    d = v_len(v_sub(t, s))
-    d = min(max(d, 0.01), l1 + l2 - 0.05)
-    base = math.atan2(t[1] - s[1], t[0] - s[0])
-    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
-    a = math.acos(max(-1.0, min(1.0, cos_a)))
-    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
-    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
-    side = 1.0 if s[0] >= 0 else -1.0
+# Revel arm poses, built like the approved figure.STOCK ones: (front elbow, front hand,
+# back elbow, back hand, back hand shows in front of the body). The upper arm (about 16
+# units from the sleeve top) hangs from the shoulder with the elbow below it and a little
+# out; the forearm does the lifting. Only a hand raised above the head lifts the elbow.
+# A figure faces right: +x is forward, the back arm is the far one.
+_F_STAND = ((10.5, -62), (11.5, -47))
+_F_HOLD = ((11, -61.5), (21, -69))        # cup, fan or torch held out at chest height
+_F_CARRY = ((11.5, -62), (23, -66))       # a dish or a rope held forward
+_F_TOAST = ((13.5, -63.5), (20, -76))     # cup raised before the face
+_F_RAISE = ((15, -90), (16.5, -104))      # arm high over the head
+_F_HIGH = ((17, -85), (18.5, -100))       # raised, a little forward
+_F_POINT = ((17, -72), (31, -75))         # arm thrust forward (fencing, throwing)
+_F_STAFF = ((11, -62), (19.5, -63))       # staff or couched lance
+_F_LAP = ((11, -62), (19, -53))           # seated, hand resting on the thigh
+_F_LIFT = ((16, -78), (26, -89))          # forearm swung up and forward
+_F_GUARD = ((11, -62), (20.5, -64))       # blade held at guard
+_B_STAND = ((-9.5, -62), (-10.5, -47))
+_B_HIP = ((-19, -66), (-10, -56))         # fist on the hip, elbow out behind
+_B_RAISE = ((-14, -90), (-15.5, -104))    # far arm raised over the head
+_B_OUT = ((-15, -66), (-26, -61))         # far arm swung back, low
+_B_UPOUT = ((-14, -68), (-21, -80))       # far arm lifted out to the side
+_B_STAFF = ((-10.5, -62), (-18, -62))     # far hand holding an upright staff
+_B_SIDE = ((-12, -64), (-18, -68))        # far hand lifted a little at the side (stout figures)
 
-    def score(e):
-        return e[1] + out * side * e[0]
-    best, other = (e1, e2) if score(e1) >= score(e2) else (e2, e1)
-    e = best if bend != 0 else other
-    dirv = v_norm(v_sub(t, e))
-    return e, v_add(e, v_mul(dirv, l2))
+
+def _pose(f, b, front=False):
+    return (f[0], f[1], b[0], b[1], front)
 
 
-# Revel poses: front hand, back hand, back arm in front, bends, and the elbow `out`
-# weights for the front and back arm (see rik). Hands are kept a natural reach from
-# the shoulder so the elbows bend softly down and out.
-RE_POSES = {
-    're_stand':     ((12, -51), (-11, -51), False, 1, 1, 1.4, 1.4),
-    're_lips':      ((11, -77), (-11, -51), False, 1, 1, 0.0, 1.4),     # cup at the lips
-    're_cup':       ((25, -70), (-11, -51), False, 1, 1, 0.3, 1.4),     # cup held out
-    're_cup_hip':   ((25, -70), (-14, -58), False, 1, 1, 0.3, 1.4),     # cup out, fist on hip
-    're_raise':     ((17, -107), (-11, -51), False, 1, 1, 1.4, 1.4),    # arm high
-    're_raise_hip': ((17, -107), (-14, -58), False, 1, 1, 1.4, 1.4),
-    're_fence':     ((37, -73), (-22, -97), False, 1, 1, 0.3, 1.4),     # en garde, back hand up
-    're_fence_hip': ((37, -73), (-14, -58), False, 1, 1, 0.3, 1.4),
-    're_couch':     ((22, -56), (-12, -98), False, 1, 1, -1.0, 1.4),    # lance couched, cup aloft
-    're_juggle':    ((24, -64), (-20, -64), False, 1, 1, 0.3, 0.3),
-    're_torch_up':  ((26, -66), (-15, -106), False, 1, 1, 0.3, 1.4),    # front hand out, back hand high
-    're_both_up':   ((17, -107), (-15, -106), False, 1, 1, 1.4, 1.4),
-    're_lap':       ((16, -51), (-6, -52), False, 1, 1, 0.6, 1.4),      # hand resting on the knee
-    're_toast':     ((19, -76), (-11, -51), False, 1, 1, 0.5, 1.4),     # cup raised to the face
-    're_toast_hip': ((19, -76), (-14, -58), False, 1, 1, 0.5, 1.4),
-    're_offer':     ((24, -66), (-11, -51), False, 1, 1, 0.3, 1.4),
-    're_staff':     ((20, -63), (-11, -51), False, 1, 1, 0.0, 1.4),     # upright staff held at the side
+RE_STOCK = {
+    're_toast':     _pose(_F_TOAST, _B_STAND),
+    're_toast_hip': _pose(_F_TOAST, _B_HIP),
+    're_hold_hip':  _pose(_F_HOLD, _B_HIP),
+    're_carry':     _pose(_F_CARRY, _B_STAND),
+    're_carry_hip': _pose(_F_CARRY, _B_HIP),
+    're_raise_hip': _pose(_F_RAISE, _B_HIP),
+    're_both_up':   _pose(_F_RAISE, _B_RAISE),
+    're_dance':     _pose(_F_HOLD, _B_RAISE),
+    're_lift':      _pose(_F_CARRY, _B_RAISE),
+    're_fence':     _pose(_F_POINT, _B_HIP),
+    're_throw':     _pose(_F_POINT, _B_OUT),
+    're_couch':     _pose(_F_STAFF, _B_RAISE),
+    're_raise_out': _pose(_F_RAISE, _B_OUT),
+    're_flame':     _pose(_F_HOLD, _B_UPOUT),
+    're_lap':       _pose(_F_LAP, _B_STAND),
+    're_guard_up':  _pose(_F_GUARD, _B_RAISE),
+    're_hold_out':  _pose(_F_HOLD, _B_OUT),
+    're_hold_side': _pose(_F_HOLD, _B_SIDE),
+    're_toss':      _pose(_F_LIFT, _B_HIP),
+    're_flourish':  _pose(_F_HIGH, _B_OUT),
+    're_raise_staff': _pose(_F_RAISE, _B_STAFF),
+    # both hands up before the face, gripping a curtain
+    're_haul':      ((16, -78), (25, -90), (-5, -64), (19, -79), True),
+    # both hands forward at the waist, carrying a keg
+    're_keg':       ((11.5, -62), (22, -61), (-5.5, -63), (16, -62), True),
 }
-for _k, _v in RE_POSES.items():
-    POSES.setdefault(_k, _v[:5])
+for _k, _v in RE_STOCK.items():
+    STOCK.setdefault(_k, _v)
 
 
 class RFig(Figure):
@@ -103,16 +116,11 @@ class RFig(Figure):
             'waist': (0.0, -57 + k),
             'hip': (0.0, -48 + k),
         }
-        if isinstance(self.pose, tuple):
-            pose = self.pose
-        else:
-            pose = RE_POSES.get(self.pose) or POSES[self.pose]
-        pf, pb, bfront, bend_f, bend_b = pose[:5]
-        out_f, out_b = (pose[5], pose[6]) if len(pose) >= 7 else (1.4, 1.4)
-        hf = (pf[0], pf[1] + k)
-        hb = (pb[0], pb[1] + k)
-        j['el_f'], j['hand_f'] = rik(j['sh_f'], hf, 16.5, 15.5, bend_f, out_f)
-        j['el_b'], j['hand_b'] = rik(j['sh_b'], hb, 16.5, 15.5, bend_b, out_b)
+        # arms come only from the hand-placed STOCK table, as in figure.Figure
+        ef, hf, eb, hb, bfront = STOCK[self.pose]
+        w = self.width
+        j['el_f'], j['hand_f'] = (ef[0] * w, ef[1] + k), (hf[0] + (w - 1) * 9, hf[1] + k)
+        j['el_b'], j['hand_b'] = (eb[0] * w, eb[1] + k), (hb[0] if bfront else hb[0] * w, hb[1] + k)
         j['back_front'] = bfront
         j['k'] = k
         return j

@@ -9,79 +9,31 @@ import props as PR
 from figure import Figure
 import figure as FG
 
-# figure poses of our own: front hand, back hand, back arm in front of body,
-# front elbow bend, back elbow bend
-WI_POSES = {
-    'wi_whistle': ((8, -86), (-9, -51), False, 1, 1),
-    'wi_wassail': ((25, -104), (-9, -52), False, 1, 1),
-    'wi_draw_up': ((31, -103), (7, -84.5), False, 1, 1),
-    'wi_drop': ((24, -64), (-12, -50), False, 1, 1),
+# Arm poses of our own, built like the approved STOCK set in figure.py:
+# (front elbow, front hand, back elbow, back hand, back hand shows in front of the body).
+# Upper arms hang from the shoulder (about 16 units), forearms (13 to 15) do the lifting.
+WI_STOCK = {
+    # letting an acorn fall from the near hand held out at waist height,
+    # the far hand comes round in front with a basket on its wrist
+    'wi_drop':    ((12, -65), (25, -60), (-6, -63), (9, -56), True),
+    # a basket in the far hand at the waist, a staff in the near fist
+    'wi_basket':  ((11, -62), (19.5, -63), (-6, -63), (9, -56), True),
+    # a wassail bowl lifted high and forward in the near hand
+    'wi_wassail': ((17.5, -90), (24, -103), (-9.5, -62), (-10.5, -47), False),
+    # an archer drawing at birds overhead: bow arm nearly straight up and forward,
+    # the drawing hand at the cheek, its elbow lifted behind the head
+    'wi_draw_up': ((19, -93.5), (27, -105), (-10, -95), (3, -86.5), False),
+    # a horn raised to the lips in the near hand, elbow out and down
+    'wi_horn':    ((14, -66), (7, -78), (-9.5, -62), (-10.5, -47), False),
+    # both hands low in front, holding a cloth or tray at the hips
+    'wi_carry':   ((11, -62), (20, -64), (-6, -63), (17, -63.5), True),
 }
-FG.POSES.update(WI_POSES)
-
-# explicit (foreshortened) elbows for poses the two-bone solver cannot show:
-# the archer's drawing elbow sticks out behind his head, level with the shoulder
-WI_ELBOWS = {
-    'wi_draw_up': {'el_b': (-20, -87)},
-}
-
-# poses whose hands are meant to stay close to the chest (no forward push)
-_CLOSE_POSES = ('pray', 'bless', 'wi_whistle')
-# raised hands whose elbow should still hang low (hand brought up to the face)
-_LOW_ELBOW = ('wi_whistle',)
-
-
-def wi_ik(s, t, l1, l2, low=False, push=True):
-    """Two-bone arm. For a hand at or below the shoulder the elbow hangs down
-    beside the body; if the hand target is so close to the shoulder that the arm
-    would fold into a chicken wing, the hand is carried forward (the figure faces
-    right) until the arm makes a natural L. For a raised hand the elbow goes out
-    and forward."""
-    L = l1 + l2
-    side = 1.0 if s[0] >= 0 else -1.0
-    raised = t[1] < s[1] - 2
-    d = v_len(v_sub(t, s))
-    if push and not raised and d < 0.8 * L:
-        dy = t[1] - s[1]
-        need = math.sqrt(max(0.0, (0.8 * L) ** 2 - dy * dy))
-        dx = t[0] - s[0]
-        sgn = -1.0 if (dx < -3 and side < 0) else 1.0
-        t = (s[0] + sgn * max(need, abs(dx)), t[1])
-        d = v_len(v_sub(t, s))
-    d = min(max(d, 0.01), L - 0.05)
-    base = math.atan2(t[1] - s[1], t[0] - s[0])
-    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
-    a = math.acos(max(-1.0, min(1.0, cos_a)))
-    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
-    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
-    if raised and not low:
-        def score(e):
-            return e[1] + 1.4 * side * e[0] + 0.6 * e[0]
-    else:
-        def score(e):
-            return e[1] + 0.5 * side * e[0]
-    e = e1 if score(e1) >= score(e2) else e2
-    dirv = v_norm(v_sub(t, e))
-    return e, v_add(e, v_mul(dirv, l2))
+FG.STOCK.update(WI_STOCK)
 
 
 class WFigure(Figure):
-    """Figure with arms that hang naturally: elbows down at the side, hands carried
-    forward instead of folding the arm against the chest."""
-
-    def joints(self):
-        j = Figure.joints(self)
-        k = j['k']
-        pf, pb, bfront, bend_f, bend_b = FG.POSES[self.pose]
-        push = self.pose not in _CLOSE_POSES
-        j['el_f'], j['hand_f'] = wi_ik(j['sh_f'], (pf[0], pf[1] + k), 16.5, 15.5, low=self.pose in _LOW_ELBOW, push=push)
-        j['el_b'], j['hand_b'] = wi_ik(j['sh_b'], (pb[0], pb[1] + k), 16.5, 15.5, push=push)
-        for key, q in WI_ELBOWS.get(self.pose, {}).items():
-            j[key] = (q[0], q[1] + k)
-            hand = 'hand_' + key[-1]
-            tgt = pf if key[-1] == 'f' else pb
-            j[hand] = (tgt[0], tgt[1] + k)
-        return j
+    """The base Figure with the approved STOCK arms (kept as a name for old scenes)."""
+    pass
 
 # ------------------------------------------------------------------ palette
 
@@ -1668,9 +1620,14 @@ def druid_head(wreath='oak', hood_col=DRUID_GREEN):
     return fn
 
 
-class Druid(WFigure):
-    """A Figure with a wreath worn over the hood (oak, mistletoe or rowan)."""
+class Druid(Figure):
+    """A Figure with a wreath worn over the hood (oak, mistletoe or rowan).
+    Druids wear leather belts, never a friar's rope cincture."""
     def __init__(self, wreath=None, **kw):
+        if kw.get('belt', 'cord') == 'cord':
+            kw['belt'] = 'leather'
+        if kw.get('hair') == 'tonsure':
+            kw['hair'] = 'short'
         super().__init__(**kw)
         self.wreath = wreath
 
@@ -2069,7 +2026,7 @@ def oak_leaf(p, base, ang, L, col=OAK_LEAF, lobes=4, ink=True, vein=True):
             p.line([q, v_lerp(q, right[i], 0.8)], col.dark(0.3).alpha(0.6), 0.7)
 
 
-class Woodwose(WFigure):
+class Woodwose(Figure):
     """The wild man of the fells: shaggy all over, hair and beard to the waist."""
     def _body(self, j):
         super()._body(j)

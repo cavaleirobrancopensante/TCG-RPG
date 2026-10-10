@@ -6,7 +6,7 @@ import cairo
 from core import *
 import bg
 import props as PR
-from figure import Figure, ik, POSES
+from figure import Figure, STOCK
 
 BRASS = C.hex('c99a45')
 BRASS_DARK = C.hex('7d5a22')
@@ -24,20 +24,20 @@ DEMON_RED = C.hex('a8352a')
 MOSS = C.hex('5c7d2e')
 FUR = C.hex('7a5232')
 
-# my own poses: (front hand, back hand, back arm in front, front bend, back bend).
-# Each bend was checked so the elbow hangs down by the side, never up and out.
-POSES['g_write'] = ((25, -61), (14, -57), True, 0, -1)      # seated, writing at a desk
-POSES['g_lounge'] = ((24, -72), (-19, -52), False, 1, 1)    # seated, cup forward, leaning back on a hand
-POSES['g_plant'] = ((22, -62), (-9, -47), False, 0, 1)      # kneeling, one hand steadying a sapling, the other at his side
-POSES['g_toast'] = ((20, -86), (-18, -52), False, 1, 1)     # cup raised, staff held out at the side
-POSES['g_slump'] = ((22, -52), (-15, -53), False, 1, 1)     # seated asleep, cup hand on the knee, other hand on the bench
-POSES['g_pole'] = ((21, -62), (-10, -50), False, 0, 1)      # one hand on a pole held upright in front, the other relaxed
-POSES['g_sprinkle'] = ((30, -100), (-16, -50), False, 1, 1)  # aspergillum raised high, bucket at the side
-POSES['g_cart'] = ((17, -52), (14, -50), True, 0, -1)       # pushing a handcart
-POSES['g_scroll'] = ((21, -60), (-9, -51), False, 0, 1)     # holding a letter in front
-POSES['g_read'] = ((24, -62), (16, -62), True, 0, 1)        # reading a book held in both hands
-POSES['g_alarm'] = ((24, -76), (16, -70), True, 1, 1)       # hands up in alarm
-POSES['g_unmask'] = ((22, -68), (-22, -54), False, 0, 1)    # mask lowered in front, cup held out at the side
+# my own poses, built like the approved STOCK ones: (front elbow, front hand, back
+# elbow, back hand, back hand shows in front of the body). The upper arm hangs from
+# the shoulder with the elbow below it and a little out; the forearm does the work.
+STOCK['g_write'] = ((11, -62), (22, -60), (-6, -62), (15, -59), True)          # seated, writing at a desk, the other hand steadying the page
+STOCK['g_lounge'] = ((12, -62), (22, -70), (-11, -63), (-15, -47), False)      # seated, cup held forward, the other hand on the bench
+STOCK['g_plant'] = ((11, -62), (22.5, -63), (-5, -63), (21.5, -53), True)      # kneeling, both hands steadying a sapling
+STOCK['g_toast'] = ((17, -77), (21, -92), (-11, -63), (-14, -50), False)       # cup raised, staff held upright at the side
+STOCK['g_slump'] = ((12, -62), (22, -52), (-11, -63), (-14, -49), False)       # seated asleep, cup hand on the knee, the other on the bench
+STOCK['g_pole'] = ((11, -62), (19.5, -63), (-9.5, -62), (-10.5, -47), False)   # one hand on a pole held upright in front
+STOCK['g_sprinkle'] = ((16.5, -79), (26, -93), (-11, -63), (-13, -48), False)  # aspergillum raised, bucket at the side
+STOCK['g_cart'] = ((10, -63), (15, -51), (-6, -63), (13, -52), True)           # pushing the handles of a handcart
+STOCK['g_scroll'] = ((11, -62), (19.5, -64), (-9.5, -62), (-10.5, -47), False)  # holding a letter in front
+STOCK['g_read'] = ((12, -62), (24, -62), (-6, -62), (10, -61), True)         # a book or scroll held open in both hands
+STOCK['g_unmask'] = ((11, -61.5), (18.5, -74), (-6, -62), (12, -58), True)     # cup raised in the near hand, the mask lowered in the far hand
 
 
 # ------------------------------------------------------------------ basics
@@ -99,8 +99,14 @@ def tiny_person(p, x, y, s=1.0, col=VERMILION, head_col=SKIN, hat=None, arms_up=
     p.shape([(x - 5 * s, y, 0), (x - 3.4 * s, y - 16 * s), (x - 2.6 * s, y - 22 * s), (x + 2.6 * s, y - 22 * s), (x + 3.4 * s, y - 16 * s), (x + 5 * s, y, 0)],
             cloak or col, width=1.2, shade=0.7)
     if arms_up:
-        p.line([(x - 2.4 * s, y - 20 * s), (x - 6 * s, y - 29 * s)], cloak or col, 2.2 * s)
-        p.line([(x + 2.4 * s, y - 20 * s), (x + 6 * s, y - 29 * s)], cloak or col, 2.2 * s)
+        # upper arms hang out from the shoulders, forearms lift the open hands
+        for side in (-1, 1):
+            sh = (x + side * 2.6 * s, y - 20.5 * s)
+            el = (x + side * 5.6 * s, y - 16.5 * s)
+            hd = (x + side * 7.0 * s, y - 25.5 * s)
+            p.line([sh, el, hd], INK, 3.2 * s, smooth=False)
+            p.line([sh, el, hd], cloak or col, 2.0 * s, smooth=False)
+            p.blob(hd, 1.1 * s, 1.1 * s, head_col, ink=False)
     p.blob((x, y - 25.5 * s), 3.2 * s, 3.4 * s, head_col, width=1.1)
     if hat:
         p.shape([(x - 3.6 * s, y - 26 * s), (x, y - 31 * s), (x + 3.6 * s, y - 26 * s)], hat, width=1.0)
@@ -222,10 +228,20 @@ def pipe(p, pts, w=6, col=COPPER):
     p.line(pts, col.light(0.45).alpha(0.6), w * 0.35)
 
 
-def construct(p, x, y, h, flip=False, body=BRASS, eye=C.hex('ffd27a'), hf=(20, -55), hb=(-12, -34),
-              moss=False, rockets=False, hopper=False, wide=1.0, head='helm', furnace=None, bend_f=1):
+# arms for the constructs, laid out like the approved poses: (front elbow, front hand,
+# back elbow, back hand). Shoulders sit at (12w, -74) and (-11w, -74).
+CONSTRUCT_ARMS = {
+    'hang': ((15, -58), (21, -44), (-13, -58), (-15, -42)),
+    'halberd': ((15, -58), (24, -57), (-13, -58), (-15, -42)),
+    'fling': ((22, -86), (30, -100), (-14, -58), (-18, -44)),
+}
+
+
+def construct(p, x, y, h, flip=False, body=BRASS, eye=C.hex('ffd27a'), arms='hang',
+              moss=False, rockets=False, hopper=False, wide=1.0, head='helm', furnace=None):
     """A clockwork man of riveted brass plates, gear joints and a glowing visor.
-    Figure units: feet at 0, head near -90; hf/hb are the hand targets."""
+    Figure units: feet at 0, head near -90; arms names a CONSTRUCT_ARMS entry (or is
+    a tuple of front elbow, front hand, back elbow, back hand)."""
     s = h / 100.0
     p.push(x, y, s, flip)
     p.lw = 2.4
@@ -234,8 +250,9 @@ def construct(p, x, y, h, flip=False, body=BRASS, eye=C.hex('ffd27a'), hf=(20, -
     w = wide
     p.blob((1, -0.5), 26 * w, 3.8, C(0.1, 0.05, 0.02, 0.3), ink=False)
     sh_f, sh_b = (12 * w, -74), (-11 * w, -74)
-    el_b, hand_b = ik(sh_b, hb, 17, 16, 1)
-    el_f, hand_f = ik(sh_f, hf, 17, 16, bend_f)
+    ef, hf, eb, hb = CONSTRUCT_ARMS[arms] if isinstance(arms, str) else arms
+    el_f, hand_f = (ef[0] * w, ef[1]), (hf[0] + (w - 1) * 12, hf[1])
+    el_b, hand_b = (eb[0] * w, eb[1]), (hb[0] * w, hb[1])
     if hopper:
         # a riveted hopper on the back heaped with bones, and a smokestack
         p.shape([(-30 * w, -96, 0), (-4 * w, -96, 0), (-8 * w, -66, 0), (-24 * w, -66, 0)], IRON, width=2, smooth=False, shade=0.9, rim=0.3)
@@ -465,18 +482,10 @@ def demon_head(horn=BONE.dark(0.25), mask=None, eye=C.hex('ffcf4a'), hat=None):
 
 
 class PrayFigure(Figure):
-    """A figure praying with joined hands held a little forward of the chest, both
-    elbows hanging down by the sides (the stock 'pray' pose folds them out)."""
+    """A figure praying with joined hands (the approved stock 'pray' arms)."""
     def __init__(self, **kw):
         kw['pose'] = 'pray'
         super().__init__(**kw)
-
-    def joints(self):
-        j = super().joints()
-        k = j['k']
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], (22, -70 + k), 16.5, 15.5, 0)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], (20, -69 + k), 16.5, 15.5, 1)
-        return j
 
 
 class SatyrFigure(Figure):
@@ -527,9 +536,10 @@ class SeatedFigure(Figure):
         k = self.SEAT_K
         j = {'head': (1.8, -91 + k), 'neck': (0.6, -83.5 + k), 'sh_f': (9.0 * self.width, -80.5 + k),
              'sh_b': (-8.0 * self.width, -80.5 + k), 'waist': (0.0, -57 + k), 'hip': (0.0, -48 + k)}
-        pf, pb, bfront, bend_f, bend_b = POSES[self.pose]
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], (pf[0], pf[1] + k), 16.5, 15.5, bend_f)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], (pb[0], pb[1] + k), 16.5, 15.5, bend_b)
+        ef, hf, eb, hb, bfront = STOCK[self.pose]
+        w = self.width
+        j['el_f'], j['hand_f'] = (ef[0] * w, ef[1] + k), (hf[0] + (w - 1) * 9, hf[1] + k)
+        j['el_b'], j['hand_b'] = (eb[0] * w, eb[1] + k), (hb[0] if bfront else hb[0] * w, hb[1] + k)
         j['back_front'] = bfront
         j['k'] = k
         return j

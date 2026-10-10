@@ -6,7 +6,7 @@ import cairo
 from core import *
 import bg
 import props as PR
-from figure import Figure, POSES
+from figure import Figure, POSES, STOCK
 
 MARBLE = C.hex('eee8dc')
 MARBLE_SHADE = C.hex('c8bfae')
@@ -32,27 +32,35 @@ CHITON_BLUE = C.hex('3a5ea8')
 HAIR_DARK = C.hex('3a2818')
 HAIR_GREY = C.hex('9a948a')
 
-# extra poses (unique prefix so other faiths are untouched)
-POSES.update({
-    # hand targets chosen so the arm either hangs nearly straight or the elbow
-    # drops by the side and the forearm leads forward to the hand
-    'ly_write':    ((19, -61), (7, -60), True, 1, -1),
-    'ly_shoulder': ((13, -50), (-6, -97), False, 1, 1),
-    'ly_finger':   ((20, -80), (-10, -50), False, 1, 1),
-    'ly_lips':     ((11, -80), (-10, -50), False, 1, 1),
-    'ly_palm':     ((27, -72), (-10, -50), False, 1, 1),
-    'ly_oath':     ((19, -92), (-1, -62), True, 1, 1),
-    'ly_hoplite':  ((22, -62), (-1, -62), True, 1, 1),
-    'ly_spearlow': ((25, -56), (-1, -62), True, 1, 1),
-    'ly_chin':     ((8, -80), (9, -64), True, 1, -1),
-    'ly_scroll':   ((24, -64), (8, -63), True, 1, -1),
-    'ly_lean':     ((20, -58), (-10, -50), False, 1, 1),
-    'ly_both_up':  ((20, -100), (-18, -98), False, 1, -1),
-    'ly_ear':      ((4, -92), (3, -62), True, 1, -1),
-    'ly_hand_out': ((26, -66), (-10, -50), False, 1, 1),
-    'ly_book':     ((22, -66), (11, -65), True, 1, -1),
-    'ly_hang':     ((13, -50), (-10, -50), False, 1, 1),
-    'ly_knees':    ((23, -60), (15, -61), True, 1, -1),
+# extra arm positions for the Stoa, built like the approved STOCK poses in figure.py:
+# (front elbow, front hand, back elbow, back hand, back hand shows in front of the body).
+# Upper arms hang from the shoulder, the elbow sits below it and a little out, the
+# forearm does the lifting. A figure faces right: +x is forward, the back arm is the far one.
+_HANG_B = ((-9.5, -62), (-10.5, -47), False)
+_SHIELD_B = ((-8.5, -64), (-2.5, -64), True)
+STOCK.update({
+    # forearm raised, open palm over the altar; the far forearm carries the shield
+    'ly_oath':     ((17.5, -67), (20, -84)) + _SHIELD_B,
+    # pail hanging in the near hand, the far hand steadying a jar on the far shoulder
+    'ly_shoulder': ((11.5, -62), (15.5, -48), (-17, -77), (-8.5, -94), False),
+    # quill at the desk, the far hand holding the sheet
+    'ly_write':    ((11, -62), (22, -61), (-6, -62), (13, -61), True),
+    # one finger raised, teaching
+    'ly_finger':   ((11.5, -62), (18.5, -78)) + _HANG_B,
+    # a calm open palm raised to shoulder height: wait, consider
+    'ly_calm':     ((15.5, -66), (19, -82)) + _HANG_B,
+    # the open palm thrust forward
+    'ly_palm':     ((16, -70), (27, -78)) + _HANG_B,
+    # an open scroll held in both hands, a roller in each fist
+    'ly_scroll':   ((11, -61.5), (22, -64), (-6, -62), (6, -63), True),
+    # an open book held by its two edges, a hand under each cover
+    'ly_book':     ((11, -61.5), (21.5, -63), (-6, -62), (5.5, -62.5), True),
+    # weight on a crutch held low at the side
+    'ly_lean':     ((11.5, -62), (20, -57)) + _HANG_B,
+    # the open hand held out, explaining
+    'ly_hand_out': ((13, -63), (25, -67)) + _HANG_B,
+    # seated, knees drawn up, both hands clasped round the shins (SeatedGreek)
+    'ly_knees':    ((12.5, -63), (24, -61), (-5, -63), (20, -62), True),
 })
 
 
@@ -1394,65 +1402,12 @@ def hoplon(p, c, R=21, device='book', field=None, col=BRONZE, turn=0.86):
         p.blob(polar((x, y), R * 0.91 * turn, a, R * 0.91), 0.7 * s, 0.7 * s, col.light(0.5), ink=False)
 
 
-def ly_ik(s, t, l1, l2, out=0.35):
-    """Two-bone limb from s to t. The elbow takes the lower of the two bends (it
-    hangs with gravity), with a mild preference for pointing away from the body,
-    so the forearm leads forward to the hand instead of folding into the chest."""
-    d = v_len(v_sub(t, s))
-    d = min(max(d, 0.01), l1 + l2 - 0.05)
-    base = math.atan2(t[1] - s[1], t[0] - s[0])
-    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
-    a = math.acos(max(-1.0, min(1.0, cos_a)))
-    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
-    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
-    side = 1.0 if s[0] >= 0 else -1.0
-    e = max((e1, e2), key=lambda q: q[1] + out * side * q[0])
-    dirv = v_norm(v_sub(t, e))
-    return e, v_add(e, v_mul(dirv, l2))
-
-
-# shared poses re-aimed for the gravity elbow (only for Stoa figures)
-LY_POSES = {
-    'hold':  ((22, -63), (-10, -50), False, 1, 1),
-    'staff': ((21, -64), (-10, -50), False, 1, 1),
-    'book':  ((22, -66), (11, -65), True, 1, -1),
-    'pray':  ((16, -75), (15, -74), True, 1, -1),
-}
-
-
-class LyJoints:
-    """Skeleton with the gravity elbow rule above (shared by every Stoa figure)."""
-
-    def joints(self):
-        k = 24.0 if self.kneel else 0.0
-        j = {
-            'head': (1.8, -91 + k),
-            'neck': (0.6, -83.5 + k),
-            'sh_f': (9.0 * self.width, -80.5 + k),
-            'sh_b': (-8.0 * self.width, -80.5 + k),
-            'waist': (0.0, -57 + k),
-            'hip': (0.0, -48 + k),
-        }
-        pf, pb, bfront, bend_f, bend_b = LY_POSES.get(self.pose) or POSES[self.pose]
-        if getattr(self, 'hoplon', None):
-            # the hoplon is strapped on the forearm, carried across the body;
-            # the spear hand comes out past its rim
-            pb, bfront = (-1, -62), True
-            edge = -2.5 + 0.86 * self.hoplon_r + 4.5
-            if pf[1] > -75 and pf[0] < edge:
-                pf = (edge, pf[1])
-        j['el_f'], j['hand_f'] = ly_ik(j['sh_f'], (pf[0], pf[1] + k), 16.5, 15.5)
-        j['el_b'], j['hand_b'] = ly_ik(j['sh_b'], (pb[0], pb[1] + k), 16.5, 15.5)
-        j['back_front'] = bfront
-        j['k'] = k
-        return j
-
-
-class LyFigure(LyJoints, Figure):
+class LyFigure(Figure):
+    """The base Figure with the stock arms (kept as a name for the scenes)."""
     pass
 
 
-class Greek(LyJoints, Figure):
+class Greek(Figure):
     """Figure with Greek dress and arms: himation, muscled cuirass with pteruges,
     greaves and sandals, a round hoplon on the left arm."""
 
@@ -1472,6 +1427,10 @@ class Greek(LyJoints, Figure):
         self.hem = hem
 
     def draw(self, p, x, y, height=480, flip=False):
+        """Same order as Figure.draw: far arm behind the body (only its hand comes
+        round in front when it reaches forward), props over the near arm, fists over
+        the props. The hoplon is strapped to the far forearm on the far side of the
+        torso, clear of the spear arm."""
         self.p = p
         s = height / 100.0
         p.push(x, y, s, flip)
@@ -1486,35 +1445,32 @@ class Greek(LyJoints, Figure):
         if self.props_back:
             for fn in self.props_back:
                 fn(p, j)
-        if not j['back_front']:
-            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._no_hand = j['back_front']
+        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._no_hand = False
         self._legs(j)
         self._body(j)
         if self.cloak:
             self._cloak_front(j)
         self._head(j)
-        if j['back_front']:
-            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
+        self._front_half(p, j)
+        p.pop()
+
+    def _front_half(self, p, j):
         if self.hoplon:
-            # strapped on the forearm, held in front of the torso; the spear arm
-            # is behind its rim, the hand showing beyond it
-            self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
             hb = j['hand_b']
-            hoplon(p, (hb[0] - 1.5, hb[1] + 2.5), self.hoplon_r, self.hoplon, self.hoplon_field)
-            hf = j['hand_f']
-            self._hand(hf, v_norm(v_sub(hf, j['el_f'])))
-        else:
-            self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+            hoplon(p, (hb[0] - 9.5, hb[1] + 4.5), self.hoplon_r, self.hoplon, self.hoplon_field)
+        elif j['back_front']:
+            self._forearm_tip(j['el_b'], j['hand_b'])
+        self._no_hand = True
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+        self._no_hand = False
         if self.props_front:
             for fn in self.props_front:
                 fn(p, j)
-            # a hand that grips a shaft is painted again over it
-            for fn in self.props_front:
-                g = getattr(fn, 'grip', None)
-                if g:
-                    h, el = j['hand_' + g], j['el_' + g]
-                    self._hand(h, v_norm(v_sub(h, el)))
-        p.pop()
+        self._hand(j['hand_f'], v_norm(v_sub(j['hand_f'], j['el_f'])))
+        if j['back_front'] and not self.hoplon:
+            self._hand(j['hand_b'], v_norm(v_sub(j['hand_b'], j['el_b'])))
 
     def _hair(self, hc):
         if self.hair == 'curly' and not getattr(self.head, 'helmet', False):
@@ -1542,7 +1498,7 @@ class Greek(LyJoints, Figure):
         pose = self.pose
         is_f = at is self.j['hand_f']
         ang = math.atan2(d[1], d[0])
-        if is_f and pose in ('ly_oath', 'ly_palm', 'ly_hand_out') or pose == 'ly_both_up':
+        if is_f and pose in ('ly_oath', 'ly_calm', 'ly_palm', 'ly_hand_out'):
             c = v_add(at, v_mul(d, 1.6))
             up = -math.pi / 2 if pose != 'ly_hand_out' else ang
             p.blob(c, 2.5, 2.8, self.skin, rot=up, width=1.2, shade=0.4)
@@ -1557,7 +1513,7 @@ class Greek(LyJoints, Figure):
             rod(p, [polar(c, 1.6, ang - 0.15), polar(c, 7.6, ang - 0.15)], 0.85, 0.7, self.skin, width=1.0)
             rod(p, [polar(c, 1.4, ang - 1.1), polar(c, 3.8, ang - 0.7)], 0.75, 0.6, self.skin, width=0.9)
             return
-        if is_f and pose in ('ly_finger', 'ly_lips', 'ly_ear'):
+        if is_f and pose == 'ly_finger':
             p.blob(at, 2.4, 2.6, self.skin, width=1.2, shade=0.5)
             rod(p, [(at[0] + 0.4, at[1] - 1.6), (at[0] + 0.8, at[1] - 7.8)], 0.85, 0.7, self.skin, width=1.0)
             rod(p, [(at[0] - 1.8, at[1] + 0.4), (at[0] - 3.4, at[1] - 2.2)], 0.75, 0.6, self.skin, width=0.9)
@@ -1705,8 +1661,9 @@ class SeatedGreek(Greek):
         if self.props_back:
             for fn in self.props_back:
                 fn(p, j)
-        if not j['back_front']:
-            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._no_hand = j['back_front']
+        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._no_hand = False
         p.clip_shape(rect(-40, -140, 40, -D - 9))
         self._body(j)
         p.unclip()
@@ -1714,12 +1671,7 @@ class SeatedGreek(Greek):
         self._leg((3, -9), (23, -31), (27, -3), cloth, skin)
         p.push(0, D, 1.0)
         self._head(j)
-        if j['back_front']:
-            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
-        if self.props_front:
-            for fn in self.props_front:
-                fn(p, j)
+        self._front_half(p, j)
         p.pop()
         p.pop()
 
@@ -1768,8 +1720,9 @@ class BenchGreek(Greek):
         if self.props_back:
             for fn in self.props_back:
                 fn(p, j)
-        if not j['back_front']:
-            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._no_hand = j['back_front']
+        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._no_hand = False
         p.clip_shape(rect(-40, -140, 40, -D - 22))
         self._body(j)
         p.unclip()
@@ -1779,12 +1732,7 @@ class BenchGreek(Greek):
         if self.cloak:
             self._cloak_front(j)
         self._head(j)
-        if j['back_front']:
-            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
-        if self.props_front:
-            for fn in self.props_front:
-                fn(p, j)
+        self._front_half(p, j)
         p.pop()
         p.pop()
 
@@ -1832,7 +1780,7 @@ def hoplite(**kw):
     kw.setdefault('hair', 'none')
     kw.setdefault('beard', 'short')
     kw.setdefault('hair_col', HAIR_DARK)
-    kw.setdefault('pose', 'ly_hoplite')
+    kw.setdefault('pose', 'guard')
     kw.setdefault('trim', None)
     return Greek(**kw)
 
