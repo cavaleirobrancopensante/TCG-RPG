@@ -132,6 +132,27 @@ func _ready() -> void:
 	await _frames(3)
 	var d: DeckBuilder = main.screen
 	d._auto()
+	# filters: one faith, creatures only, cost 2 — every card shown must match
+	d.faiths = {"sanctum": true}
+	d.f_type = 1
+	d.f_cost = 2
+	d._refresh_now()
+	for cv in d.grid.get_children():
+		var cc: Dictionary = (cv as CardView).card
+		assert(cc["faction"] == "sanctum" and cc["type"] == "creature" and int(cc["mana_value"]) == 2, "filters")
+	d._clear_filters()
+	d._refresh_now()
+	var n_all := d.grid.get_child_count()
+	d.f_text = "zzzz-no-such-card"
+	d._refresh_now()
+	assert(d.grid.get_child_count() == 0 and n_all > 0, "search filter")
+	d._clear_filters()
+	# a second deck: copy, rename, make it the duel deck
+	d._copy_deck()
+	assert(GameState.decks.size() == 2 and d.editing == 1, "copy deck")
+	GameState.decks[1]["name"] = "Second"
+	GameState.active_deck = 1
+	d._refresh_now()
 	d._done()
 	await _frames(3)
 	print("city & deck builder ok")
