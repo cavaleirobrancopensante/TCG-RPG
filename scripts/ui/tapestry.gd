@@ -52,6 +52,18 @@ static func field(f: String) -> Color:
 
 # ------------------------------------------------------------------ fonts
 
+static var _symbols: Array = []
+
+
+static func symbol_fonts() -> Array:
+	if _symbols.is_empty():
+		for path in ["res://art/fonts/NotoSansSymbols2-Regular.ttf", "res://art/fonts/NotoSansSymbols.ttf"]:
+			if ResourceLoader.exists(path):
+				_symbols.append(load(path))
+		_symbols.append(ThemeDB.fallback_font)
+	return _symbols
+
+
 static func font(kind: String = "book") -> Font:
 	if not _fonts.has(kind):
 		var path: String = {
@@ -63,8 +75,9 @@ static func font(kind: String = "book") -> Font:
 		if path != "" and ResourceLoader.exists(path):
 			f = load(path)
 		if f is FontFile:
-			# symbols (♥ ✦ ⏮ …) fall back to the engine font, then the system
-			(f as FontFile).fallbacks = [ThemeDB.fallback_font]
+			# Symbols (♥ ✦ ⏮ ♪ …) come from bundled Noto fonts: browsers give Godot no
+			# system fonts, so without these the icons would show as empty boxes.
+			(f as FontFile).fallbacks = symbol_fonts()
 		_fonts[kind] = f if f else ThemeDB.fallback_font
 	return _fonts[kind]
 
