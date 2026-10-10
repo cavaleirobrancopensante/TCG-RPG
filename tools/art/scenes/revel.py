@@ -717,13 +717,13 @@ def revel_u_003(p):
 
 
 def revel_u_004(p):
-    """Hostess of the Lantern Garden: she never leaves her couch, yet no guest leaves hungry."""
+    """Host of the Lantern Garden: he never leaves his couch, yet no guest leaves hungry."""
     garden_bg(p, 'dusk', palace_at=(330, 330), lanterns=False, fountain_at=(330, 420, 0.4))
     lantern_string(p, [(100, 120), (480, 90), (900, 130)], s=0.85, sag=50)
     seat_y = chaise(p, 600, 604, 400, C.hex('2a6a6a'), GOLD, 140, 'right')
     cushion(p, (760, seat_y - 80), 34, 48, VELVET, -0.3)
-    RFig(pose=((24, -70), (-14, -56), False, 1, 1, 0.3, 1.4), garb='gown', seat='lounge', main=C.hex('8a1a3a'), second=C.hex('6a1030'), trim=GOLD, fur=ERMINE,
-         lining=GOLD, sleeves='bell', hair='long', hair_col=C.hex('3a2414'), head=lady_head(C.hex('3a2414'), crown=True, gem=C.hex('2a8a6a')),
+    RFig(pose=((24, -70), (-14, -56), False, 1, 1, 0.3, 1.4), garb='robe', seat='lounge', main=C.hex('8a1a3a'), second=C.hex('6a1030'), trim=GOLD, fur=ERMINE,
+         lining=GOLD, sleeves='bell', hair='short', beard='short', hair_col=C.hex('3a2414'), head='coronet',
          belt='gold', props_front=[fan('f')]).draw(p, 730, seat_y - 6 + 19 * 4.4, 440, flip=True)
     laden_table(p, 60, 330, 500, LEAD_WHITE, 26, 80, runner=C.hex('2a6a6a'), items=[
         (lambda p, x, y, s: roast_fowl(p, x, y, s), 120, 1.0), (lambda p, x, y, s: fruit_bowl(p, x, y, s), 230, 1.0),
@@ -1285,16 +1285,16 @@ def revel_r_009(p):
 
 
 def revel_m_001(p):
-    """Vessaria, Mistress of the Undying Feast: the guests who drink do not rise again."""
+    """Vessar, Master of the Undying Feast: the guests who drink do not rise again."""
     hall_bg(p, hang=C.hex('2a1238'), floor=(C.hex('140a18'), C.hex('6a5a6a')), chandelier=False, cols=True)
     p.cx.new_path()
     p.cx.rectangle(0, 0, W, H)
     p.fill(C(0.05, 0.0, 0.08, 0.35))
     chandelier_at(p, 500, 90, 0.85)
     great_chair(p, 520, 520, 1.5, C.hex('3a1a4a'), C.hex('1a0a1a'), GOLD)
-    RFig(pose=((19, -104), (-14, -56), False, 1, 1, 1.4, 1.4), garb='gown', main=C.hex('3a0a3a'), second=C.hex('2a0a2a'), trim=GOLD, fur=ERMINE, cloak='mantle',
-         cloak_col=C.hex('1a0a20'), lining=C.hex('8a1a3a'), sleeves='bell', hair='long', hair_col=INK, skin=C.hex('f2dcc8'),
-         head=lady_head(INK, GOLD, GOLD, C(0.6, 0.4, 0.7, 0.5), C.hex('3aa86a'), crown=True), belt='gold', eyes='open', mouth='calm', blush=0.2,
+    RFig(pose=((19, -104), (-14, -56), False, 1, 1, 1.4, 1.4), garb='robe', main=C.hex('3a0a3a'), second=C.hex('2a0a2a'), trim=GOLD, fur=ERMINE, cloak='mantle',
+         cloak_col=C.hex('1a0a20'), lining=C.hex('8a1a3a'), sleeves='bell', hair='short', beard='short', hair_col=INK, skin=C.hex('f2dcc8'),
+         head='crown', belt='gold', eyes='open', mouth='calm', blush=0.2,
          props_front=[goblet('f', col=GOLD, wine=C.hex('3a8a4a'), s=1.2)]).draw(p, 500, 600, 470)
     hx, hy = 500 + 19 * 4.7, 600 - 104 * 4.7
     for k in range(3):

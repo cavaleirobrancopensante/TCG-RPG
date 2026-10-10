@@ -42,8 +42,8 @@ func test_card_db() -> void:
 	var valid_actions := ["damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate",
 		"rummage", "freeze", "pacify", "snare", "fight", "destroy_relic", "foresight", "tax", "upkeep_cost"]
 	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
-	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "guardian",
-		"sanctified", "dread", "regenerate", "first_strike", "steadfast"]
+	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "martyr",
+		"sanctified", "dread", "regenerate", "first_strike", "unmoved"]
 	var fighters := ["Soldier", "Knight", "Paladin", "Warrior", "Duelist", "Assassin", "Hoplite"]
 	for id in CardDB.all_set_ids():
 		var c := CardDB.get_card(id)
@@ -178,7 +178,7 @@ func _lib() -> void:
 		"Bear": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 1}, "power": 2, "toughness": 2},
 		"Ogre": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 3}, "power": 4, "toughness": 4},
 		"Wall": {"faction": "lyceum", "type": "creature", "cost": {"U": 1, "generic": 1}, "power": 1, "toughness": 4, "keywords": ["defender"]},
-		"Guard": {"faction": "sanctum", "type": "creature", "cost": {"W": 1, "generic": 1}, "power": 2, "toughness": 2, "keywords": ["guardian"]},
+		"Guard": {"faction": "sanctum", "type": "creature", "cost": {"W": 1, "generic": 1}, "power": 2, "toughness": 2, "keywords": ["martyr"]},
 		"Angel": {"faction": "sanctum", "type": "creature", "cost": {"W": 1, "generic": 2}, "power": 2, "toughness": 2, "keywords": ["flying"]},
 		"Saint": {"faction": "sanctum", "type": "creature", "cost": {"W": 1, "generic": 2}, "power": 2, "toughness": 3, "keywords": ["sanctified", "lifelink"]},
 		"Spider": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 1}, "power": 1, "toughness": 3, "keywords": ["reach"]},
@@ -188,7 +188,7 @@ func _lib() -> void:
 		"Juggernaut": {"faction": "wild", "type": "creature", "cost": {"G": 1, "generic": 4}, "power": 5, "toughness": 5, "keywords": ["trample"]},
 		"Fencer": {"faction": "revel", "type": "creature", "cost": {"R": 1, "generic": 1}, "power": 2, "toughness": 1, "keywords": ["first_strike"]},
 		"Bacchant": {"faction": "revel", "type": "creature", "cost": {"R": 1, "generic": 1}, "power": 2, "toughness": 1, "keywords": ["haste"]},
-		"Hoplite": {"faction": "lyceum", "type": "creature", "cost": {"U": 1, "generic": 2}, "power": 2, "toughness": 2, "keywords": ["steadfast", "vigilance"]},
+		"Hoplite": {"faction": "lyceum", "type": "creature", "cost": {"U": 1, "generic": 2}, "power": 2, "toughness": 2, "keywords": ["unmoved", "vigilance"]},
 		"Martyr": {"faction": "sanctum", "type": "creature", "cost": {"W": 1}, "power": 1, "toughness": 1, "effects": [{"trigger": "death", "action": "heal", "target": "self_player", "amount": 3}]},
 		"Ghoul": {"faction": "abyss", "type": "creature", "cost": {"B": 1}, "power": 1, "toughness": 1, "effects": [{"trigger": "death", "action": "summon", "token": {"name": "Restless Dead", "power": 1, "toughness": 1, "subtype": "Zombie"}}]},
 		"Lounger": {"faction": "revel", "type": "creature", "cost": {"R": 1}, "power": 1, "toughness": 2, "effects": [{"trigger": "idle", "action": "buff", "target": "self", "power": 1, "toughness": 1, "duration": "permanent"}]},
@@ -300,33 +300,32 @@ func test_mulligan() -> void:
 	var st := BattleState.new()
 	st.setup(deck.duplicate(), deck.duplicate(), ["A", "B"], [20, 20], 0, 77, true)
 	check(st.phase == "mulligan", "starts in mulligan phase")
-	check(st.side(0).hand.size() == 7 and st.side(1).hand.size() == 7, "seven cards each")
+	check(st.side(0).hand.size() == 5 and st.side(1).hand.size() == 5, "five cards each")
 	st.mulligan(0)
 	st.mulligan(0)
-	check(st.side(0).hand.size() == 7, "mulligan redraws seven")
+	check(st.side(0).hand.size() == 5, "mulligan redraws five")
 	check(st.to_bottom(0) == 2, "two to the bottom after two mulligans")
 	var a: String = st.side(0).hand[0]
 	var b: String = st.side(0).hand[1]
 	st.keep(0, [0, 1])
-	check(st.side(0).hand.size() == 5, "kept hand of five")
-	check(st.side(0).deck.size() == 35 and st.side(0).deck.slice(0, 2).has(a) and st.side(0).deck.slice(0, 2).has(b), "chosen cards on the bottom")
+	check(st.side(0).hand.size() == 3, "kept hand of three")
+	check(st.side(0).deck.size() == 37 and st.side(0).deck.slice(0, 2).has(a) and st.side(0).deck.slice(0, 2).has(b), "chosen cards on the bottom")
 	check(st.phase == "mulligan", "waits for the other player")
 	st.keep(1)
-	check(st.side(1).hand.size() == 7, "keeping seven puts none on the bottom")
+	check(st.side(1).hand.size() == 5, "keeping five puts none on the bottom")
 	check(st.phase == "main1" and st.turn == 1, "turn one begins after both keep")
 	# AI: a hand with no lands is sent back.
 	var st2 := BattleState.new()
 	var spells: Array = []
-	for id in CardDB.all_set_ids().slice(0, 7):
-		spells.append(id)
-	for n in 33:
-		spells.insert(0, Factions.land_id("sanctum"))
+	for id in CardDB.all_set_ids():
+		if not CardDB.is_land(id) and spells.size() < 40:
+			spells.append(id)
 	st2.setup(spells.duplicate(), spells.duplicate(), ["A", "B"], [20, 20], 0, 5, true)
 	check(BattleAI.should_mulligan(st2, 0), "AI mulligans a hand with no lands")
 	BattleAI.resolve_mulligan(st2, 0)
 	BattleAI.resolve_mulligan(st2, 1)
 	check(st2.phase == "main1", "AI mulligans resolve")
-	check(st2.side(0).hand.size() == 7 - st2.mulligans[0] + (0 if st2.first_player == 0 else 1), "AI hand size matches mulligans")
+	check(st2.side(0).hand.size() == 5 - st2.mulligans[0] + (0 if st2.first_player == 0 else 1), "AI hand size matches mulligans")
 
 
 ## Every rule a card can use, checked on a small board.
@@ -334,12 +333,14 @@ func test_mechanics() -> void:
 	print("-- card mechanics")
 	_lib()
 	var st := _duel()
-	# Guardian, deathtouch, trample, lifelink, first strike, steadfast.
+	# Martyr, deathtouch, trample, lifelink, first strike, unmoved.
 	var bear := _put(st, 0, "Bear")
 	var guard := _put(st, 1, "Guard")
+	var heir := _put(st, 1, "Wall")
 	st.declare_attackers([bear.uid])
 	st.declare_blocks({bear.uid: guard.uid})
-	check(st.find_perm(guard.uid) != null and st.find_perm(bear.uid) == null, "guardian blocks as 2/4 and kills a 2/2")
+	check(st.find_perm(guard.uid) == null and st.find_perm(bear.uid) == null, "the martyr trades with a 2/2")
+	check(heir.power() == 2 and heir.toughness() == 5, "the martyr's death gives another creature +1/+1")
 	st = _duel()
 	var jug := _put(st, 0, "Juggernaut")
 	var cr := _put(st, 1, "Crawler")
@@ -366,10 +367,13 @@ func test_mechanics() -> void:
 	check(st.find_perm(f2.uid) != null and st.find_perm(b3.uid) == null, "first striker kills its blocker before it strikes back")
 	st = _duel()
 	var hop := _put(st, 1, "Hoplite")
-	var bb := _put(st, 0, "Bear")
-	st.declare_attackers([bb.uid])
-	st.declare_blocks({bb.uid: hop.uid})
-	check(st.find_perm(hop.uid) != null and hop.damage == 1, "steadfast prevents 1 damage")
+	var plain := _put(st, 1, "Bear")
+	st.resolve_effect(0, {"action": "tap", "target": "all_enemy_creatures"}, null, null)
+	check(not hop.tapped and plain.tapped, "unmoved: enemy effects cannot tap it")
+	st.resolve_effect(0, {"action": "buff", "target": "all_enemy_creatures", "power": -1, "toughness": -1}, null, null)
+	check(hop.toughness() == 2, "unmoved: enemy effects cannot shrink it")
+	st.resolve_effect(1, {"action": "buff", "target": "all_own_creatures", "power": 1, "toughness": 1}, null, null)
+	check(hop.power() == 3, "its own side can still help it")
 	# Evasion: flying/reach, dread, sanctified.
 	st = _duel()
 	var ang := _put(st, 0, "Angel")
@@ -728,7 +732,7 @@ func test_draft() -> void:
 		check(d.picks[s].size() == 45, "seat %d drafted %d" % [s, d.picks[s].size()])
 	d.finish_draft()
 	for s in range(1, Draft.SEATS):
-		check(DeckTools.validate(d.decks[s], d.pool(s)) == "", "bot %d deck: %s" % [s, DeckTools.validate(d.decks[s], d.pool(s))])
+		check(DeckTools.validate(d.decks[s], d.pool(s), DeckTools.DRAFT_COPIES) == "", "bot %d deck: %s" % [s, DeckTools.validate(d.decks[s], d.pool(s), DeckTools.DRAFT_COPIES)])
 		var fc := d.faith_counts(s)
 		var top := 0
 		for f in fc:
@@ -846,10 +850,11 @@ func test_save_slots() -> void:
 	GameState.gold = 5
 	check(Economy.defeat_cost(false) == 5, "never more than you have")
 	GameState.gold = 50
-	GameState.rested = false
+	GameState.life = 3
 	var d0 := GameState.day
-	check(GameState.rest_at_inn() and GameState.rested and GameState.day == d0 + 1 and GameState.gold == 30, "a night at the inn")
-	check(not GameState.rest_at_inn(), "no second night while rested")
+	check(GameState.rest_at_inn() and GameState.life == GameState.max_life() and GameState.day == d0 + 1 and GameState.gold == 50 - Economy.inn_price(), "a night at the inn heals fully")
+	GameState.gold = 0
+	check(not GameState.rest_at_inn(), "no bed without the price")
 
 	print("-- save slots")
 	DirAccess.remove_absolute(GameState.LEGACY_SAVE)

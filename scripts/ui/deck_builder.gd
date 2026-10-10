@@ -261,7 +261,7 @@ func _change(id: String, delta: int) -> void:
 	var d := _deck()
 	var n := int(d.get(id, 0)) + delta
 	if delta > 0 and not CardDB.is_basic_land(id):
-		if n > DeckTools.MAX_COPIES or n > _count_owned(id):
+		if n > _copy_limit() or n > _count_owned(id):
 			return
 	if n <= 0:
 		d.erase(id)
@@ -318,13 +318,18 @@ func _owned() -> Dictionary:
 	return pool if draft_deck >= 0 else GameState.owned_all()
 
 
+## A draft deck may use every card drafted; your own decks hold 1 + Industry copies.
+func _copy_limit() -> int:
+	return DeckTools.DRAFT_COPIES if draft_deck >= 0 else DeckTools.hero_copies()
+
+
 func _count_owned(id: String) -> int:
 	return int(pool.get(id, 0)) if draft_deck >= 0 else GameState.owned_count(id)
 
 
 func _done() -> void:
 	if draft_deck >= 0:
-		var dp := DeckTools.validate(GameState.decks[draft_deck]["cards"], pool)
+		var dp := DeckTools.validate(GameState.decks[draft_deck]["cards"], pool, DeckTools.DRAFT_COPIES)
 		if dp != "":
 			warn_label.text = dp
 			warn_label.add_theme_color_override("font_color", UIKit.RED)
@@ -429,7 +434,7 @@ func _refresh_now() -> void:
 		var cv := CardView.create(id, SCALE, int(GameState.foils.get(id, 0)) > 0)
 		var in_deck := int(d.get(id, 0))
 		cv.count_badge = int(owned[id]) - in_deck
-		cv.dimmed = cv.count_badge <= 0 or in_deck >= DeckTools.MAX_COPIES
+		cv.dimmed = cv.count_badge <= 0 or in_deck >= _copy_limit()
 		var cid: String = id
 		cv.tapped.connect(func(_v): _change(cid, 1))
 		cv.long_pressed.connect(func(_v): _view(cid))
@@ -472,7 +477,7 @@ func _view(start_id: String) -> void:
 		var id: String = e["id"]
 		var n := int(_deck().get(id, 0))
 		return [
-			[I18n.t("Add (%d in deck)") % n, func(): _change(id, 1), n < mini(DeckTools.MAX_COPIES, _count_owned(id)), false],
+			[I18n.t("Add (%d in deck)") % n, func(): _change(id, 1), n < mini(_copy_limit(), _count_owned(id)), false],
 			["Remove", func(): _change(id, -1), n > 0, false],
 		])
 	v.closed.connect(_refresh)

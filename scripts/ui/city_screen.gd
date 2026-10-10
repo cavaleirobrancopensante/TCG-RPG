@@ -313,18 +313,18 @@ func _show_inn() -> void:
 	var rest_row := HBoxContainer.new()
 	rest_row.add_theme_constant_override("separation", 12)
 	content.add_child(rest_row)
-	var rest := UIKit.button(I18n.t("Sleep here (%d gold)") % Economy.INN_PRICE, func():
+	var rest := UIKit.button(I18n.t("Sleep here (%d gold)") % Economy.inn_price(), func():
 		if GameState.rest_at_inn():
 			GameState.save_game()
 			_toast("You sleep well.")
 		else:
 			_toast("Not enough gold.")
 		_show(), 300)
-	rest.disabled = GameState.rested or GameState.gold < Economy.INN_PRICE
+	rest.disabled = GameState.life >= GameState.max_life() or GameState.gold < Economy.inn_price()
 	rest_row.add_child(rest)
-	var note := I18n.t("A night's sleep: the day passes, prices settle, and you start your next duel with %d extra life.") % Economy.RESTED_LIFE
-	if GameState.rested:
-		note = I18n.t("Rested: you start your next duel with %d extra life.") % Economy.RESTED_LIFE
+	var note := I18n.t("A night's sleep heals you fully (life %d of %d). The day passes and prices settle.") % [GameState.life, GameState.max_life()]
+	if GameState.life >= GameState.max_life():
+		note = I18n.t("You are rested and whole (life %d of %d).") % [GameState.life, GameState.max_life()]
 	var nl := UIKit.label(note, 17, UIKit.DIM, true)
 	nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rest_row.add_child(nl)

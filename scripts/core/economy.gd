@@ -24,8 +24,7 @@ const DRIFT := 0.8               # what is left of a price swing after one day
 const MARKET_MIN := 0.6
 const MARKET_MAX := 1.8
 
-const INN_PRICE := 20            # a bed for the night: rested, you start the next duel with more life
-const RESTED_LIFE := 3
+const INN_PRICE := 20            # a bed for the night: you wake healed
 const CITY_TOLL := 8             # the gate of a city not of your faith
 const REGION_TOLL := 12          # bridges and ferries into another faith's lands
 const LOSS_SHARE := 0.2          # lose a duel: a fifth of your purse
@@ -58,6 +57,7 @@ static func buy_price(city_id: String, id: String) -> int:
 	var p := float(BUY.get(c.get("rarity", "common"), 99999))
 	if card_faith(id) == GameState.city(city_id).get("faction", ""):
 		p *= OWN_FAITH_BUY
+	p *= 1.0 - 0.05 * GameState.stat("charm")
 	return maxi(1, int(round(p * market(city_id, id))))
 
 
@@ -69,6 +69,7 @@ static func sell_price(city_id: String, id: String, foil: bool) -> int:
 		p *= market(city_id, id)
 	if foil:
 		p *= FOIL_SELL_MULT
+	p *= 1.0 + 0.05 * GameState.stat("charm")
 	return maxi(1, int(round(p)))
 
 
@@ -92,5 +93,28 @@ static func trend(city_id: String, id: String) -> String:
 
 ## What a duel lost or fled costs.
 static func defeat_cost(fled: bool) -> int:
-	var share := FLEE_SHARE if fled else LOSS_SHARE
+	var share: float = (FLEE_SHARE if fled else LOSS_SHARE) * float(GameState.diff("defeat"))
 	return mini(GameState.gold, maxi(MIN_LOSS, int(GameState.gold * share)))
+
+
+## Charm opens purses and doors.
+static func inn_price() -> int:
+	return maxi(5, INN_PRICE - 3 * GameState.stat("charm"))
+
+
+static func toll(base: int) -> int:
+	return int(round(base * maxf(0.0, 1.0 - 0.2 * GameState.stat("charm"))))
+
+
+## Spoils of a won duel: a chance of gold and a chance of a card, both raised by Dread.
+static func spoils_gold_chance() -> float:
+	return minf(0.95, 0.5 + 0.1 * GameState.stat("dread"))
+
+
+static func spoils_card_chance() -> float:
+	return minf(0.9, 0.3 + 0.1 * GameState.stat("dread"))
+
+
+## Gold won, after the difficulty's measure.
+static func income(g: int) -> int:
+	return int(round(g * float(GameState.diff("income"))))

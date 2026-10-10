@@ -80,6 +80,86 @@
 		"seconds": 75.4
 	},
 	{
+		"id": "sanctum_10",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "Ave Maris Stella",
+		"file": "res://music/sanctum_10.ogg",
+		"seconds": 180.0
+	},
+	{
+		"id": "sanctum_11",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "Compline",
+		"file": "res://music/sanctum_11.ogg",
+		"seconds": 90.1
+	},
+	{
+		"id": "sanctum_12",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "The Bells of Santa Lucerna",
+		"file": "res://music/sanctum_12.ogg",
+		"seconds": 174.3
+	},
+	{
+		"id": "sanctum_13",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "Psalm of the Pilgrims",
+		"file": "res://music/sanctum_13.ogg",
+		"seconds": 131.7
+	},
+	{
+		"id": "sanctum_14",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "The Hermit's Spring",
+		"file": "res://music/sanctum_14.ogg",
+		"seconds": 180.0
+	},
+	{
+		"id": "sanctum_15",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "Benedictus",
+		"file": "res://music/sanctum_15.ogg",
+		"seconds": 142.9
+	},
+	{
+		"id": "sanctum_16",
+		"faction": "sanctum",
+		"kind": "menu",
+		"title": "Lauds at Dawn",
+		"file": "res://music/sanctum_16.ogg",
+		"seconds": 108.2
+	},
+	{
+		"id": "sanctum_17",
+		"faction": "sanctum",
+		"kind": "combat",
+		"title": "Non Nobis Domine",
+		"file": "res://music/sanctum_17.ogg",
+		"seconds": 75.4
+	},
+	{
+		"id": "sanctum_18",
+		"faction": "sanctum",
+		"kind": "combat",
+		"title": "The Siege of the Krak",
+		"file": "res://music/sanctum_18.ogg",
+		"seconds": 59.0
+	},
+	{
+		"id": "sanctum_19",
+		"faction": "sanctum",
+		"kind": "combat",
+		"title": "Michael, Defend Us",
+		"file": "res://music/sanctum_19.ogg",
+		"seconds": 70.0
+	},
+	{
 		"id": "abyss_00",
 		"faction": "abyss",
 		"kind": "anthem",
@@ -158,6 +238,86 @@
 		"title": "Herald of Belzareth",
 		"file": "res://music/abyss_09.ogg",
 		"seconds": 73.5
+	},
+	{
+		"id": "abyss_10",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "The Ledger Opens",
+		"file": "res://music/abyss_10.ogg",
+		"seconds": 207.1
+	},
+	{
+		"id": "abyss_11",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "Candles of Black Wax",
+		"file": "res://music/abyss_11.ogg",
+		"seconds": 105.5
+	},
+	{
+		"id": "abyss_12",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "The Fen at Night",
+		"file": "res://music/abyss_12.ogg",
+		"seconds": 224.0
+	},
+	{
+		"id": "abyss_13",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "Whispers in the Crypt",
+		"file": "res://music/abyss_13.ogg",
+		"seconds": 145.4
+	},
+	{
+		"id": "abyss_14",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "A Debt Unpaid",
+		"file": "res://music/abyss_14.ogg",
+		"seconds": 192.6
+	},
+	{
+		"id": "abyss_15",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "The Bone Chapel",
+		"file": "res://music/abyss_15.ogg",
+		"seconds": 159.3
+	},
+	{
+		"id": "abyss_16",
+		"faction": "abyss",
+		"kind": "menu",
+		"title": "Ashes on the Wind",
+		"file": "res://music/abyss_16.ogg",
+		"seconds": 131.7
+	},
+	{
+		"id": "abyss_17",
+		"faction": "abyss",
+		"kind": "combat",
+		"title": "The Pact Called In",
+		"file": "res://music/abyss_17.ogg",
+		"seconds": 56.1
+	},
+	{
+		"id": "abyss_18",
+		"faction": "abyss",
+		"kind": "combat",
+		"title": "Grave Rising",
+		"file": "res://music/abyss_18.ogg",
+		"seconds": 103.6
+	},
+	{
+		"id": "abyss_19",
+		"faction": "abyss",
+		"kind": "combat",
+		"title": "Hellfire Procession",
+		"file": "res://music/abyss_19.ogg",
+		"seconds": 68.4
 	},
 	{
 		"id": "wild_00",
@@ -240,6 +400,86 @@
 		"seconds": 54.8
 	},
 	{
+		"id": "wild_10",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Mistletoe and Frost",
+		"file": "res://music/wild_10.ogg",
+		"seconds": 89.2
+	},
+	{
+		"id": "wild_11",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "The Hidden Spring",
+		"file": "res://music/wild_11.ogg",
+		"seconds": 139.4
+	},
+	{
+		"id": "wild_12",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Beneath the Elder Oak",
+		"file": "res://music/wild_12.ogg",
+		"seconds": 85.6
+	},
+	{
+		"id": "wild_13",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Fox and Hare",
+		"file": "res://music/wild_13.ogg",
+		"seconds": 117.1
+	},
+	{
+		"id": "wild_14",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Barrow Mist",
+		"file": "res://music/wild_14.ogg",
+		"seconds": 74.7
+	},
+	{
+		"id": "wild_15",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Wassail",
+		"file": "res://music/wild_15.ogg",
+		"seconds": 82.4
+	},
+	{
+		"id": "wild_16",
+		"faction": "wild",
+		"kind": "menu",
+		"title": "Song of the Fens",
+		"file": "res://music/wild_16.ogg",
+		"seconds": 174.3
+	},
+	{
+		"id": "wild_17",
+		"faction": "wild",
+		"kind": "combat",
+		"title": "Boar of the Weald",
+		"file": "res://music/wild_17.ogg",
+		"seconds": 72.6
+	},
+	{
+		"id": "wild_18",
+		"faction": "wild",
+		"kind": "combat",
+		"title": "The Hunt Rides Out",
+		"file": "res://music/wild_18.ogg",
+		"seconds": 96.6
+	},
+	{
+		"id": "wild_19",
+		"faction": "wild",
+		"kind": "combat",
+		"title": "Stag at Bay",
+		"file": "res://music/wild_19.ogg",
+		"seconds": 52.9
+	},
+	{
 		"id": "revel_00",
 		"faction": "revel",
 		"kind": "anthem",
@@ -318,6 +558,86 @@
 		"title": "Last Toast",
 		"file": "res://music/revel_09.ogg",
 		"seconds": 51.1
+	},
+	{
+		"id": "revel_10",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "Vintage Morning",
+		"file": "res://music/revel_10.ogg",
+		"seconds": 73.5
+	},
+	{
+		"id": "revel_11",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "The Idle Hour",
+		"file": "res://music/revel_11.ogg",
+		"seconds": 80.9
+	},
+	{
+		"id": "revel_12",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "Candlelit Gallery",
+		"file": "res://music/revel_12.ogg",
+		"seconds": 164.0
+	},
+	{
+		"id": "revel_13",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "Pleasure Garden",
+		"file": "res://music/revel_13.ogg",
+		"seconds": 83.2
+	},
+	{
+		"id": "revel_14",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "The Cellar Door",
+		"file": "res://music/revel_14.ogg",
+		"seconds": 169.0
+	},
+	{
+		"id": "revel_15",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "A Masked Guest",
+		"file": "res://music/revel_15.ogg",
+		"seconds": 64.9
+	},
+	{
+		"id": "revel_16",
+		"faction": "revel",
+		"kind": "menu",
+		"title": "Lute under the Balcony",
+		"file": "res://music/revel_16.ogg",
+		"seconds": 87.4
+	},
+	{
+		"id": "revel_17",
+		"faction": "revel",
+		"kind": "combat",
+		"title": "Rapiers at Midnight",
+		"file": "res://music/revel_17.ogg",
+		"seconds": 51.7
+	},
+	{
+		"id": "revel_18",
+		"faction": "revel",
+		"kind": "combat",
+		"title": "The Brawl at the Inn",
+		"file": "res://music/revel_18.ogg",
+		"seconds": 55.4
+	},
+	{
+		"id": "revel_19",
+		"faction": "revel",
+		"kind": "combat",
+		"title": "Fire and Wine",
+		"file": "res://music/revel_19.ogg",
+		"seconds": 49.5
 	},
 	{
 		"id": "lyceum_00",
@@ -400,6 +720,86 @@
 		"seconds": 77.3
 	},
 	{
+		"id": "lyceum_10",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "The Painted Porch",
+		"file": "res://music/lyceum_10.ogg",
+		"seconds": 180.0
+	},
+	{
+		"id": "lyceum_11",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "Olive Grove Walk",
+		"file": "res://music/lyceum_11.ogg",
+		"seconds": 120.5
+	},
+	{
+		"id": "lyceum_12",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "Tablets of Bronze",
+		"file": "res://music/lyceum_12.ogg",
+		"seconds": 224.0
+	},
+	{
+		"id": "lyceum_13",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "The Lighthouse Lamp",
+		"file": "res://music/lyceum_13.ogg",
+		"seconds": 96.1
+	},
+	{
+		"id": "lyceum_14",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "On Endurance",
+		"file": "res://music/lyceum_14.ogg",
+		"seconds": 154.9
+	},
+	{
+		"id": "lyceum_15",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "Evening Star",
+		"file": "res://music/lyceum_15.ogg",
+		"seconds": 142.9
+	},
+	{
+		"id": "lyceum_16",
+		"faction": "lyceum",
+		"kind": "menu",
+		"title": "The Long Walls",
+		"file": "res://music/lyceum_16.ogg",
+		"seconds": 156.3
+	},
+	{
+		"id": "lyceum_17",
+		"faction": "lyceum",
+		"kind": "combat",
+		"title": "Shield to Shield",
+		"file": "res://music/lyceum_17.ogg",
+		"seconds": 76.3
+	},
+	{
+		"id": "lyceum_18",
+		"faction": "lyceum",
+		"kind": "combat",
+		"title": "The Sophist Confounded",
+		"file": "res://music/lyceum_18.ogg",
+		"seconds": 100.0
+	},
+	{
+		"id": "lyceum_19",
+		"faction": "lyceum",
+		"kind": "combat",
+		"title": "Thermopylae",
+		"file": "res://music/lyceum_19.ogg",
+		"seconds": 71.7
+	},
+	{
 		"id": "machine_00",
 		"faction": "machine",
 		"kind": "anthem",
@@ -478,5 +878,85 @@
 		"title": "The Prime Engine",
 		"file": "res://music/machine_09.ogg",
 		"seconds": 74.4
+	},
+	{
+		"id": "machine_10",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "The Escapement",
+		"file": "res://music/machine_10.ogg",
+		"seconds": 121.3
+	},
+	{
+		"id": "machine_11",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "Blueprints by Lamplight",
+		"file": "res://music/machine_11.ogg",
+		"seconds": 154.9
+	},
+	{
+		"id": "machine_12",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "Steam and Brass",
+		"file": "res://music/machine_12.ogg",
+		"seconds": 88.3
+	},
+	{
+		"id": "machine_13",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "The Patent Office",
+		"file": "res://music/machine_13.ogg",
+		"seconds": 95.0
+	},
+	{
+		"id": "machine_14",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "The Waterwheel",
+		"file": "res://music/machine_14.ogg",
+		"seconds": 136.0
+	},
+	{
+		"id": "machine_15",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "Cog and Pinion",
+		"file": "res://music/machine_15.ogg",
+		"seconds": 103.6
+	},
+	{
+		"id": "machine_16",
+		"faction": "machine",
+		"kind": "menu",
+		"title": "The Observatory Dome",
+		"file": "res://music/machine_16.ogg",
+		"seconds": 199.6
+	},
+	{
+		"id": "machine_17",
+		"faction": "machine",
+		"kind": "combat",
+		"title": "Rivetwall",
+		"file": "res://music/machine_17.ogg",
+		"seconds": 68.4
+	},
+	{
+		"id": "machine_18",
+		"faction": "machine",
+		"kind": "combat",
+		"title": "Pressure Rising",
+		"file": "res://music/machine_18.ogg",
+		"seconds": 92.0
+	},
+	{
+		"id": "machine_19",
+		"faction": "machine",
+		"kind": "combat",
+		"title": "The Iron Leviathan",
+		"file": "res://music/machine_19.ogg",
+		"seconds": 69.2
 	}
 ]

@@ -424,7 +424,7 @@ static func _sure_combat_damage(st: BattleState, i: int) -> int:
 		else:
 			free.erase(blocker)
 			if a.has_kw("trample"):
-				total += maxi(0, _attack_power(a) - blocker.toughness() - (2 if blocker.has_kw("guardian") else 0))
+				total += maxi(0, _attack_power(a) - blocker.toughness())
 	return total
 
 
@@ -720,7 +720,7 @@ static func choose_attackers(st: BattleState, i: int) -> Array:
 			if not st.can_block(b, p):
 				continue
 			can_be_blocked = true
-			var b_t: int = b.toughness() + (2 if b.has_kw("guardian") else 0)
+			var b_t: int = b.toughness()
 			var kills_me: bool = b.power() >= p.toughness() or b.has_kw("deathtouch")
 			var i_kill: bool = ap >= b_t or p.has_kw("deathtouch")
 			if kills_me and not i_kill:
@@ -798,7 +798,7 @@ static func choose_blocks(st: BattleState, i: int) -> Dictionary:
 		for b in free:
 			if not st.can_block(b, ap):
 				continue
-			var b_t: int = b.toughness() + (2 if b.has_kw("guardian") else 0)
+			var b_t: int = b.toughness()
 			var survives: bool = ap.power() < b_t and not ap.has_kw("deathtouch")
 			var kills: bool = b.power() >= ap.toughness() or b.has_kw("deathtouch")
 			var score := 0.0
@@ -826,7 +826,7 @@ static func choose_blocks(st: BattleState, i: int) -> Dictionary:
 			free.erase(best)
 			var stopped: int = ap.power()
 			if ap.has_kw("trample"):
-				stopped = mini(ap.power(), best.toughness() + (2 if best.has_kw("guardian") else 0))
+				stopped = mini(ap.power(), best.toughness())
 			incoming -= stopped
 			in_danger = incoming >= me.life
 	return result

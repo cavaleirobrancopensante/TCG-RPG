@@ -167,7 +167,7 @@ func finish_draft() -> void:
 	decks = []
 	for s in SEATS:
 		var pl := pool(s)
-		decks.append(DeckTools.auto_build(pl, DeckTools.best_factions(pl, 2)) if s > 0 else {})
+		decks.append(DeckTools.auto_build(pl, DeckTools.best_factions(pl, 2), DeckTools.DRAFT_COPIES) if s > 0 else {})
 	bracket = range(SEATS)
 	# shuffle the seating so the first opponent is a surprise
 	for i in range(bracket.size() - 1, 0, -1):

@@ -54,7 +54,7 @@ with reverence. Angels are masculine. Soldiers/knights/fighters are men. No gend
 Keep unchanged: city names (Cogspire, Santa Lucerna, Porticus, Elderholt, Vinemere, Ashenmouth), personal
 names (Father Anselm → keep the name but translate the title separately), Latin (Lumen Ecclesiae, Deus Vult,
 Victoria, Clades, Aurea), "TCG · RPG", symbols (♥ ◉ ✦ ✉ ⚔ ★ ✗ ▶ ♪), and any card/creature proper name like
-"Belzareth", "Cernoth", "Vessaria", "Aristeon" (translate only the epithet after the comma).
+"Belzareth", "Cernoth", "Vessar", "Aristeon" (translate only the epithet after the comma).
 
 ## Set 2 terms (es)
 

@@ -7,7 +7,7 @@ After the set was written, the AI played every faith against every other (600 du
 - **Antlered Barrow-Stag** went from 3/3 to 3/2, matching the early-2000s rate for a three-mana common with a keyword.
 - **White Hart of the Greenwood** went from 3/3 to 2/3. It won almost nine games in ten when cast.
 - **Fen-Worm of the Wear** went from 6/6 to 5/5. Trample and regenerate on a 6/6 for six left no answer at common removal levels.
-- **Vessaria** no longer costs life each upkeep, and her Idle deals 2 to the enemy player instead of 1. As a 0/5 who never fights, she needed to matter.
+- **Vessar** no longer costs life each upkeep, and his Idle deals 2 to the enemy player instead of 1. As a 0/5 who never fights, he needed to matter.
 - **Bottomless Wine Cask** no longer costs life. It only rummages, so the price was too high.
 - **Carnival of Cinders** costs 1 life instead of 3, since it already hurts your own creatures.
 - **Ledger of the Damned** costs 1 life per card instead of 2.

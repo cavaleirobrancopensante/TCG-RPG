@@ -53,7 +53,14 @@ const HEROES := {
 var stats: Dictionary = {"wins": 0, "losses": 0, "boosters_opened": 0}
 var market: Dictionary = {}       # city -> card id -> [price swing, day it was set]
 var day := 0                      # one passes with every duel and every night at an inn
-var rested := false               # slept at an inn: more life in the next duel
+var rested := false               # (old saves) slept at an inn
+var attrs: Dictionary = {}        # the hero's six stats (see Hero.STATS)
+var difficulty := "knight"
+var look: Dictionary = {}         # the hero's appearance (see Hero)
+var life := 10                    # carried from duel to duel, healed by time and inns
+var clock := 8.0                  # hour of the day; it runs only while you travel
+var explored := PackedByteArray() # fog of war: one byte per map cell, 1 = seen
+var _regen := 0.0
 var last_region := ""             # the faith of the lands you are in (for tolls)
 var errand: Dictionary = {}       # a favour asked by a friend on the road: {giver, need, done, reward}
 var slot := 1                     # the slot this run auto-saves into
@@ -80,10 +87,21 @@ func _ready() -> void:
 
 # ---------------------------------------------------------------- new / save / load
 
-func new_game(into_slot: int = 1, hero_faith: String = "sanctum") -> void:
+func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Dictionary = {}) -> void:
 	slot = into_slot
 	hero = hero_faith if HEROES.has(hero_faith) else "sanctum"
 	player_name = settings.get("player_name", "Wanderer")
+	if sheet.is_empty():
+		sheet = Hero.random_sheet(rng)
+		sheet["faith"] = hero
+	player_name = String(sheet.get("name", player_name))
+	attrs = Dictionary(sheet.get("stats", Hero.random_stats(rng, hero))).duplicate()
+	look = Dictionary(sheet.get("look", Hero.random_look(rng, hero))).duplicate()
+	difficulty = String(sheet.get("difficulty", "knight"))
+	life = max_life()
+	clock = 8.0
+	explored = PackedByteArray()
+	_regen = 0.0
 	play_time = 0.0
 	_session_start = Time.get_ticks_msec()
 	gold = START_GOLD
@@ -207,6 +225,8 @@ func save_game(n: int = 0) -> void:
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
 		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand,
+		"attrs": attrs, "difficulty": difficulty, "look": Hero.look_to_save(look), "life": life, "clock": clock,
+		"explored": Marshalls.raw_to_base64(explored),
 		"meta": _meta(),
 	}
 	_extra_save(data)
@@ -297,6 +317,18 @@ func load_game(n: int = 0) -> bool:
 	rested = bool(data.get("rested", false))
 	last_region = String(data.get("last_region", ""))
 	errand = data.get("errand", {})
+	attrs = data.get("attrs", {})
+	if attrs.is_empty():      # saves from before the hero sheet: a sheet that suits the faith
+		var r := RandomNumberGenerator.new()
+		r.seed = hash(player_name)
+		attrs = Hero.random_stats(r, hero if hero != "" else "sanctum")
+	for k in Hero.STAT_ORDER:
+		attrs[k] = int(attrs.get(k, 0))
+	difficulty = String(data.get("difficulty", "knight"))
+	look = Hero.look_from_save(data.get("look", {}))
+	life = clampi(int(data.get("life", max_life())), 1, max_life())
+	clock = float(data.get("clock", 8.0))
+	explored = Marshalls.base64_to_raw(String(data.get("explored", "")))
 	_extra_load(data)
 	# Drop cards that no longer exist in the database (set revisions).
 	var dicts: Array = [collection, foils]
@@ -402,13 +434,56 @@ func buy_booster() -> bool:
 	return true
 
 
-## A night at the inn: the day passes and you wake rested.
+## A night at the inn: you wake healed at seven the next morning.
 func rest_at_inn() -> bool:
-	if rested or not spend_gold(Economy.INN_PRICE):
+	if not spend_gold(Economy.inn_price()):
 		return false
-	rested = true
+	life = max_life()
 	day += 1
+	clock = 7.0
 	return true
+
+
+# ------------------------------------------------------------------ the hero sheet
+
+func stat(name: String) -> int:
+	return int(attrs.get(name, 0))
+
+
+func max_life() -> int:
+	return Hero.BASE_LIFE + 2 * stat("devotion")
+
+
+func hand_size() -> int:
+	return Hero.BASE_HAND + stat("reason")
+
+
+func max_copies() -> int:
+	return 1 + stat("industry")
+
+
+func diff(key: String):
+	return Hero.DIFFICULTY.get(difficulty, Hero.DIFFICULTY["knight"])[key]
+
+
+## Time passes on the road: the clock turns, new days begin, wounds heal.
+## One hour mends one point of life.
+func advance_clock(hours: float) -> void:
+	clock += hours
+	while clock >= 24.0:
+		clock -= 24.0
+		day += 1
+	if life < max_life():
+		_regen += hours
+		while _regen >= 1.0 and life < max_life():
+			_regen -= 1.0
+			life += 1
+	else:
+		_regen = 0.0
+
+
+func is_night() -> bool:
+	return clock < 6.0 or clock >= 20.0
 
 
 ## Opens one pending booster; returns the cards (already added to the collection).
@@ -436,7 +511,7 @@ func hero_look() -> Dictionary:
 	if not HEROES.has(hero):
 		return {}
 	var h: Dictionary = HEROES[hero]
-	return {"faction": hero, "subtype": h["subtype"], "name": h["name"]}
+	return {"faction": hero, "subtype": h["subtype"], "name": player_name, "look": look}
 
 
 func ensure_deck() -> void:

@@ -8,8 +8,8 @@ signal tapped(fig: SummonFigure)
 
 const SIZE := Vector2(118, 158)
 const KW_ICONS := {"flying": "✈", "reach": "R", "haste": "»", "lifelink": "♥", "deathtouch": "☠",
-	"vigilance": "◉", "trample": "T", "defender": "▣", "guardian": "⛨", "sanctified": "✚",
-	"dread": "☾", "regenerate": "↻", "first_strike": "‼", "steadfast": "▲"}
+	"vigilance": "◉", "trample": "T", "defender": "▣", "martyr": "✝", "sanctified": "✚",
+	"dread": "☾", "regenerate": "↻", "first_strike": "‼", "unmoved": "◆"}
 
 var uid := -1
 var card: Dictionary = {}

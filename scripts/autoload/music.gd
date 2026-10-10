@@ -83,6 +83,11 @@ func label(t: Dictionary) -> String:
 
 ## kind: "menu" | "world" | "city" | "battle" | "lair". faction may be "" for menu.
 func set_context(kind: String, faction: String = "") -> void:
+	# on the road and in towns you hear your own faith's music, wherever you are;
+	# a duel plays the music of the faith you are fighting
+	if (kind == "world" or kind == "city") and GameState.hero != "":
+		kind = "home"
+		faction = GameState.hero
 	var key := kind + ":" + faction
 	if key == context:
 		return
@@ -111,6 +116,8 @@ func set_context(kind: String, faction: String = "") -> void:
 	match kind:
 		"menu":
 			list = faction_tracks_all("anthem")
+		"home":
+			list = faction_tracks(faction, "anthem") + faction_tracks(faction, "menu")
 		"world":
 			list = faction_tracks(faction, "menu")
 		"city":

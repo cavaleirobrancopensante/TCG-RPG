@@ -159,16 +159,16 @@ def sanctum_c_008(p):
 
 
 def sanctum_c_003(p):
-    """Novice of the Choir: a young novice in the white veil sings Vespers in the
-    candlelit choir, and the shadows at the windows draw back."""
+    """Novice of the Choir: a young tonsured novice sings Vespers in the candlelit
+    choir, and the shadows at the windows draw back."""
     gothic_choir(p, dark=True, windows=3)
     choir_stalls(p, 520, -10, W + 10, OAK.dark(0.15), 230)
     p.glow((470, 300), 380, C.hex('ffe7a8'), 0.45)
     candlestick(p, 140, 600, 150)
     candlestick(p, 860, 600, 150)
     lectern(p, 770, 600, 220)
-    Fig(pose='book', garb='habit', main=BLACK_HABIT, head='veil', hood_col=LEAD_WHITE, belt='leather', mouth='open', eyes='up',
-        scapular=BLACK_HABIT.light(0.06), props_front=[PR.book('both', CRIMSON, open_=True)], blush=0.8).draw(p, 450, 598, 450)
+    Fig(pose='book', garb='habit', main=BLACK_HABIT, hair='tonsure', hair_col=C.hex('7a5230'), belt='leather', mouth='open', eyes='up',
+        scapular=BLACK_HABIT.light(0.06), props_front=[PR.book('both', CRIMSON, open_=True)], blush=0.6).draw(p, 450, 598, 450)
     # sung notes as little golden sparks rising
     for i in range(9):
         q = (520 + i * 22, 210 - i * 16 + math.sin(i) * 10)
@@ -762,8 +762,8 @@ def _sitting_in_bed(p, x, y_mat, h, fig, flip=False):
 
 
 def sanctum_u_001(p):
-    """Sister of Mercy: in the hospital hall a sister gives water to a wounded
-    knight of one banner, while a man of the other banner sleeps in the next bed."""
+    """Brother of Mercy: in the hospital hall a brother of the Hospital gives water to
+    a wounded knight of one banner, while a man of the other banner sleeps in the next bed."""
     wall = C.hex('d8ccb0')
     L.ashlar(p, (-5, -5, W + 5, 560), wall, 40, 90, 0.7)
     for x0 in (20, 360, 700):
@@ -797,8 +797,8 @@ def sanctum_u_001(p):
     for xx in (220, 300, 380):
         p.fold([(xx, 508), (xx + 6, 590)], C.hex('c9b893'), 1.4)
     p.shape([(420, 600, 0), (420, 520, 0), (436, 520, 0), (436, 600, 0)], OAK.dark(0.1), width=1.4, smooth=False)
-    # the sister with cup and towel
-    Fig(pose='offer', garb='habit', main=C.hex('5a6a8a'), head='veil', hood_col=LEAD_WHITE, scapular=LEAD_WHITE, belt='cord', eyes='down',
+    # the brother of the Hospital with cup and towel
+    Fig(pose='offer', garb='habit', main=C.hex('2c2a30'), hair='short', hair_col=C.hex('5a3a22'), beard='short', emblem='maltese', belt='cord', eyes='down',
         props_front=[PR.chalice('f') if False else _cup('f')], hands=((26, -66), (6, -58), True, 1, -1), blush=0.7).draw(p, 380, 600, 450, flip=True)
 
 
@@ -1761,8 +1761,8 @@ def _rose_bush(p, x, y, s=1.0):
 
 
 def sanctum_r_001(p):
-    """Abbess of the Silent Order: in the enclosed garden at evening the old abbess
-    lays a finger on her lips, her sisters walking in silence behind her."""
+    """Abbot of the Silent Order: in the enclosed garden at evening the old abbot
+    lays a finger on his lips, his monks walking in silence behind him."""
     bg.dusk_sky(p)
     L.ashlar(p, (-5, 300, W + 5, 470), C.hex('b8a888'), 34, 80)
     p.shape([(-5, 290, 0), (W + 5, 290, 0), (W + 5, 304, 0), (-5, 304, 0)], C.hex('8a4b34'), width=1.6, smooth=False)
@@ -1776,11 +1776,11 @@ def sanctum_r_001(p):
     p.line([(750, 430), (750, 480)], INK, 1.4, smooth=False)
     p.shape([(740, 480, 0), (760, 480, 0), (758, 496, 0), (742, 496, 0)], OAK, width=1.2, smooth=False)
     for x, h in ((560, 230), (640, 210)):
-        Fig(pose='pray', garb='habit', main=BENEDICTINE, head='veil', hood_col=C.hex('1a181e'), belt='leather', eyes='down').draw(p, x, 500, h, flip=True)
+        Fig(pose='pray', garb='habit', main=BENEDICTINE, head='cowl', hair='tonsure', hair_col=C.hex('6a4a2a'), belt='leather', eyes='down').draw(p, x, 500, h, flip=True)
     def finger(p, j):
         x, y = j['hand_b']
         p.taper([(x + 0.6, y - 1.6), (x + 0.4, y - 6.2)], 0.8, 0.65, SKIN, width=1.1)
-    ab = Fig(pose='hold', garb='habit', main=BENEDICTINE, head='veil', hood_col=C.hex('1a181e'), belt='leather', hands=((15, -60), (5.4, -82), True, 1, 1),
+    ab = Fig(pose='hold', garb='habit', main=BENEDICTINE, head='cowl', hair='white', beard='long', belt='leather', hands=((15, -60), (5.4, -82), True, 1, 1),
              props_back=[PR.staff('f', 'crook', 104, C.hex('6b4a2a'))], props_front=[finger], eyes='open', age='old', cloak='cope',
              cloak_col=C.hex('2a2630'), trim=GOLD, sleeves='fitted')
     ab.draw(p, 330, 600, 470)

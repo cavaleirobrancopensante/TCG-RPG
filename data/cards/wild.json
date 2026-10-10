@@ -50,7 +50,7 @@
       }
     ],
     "text": "Tap: add G.",
-    "flavor": "She coaxes the green out of the soil the way one coaxes a shy child.",
+    "flavor": "He coaxes the green out of the soil the way one coaxes a shy child.",
     "art": "res://art/cards/wild_c_002.webp"
   },
   {
@@ -131,7 +131,7 @@
       }
     ],
     "text": "When this enters, create a 1/1 Sapling token.",
-    "flavor": "Every acorn she lets fall is a gift to someone two hundred years from now.",
+    "flavor": "Every acorn he lets fall is a gift to someone two hundred years from now.",
     "art": "res://art/cards/wild_c_005.webp"
   },
   {
@@ -661,7 +661,7 @@
       }
     ],
     "text": "When this enters, create two 1/1 Sapling tokens.",
-    "flavor": "She plants acorns as she walks; by evening they walk beside her.",
+    "flavor": "He plants acorns as he walks; by evening they walk beside him.",
     "art": "res://art/cards/wild_u_005.webp"
   },
   {

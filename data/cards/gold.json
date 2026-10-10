@@ -135,7 +135,7 @@
     "power": 2,
     "toughness": 4,
     "keywords": [
-      "steadfast"
+      "unmoved"
     ],
     "effects": [
       {
@@ -154,13 +154,13 @@
     "statics": [
       {
         "static": "keyword",
-        "keyword": "steadfast",
+        "keyword": "unmoved",
         "scope": "other_own_creatures",
         "condition": "grace"
       }
     ],
     "overclock": {},
-    "text": "Steadfast (prevent 1 of the damage dealt to it by each source). As long as you have more life than you started with, other creatures you control have steadfast. When this dies, draw two cards and gain 3 life.",
+    "text": "Unmoved. As long as you have more life than you started with, other creatures you control have unmoved. When this dies, draw two cards and gain 3 life.",
     "flavor": "In his cell he wrote that Philosophy came to console him. Then he went out to his death a Christian, and Pavia keeps his feast.",
     "art": "res://art/cards/gold_sanctum_lyceum.webp"
   },
