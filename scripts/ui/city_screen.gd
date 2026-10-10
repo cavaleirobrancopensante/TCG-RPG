@@ -270,9 +270,17 @@ func _view_sell(listing: Array, at: int) -> void:
 
 func _show_inn() -> void:
 	content.add_child(UIKit.label("A warm fire, a bed and a ledger. Your progress is saved whenever you rest here.", 20, UIKit.TEXT, true))
-	content.add_child(UIKit.button("Rest & save", func():
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	content.add_child(row)
+	row.add_child(UIKit.button("Rest & save (slot %s)" % SlotScreen._roman(GameState.slot), func():
 		GameState.save_game()
-		_toast("Game saved."), 220))
+		_toast("Game saved."), 300))
+	row.add_child(UIKit.button("Save to another slot…", func():
+		var sc := SlotScreen.create("save")
+		sc.chosen.connect(func(n): GameState.save_game(n))
+		sc.closed.connect(_show)
+		add_child(sc), 300))
 	var s: Dictionary = GameState.stats
 	content.add_child(UIKit.label("Duels won: %d   lost: %d   boosters opened: %d   cards owned: %d" % [
 		int(s.get("wins", 0)), int(s.get("losses", 0)), int(s.get("boosters_opened", 0)), _owned_total()], 18, UIKit.DIM))
