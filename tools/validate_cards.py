@@ -31,11 +31,11 @@ ACTION_OWNERS = {
     "buff": FAITHS, "lose_life": FAITHS,
 }
 CONDITION_OWNER = {"grace": "sanctum", "composure": "lyceum", "rooted": "wild", "carouse": "revel", "bloodied": "abyss"}
-TRIGGERS = ["enter", "death", "upkeep", "attack", "cast", "idle"]
+TRIGGERS = ["enter", "death", "upkeep", "attack", "cast", "idle", "ally_enter"]
 TARGETS = ["", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self_player", "enemy_player", "self",
            "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
-STATICS = {"anthem": None, "keyword": None, "assembly": "machine", "cost_reduce": "machine"}
-COUNTS = {"common": 20, "uncommon": 13, "rare": 9, "mythic": 3}
+STATICS = {"anthem": None, "keyword": None, "assembly": "machine", "cost_reduce": None, "kinship": None}
+COUNTS = {"common": 27, "uncommon": 18, "rare": 11, "mythic": 4}
 DASHES = re.compile("[‒–—―−]")
 WOMEN = [" she ", " her ", " hers ", "woman", "maiden", "lady", "queen", "sister", "mother", "wife", "daughter"]
 FIGHTERS = ["Soldier", "Knight", "Paladin", "Warrior", "Duelist", "Assassin", "Hoplite", "Guard", "Sentinel", "Lancer", "Berserker", "Champion"]
@@ -125,6 +125,13 @@ def check_card(c, owners_override=None):
         check_effect(cid, faith, e, "effect", owners)
         if c.get("type") == "spell" and e.get("trigger") != "cast":
             bad(cid, "spell effects need trigger cast")
+    if c.get("speed") not in [None, "instant"]:
+        bad(cid, "speed must be 'instant' or absent")
+    if c.get("speed") and c.get("type") != "spell":
+        bad(cid, "only spells can be instants")
+    for e in c.get("effects", []):
+        if e.get("trigger") == "ally_enter" and not e.get("ally_subtype"):
+            bad(cid, "ally_enter needs ally_subtype")
     for ab in c.get("abilities", []):
         cost = ab.get("cost", {})
         if cost.get("sacrifice") in ["other", "self"] and "abyss" not in owners and not (cost.get("sacrifice") == "self" and "machine" in owners):
@@ -139,6 +146,10 @@ def check_card(c, owners_override=None):
             bad(cid, "unknown static %r" % kind)
         elif STATICS[kind] and STATICS[kind] not in owners:
             bad(cid, "static %s is %s only" % (kind, STATICS[kind]))
+        if kind == "cost_reduce" and not s.get("subtype") and "machine" not in owners:
+            bad(cid, "cost_reduce without a subtype is Technocracy only")
+        if kind == "kinship" and not s.get("subtype"):
+            bad(cid, "kinship needs a subtype")
         if kind == "keyword" and KEYWORD_OWNER.get(s.get("keyword")) not in owners:
             bad(cid, "static keyword %s not owned" % s.get("keyword"))
         if kind == "anthem" and s.get("scope") in ["own_creatures", "other_own_creatures"] and "sanctum" not in owners and not s.get("subtype"):

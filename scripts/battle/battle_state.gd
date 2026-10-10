@@ -408,7 +408,33 @@ func static_bonus(p: Perm) -> Vector2i:
 							for other in side(p.owner).creatures:
 								if other != p and other.subtype_has("Construct"):
 									out += Vector2i(1, 1)
+					"kinship":
+						# +P/+T for each other creature of the tribe you control
+						if src == p and cond_ok(src.owner, stc.get("condition", ""), src):
+							var kin := count_kin(p.owner, String(stc.get("subtype", "")), p)
+							out += Vector2i(int(stc.get("power", 1)) * kin, int(stc.get("toughness", 1)) * kin)
 	return out
+
+
+## How many creatures of a tribe a side controls (not counting `except`).
+func count_kin(i: int, subtype: String, except: Perm = null) -> int:
+	var n := 0
+	for c in side(i).creatures:
+		if c != except and (subtype == "" or c.subtype_has(subtype)):
+			n += 1
+	return n
+
+
+## A creature has just come into play: tell its kin ("whenever another Knight enters").
+func _entered(p: Perm) -> void:
+	for src in side(p.owner).creatures + side(p.owner).relics:
+		if src == p or find_perm(src.uid) == null:
+			continue
+		for e in src.card.get("effects", []):
+			if e.get("trigger") == "ally_enter" and p.subtype_has(String(e.get("ally_subtype", ""))):
+				resolve_effect(src.owner, e, src, null)
+				if phase == "over":
+					return
 
 
 func granted_keyword(p: Perm, k: String) -> bool:
@@ -476,11 +502,18 @@ func effective_cost(i: int, c: Dictionary, extra: Dictionary = {}) -> Dictionary
 	if c.get("type") == "land":
 		return {}
 	var gen := int(cost.get("generic", 0))
-	if c.get("faction", "") == "machine" or c.get("faction2", "") == "machine":
-		for src in side(i).creatures + side(i).relics:
-			for stc in src.card.get("statics", []):
-				if stc.get("static", "") == "cost_reduce":
+	var is_machine: bool = c.get("faction", "") == "machine" or c.get("faction2", "") == "machine"
+	for src in side(i).creatures + side(i).relics:
+		for stc in src.card.get("statics", []):
+			if stc.get("static", "") != "cost_reduce":
+				continue
+			var sub := String(stc.get("subtype", ""))
+			if sub != "":
+				# tribal: your creature cards of that tribe cost less
+				if c.get("type") == "creature" and String(c.get("subtype", "")).contains(sub):
 					gen -= int(stc.get("amount", 1))
+			elif is_machine:
+				gen -= int(stc.get("amount", 1))
 	gen = maxi(0, gen) + side(i).tax
 	if gen > 0:
 		cost["generic"] = gen
@@ -722,6 +755,7 @@ func play(i: int, hand_idx: int, targets: Array = [], overclock: bool = false) -
 			s.creatures.append(p)
 			emit({"type": "summon", "side": i, "uid": p.uid, "id": id})
 			_run_effects(i, c, "enter", p, targets)
+			_entered(p)
 			if overclock:
 				emit({"type": "overclock", "side": i, "uid": p.uid})
 				_run_list(i, c.get("overclock", {}).get("effects", []), p, oc_targets)
@@ -939,6 +973,16 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 	var me := side(i)
 	var enemy := side(1 - i)
 	var amount := int(e.get("amount", 1))
+	if e.has("amount_per"):
+		# tribal scaling: amount for each creature of the tribe you control
+		var kin := count_kin(i, String(e["amount_per"]))
+		amount *= kin
+		if e.get("action") == "buff":
+			e = e.duplicate()
+			e["power"] = int(e.get("power", 0)) * kin
+			e["toughness"] = int(e.get("toughness", 0)) * kin
+		if kin <= 0:
+			return
 	var t: String = e.get("target", "")
 	if TARGET_CHOICE_TYPES.has(t):
 		if chosen == null or not _ref_still_valid(i, e, chosen):
@@ -1077,6 +1121,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				p.is_token = true
 				me.creatures.append(p)
 				emit({"type": "summon", "side": i, "uid": p.uid, "id": "token", "token": c})
+				_entered(p)
 		"add_mana":
 			var col: String = e.get("color", "C")
 			me.pool[col] = int(me.pool.get(col, 0)) + amount
@@ -1100,6 +1145,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				var rp := _make_perm(i, best, CardDB.get_card(best))
 				me.creatures.append(rp)
 				emit({"type": "summon", "side": i, "uid": rp.uid, "id": best, "reanimated": true})
+				_entered(rp)
 		"foresight":
 			_foresight(i, amount)
 		"tax":

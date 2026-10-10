@@ -198,6 +198,13 @@ func _lib() -> void:
 			"overclock": {"cost": {"generic": 2}, "effects": [{"action": "buff", "target": "self", "power": 2, "toughness": 2, "duration": "permanent"}]}},
 		"Hauler": {"faction": "machine", "type": "creature", "subtype": "Construct", "cost": {"generic": 2}, "power": 4, "toughness": 3, "effects": [{"trigger": "upkeep", "action": "upkeep_cost", "amount": 1}]},
 		"Comptroller": {"faction": "machine", "type": "creature", "cost": {"C": 1}, "power": 1, "toughness": 2, "statics": [{"static": "cost_reduce", "amount": 1}]},
+		"Packwolf": {"faction": "wild", "type": "creature", "subtype": "Wolf", "cost": {"G": 1, "generic": 1}, "power": 2, "toughness": 2, "statics": [{"static": "kinship", "subtype": "Wolf", "power": 1, "toughness": 0}]},
+		"Banneret": {"faction": "sanctum", "type": "creature", "subtype": "Human Knight", "cost": {"W": 1, "generic": 1}, "power": 2, "toughness": 2,
+			"effects": [{"trigger": "ally_enter", "ally_subtype": "Knight", "action": "heal", "target": "self_player", "amount": 1}],
+			"statics": [{"static": "cost_reduce", "subtype": "Knight", "amount": 1}]},
+		"Squire": {"faction": "sanctum", "type": "creature", "subtype": "Human Knight", "cost": {"W": 1, "generic": 2}, "power": 2, "toughness": 2},
+		"Symposium": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "draw", "amount": 1, "amount_per": "Philosopher"}]},
+		"Sage": {"faction": "lyceum", "type": "creature", "subtype": "Human Philosopher", "cost": {"U": 1}, "power": 1, "toughness": 1},
 		"Druid": {"faction": "wild", "type": "creature", "cost": {"G": 1}, "power": 1, "toughness": 1, "abilities": [{"cost": {"tap": true}, "effects": [{"action": "add_mana", "color": "G", "amount": 1}], "text": "Tap: add G."}]},
 		"Altar": {"faction": "abyss", "type": "relic", "cost": {"B": 1}, "abilities": [{"cost": {"sacrifice": "other"}, "effects": [{"action": "drain", "amount": 1}], "text": "Sacrifice a creature: drain 1."}]},
 		"Manacles": {"faction": "machine", "type": "relic", "cost": {"generic": 2}, "effects": [{"trigger": "enter", "action": "snare", "target": "enemy_creature"}]},
@@ -292,6 +299,31 @@ func _named(st: BattleState, i: int, name: String) -> int:
 	return n
 
 
+func _test_tribes() -> void:
+	var st := _duel()
+	var w1 := _put(st, 0, "Packwolf")
+	check(w1.power() == 2, "kinship alone: no bonus")
+	_put(st, 0, "Packwolf")
+	_put(st, 0, "Bear")
+	check(w1.power() == 3 and w1.toughness() == 2, "kinship counts the other wolf only")
+	st = _duel()
+	_put(st, 0, "Banneret")
+	var cost := st.effective_cost(0, CardDB.get_card(_id("Squire")))
+	check(int(cost.get("generic", 0)) == 1, "tribal cost_reduce cuts a Knight's cost")
+	check(int(st.effective_cost(0, CardDB.get_card(_id("Bear"))).get("generic", 0)) == 1, "tribal cost_reduce leaves other creatures alone")
+	var life := st.side(0).life
+	_hand(st, 0, ["Squire"])
+	st.play(0, st.side(0).hand.size() - 1)
+	check(st.side(0).life == life + 1, "ally_enter fires when another Knight enters")
+	st = _duel()
+	_put(st, 0, "Sage")
+	_put(st, 0, "Sage")
+	var n := st.side(0).hand.size()
+	_hand(st, 0, ["Symposium"])
+	st.play(0, st.side(0).hand.size() - 1)
+	check(st.side(0).hand.size() == n + 2, "amount_per draws one for each Philosopher")
+
+
 func test_mulligan() -> void:
 	print("-- mulligan")
 	var deck: Array = []
@@ -332,6 +364,7 @@ func test_mulligan() -> void:
 func test_mechanics() -> void:
 	print("-- card mechanics")
 	_lib()
+	_test_tribes()
 	var st := _duel()
 	# Martyr, deathtouch, trample, lifelink, first strike, unmoved.
 	var bear := _put(st, 0, "Bear")

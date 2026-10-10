@@ -184,6 +184,43 @@ Servos with `"sacrifice": "servo"`).
 - `assembly`: this creature gets +1/+1 for each other Construct you control (Technocracy).
 - `cost_reduce`: your Technocracy cards cost N less generic mana (Technocracy).
 
+## Tribes (1.23)
+
+Each faith has two tribes, named in creature subtypes (a subtype "contains" a tribe word,
+so "Human Knight" is a Knight and "Undead Zombie" is Undead):
+
+| faith | tribes |
+|---|---|
+| Church | Knight, Angel |
+| Black Pact | Undead, Demon |
+| Old Ways | Wolf, Treefolk |
+| Revel | Noble, Performer |
+| Stoa | Hoplite, Philosopher |
+| Technocracy | Construct, Artificer |
+
+Tribal tools (any faith, always with its own tribes):
+- static `anthem` with `subtype` (other members of the tribe get +X/+Y).
+- static `kinship`: `{"static": "kinship", "subtype": "Wolf", "power": 1, "toughness": 0}`:
+  this creature gets +P/+T for each **other** creature of the tribe you control.
+- static `cost_reduce` with `subtype`: your creature cards of that tribe cost N less generic.
+- static `keyword` with a scope and `subtype` (grant a keyword the faith owns to the tribe).
+- trigger `ally_enter` with `ally_subtype`: whenever **another** creature of the tribe enters
+  under your control (targets are chosen automatically, so use automatic targets or
+  `own_creature`/`enemy_creature` that are safe to auto-pick).
+- `amount_per` on an effect: the amount (or a buff's power and toughness) is multiplied by
+  the number of creatures of that tribe you control, e.g. `{"action": "draw", "amount": 1,
+  "amount_per": "Philosopher"}`.
+- target filter `subtype` (already present), e.g. a buff on `all_own_creatures` with
+  `"subtype": "Angel"`.
+- `summon` tokens with the tribe in their subtype count as members.
+
+## Instants
+
+A spell with `"speed": "instant"` may be cast whenever you have priority: in either
+player's turn, in combat, and in answer to another spell or ability on the stack. Instants
+are fewer and a little dearer than sorcery-speed spells (about +1 mana for the same effect
+at common, or a smaller effect). Combat tricks, counters of a sort and protection belong here.
+
 ## Overclock (Technocracy kicker)
 
 ```json
@@ -206,7 +243,7 @@ two +1/+1 counters."
 
 ## Per faith counts (Set 2)
 
-45 cards per faith: **20 common, 13 uncommon, 9 rare, 3 mythic**. Roughly 26 creatures,
+60 cards per faith: **27 common, 18 uncommon, 11 rare, 4 mythic** (the last 15 of each faith, added in 1.23, are tribal). Roughly 26 creatures,
 12 spells and 7 relics, with a smooth curve (about 6 one- and two-drops among the commons).
 Plus 15 dual-faith (gold) cards and 15 dual gain-lands made separately. Total 300.
 
