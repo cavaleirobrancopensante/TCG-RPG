@@ -10,6 +10,7 @@ signal open_tournament
 const SCALE := 0.55
 
 var city: Dictionary
+var city_id := ""
 var faction := "machine"
 var content: VBoxContainer
 var gold_label: Label
@@ -19,6 +20,7 @@ var rarity_filter := "all"
 
 func setup(city_id: String) -> void:
 	city = GameState.city(city_id)
+	self.city_id = city_id
 	faction = city.get("faction", "machine")
 
 
@@ -192,7 +194,7 @@ func _show_shop() -> void:
 	var top := HBoxContainer.new()
 	top.add_theme_constant_override("separation", 12)
 	content.add_child(top)
-	top.add_child(UIKit.button(I18n.t("Buy booster (%d)") % Factions.BOOSTER_PRICE, func():
+	top.add_child(UIKit.button(I18n.t("Buy booster (%d)") % Economy.BOOSTER_PRICE, func():
 		if GameState.buy_booster():
 			_toast("Booster bought.")
 		else:
@@ -202,12 +204,13 @@ func _show_shop() -> void:
 	open.disabled = GameState.pending_boosters <= 0
 	top.add_child(open)
 	content.add_child(UIKit.label(I18n.t("Singles: %s and Technocracy cards. Tap a card to read it and buy from there.") % Factions.info(faction)["short"], 18, UIKit.DIM))
+	content.add_child(UIKit.label(I18n.t("%s cards are cheaper here. Every copy you buy raises the price here; prices settle back day by day. ▲ dearer than usual, ▼ cheaper.") % Factions.info(faction)["short"], 16, UIKit.DIM, true))
 	var rf := HBoxContainer.new()
 	content.add_child(rf)
 	for r in ["all"] + Factions.RARITIES:
 		var rr: String = r
 		var b := Button.new()
-		b.text = I18n.t(rr.capitalize()) + ("" if rr == "all" else " (%d)" % Factions.BUY_PRICE[rr])
+		b.text = I18n.t(rr.capitalize())
 		b.custom_minimum_size = Vector2(0, 44)
 		b.pressed.connect(func():
 			rarity_filter = rr
@@ -236,7 +239,7 @@ func _show_shop() -> void:
 		var at := li
 		cv.tapped.connect(func(_v): _view_shop(listing, at))
 		cell.add_child(cv)
-		var price := UIKit.label("◉ %d" % Factions.BUY_PRICE[c["rarity"]], 15, UIKit.GOLD)
+		var price := UIKit.label("◉ %d %s" % [Economy.buy_price(city_id, id), Economy.trend(city_id, id)], 15, UIKit.GOLD)
 		price.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		cell.add_child(price)
 		grid.add_child(cell)
@@ -246,9 +249,9 @@ func _show_shop() -> void:
 func _view_shop(listing: Array, at: int) -> void:
 	var v := CardViewer.open(self, listing, at, func(e, _i):
 		var id: String = e["id"]
-		var price: int = Factions.BUY_PRICE[CardDB.get_card(id)["rarity"]]
+		var price: int = Economy.buy_price(city_id, id)
 		return [[I18n.t("Buy · %d gold") % price, func():
-			if GameState.buy_card(id):
+			if GameState.buy_card(id, city_id):
 				GameState.save_game()
 				_toast(I18n.t("Bought %s.") % I18n.t(CardDB.get_card(id)["name"]))
 			_update_gold(), GameState.gold >= price, false]])
@@ -259,6 +262,7 @@ func _view_shop(listing: Array, at: int) -> void:
 
 func _show_sell() -> void:
 	content.add_child(UIKit.label("Cards in your decks are kept back. Tap a card to read it; sell from there.", 18, UIKit.DIM))
+	content.add_child(UIKit.label(I18n.t("Cards of other faiths fetch more here than %s cards. Every copy you sell lowers the price here for a while.") % Factions.info(faction)["short"], 16, UIKit.DIM, true))
 	var grid := GridContainer.new()
 	grid.columns = 9
 	grid.add_theme_constant_override("h_separation", 16)
@@ -281,7 +285,7 @@ func _show_sell() -> void:
 			sell_list.append({"id": id, "foil": foil})
 			cv.tapped.connect(func(_v): _view_sell(sell_list, at))
 			cell.add_child(cv)
-			var price := UIKit.label("◉ %d" % GameState.sell_price(id, foil), 15, UIKit.GOLD)
+			var price := UIKit.label("◉ %d %s" % [GameState.sell_price(id, foil, city_id), Economy.trend(city_id, id)], 15, UIKit.GOLD)
 			price.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			cell.add_child(price)
 			grid.add_child(cell)
@@ -295,8 +299,8 @@ func _view_sell(listing: Array, at: int) -> void:
 		var id: String = e["id"]
 		var foil: bool = e["foil"]
 		var left := GameState.sellable_count(id, foil)
-		return [[I18n.t("Sell · %d gold (%d spare)") % [GameState.sell_price(id, foil), left], func():
-			GameState.sell_card(id, foil)
+		return [[I18n.t("Sell · %d gold (%d spare)") % [GameState.sell_price(id, foil, city_id), left], func():
+			GameState.sell_card(id, foil, city_id)
 			GameState.save_game()
 			_update_gold(), left > 0, false]])
 	v.closed.connect(_show)
@@ -305,11 +309,29 @@ func _view_sell(listing: Array, at: int) -> void:
 # ------------------------------------------------------------------ inn
 
 func _show_inn() -> void:
-	content.add_child(UIKit.label("A warm fire, a bed and a ledger. Your progress is saved whenever you rest here.", 20, UIKit.TEXT, true))
+	content.add_child(UIKit.label("A warm fire, a bed and a ledger.", 20, UIKit.TEXT, true))
+	var rest_row := HBoxContainer.new()
+	rest_row.add_theme_constant_override("separation", 12)
+	content.add_child(rest_row)
+	var rest := UIKit.button(I18n.t("Sleep here (%d gold)") % Economy.INN_PRICE, func():
+		if GameState.rest_at_inn():
+			GameState.save_game()
+			_toast("You sleep well.")
+		else:
+			_toast("Not enough gold.")
+		_show(), 300)
+	rest.disabled = GameState.rested or GameState.gold < Economy.INN_PRICE
+	rest_row.add_child(rest)
+	var note := I18n.t("A night's sleep: the day passes, prices settle, and you start your next duel with %d extra life.") % Economy.RESTED_LIFE
+	if GameState.rested:
+		note = I18n.t("Rested: you start your next duel with %d extra life.") % Economy.RESTED_LIFE
+	var nl := UIKit.label(note, 17, UIKit.DIM, true)
+	nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rest_row.add_child(nl)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
 	content.add_child(row)
-	row.add_child(UIKit.button(I18n.t("Rest & save (slot %s)") % SlotScreen._roman(GameState.slot), func():
+	row.add_child(UIKit.button(I18n.t("Save (slot %s)") % SlotScreen._roman(GameState.slot), func():
 		GameState.save_game()
 		_toast("Game saved."), 300))
 	row.add_child(UIKit.button("Save to another slot…", func():

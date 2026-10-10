@@ -8,7 +8,7 @@ extends RefCounted
 const SEATS := 8
 const ROUNDS := 3
 const PACK_SIZE := 15
-const ENTRY_FEE := 250
+const ENTRY_FEE := 300
 ## Prizes by how far you got: 0 = lost the first match ... 3 = champion.
 const PRIZES := [
 	{"gold": 0, "boosters": 0},

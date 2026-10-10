@@ -53,6 +53,31 @@ POSES = {
 }
 
 
+# Hand-placed arms for the stock poses: (front elbow, front hand, back elbow, back hand,
+# back hand shows in front of the body). Upper arms hang from the shoulder; forearms do
+# the work. A figure faces right: +x is forward, the back arm is the far one.
+STOCK = {
+    'stand':    ((10.5, -62), (11.5, -47), (-9.5, -62), (-10.5, -47), False),
+    'hold':     ((11, -61.5), (21, -69), (-9.5, -62), (-10.5, -47), False),
+    'present':  ((10.5, -61.5), (19, -66), (-6, -62), (15, -65.5), True),
+    'book':     ((10.5, -61.5), (18, -62.5), (-6, -62), (13, -62), True),
+    'pray':     ((10.5, -61.5), (15, -71), (-5, -62), (14, -70.5), True),
+    'raise':    ((15, -90), (16.5, -104), (-9.5, -62), (-10.5, -47), False),
+    'bless':    ((11, -62), (18, -78), (-6, -62), (13, -61), True),
+    'lantern':  ((11.5, -62), (16.5, -48), (-9.5, -62), (-10.5, -47), False),
+    'staff':    ((11, -62), (19.5, -63), (-9.5, -62), (-10.5, -47), False),
+    'staff2':   ((11, -62), (19.5, -63), (-6, -62), (12, -61), True),
+    'sword_up': ((17, -85), (18.5, -100), (-8.5, -64), (-2.5, -64), True),
+    'guard':    ((11, -62), (20.5, -64), (-8.5, -64), (-2.5, -64), True),
+    'shield_rest': ((11, -62), (12, -47), (-8.5, -64), (-2.5, -64), True),
+    'spread':   ((16, -68), (24, -80), (-14, -68), (-21, -80), False),
+    'sprinkle': ((16, -78), (26, -89), (-9.5, -62), (-10.5, -47), False),
+    'offer':    ((11.5, -62), (23, -71), (-5.5, -63), (20, -70.5), True),
+    'point':    ((17, -72), (31, -75), (-9.5, -62), (-10.5, -47), False),
+    'cup':      ((11, -61.5), (17.5, -74), (-9.5, -62), (-10.5, -47), False),
+}
+
+
 class Figure:
     def __init__(self, pose='stand', garb='robe', main=BROWN, second=None, trim=None, lining=None,
                  skin=SKIN, hair='short', hair_col=UMBER, beard=None, head=None, halo=False,
@@ -77,11 +102,17 @@ class Figure:
             'waist': (0.0, -57 + k),
             'hip': (0.0, -48 + k),
         }
-        pf, pb, bfront, bend_f, bend_b = POSES[self.pose]
-        hf = (pf[0], pf[1] + k)
-        hb = (pb[0], pb[1] + k)
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], hf, 16.5, 15.5, bend_f)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], hb, 16.5, 15.5, bend_b)
+        if self.pose in STOCK:
+            ef, hf, eb, hb, bfront = STOCK[self.pose]
+            w = self.width
+            j['el_f'], j['hand_f'] = (ef[0] * w, ef[1] + k), (hf[0] + (w - 1) * 9, hf[1] + k)
+            j['el_b'], j['hand_b'] = (eb[0] * w, eb[1] + k), (hb[0] if bfront else hb[0] * w, hb[1] + k)
+        else:
+            pf, pb, bfront, bend_f, bend_b = POSES[self.pose]
+            hf = (pf[0], pf[1] + k)
+            hb = (pb[0], pb[1] + k)
+            j['el_f'], j['hand_f'] = ik(j['sh_f'], hf, 16.5, 15.5, bend_f)
+            j['el_b'], j['hand_b'] = ik(j['sh_b'], hb, 16.5, 15.5, bend_b)
         j['back_front'] = bfront
         j['k'] = k
         return j
@@ -104,24 +135,41 @@ class Figure:
         if self.props_back:
             for fn in self.props_back:
                 fn(p, j)
-        if not j['back_front']:
-            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, hand=not j['back_front'])
         self._legs(j)
         self._body(j)
         if self.cloak:
             self._cloak_front(j)
         self._head(j)
-        if j['back_front']:
-            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
         if self.shield:
-            # strapped to the forearm, held square in front of the body
+            # strapped to the far forearm, held square in front of the body
             hb = j['hand_b']
-            PR.heater_shield(p, (hb[0] - 3.5, hb[1] + 7), self.shield, s=1.08)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+            PR.heater_shield(p, (hb[0] - 7.5, hb[1] + 8), self.shield, s=1.45)
+        elif j['back_front']:
+            # the far arm is hidden by the body; only its hand comes round in front
+            self._forearm_tip(j['el_b'], j['hand_b'])
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False, hand=False)
         if self.props_front:
             for fn in self.props_front:
                 fn(p, j)
+        # fists over whatever they hold, so staffs and cups sit in the hand
+        self._hand(j['hand_f'], v_norm(v_sub(j['hand_f'], j['el_f'])))
+        if j['back_front'] and not self.shield:
+            self._hand(j['hand_b'], v_norm(v_sub(j['hand_b'], j['el_b'])))
         p.pop()
+
+    def _forearm_tip(self, el, hand):
+        """The last stretch of the far sleeve, peeking round the body to the hand."""
+        p = self.p
+        col = self.main if not self.mail else STEEL.dark(0.1)
+        if self.garb in ('surcoat',) and not self.mail:
+            col = self.second
+        d = v_norm(v_sub(hand, el))
+        a = v_sub(hand, v_mul(d, 6.5))
+        n = v_perp(d)
+        cuff = 3.4 if self.sleeves in ('bell', 'wide') and not self.mail else 2.6
+        p.shape([v_add(a, v_mul(n, 2.6)), v_add(hand, v_mul(n, cuff)), v_sub(hand, v_mul(n, cuff)), v_sub(a, v_mul(n, 2.6))],
+                col.dark(0.12), width=2.0, shade=0.7)
 
     # ------------------------------------------------------------ parts
     def _legs(self, j):
@@ -268,7 +316,7 @@ class Figure:
             row += 1
         p.unclip()
 
-    def _arm(self, sh, el, hand, back=False, over=False):
+    def _arm(self, sh, el, hnd, back=False, over=False, hand=True):
         p = self.p
         col = self.main if not self.mail else STEEL.dark(0.1)
         if self.garb in ('surcoat',) and not self.mail:
@@ -279,11 +327,12 @@ class Figure:
         if self.mail:
             cuff = 2.8
         mid = el
-        sh = (sh[0] - (1.8 if sh[0] > 0 else -1.8), sh[1] + 1.6)
-        pts = [sh, v_lerp(sh, mid, 0.5), mid, v_lerp(mid, hand, 0.55), hand]
+        # the sleeve starts under the shoulder line, so no cap bulges above it
+        sh = (sh[0] - (1.0 if sh[0] > 0 else -1.0), sh[1] + 3.0)
+        pts = [sh, v_lerp(sh, mid, 0.5), mid, v_lerp(mid, hnd, 0.55), hnd]
         # build a sleeve outline: upper arm then forearm flaring to the cuff
         left, right = [], []
-        widths = [3.9, 3.5, 3.1, 3.1 + (cuff - 3.1) * 0.35, cuff]
+        widths = [3.4, 3.4, 3.1, 3.1 + (cuff - 3.1) * 0.35, cuff]
         for i, q in enumerate(pts):
             a = pts[max(0, i - 1)]
             b = pts[min(len(pts) - 1, i + 1)]
@@ -291,22 +340,15 @@ class Figure:
             left.append(v_add(q, v_mul(nrm, widths[i])))
             right.append(v_sub(q, v_mul(nrm, widths[i])))
         sleeve = left + right[::-1]
-        if self.sleeves == 'bell' and not self.mail:
-            # the open cuff droops below the wrist
-            d = v_norm(v_sub(hand, mid))
-            hang = v_add(hand, (0, cuff * 1.4))
-            sleeve = left + [v_add(hand, v_mul(d, 1.5)), hang] + right[::-1]
         if self.sleeves == 'none':
             p.taper(pts, 2.6, 2.0, self.skin, width=1.8, shade=0.6)
         else:
             p.shape(sleeve, col, width=2.2, shade=0.9, rim=0.4)
             if self.mail:
                 self._mail_rings(sleeve)
-            p.fold([v_lerp(sh, mid, 0.6), v_lerp(mid, hand, 0.4)], col, 1.2, hi=False)
-            if self.sleeves in ('bell', 'wide'):
-                p.line([v_add(q, (0, 0)) for q in (left[-1], v_add(hand, (0, cuff * 1.3)))], self.lining.alpha(0.0), 0.1)
-        # the hand
-        self._hand(hand, v_norm(v_sub(hand, el)))
+            p.fold([v_lerp(sh, mid, 0.6), v_lerp(mid, hnd, 0.4)], col, 1.2, hi=False)
+        if hand:
+            self._hand(hnd, v_norm(v_sub(hnd, el)))
 
     def _hand(self, at, d):
         p = self.p

@@ -133,7 +133,25 @@ func _process(delta: float) -> void:
 	_music_timer -= delta
 	if _music_timer <= 0.0 and world and world.active and screen == null:
 		_music_timer = 1.0
-		Music.set_context("world", world.faction_at(world.player_pos))
+		var region: String = world.faction_at(world.player_pos)
+		Music.set_context("world", region)
+		_region_toll(region)
+
+
+## Bridges and ferries into another faith's lands charge a toll (never into your own
+## faith's lands, and never more than you have).
+func _region_toll(region: String) -> void:
+	if region == GameState.last_region:
+		return
+	var first := GameState.last_region == ""
+	GameState.last_region = region
+	if first or region == GameState.hero:
+		return
+	var toll := mini(Economy.REGION_TOLL, GameState.gold)
+	if toll > 0:
+		GameState.add_gold(-toll)
+		_update_hud()
+		_toast(I18n.t("Toll into the lands of %s: %d gold.") % [Factions.info(region)["name"], toll])
 
 
 # ================================================================== menu
@@ -434,8 +452,14 @@ func _mission_city(mid: String) -> String:
 
 func _on_city_entered(city_id: String) -> void:
 	GameState.record_visit(city_id)
+	var toll := 0
+	if GameState.city(city_id).get("faction", "") != GameState.hero:
+		toll = mini(Economy.CITY_TOLL, GameState.gold)    # the broke are waved through
+		GameState.add_gold(-toll)
 	GameState.save_game()
 	_open_city(city_id)
+	if toll > 0:
+		_toast(I18n.t("Gate toll: %d gold.") % toll)
 
 
 func _open_city(city_id: String) -> void:
@@ -504,7 +528,13 @@ func start_battle(info: Dictionary) -> void:
 	var b := BattleScene.new()
 	b.auto_play = debug_auto_battles
 	_set_screen(b)
-	b.finished.connect(func(won: bool): _on_battle_finished(won, info))
+	# a night at the inn sends you into the next duel with more life
+	if GameState.rested and not info.get("tournament", false):
+		info["player_life"] = 20 + Economy.RESTED_LIFE
+		GameState.rested = false
+	b.finished.connect(func(won: bool):
+		info["fled"] = b.fled
+		_on_battle_finished(won, info))
 	b.start(info)
 
 
@@ -515,6 +545,7 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 	_set_screen(null)
 	_pause_world(false)
 	world.grace = 3.0
+	GameState.day += 1
 	var lvl := int(info.get("level", 1))
 	if won:
 		var lair_id: String = info.get("lair", "")
@@ -540,7 +571,7 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 				GameState.add_card(cid)
 				cards.append(cid)
 		else:
-			var g := 15 + lvl * 10 if lair_id == "" else 40 * lvl
+			var g := 8 + lvl * 6 if lair_id == "" else 25 * lvl
 			GameState.add_gold(g)
 			parts.append(I18n.t("%d gold") % g)
 		for cid in cards:
@@ -555,12 +586,18 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		show_dialog("Victory", I18n.t("You gain: %s") % ", ".join(parts), [["Onward", Callable()]], cards)
 	else:
 		GameState.stats["losses"] = int(GameState.stats.get("losses", 0)) + 1
-		var lost := GameState.gold / 10
+		var fled: bool = info.get("fled", false)
+		var lost := Economy.defeat_cost(fled)
 		GameState.add_gold(-lost)
-		var city_id := _nearest_visited_city()
-		world.respawn_at_city(city_id)
-		GameState.save_game()
-		show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")], [["Get up", Callable()]])
+		if fled:
+			# fleeing costs less, and you keep your place on the road
+			GameState.save_game()
+			show_dialog("You fled", I18n.t("You drop %d gold as you run.") % lost, [["Onward", Callable()]])
+		else:
+			var city_id := _nearest_visited_city()
+			world.respawn_at_city(city_id)
+			GameState.save_game()
+			show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")], [["Get up", Callable()]])
 	_update_hud()
 
 
@@ -729,3 +766,19 @@ func show_dialog(title: String, body: String, buttons: Array, card_ids: Array = 
 	await get_tree().process_frame
 	if is_instance_valid(panel):
 		panel.position = (overlay.size - panel.size) * 0.5
+
+
+## A short gold-coloured message at the foot of the screen, above whatever is open.
+func _toast(t: String) -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 60
+	add_child(layer)
+	var l := UIKit.label(t, 24, UIKit.GOLD)
+	l.add_theme_color_override("font_outline_color", Tapestry.PARCHMENT_LIGHT)
+	l.add_theme_constant_override("outline_size", 8)
+	layer.add_child(l)
+	l.position = Vector2(30, get_viewport().get_visible_rect().size.y - 110)
+	var tw := l.create_tween()
+	tw.tween_interval(2.2)
+	tw.tween_property(l, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(layer.queue_free)

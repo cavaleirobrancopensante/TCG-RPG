@@ -66,7 +66,7 @@ func start(p_info: Dictionary) -> void:
 	var edeck := DeckTools.to_list(info.get("deck", {}))
 	var main_f := DeckTools.best_factions(GameState.deck, 1)
 	st.side_faction = [main_f[0] if not main_f.is_empty() else "sanctum", info.get("faction", "abyss")]
-	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [20, int(info.get("life", 20))], -1, 0, true)
+	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [int(info.get("player_life", 20)), int(info.get("life", 20))], -1, 0, true)
 	st.side(0).interactive = not auto_play       # you make your own choices (discards, foresight)
 	_log(I18n.t("A duel against %s begins!") % I18n.t(info.get("name", "a stranger")))
 	BattleAI.resolve_mulligan(st, 1)
@@ -1479,9 +1479,13 @@ func _auto_player_turn() -> void:
 		await _player_end_turn()
 
 
+var fled := false
+
+
 func _on_flee() -> void:
 	if st.phase == "over":
 		return
+	fled = true
 	st._lose(0)
 	_log("You flee the duel.")
 	await play_events()

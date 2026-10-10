@@ -772,9 +772,11 @@ func test_game_state() -> void:
 	check(DeckTools.count(DeckTools.auto_build(GameState.owned_all(), sf)) == 40, "starter is 40 cards")
 	GameState.ensure_deck()
 	check(DeckTools.validate(GameState.deck, GameState.owned_all()) == "", "deck valid after new game")
+	check(not GameState.buy_booster(), "the starting purse cannot buy a booster yet")
+	GameState.gold = 400
 	var g := GameState.gold
 	check(GameState.buy_booster(), "buy booster")
-	check(GameState.gold == g - Factions.BOOSTER_PRICE, "gold after booster")
+	check(GameState.gold == g - Economy.BOOSTER_PRICE, "gold after booster")
 	GameState.accept_mission("m_tech_1")
 	GameState.record_victory("abyss")
 	GameState.record_victory("wild")
@@ -803,6 +805,52 @@ func test_game_state() -> void:
 
 
 func test_save_slots() -> void:
+	print("-- economy")
+	GameState.gold = 5000
+	GameState.market = {}
+	GameState.day = 0
+	var town := "cogspire"
+	var tfaith: String = GameState.city(town).get("faction", "")
+	var own_id := ""
+	var foreign_id := ""
+	for cid in CardDB.all_set_ids():
+		var cc := CardDB.get_card(cid)
+		if cc.get("rarity", "") != "common" or cc.get("faction2", "") != "":
+			continue
+		if own_id == "" and cc["faction"] == tfaith:
+			own_id = cid
+		elif foreign_id == "" and cc["faction"] != tfaith:
+			foreign_id = cid
+	check(Economy.buy_price(town, own_id) < Economy.buy_price(town, foreign_id), "a city's own faith is cheaper there")
+	check(Economy.sell_price(town, foreign_id, false) >= Economy.sell_price(town, own_id, false), "foreign cards sell for more")
+	var p0 := Economy.buy_price(town, foreign_id)
+	check(GameState.buy_card(foreign_id, town), "buy a single")
+	var p1 := Economy.buy_price(town, foreign_id)
+	check(p1 > p0, "buying raises the price (%d -> %d)" % [p0, p1])
+	check(Economy.buy_price("elderholt", foreign_id) <= Economy.BUY[CardDB.get_card(foreign_id)["rarity"]], "other cities are not affected")
+	GameState.day += 10
+	check(Economy.buy_price(town, foreign_id) <= p0 + 1, "prices settle back with the days")
+	var s0 := Economy.sell_price(town, foreign_id, false)
+	GameState.add_card(foreign_id)
+	GameState.add_card(foreign_id)
+	check(GameState.sell_card(foreign_id, false, town), "sell a card")
+	check(Economy.market(town, foreign_id) < 1.0, "selling lowers the price")
+	check(Economy.sell_price(town, foreign_id, false) <= s0, "the next copy sells for no more")
+	# a booster never sells for more than it costs, even in the best market
+	var best := 0
+	for r in ["common", "uncommon", "rare"]:
+		best += int(Economy.SELL[r] * Economy.FOREIGN_SELL * {"common": 10, "uncommon": 3, "rare": 1}[r])
+	check(best + Economy.SELL["mythic"] / 4 < Economy.BOOSTER_PRICE, "no profit in selling boosters (%d)" % best)
+	GameState.gold = 100
+	check(Economy.defeat_cost(false) == 20 and Economy.defeat_cost(true) == 10, "defeat costs a fifth, fleeing a tenth")
+	GameState.gold = 5
+	check(Economy.defeat_cost(false) == 5, "never more than you have")
+	GameState.gold = 50
+	GameState.rested = false
+	var d0 := GameState.day
+	check(GameState.rest_at_inn() and GameState.rested and GameState.day == d0 + 1 and GameState.gold == 30, "a night at the inn")
+	check(not GameState.rest_at_inn(), "no second night while rested")
+
 	print("-- save slots")
 	DirAccess.remove_absolute(GameState.LEGACY_SAVE)
 	for n in range(1, GameState.SLOTS + 1):

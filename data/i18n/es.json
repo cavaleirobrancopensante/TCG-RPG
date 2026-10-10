@@ -1754,5 +1754,17 @@
  "⚔ Attack": "⚔ Atacar",
  "%s, taken from the loser's deck": "%s, tomada del mazo del derrotado",
  "Assembly. When this enters, create two 1/1 Servo Construct tokens.": "Ensamblaje. Al entrar, crea dos fichas de Servo Autómata 1/1.",
- "Create two 1/1 Servo Construct tokens, then put a +1/+1 counter on each creature you control.": "Crea dos fichas de Servo Autómata 1/1, luego pon un contador +1/+1 sobre cada criatura que controlas."
+ "Create two 1/1 Servo Construct tokens, then put a +1/+1 counter on each creature you control.": "Crea dos fichas de Servo Autómata 1/1, luego pon un contador +1/+1 sobre cada criatura que controlas.",
+ "You drop %d gold as you run.": "Dejas caer %d de oro al huir.",
+ "Save (slot %s)": "Guardar (ranura %s)",
+ "A warm fire, a bed and a ledger.": "Un fuego cálido, una cama y un libro de registro.",
+ "You sleep well.": "Duermes bien.",
+ "Rested: you start your next duel with %d extra life.": "Descansado: empiezas el próximo duelo con %d de vida extra.",
+ "You fled": "Huiste",
+ "%s cards are cheaper here. Every copy you buy raises the price here; prices settle back day by day. ▲ dearer than usual, ▼ cheaper.": "Las cartas de %s son más baratas aquí. Cada copia que compras sube el precio aquí; los precios vuelven a su nivel día tras día. ▲ más caro de lo normal, ▼ más barato.",
+ "Gate toll: %d gold.": "Peaje de la puerta: %d de oro.",
+ "A night's sleep: the day passes, prices settle, and you start your next duel with %d extra life.": "Una noche de sueño: pasa el día, los precios se calman y empiezas el próximo duelo con %d de vida extra.",
+ "Toll into the lands of %s: %d gold.": "Peaje para entrar en las tierras de %s: %d de oro.",
+ "Cards of other faiths fetch more here than %s cards. Every copy you sell lowers the price here for a while.": "Las cartas de otras fes valen más aquí que las de %s. Cada copia que vendes baja el precio aquí por un tiempo.",
+ "Sleep here (%d gold)": "Dormir aquí (%d de oro)"
 }
