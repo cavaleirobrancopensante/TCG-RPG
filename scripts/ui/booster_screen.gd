@@ -61,8 +61,10 @@ func _next_pack() -> void:
 		closed.emit()
 		return
 	var remaining := GameState.pending_boosters
+	var faith := GameState.next_pack_faith()
 	pack = GameState.open_booster()
-	title.text = I18n.t("Booster pack (%d more after this one)") % (remaining - 1) if remaining > 1 else I18n.t("Booster pack")
+	var head := I18n.t("%s booster") % Factions.info(faith)["name"] if faith != "" else I18n.t("Booster pack")
+	title.text = head + ("  " + I18n.t("(%d more after this one)") % (remaining - 1) if remaining > 1 else "")
 	for entry in pack:
 		var cv := CardView.create(entry["id"], SCALE, entry["foil"])
 		cv.face_down = true

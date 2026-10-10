@@ -516,10 +516,19 @@ func _check_invariants(st: BattleState) -> void:
 
 func test_game_state() -> void:
 	print("-- game state")
-	GameState.new_game()
-	check(GameState.pending_boosters == 3, "start boosters")
+	GameState.new_game(1, "wild")
+	check(GameState.pending_boosters == 4, "three general boosters and one of the hero's faith")
+	check(GameState.next_pack_faith() == "wild", "the faith booster comes first")
+	var faith_pack := GameState.open_booster()
+	check(faith_pack.size() == 15, "faith booster size")
+	for e in faith_pack:
+		check(CardDB.get_card(e["id"])["faction"] == "wild", "faith booster holds only its faith (%s)" % e["id"])
 	for i in 3:
 		check(GameState.open_booster().size() == 15, "open booster")
+	check(GameState.hero_look().get("faction", "") == "wild", "hero look")
+	var sf := DeckTools.starter_factions(GameState.owned_all(), "wild")
+	check(sf[0] == "wild" and sf.size() == 2, "starter built around the hero's faith %s" % [sf])
+	check(DeckTools.count(DeckTools.auto_build(GameState.owned_all(), sf)) == 40, "starter is 40 cards")
 	GameState.ensure_deck()
 	check(DeckTools.validate(GameState.deck, GameState.owned_all()) == "", "deck valid after new game")
 	var g := GameState.gold

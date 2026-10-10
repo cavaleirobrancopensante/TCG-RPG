@@ -185,6 +185,8 @@ func _show_shop() -> void:
 		rf.add_child(b)
 	var grid := GridContainer.new()
 	grid.columns = 9
+	grid.add_theme_constant_override("h_separation", 16)
+	grid.add_theme_constant_override("v_separation", 16)
 	content.add_child(grid)
 	var ids := CardDB.faction_ids(faction)
 	if faction != "machine":
@@ -229,6 +231,8 @@ func _show_sell() -> void:
 	content.add_child(UIKit.label("Cards in your decks are kept back. Tap a card to read it; sell from there.", 18, UIKit.DIM))
 	var grid := GridContainer.new()
 	grid.columns = 9
+	grid.add_theme_constant_override("h_separation", 16)
+	grid.add_theme_constant_override("v_separation", 16)
 	content.add_child(grid)
 	var any := false
 	var sell_list := []

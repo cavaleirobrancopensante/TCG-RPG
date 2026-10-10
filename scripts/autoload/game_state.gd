@@ -38,6 +38,18 @@ var visited_cities: Array = []
 var defeated: Dictionary = {}     # faction -> wins counted while missions are active
 var missions: Dictionary = {}     # mission_id -> {"state": "active"/"done"/"claimed", "progress": int}
 var pending_boosters: int = 0     # boosters earned but not opened yet
+var faction_packs: Array = []     # faiths of special boosters among the pending ones (opened first)
+var hero := ""                    # the faith of the hero chosen at New game
+
+## One hero per faith. Shown on the map and on the hero screen.
+const HEROES := {
+	"sanctum": {"name": "Brother Knight", "subtype": "Human Knight", "blurb": "A knight of the Lamp, sworn to keep the pilgrim roads."},
+	"abyss": {"name": "Blackguard", "subtype": "Human Cultist", "blurb": "He signed the Covenant's book and means to collect on it."},
+	"wild": {"name": "Woodward", "subtype": "Human Druid", "blurb": "A keeper of the old groves, at home under the oaks."},
+	"revel": {"name": "Minstrel", "subtype": "Human Performer", "blurb": "A wandering player who has never refused a feast."},
+	"lyceum": {"name": "Peripatetic", "subtype": "Human Philosopher", "blurb": "A scholar of the Porch who walks while he thinks."},
+	"machine": {"name": "Artificer", "subtype": "Human Artificer", "blurb": "A guild engineer with a satchel of brass and clever tools."},
+}
 var stats: Dictionary = {"wins": 0, "losses": 0, "boosters_opened": 0}
 var slot := 1                     # the slot this run auto-saves into
 var play_time := 0.0              # seconds played in this run
@@ -63,8 +75,9 @@ func _ready() -> void:
 
 # ---------------------------------------------------------------- new / save / load
 
-func new_game(into_slot: int = 1) -> void:
+func new_game(into_slot: int = 1, hero_faith: String = "sanctum") -> void:
 	slot = into_slot
+	hero = hero_faith if HEROES.has(hero_faith) else "sanctum"
 	player_name = settings.get("player_name", "Wanderer")
 	play_time = 0.0
 	_session_start = Time.get_ticks_msec()
@@ -78,7 +91,8 @@ func new_game(into_slot: int = 1) -> void:
 	defeated.clear()
 	missions.clear()
 	stats = {"wins": 0, "losses": 0, "boosters_opened": 0}
-	pending_boosters = START_BOOSTERS
+	pending_boosters = START_BOOSTERS + 1     # three general boosters and one of the hero's faith
+	faction_packs = [hero]
 	var start: Dictionary = world_data.get("start", {})
 	player_pos = Vector2(start.get("x", 0), start.get("y", 0))
 	current_city = ""
@@ -174,6 +188,7 @@ func save_game(n: int = 0) -> void:
 		"player_name": player_name, "player_pos": [player_pos.x, player_pos.y],
 		"cleared_lairs": cleared_lairs, "visited_cities": visited_cities,
 		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters,
+		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
 		"meta": _meta(),
 	}
@@ -251,6 +266,8 @@ func load_game(n: int = 0) -> bool:
 	for m in missions:
 		missions[m]["progress"] = int(missions[m].get("progress", 0))
 	pending_boosters = int(data.get("pending_boosters", 0))
+	faction_packs = Array(data.get("faction_packs", [])).filter(func(x): return Factions.DATA.has(x))
+	hero = String(data.get("hero", ""))
 	stats = data.get("stats", stats)
 	_extra_load(data)
 	# Drop cards that no longer exist in the database (set revisions).
@@ -361,10 +378,26 @@ func open_booster() -> Array:
 		return []
 	pending_boosters -= 1
 	stats["boosters_opened"] = int(stats.get("boosters_opened", 0)) + 1
-	var pack := Booster.open(rng)
+	var only: Array = []
+	if not faction_packs.is_empty():
+		only = [faction_packs.pop_front()]
+	var pack := Booster.open(rng, only)
 	for entry in pack:
 		add_card(entry["id"], entry["foil"])
 	return pack
+
+
+## The faith of the next booster to open ("" for a general one).
+func next_pack_faith() -> String:
+	return String(faction_packs[0]) if not faction_packs.is_empty() and pending_boosters > 0 else ""
+
+
+## How the player's hero looks (a card-like dictionary for FigurePainter); {} before 1.13.
+func hero_look() -> Dictionary:
+	if not HEROES.has(hero):
+		return {}
+	var h: Dictionary = HEROES[hero]
+	return {"faction": hero, "subtype": h["subtype"], "name": h["name"]}
 
 
 func ensure_deck() -> void:

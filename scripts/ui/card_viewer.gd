@@ -33,6 +33,8 @@ var right_btn: Button
 var _press_pos := Vector2.ZERO
 var _pressing := false
 var _card_scale := 2.0
+var _home := Vector2.ZERO
+var _swiping := false
 
 
 static func open(parent: Node, p_entries: Array, p_index: int, p_actions: Callable = Callable()) -> CardViewer:
@@ -62,11 +64,9 @@ func _ready() -> void:
 	card_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(card_view)
 
-	left_btn = _arrow("‹", prev)
-	right_btn = _arrow("›", next)
-
 	var plate := PanelContainer.new()
 	plate.name = "Plate"
+	plate.clip_contents = true
 	add_child(plate)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 10)
@@ -75,6 +75,9 @@ func _ready() -> void:
 	info_box = VBoxContainer.new()
 	info_box.add_theme_constant_override("separation", 6)
 	col.add_child(info_box)
+	# arrows last, so nothing can ever cover them
+	left_btn = _arrow("‹", prev)
+	right_btn = _arrow("›", next)
 	_layout()
 	_show(0)
 
@@ -89,17 +92,27 @@ func _arrow(t: String, cb: Callable) -> Button:
 	return b
 
 
+## Arrows sit at the screen edges; the card and its text plate share the space between.
 func _layout() -> void:
 	var vp := get_viewport_rect().size
-	var cs := CardView.BASE * _card_scale
 	var plate: Control = get_node("Plate")
-	var total := 72 + 16 + cs.x + 24 + 360 + 16 + 72
-	var x0 := maxf(12.0, (vp.x - total) * 0.5)
+	var lane := Vector2(8 + 72 + 12, vp.x - 8 - 72 - 12)     # x range between the arrows
+	var plate_w := 360.0
+	var cs := CardView.BASE * _card_scale
+	if cs.x + 20 + plate_w > lane.y - lane.x:
+		_card_scale = maxf(0.8, (lane.y - lane.x - 20 - plate_w) / CardView.BASE.x)
+		card_view.scale_factor = _card_scale
+		cs = CardView.BASE * _card_scale
+	var total := cs.x + 20 + plate_w
+	var x0 := lane.x + maxf(0.0, (lane.y - lane.x - total) * 0.5)
 	var top := UIKit.TOP + (vp.y - UIKit.TOP - cs.y) * 0.5
-	left_btn.position = Vector2(x0, top + cs.y * 0.5 - 60)
-	card_view.position = Vector2(x0 + 72 + 16, top)
-	plate.position = Vector2(card_view.position.x + cs.x + 24, top)
-	right_btn.position = Vector2(plate.position.x + 360 + 16, top + cs.y * 0.5 - 60)
+	card_view.position = Vector2(x0, top)
+	_home = card_view.position
+	plate.position = Vector2(x0 + cs.x + 20, top)
+	plate.custom_minimum_size = Vector2(plate_w, 0)
+	plate.size = Vector2(minf(plate_w, lane.y - plate.position.x), plate.size.y)
+	left_btn.position = Vector2(8, vp.y * 0.5 - 60 + UIKit.TOP * 0.5)
+	right_btn.position = Vector2(vp.x - 8 - 72, vp.y * 0.5 - 60 + UIKit.TOP * 0.5)
 
 
 func entry() -> Dictionary:
@@ -130,7 +143,7 @@ func _show(dir: int) -> void:
 		return
 	card_view.set_card(e["id"], e.get("foil", false), e.get("data", {}))
 	if dir != 0:
-		var home := card_view.position
+		var home := _home
 		card_view.position = home + Vector2(60 * dir, 0)
 		card_view.modulate.a = 0.3
 		var tw := create_tween().set_parallel(true)
@@ -149,7 +162,10 @@ func _fill_info(e: Dictionary) -> void:
 	UIKit.clear(info_box)
 	var c: Dictionary = e.get("data", {}) if e.has("data") else CardDB.get_card(e["id"])
 	var f: String = c.get("faction", "machine")
-	info_box.add_child(UIKit.title(I18n.t(c.get("name", "")), 30))
+	var tl := UIKit.title(I18n.t(c.get("name", "")), 30)
+	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	tl.custom_minimum_size.x = 300
+	info_box.add_child(tl)
 	var line := "%s · %s" % [Factions.info(f)["name"], I18n.t(String(c.get("rarity", "")).capitalize())]
 	if e.get("foil", false):
 		line += " · " + I18n.t("Foil")
@@ -188,18 +204,49 @@ func _fill_info(e: Dictionary) -> void:
 
 # ------------------------------------------------------------------ swipe & keys
 
-func _gui_input(event: InputEvent) -> void:
+## Swipes are read anywhere on the screen (over the card, the text or the background),
+## and the card follows the finger while dragging.
+func _input(event: InputEvent) -> void:
+	if not is_visible_in_tree() or not _is_top():
+		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			_pressing = true
+			_swiping = false
 			_press_pos = event.position
 		elif _pressing:
 			_pressing = false
-			var dx: float = event.position.x - _press_pos.x
-			if dx > SWIPE:
-				prev()
-			elif dx < -SWIPE:
-				next()
+			var d: Vector2 = event.position - _press_pos
+			if _swiping:
+				card_view.position = _home
+				card_view.modulate.a = 1.0
+				get_viewport().set_input_as_handled()    # a swipe is not a button press
+				if d.x > SWIPE and index > 0:
+					prev()
+				elif d.x < -SWIPE and index < entries.size() - 1:
+					next()
+	elif event is InputEventMouseMotion and _pressing:
+		var d: Vector2 = event.position - _press_pos
+		if not _swiping and absf(d.x) > 18.0 and absf(d.x) > absf(d.y) * 1.3:
+			_swiping = true
+		if _swiping:
+			card_view.position = _home + Vector2(d.x * 0.5, 0)
+			card_view.modulate.a = clampf(1.0 - absf(d.x) / 600.0, 0.5, 1.0)
+
+
+func _is_top() -> bool:
+	var p := get_parent()
+	if p == null:
+		return false
+	for i in range(p.get_child_count() - 1, -1, -1):
+		var ch := p.get_child(i)
+		if ch is CardViewer:
+			return ch == self
+	return true
+
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
 		accept_event()
 
 

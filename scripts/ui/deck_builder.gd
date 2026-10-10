@@ -118,8 +118,8 @@ func _ready() -> void:
 	left.add_child(scroll)
 	grid = GridContainer.new()
 	grid.columns = 6
-	grid.add_theme_constant_override("h_separation", 6)
-	grid.add_theme_constant_override("v_separation", 6)
+	grid.add_theme_constant_override("h_separation", 18)
+	grid.add_theme_constant_override("v_separation", 18)
 	scroll.add_child(grid)
 
 	# ======================= right: deck management + contents

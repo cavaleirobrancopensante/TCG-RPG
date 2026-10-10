@@ -15,7 +15,7 @@ var foil := false
 var highlight := false        # e.g. playable in hand
 var selected := false
 var dimmed := false
-var count_badge := 0          # shows "x3" in collection screens
+var count_badge := 0          # shows "x3" in collection screens, with the copies stacked behind
 var face_down := false
 var scale_factor := 1.0:
 	set(v):
@@ -25,6 +25,7 @@ var scale_factor := 1.0:
 		queue_redraw()
 
 var _t := 0.0
+var _acc := 0.0
 var _holding := false
 var _long_fired := false
 var _press_t := 0.0
@@ -59,7 +60,10 @@ func _process(delta: float) -> void:
 			long_pressed.emit(self)
 	if foil or highlight or selected:
 		_t += delta
-		queue_redraw()
+		_acc += delta
+		if _acc >= 0.05:       # ~20 repaints a second is plenty for the shimmer and glow
+			_acc = 0.0
+			queue_redraw()
 
 
 ## Tap = press and release without moving. Hold ~0.45 s = long press (e.g. read the card).
@@ -95,6 +99,12 @@ func _draw() -> void:
 	var book := Tapestry.font("book")
 	var black := Tapestry.font("black")
 	var lw := maxf(1.0, 1.6 * k)
+
+	# duplicates: the extra copies peek out behind, up and to the right
+	for layer in range(mini(count_badge - 1, 3), 0, -1):
+		var lr := Rect2(Vector2(5 * k * layer, -5 * k * layer), r.size)
+		Tapestry.ink_rect(self, lr, Tapestry.PARCHMENT_DARK.lerp(Tapestry.PARCHMENT, 0.3 * layer), lw)
+		draw_rect(lr.grow(-6 * k), Color(UIKit.faction_ink(f), 0.35), false, lw)
 
 	if highlight or selected:
 		var gc := Tapestry.GILT if selected else Color(0.35, 0.85, 0.35)
@@ -185,9 +195,14 @@ func _draw() -> void:
 		draw_string(black, Vector2(inner.position.x + 4 * k, inner.end.y - 4 * k), "Aurea", HORIZONTAL_ALIGNMENT_LEFT, -1, int(11 * k), Tapestry.GILT.darkened(0.2))
 
 	if count_badge > 0:
-		var br := Rect2(-4 * k, -4 * k, 40 * k, 26 * k)
-		Tapestry.ink_rect(self, br, Tapestry.VERMILION, lw)
-		draw_string(book, br.position + Vector2(0, 19 * k), "x%d" % count_badge, HORIZONTAL_ALIGNMENT_CENTER, br.size.x, int(16 * k), Tapestry.WHITE)
+		var mc := Vector2(14 * k, 14 * k)
+		var mr := maxf(15.0, 22 * k)
+		Tapestry.ink_circle(self, mc, mr, Tapestry.VERMILION, maxf(1.5, 2.2 * k))
+		draw_arc(mc, mr - 3.0, 0, TAU, 24, Color(Tapestry.GILT, 0.9), maxf(1.0, 1.4 * k), true)
+		var bfs := int(maxf(15.0, 21 * k))
+		var txt := "×%d" % count_badge
+		var btw := book.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, bfs).x
+		draw_string(book, mc + Vector2(-btw * 0.5, bfs * 0.36), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, bfs, Tapestry.WHITE)
 
 	if dimmed:
 		draw_rect(r, Color(0.2, 0.15, 0.1, 0.55))
