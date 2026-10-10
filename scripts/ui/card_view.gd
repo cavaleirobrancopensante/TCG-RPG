@@ -258,15 +258,8 @@ func _draw_miniature(art_r: Rect2, f: String, k: float, is_land: bool) -> void:
 				var hh := art_r.size.y * (0.78 if spec["kind"] in ["human", "construct", "tree", "stone", "skeleton", "spirit"] else 0.95)
 				FigurePainter.paint(self, card, Transform2D(0, feet), hh, 1.0, 1.0)
 			_:
-				# spells and relics: an illuminated emblem with rays
-				var c := Vector2(art_r.get_center().x, art_r.position.y + art_r.size.y * 0.48)
-				for i in 16:
-					var a := TAU * i / 16.0
-					draw_line(c, c + Vector2(cos(a), sin(a)) * 40 * k, Color(Tapestry.GILT, 0.7), 2 * k)
-				var roundel_col := Tapestry.PARCHMENT_LIGHT if card.get("type") == "spell" else Tapestry.GILT
-				Tapestry.ink_circle(self, c, 25 * k, roundel_col, 1.6 * k)
-				var sc: Color = Tapestry.colors(f)[0] if f not in ["sanctum", "lyceum"] else (Tapestry.VERMILION if f == "sanctum" else Tapestry.ULTRAMARINE)
-				UIKit.draw_sigil(self, f, c, 16 * k, sc, 2.4 * k)
+				# spells and relics: a painted miniature of their subject
+				SpellArt.draw(self, card, art_r, k)
 	# arch frame
 	var frame := arch.duplicate()
 	frame.append(arch[0])
