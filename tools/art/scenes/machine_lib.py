@@ -5,6 +5,7 @@ foundries, the Cogspire skyline, blueprint grounds, counting houses)."""
 import math
 from core import *
 import bg
+import props as PR
 from figure import Figure
 import figure as _figure
 
@@ -1629,3 +1630,135 @@ def tool(kind, which='f', **kw):
             wind_key(p, (c[0] - 3.4, c[1] - 2.6), 0.18, BRASS_L, rot=math.pi / 2)
             p.pop()
     return fn
+
+
+# ------------------------------------------------------------------ tribal (1.23) helpers
+
+def hand_at(x, y, h, pose, which='f', flip=False):
+    """World position of a stock-pose hand for a Figure drawn at (x, y) with height h."""
+    ef, hf, eb, hb, bfront = _figure.STOCK[pose]
+    q = hf if which == 'f' else hb
+    s = h / 100.0
+    return (x - q[0] * s if flip else x + q[0] * s, y + q[1] * s)
+
+
+def chain_of_office(col=GOLD):
+    """Emblem option for Figure: a guild chain with a gear pendant."""
+    def fn(p, chest):
+        k = chest[1] + 64
+        pts = [(-7, -80 + k), (-5, -70 + k), (0, -66 + k), (5, -70 + k), (8, -80 + k)]
+        p.line(pts, GOLD_DARK, 2.4)
+        p.line(pts, GOLD_LIGHT, 1.2)
+        gear(p, (0, -64 + k), 3.2, 10, col, 0.2, width=0.9, spokes=0)
+    return fn
+
+
+def bellows(p, x0, y0, x1, y1, open_=1.0, col=LEATHER):
+    """A great smith's bellows lying on its side: boards hinged at the nozzle end (x1)."""
+    mid = (y0 + y1) / 2
+    top = [(x0, y0 - 12 * open_), (x1, mid - 6)]
+    bot = [(x0, y1 + 4), (x1, mid + 6)]
+    # pleated leather between the boards
+    leather = [top[0], (x0 + (x1 - x0) * 0.5, y0 - 4 * open_), top[1], bot[1], (x0 + (x1 - x0) * 0.5, y1 + 2), bot[0]]
+    p.shape(leather, col, width=2.0, shade=0.8, rim=0.4)
+    for k in range(1, 5):
+        t = k / 5
+        a = v_lerp(top[0], top[1], t)
+        b = v_lerp(bot[0], bot[1], t)
+        p.line([a, v_lerp(a, b, 0.5), b], col.dark(0.45), 1.4)
+    for (a, b) in (top, bot):
+        p.taper([a, b], 6, 4, metal(OAK, 'v'), width=1.8, shade=0.7)
+        rivets(p, a, b, 4, 2.6, BRASS)
+    # nozzle
+    p.shape([(x1 - 4, mid - 8, 0), (x1 + 50, mid - 3, 0), (x1 + 50, mid + 3, 0), (x1 - 4, mid + 8, 0)], metal(BRASS_D), width=1.6, smooth=False, shade=0.6)
+
+
+def leyden_jar(p, x, y, s=1.0):
+    p.push(x, y, s)
+    p.shape([(-10, 0, 0), (-11, -26), (-8, -32, 0), (8, -32, 0), (11, -26), (10, 0, 0)], GLASS.alpha(0.55), width=1.6, shade=0.5)
+    p.shape([(-10.5, -2, 0), (-11, -16, 0), (11, -16, 0), (10.5, -2, 0)], metal(STEELC), width=1.2, smooth=False, shade=0.5)
+    p.shape([(-7, -32, 0), (7, -32, 0), (7, -36, 0), (-7, -36, 0)], OAK_D, width=1.2, smooth=False)
+    p.line([(0, -36), (0, -48)], INK, 2.4)
+    p.line([(0, -36), (0, -48)], BRASS, 1.2)
+    p.blob((0, -50), 3, 3, metal(BRASS_L, 'v'), width=1.0)
+    p.blob((-6, -22), 1.6, 6, C(1, 1, 1, 0.5), ink=False)
+    p.pop()
+
+
+def coil_tower(p, x, base, top, w, col=COPPER):
+    """A stacked copper induction coil on an oak plinth, crowned by a brass sphere."""
+    p.shape([(x - w * 0.8, base, 0), (x - w * 0.7, base - 40, 0), (x + w * 0.7, base - 40, 0), (x + w * 0.8, base, 0)], ('v', OAK.light(0.1), OAK_D), width=2, smooth=False)
+    cylinder(p, x, top + 30, base - 40, w * 0.55, IRONC.light(0.1), cap=False)
+    y = base - 46
+    while y > top + 34:
+        p.blob((x, y), w * 0.62, 6, None, ink=INK, width=6)
+        p.blob((x, y), w * 0.62, 6, None, ink=col.light(0.15), width=3.4)
+        y -= 9
+    p.blob((x, top + 30), w * 0.3, 5, metal(IRONC, 'v'), width=1.6)
+    p.taper([(x, top + 30), (x, top + 8)], 3, 3, metal(BRASS), width=1.4)
+    p.blob((x, top), w * 0.42, w * 0.42, metal(BRASS_L, 'v'), width=2, shade=0.8)
+    p.blob((x - w * 0.14, top - w * 0.14), w * 0.1, w * 0.08, C(1, 1, 1, 0.7), ink=False)
+
+
+def clock_dial(p, c, r, rot=0.0):
+    """A great tower clock face: stone ring, gilt numerals as studs, iron hands."""
+    p.blob(c, r * 1.12, r * 1.12, metal(STONE, 'v'), width=2.6, shade=0.7)
+    p.blob(c, r, r, ('r', C.hex('f6ecd0'), C.hex('d8c69a')), width=2.2)
+    p.cx.new_path()
+    p.cx.arc(c[0], c[1], r * 0.78, 0, TAU)
+    p.stroke(GOLD_DARK.alpha(0.7), 2)
+    for k in range(12):
+        a = k * TAU / 12
+        q = polar(c, r * 0.88, a)
+        p.blob(q, r * 0.05, r * 0.05, GOLD, width=1.0, shade=0.5)
+        p.line([polar(c, r * 0.7, a), polar(c, r * 0.76, a)], INK, 2, smooth=False)
+    for k in range(60):
+        a = k * TAU / 60
+        p.line([polar(c, r * 0.76, a), polar(c, r * 0.78, a)], INK.alpha(0.6), 1, smooth=False)
+    p.blob(c, r * 0.3, r * 0.3, None, ink=GOLD_DARK.alpha(0.5), width=1.4)
+    for (a, L, w) in ((rot - 1.2, 0.5, 6), (rot + 0.9, 0.72, 4)):
+        tip = polar(c, r * L, a)
+        p.taper([polar(c, -r * 0.1, a), tip], w, 1.5, metal(IRONC), width=1.4)
+        p.blob(v_lerp(c, tip, 0.8), w * 0.9, w * 0.9, IRONC, width=1.0)
+    p.blob(c, r * 0.05, r * 0.05, GOLD, width=1.2)
+
+
+def pack_frame(load=True):
+    """Extra-back option for Automaton: an oak carrying frame on its back, loaded with
+    the guild's tools: a chest, coiled copper and a lamp, timbers lashed across."""
+    def fn(p, j):
+        x0 = j['sh_b'][0] - 16
+        # leather straps over the shoulders and round the waist hold it on
+        for (a, b) in (((x0 + 20, -82), (j['sh_b'][0] + 8, -80)), ((x0 + 20, -50), (j['sh_b'][0] + 6, -52))):
+            p.taper([a, b], 1.4, 1.4, LEATHER.dark(0.2), width=1.0)
+        p.taper([(x0, -36), (x0, -104)], 2.2, 2.0, OAK, width=1.4, shade=0.6)
+        p.taper([(x0 + 20, -40), (x0 + 20, -100)], 2.2, 2.0, OAK, width=1.4, shade=0.6)
+        for yy in (-98, -70, -44):
+            p.taper([(x0 - 6, yy), (x0 + 26, yy)], 1.8, 1.8, OAK.dark(0.1), width=1.2)
+        if load:
+            p.shape([(x0 - 12, -70, 0), (x0 + 20, -70, 0), (x0 + 20, -50, 0), (x0 - 12, -50, 0)], ('v', OAK.light(0.15), OAK_D), width=1.6, smooth=False)
+            p.line([(x0 - 12, -63), (x0 + 20, -63)], IRONC, 1.6, smooth=False)
+            rivet(p, (x0 + 4, -59), 1.4, BRASS)
+            for k in range(5):
+                p.blob((x0 + 4, -88 + k * 2.4), 10, 3, None, ink=COPPER, width=1.8)
+            for k in range(3):
+                p.taper([(x0 - 16, -100 - k * 3), (x0 + 28, -98 - k * 3)], 1.6, 1.6, OAK.light(0.1 * k), width=1.0)
+            p.line([(x0 - 6, -44), (x0 - 10, -38)], INK, 1.0)
+            p.push(x0 - 11, -34, 0.5)
+            PR.lantern()(p, {'hand_f': (0, 0)})
+            p.pop()
+    return fn
+
+
+def banner(p, x, top, w, h, col, charge=None):
+    """A guild banner hanging from a rod: swallow-tailed, gold fringe, a gear charge."""
+    p.taper([(x - w / 2 - 10, top), (x + w / 2 + 10, top)], 3, 3, metal(BRASS), width=1.4)
+    pts = [(x - w / 2, top, 0), (x + w / 2, top, 0), (x + w / 2, top + h, 0), (x, top + h - w * 0.35, 0), (x - w / 2, top + h, 0)]
+    p.shape(pts, ('h', col.light(0.15), col, col.dark(0.3)), width=2, smooth=False, shade=0.4)
+    p.clip_shape(pts, smooth=False)
+    for k in range(3):
+        xx = x - w / 2 + w * (k + 0.5) / 3
+        p.fold_band([(xx, top), (xx + 2, top + h)], 0.5, 4, col.dark(0.4).alpha(0.3))
+    p.unclip()
+    if charge != 'none':
+        gear(p, (x, top + h * 0.38), w * 0.26, 10, GOLD, 0.2, width=1.4, spokes=4)

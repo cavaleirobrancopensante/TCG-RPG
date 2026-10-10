@@ -27,6 +27,11 @@ var pending_hand_idx := -1
 var pending_ability := []       # [uid, index] while choosing targets for an ability
 var pending_overclock := false
 var auto_play := false          # tests: AI plays the player's side too
+var waiting_priority := false   # the game waits for you to answer (cast) or pass
+var idle_main := false          # your main phase: End turn / Attack take it on
+var view_stack: Array = []      # the stack as far as the animations have shown it
+
+signal _priority_action
 
 # UI
 var enemy_field: HBoxContainer
@@ -40,7 +45,9 @@ var player_info: RichTextLabel
 var enemy_relics: HBoxContainer
 var player_relics: HBoxContainer
 var hand_box: HBoxContainer
-var phase_label: Label
+var phase_bar: PhaseBar
+var stack_view: StackView
+var _mid_bar: Control
 var log_label: Label
 var btn_main: Button
 var btn_alt: Button
@@ -62,6 +69,7 @@ func start(p_info: Dictionary) -> void:
 	theme = UIKit.make_theme()
 	_build_ui()
 	st = BattleState.new()
+	st.auto_priority = false        # the screen drives the priority windows
 	var pdeck := DeckTools.to_list(GameState.deck)
 	var edeck := DeckTools.to_list(info.get("deck", {}))
 	var main_f := DeckTools.best_factions(GameState.deck, 1)
@@ -77,10 +85,13 @@ func start(p_info: Dictionary) -> void:
 		refresh()
 		await _player_mulligan()
 	await play_events()
-	if st.active == 1 and st.phase != "over":
-		await enemy_turn()
-	elif auto_play and st.phase != "over":
-		await _auto_player_turn()
+	if st.phase != "over":
+		if st.active == 1:
+			await _ai_turn(1)
+		elif auto_play:
+			await _ai_turn(0)
+		else:
+			await _player_turn()
 	_update_controls()
 
 
@@ -123,10 +134,9 @@ func _build_ui() -> void:
 	mid.custom_minimum_size.y = 60
 	mid.add_theme_constant_override("separation", 10)
 	root.add_child(mid)
-	phase_label = UIKit.title("", 24)
-	phase_label.custom_minimum_size.x = 210
-	phase_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	mid.add_child(phase_label)
+	_mid_bar = mid
+	phase_bar = PhaseBar.new()
+	mid.add_child(phase_bar)
 	log_label = UIKit.label("", 16, UIKit.DIM, true)
 	log_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	log_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -170,6 +180,13 @@ func _build_ui() -> void:
 	hand_box.alignment = BoxContainer.ALIGNMENT_CENTER
 	hand_scroll.add_child(hand_box)
 
+	stack_view = StackView.new()
+	stack_view.visible = false
+	stack_view.plate_pressed.connect(_show_stack_card)
+	add_child(stack_view)
+	mid.resized.connect(_place_stack_view)
+	stack_view.resized.connect(_place_stack_view)
+
 	arrows = _Arrows.new()
 	arrows.scene = self
 	UIKit.full_rect(arrows)
@@ -179,6 +196,50 @@ func _build_ui() -> void:
 	UIKit.full_rect(fx)
 	fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fx)
+
+
+## The stack sits at the right, just above the middle bar (clear of its buttons).
+func _place_stack_view() -> void:
+	if stack_view == null or _mid_bar == null:
+		return
+	var sz := stack_view.get_combined_minimum_size()
+	stack_view.size = sz
+	stack_view.position = Vector2(size.x - sz.x - 10, _mid_bar.global_position.y - global_position.y - sz.y - 6)
+
+
+func _refresh_stack_view() -> void:
+	stack_view.set_entries(view_stack)
+	_place_stack_view()
+	if arrows:
+		arrows.queue_redraw()
+
+
+## The stack as the engine has it now (after the animations have caught up).
+func _sync_view_stack() -> void:
+	view_stack.clear()
+	for it in st.stack:
+		view_stack.append(_view_entry(it["sid"], it["side"], it["id"], it.get("kind") == "ability", String(it.get("text", "")),
+			st._event_targets(it), it.get("token", {}), String(it.get("name", ""))))
+	_refresh_stack_view()
+
+
+func _view_entry(sid: int, side_i: int, id: String, ability: bool, text: String, targets: Array, token: Dictionary = {}, pname: String = "") -> Dictionary:
+	var nm := pname
+	if nm == "":
+		nm = String(token.get("name", "")) if not token.is_empty() else String(CardDB.get_card(id).get("name", id))
+	return {"sid": sid, "side": side_i, "id": id, "name": nm, "ability": ability, "text": text, "targets": targets, "token": token}
+
+
+func _show_stack_card(e: Dictionary) -> void:
+	if mode != "idle":
+		return
+	_close_preview()
+	var entry := {"id": e["id"], "foil": false}
+	if not e.get("token", {}).is_empty():
+		entry["data"] = e["token"]
+	elif not CardDB.has_card(String(e["id"])):
+		return
+	preview = CardViewer.open(self, [entry], 0)
 
 
 func _field() -> HBoxContainer:
@@ -271,7 +332,9 @@ class _Arrows extends Control:
 			fl[3] -= delta
 			live = true
 		flashes = flashes.filter(func(fl): return fl[3] > 0.0)
-		if live or _redraw:
+		# arrows that stay follow their figures while the layout settles
+		var stays: bool = scene != null and scene.st != null and (scene.mode == "attack" or scene.st.phase in ["block", "combat"] or not scene.view_stack.is_empty())
+		if live or _redraw or stays:
 			_redraw = flashes.size() > 0
 			queue_redraw()
 
@@ -317,16 +380,43 @@ func persistent_arrows() -> Array:
 		for u in sel_attackers:
 			if figures.has(u):
 				out.append([_fig_center(figures[u]), portrait_pos(1), red])
-	elif st.phase == "block":
+	elif st.phase in ["block", "combat"]:
 		var defender := 1 - st.active
+		var bl: Dictionary = pending_blocks if st.phase == "block" else st.blocks
 		for u in st.attackers:
-			if figures.has(u) and not pending_blocks.has(u):
+			if figures.has(u) and not bl.has(u) and not st.was_blocked.has(u):
 				out.append([_fig_center(figures[u]), portrait_pos(defender), red])
-		for a in pending_blocks:
-			var b: int = pending_blocks[a]
+		for a in bl:
+			var b: int = bl[a]
 			if figures.has(a) and figures.has(b):
 				out.append([_fig_center(figures[b]), _fig_center(figures[a]), blue])
+	# each spell or ability on the stack points at what it targets
+	if stack_view and stack_view.visible:
+		for e in view_stack:
+			var from := stack_view.plate_anchor(int(e["sid"]))
+			if from == Vector2.ZERO:
+				continue
+			var col := Color(Tapestry.ULTRAMARINE.lightened(0.35), 0.85) if int(e["side"]) == 0 else Color(Tapestry.VERMILION.lightened(0.1), 0.85)
+			for ref in e.get("targets", []):
+				var to := Vector2.ZERO
+				if ref.get("kind") == "player":
+					to = portrait_pos(int(ref["side"]))
+				elif ref.get("kind") == "creature" and figures.has(int(ref["uid"])):
+					to = _fig_center(figures[int(ref["uid"])])
+				elif ref.get("kind") == "relic":
+					to = _relic_pos(int(ref["uid"]))
+				if to != Vector2.ZERO:
+					out.append([from, to, col])
 	return out
+
+
+func _relic_pos(uid: int) -> Vector2:
+	for box in [player_relics, enemy_relics]:
+		for i in box.get_child_count():
+			var b: Control = box.get_child(i)
+			if b.has_meta("uid") and int(b.get_meta("uid")) == uid:
+				return b.global_position + b.size * 0.5
+	return Vector2.ZERO
 
 
 func _fig_center(f: SummonFigure) -> Vector2:
@@ -525,6 +615,7 @@ func _refresh_relics(i: int) -> void:
 	UIKit.clear(box)
 	for r in st.side(i).relics:
 		var b := Button.new()
+		b.set_meta("uid", r.uid)
 		b.text = "✧ " + I18n.t(r.name)
 		b.custom_minimum_size = Vector2(0, 40)
 		b.add_theme_font_size_override("font_size", 14)
@@ -620,7 +711,7 @@ func _update_marks() -> void:
 				if _is_valid_target({"kind": "creature", "uid": uid}):
 					fig.mark = "target"
 			"idle":
-				if p.owner == 0 and st.active == 0 and not busy:
+				if p.owner == 0 and st.has_priority(0) and not busy:
 					for k in st.abilities_of(p).size():
 						if st.can_activate(0, uid, k):
 							fig.mark = "select"      # it has an ability ready: tap it to use it
@@ -630,8 +721,7 @@ func _update_controls() -> void:
 	if st == null:
 		return
 	var mine := st.active == 0
-	var names := {"choice": "Upkeep", "mulligan": "Opening hand", "main1": "Main phase", "block": "Combat", "main2": "Main phase 2", "over": "Duel over"}
-	phase_label.text = I18n.t("Your turn" if mine else "Enemy turn") + " · " + I18n.t(names.get(st.phase, st.phase))
+	phase_bar.set_state(_bar_key(), mine)
 	btn_alt.visible = false
 	btn_main.disabled = busy
 	btn_alt.disabled = busy
@@ -645,18 +735,38 @@ func _update_controls() -> void:
 		"target":
 			btn_main.text = "Cancel"
 		_:
-			if not mine or st.phase == "over":
+			if st.phase == "over":
 				btn_main.text = "..."
 				btn_main.disabled = true
-			elif st.phase == "main1":
+			elif waiting_priority:
+				btn_main.text = I18n.t("Resolve") if not st.stack.is_empty() else I18n.t("Pass")
+			elif idle_main and mine and st.is_main_phase() and st.stack.is_empty():
 				btn_main.text = "End turn"
-				btn_alt.text = "⚔ Attack"
-				btn_alt.visible = not st.attack_candidates(0).is_empty()
+				if st.phase == "main1":
+					btn_alt.text = "⚔ Attack"
+					btn_alt.visible = not st.attack_candidates(0).is_empty()
 			else:
-				btn_main.text = "End turn"
+				btn_main.text = "..."
+				btn_main.disabled = true
 	# Life totals stay readable; they glow gold when they can be targeted.
 	enemy_life.modulate = Color(1.4, 1.2, 0.6) if _is_valid_target({"kind": "player", "side": 1}) else Color.WHITE
 	player_life.modulate = Color(1.4, 1.2, 0.6) if _is_valid_target({"kind": "player", "side": 0}) else Color.WHITE
+
+
+## The phase bar's lit step.
+func _bar_key() -> String:
+	match st.phase:
+		"mulligan", "over", "setup":
+			return ""
+		"choice":
+			return "upkeep"
+		"begin_combat":
+			return "attackers"
+		"block":
+			return "attackers" if st.window_open else "blockers"
+	if st.step == "begin_combat":
+		return "attackers"
+	return st.step
 
 
 # =================================================================== event playback
@@ -673,6 +783,7 @@ func play_events() -> void:
 		for e in st.take_events():
 			await _animate(e)
 	busy = false
+	_sync_view_stack()
 	refresh()
 	if st.phase == "over":
 		_show_result()
@@ -773,11 +884,31 @@ func _animate(e: Dictionary) -> void:
 				await _wait(0.25)
 			else:
 				_rebuild_hand()
+		"cast":
+			var cc := CardDB.get_card(e["id"])
+			_log(I18n.t("%s casts %s.") % [st.side(e["side"]).name, I18n.t(cc.get("name", ""))])
+			_rebuild_hand()
+			_refresh_bars()
+			view_stack.append(_view_entry(int(e["sid"]), int(e["side"]), e["id"], false, "", e.get("targets", [])))
+			await _show_cast(e["id"], e["side"], 0.4)
+			_refresh_stack_view()
+			await _wait(0.12)
+		"resolve":
+			for k in view_stack.size():
+				if int(view_stack[k]["sid"]) == int(e["sid"]):
+					view_stack.remove_at(k)
+					break
+			_refresh_stack_view()
+		"fizzle":
+			var fc := CardDB.get_card(String(e.get("id", "")))
+			_log(I18n.t("%s fizzles: its target is gone.") % I18n.t(String(fc.get("name", ""))) if not e.get("ability", false) \
+				else I18n.t("The ability fizzles: its target is gone."))
+			await _wait(0.35)
 		"summon":
 			var p = st.find_perm(e["uid"])
 			if p == null:
 				return
-			if e.get("id") != "token":
+			if e.get("id") != "token" and not e.get("from_stack", false):
 				await _show_cast(e["id"], e["side"])
 			_log(I18n.t("%s raises %s." if e.get("reanimated") else "%s summons %s.") % [st.side(e["side"]).name, I18n.t(p.name)])
 			_rebuild_hand()
@@ -788,16 +919,21 @@ func _animate(e: Dictionary) -> void:
 			_burst(fig.global_position + Vector2(SummonFigure.SIZE.x * 0.5, SummonFigure.SIZE.y - 30), Factions.color(fig.faction).lightened(0.3), 30)
 			await fig.play_summon()
 		"relic":
-			await _show_cast(e["id"], e["side"])
+			if not e.get("from_stack", false):
+				await _show_cast(e["id"], e["side"])
 			_log(I18n.t("%s sets out %s.") % [st.side(e["side"]).name, I18n.t(CardDB.get_card(e["id"]).get("name", ""))])
 			_refresh_relics(e["side"])
 			_rebuild_hand()
 		"spell":
 			var c := CardDB.get_card(e["id"])
-			_log(I18n.t("%s casts %s.") % [st.side(e["side"]).name, I18n.t(c.get("name", ""))])
 			_rebuild_hand()
 			_flash(Factions.color(c.get("faction", "machine")))
-			await _show_cast(e["id"], e["side"], 0.9)
+			if e.get("from_stack", false):
+				_log(I18n.t("%s resolves.") % I18n.t(c.get("name", "")))
+				await _wait(0.25)
+			else:
+				_log(I18n.t("%s casts %s.") % [st.side(e["side"]).name, I18n.t(c.get("name", ""))])
+				await _show_cast(e["id"], e["side"], 0.9)
 		"attack":
 			if figures.has(e["uid"]):
 				figures[e["uid"]].mark = "attack"
@@ -930,6 +1066,12 @@ func _animate(e: Dictionary) -> void:
 			_log(I18n.t("Overclocked!"))
 		"ability":
 			_log(I18n.t("%s uses: %s") % [st.side(e["side"]).name, I18n.t(String(e.get("text", "")))])
+			if int(e.get("sid", -1)) >= 0:
+				var src = st.find_perm(int(e["uid"]))
+				var tok: Dictionary = src.card if src != null and src.is_token else {}
+				view_stack.append(_view_entry(int(e["sid"]), int(e["side"]), String(e.get("id", "")), true, String(e.get("text", "")), e.get("targets", []), tok,
+					String(src.name) if src != null else ""))
+				_refresh_stack_view()
 			_refresh_relics(e["side"])
 			_refresh_bars()
 			await _wait(0.35 if e["side"] == 1 else 0.1)
@@ -1291,12 +1433,27 @@ func _advance_targeting() -> void:
 				sac_uid = int(first.get("uid", -1))
 		st.activate(0, ab[0], ab[1], tg, sac_uid)
 		await play_events()
+		await _after_player_action()
 		return
 	var idx := pending_hand_idx
 	pending_hand_idx = -1
 	st.play(0, idx, chosen_targets, pending_overclock)
 	pending_overclock = false
 	await play_events()
+	await _after_player_action()
+
+
+## You cast something or used an ability: if the game was waiting for you, it goes on;
+## otherwise (your main phase) the stack is played out, the other side answering first.
+func _after_player_action() -> void:
+	if waiting_priority:
+		_priority_action.emit()
+		return
+	if st.phase != "over" and (not st.stack.is_empty() or st.window_open):
+		busy = true
+		await _run_priority(st.step)
+		busy = false
+	refresh()
 
 
 func _spec_prompt(spec: Dictionary) -> String:
@@ -1382,13 +1539,17 @@ func _on_alt() -> void:
 			sel_attackers.clear()
 			refresh()
 		"idle":
-			if st.active == 0 and st.phase == "main1":
-				mode = "attack"
-				sel_attackers.clear()
-				for p in st.attack_candidates(0):
-					sel_attackers.append(p.uid)      # everyone charges unless you hold them back
-				_log("All your ready creatures will attack. Tap any you want to hold back, then confirm.")
-				refresh()
+			if idle_main and st.active == 0 and st.phase == "main1" and st.stack.is_empty():
+				_enter_attack_mode()
+
+
+func _enter_attack_mode() -> void:
+	mode = "attack"
+	sel_attackers.clear()
+	for p in st.attack_candidates(0):
+		sel_attackers.append(p.uid)      # everyone charges unless you hold them back
+	_log("All your ready creatures will attack. Tap any you want to hold back, then confirm.")
+	refresh()
 
 
 func _on_main() -> void:
@@ -1404,28 +1565,221 @@ func _on_main() -> void:
 			refresh()
 		"attack":
 			mode = "idle"
-			await _player_attack(sel_attackers.duplicate())
+			idle_main = false
+			var uids := sel_attackers.duplicate()
 			sel_attackers.clear()
+			await _player_attack(uids)
 		"block":
 			mode = "idle"
 			_blocks_done.emit()
 		"idle":
-			if st.active == 0 and st.phase != "over":
+			if waiting_priority:
+				st.pass_priority(0)
+				_priority_action.emit()
+			elif idle_main and st.active == 0 and st.phase != "over":
 				await _player_end_turn()
 
 
-func _player_attack(uids: Array) -> void:
-	st.declare_attackers(uids)
-	await play_events()
-	if st.phase == "block":
-		st.declare_blocks(BattleAI.choose_blocks(st, 1))
+# =================================================================== priority windows
+
+## Is there a stop on this step in the current turn (the phase bar's pennants)?
+func _stop_on(key: String) -> bool:
+	return phase_bar.is_stop(key, st.active == 0)
+
+
+## Can you cast or use anything right now (mana abilities don't count)?
+func _can_respond() -> bool:
+	var me := st.side(0)
+	for idx in me.hand.size():
+		var c := CardDB.get_card(me.hand[idx])
+		if c.get("type") != "land" and st.can_play(0, idx) and st.has_useful_targets(0, c):
+			return true
+	for p in me.creatures + me.relics:
+		var list: Array = st.abilities_of(p)
+		for k in list.size():
+			if not BattleState.is_mana_ability(list[k]) and st.can_activate(0, p.uid, k):
+				return true
+	return false
+
+
+## Anything to do in your own main phase (a land, a card, an ability, an attack)?
+func _can_act_main(with_attack: bool) -> bool:
+	if _can_respond():
+		return true
+	var me := st.side(0)
+	for idx in me.hand.size():
+		if CardDB.is_land(me.hand[idx]) and st.can_play(0, idx):
+			return true
+	return with_attack and not st.attack_candidates(0).is_empty()
+
+
+## Play out priority until the step's window closes and the stack is empty. You are asked
+## only when it's a stop or something is on the stack, and only if you can answer at all;
+## otherwise you pass at once.
+func _run_priority(key: String) -> void:
+	var guard := 0
+	while st.phase != "over":
+		guard += 1
+		if guard > 400:
+			push_warning("BattleScene: priority guard")
+			st._force_resolve()
+			st.window_open = false
+			break
 		await play_events()
+		if st.phase == "over" or (not st.window_open and st.stack.is_empty()):
+			break
+		var p := st.priority
+		if st.ai_controls(p):
+			st.settle()
+			if st.priority == p and st.ai_controls(p) and (st.window_open or not st.stack.is_empty()):
+				st._pass(p)       # cannot happen; never hang on it
+			continue
+		var asked := (_stop_on(key) or not st.stack.is_empty()) and _can_respond()
+		if asked:
+			await _wait_for_player()
+		else:
+			st.pass_priority(0)
+	busy = true
+
+
+func _wait_for_player() -> void:
+	waiting_priority = true
+	busy = false
+	if not st.stack.is_empty():
+		var top: Dictionary = st.stack.back()
+		var nm: String = I18n.t(String(top.get("name", CardDB.get_card(top["id"]).get("name", ""))))
+		_log(I18n.t("%s waits on the stack: answer it, or let it resolve.") % nm)
+	else:
+		_log(I18n.t("You may act now, or pass."))
 	refresh()
+	await _priority_action
+	waiting_priority = false
+	busy = true
+
+
+# =================================================================== turn flow
+
+## Upkeep and draw windows, then main phase 1.
+func _turn_start() -> void:
+	busy = true
+	idle_main = false
+	await play_events()
+	if st.phase == "over":
+		return
+	await _run_priority("upkeep")
+	if st.phase == "over":
+		return
+	st.to_draw()
+	await _run_priority("draw")
+	if st.phase == "over":
+		return
+	st.to_main()
+	await play_events()
+
+
+func _player_turn() -> void:
+	await _turn_start()
+	await _player_main("main1")
+
+
+## Your main phase waits for you when it's a stop and you have something to do;
+## otherwise the game moves on by itself.
+func _player_main(key: String) -> void:
+	if st.phase == "over":
+		return
+	if _stop_on(key) and _can_act_main(key == "main1"):
+		idle_main = true
+		busy = false
+		refresh()
+		return
+	if key == "main1":
+		if not st.attack_candidates(0).is_empty():
+			idle_main = true
+			busy = false
+			_enter_attack_mode()
+			return
+		st.declare_attackers([])
+		await play_events()
+		await _player_main("main2")
+	else:
+		await _player_end_turn()
+
+
+func _player_attack(uids: Array) -> void:
+	busy = true
+	idle_main = false
+	if uids.is_empty():
+		st.declare_attackers([])
+		await play_events()
+		await _player_main("main2")
+		return
+	st.begin_combat()
+	await _run_priority("begin_combat")
+	if st.phase == "over":
+		return
+	st.declare_attackers(uids)
+	await _combat()
+	if st.phase == "over":
+		return
+	await _player_main("main2")
+
+
+## Attackers are declared: their window, blocks, the blockers window, damage, main 2.
+func _combat() -> void:
+	if st.phase == "block":
+		await _run_priority("attackers")
+		if st.phase == "over":
+			return
+		var defender := 1 - st.active
+		if defender == 0 and not auto_play:
+			await _player_blocks()
+		else:
+			pending_blocks = BattleAI.choose_blocks(st, defender)
+		st.declare_blocks(pending_blocks)
+		pending_blocks.clear()
+		await _run_priority("blockers")
+		if st.phase == "over":
+			return
+		st.combat_damage()
+		await _run_priority("damage")
+		if st.phase == "over":
+			return
+		st.to_main2()
+	await play_events()
+
+
+func _player_blocks() -> void:
+	pending_blocks.clear()
+	block_pick = -1
+	var can_any := false
+	for p in st.side(0).creatures:
+		for u in st.attackers:
+			var a = st.find_perm(u)
+			if a and st.can_block(p, a):
+				can_any = true
+	if can_any:
+		mode = "block"
+		busy = false
+		_log("You are attacked! Tap your creature, then the attacker it blocks.")
+		refresh()
+		await _blocks_done
+		busy = true
+	else:
+		_log("You have no blockers.")
+		await _wait(0.5)
+	mode = "idle"
 
 
 func _player_end_turn() -> void:
-	if st.phase == "main1":
+	idle_main = false
+	mode = "idle"
+	busy = true
+	if st.phase in ["main1", "begin_combat"]:
 		st.declare_attackers([])
+	st.begin_end_step()
+	await _run_priority("end")
+	if st.phase == "over":
+		return
 	# more cards than you may keep: you choose which to let go
 	var me := st.side(0)
 	while me.interactive and me.hand.size() > me.max_hand and st.phase != "over":
@@ -1434,67 +1788,67 @@ func _player_end_turn() -> void:
 		st.discard_owed(0, int(idx))
 		await play_events()
 	st.end_turn()
-	await play_events()
-	if st.active == 1 and st.phase != "over":
-		await enemy_turn()
+	if st.phase == "over":
+		await play_events()
+	elif st.active == 1:
+		await _ai_turn(1)
+	else:
+		await _player_turn()
 
 
-func enemy_turn() -> void:
-	busy = true
-	BattleAI.play_main(st, 1)
-	await play_events()
+## A turn played by the AI (the enemy, or your side in the tests' auto play).
+func _ai_turn(i: int) -> void:
+	await _turn_start()
 	if st.phase == "over":
 		return
-	if st.phase == "main1":
-		st.declare_attackers(BattleAI.choose_attackers(st, 1))
-		await play_events()
-	if st.phase == "block":
-		pending_blocks.clear()
-		block_pick = -1
-		var can_any := false
-		for p in st.side(0).creatures:
-			for u in st.attackers:
-				var a = st.find_perm(u)
-				if a and st.can_block(p, a):
-					can_any = true
-		if can_any and not auto_play:
-			mode = "block"
-			_log("You are attacked! Tap your creature, then the attacker it blocks.")
-			refresh()
-			await _blocks_done
-		elif auto_play:
-			pending_blocks = BattleAI.choose_blocks(st, 0)
-		else:
-			_log("You have no blockers.")
-			await _wait(0.5)
-		mode = "idle"
-		st.declare_blocks(pending_blocks)
-		pending_blocks.clear()
-		await play_events()
+	await _ai_main(i)
 	if st.phase == "over":
 		return
-	BattleAI.play_main(st, 1)
+	st.open_main_window()
+	await _run_priority("main1")
+	if st.phase == "over":
+		return
+	if BattleAI.choose_attackers(st, i).is_empty():
+		st.declare_attackers([])
+	else:
+		st.begin_combat()
+		await _run_priority("begin_combat")
+		if st.phase == "over":
+			return
+		st.declare_attackers(BattleAI.choose_attackers(st, i))
+		await _combat()
+	if st.phase == "over":
+		return
 	await play_events()
+	await _ai_main(i)
+	if st.phase == "over":
+		return
+	st.open_main_window()
+	await _run_priority("main2")
+	if st.phase == "over":
+		return
+	st.begin_end_step()
+	await _run_priority("end")
 	if st.phase == "over":
 		return
 	st.end_turn()
-	await play_events()
-	if auto_play and st.phase != "over":
-		await _auto_player_turn()
-
-
-## Used by the smoke test: let the AI play the player's side.
-func _auto_player_turn() -> void:
-	BattleAI.play_main(st, 0)
-	await play_events()
-	if st.phase == "main1":
-		await _player_attack(BattleAI.choose_attackers(st, 0))
 	if st.phase == "over":
-		return
-	BattleAI.play_main(st, 0)
+		await play_events()
+	elif st.active == 0 and not auto_play:
+		await _player_turn()
+	else:
+		await _ai_turn(st.active)
+
+
+## The AI's main phase, one decision at a time; you may answer each spell.
+func _ai_main(i: int) -> void:
+	var guard := 0
+	while guard < 40 and st.phase != "over":
+		guard += 1
+		if not BattleAI.main_action(st, i):
+			break
+		await _run_priority(st.step)
 	await play_events()
-	if st.phase != "over":
-		await _player_end_turn()
 
 
 var fled := false
@@ -1506,7 +1860,10 @@ func _on_flee() -> void:
 	fled = true
 	st._lose(0)
 	_log("You flee the duel.")
+	waiting_priority = false
+	idle_main = false
 	await play_events()
+	_priority_action.emit()
 
 
 # =================================================================== result

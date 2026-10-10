@@ -1811,3 +1811,134 @@ def statue(**kw):
     kw.setdefault('sleeves', 'fitted')
     kw.setdefault('garb', 'toga')
     return Greek(himation=col.dark(0.04), sandals=False, **kw)
+
+
+# ------------------------------------------------------------------ tribal cards (1.23)
+
+def spear_fwd(which='f', ang=-0.35, back=38, front=92):
+    """A spear held in the fist and levelled forward, the point raised a little above
+    the horizontal (ang in radians, negative is up). Drawn before the fist."""
+    def fn(p, j):
+        h = j['hand_' + which]
+        d = (math.cos(ang), math.sin(ang))
+        butt = v_sub(h, v_mul(d, back))
+        top = v_add(h, v_mul(d, front))
+        rod(p, [butt, top], 1.0, 0.9, C.hex('8a6a40'), width=1.1, shade=0.6)
+        n = v_perp(d)
+        tip = v_add(top, v_mul(d, 11))
+        p.shape([v_add(top, v_mul(n, 0.8)) + (0,), v_add(v_add(top, v_mul(d, 3)), v_mul(n, 2.2)), tip + (0,),
+                 v_sub(v_add(top, v_mul(d, 3)), v_mul(n, 2.2)), v_sub(top, v_mul(n, 0.8)) + (0,)], ('h', BRONZE_LIGHT, BRONZE_DARK), width=1.1)
+        rod(p, [butt, v_add(butt, v_mul(d, 6))], 1.2, 1.1, BRONZE, width=1.0)
+    fn.grip = which
+    return fn
+
+
+def held_tablet(which='both'):
+    """A hinged wax tablet held open at chest height between the hands."""
+    def fn(p, j):
+        h = v_lerp(j['hand_f'], j['hand_b'], 0.5) if which == 'both' else j['hand_' + which]
+        p.push(h[0], h[1] - 1, 1.0, rot=-0.1)
+        p.shape(rect(-9, -6, 9, 6), C.hex('8a6038'), width=1.1, smooth=False, shade=0.6)
+        for x0 in (-7.6, 0.8):
+            p.shape(rect(x0, -4.6, x0 + 6.8, 4.6), C.hex('3a2a1a'), width=0.6, smooth=False)
+            for k in range(3):
+                p.line([(x0 + 1, -2.6 + k * 2.2), (x0 + 5.6, -2.6 + k * 2.2)], C.hex('d8b880').alpha(0.75), 0.5, smooth=False)
+        p.line([(0, -6), (0, 6)], INK, 0.8, smooth=False)
+        p.pop()
+    return fn
+
+
+def held_lamp(which='f'):
+    """A small clay oil lamp carried on the palm, lit."""
+    def fn(p, j):
+        h = j['hand_' + which]
+        p.glow((h[0] + 4, h[1] - 8), 30, C.hex('ffd88a'), 0.5)
+        oil_lamp(p, (h[0] + 1, h[1] - 2), 0.17, glow=False)
+        p.shape([(h[0] + 8.0, h[1] - 3.8), (h[0] + 7.4, h[1] - 7), (h[0] + 8.6, h[1] - 11, 0), (h[0] + 9.8, h[1] - 7), (h[0] + 9.2, h[1] - 3.8)], FLAME, width=0.6)
+        p.blob((h[0] + 8.6, h[1] - 5.6), 0.6, 1.2, FLAME_CORE, ink=False)
+    return fn
+
+
+def arrow_stuck(p, at, ang, L=46, col=INK_SOFT, fletch=LEAD_WHITE):
+    """An arrow buried in a shield or the ground: shaft out to the fletching."""
+    d = (math.cos(ang), math.sin(ang))
+    end = v_add(at, v_mul(d, L))
+    p.line([at, end], col, 2.4, smooth=False)
+    n = v_perp(d)
+    for sd in (-1, 1):
+        p.shape([v_sub(end, v_mul(d, 12)), v_add(v_sub(end, v_mul(d, 2)), v_mul(n, 5 * sd)) + (0,), v_add(end, v_mul(d, 2)) + (0,), end], fletch, width=0.9)
+
+
+def phalanx_tips(p, x0, x1, y_base, y_top, n=24, col=C.hex('7a5a36')):
+    """A forest of upright spears of ranks out of sight."""
+    for k in range(n):
+        x = lerp(x0, x1, k / max(1, n - 1)) + p.rng.uniform(-6, 6)
+        t = y_top + p.rng.uniform(0, 30)
+        p.line([(x - 3, y_base), (x + 4, t)], col, 2.4, smooth=False)
+        p.shape([(x + 4, t - 18, 0), (x + 1, t + 2, 0), (x + 7, t + 2, 0)], BRONZE, width=1, smooth=False)
+
+
+def tropaion(p, x, y, s=1.0):
+    """A battle trophy: an oak trunk with a crossbar dressed in captured arms."""
+    p.push(x, y, s)
+    bark = C.hex('6e5a42')
+    # mound of stones at the foot
+    for k in range(9):
+        q = (-70 + k * 17 + p.rng.uniform(-4, 4), -6 + (k % 2) * 3)
+        p.blob(q, 16, 10, STONE.mix(OCHRE, 0.2), width=1.6, shade=0.7)
+    # the trunk and the crossbar of a lopped oak
+    p.taper([(0, 0), (-4, -120), (2, -250), (0, -330)], 18, 12, bark, width=2.2, shade=0.9, rim=0.4)
+    p.taper([(-120, -262), (0, -258), (124, -268)], 9, 8, bark, width=2, shade=0.8)
+    for q in ((-6, -80), (4, -170)):
+        p.blob(q, 5, 7, bark.dark(0.4), width=1.2)
+    # captured spears crossed behind
+    for (a, b) in (((-150, -20), (120, -380)), ((150, -30), (-110, -390))):
+        rod(p, [a, b], 2.6, 2.2, C.hex('8a6a40'), width=1.2, shade=0.6)
+        d = v_norm(v_sub(b, a))
+        n = v_perp(d)
+        tip = v_add(b, v_mul(d, 28))
+        p.shape([v_add(b, v_mul(n, 3)) + (0,), v_add(v_add(b, v_mul(d, 8)), v_mul(n, 7)), tip + (0,), v_sub(v_add(b, v_mul(d, 8)), v_mul(n, 7)), v_sub(b, v_mul(n, 3)) + (0,)], IRON.light(0.3), width=1.2)
+    # the enemy's tunic hung on the crossbar, falling in folds
+    tun = [(-56, -262), (56, -262), (62, -200), (70, -120), (-70, -120), (-62, -200)]
+    p.shape(tun, ('v', C.hex('d0a040'), C.hex('8a5a20')), width=2, shade=0.9, rim=0.4)
+    p.clip_shape(tun)
+    for k in range(6):
+        xx = -60 + k * 24
+        p.line([(xx * 0.8, -258), (xx, -122)], C.hex('5a3a10').alpha(0.5), 2)
+    for k in range(5):
+        p.line([(-70, -150 + k * 6), (70, -150 + k * 6)], ULTRA.alpha(0.6), 2.4, smooth=False)
+    p.unclip()
+    # scale cuirass over the tunic
+    cu = [(-44, -262), (44, -262), (50, -200), (-50, -200)]
+    p.shape(cu, ('h', BRONZE_LIGHT, BRONZE, BRONZE_DARK), width=2, shade=0.8)
+    p.clip_shape(cu)
+    for r in range(8):
+        for c in range(12):
+            xx = -50 + c * 9 + (4.5 if r % 2 else 0)
+            yy = -258 + r * 8
+            p.cx.new_path()
+            p.cx.arc(xx, yy, 4.6, 0.1 * math.pi, 0.9 * math.pi)
+            p.stroke(BRONZE_DARK.alpha(0.8), 1.2)
+    p.unclip()
+    # the helmet on top of the trunk
+    p.shape([(-30, -318), (-32, -346), (-18, -370), (6, -376), (28, -362), (34, -336), (30, -316), (16, -312), (14, -332), (-6, -334), (-8, -312)],
+            ('r', BRONZE_LIGHT, BRONZE, BRONZE_DARK), width=2.2, shade=1.0, rim=0.4)
+    p.taper([(4, -376), (-20, -400), (-48, -396), (-64, -372), (-66, -344)], 7, 6, VERMILION, width=1.6, shade=0.7)
+    # captured shields hung from the crossbar ends, wicker and bronze
+    for (cx0, dev) in ((-122, None), (126, 'star')):
+        if dev:
+            hoplon(p, (cx0, -214), 48, dev, C.hex('2a2a2a'), turn=0.9)
+        else:
+            sh = [(cx0 - 30, -262), (cx0 + 30, -262), (cx0 + 40, -200), (cx0 + 30, -140), (cx0 - 30, -140), (cx0 - 40, -200)]
+            p.shape(sh, ('v', C.hex('c8a868'), C.hex('8a6a38')), width=2, shade=0.8)
+            p.clip_shape(sh)
+            for k in range(14):
+                yy = -262 + k * 9
+                p.line([(cx0 - 44, yy), (cx0 + 44, yy + 2)], C.hex('6a4a20').alpha(0.6), 2)
+            p.unclip()
+            p.blob((cx0, -200), 10, 10, BRONZE, width=1.4, shade=0.6)
+        p.line([(cx0, -262), (cx0 + (8 if cx0 < 0 else -8), -268)], INK, 2)
+    # a curved sword hung by its baldric
+    p.taper([(70, -116), (82, -80), (78, -40), (64, -14)], 3.6, 1.6, IRON.light(0.35), width=1.2, shade=0.5)
+    p.shape(rect(64, -126, 78, -116), GOLD, width=1.0, smooth=False)
+    p.pop()

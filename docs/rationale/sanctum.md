@@ -83,8 +83,8 @@ A defensive flier that blocks as a 2/6 in the air or on the ground. Two keywords
 **Angel of Compline** · Uncommon · Creature (Angel) · 4W · 3/4 · Flying. As long as you have more life than you started with, this has lifelink.
 A five mana 3/4 flier that gains lifelink in Grace, so the richer you are, the faster you pull away. Without Grace he is a fair evasive body, and with it he is a strong one. Compline is the last hour of the Divine Office before sleep, and the flavour comes from its closing prayer asking the holy angels to guard the house through the night.
 
-**Smite the Proud** · Uncommon · Spell (Exorcism) · 1W · Destroy target tapped enemy creature with power 4 or greater.
-The mirror of Rebuke the Wicked: two mana to kill a big creature, provided it has tapped. It is cheap because it is narrow, useless against small creatures and anything that stays home. The flavour is from the Magnificat, sung every day at Vespers, and humbling the proud is the whole point of the card.
+**Smite the Proud** · Uncommon · Spell (Exorcism) · Instant · 2W · Destroy target tapped enemy creature with power 4 or greater.
+The mirror of Rebuke the Wicked: three mana to kill a big creature, provided it has tapped. Since 1.23 it is an instant, so it answers a big attacker in the middle of combat, and it costs one more for that. It stays cheap because it is narrow, useless against small creatures and anything that stays home. The flavour is from the Magnificat, sung every day at Vespers, and humbling the proud is the whole point of the card.
 
 **Truce of God** · Uncommon · Spell (Blessing) · 2W · Pacify target enemy creature (it can't attack for the rest of the duel). Gain 3 life.
 A heavier Sign of Peace that also gains 3 life, so it stops an attacker and pushes you toward Grace in one card. The extra mana for the life is a fair trade at uncommon. The Truce of God was a real medieval institution in which bishops forbade fighting on certain days of the week and in holy seasons.
@@ -92,8 +92,8 @@ A heavier Sign of Peace that also gains 3 life, so it stops an attacker and push
 **Te Deum** · Uncommon · Spell (Prayer) · 3W · Gain 3 life. Then, if you have more life than you started with, creatures you control get +1/+1 permanently.
 A one shot team pump that only works in Grace, with the 3 life usually making sure it does. Four mana for 3 life and a permanent +1/+1 on everything is strong on a wide board and weak on an empty one, which is the right risk for an uncommon. The Te Deum is the ancient hymn of thanksgiving sung at Matins and on great occasions of the Church.
 
-**Litany of the Saints** · Uncommon · Spell (Prayer) · 2W · Creatures you control get +0/+2 permanently.
-A defensive team blessing that lasts for the rest of the duel. Extra toughness rarely wins a race but it wins many combats, and it makes the board resistant to burn and sweepers. The Litany of the Saints calls on the whole Communion of Saints by name, and each answer of pray for us is a little more strength for the line.
+**Litany of the Saints** · Uncommon · Spell (Prayer) · Instant · 2W · Creatures you control get +0/+2 permanently.
+A defensive team blessing that lasts for the rest of the duel, and since 1.23 an instant, cast in the middle of combat to turn the enemy's attack into a bad trade. Extra toughness rarely wins a race but it wins many combats, and it makes the board resistant to burn and sweepers. The Litany of the Saints calls on the whole Communion of Saints by name, and each answer of pray for us is a little more strength for the line.
 
 **Icon of the Heavenly Host** · Uncommon · Relic (Relic) · 2W · Angels you control get +1/+1.
 A small tribal anthem for the Church's angels. Angels are spread across every rarity, so a deck built around them has enough to make this worth a card, and the bonus makes them hard for reach creatures to stop. The nine choirs of angels come from the tradition of Pseudo Dionysius, and icons painted in gold leaf after fasting belong to the oldest sacred art.
@@ -136,3 +136,52 @@ A mythic lord: every other creature gets +1/+1 and protection from the Pact. Aga
 
 **The Last Judgment** · Mythic · Spell (Exorcism) · 4WW · Destroy up to three target tapped enemy creatures.
 The Church's one sided sweeper, and it only judges the guilty. After an all out attack it can wipe three attackers at once, but against an opponent who keeps his creatures home it does nothing. That makes it splashy and answerable, as a mythic should be. The flavour is from the Nicene Creed, said at every Sunday Mass.
+
+### Tribal cards (1.23)
+
+The Church's two tribes are its two arms. The Knights of the military orders fight on the ground: they come cheap, get cheaper with the Preceptor, grow together through kinship and the Temple's banner, and pay the Church in life as they arrive, which feeds Grace. The Angels hold the air: fewer and dearer, but every one of them flies, and they reward a full choir with life and with size. Saint Michael, patron of knights and prince of the heavenly host, joins the two. Neither tribe uses tokens or card draw, which the Church does not own; their depth comes from lords, kinship and life gain, the faith's native tools.
+
+**Knight of Saint Lazarus** · Common · Creature (Human Knight) · 1W · 2/2 · When this enters, gain 1 life for each Knight you control.
+An on rate two drop that pays a little life on arrival, and more the deeper the Knight deck goes, since he counts himself. It is the simple common that starts a Knight curve and nudges the Church toward Grace. The Order of Saint Lazarus began as a hospital for lepers outside Jerusalem, and its knights took the green cross; serving the lepers is the heart of the card.
+
+**Teutonic Knight-Brother** · Common · Creature (Human Knight) · 2W · 2/3 · This gets +1/+0 for each other Knight you control.
+A slightly under rate 2/3 alone, but with two other Knights beside him he hits as a 4/3. Kinship on power only keeps him a common and keeps the Church defensive at heart. The Teutonic Order wore a black cross on white and built its red brick castles along the Baltic, and its rule bound the brothers to live, eat and ride in common.
+
+**Angel of the Wayside Shrine** · Common · Creature (Angel) · 1W · 1/2 · Flying (can only be blocked by creatures with flying or reach).
+The cheapest Angel, a 1/2 flier for two, a point under a vanilla body to pay for the wings. It gives the Angel deck an early body to count for kinship and life gain payoffs. Wayside shrines line the mountain roads of Catholic Europe, and the guardian of travellers is the angel Raphael's office in miniature.
+
+**Angel of the Flaming Sword** · Common · Creature (Angel) · 3W · 3/3 · Flying (can only be blocked by creatures with flying or reach).
+The common Angel top end: a 3/3 flier for four, the classic white common evasive body. It is plain on purpose, so the tribe's payoffs carry the complexity. The flavour is Genesis 3:24, the cherub set at the east of Eden with the sword of fire after the Fall.
+
+**Accolade** · Common · Spell (Blessing) · 2W · Target Knight you control gets +2/+2 permanently.
+A permanent +2/+2, priced at three mana and limited to Knights, so it is a little better than Sacrament of Confirmation for the right deck and dead in the wrong one. Permanent growth keeps it inside the Church's niche; temporary single creature pumps belong to the Old Ways. The accolade was the blow on the shoulder that made a knight, given with the charge to be a good knight in God's name.
+
+**Hospital of Saint John** · Common · Relic (Relic) · 1W · Whenever a Knight enters under your control, gain 2 life.
+A cheap tribal engine that turns every Knight into a small Asperges. It rewards a dense Knight deck with steady life and switches Grace on early for cards like Knight of the Pilgrim Way. The great Hospital of the Order of Saint John in Jerusalem cared for pilgrims of every nation, and its sisters nursed beside the brothers; this is the one card where a nursing sister appears, unarmed and at her work.
+
+**Gloria in Excelsis** · Common · Spell (Prayer) · Instant · 1W · Gain 2 life for each Angel you control.
+An instant that scales with the choir: with two Angels it is four life for two mana, with none it does nothing. At instant speed it can answer burn or keep Grace on through the enemy's turn, but it never touches the board. The Gloria is the hymn of the angels to the shepherds at Bethlehem, sung at every festive Mass.
+
+**Preceptor of the Commandery** · Uncommon · Creature (Human Knight) · 2W · 2/3 · Your Knight creature cards cost 1 less to play (1 less generic mana).
+The Knight deck's accelerant: from the turn after him, two drops cost one and the Grand Master costs three. His own 2/3 body is fair, so he is never a blank. A preceptor ran a commandery, the local house of a military order, keeping its lands, horses and recruits for the war in the East.
+
+**War Banner of the Temple** · Uncommon · Relic (Relic) · 2W · Knights you control get +1/+1.
+The Knight twin of Icon of the Heavenly Host, a tribal anthem at three mana. It is fragile to the Old Ways' relic removal and does nothing without Knights, which is the right price. The Beauceant, the black and white banner of the Templars, was the rallying point in battle, and while it flew no brother was permitted to leave the field.
+
+**Angel of the Choir of Virtues** · Uncommon · Creature (Angel) · 3W · 2/3 · Flying. This gets +1/+1 for each other Angel you control.
+A 2/3 flier for four that grows by +1/+1 for each other Angel, so in a choir of three it is a 4/5 in the air. Full kinship is uncommon strength and needs a committed deck. The Virtues are the fifth of the nine choirs in the hierarchy of Pseudo-Dionysius, the angels through whom miracles are worked.
+
+**Angel of the Dominions** · Uncommon · Creature (Angel) · 2W · 1/3 · Flying. Whenever another Angel enters under your control, gain 2 life.
+A cheap blocker in the air that turns every later Angel into a life gain spell. It holds off early fliers and pushes the Church into Grace for its Angel payoffs. The Dominions are the fourth choir, who govern the duties of the lower angels; the art crowns him and gives him the sceptre, as tradition does.
+
+**Angelic Intercession** · Uncommon · Spell (Prayer) · Instant · 2W · Creatures you control get +0/+2 until end of turn. Gain 1 life for each Angel you control.
+The Church's combat trick, and so an instant: it saves the whole team from a bad block or a burn spell and gains a little life for each Angel. It only adds toughness, because temporary power for the team is the Revel's. The flavour is the guardian angel's office of turning aside harm that the guarded man never sees.
+
+**Grand Master of the Temple** · Rare · Creature (Human Knight) · 2WW · 3/3 · Sanctified (protection from the Pact). Other Knights you control get +1/+1 and have sanctified.
+The Knight lord. Every other Knight gets +1/+1 and protection from the Pact, so against the Black Pact a Knight army walks through their blockers and removal. His own 3/3 body for four dies to ordinary damage, which keeps him answerable. The flavour is the Templars' motto from Psalm 113, and the abacus he holds was the staff of the Grand Master's office.
+
+**Saint Raphael, Medicine of God** · Rare · Creature (Angel) · 3WW · 3/4 · Flying. When this enters, gain 2 life for each Angel you control.
+The Angel deck's rare: a 3/4 flier for five that gains at least two life and usually six or eight. It stabilises a losing board and switches Grace on for many turns. Raphael's name means God heals; in the Book of Tobit he walks with young Tobias, tells him to take the fish from the Tigris, and heals his father's blindness with it, and the flavour is his own word in Tobit 12:15.
+
+**Saint Michael the Archangel** · Mythic · Creature (Angel) · 4WW · 4/5 · Flying, sanctified (protection from the Pact). Other Angels and Knights you control get +1/+1.
+The mythic that binds both tribes. A 4/5 flier that the Pact cannot touch, and a lord for Angels and Knights at once, so any tribal Church deck wants him. At six mana and with no immediate effect on the board, he is splashy but answerable by the other five faiths. Michael is the captain of the heavenly host who cast down the rebel angels and the patron of knights; his name, Quis ut Deus, is the cry with which he did it.

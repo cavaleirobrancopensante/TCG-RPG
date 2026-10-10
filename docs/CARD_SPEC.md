@@ -66,8 +66,9 @@ creatures through its own mechanics, and its basic land.
 
 - `id`: `<faith>_<c|u|r|m>_<nnn>` with faith one of `sanctum, abyss, wild, revel, lyceum,
   machine`, numbered from 001 per rarity.
-- `type`: `creature`, `spell` (sorcery speed, goes to the graveyard), `relic` (stays on
-  the battlefield), `land` (only for the dual lands, made separately).
+- `type`: `creature`, `spell` (sorcery speed unless `"speed": "instant"`, goes to the
+  graveyard), `relic` (stays on the battlefield), `land` (only for the dual lands, made
+  separately).
 - `cost`: mana symbols `W U B R G C` (C = Technocracy Foundry mana) plus `generic`.
 - `power`, `toughness`: creatures only.
 - `faction2`: only on dual-faith (gold) cards.
@@ -150,7 +151,13 @@ if it holds when it would happen.
 
 ## Abilities (activated)
 
-Used in your main phase, as often as you can pay (unless `once_per_turn`).
+Used whenever you have priority (your turn or the opponent's, in answer to a spell or another
+ability too), as often as you can pay (unless `once_per_turn`, which counts each turn). The
+cost is paid at once (tap, mana, life, discard, sacrifice) and the targets are chosen then;
+the ability goes on the stack and resolves later, even if its source has left play.
+Abilities whose only effects are `add_mana` are mana abilities: they resolve at once and
+never use the stack. A `tap` cost still needs a creature that has been in play since its
+controller's turn began (or haste).
 
 ```json
 "abilities": [
@@ -220,6 +227,31 @@ A spell with `"speed": "instant"` may be cast whenever you have priority: in eit
 player's turn, in combat, and in answer to another spell or ability on the stack. Instants
 are fewer and a little dearer than sorcery-speed spells (about +1 mana for the same effect
 at common, or a smaller effect). Combat tricks, counters of a sort and protection belong here.
+Every other non-land card (creatures, relics, spells without `speed`) is sorcery speed: only
+in your own main phase, with an empty stack.
+
+## The stack (the pile) and priority
+
+- Casting any non-land card puts it on the stack: its cost (with tax, overclock) is paid and
+  its targets chosen at once, and it counts for Carouse when cast. Activating a non-mana
+  ability does the same. Lands are played straight away.
+- Casting counts as passing: after something goes on the stack the other player gets
+  priority, then priority alternates. When both players pass in a row, the top item resolves
+  (last in, first out) and the active player gets priority again.
+- On resolution every chosen target is checked again (sanctified, unmoved, filters such as
+  `tapped: true`, still in play). An effect whose chosen target is gone does nothing; a spell
+  or ability whose chosen targets are all gone fizzles (a spell still goes to the graveyard).
+  A creature or relic always enters; only its enter effects with lost targets are skipped.
+- Creature and relic spells put the permanent into play when they resolve; then their
+  `enter` triggers run.
+- Simplification: triggered effects (`enter`, `death`, `attack`, `upkeep`, `idle`,
+  `ally_enter`) do not use the stack; they resolve the moment they trigger, as before.
+- Priority windows in each turn: upkeep (after the upkeep triggers), draw, main 1, beginning
+  of combat, after attackers are declared, after blockers are declared, after combat damage,
+  main 2 and the end step (after Idle triggers, before the hand limit). A window closes when
+  both players pass in a row with an empty stack. An attacker whose blocker leaves combat
+  stays blocked (it deals no damage unless it has trample).
+- A side may act at most four times in one window (the AI's loop guard).
 
 ## Overclock (Technocracy kicker)
 

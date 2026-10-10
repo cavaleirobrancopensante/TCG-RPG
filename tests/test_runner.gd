@@ -13,6 +13,7 @@ func _ready() -> void:
 	test_enemy_decks()
 	test_mulligan()
 	test_mechanics()
+	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
 	test_draft()
@@ -230,6 +231,11 @@ func _lib() -> void:
 		"Summoner": {"faction": "abyss", "type": "creature", "cost": {"B": 1, "generic": 3}, "power": 2, "toughness": 2, "effects": [{"trigger": "enter", "action": "reanimate", "max_mv": 4}]},
 		"Lens": {"faction": "lyceum", "type": "relic", "cost": {"U": 1}, "effects": [{"trigger": "upkeep", "action": "foresight", "amount": 2}]},
 		"Duelist": {"faction": "revel", "type": "creature", "cost": {"R": 1, "generic": 1}, "power": 2, "toughness": 2, "effects": [{"trigger": "attack", "action": "buff", "target": "self", "power": 1, "toughness": 0}]},
+		"Zap": {"faction": "revel", "type": "spell", "speed": "instant", "cost": {"R": 1}, "effects": [{"trigger": "cast", "action": "damage", "target": "any_enemy", "amount": 2}]},
+		"Giant": {"faction": "wild", "type": "spell", "speed": "instant", "cost": {"G": 1}, "effects": [{"trigger": "cast", "action": "buff", "target": "own_creature", "power": 2, "toughness": 2}]},
+		"Doom": {"faction": "abyss", "type": "spell", "speed": "instant", "cost": {"B": 1}, "effects": [{"trigger": "cast", "action": "destroy", "target": "enemy_creature"}]},
+		"Pinger": {"faction": "revel", "type": "creature", "cost": {"R": 1}, "power": 1, "toughness": 1, "abilities": [{"cost": {"tap": true}, "effects": [{"action": "damage", "target": "any_enemy", "amount": 1}], "text": "Tap: 1 damage."}]},
+		"Engine": {"faction": "machine", "type": "relic", "cost": {"generic": 1}, "abilities": [{"cost": {}, "effects": [{"action": "summon", "count": 2, "token": {"name": "Servo", "power": 1, "toughness": 1, "subtype": "Servo"}}], "text": "Make two Servos."}]},
 	}
 	for n in L:
 		var c: Dictionary = L[n].duplicate(true)
@@ -644,6 +650,135 @@ func test_mechanics() -> void:
 			_check_invariants(d)
 
 
+## A duel where both sides are decided by hand (the engine stops whenever either has priority).
+func _held_duel() -> BattleState:
+	var st := _duel()
+	st.auto_priority = false
+	st.side(0).interactive = true
+	st.side(1).interactive = true
+	return st
+
+
+func _hand_idx(st: BattleState, i: int, name: String) -> int:
+	return st.side(i).hand.find(_id(name))
+
+
+## The stack, priority and instant speed.
+func test_stack() -> void:
+	print("-- stack and priority")
+	_lib()
+	# An instant in answer saves a creature from a spell before it resolves.
+	var st := _held_duel()
+	var bear := _put(st, 1, "Bear")
+	_hand(st, 0, ["Chill"])
+	_hand(st, 1, ["Giant"])
+	check(st.play(0, 0, [{"kind": "creature", "uid": bear.uid}]), "cast Chill")
+	check(st.stack.size() == 1 and st.priority == 1 and st.find_perm(bear.uid) != null, "the spell waits on the stack, the other side has priority")
+	check(st.play(1, 0, [{"kind": "creature", "uid": bear.uid}]), "answer with an instant")
+	check(st.stack.size() == 2 and st.priority == 0, "the answer goes on top, priority goes back")
+	st.pass_priority(0)
+	check(st.stack.size() == 1 and bear.toughness() == 4, "both passed: only the top item resolved (LIFO)")
+	check(st.priority == 0, "the active player gets priority after a resolution")
+	st.pass_priority(0)
+	st.pass_priority(1)
+	check(st.stack.is_empty() and st.find_perm(bear.uid) != null and bear.toughness() == 2, "the pump saved the creature from -2/-2")
+	# An instant in answer kills the target first: the pump fizzles.
+	st = _held_duel()
+	var cub := _put(st, 0, "Bear")
+	_hand(st, 0, ["Surge"])
+	_hand(st, 1, ["Zap"])
+	st.play(0, 0, [{"kind": "creature", "uid": cub.uid}])
+	st.play(1, 0, [{"kind": "creature", "uid": cub.uid}])
+	st.pass_priority(0)
+	check(st.find_perm(cub.uid) == null, "the burn resolved first and killed the creature")
+	st.take_events()
+	st.pass_priority(0)
+	st.pass_priority(1)
+	var fizzled := false
+	for e in st.take_events():
+		if e["type"] == "fizzle":
+			fizzled = true
+	check(fizzled and st.stack.is_empty() and st.side(0).graveyard.has(_id("Surge")), "a spell whose only target is gone fizzles to the graveyard")
+	# LIFO with three items.
+	st = _held_duel()
+	_hand(st, 0, ["Toast", "Zap"])
+	_hand(st, 1, ["Zap"])
+	st.play(0, 0, [{"kind": "player", "side": 1}])
+	st.play(1, 0, [{"kind": "player", "side": 0}])
+	st.play(0, _hand_idx(st, 0, "Zap"), [{"kind": "player", "side": 1}])
+	var order: Array = st.stack.map(func(it): return it["side"])
+	check(order == [0, 1, 0], "three items stacked")
+	st.pass_priority(1)
+	check(st.side(1).life == 18 and st.side(0).life == 20, "the last cast resolves first")
+	st.pass_priority(0)
+	st.pass_priority(1)
+	check(st.side(0).life == 18 and st.side(1).life == 18, "then the one below it")
+	st.pass_priority(0)
+	st.pass_priority(1)
+	check(st.side(1).life == 16 and st.stack.is_empty(), "and the first one last")
+	# Sorcery speed: own main phase with an empty stack only.
+	st = _held_duel()
+	_hand(st, 0, ["Toast", "Bear", "Zap"])
+	_hand(st, 1, ["Bear", "Zap"])
+	check(st.can_play(0, 1) and st.can_play(0, 2), "own main phase: creatures and instants")
+	check(not st.can_play(1, 0) and not st.can_play(1, 1), "no priority, nothing to cast")
+	st.play(0, 0, [{"kind": "player", "side": 1}])
+	check(not st.can_play(1, 0) and st.can_play(1, 1), "answering: instants yes, creatures no")
+	st.play(1, 1, [{"kind": "player", "side": 0}])
+	check(not st.can_play(0, 0) and st.can_play(0, 1), "a non-empty stack refuses sorcery-speed cards")
+	st.pass_priority(0)
+	st.pass_priority(0)
+	st.pass_priority(1)
+	check(st.stack.is_empty() and st.can_play(0, 0), "empty stack again: the creature can be cast")
+	st.begin_end_step()
+	check(st.window_open and st.priority == 0 and not st.can_play(0, 0) and st.can_play(0, 1), "end step: instants only")
+	# Abilities in the opponent's turn.
+	var pinger := _put(st, 1, "Pinger")
+	st.pass_priority(0)
+	check(st.priority == 1 and st.can_activate(1, pinger.uid, 0), "the other side may use an ability in my end step")
+	st.activate(1, pinger.uid, 0, [{"kind": "player", "side": 0}])
+	check(st.stack.size() == 1 and st.side(0).life == 18, "the ability waits on the stack")
+	st.pass_priority(0)
+	check(st.side(0).life == 17 and st.stack.is_empty() and st.window_open, "and resolves; the window stays open")
+	st.pass_priority(0)
+	st.pass_priority(1)
+	check(not st.window_open, "both pass with an empty stack: the window closes")
+	st.end_turn()
+	check(st.active == 1 and st.phase == "upkeep" and st.window_open, "held mode stops in the next upkeep")
+	st.pass_priority(1)
+	st.pass_priority(0)
+	st.to_draw()
+	st.pass_priority(1)
+	st.pass_priority(0)
+	st.to_main()
+	check(st.phase == "main1" and st.active == 1 and st.priority == 1, "steps advance to main 1")
+	# Mana abilities skip the stack.
+	st = _held_duel()
+	var druid := _put(st, 0, "Druid")
+	st.activate(0, druid.uid, 0)
+	check(st.stack.is_empty() and int(st.side(0).pool.get("G", 0)) == 1, "mana abilities resolve at once")
+	# A blocked attacker whose blocker is removed deals no damage.
+	st = _duel()
+	var og := _put(st, 0, "Ogre")
+	var wall := _put(st, 1, "Wall")
+	st.auto_priority = false
+	st.side(0).interactive = true
+	st.side(1).interactive = true
+	st.phase = "begin_combat"
+	st.declare_attackers([og.uid])
+	st.pass_priority(0)
+	st.pass_priority(1)
+	st.declare_blocks({og.uid: wall.uid})
+	_hand(st, 0, ["Doom"])
+	st.pass_priority(0)
+	st.play(0, 0, [{"kind": "creature", "uid": wall.uid}])
+	st.pass_priority(1)
+	st.pass_priority(0)
+	st.pass_priority(1)
+	st.combat_damage()
+	check(st.find_perm(wall.uid) == null and st.side(1).life == 20, "the attacker stays blocked")
+
+
 ## The opponent's choices: kill first, then sensible strategy.
 func test_ai_decisions() -> void:
 	print("-- AI decisions")
@@ -750,6 +885,34 @@ func test_ai_decisions() -> void:
 	var lz := _put(st, 0, "Lounger")
 	_put(st, 1, "Wall")
 	check(not BattleAI.choose_attackers(st, 0).has(lz.uid), "AI lets an idle creature lounge instead of a pointless attack")
+	# Answers at instant speed.
+	st = _duel(1, 0)
+	_lands(st, 0, "B")
+	_lands(st, 1, "G")
+	var pet := _put(st, 1, "Bear")
+	_hand(st, 1, ["Giant"])
+	_hand(st, 0, ["Chill"])
+	st.play(0, 0, [{"kind": "creature", "uid": pet.uid}])
+	check(st.find_perm(pet.uid) != null and st.side(1).hand.is_empty() and st.stack.is_empty(), "AI answers removal with a pump")
+	st = _duel(0, 0)
+	_lands(st, 1, "G")
+	var big := _put(st, 0, "Ogre")
+	var bl := _put(st, 1, "Bear")
+	_hand(st, 1, ["Giant"])
+	st.declare_attackers([big.uid])
+	st.declare_blocks({big.uid: bl.uid})
+	check(st.find_perm(big.uid) == null and st.side(1).hand.is_empty(), "AI casts a combat trick after blocks")
+	st = _duel(1, 1)
+	_lands(st, 0, "R")
+	_put(st, 1, "Bear")
+	_hand(st, 0, ["Zap"])
+	BattleAI.play_main(st, 0)
+	check(st.side(0).hand.size() == 1, "AI holds an instant in its own main phase")
+	st = _duel(0, 0)
+	_put(st, 1, "Engine")
+	st.end_turn()
+	check(_named(st, 1, "Servo") == 2 * BattleState.MAX_WINDOW_ACTIONS, "loop guard: at most %d actions in a window (%d servos)" % [BattleState.MAX_WINDOW_ACTIONS, _named(st, 1, "Servo")])
+	check(st.active == 1 and st.phase == "main1", "the turn still passes")
 
 
 func test_draft() -> void:

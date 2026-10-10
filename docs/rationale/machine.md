@@ -62,13 +62,13 @@ A cheap token spell that scales: one Servo for one mana, two for three. It is ge
 
 Two bodies for two mana at full rate, the committed version of Spare Parts. It is the plainest way to widen the board for Assembly. The requisition slip, stamped and billed, is how the Technocracy wages war.
 
-**Tempered Plating** · Common · Spell (Device) · 1C · Put two +1/+1 counters on target Construct you control.
+**Tempered Plating** · Common · Spell (Device, instant) · 2C · Put two +1/+1 counters on target Construct you control.
 
-A permanent upgrade instead of a combat trick, so it stays clear of the Old Ways' temporary pumps. Two counters for two mana is fair, and the Construct restriction keeps it inside the faith. The guild stamp makes even armour a matter of paperwork.
+A permanent upgrade instead of a temporary pump, so it stays clear of the Old Ways' combat tricks. In 1.23 it became an instant and its cost rose by one generic: two permanent counters in the middle of combat are worth three mana, not two. The Construct restriction keeps it inside the faith, and the guild stamp makes even armour a matter of paperwork.
 
-**Calibrated Discharge** · Common · Spell (Device) · 1 · Put a +1/+1 counter on target Construct you control. Overclock 1C (you may pay 1C more as you play this). If overclocked, also deal 2 damage to target enemy creature.
+**Calibrated Discharge** · Common · Spell (Device, instant) · 1 · Put a +1/+1 counter on target Construct you control. Overclock 1C (you may pay 1C more as you play this). If overclocked, also deal 2 damage to target enemy creature.
 
-The faith's common creature damage, kept behind an Overclock that needs a Foundry, so other faiths cannot treat it as cheap removal. Base mode is a small permanent upgrade for one; overclocked it is three mana for a counter and two damage, below the Revel's rate. The precise flavour keeps the cold, measured tone of set 1.
+The faith's common creature damage, kept behind an Overclock that needs a Foundry, so other faiths cannot treat it as cheap removal. Base mode is a small permanent upgrade for one; overclocked it is three mana for a counter and two damage, below the Revel's rate. In 1.23 it became an instant at the same cost, since a single counter, or two damage behind a Foundry overclock, is modest enough to answer an attack without a surcharge. The precise flavour keeps the cold, measured tone of set 1.
 
 **Gear Trap** · Common · Relic (Snare) · 1C · When this enters, choose target enemy creature with power 3 or less. It can't attack or block while this stays in play.
 
@@ -181,3 +181,67 @@ Assembly and upkeep together on the biggest machine in the faith: a 6/6 for five
 **The Grand Tabulator** · Mythic · Relic (Engine) · 4C · Your Technocracy cards cost 1 less to play. This reduces only generic mana. At the beginning of your upkeep, create a 1/1 Servo Construct token.
 
 The guild's great calculating engine combines the faith's two engine pieces, cost reduction and a Servo every turn. Five mana is a heavy investment for a relic that does nothing to the board on the turn it arrives. It is the soulless efficiency of the Technocracy given a throne, and its final sum is the faith's quiet horror.
+
+### Tribal cards (1.23)
+
+The Technocracy's two tribes are the made and the makers. Constructs are the wide tribe: Servos, Assembly bodies and upkeep giants already filled the faith, so the new Construct cards mostly reward building alongside the guild's craftsmen. Artificers are the narrow tribe, and they get their own job: they cut the cost of Constructs, grow whenever a Construct enters, and spend Overclock mana on effects that scale with how many craftsmen sit at the bench. A Technocracy deck now chooses between a flood of cheap machines and a smaller workshop of Artificers who make every machine count, and the best decks run a little of both, since each tribe feeds the other.
+
+**Bellows Boy** · Common · Creature (Human Artificer) · C · 1/1 · Whenever a Construct enters under your control, this gets +1/+0 until end of turn.
+
+The cheapest Artificer and the plainest statement of the tribe's job: it watches the machines arrive and is livelier for it. On a turn with a Servo spell it attacks as a 2/1 or 3/1, but it is a frail one-drop that dies to any blocker, so it rewards timing rather than raw stats. The boy at the bellows was the first rung of every guild apprenticeship.
+
+**Journeyman Riveter** · Common · Creature (Human Artificer) · 1C · 1/1 · When this enters, put a +1/+1 counter on target Construct you control.
+
+Three points of stats for two mana, split between a small body and a permanent counter, at the C rate. It does nothing on an empty board, which keeps it inside a Construct deck. Riveting was the journeyman's daily work in every shipyard and foundry: unglamorous, exact and endlessly repeated.
+
+**Workshop Draughtsman** · Common · Creature (Human Artificer) · 2C · 2/3 · Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.
+
+The common Overclock payoff for Artificers: a plain 2/3 for three, or for five a 3/4 that lifts every other craftsman too. It counts itself, so it is never a blank, and it grows better the more of the tribe you field. The master's drawing passed round the workshop is how medieval masons and clockmakers spread their method.
+
+**Tended Automaton** · Common · Creature (Construct) · 1C · 2/2 · This gets +1/+0 for each Artificer you control.
+
+A Construct that wants its makers nearby, the mirror of Assembly: instead of counting machines it counts men. Alone it is a fair 2/2 for two; with two Artificers it hits as a 4/2 while staying easy to block and kill. Power only keeps it modest at common. The boy who names the machine he polishes is the faith's one touch of warmth, and it is a little sad.
+
+**Coupling Automaton** · Common · Creature (Construct) · 2C · 2/2 · Whenever another Construct enters under your control, put a +1/+1 counter on this.
+
+A permanent version of Assembly: it starts under rate as a 2/2 for three but keeps every counter it earns, even if the Servos later die or are sacrificed. That makes it a good partner for Scrap Collector and Furnace Stoker, which consume the tokens it has already counted. The chain of coupled machines is the Cogspire line in miniature.
+
+**Emergency Shoring** · Common · Spell (Order, instant) · 2C · Put a +1/+1 counter on each Construct you control.
+
+A team-wide combat trick for machines, priced a mana above sorcery-speed effects as instants are, and limited to Constructs so it never becomes an anthem for other creatures. Cast during the enemy's attack it turns a row of Servos into 2/2 blockers for good. A guild order issued mid-battle, with the bill to follow, is the Technocracy at war.
+
+**Mule-Frame Automaton** · Common · Creature (Construct) · 3C · 3/3 · When this enters, put a +1/+1 counter on each Artificer you control.
+
+A four-mana 3/3 is a point under rate; the counters make up the difference only when you have Artificers on the table. It is the Construct side of the bargain: machines that carry the craftsmen's burdens and leave them stronger. Pack frames for tools and coal were the first automata a medieval guild would have dreamed of.
+
+**Guild Fitter** · Uncommon · Creature (Human Artificer) · 1C · 1/2 · Your Construct creature cards cost 1 less to play. This reduces only generic mana.
+
+The tribal cost reducer: narrower than Guild Comptroller, since it helps only Construct creatures, and so cheaper and at uncommon. It turns three-drop Constructs into two-drops and stacks with the faith's Engines for very fast starts. A fitter with parts already cut is the medieval workshop's answer to mass production.
+
+**Foundry Line-Master** · Uncommon · Creature (Human Artificer) · 3C · 2/3 · Constructs you control get +1/+1.
+
+The Construct lord, held by an Artificer so that the anthem dies with the man, not the machines. Servos become 2/2s and Assembly bodies grow further, which makes him the first target of enemy removal. Team-wide anthems belong to the Church, so this one is filtered to the faith's own tribe, as the spec allows. The overseer with lamp and gauge stands for guild quality control.
+
+**Arc-Lamp Galvanist** · Uncommon · Creature (Human Artificer) · 2C · 2/2 · Overclock 1C (you may pay 1C more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.
+
+One of the faith's rare damage cards, kept behind an Overclock that needs a Foundry and scaling with the tribe, so other faiths gain nothing from it. With two other Artificers out it is five mana for a 2/2 and three damage, in line with Arc-Welder Construct. The galvanist is natural philosophy turned into an invoice.
+
+**Field Repair** · Uncommon · Spell (Device, instant) · 1C · Put a +1/+1 counter on target Construct you control for each Artificer you control.
+
+The Artificers' combat trick: the more craftsmen on the field, the bigger the permanent repair. With one Artificer it is a weak two-mana instant; with three it saves a Construct in combat and keeps the counters afterward. It is permanent, so it stays clear of the Old Ways' temporary pumps.
+
+**Masterwork Automaton** · Uncommon · Creature (Construct) · 3C · 2/3 · This gets +1/+1 for each Artificer you control.
+
+The uncommon Construct that rewards an Artificer deck: alone a soft 2/3 for four, but with two craftsmen a 4/5. It gives the tribes a shared finisher at uncommon. Guild masterpieces were judged by the masters of the craft, and the punch marks stand for each master's approval.
+
+**Master Horologist** · Rare · Creature (Human Artificer) · 2C · 2/2 · Other Artificers you control get +1/+1. Your Construct creature cards cost 1 less to play. This reduces only generic mana.
+
+The Artificer lord and the bridge between the tribes: he makes his fellow craftsmen sturdier and his machines cheaper. A 2/2 for three is fragile, so he must be protected to keep the engine running. The horologist who set the city clock recalls the great medieval astronomical clocks of Strasbourg and Wells, the proudest work of the age's craftsmen.
+
+**Self-Winding Wright** · Rare · Creature (Construct Artificer) · 3C · 2/2 · Assembly (this gets +1/+1 for each other Construct you control). Whenever another Artificer enters under your control, create a 1/1 Servo Construct token.
+
+The only card in both tribes: a machine that builds machines, which counts for every Artificer and Construct payoff. Each new craftsman brings a Servo, and each Servo grows the Wright through Assembly, so it is a build-around that rewards a deck balanced between the tribes. A 2/2 for four is weak on its own, which keeps it answerable. The joke about wages is the guild's dream and the faith's quiet horror.
+
+**The Archwright of Cogspire** · Mythic · Creature (Human Artificer) · 2CC · 2/4 · Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock 3 (you may pay 3 more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.
+
+The faith's tribal showpiece: every machine that enters makes every craftsman stronger, and overclocked he arrives with three Servos, putting three counters on himself and each other Artificer at once. It is splashy but answerable: the counters stay, but without him the engine stops, and he is a single creature with no protection. The master whose hand or pupils drew every machine is the guild's highest rank, and its proudest boast.

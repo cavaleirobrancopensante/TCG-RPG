@@ -488,12 +488,12 @@ def brazier_relic(p, x, y, s=1.0):
 # ================================================================ spells and relics, common
 
 def revel_c_013(p):
-    """Toast of Fire: 'To your health!' she cried, and the lit brandy leapt from her cup."""
+    """Toast of Fire: 'To your health!' he cried, and the lit brandy leapt from his cup."""
     garden_bg(p, 'night', palace_at=(520, 330), lanterns=True)
     crowd(p, 470, 560, 1000, 5, 1.2, raised=0.6, masks=True, dark=0.1)
-    RFig(pose='raise', garb='gown', main=CRIMSON, second=CRIMSON.dark(0.2), trim=GOLD, fur=ERMINE, belt='gold', sleeves='bell',
-         lining=GOLD, hair='long', hair_col=C.hex('6a3a1a'), head=lady_head(C.hex('6a3a1a'), crown=True), mouth='open', eyes='up',
-         cloak='mantle', cloak_col=PLUM, props_front=[goblet('f', flame=True)]).draw(p, 360, 604, 460)
+    RFig(pose='raise', garb='robe', main=CRIMSON, second=CRIMSON.dark(0.2), trim=GOLD, fur=ERMINE, belt='gold', sleeves='bell',
+         lining=GOLD, hair='curly', hair_col=C.hex('6a3a1a'), beard='forked', head=coronet_high(CRIMSON.dark(0.1)), mouth='open', eyes='up',
+         cloak='mantle', cloak_col=PLUM, width=1.15, blush=0.8, props_front=[goblet('f', flame=True)]).draw(p, 360, 604, 460)
     fire_jet(p, [(430, 78), (520, 70), (620, 92), (720, 140), (810, 200)], 5, 40)
     sparks(p, (430, 40, 860, 260), 24)
     laden_table(p, 80, 560, 520, LEAD_WHITE, 26, 80, runner=PLUM, items=[
@@ -882,7 +882,7 @@ def revel_u_010(p):
     p.cx.rectangle(0, 400, W, H)
     p.fill(('v', C.hex('2a1a1a'), C.hex('5a3020')))
     # back ring of dancers
-    for x, col, lady in ((330, C.hex('2a6a5a'), True), (500, C.hex('8a6a2a'), False), (670, C.hex('6a2a6a'), True)):
+    for x, col, lady in ((330, C.hex('2a6a5a'), False), (500, C.hex('8a6a2a'), False), (670, C.hex('6a2a6a'), False)):
         if lady:
             RFig(pose='spread', garb='gown', main=col, hair='long', hair_col=C.hex('6a3a1a'), head=lady_head(C.hex('6a3a1a')), belt='gold').draw(p, x, 440, 230, flip=x > 500)
         else:
@@ -898,8 +898,8 @@ def revel_u_010(p):
         fire_jet(p, pts, 4, 18, puff=False)
     sparks(p, (100, 100, 900, 460), 30)
     # front dancers, whirling hand in hand
-    RFig(pose='re_dance', garb='gown', main=CRIMSON, trim=GOLD, hair='long', hair_col=C.hex('3a2414'), head=lady_head(C.hex('3a2414'), gem=GOLD),
-         belt='gold', mouth='open').draw(p, 200, 610, 400)
+    RFig(pose='re_dance', garb='tunic', stance='dance', main=CRIMSON, trim=GOLD, hose=C.hex('3a2414'), hair='short', hair_col=C.hex('3a2414'),
+         beard='short', belt='gold', mouth='open', sleeves='fitted').draw(p, 200, 610, 400)
     RFig(pose='re_both_up', garb='tunic', stance='dance', main=C.hex('d8a030'), parti=CRIMSON, hose=CRIMSON, hose2=C.hex('d8a030'), hair='curly',
          hair_col=C.hex('8a5a2a'), head=vine_crown(), mouth='open', sleeves='fitted', belt='gold').draw(p, 800, 610, 420, flip=True)
 
@@ -1391,3 +1391,466 @@ def land_revel(p):
     for x in (360, 640):
         paper_lantern(p, (x, 470), 0.9, GOLD)
         p.line([(x, 452), (x, 600)], INK, 3)
+
+
+# ================================================================ tribal cards (1.23): Nobles and Performers
+
+def revel_c_021(p):
+    """Wandering Minstrel: he sings of battles he has never seen, on his way to one."""
+    bg.landscape(p, 'dawn', trees=False, near_col=C.hex('7a9a4a'), ground_y=0.74)
+    # the army's camp on the far ridge, pennons and tents
+    for i, (x, col) in enumerate(((640, CRIMSON), (700, LEAD_WHITE), (760, C.hex('1f4f8a')), (820, CRIMSON), (880, GOLD))):
+        tent(p, x, 372 - (i % 2) * 4, 46, 50, col, LEAD_WHITE if col != LEAD_WHITE else CRIMSON, flag=True)
+    for i in range(16):
+        x = 600 + i * 22
+        p.line([(x, 386), (x + 1, 350)], INK.alpha(0.5), 1.2)
+    bg.road(p, 700, 390, 300, 8, 200)
+    for x, s in ((90, 1.3), (180, 1.0), (900, 1.2)):
+        bg.tiny_tree(p, x, 470 - s * 30, s * 1.4, LEAF.dark(0.1), 'round')
+    # a milestone and a wayside bush
+    p.shape([(820, 600, 0), (812, 520), (830, 500), (850, 520), (846, 600, 0)], ('h', STONE.light(0.2), STONE.dark(0.2)), width=2, shade=0.6)
+    p.blob((900, 590), 70, 34, C.hex('3f6a2a'), width=1.6, shade=0.7)
+    for i in range(10):
+        p.blob((860 + i * 9, 572 + (i % 3) * 8), 3, 3, C.hex('c81a1a'), width=0.5)
+    RFig(pose='re_lute', garb='jerkin', stance='stride', main=C.hex('2a6a5a'), parti=C.hex('c8a040'), hose=C.hex('c8a040').dark(0.15),
+         hose2=C.hex('2a6a5a').dark(0.2), cloak='cape', cloak_col=C.hex('8a2a2a'), lining=GOLD, hair='curly', hair_col=C.hex('8a5a2a'),
+         head=feathered_cap(C.hex('8a2a2a'), LEAD_WHITE, GOLD), mouth='open', eyes='up', sleeves='fitted', belt='leather',
+         props_back=[lambda p, j: p.blob((-10, -50 + j['k']), 5, 7, C.hex('8a5a32'), width=1.0, shade=0.7)],
+         props_front=[lute()]).draw(p, 430, 604, 470)
+    # notes of his song drifting toward the camp
+    for i, q in enumerate(((560, 160), (610, 120), (660, 150), (710, 110))):
+        p.blob(q, 6, 4.4, INK.alpha(0.75), rot=-0.4, ink=False)
+        p.line([(q[0] + 5, q[1] - 1), (q[0] + 5, q[1] - 26)], INK.alpha(0.75), 1.6, smooth=False)
+        if i % 2 == 0:
+            p.line([(q[0] + 5, q[1] - 26), (q[0] + 14, q[1] - 18)], INK.alpha(0.75), 1.6)
+
+
+def revel_c_022(p):
+    """Tumbler of the Fair: he lands every somersault, and every somersault lands on someone."""
+    bg.sky(p, ULTRA, AZURE, C.hex('f4e8c8'), 0.6)
+    bg.clouds(p, 100, 2, xs=[260, 720])
+    bg.hills(p, 360, C.hex('7aa08a'), 30, n=6)
+    tent(p, 120, 430, 220, 240, C.hex('1f4f8a'), GOLD)
+    tent(p, 880, 430, 220, 230, CRIMSON, LEAD_WHITE)
+    tent(p, 500, 380, 160, 150, C.hex('2a6a3a'), GOLD_LIGHT)
+    p.cx.new_path()
+    p.cx.rectangle(0, 410, W, H)
+    p.fill(('v', C.hex('7a8a4a'), C.hex('5a6a32')))
+    bunting(p, [(60, 190), (500, 150), (940, 190)], sag=40)
+    crowd(p, 500, -10, 300, 4, 1.0, raised=0.4)
+    crowd(p, 500, 700, 1010, 4, 1.0, raised=0.4)
+    # the tumbling carpet
+    p.shape([(220, 610, 0), (300, 520, 0), (760, 520, 0), (840, 610, 0)], ('v', C.hex('8a2a2a'), C.hex('6a1a1a')), width=2, smooth=False)
+    for k in range(1, 4):
+        p.line([(220 + k * 20, 610 - k * 22), (840 - k * 20, 610 - k * 22)], GOLD.alpha(0.6), 2, smooth=False)
+    # his fellow on his hands
+    handstand(p, RFig(pose='re_both_up', garb='jerkin', main=C.hex('e0a020'), parti=C.hex('1f4f8a'), hose=C.hex('1f4f8a'), hose2=C.hex('e0a020'),
+                      hair='short', hair_col=C.hex('2a1a10'), mouth='open', sleeves='fitted', belt='gold'), 330, 590, 270, lean=0.12)
+    # the somersault arc and its victim
+    p.line([(420, 520), (470, 300), (560, 210), (640, 260), (700, 400)], LEAD_WHITE.alpha(0.55), 3)
+    RFig(pose='spread', garb='robe', main=C.hex('5a4a2a'), second=C.hex('3a2a1a'), hair='bald', hair_col=C.hex('8a7a6a'), beard='short',
+         width=1.5, mouth='open', eyes='up', head=chaperon(C.hex('3a5a2a'), True), kneel=True).draw(p, 760, 600, 300, flip=True)
+    p.blob((820, 330), 22, 10, C.hex('3a5a2a'), rot=0.6, width=1.4, shade=0.7)
+    for q in ((700, 360), (730, 330), (700, 300)):
+        p.star(q, 12, GOLD_LIGHT, 4)
+    p.push(570, 400, 1.0, rot=0.55)
+    RFig(pose='re_both_up', garb='jerkin', stance='dance', main=CRIMSON, parti=C.hex('2a8a6a'), hose=C.hex('2a8a6a'), hose2=CRIMSON,
+         dagged=[CRIMSON, C.hex('2a8a6a'), GOLD], hair='curly', hair_col=C.hex('6a3a1a'), mouth='open', eyes='open', sleeves='fitted',
+         belt='gold', head=feathered_cap(C.hex('2a8a6a'), GOLD_LIGHT, GOLD)).draw(p, 0, 190, 380)
+    p.pop()
+
+
+def revel_c_023(p):
+    """Mummer of the Twelfth Night: every year he slays the paper dragon with a wooden sword."""
+    square_bg(p, 'night', ground_y=430, bunt=False)
+    p.cx.new_path()
+    p.cx.rectangle(0, 0, W, H)
+    p.fill(C(0.75, 0.82, 1.0, 0.12))
+    # snow on the roofs and the cobbles
+    for x0, x1, y in ((-30, 200, 270), (290, 540, 180), (600, 840, 190), (930, 1100, 200)):
+        p.shape([(x0, y + 10), ((x0 + x1) / 2, y - 6), (x1, y + 10), (x1, y + 18), (x0, y + 18)], LEAD_WHITE.dark(0.05), width=1.2, shade=0.3)
+    p.shape([(-10, 470), (300, 456), (700, 462), (1010, 450), (1010, 640, 0), (-10, 640, 0)], ('v', C.hex('e8eef6'), C.hex('b8c4d8')), width=1.4)
+    holly(p, [(60, 230), (300, 250), (520, 240), (760, 254), (960, 230)], 1.2)
+    crowd(p, 520, -20, 260, 4, 1.05, raised=0.4, dark=0.25)
+    crowd(p, 520, 780, 1020, 3, 1.05, raised=0.4, dark=0.25)
+    paper_dragon(p, 700, 600, 1.15, C.hex('2f7a3a'), C.hex('e0c060'))
+    # the mummer: a coat of paper strips, a tall paper hat
+    def strips(p, j):
+        k = j['k']
+        for i in range(16):
+            x = -12 + i * 1.7
+            col = [CRIMSON, LEAD_WHITE, GOLD_LIGHT, C.hex('1f4f8a')][i % 4]
+            p.taper([(x, -82 + k + abs(i - 8) * 0.6), (x + 0.4, -50 + k), (x - 0.6 + (i % 3), -30 + k)], 1.2, 1.0, col, width=0.5)
+    def paper_hat(p, hc):
+        hx, hy = hc
+        p.shape([(hx - 7, hy - 5, 0), (hx + 1, hy - 30, 0), (hx + 8, hy - 5, 0)], C.hex('f0e6c8'), width=1.1, smooth=False, shade=0.6)
+        for i, col in enumerate((CRIMSON, C.hex('1f4f8a'), GOLD)):
+            p.line([(hx - 5 + i * 1.6, hy - 9 - i * 6), (hx + 6 - i * 1.6, hy - 9 - i * 6)], col, 1.2)
+        p.blob((hx + 1, hy - 31), 2, 2, CRIMSON, width=0.6)
+    RFig(pose='sword_up', garb='tunic', stance='lunge', main=C.hex('8a2a2a'), second=C.hex('5a1a1a'), hose=C.hex('5a3a2a'),
+         hair='curly', hair_col=C.hex('3a2414'), beard='short', head=paper_hat, mouth='open', eyes='open', sleeves='fitted', belt='leather',
+         shield='cross_red', props_front=[strips, wooden_sword('f', 42, -1.2)]).draw(p, 300, 604, 450)
+    snow(p, (0, 0, W, H), 110)
+
+
+def revel_c_024(p):
+    """Perfumed Lordling: he has never held anything heavier than a pomander."""
+    loggia_bg(p, 'day')
+    # an orange tree in a tub and a parrot on its stand
+    p.shape([(140, 600, 0), (120, 520, 0), (220, 520, 0), (200, 600, 0)], ('h', C.hex('c87a4a'), C.hex('8a4a2a')), width=2, smooth=False, shade=0.5)
+    p.taper([(170, 520), (172, 400)], 8, 6, UMBER, width=1.6)
+    p.blob((172, 360), 80, 70, C.hex('2f5a2a'), width=2, shade=0.8)
+    for q in ((130, 340), (190, 320), (210, 380), (150, 390), (180, 360)):
+        p.blob(q, 9, 9, C.hex('f08a20'), width=1.0, shade=0.6)
+    # a page holding a parasol over him
+    def parasol(p, j):
+        x, y = j['hand_f']
+        tip = (x - 1, y - 52)
+        p.taper([(x + 0.5, y + 4), tip], 0.7, 0.7, UMBER, width=0.7)
+        can = [(tip[0] - 34, tip[1] + 14), (tip[0] - 22, tip[1] + 2), (tip[0], tip[1] - 4), (tip[0] + 22, tip[1] + 2), (tip[0] + 34, tip[1] + 14)]
+        p.shape(can + [(tip[0] + 22, tip[1] + 10), (tip[0], tip[1] + 8), (tip[0] - 22, tip[1] + 10)], ('h', C.hex('2a8a8a'), C.hex('1a5a5a')), width=1.0, shade=0.5)
+        for q in can[1:-1]:
+            p.line([tip, q], GOLD.alpha(0.6), 0.5)
+        for i in range(9):
+            q = (tip[0] - 32 + i * 8, tip[1] + 14 + (i % 2) * 2)
+            p.blob(q, 1.2, 1.6, GOLD, width=0.4)
+    RFig(pose='staff', garb='tunic', main=C.hex('2a8a8a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a8a8a'), hair='curly',
+         hair_col=C.hex('c8a060'), eyes='down', sleeves='fitted', belt='leather', props_front=[parasol]).draw(p, 800, 604, 330, flip=True)
+    # a tiny lapdog
+    p.blob((620, 590), 26, 14, LEAD_WHITE, width=1.4, shade=0.6)
+    p.blob((600, 572), 12, 11, LEAD_WHITE, width=1.4, shade=0.6)
+    p.blob((594, 576), 6, 8, C.hex('c8a070'), width=1.0, shade=0.5)
+    p.blob((604, 570), 1.4, 1.4, INK, ink=False)
+    p.shape([(646, 586), (664, 572), (656, 590)], LEAD_WHITE, width=1.0)
+    p.taper([(600, 582), (590, 590)], 1.6, 1.4, CRIMSON, width=0.6)
+    for x in (604, 638):
+        p.taper([(x, 598), (x, 606)], 3, 3, LEAD_WHITE, width=0.9)
+    RFig(pose='re_toast_hip', garb='jerkin', stance='stand', main=C.hex('d88aa0'), second=C.hex('a85a70'), parti=C.hex('f0e0c0'),
+         hose=C.hex('f0e0c0'), hose2=C.hex('d88aa0'), dagged=[C.hex('d88aa0'), GOLD, C.hex('f0e0c0')], hair='curly', hair_col=C.hex('e0c070'),
+         head=feathered_cap(C.hex('6a2a6a'), LEAD_WHITE, GOLD, C.hex('d88aa0')), eyes='closed', mouth='calm', blush=1.0, sleeves='fitted', belt='gold',
+         fur=ERMINE, props_front=[pomander('f')]).draw(p, 450, 604, 450)
+
+
+def revel_c_025(p):
+    """Count of the Velvet Glove: he accepts every challenge, and names a date after the next feast."""
+    hall_bg(p, hang=C.hex('2a3a5a'), floor=(C.hex('1a1a2a'), C.hex('c8b088')), chandelier=False, cols=False)
+    portrait_w(p, 200, 170, 110, 150, C.hex('3a1a2a'), C.hex('2a3a2a'))
+    portrait_w(p, 800, 170, 110, 150, C.hex('1a2a4a'), C.hex('3a2a1a'))
+    for x in (90, 910):
+        candlestick(p, x, 430, 1.4, True)
+    # a challenger's page bowing with the cartel, and the feast laid behind
+    laden_table(p, 560, 1010, 470, LEAD_WHITE, 26, 70, runner=C.hex('2a3a5a'), items=[
+        (lambda p, x, y, s: roast_fowl(p, x, y, s), 640, 1.0), (lambda p, x, y, s: candlestick(p, x, y, s), 720, 1.0),
+        (lambda p, x, y, s: goblet_w(p, x, y, s), 860, 1.0), (lambda p, x, y, s: pie(p, x, y, s), 940, 1.0)])
+    RFig(pose='book', garb='tunic', main=C.hex('3a5a2a'), parti=LEAD_WHITE.dark(0.1), hose=LEAD_WHITE.dark(0.1), hose2=C.hex('3a5a2a'),
+         hair='short', hair_col=C.hex('3a2414'), eyes='down', sleeves='fitted', belt='leather', kneel=True,
+         props_front=[PR.scroll('f')]).draw(p, 790, 604, 320, flip=True)
+    glove_w(p, 610, 590, 2.0, C.hex('5a1a3a'), -0.15)
+    RFig(pose='re_guard_up', garb='jerkin', stance='wide', main=C.hex('5a1a3a'), second=C.hex('3a0a2a'), hose=BLACK_VELVET, hair='curly',
+         hair_col=C.hex('2a1a10'), beard='forked', head=coronet_high(C.hex('5a1a3a')), mouth='calm', eyes='open', sleeves='fitted', belt='gold',
+         cloak='cape', cloak_col=BLACK_VELVET, lining=C.hex('c8a040'), fur=ERMINE,
+         emblem=lambda p, c: [p.line([(c[0] - 6, c[1] - 14 + i * 5), (c[0] + 6, c[1] - 14 + i * 5)], GOLD.alpha(0.8), 1.0) for i in range(5)],
+         props_front=[rapier('f', ang=-1.05, length=54)]).draw(p, 390, 604, 460)
+
+
+def revel_c_026(p):
+    """Shouts of Encore: the crowd roared for more, and the players gave it."""
+    bg.dusk_sky(p)
+    p.glow((500, 330), 380, C.hex('ffb070'), 0.3)
+    bg.hills(p, 380, C.hex('3a3a5a'), 26, n=6)
+    tent(p, 110, 440, 200, 220, PLUM, GOLD)
+    tent(p, 890, 440, 200, 220, C.hex('1f4f8a'), GOLD_LIGHT)
+    p.cx.new_path()
+    p.cx.rectangle(0, 430, W, H)
+    p.fill(('v', C.hex('4a3a3a'), C.hex('6a4a3a')))
+    lantern_string(p, [(60, 170), (500, 130), (940, 170)], s=0.75, sag=40)
+    stage(p, 200, 800, 420, 60)
+    # curtains of the booth
+    for k in (-1, 1):
+        x = 500 + k * 300
+        p.shape([(x, 60), (x - k * 70, 60), (x - k * 40, 200), (x - k * 20, 420, 0), (x + k * 10, 420, 0)], ('h', VELVET.light(0.1), VELVET.dark(0.3)), width=2)
+    p.shape([(190, 46, 0), (810, 46, 0), (810, 80, 0), (190, 80, 0)], VELVET, width=2, smooth=False, shade=0.6)
+    for xx in range(190, 810, 31):
+        p.shape([(xx, 80, 0), (xx + 31, 80, 0), (xx + 15.5, 96, 0)], GOLD, width=1.0, smooth=False)
+    # three players: a fiddler, a fire-juggler and a clown with his arms up
+    RFig(pose='re_lute', garb='jerkin', stance='wide', main=C.hex('2a6a3a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a6a3a'), hair='short',
+         hair_col=C.hex('5a3a1a'), mouth='open', sleeves='fitted', belt='leather', head=feathered_cap(C.hex('2a6a3a'), GOLD_LIGHT, GOLD),
+         props_front=[lute(C.hex('a86a32'))]).draw(p, 320, 436, 300)
+    RFig(pose='re_both_up', garb='jerkin', stance='wide', main=C.hex('e07a20'), parti=C.hex('1f4f8a'), hose=C.hex('1f4f8a'), hose2=C.hex('e07a20'),
+         dagged=[C.hex('e07a20'), C.hex('1f4f8a'), GOLD], hair='curly', hair_col=C.hex('2a1a10'), mouth='open', eyes='up', sleeves='fitted',
+         belt='gold', props_front=[torch('f', 22, -1.6, 0.8), torch('b', 22, -1.5, 0.8)]).draw(p, 500, 436, 330)
+    for q, a in (((470, 90), 0.5), ((530, 70), -0.4), ((500, 40), 1.2)):
+        p.push(q[0], q[1], 1.0, rot=a)
+        p.taper([(0, 10), (0, -10)], 2.4, 3, UMBER, width=1.0)
+        p.pop()
+        flame_tongue(p, (q[0] + math.sin(a) * 10, q[1] - math.cos(a) * 10), 20, 6, lean=-2)
+    RFig(pose='re_toss', garb='jerkin', stance='dance', main=C.hex('d8d0c0'), parti=CRIMSON, hose=CRIMSON, hose2=C.hex('d8d0c0'),
+         dagged=[CRIMSON, LEAD_WHITE], hair='none', head=jester_cap(CRIMSON, LEAD_WHITE, GOLD), mouth='open', eyes='open', sleeves='fitted',
+         belt='gold', props_front=[marotte('b', CRIMSON, GOLD)]).draw(p, 680, 436, 300, flip=True)
+    # flowers thrown onto the stage
+    for i in range(14):
+        q = (p.rng.uniform(240, 760), p.rng.uniform(120, 420))
+        for a in range(5):
+            p.blob(polar(q, 3.2, a * 1.256), 2.6, 2.6, [ROSE, LEAD_WHITE, GOLD_LIGHT, VERMILION][i % 4], ink=False)
+        p.blob(q, 1.6, 1.6, GOLD, ink=False)
+    crowd(p, 600, -20, W + 20, 9, 1.4, raised=0.75, dark=0.35, rows=1)
+
+
+def revel_c_027(p):
+    """Toast to the Peerage: each lord rose in turn to drink to the enemy's ruin."""
+    hall_bg(p, hang=C.hex('6a1a2a'), floor=(C.hex('2a1a1a'), C.hex('b89a6a')), chandelier=True, cols=False)
+    # heraldic banners of the peers
+    for x, col, ch in ((140, C.hex('1f4f8a'), GOLD), (300, GOLD_DARK, CRIMSON), (700, C.hex('2a5a2a'), GOLD_LIGHT), (860, CRIMSON, LEAD_WHITE)):
+        p.shape([(x - 34, 140, 0), (x + 34, 140, 0), (x + 34, 290, 0), (x, 312, 0), (x - 34, 290, 0)], col, width=1.6, smooth=False, shade=0.6)
+        PR.fleur(p, (x, 210), 16, ch)
+        p.line([(x - 44, 140), (x + 44, 140)], GOLD_DARK, 4)
+    laden_table(p, 30, 970, 480, LEAD_WHITE, 34, 130, runner=C.hex('6a1a2a'), items=[
+        (lambda p, x, y, s: roast_boar(p, x, y, s), 500, 1.5), (lambda p, x, y, s: candelabra(p, x, y, s), 330, 1.0),
+        (lambda p, x, y, s: candelabra(p, x, y, s), 670, 1.0), (lambda p, x, y, s: bottle_w(p, x, y, s, WINE), 420, 1.0),
+        (lambda p, x, y, s: fruit_bowl(p, x, y, s), 590, 1.0)])
+    specs = [(110, 360, C.hex('1f4f8a'), 'white', 'long', False, coronet_high(C.hex('1f4f8a'))),
+             (290, 380, GOLD_DARK, 'curly', 'short', False, 'coronet'),
+             (720, 390, C.hex('2a5a2a'), 'short', 'forked', True, coronet_high(C.hex('2a5a2a'))),
+             (890, 360, CRIMSON, 'bald', 'short', True, 'coronet')]
+    for x, h, col, hair, beard, flip, head in specs:
+        RFig(pose='re_toast', garb='robe', main=col, second=col.dark(0.2), trim=GOLD, fur=ERMINE, belt='gold', hair=hair,
+             hair_col=[C.hex('d8d0c0'), C.hex('6a3a1a'), C.hex('2a1a10'), C.hex('8a7a6a')][specs.index((x, h, col, hair, beard, flip, head))],
+             beard=beard, head=head, mouth='open', width=1.2, sleeves='bell',
+             props_front=[goblet('f', flame=True)]).draw(p, x, 470, h, flip=flip)
+    sparks(p, (80, 60, 920, 260), 20)
+
+
+def revel_u_014(p):
+    """Master of the Revels: he hires the jugglers, pays the fire-eaters, and bills the Crown."""
+    hall_bg(p, hang=C.hex('3a1a4a'), floor=(C.hex('1a1020'), C.hex('c8a870')), chandelier=False)
+    # the stage behind, players waiting their turn
+    stage(p, 520, 960, 420, 50)
+    for k in (1,):
+        p.shape([(960, 128), (880, 128), (900, 260), (930, 420, 0), (980, 420, 0)], ('h', VELVET.light(0.1), VELVET.dark(0.3)), width=2)
+    RFig(pose='re_flame', garb='jerkin', stance='wide', main=BLACK_VELVET, parti=C.hex('c83a1a'), hose=C.hex('c83a1a'), hose2=BLACK_VELVET,
+         hair='short', hair_col=INK_SOFT, mouth='open', sleeves='fitted', belt='gold',
+         props_front=[torch('f', 22, -1.1, 0.7), torch('b', 22, -1.9, 0.9)]).draw(p, 600, 436, 250)
+    RFig(pose='spread', garb='jerkin', stance='dance', main=C.hex('1f4f8a'), parti=C.hex('e0a020'), hose=C.hex('e0a020'), hose2=C.hex('1f4f8a'),
+         hair='curly', hair_col=C.hex('6a3a1a'), mouth='open', eyes='up', sleeves='fitted', belt='gold').draw(p, 720, 436, 260)
+    for i, q in enumerate(((700, 120), (742, 100), (780, 130))):
+        ball_at(p, q, 9, [CRIMSON, GOLD, C.hex('2a8a6a')][i])
+    RFig(pose='re_lute', garb='jerkin', main=C.hex('6a2a2a'), parti=C.hex('d8c8a0'), hose=C.hex('d8c8a0'), hose2=C.hex('6a2a2a'), hair='short',
+         hair_col=C.hex('3a2414'), beard='short', mouth='calm', sleeves='fitted', belt='leather', props_front=[lute()]).draw(p, 850, 436, 250, flip=True)
+    # his clerk's desk with the account book and a purse of coin
+    p.shape([(60, 600, 0), (70, 470, 0), (290, 470, 0), (300, 600, 0)], ('h', C.hex('6a4426'), C.hex('3a2414')), width=2, smooth=False, shade=0.6)
+    p.shape([(50, 470, 0), (310, 470, 0), (300, 450, 0), (60, 450, 0)], C.hex('7a5232'), width=1.8, smooth=False, shade=0.5)
+    p.shape([(110, 452, 0), (230, 452, 0), (240, 440, 0), (170, 446, 0), (100, 440, 0)], PARCH, width=1.4, smooth=False, shade=0.4)
+    for i in range(5):
+        p.line([(118 + 0, 446 - i * 0.5), (162, 447 - i * 0.5)], INK.alpha(0.4), 0.8)
+    p.blob((270, 444), 20, 14, C.hex('8a5a2a'), width=1.4, shade=0.7)
+    for i in range(6):
+        p.blob((250 + i * 7, 456 + (i % 2) * 3), 5, 2.4, GOLD, width=0.7, shade=0.5)
+    p.taper([(205, 446), (235, 410)], 1.4, 0.5, LEAD_WHITE, width=0.6)
+    RFig(pose='re_hold_staff', garb='robe', main=BLACK_VELVET, second=C.hex('3a2a3a'), trim=GOLD, fur=C.hex('6a4a2a'), sleeves='bell',
+         hair='short', hair_col=C.hex('5a5048'), beard='short', head=chaperon(BLACK_VELVET, True), mouth='calm', eyes='open', belt='gold',
+         emblem=office_chain(), props_back=[white_wand('b')], props_front=[PR.scroll('f')]).draw(p, 400, 604, 470)
+
+
+def revel_u_015(p):
+    """Master of the Pageant Wagon: when his wagon rolls into town the company leaps down performing."""
+    square_bg(p, 'day', ground_y=420, bunt=True)
+    crowd(p, 520, -20, 220, 3, 1.0, raised=0.5)
+    pageant_wagon(p, 520, 580, 1.0, CRIMSON, GOLD)
+    # the master on the upper stage, arms flung out
+    RFig(pose='re_raise_out', garb='robe', main=C.hex('6a1a6a'), second=C.hex('4a0a4a'), trim=GOLD, fur=GOLD_DARK, sleeves='bell', cloak='mantle',
+         cloak_col=C.hex('e0a020'), lining=CRIMSON, hair='curly', hair_col=C.hex('2a1a10'), beard='forked', mouth='open', eyes='open',
+         head=feathered_cap(C.hex('e0a020'), LEAD_WHITE, CRIMSON, C.hex('6a1a6a')), belt='gold',
+         props_front=[torch('f', 24, -1.4, 0.9)]).draw(p, 520, 364, 210)
+    # players leaping down
+    p.push(780, 460, 1.0, rot=0.3)
+    RFig(pose='re_both_up', garb='jerkin', stance='dance', main=C.hex('2a8a6a'), parti=C.hex('e0b030'), hose=C.hex('e0b030'), hose2=C.hex('2a8a6a'),
+         hair='curly', hair_col=C.hex('8a5a2a'), mouth='open', sleeves='fitted', belt='gold', head=jester_cap(C.hex('2a8a6a'), C.hex('e0b030'))).draw(p, 0, 80, 260)
+    p.pop()
+    RFig(pose='re_lute', garb='jerkin', stance='stride', main=C.hex('1f4f8a'), parti=LEAD_WHITE.dark(0.05), hose=LEAD_WHITE.dark(0.05), hose2=C.hex('1f4f8a'),
+         hair='short', hair_col=C.hex('3a2414'), mouth='open', sleeves='fitted', belt='leather', head=feathered_cap(CRIMSON, GOLD_LIGHT, GOLD),
+         props_front=[lute()]).draw(p, 170, 608, 340)
+    RFig(pose='re_flame', garb='jerkin', stance='lunge', main=BLACK_VELVET, parti=C.hex('c83a1a'), hose=C.hex('c83a1a'), hose2=BLACK_VELVET,
+         hair='short', hair_col=INK_SOFT, mouth='open', sleeves='fitted', belt='gold', head=mask_half(BLACK_VELVET, GOLD),
+         props_front=[torch('f', 22, -1.0, 0.8), torch('b', 22, -1.9, 0.9)]).draw(p, 880, 610, 320, flip=True)
+
+
+def revel_u_016(p):
+    """Gossiping Marquis: he knows every scandal at court, and is the subject of most of them."""
+    ballroom_bg(p, sky_fireworks=True, hang=C.hex('2a5a5a'))
+    # dancers behind, and a pair of nobles who have just been talked about
+    RFig(pose='re_toast', garb='robe', main=C.hex('6a2a2a'), trim=GOLD, fur=ERMINE, hair='white', beard='long', age='old', head='coronet',
+         mouth='open', eyes='open', props_front=[goblet('f')]).draw(p, 820, 560, 300, flip=True)
+    RFig(pose='spread', garb='jerkin', main=C.hex('2a4a6a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a4a6a'), hair='short', hair_col=C.hex('8a5a2a'),
+         mouth='open', eyes='open', sleeves='fitted', belt='gold').draw(p, 690, 540, 260, flip=True)
+    # the listener, leaning in
+    RFig(pose='re_toast_hip', garb='robe', main=C.hex('3a6a3a'), second=C.hex('2a4a2a'), trim=GOLD, fur=C.hex('8a6a4a'), hair='curly',
+         hair_col=C.hex('2a1a10'), beard='short', head=chaperon(C.hex('3a6a3a'), True), eyes='open', mouth='open', blush=1.0, belt='gold',
+         props_front=[goblet('f', wine=WINE)]).draw(p, 560, 604, 430, flip=True)
+    RFig(pose='re_hold_hip', garb='robe', main=C.hex('8a1a5a'), second=C.hex('5a0a3a'), trim=GOLD, fur=ERMINE, sleeves='bell', hair='curly',
+         hair_col=C.hex('c8a060'), beard='forked', head=coronet_high(C.hex('8a1a5a')), eyes='open', mouth='open', blush=0.8, belt='gold',
+         cloak='mantle', cloak_col=C.hex('2a5a5a'), lining=GOLD, props_front=[fan('f', C.hex('8a2a4a'))]).draw(p, 330, 604, 460)
+
+
+def revel_u_017(p):
+    """Lord of Misrule: for the twelve nights of the feast the fool wears the paper crown."""
+    hall_bg(p, hang=C.hex('2a4a2a'), floor=(C.hex('2a1a10'), C.hex('b89a6a')), chandelier=False, cols=True)
+    holly(p, [(40, 150), (280, 180), (500, 160), (720, 180), (960, 150)], 1.4)
+    hearth(p, 840, 480, 220, 200)
+    # the yule log in the hearth
+    p.taper([(760, 452), (920, 446)], 18, 16, C.hex('5a3a22'), width=2, shade=0.7)
+    fire_mass(p, 840, 446, 140, 120, n=7)
+    great_chair(p, 450, 600, 1.5, C.hex('2a4a2a'), C.hex('5a3220'), GOLD)
+    RFig(pose='re_toast', garb='jerkin', seat='chair', main=C.hex('2a8a3a'), parti=C.hex('e0b030'), hose=C.hex('e0b030'), hose2=C.hex('2a8a3a'),
+         dagged=[C.hex('2a8a3a'), C.hex('e0b030'), VERMILION], hair='curly', hair_col=C.hex('c86a2a'), head=paper_crown(), mouth='open', eyes='open',
+         sleeves='fitted', belt='gold', cloak='mantle', cloak_col=CRIMSON, lining=ERMINE,
+         props_front=[marotte('f', C.hex('2a8a3a'), C.hex('e0b030'))]).draw(p, 420, 620, 470)
+    # the true lord of the hall, laughing, serves him
+    RFig(pose='re_carry', garb='robe', main=C.hex('3a2a5a'), second=C.hex('2a1a4a'), trim=GOLD, fur=ERMINE, hair='white', beard='long', age='old',
+         head=coronet_high(C.hex('3a2a5a')), mouth='open', eyes='closed', belt='gold', width=1.3,
+         props_front=[goblet('f')]).draw(p, 700, 604, 400, flip=True)
+    crowd(p, 590, -20, 220, 3, 1.1, raised=0.6, dark=0.2, rows=1)
+
+
+def revel_u_018(p):
+    """Royal Command Performance: the king asked for something with fire in it."""
+    hall_bg(p, hang=C.hex('1f2a5a'), floor=(C.hex('1a1a2a'), C.hex('d8c090')), chandelier=False, cols=False)
+    # the king on his dais at the back
+    p.shape([(360, 470, 0), (640, 470, 0), (620, 440, 0), (380, 440, 0)], C.hex('8a6a4a'), width=1.6, smooth=False, shade=0.6)
+    p.shape([(400, 130, 0), (600, 130, 0), (580, 170, 0), (420, 170, 0)], CRIMSON, width=1.6, smooth=False, shade=0.6)
+    for xx in range(410, 590, 18):
+        p.shape([(xx, 170, 0), (xx + 18, 170, 0), (xx + 9, 182, 0)], GOLD, width=0.8, smooth=False)
+    great_chair(p, 520, 444, 0.9, CRIMSON, C.hex('5a3220'), GOLD)
+    RFig(pose='re_hold_hip', garb='robe', seat='chair', main=C.hex('6a1a6a'), trim=GOLD, fur=ERMINE, cloak='mantle', cloak_col=CRIMSON, lining=ERMINE,
+         hair='curly', hair_col=C.hex('8a6a3a'), beard='short', head='crown', mouth='calm', eyes='open',
+         props_front=[PR.staff('f', 'cross', 50, GOLD)]).draw(p, 500, 454, 230)
+    # the players, all aiming their fire at the enemy champion
+    RFig(pose='re_flame', garb='jerkin', stance='wide', main=BLACK_VELVET, parti=C.hex('c83a1a'), hose=C.hex('c83a1a'), hose2=BLACK_VELVET,
+         dagged=[C.hex('c83a1a'), GOLD], hair='short', hair_col=INK_SOFT, mouth='open', sleeves='fitted', belt='gold',
+         props_front=[torch('f', 24, -1.0, 0.8), torch('b', 24, -1.9, 1.0)]).draw(p, 150, 604, 380)
+    mx, my = 150 + 5.4 * 3.8, 604 - 87.5 * 3.8
+    fire_jet(p, [(mx, my), (mx + 120, my + 20), (mx + 300, my + 90), (mx + 480, my + 110), (780, 350)], 6, 44)
+    RFig(pose='re_toss', garb='jerkin', stance='lunge', main=C.hex('e0a020'), parti=C.hex('1f4f8a'), hose=C.hex('1f4f8a'), hose2=C.hex('e0a020'),
+         hair='curly', hair_col=C.hex('6a3a1a'), mouth='open', sleeves='fitted', belt='gold', head=feathered_cap(C.hex('1f4f8a'), GOLD_LIGHT, GOLD),
+         props_front=[torch('f', 22, -1.2, 0.8)]).draw(p, 360, 610, 330)
+    for q, a in (((560, 300), 0.8), ((630, 360), 1.6)):
+        p.push(q[0], q[1], 1.0, rot=a)
+        p.taper([(0, 10), (0, -10)], 2.4, 3, UMBER, width=1.0)
+        p.pop()
+        flame_tongue(p, (q[0] + math.sin(a) * 10, q[1] - math.cos(a) * 10), 22, 7, lean=-6)
+    # the enemy champion recoils, shield up
+    RFig(pose='spread', garb='surcoat', mail=True, main=C.hex('3a3a3a'), second=C.hex('3a3a3a'), head='nasal', hair='short', hair_col=UMBER,
+         beard='short', mouth='open', stance='stride', belt='sword', emblem='cross_black').draw(p, 840, 610, 400, flip=True)
+    sparks(p, (640, 260, 900, 460), 30)
+
+
+def revel_r_010(p):
+    """King of the Minstrels: every fiddler in the shire owes him a penny a year."""
+    bg.dusk_sky(p)
+    p.glow((520, 360), 360, C.hex('ffc080'), 0.4)
+    bg.hills(p, 380, C.hex('5a5a7a'), 30, n=6)
+    # the castle gate he leads them out of
+    wall = C.hex('c8b898')
+    p.shape([(560, 470, 0), (560, 150, 0), (980, 150, 0), (980, 470, 0)], ('h', wall, wall.dark(0.25)), width=2, smooth=False)
+    for x in range(560, 980, 40):
+        p.shape([(x, 150, 0), (x + 24, 150, 0), (x + 24, 126, 0), (x, 126, 0)], wall.dark(0.05), width=1.6, smooth=False)
+    for r in range(8):
+        for x in range(560 + (r % 2) * 30, 980, 60):
+            p.line([(x, 160 + r * 40), (x + 50, 160 + r * 40)], INK.alpha(0.2), 1.0)
+    gate = [(680, 470, 0), (680, 300), (770, 250), (860, 300), (860, 470, 0)]
+    p.shape(gate, C.hex('3a2a20'), width=2.2)
+    p.glow((770, 400), 120, C.hex('ffb050'), 0.4)
+    for x, col in ((620, CRIMSON), (920, C.hex('1f4f8a'))):
+        p.shape([(x - 26, 180, 0), (x + 26, 180, 0), (x + 26, 300, 0), (x, 320, 0), (x - 26, 300, 0)], col, width=1.4, smooth=False, shade=0.5)
+    p.cx.new_path()
+    p.cx.rectangle(0, 470, W, H)
+    p.fill(('v', C.hex('6a6a4a'), C.hex('4a4a32')))
+    # his company behind: piper, drummer, harper
+    def pipe(p, j):
+        x, y = j['hand_f']
+        p.taper([(x - 6, y - 14), (x + 10, y + 6)], 1.0, 1.6, C.hex('a8884a'), width=0.8)
+    def drum(p, j):
+        k = j['k']
+        p.shape([(-12, -60 + k), (14, -60 + k), (14, -44 + k), (-12, -44 + k)], CRIMSON, width=1.0, smooth=False, shade=0.6)
+        p.blob((1, -60 + k), 13, 3, LEAD_WHITE, width=0.9)
+        for i in range(4):
+            p.line([(-12 + i * 8, -60 + k), (-8 + i * 8, -44 + k)], GOLD, 0.6)
+    RFig(pose='re_toast', garb='jerkin', main=C.hex('2a6a3a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a6a3a'), hair='short', hair_col=C.hex('5a3a1a'),
+         mouth='calm', sleeves='fitted', belt='leather', props_front=[pipe]).draw(p, 720, 520, 220)
+    RFig(pose='re_carry', garb='jerkin', main=C.hex('1f4f8a'), parti=LEAD_WHITE.dark(0.1), hose=LEAD_WHITE.dark(0.1), hose2=C.hex('1f4f8a'), hair='curly',
+         hair_col=C.hex('2a1a10'), mouth='open', sleeves='fitted', belt='leather', props_front=[drum]).draw(p, 840, 540, 240)
+    RFig(pose='re_lute', garb='jerkin', stance='stride', main=C.hex('8a2a2a'), parti=C.hex('d8c8a0'), hose=C.hex('d8c8a0'), hose2=C.hex('8a2a2a'),
+         hair='curly', hair_col=C.hex('8a5a2a'), mouth='open', sleeves='fitted', belt='leather', props_front=[lute()]).draw(p, 600, 570, 280)
+    RFig(pose='re_staff_hip', garb='robe', stance='stride', main=C.hex('8a1a3a'), second=C.hex('5a0a2a'), trim=GOLD, fur=ERMINE, sleeves='bell',
+         cloak='mantle', cloak_col=C.hex('1f3a7a'), lining=GOLD, hair='curly', hair_col=C.hex('6a4a2a'), beard='long', head=minstrel_crown(),
+         mouth='open', eyes='open', belt='gold', emblem=office_chain(C.hex('d8dce0')),
+         props_front=[banner_staff('f', 124, C.hex('1f3a7a'), GOLD)]).draw(p, 330, 606, 470)
+
+
+def revel_r_011(p):
+    """Elector of the Endless Banquet: he gives his vote to whichever prince serves the longest dinner."""
+    hall_bg(p, hang=C.hex('6a1a1a'), floor=(C.hex('2a1a10'), C.hex('c8a870')), chandelier=False, cols=True)
+    # the eagle banner of the empire's electors
+    for x in (300, 700):
+        p.shape([(x - 50, 140, 0), (x + 50, 140, 0), (x + 50, 330, 0), (x, 360, 0), (x - 50, 330, 0)], GOLD, width=1.6, smooth=False, shade=0.5)
+        e = (x, 240)
+        p.blob(e, 14, 24, INK_SOFT, width=1.0)
+        for sgn in (-1, 1):
+            p.shape([(e[0] + sgn * 6, e[1] - 10), (e[0] + sgn * 40, e[1] - 30), (e[0] + sgn * 36, e[1] - 6), (e[0] + sgn * 30, e[1] + 10), (e[0] + sgn * 8, e[1] + 8)],
+                    INK_SOFT, width=1.0)
+            p.blob((e[0] + sgn * 7, e[1] - 30), 6, 7, INK_SOFT, width=0.9)
+        p.line([(x - 60, 140), (x + 60, 140)], GOLD_DARK, 4)
+    great_chair(p, 520, 520, 1.6, C.hex('6a1a1a'), C.hex('3a2010'), GOLD)
+    RFig(pose='re_toast', garb='robe', seat='chair', main=C.hex('a8182a'), second=C.hex('6a0a1a'), trim=GOLD, fur=ERMINE, cloak='mantle', cloak_col=C.hex('a8182a'),
+         lining=ERMINE, hair='white', beard='forked', head=elector_cap(), mouth='open', eyes='open', width=1.6, blush=1.2, belt='gold',
+         props_front=[goblet('f', s=1.2)]).draw(p, 490, 540, 470)
+    laden_table(p, 120, 880, 430, LEAD_WHITE, 34, 120, runner=C.hex('a8182a'), items=[
+        (lambda p, x, y, s: peacock_dish(p, x, y, s), 330, 1.3), (lambda p, x, y, s: roast_boar(p, x, y, s), 520, 1.4),
+        (lambda p, x, y, s: pie(p, x, y, s), 690, 1.3), (lambda p, x, y, s: candelabra(p, x, y, s), 200, 1.0),
+        (lambda p, x, y, s: candelabra(p, x, y, s), 800, 1.0)])
+    # fattened lords at the ends of the board, swelling with every course
+    RFig(pose='re_lift', garb='robe', seat='chair', main=C.hex('2a4a6a'), trim=GOLD, fur=ERMINE, hair='curly', hair_col=C.hex('6a3a1a'), beard='short',
+         head=coronet_high(C.hex('2a4a6a')), width=1.8, blush=1.4, mouth='open', props_front=[drumstick('f')], props_back=[goblet('b')]).draw(p, 110, 660, 380)
+    RFig(pose='re_toast', garb='robe', seat='chair', main=C.hex('3a5a2a'), trim=GOLD, fur=ERMINE, hair='bald', hair_col=C.hex('8a7a6a'), beard='long',
+         head='coronet', width=1.9, blush=1.4, mouth='open', props_front=[goblet('f')]).draw(p, 890, 660, 380, flip=True)
+
+
+def revel_m_004(p):
+    """Ruggiero, Patron of the Players: he has never drawn a sword. He keeps forty players who throw fire on cue."""
+    bg.night_sky(p, moon=True, stars=60)
+    firework(p, (640, 110), 70, C.hex('ffcf5a'))
+    firework(p, (820, 170), 50, C.hex('ff6a8a'))
+    # the courtyard below, the enemy at the gate
+    wall = C.hex('a89878').dark(0.3)
+    p.shape([(380, 470, 0), (380, 260, 0), (1000, 260, 0), (1000, 470, 0)], ('v', wall, wall.dark(0.2)), width=2, smooth=False)
+    for x in range(380, 1000, 40):
+        p.shape([(x, 260, 0), (x + 24, 260, 0), (x + 24, 240, 0), (x, 240, 0)], wall, width=1.4, smooth=False)
+    gate = [(860, 470, 0), (860, 340), (920, 300), (980, 340), (980, 470, 0)]
+    p.shape(gate, C.hex('1a1210'), width=2)
+    for i in range(5):
+        x = 880 + i * 22
+        p.taper([(x, 470), (x + 2, 360)], 2, 2, STEEL.dark(0.3), width=0.8)
+        p.shape([(x - 4, 362), (x + 2, 344, 0), (x + 6, 362)], STEEL, width=0.8)
+        p.blob((x + 1, 400), 8, 9, C.hex('3a3a4a'), width=1.0)
+    bg.tile_floor(p, 470, C.hex('3a2a2a'), C.hex('8a7a6a'), rows=5)
+    # his players in the courtyard, all their fire thrown at the gate
+    RFig(pose='re_flame', garb='jerkin', stance='wide', main=BLACK_VELVET, parti=C.hex('c83a1a'), hose=C.hex('c83a1a'), hose2=BLACK_VELVET,
+         hair='short', hair_col=INK_SOFT, mouth='open', sleeves='fitted', belt='gold', head=mask_half(BLACK_VELVET, GOLD),
+         props_front=[torch('f', 22, -1.0, 0.7), torch('b', 22, -1.9, 0.9)]).draw(p, 560, 560, 220)
+    mx, my = 560 + 5.4 * 2.2, 560 - 87.5 * 2.2
+    fire_jet(p, [(mx, my), (mx + 90, my - 20), (mx + 200, my), (880, 400)], 4, 30)
+    RFig(pose='re_toss', garb='jerkin', stance='lunge', main=C.hex('e0a020'), parti=C.hex('1f4f8a'), hose=C.hex('1f4f8a'), hose2=C.hex('e0a020'),
+         hair='curly', hair_col=C.hex('6a3a1a'), mouth='open', sleeves='fitted', belt='gold', props_front=[torch('f', 20, -1.2, 0.7)]).draw(p, 700, 580, 220)
+    for q in ((760, 300), (810, 330)):
+        flame_tongue(p, q, 20, 6, lean=-5)
+    RFig(pose='re_lute', garb='jerkin', main=C.hex('2a6a3a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a6a3a'), hair='short', hair_col=C.hex('5a3a1a'),
+         mouth='open', sleeves='fitted', belt='leather', props_front=[lute()]).draw(p, 470, 600, 220)
+    sparks(p, (700, 300, 1000, 470), 30)
+    # his balcony: he stands behind the balustrade
+    RFig(pose='re_point_hip', garb='robe', main=BLACK_VELVET, second=C.hex('2a1a2a'), trim=GOLD, fur=C.hex('6a4a2a'), sleeves='bell', cloak='mantle',
+         cloak_col=CRIMSON, lining=GOLD, hair='curly', hair_col=C.hex('2a1a10'), beard='forked', head=feathered_cap(BLACK_VELVET, LEAD_WHITE, GOLD, CRIMSON),
+         mouth='calm', eyes='open', belt='gold', emblem=office_chain()).draw(p, 200, 560, 450)
+    p.shape([(0, 430, 0), (400, 430, 0), (400, 452, 0), (0, 452, 0)], ('v', C.hex('e8dcc0'), C.hex('a89878')), width=2, smooth=False)
+    for x in range(14, 400, 32):
+        p.shape([(x - 7, 452), (x - 10, 480), (x - 6, 508), (x + 6, 508), (x + 10, 480), (x + 7, 452)], ('h', C.hex('e8dcc0'), C.hex('8a7a5a')), width=1.4)
+    p.shape([(0, 508, 0), (410, 508, 0), (410, 640, 0), (0, 640, 0)], ('v', C.hex('c8b898'), C.hex('8a7a5a')), width=2, smooth=False)
+    swag(p, 0, 400, 452, CRIMSON, n=3, depth=50)

@@ -241,22 +241,6 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Upkeep",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
-   "key": "Opening hand",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
-   "key": "Your turn",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
-   "key": "Enemy turn",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
    "key": "Attack! (%d)",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -270,6 +254,14 @@
   },
   {
    "key": "Confirm blocks",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Resolve",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Pass",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -309,11 +301,27 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Your turn",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "%s's turn",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
    "key": "%s plays %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s casts %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s fizzles: its target is gone.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "The ability fizzles: its target is gone.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -329,7 +337,7 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "%s casts %s.",
+   "key": "%s resolves.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -509,11 +517,11 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Too many cards",
+   "key": "%s waits on the stack: answer it, or let it resolve.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "You may keep %d cards. Choose one to discard.",
+   "key": "You may act now, or pass.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -522,6 +530,14 @@
   },
   {
    "key": "You have no blockers.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Too many cards",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You may keep %d cards. Choose one to discard.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -554,6 +570,10 @@
   },
   {
    "key": "WU",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "once per turn",
    "note": "scripts/battle/battle_state.gd"
   },
   {
@@ -1501,6 +1521,10 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
+   "key": "Upkeep",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
    "key": "Upkeep N: at the start of your turn pay N, or it is sacrificed.",
    "note": "scripts/ui/card_viewer.gd"
   },
@@ -2145,6 +2169,30 @@
    "note": "scripts/ui/music_bar.gd"
   },
   {
+   "key": "Main 1",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "Attack",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "Block",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "Main 2",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "End",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "Enemy turn",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
    "key": "Turn your device sideways",
    "note": "scripts/ui/rotate_overlay.gd"
   },
@@ -2339,6 +2387,18 @@
   {
    "key": "Wolf",
    "note": "scripts/ui/spell_art.gd"
+  },
+  {
+   "key": "Stack",
+   "note": "scripts/ui/stack_view.gd"
+  },
+  {
+   "key": "(%d more below)",
+   "note": "scripts/ui/stack_view.gd"
+  },
+  {
+   "key": "Ability",
+   "note": "scripts/ui/stack_view.gd"
   },
   {
    "key": "Tournament of %s",
@@ -2815,6 +2875,86 @@
    "note": "flavour text of Processional Cross"
   },
   {
+   "key": "Knight of Saint Lazarus",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "When this enters, gain 1 life for each Knight you control.",
+   "note": "rules text of Knight of Saint Lazarus"
+  },
+  {
+   "key": "He took his vows among the lepers, and learned there that a knight's first enemy is his own fear.",
+   "note": "flavour text of Knight of Saint Lazarus"
+  },
+  {
+   "key": "Teutonic Knight-Brother",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "This gets +1/+0 for each other Knight you control.",
+   "note": "rules text of Teutonic Knight-Brother"
+  },
+  {
+   "key": "Black cross on white mantle, he rides out with his brothers or not at all.",
+   "note": "flavour text of Teutonic Knight-Brother"
+  },
+  {
+   "key": "Angel of the Wayside Shrine",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Travellers who stop to pray at his shrine find the road shorter afterward, and never know why.",
+   "note": "flavour text of Angel of the Wayside Shrine"
+  },
+  {
+   "key": "Angel of the Flaming Sword",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "He was set at the east of the garden, with a flaming sword turning every way, to keep the way of the tree of life.",
+   "note": "flavour text of Angel of the Flaming Sword"
+  },
+  {
+   "key": "Accolade",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Target Knight you control gets +2/+2 permanently.",
+   "note": "rules text of Accolade"
+  },
+  {
+   "key": "Be thou a good knight, in the name of God. The blow upon his shoulder is the last he shall take without answer.",
+   "note": "flavour text of Accolade"
+  },
+  {
+   "key": "Hospital of Saint John",
+   "note": "card name (sanctum, relic)"
+  },
+  {
+   "key": "Whenever a Knight enters under your control, gain 2 life.",
+   "note": "rules text of Hospital of Saint John"
+  },
+  {
+   "key": "Here the sick are our lords. The knights come in from the field and kneel to serve them.",
+   "note": "flavour text of Hospital of Saint John"
+  },
+  {
+   "key": "Gloria in Excelsis",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Prayer",
+   "note": "card subtype"
+  },
+  {
+   "key": "Gain 2 life for each Angel you control.",
+   "note": "rules text of Gloria in Excelsis"
+  },
+  {
+   "key": "The shepherds heard it first, and the hills of Bethlehem have kept the tune ever since.",
+   "note": "flavour text of Gloria in Excelsis"
+  },
+  {
    "key": "Brother of Mercy",
    "note": "card name (sanctum, creature)"
   },
@@ -2931,10 +3071,6 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Prayer",
-   "note": "card subtype"
-  },
-  {
    "key": "Gain 3 life. Then, if you have more life than you started with, creatures you control get +1/+1 permanently.",
    "note": "rules text of Te Deum"
   },
@@ -2977,6 +3113,66 @@
   {
    "key": "O saving Victim, opening wide the gate of Heaven to man below.",
    "note": "flavour text of Monstrance of the Blessed Sacrament"
+  },
+  {
+   "key": "Preceptor of the Commandery",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Your Knight creature cards cost 1 less to play (1 less generic mana).",
+   "note": "rules text of Preceptor of the Commandery"
+  },
+  {
+   "key": "He keeps the accounts, the horses and the novices, and every spring he sends the ready ones East.",
+   "note": "flavour text of Preceptor of the Commandery"
+  },
+  {
+   "key": "War Banner of the Temple",
+   "note": "card name (sanctum, relic)"
+  },
+  {
+   "key": "Knights you control get +1/+1.",
+   "note": "rules text of War Banner of the Temple"
+  },
+  {
+   "key": "While the black and white banner stands, no brother of the Temple may leave the field.",
+   "note": "flavour text of War Banner of the Temple"
+  },
+  {
+   "key": "Angel of the Choir of Virtues",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Flying (can only be blocked by creatures with flying or reach). This gets +1/+1 for each other Angel you control.",
+   "note": "rules text of Angel of the Choir of Virtues"
+  },
+  {
+   "key": "The Virtues work the wonders of Heaven, and they never work them alone.",
+   "note": "flavour text of Angel of the Choir of Virtues"
+  },
+  {
+   "key": "Angel of the Dominions",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Flying (can only be blocked by creatures with flying or reach). Whenever another Angel enters under your control, gain 2 life.",
+   "note": "rules text of Angel of the Dominions"
+  },
+  {
+   "key": "The Dominions govern the lesser choirs, and greet each one sent down with a hymn.",
+   "note": "flavour text of Angel of the Dominions"
+  },
+  {
+   "key": "Angelic Intercession",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Creatures you control get +0/+2 until end of turn. Gain 1 life for each Angel you control.",
+   "note": "rules text of Angelic Intercession"
+  },
+  {
+   "key": "The blow fell, and something no one saw turned it aside.",
+   "note": "flavour text of Angelic Intercession"
   },
   {
    "key": "Abbot of the Silent Order",
@@ -3087,6 +3283,26 @@
    "note": "flavour text of Reliquary of the First Martyr"
   },
   {
+   "key": "Grand Master of the Temple",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Sanctified (protection from the Pact). Other Knights you control get +1/+1 and have sanctified.",
+   "note": "rules text of Grand Master of the Temple"
+  },
+  {
+   "key": "Saint Raphael, Medicine of God",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 2 life for each Angel you control.",
+   "note": "rules text of Saint Raphael, Medicine of God"
+  },
+  {
+   "key": "I am the angel Raphael, one of the seven who stand before the Lord.",
+   "note": "flavour text of Saint Raphael, Medicine of God"
+  },
+  {
    "key": "Archangel of the Last Vigil",
    "note": "card name (sanctum, creature)"
   },
@@ -3121,6 +3337,18 @@
   {
    "key": "He shall come again with glory to judge the living and the dead.",
    "note": "flavour text of The Last Judgment"
+  },
+  {
+   "key": "Saint Michael the Archangel",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Flying, sanctified (protection from the Pact). Other Angels and Knights you control get +1/+1.",
+   "note": "rules text of Saint Michael the Archangel"
+  },
+  {
+   "key": "Quis ut Deus? Who is like unto God?",
+   "note": "flavour text of Saint Michael the Archangel"
   },
   {
    "key": "Pact Initiate",
@@ -3167,7 +3395,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Zombie",
+   "key": "Undead Zombie",
    "note": "card subtype"
   },
   {
@@ -3243,7 +3471,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this dies, create a 1/1 Restless Dead Zombie token.",
+   "key": "When this dies, create a 1/1 Restless Dead Undead Zombie token.",
    "note": "rules text of Ossuary Ghoul"
   },
   {
@@ -3271,7 +3499,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Spirit",
+   "key": "Undead Spirit",
    "note": "card subtype"
   },
   {
@@ -3381,6 +3609,82 @@
   {
    "key": "The broken oath swings in the wind, and every man below remembers his own.",
    "note": "flavour text of Gibbet of the Forsworn"
+  },
+  {
+   "key": "Lych-Gate Shambler",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "This gets +1/+0 for each other Undead you control.",
+   "note": "rules text of Lych-Gate Shambler"
+  },
+  {
+   "key": "It waits by the lych-gate for the next funeral, and it is never alone for long.",
+   "note": "flavour text of Lych-Gate Shambler"
+  },
+  {
+   "key": "Cackling Imp",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Whenever another Demon enters under your control, target enemy creature gets -1/-1 until end of turn.",
+   "note": "rules text of Cackling Imp"
+  },
+  {
+   "key": "It laughs whenever a greater fiend arrives, because then someone else will suffer.",
+   "note": "flavour text of Cackling Imp"
+  },
+  {
+   "key": "Bone-Rattle Picket",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Undead Skeleton",
+   "note": "card subtype"
+  },
+  {
+   "key": "Knock it down and something else climbs out of the same grave.",
+   "note": "flavour text of Bone-Rattle Picket"
+  },
+  {
+   "key": "Sulphur Brute",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "It comes up through the cellar floor, and the whole house smells of the pit for a week.",
+   "note": "flavour text of Sulphur Brute"
+  },
+  {
+   "key": "Chill of the Charnel Host",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "Target enemy creature gets -1/-1 until end of turn for each Undead you control.",
+   "note": "rules text of Chill of the Charnel Host"
+  },
+  {
+   "key": "One dead hand is cold. A hundred of them are the grave itself.",
+   "note": "flavour text of Chill of the Charnel Host"
+  },
+  {
+   "key": "Tithe of the Pit",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "Draw a card for each Demon you control. You lose 1 life for each Demon you control.",
+   "note": "rules text of Tithe of the Pit"
+  },
+  {
+   "key": "Every fiend brings a secret, and every secret is billed to his master.",
+   "note": "flavour text of Tithe of the Pit"
+  },
+  {
+   "key": "Marsh-Light Shade",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Travellers follow its pale lantern off the causeway, and the fen keeps them.",
+   "note": "flavour text of Marsh-Light Shade"
   },
   {
    "key": "Bone-Priest of the Pact",
@@ -3551,6 +3855,66 @@
    "note": "flavour text of Censer of Bitter Ash"
   },
   {
+   "key": "Drummer of the Dead March",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Other Undead you control get +1/+0.",
+   "note": "rules text of Drummer of the Dead March"
+  },
+  {
+   "key": "He beats a drum of stretched hide, and every grave in the parish keeps time.",
+   "note": "flavour text of Drummer of the Dead March"
+  },
+  {
+   "key": "Herald of the Burning Gate",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Your Demon creature cards cost 1 less to play.",
+   "note": "rules text of Herald of the Burning Gate"
+  },
+  {
+   "key": "He holds the gate open, and something larger is always waiting behind him.",
+   "note": "flavour text of Herald of the Burning Gate"
+  },
+  {
+   "key": "Gravecaller Ghast",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Whenever another Undead enters under your control, this gets +1/+1 for the rest of the duel.",
+   "note": "rules text of Gravecaller Ghast"
+  },
+  {
+   "key": "Each corpse that rises feeds it a little of the cold it carries.",
+   "note": "flavour text of Gravecaller Ghast"
+  },
+  {
+   "key": "Brimstone Exhalation",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "All enemy creatures get -1/-1 until end of turn for each Demon you control.",
+   "note": "rules text of Brimstone Exhalation"
+  },
+  {
+   "key": "The fiends breathe out together, and the field below them chokes.",
+   "note": "flavour text of Brimstone Exhalation"
+  },
+  {
+   "key": "Corpse-Bell of the Barrow",
+   "note": "card name (abyss, relic)"
+  },
+  {
+   "key": "Whenever another Undead enters under your control, the enemy player loses 1 life and you gain 1 life.",
+   "note": "rules text of Corpse-Bell of the Barrow"
+  },
+  {
+   "key": "It was cast to ring the dead to rest. The Pact recast it to ring them up again.",
+   "note": "flavour text of Corpse-Bell of the Barrow"
+  },
+  {
    "key": "Oathbreaker Knight",
    "note": "card name (abyss, creature)"
   },
@@ -3591,6 +3955,10 @@
    "note": "card name (abyss, creature)"
   },
   {
+   "key": "Undead Lich",
+   "note": "card subtype"
+  },
+  {
    "key": "Deathtouch. At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
    "note": "rules text of Hollow-Crowned Lich"
   },
@@ -3603,7 +3971,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Other Zombies you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
+   "key": "Other Zombies you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Undead Zombie token.",
    "note": "rules text of Bone-Lord of the Ossuary"
   },
   {
@@ -3611,7 +3979,7 @@
    "note": "flavour text of Bone-Lord of the Ossuary"
   },
   {
-   "key": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
+   "key": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Undead Zombie token.",
    "note": "activated ability text of Bone-Lord of the Ossuary"
   },
   {
@@ -3663,6 +4031,30 @@
    "note": "flavour text of Ledger of the Damned"
   },
   {
+   "key": "Barrow-King of the Hollow Hills",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Other Undead you control have dread (they can only be blocked by Pact creatures and Constructs).",
+   "note": "rules text of Barrow-King of the Hollow Hills"
+  },
+  {
+   "key": "When he rides out of the hill at midnight, his host walks where no living man can stop it.",
+   "note": "flavour text of Barrow-King of the Hollow Hills"
+  },
+  {
+   "key": "Brimstone Marshal",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Other Demons you control get +1/+1. When this enters, you lose 1 life for each Demon you control.",
+   "note": "rules text of Brimstone Marshal"
+  },
+  {
+   "key": "He drills the legions of the pit, and every recruit is paid for in someone's blood.",
+   "note": "flavour text of Brimstone Marshal"
+  },
+  {
    "key": "Belzareth, Prince of Cinders",
    "note": "card name (abyss, creature)"
   },
@@ -3701,6 +4093,18 @@
   {
    "key": "Sign, and your enemies wither. Sign, and so do you.",
    "note": "flavour text of The Black Contract"
+  },
+  {
+   "key": "Azgaroth, Duke of the Ninth Pit",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Dread. Other Demons you control have deathtouch (any damage they deal to a creature destroys it). Whenever another Demon enters under your control, the enemy discards a card at random. When this enters, you lose 3 life.",
+   "note": "rules text of Azgaroth, Duke of the Ninth Pit"
+  },
+  {
+   "key": "He keeps no court of nobles, only of debtors, and none has ever left it.",
+   "note": "flavour text of Azgaroth, Duke of the Ninth Pit"
   },
   {
    "key": "Briar Fox",
@@ -3775,7 +4179,7 @@
    "note": "token creature name"
   },
   {
-   "key": "Plant",
+   "key": "Treefolk",
    "note": "token subtype"
   },
   {
@@ -3789,10 +4193,6 @@
   {
    "key": "Oakmoot Sentinel",
    "note": "card name (wild, creature)"
-  },
-  {
-   "key": "Treefolk",
-   "note": "card subtype"
   },
   {
    "key": "It stood guard at the moot for a hundred years, and saw no need to leave.",
@@ -3819,7 +4219,7 @@
    "note": "rules text of Barrowland Bear"
   },
   {
-   "key": "The druids call her grandmother, and wisely give her the path.",
+   "key": "The druids call him grandfather, and wisely give him the path.",
    "note": "flavour text of Barrowland Bear"
   },
   {
@@ -3955,12 +4355,88 @@
    "note": "flavour text of Sower's Basket"
   },
   {
-   "key": "Wolfmother of the Fen",
+   "key": "Moorland Wolf",
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Where she runs, she never runs alone.",
-   "note": "flavour text of Wolfmother of the Fen"
+   "key": "This gets +1/+0 for each other Wolf you control.",
+   "note": "rules text of Moorland Wolf"
+  },
+  {
+   "key": "Alone he is a thin grey shadow on the heather. He is seldom alone.",
+   "note": "flavour text of Moorland Wolf"
+  },
+  {
+   "key": "Ridge-Runner Wolf",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Whenever another Wolf enters under your control, this gets +1/+1 until end of turn.",
+   "note": "rules text of Ridge-Runner Wolf"
+  },
+  {
+   "key": "He runs the skyline so the flock below can see him coming, and lose heart.",
+   "note": "flavour text of Ridge-Runner Wolf"
+  },
+  {
+   "key": "Run with the Pack",
+   "note": "card name (wild, spell)"
+  },
+  {
+   "key": "Target creature you control gets +1/+1 until end of turn for each Wolf you control.",
+   "note": "rules text of Run with the Pack"
+  },
+  {
+   "key": "The lone wolf starves. The pack eats in winter.",
+   "note": "flavour text of Run with the Pack"
+  },
+  {
+   "key": "Coppiced Hazel",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Cut to the stool every seventh year, and every seventh year he comes back thicker.",
+   "note": "flavour text of Coppiced Hazel"
+  },
+  {
+   "key": "Hedge-Elm of the Moot",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "This gets +1/+0 for each other Treefolk you control.",
+   "note": "rules text of Hedge-Elm of the Moot"
+  },
+  {
+   "key": "When the moot is full, the old elm leans in to hear, and the boughs creak with opinions.",
+   "note": "flavour text of Hedge-Elm of the Moot"
+  },
+  {
+   "key": "Stand Like Oaks",
+   "note": "card name (wild, spell)"
+  },
+  {
+   "key": "Treefolk you control get +1/+2 until end of turn.",
+   "note": "rules text of Stand Like Oaks"
+  },
+  {
+   "key": "The axemen came at dawn. By noon they were sharpening their axes and wondering.",
+   "note": "flavour text of Stand Like Oaks"
+  },
+  {
+   "key": "Dusk-Runner Wolf",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Shepherds bar the fold at sunset. He was over the wall at noon.",
+   "note": "flavour text of Dusk-Runner Wolf"
+  },
+  {
+   "key": "Wolfsire of the Fen",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Where he runs, he never runs alone.",
+   "note": "flavour text of Wolfsire of the Fen"
   },
   {
    "key": "Fowler of the Fens",
@@ -3977,6 +4453,10 @@
   {
    "key": "Stonehide Spirit",
    "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Spirit",
+   "note": "card subtype"
   },
   {
    "key": "Reach, regenerate.",
@@ -4013,6 +4493,10 @@
   {
    "key": "Green Man of the Hedgerow",
    "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Treefolk Spirit",
+   "note": "card subtype"
   },
   {
    "key": "Tap: target creature you control gets +2/+2 until end of turn.",
@@ -4105,6 +4589,66 @@
   {
    "key": "Blow it once on a winter night, and something in the hills always answers.",
    "note": "flavour text of Horn of the Wild Hunt"
+  },
+  {
+   "key": "Pack-Leader of the Moors",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Other Wolves you control get +1/+1.",
+   "note": "rules text of Pack-Leader of the Moors"
+  },
+  {
+   "key": "He eats first, sleeps last, and every wolf on the moor knows his howl.",
+   "note": "flavour text of Pack-Leader of the Moors"
+  },
+  {
+   "key": "Old Grey Wolf",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Whenever another Wolf enters under your control, this gets +1/+1 permanently.",
+   "note": "rules text of Old Grey Wolf"
+  },
+  {
+   "key": "Every cub the pack raises makes him a little prouder, and a little more dangerous.",
+   "note": "flavour text of Old Grey Wolf"
+  },
+  {
+   "key": "Old Moot-Oak",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Other Treefolk you control get +1/+1.",
+   "note": "rules text of Old Moot-Oak"
+  },
+  {
+   "key": "Laws were given under his boughs before there were kings to give them.",
+   "note": "flavour text of Old Moot-Oak"
+  },
+  {
+   "key": "Acorn of the Elder Oak",
+   "note": "card name (wild, relic)"
+  },
+  {
+   "key": "Your Treefolk creature cards cost 1 less.",
+   "note": "rules text of Acorn of the Elder Oak"
+  },
+  {
+   "key": "Plant it, and the wood will owe you a favour for three hundred years.",
+   "note": "flavour text of Acorn of the Elder Oak"
+  },
+  {
+   "key": "Pack Hunt",
+   "note": "card name (wild, spell)"
+  },
+  {
+   "key": "Target creature you control gets +1/+0 until end of turn for each Wolf you control. Then target creature you control fights target enemy creature.",
+   "note": "rules text of Pack Hunt"
+  },
+  {
+   "key": "The stag turned to face one wolf, and the other five did the rest.",
+   "note": "flavour text of Pack Hunt"
   },
   {
    "key": "Mistletoe Archdruid",
@@ -4227,6 +4771,30 @@
    "note": "flavour text of Circle of Standing Stones"
   },
   {
+   "key": "Grey Sire of the Long Winter",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Trample. This gets +1/+1 for each other Wolf you control.",
+   "note": "rules text of Grey Sire of the Long Winter"
+  },
+  {
+   "key": "In the hungry year he came down from the fells, and every wolf in the shire followed him.",
+   "note": "flavour text of Grey Sire of the Long Winter"
+  },
+  {
+   "key": "Grandsire Hornbeam",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Reach, regenerate. Other Treefolk you control have reach and regenerate.",
+   "note": "rules text of Grandsire Hornbeam"
+  },
+  {
+   "key": "Ironwood, the charcoal burners call him, and they have broken three axes on his kin.",
+   "note": "flavour text of Grandsire Hornbeam"
+  },
+  {
    "key": "Herne, Lord of the Wild Hunt",
    "note": "card name (wild, creature)"
   },
@@ -4245,10 +4813,6 @@
   {
    "key": "Cernoth, the Thousand-Year Oak",
    "note": "card name (wild, creature)"
-  },
-  {
-   "key": "Treefolk Spirit",
-   "note": "card subtype"
   },
   {
    "key": "Trample, reach. When this enters, create two 2/2 Oakling tokens.",
@@ -4273,6 +4837,18 @@
   {
    "key": "Stag",
    "note": "token creature name"
+  },
+  {
+   "key": "Wolfwood, the Denning Oak",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Trample. Other Treefolk you control get +1/+1. Other Wolves you control get +1/+1.",
+   "note": "rules text of Wolfwood, the Denning Oak"
+  },
+  {
+   "key": "The wolves den among his roots, and the oaks of the wood stand taller for his shade.",
+   "note": "flavour text of Wolfwood, the Denning Oak"
   },
   {
    "key": "Tavern Brawler",
@@ -4443,7 +5019,7 @@
    "note": "rules text of Toast of Fire"
   },
   {
-   "key": "\"To your health!\" she cried, and lit the brandy.",
+   "key": "\"To your health!\" he cried, and lit the brandy.",
    "note": "flavour text of Toast of Fire"
   },
   {
@@ -4531,6 +5107,82 @@
    "note": "flavour text of Festival Drum"
   },
   {
+   "key": "Wandering Minstrel",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "He sings of battles he has never seen, on his way to one.",
+   "note": "flavour text of Wandering Minstrel"
+  },
+  {
+   "key": "Tumbler of the Fair",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "This gets +1/+0 for each other Performer you control.",
+   "note": "rules text of Tumbler of the Fair"
+  },
+  {
+   "key": "He lands every somersault, and every somersault lands on someone.",
+   "note": "flavour text of Tumbler of the Fair"
+  },
+  {
+   "key": "Mummer of the Twelfth Night",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Every Twelfth Night he slays the paper dragon with a wooden sword. The dragon has never once won.",
+   "note": "flavour text of Mummer of the Twelfth Night"
+  },
+  {
+   "key": "Perfumed Lordling",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "He has never held anything heavier than a pomander, and he means to keep it so.",
+   "note": "flavour text of Perfumed Lordling"
+  },
+  {
+   "key": "Count of the Velvet Glove",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Human Noble Duelist",
+   "note": "card subtype"
+  },
+  {
+   "key": "First strike (this deals combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+   "note": "rules text of Count of the Velvet Glove"
+  },
+  {
+   "key": "He accepts every challenge, and names a date some time after the next feast.",
+   "note": "flavour text of Count of the Velvet Glove"
+  },
+  {
+   "key": "Shouts of Encore",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Performers you control get +2/+0 until end of turn.",
+   "note": "rules text of Shouts of Encore"
+  },
+  {
+   "key": "The crowd roared for more, and the players gave it to the front rank of the enemy.",
+   "note": "flavour text of Shouts of Encore"
+  },
+  {
+   "key": "Toast to the Peerage",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Deal 1 damage to the enemy player for each Noble you control.",
+   "note": "rules text of Toast to the Peerage"
+  },
+  {
+   "key": "Each lord rose in turn to drink to the enemy's ruin, and the enemy felt every cup.",
+   "note": "flavour text of Toast to the Peerage"
+  },
+  {
    "key": "Duelist of the Velvet Court",
    "note": "card name (revel, creature)"
   },
@@ -4559,7 +5211,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Human Jester",
+   "key": "Human Jester Performer",
    "note": "card subtype"
   },
   {
@@ -4691,6 +5343,66 @@
    "note": "flavour text of Carnival Masks"
   },
   {
+   "key": "Master of the Revels",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Your Performer creature cards cost 1 less to play (this reduces only generic mana).",
+   "note": "rules text of Master of the Revels"
+  },
+  {
+   "key": "He hires the jugglers, pays the fire-eaters, and sends the bill for both to the Crown.",
+   "note": "flavour text of Master of the Revels"
+  },
+  {
+   "key": "Master of the Pageant Wagon",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Other Performers you control get +1/+0 and have haste (they can attack the turn they come into play).",
+   "note": "rules text of Master of the Pageant Wagon"
+  },
+  {
+   "key": "When his wagon rolls into town, the whole company leaps down already performing.",
+   "note": "flavour text of Master of the Pageant Wagon"
+  },
+  {
+   "key": "Gossiping Marquis",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "This gets +1/+1 for each other Noble you control.",
+   "note": "rules text of Gossiping Marquis"
+  },
+  {
+   "key": "He knows every scandal at court, and is the subject of most of them.",
+   "note": "flavour text of Gossiping Marquis"
+  },
+  {
+   "key": "Lord of Misrule",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Whenever another Performer enters under your control, deal 1 damage to the enemy player.",
+   "note": "rules text of Lord of Misrule"
+  },
+  {
+   "key": "For the twelve nights of the feast the fool wears the paper crown, and the hall obeys him.",
+   "note": "flavour text of Lord of Misrule"
+  },
+  {
+   "key": "Royal Command Performance",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Deal 1 damage to any enemy creature or the enemy player for each Performer you control.",
+   "note": "rules text of Royal Command Performance"
+  },
+  {
+   "key": "The king asked for something with fire in it. The players were happy to oblige.",
+   "note": "flavour text of Royal Command Performance"
+  },
+  {
    "key": "Salamander Juggler",
    "note": "card name (revel, creature)"
   },
@@ -4803,6 +5515,30 @@
    "note": "flavour text of Lanterns of the Pleasure Garden"
   },
   {
+   "key": "King of the Minstrels",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Haste (this can attack the turn it comes into play). Other Performers you control get +1/+1.",
+   "note": "rules text of King of the Minstrels"
+  },
+  {
+   "key": "Rex ministrallorum, the rolls call him, and every fiddler in the shire owes him a penny a year.",
+   "note": "flavour text of King of the Minstrels"
+  },
+  {
+   "key": "Elector of the Endless Banquet",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on each Noble you control.",
+   "note": "rules text of Elector of the Endless Banquet"
+  },
+  {
+   "key": "He gives his vote to whichever prince serves the longest dinner.",
+   "note": "flavour text of Elector of the Endless Banquet"
+  },
+  {
    "key": "Vessar, Master of the Undying Feast",
    "note": "card name (revel, creature)"
   },
@@ -4843,6 +5579,18 @@
    "note": "activated ability text of The Undying Bonfire"
   },
   {
+   "key": "Ruggiero, Patron of the Players",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Performers you control have first strike (they deal combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player for each Performer you control.",
+   "note": "rules text of Ruggiero, Patron of the Players"
+  },
+  {
+   "key": "He has never drawn a sword. He keeps forty players who throw fire on cue.",
+   "note": "flavour text of Ruggiero, Patron of the Players"
+  },
+  {
    "key": "Owl of the Archive",
    "note": "card name (lyceum, creature)"
   },
@@ -4857,6 +5605,10 @@
   {
    "key": "Ephebe of the Phalanx",
    "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Human Hoplite",
+   "note": "card subtype"
   },
   {
    "key": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
@@ -5099,6 +5851,86 @@
    "note": "flavour text of Harbour Chain"
   },
   {
+   "key": "Spear of the Second Rank",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "This gets +1/+0 for each other Hoplite you control.",
+   "note": "rules text of Spear of the Second Rank"
+  },
+  {
+   "key": "He cannot see the enemy past the shield in front of him. He does not need to.",
+   "note": "flavour text of Spear of the Second Rank"
+  },
+  {
+   "key": "Pupil of the Painted Porch",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Whenever another Philosopher enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+   "note": "rules text of Pupil of the Painted Porch"
+  },
+  {
+   "key": "He carries the master's stool and the master's water, and carries the master's questions home with him.",
+   "note": "flavour text of Pupil of the Painted Porch"
+  },
+  {
+   "key": "Hoplite of Plataea",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "At Plataea the arrows fell like hail, and the line stood and waited for the omens. Then it came on.",
+   "note": "flavour text of Hoplite of Plataea"
+  },
+  {
+   "key": "Questioner in the Agora",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "When this enters, tax 1 (the enemy's next non-land card costs 1 more).",
+   "note": "rules text of Questioner in the Agora"
+  },
+  {
+   "key": "He asked the general what courage is. The general went home to think it over, and is thinking still.",
+   "note": "flavour text of Questioner in the Agora"
+  },
+  {
+   "key": "Farmer Called to the Muster",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "He bought the shield with two harvests of olives, and he will carry it as long as the city asks.",
+   "note": "flavour text of Farmer Called to the Muster"
+  },
+  {
+   "key": "Lock Shields",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Discipline",
+   "note": "card subtype"
+  },
+  {
+   "key": "Hoplite creatures you control get +0/+3 until end of turn.",
+   "note": "rules text of Lock Shields"
+  },
+  {
+   "key": "Each man's shield covers his own left side and the right side of the man beside him.",
+   "note": "flavour text of Lock Shields"
+  },
+  {
+   "key": "Morning Lecture",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Foresight 2 for each Philosopher you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom), then draw a card.",
+   "note": "rules text of Morning Lecture"
+  },
+  {
+   "key": "Before the market opens, the Porch is already full.",
+   "note": "flavour text of Morning Lecture"
+  },
+  {
    "key": "Agora Inspector",
    "note": "card name (lyceum, creature)"
   },
@@ -5167,7 +5999,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Vigilance. Other Soldier creatures you control get +0/+1.",
+   "key": "Vigilance. Other Hoplite creatures you control get +0/+1.",
    "note": "rules text of Strategos of the Shieldwall"
   },
   {
@@ -5261,6 +6093,66 @@
   {
    "key": "Bronze letters list what a man may spend. The enemy finds that the list includes him.",
    "note": "flavour text of Sumptuary Tablet"
+  },
+  {
+   "key": "Polemarch of the Phalanx",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Other Hoplite creatures you control get +1/+0 and have vigilance (they don't tap to attack).",
+   "note": "rules text of Polemarch of the Phalanx"
+  },
+  {
+   "key": "He takes his place on the right of the line, where the honour is, and the danger.",
+   "note": "flavour text of Polemarch of the Phalanx"
+  },
+  {
+   "key": "Lochagos of the File",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Whenever another Hoplite enters under your control, tap target enemy creature.",
+   "note": "rules text of Lochagos of the File"
+  },
+  {
+   "key": "Every man who steps into his file is one more reason for the enemy to hesitate.",
+   "note": "flavour text of Lochagos of the File"
+  },
+  {
+   "key": "Lecture at the Painted Porch",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Draw a card for each Philosopher you control.",
+   "note": "rules text of Lecture at the Painted Porch"
+  },
+  {
+   "key": "One master speaks. A dozen pupils write it down. A thousand years of readers learn it.",
+   "note": "flavour text of Lecture at the Painted Porch"
+  },
+  {
+   "key": "Scholarch of the Porch",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Your Philosopher creature cards cost 1 less to play.",
+   "note": "rules text of Scholarch of the Porch"
+  },
+  {
+   "key": "The school passed from Zeno to Cleanthes and from Cleanthes to Chrysippus, like a lamp handed on in the dark.",
+   "note": "flavour text of Scholarch of the Porch"
+  },
+  {
+   "key": "Othismos",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). Hoplite creatures you control get +0/+2 until end of turn.",
+   "note": "rules text of Othismos"
+  },
+  {
+   "key": "When the spears break, each rank sets its shields to the backs before it, and the whole phalanx pushes as one man.",
+   "note": "flavour text of Othismos"
   },
   {
    "key": "Keeper of the Stacks",
@@ -5375,6 +6267,34 @@
    "note": "flavour text of The Painted Porch"
   },
   {
+   "key": "Socrates at Delium",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Human Hoplite Philosopher",
+   "note": "card subtype"
+  },
+  {
+   "key": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it). Whenever another Philosopher enters under your control, draw a card.",
+   "note": "rules text of Socrates at Delium"
+  },
+  {
+   "key": "In the rout he walked from the field as calmly as he crossed the agora, and no enemy cared to touch him.",
+   "note": "flavour text of Socrates at Delium"
+  },
+  {
+   "key": "Trophy of Marathon",
+   "note": "card name (lyceum, relic)"
+  },
+  {
+   "key": "Hoplite creatures you control get +1/+1.",
+   "note": "rules text of Trophy of Marathon"
+  },
+  {
+   "key": "Where the enemy turned, the victors hung his arms upon a post, and the place was honoured ever after.",
+   "note": "flavour text of Trophy of Marathon"
+  },
+  {
    "key": "Zeno of Citium",
    "note": "card name (lyceum, creature)"
   },
@@ -5413,6 +6333,18 @@
   {
    "key": "\"Look down from above on the countless herds of men, their solemn rites, their voyages in storm and calm.\" (Marcus Aurelius)",
    "note": "flavour text of The View from Above"
+  },
+  {
+   "key": "Xenophon of the Ten Thousand",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Vigilance (doesn't tap to attack). Other Hoplite creatures you control get +1/+1. When this enters, draw a card for each Philosopher you control.",
+   "note": "rules text of Xenophon of the Ten Thousand"
+  },
+  {
+   "key": "Their generals murdered, ten thousand Greeks far from home chose a pupil of Socrates, and he led them to the sea.",
+   "note": "flavour text of Xenophon of the Ten Thousand"
   },
   {
    "key": "Brass Scuttler",
@@ -5655,6 +6587,90 @@
    "note": "flavour text of Calibration Bench"
   },
   {
+   "key": "Bellows Boy",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Whenever a Construct enters under your control, this gets +1/+0 until end of turn.",
+   "note": "rules text of Bellows Boy"
+  },
+  {
+   "key": "He pumps the bellows for every new machine, and runs to see it wake.",
+   "note": "flavour text of Bellows Boy"
+  },
+  {
+   "key": "Journeyman Riveter",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "When this enters, put a +1/+1 counter on target Construct you control.",
+   "note": "rules text of Journeyman Riveter"
+  },
+  {
+   "key": "Four rivets to the plate, a plate to the hour, and never a crooked head.",
+   "note": "flavour text of Journeyman Riveter"
+  },
+  {
+   "key": "Workshop Draughtsman",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.",
+   "note": "rules text of Workshop Draughtsman"
+  },
+  {
+   "key": "His drawings are passed from bench to bench, and every man who reads them works a little better.",
+   "note": "flavour text of Workshop Draughtsman"
+  },
+  {
+   "key": "Tended Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "This gets +1/+0 for each Artificer you control.",
+   "note": "rules text of Tended Automaton"
+  },
+  {
+   "key": "Oiled at dawn, wound at noon, and polished by a boy who calls it by a name.",
+   "note": "flavour text of Tended Automaton"
+  },
+  {
+   "key": "Coupling Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Whenever another Construct enters under your control, put a +1/+1 counter on this.",
+   "note": "rules text of Coupling Automaton"
+  },
+  {
+   "key": "Every new machine on the floor is bolted to it, and it grows heavier with each.",
+   "note": "flavour text of Coupling Automaton"
+  },
+  {
+   "key": "Emergency Shoring",
+   "note": "card name (machine, spell)"
+  },
+  {
+   "key": "Put a +1/+1 counter on each Construct you control.",
+   "note": "rules text of Emergency Shoring"
+  },
+  {
+   "key": "The order came down mid-battle: brace every frame, and bill the cost afterward.",
+   "note": "flavour text of Emergency Shoring"
+  },
+  {
+   "key": "Mule-Frame Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "When this enters, put a +1/+1 counter on each Artificer you control.",
+   "note": "rules text of Mule-Frame Automaton"
+  },
+  {
+   "key": "It carries the guild's tools from bench to bench, and the craftsmen it serves grow fat on the hours it saves.",
+   "note": "flavour text of Mule-Frame Automaton"
+  },
+  {
    "key": "Siege Automaton",
    "note": "card name (machine, creature)"
   },
@@ -5811,6 +6827,66 @@
    "note": "flavour text of Clockwork Gaol"
   },
   {
+   "key": "Guild Fitter",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
+   "note": "rules text of Guild Fitter"
+  },
+  {
+   "key": "He keeps a drawer of parts already cut, and so his machines are half built before they are ordered.",
+   "note": "flavour text of Guild Fitter"
+  },
+  {
+   "key": "Foundry Line-Master",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Constructs you control get +1/+1.",
+   "note": "rules text of Foundry Line-Master"
+  },
+  {
+   "key": "He walks the line with a lamp and a gauge, and no machine leaves it until he nods.",
+   "note": "flavour text of Foundry Line-Master"
+  },
+  {
+   "key": "Arc-Lamp Galvanist",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Overclock 1C (you may pay 1C more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.",
+   "note": "rules text of Arc-Lamp Galvanist"
+  },
+  {
+   "key": "He calls it natural philosophy. The guild calls it a line item.",
+   "note": "flavour text of Arc-Lamp Galvanist"
+  },
+  {
+   "key": "Field Repair",
+   "note": "card name (machine, spell)"
+  },
+  {
+   "key": "Put a +1/+1 counter on target Construct you control for each Artificer you control.",
+   "note": "rules text of Field Repair"
+  },
+  {
+   "key": "Three wrenches, one cracked frame, and the battle not yet over.",
+   "note": "flavour text of Field Repair"
+  },
+  {
+   "key": "Masterwork Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "This gets +1/+1 for each Artificer you control.",
+   "note": "rules text of Masterwork Automaton"
+  },
+  {
+   "key": "Every master in the guild added one part to it, and signed it with a punch mark.",
+   "note": "flavour text of Masterwork Automaton"
+  },
+  {
    "key": "Guild Comptroller",
    "note": "card name (machine, creature)"
   },
@@ -5919,6 +6995,34 @@
    "note": "flavour text of Perpetual Engine"
   },
   {
+   "key": "Master Horologist",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Other Artificers you control get +1/+1. Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
+   "note": "rules text of Master Horologist"
+  },
+  {
+   "key": "He set the great clock of Cogspire, and every workshop in the city keeps his time.",
+   "note": "flavour text of Master Horologist"
+  },
+  {
+   "key": "Self-Winding Wright",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Construct Artificer",
+   "note": "card subtype"
+  },
+  {
+   "key": "Assembly (this gets +1/+1 for each other Construct you control). Whenever another Artificer enters under your control, create a 1/1 Servo Construct token.",
+   "note": "rules text of Self-Winding Wright"
+  },
+  {
+   "key": "The guild built a machine to build machines. It has not yet asked for wages.",
+   "note": "flavour text of Self-Winding Wright"
+  },
+  {
    "key": "The Prime Engine",
    "note": "card name (machine, creature)"
   },
@@ -5955,6 +7059,18 @@
    "note": "flavour text of The Grand Tabulator"
   },
   {
+   "key": "The Archwright of Cogspire",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock 3 (you may pay 3 more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.",
+   "note": "rules text of The Archwright of Cogspire"
+  },
+  {
+   "key": "Every machine in the city was drawn by his hand or by a hand he taught.",
+   "note": "flavour text of The Archwright of Cogspire"
+  },
+  {
    "key": "Penitent of the Broken Pact",
    "note": "card name (gold, creature)"
   },
@@ -5981,6 +7097,10 @@
   {
    "key": "He walks the bounds of the parish with cross and banner, and every sapling in the hedgerow hears the Litany before the spring rain.",
    "note": "flavour text of Rogationtide Friar"
+  },
+  {
+   "key": "Plant",
+   "note": "token subtype"
   },
   {
    "key": "Lord of the Last Pew",

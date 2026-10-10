@@ -1973,3 +1973,352 @@ def zzz(p, x, y, s=1.0, col=LEAD_WHITE):
         r = (4 + i * 2) * s
         pts = [polar(c, r * (1 - t / 14), t * 0.9) for t in range(14)]
         p.line(pts, col.alpha(0.7 - i * 0.15), 1.6)
+
+
+# ====================================================================== tribal (1.23): players and peers
+
+# a lute: strumming hand at the belly, the far hand round the neck held up and forward
+RE_STOCK_TRIBAL = {
+    're_lute':      ((12, -65), (7, -56), (-5, -64), (21, -73), True),
+    're_staff_hip': _pose(_F_STAFF, _B_HIP),
+    're_point_hip': _pose(_F_POINT, _B_HIP),
+    're_toast_side': _pose(_F_TOAST, _B_SIDE),
+    're_hold_staff': _pose(_F_HOLD, _B_STAFF),
+}
+for _k, _v in RE_STOCK_TRIBAL.items():
+    STOCK.setdefault(_k, _v)
+    RE_STOCK.setdefault(_k, _v)
+
+
+def lute(col=C.hex('b9823e'), neck=C.hex('5a3a22')):
+    """A round-backed lute across the belly, the neck rising forward to the far hand."""
+    def fn(p, j):
+        k = j['k']
+        hb = j['hand_b']
+        c = (4.5, -55.5 + k)
+        # neck and bent-back pegbox
+        top = (hb[0] + 2.5, hb[1] - 2.5)
+        p.taper([(c[0] + 5, c[1] - 4), top], 1.9, 1.4, neck, width=1.0, shade=0.6)
+        box = [top, (top[0] + 4.5, top[1] + 0.5), (top[0] + 6, top[1] + 3.5), (top[0] + 2, top[1] + 2)]
+        p.shape(box, neck.dark(0.1), width=0.8, shade=0.5)
+        for i in range(3):
+            q = v_lerp(top, (top[0] + 5.5, top[1] + 3), (i + 0.5) / 3)
+            p.blob((q[0] - 0.4, q[1] - 1.2), 0.6, 0.9, BONE, width=0.4)
+        # pear-shaped body with a rose
+        body = [(c[0] - 9.5, c[1] + 2), (c[0] - 8, c[1] - 5), (c[0] - 2, c[1] - 8.5), (c[0] + 5, c[1] - 7), (c[0] + 7.5, c[1] - 3),
+                (c[0] + 6, c[1] + 3), (c[0] - 1, c[1] + 8), (c[0] - 7, c[1] + 7)]
+        p.shape(body, ('r', col.light(0.25), col, col.dark(0.3)), width=1.2, shade=0.6, rim=0.3)
+        for i in range(4):
+            p.line([(c[0] - 8 + i * 1.2, c[1] + 4 - i * 2.6), (c[0] + 5 - i * 0.4, c[1] - 6 + i * 2.4)], col.dark(0.35).alpha(0.35), 0.5)
+        p.blob((c[0] - 0.5, c[1] - 1), 2.2, 2.0, INK.alpha(0.85), width=0.5)
+        p.blob((c[0] - 0.5, c[1] - 1), 2.9, 2.6, None, ink=GOLD_DARK, width=0.5)
+        p.taper([(c[0] - 6, c[1] + 4.5), (c[0] - 3.6, c[1] + 2.6)], 0.9, 0.9, neck, width=0.5)
+        # strings
+        p.line([(c[0] - 4.6, c[1] + 3.4), top], LEAD_WHITE.alpha(0.6), 0.4)
+        p.line([(c[0] - 4.0, c[1] + 4.0), (top[0] + 0.4, top[1] + 0.6)], LEAD_WHITE.alpha(0.5), 0.4)
+    return fn
+
+
+def paper_crown(col=GOLD_LIGHT, gem=CRIMSON):
+    """A crown cut from gilt paper, a little crooked: the Lord of Misrule's."""
+    def fn(p, hc):
+        hx, hy = hc
+        pts = [(hx - 6.6, hy - 5.2, 0), (hx - 7.4, hy - 13, 0), (hx - 4.4, hy - 9.4, 0), (hx - 2.2, hy - 15, 0), (hx + 0.6, hy - 10, 0),
+               (hx + 3.4, hy - 15.6, 0), (hx + 5.4, hy - 9.6, 0), (hx + 8.6, hy - 12.4, 0), (hx + 7.4, hy - 5.0, 0)]
+        p.push(hx, hy - 8, 1.0, rot=0.12)
+        p.shape([(x - hx, y - hy + 8, 0) for x, y, _ in pts], col, width=1.0, smooth=False, shade=0.6)
+        p.line([(-6.6, 2.6), (7.4, 2.8)], GOLD_DARK, 0.8)
+        for x in (-4, 0, 4):
+            p.blob((x, 1.0), 0.9, 0.9, gem if x else C.hex('1f4f8a'), width=0.5)
+        p.pop()
+    return fn
+
+
+def elector_cap(col=C.hex('a8182a')):
+    """An elector's cap of state: a tall crimson bonnet in an ermine brim."""
+    def fn(p, hc):
+        hx, hy = hc
+        p.shape([(hx - 6.6, hy - 6), (hx - 7.2, hy - 14), (hx - 2, hy - 19.5), (hx + 4.4, hy - 19), (hx + 8.4, hy - 13.4), (hx + 7.4, hy - 6)],
+                col, width=1.2, shade=0.8, rim=0.3)
+        p.line([(hx + 0.6, hy - 19.4), (hx + 0.8, hy - 8)], col.dark(0.35).alpha(0.6), 0.7)
+        p.shape([(hx - 8.4, hy - 4.2), (hx - 8.6, hy - 9.6), (hx + 0.4, hy - 11.2), (hx + 9, hy - 9.4), (hx + 8.8, hy - 4.0), (hx + 0.4, hy - 5.6)],
+                ERMINE, width=1.0, shade=0.4)
+        for x in (hx - 5.6, hx - 2, hx + 1.8, hx + 5.6):
+            p.shape([(x - 0.5, hy - 8.4), (x, hy - 6.2, 0), (x + 0.5, hy - 8.4)], INK, ink=False)
+        p.blob((hx + 1.2, hy - 20.5), 1.4, 1.4, GOLD, width=0.6, shade=0.5)
+    return fn
+
+
+def minstrel_crown(col=C.hex('d8dce0')):
+    """A silver circlet set with little harps' points, for the King of the Minstrels."""
+    def fn(p, hc):
+        hx, hy = hc
+        p.taper([(hx - 7.2, hy - 6.4), (hx + 0.6, hy - 7.6), (hx + 8, hy - 6.2)], 1.6, 1.6, col, width=0.9, shade=0.5)
+        for x in (hx - 5.6, hx - 1.8, hx + 2.2, hx + 6.0):
+            p.shape([(x - 1.4, hy - 7.4, 0), (x, hy - 12.2, 0), (x + 1.4, hy - 7.4, 0)], col, width=0.7, smooth=False, shade=0.5)
+            p.blob((x, hy - 12.6), 0.7, 0.7, C.hex('6ab0e0'), width=0.4)
+        p.blob((hx + 0.4, hy - 7.0), 0.9, 0.9, CRIMSON, width=0.4)
+    return fn
+
+
+def pomander(which='f', col=GOLD):
+    """A pierced gold ball of perfume on a short chain, lifted to the nose."""
+    def fn(p, j):
+        x, y = _h(j, which)
+        c = (x + 2.0, y - 4.0)
+        p.line([(x, y), (c[0], c[1] + 2.4)], GOLD_DARK, 0.6)
+        p.blob(c, 2.8, 2.8, col, width=0.8, shade=0.7)
+        for a in range(5):
+            p.blob(polar(c, 1.5, a * 1.26), 0.45, 0.45, INK.alpha(0.7), ink=False)
+        p.blob((c[0] - 0.8, c[1] - 0.9), 0.6, 0.6, LEAD_WHITE.alpha(0.8), ink=False)
+        for i in range(3):
+            p.line([(c[0] + 1 + i, c[1] - 3), (c[0] - 1 + i * 2, c[1] - 7), (c[0] + 1 + i, c[1] - 11)], C(0.9, 0.85, 1.0, 0.35), 0.5)
+        p.blob((x, y), 2.3, 1.9, SKIN, width=1.0, shade=0.4)
+    return fn
+
+
+def wooden_sword(which='f', length=40, ang=-1.25):
+    """A painted lath sword with a cross guard, held point up and forward."""
+    def fn(p, j):
+        h = _h(j, which)
+        d = (math.cos(ang), math.sin(ang))
+        n = v_perp(d)
+        base = v_add(h, v_mul(d, 3.0))
+        tip = v_add(h, v_mul(d, length))
+        p.shape([v_add(base, v_mul(n, 1.6)) + (0,), v_add(v_lerp(base, tip, 0.9), v_mul(n, 1.5)), tip + (0,),
+                 v_sub(v_lerp(base, tip, 0.9), v_mul(n, 1.5)), v_sub(base, v_mul(n, 1.6)) + (0,)], ('h', C.hex('d8c08a'), C.hex('a8884a')), width=1.1)
+        for t in (0.3, 0.55, 0.8):
+            a = v_lerp(base, tip, t)
+            p.line([v_add(a, v_mul(n, 1.4)), v_sub(v_add(a, v_mul(d, 3)), v_mul(n, 1.4))], CRIMSON, 0.9)
+        p.taper([v_add(base, v_mul(n, 5)), v_sub(base, v_mul(n, 5))], 1.0, 1.0, C.hex('8a5a2a'), width=0.8)
+        p.taper([base, v_sub(h, v_mul(d, 4.5))], 0.9, 0.9, C.hex('6a4426'), width=0.7)
+    return fn
+
+
+def banner_staff(which='f', length=118, col=CRIMSON, charge=GOLD, top=GOLD):
+    """A tall staff carried upright, a swallow-tailed banner at the top and a gilt finial."""
+    def fn(p, j):
+        x, y = _h(j, which)
+        foot = (x - 1.0, -1)
+        tipp = (x + 1.4, -length + j['k'])
+        p.taper([foot, tipp], 1.3, 1.1, C.hex('6a4426'), width=1.1, shade=0.6)
+        fl = [(tipp[0] + 1, tipp[1] + 6, 0), (tipp[0] + 22, tipp[1] + 4), (tipp[0] + 30, tipp[1] + 2, 0), (tipp[0] + 24, tipp[1] + 10),
+              (tipp[0] + 32, tipp[1] + 18, 0), (tipp[0] + 20, tipp[1] + 17), (tipp[0] + 1, tipp[1] + 20, 0)]
+        p.shape(fl, col, width=1.0, shade=0.6)
+        # a gold harp on the banner
+        hc = (tipp[0] + 12, tipp[1] + 12)
+        p.line([(hc[0] - 3, hc[1] + 4), (hc[0] - 3, hc[1] - 4), (hc[0] + 1, hc[1] - 3.6), (hc[0] + 3.4, hc[1] + 4), (hc[0] - 3, hc[1] + 4)], charge, 0.9)
+        for i in range(3):
+            p.line([(hc[0] - 2 + i * 1.4, hc[1] - 3), (hc[0] - 2 + i * 1.4, hc[1] + 3.6)], charge.alpha(0.8), 0.4)
+        p.blob((tipp[0], tipp[1] - 1.5), 2.2, 2.6, top, width=0.8, shade=0.6)
+        p.shape([(tipp[0] - 1.4, tipp[1] - 3.4, 0), (tipp[0], tipp[1] - 8, 0), (tipp[0] + 1.4, tipp[1] - 3.4, 0)], top, width=0.6, smooth=False)
+        p.blob((x, y), 2.4, 2.0, SKIN, width=1.0, shade=0.4)
+    return fn
+
+
+def white_wand(which='f', length=100):
+    """The white wand of a court officer, gilt at both ends."""
+    def fn(p, j):
+        x, y = _h(j, which)
+        foot = (x - 0.6, y + 26)
+        tipp = (x + 1.0, y - 46)
+        p.taper([foot, tipp], 0.9, 0.9, LEAD_WHITE, width=0.9, shade=0.4)
+        for q in (foot, tipp):
+            p.blob(q, 1.4, 1.8, GOLD, width=0.6, shade=0.5)
+        p.blob((x, y), 2.4, 2.0, SKIN, width=1.0, shade=0.4)
+    return fn
+
+
+def office_chain(col=GOLD):
+    """A collar of office: linked gold across the shoulders with a pendant jewel."""
+    def fn(p, c):
+        x, y = c
+        pts = [(x - 9, y - 22), (x - 6, y - 12), (x, y - 7), (x + 6, y - 12), (x + 9, y - 22)]
+        for i in range(len(pts) - 1):
+            for t in (0.0, 0.5):
+                q = v_lerp(pts[i], pts[i + 1], t)
+                p.blob(q, 1.3, 0.9, col, width=0.5, shade=0.5)
+        p.blob((x, y - 4), 2.2, 2.6, col, width=0.7, shade=0.6)
+        p.blob((x, y - 4), 1.0, 1.2, CRIMSON, width=0.4)
+    return fn
+
+
+def ball_at(p, c, r, col):
+    p.blob(c, r, r, col, width=1.0, shade=0.8)
+    p.blob((c[0] - r * 0.35, c[1] - r * 0.35), r * 0.3, r * 0.3, LEAD_WHITE.alpha(0.7), ink=False)
+
+
+def glove_w(p, x, y, s=1.0, col=C.hex('5a1a3a'), rot=0.0):
+    """A velvet gauntlet glove thrown down, with a gold-fringed cuff."""
+    p.push(x, y, s, rot=rot)
+    palm = [(-10, 0), (-11, -6), (-6, -9), (4, -8), (9, -10), (14, -9), (15, -6), (9, -4), (14, -3), (15, 0), (8, 2), (-2, 3)]
+    p.shape(palm, col, width=1.2, shade=0.8, rim=0.3)
+    for i in range(3):
+        p.line([(4 + i * 0.5, -6 + i * 2.2), (13 - i * 0.6, -7 + i * 2.6)], col.dark(0.4).alpha(0.6), 0.6)
+    cuff = [(-10, 1), (-11.5, -7), (-20, -9), (-21, 3)]
+    p.shape(cuff, col.light(0.1), width=1.2, shade=0.7)
+    for i in range(6):
+        p.line([(-21 + i * 0.2, -8 + i * 2.2), (-23.6 + i * 0.2, -8.4 + i * 2.2)], GOLD, 0.8)
+    p.line([(-11, -7), (-10, 1)], GOLD, 1.2)
+    p.pop()
+
+
+def portrait_w(p, x, y, w=90, h=120, sitter=C.hex('3a2a4a'), bgc=C.hex('2a3a2a'), frame=GOLD):
+    """A gilt-framed portrait of an ancestor on the wall."""
+    p.shape([(x - w / 2 - 8, y - 8, 0), (x + w / 2 + 8, y - 8, 0), (x + w / 2 + 8, y + h + 8, 0), (x - w / 2 - 8, y + h + 8, 0)],
+            ('v', frame.light(0.2), frame.dark(0.25)), width=1.6, smooth=False, shade=0.5)
+    p.shape([(x - w / 2, y, 0), (x + w / 2, y, 0), (x + w / 2, y + h, 0), (x - w / 2, y + h, 0)], ('v', bgc.light(0.1), bgc.dark(0.3)), width=1.2, smooth=False)
+    p.clip_shape([(x - w / 2, y, 0), (x + w / 2, y, 0), (x + w / 2, y + h, 0), (x - w / 2, y + h, 0)], smooth=False)
+    p.shape([(x - w * 0.42, y + h + 4), (x - w * 0.38, y + h * 0.62), (x - w * 0.12, y + h * 0.5), (x + w * 0.14, y + h * 0.5),
+             (x + w * 0.4, y + h * 0.62), (x + w * 0.44, y + h + 4)], sitter, width=1.0, shade=0.7)
+    p.taper([(x - w * 0.14, y + h * 0.52), (x, y + h * 0.58), (x + w * 0.14, y + h * 0.52)], 3, 3, ERMINE, width=0.6)
+    p.blob((x, y + h * 0.36), w * 0.13, h * 0.13, SKIN.dark(0.1), width=1.0, shade=0.6)
+    p.shape([(x - w * 0.15, y + h * 0.3), (x - w * 0.12, y + h * 0.18), (x + w * 0.12, y + h * 0.18), (x + w * 0.15, y + h * 0.3)], sitter.dark(0.3), width=0.9)
+    p.blob((x, y + h * 0.47), w * 0.08, h * 0.04, C.hex('5a3a2a'), ink=False)
+    p.unclip()
+
+
+def snow(p, rect, n=90, col=LEAD_WHITE):
+    x0, y0, x1, y1 = rect
+    for _ in range(n):
+        q = (p.rng.uniform(x0, x1), p.rng.uniform(y0, y1))
+        r = p.rng.uniform(1.4, 3.6)
+        p.blob(q, r, r, col.alpha(p.rng.uniform(0.55, 0.95)), ink=False)
+
+
+def holly(p, pts, s=1.0):
+    """A garland of holly and ivy along a curve, with red berries."""
+    p.line(pts, C.hex('2a4a22'), 5 * s)
+    for i in range(len(pts) - 1):
+        for t in (0.15, 0.5, 0.85):
+            q = v_lerp(pts[i], pts[i + 1], t)
+            a = p.rng.uniform(-1.2, 1.2)
+            p.blob(polar(q, 6 * s, a - 1.6), 7 * s, 3.4 * s, C.hex('2f5a2a').light(p.rng.uniform(0, 0.15)), rot=a - 1.6, width=0.9, shade=0.6)
+            for b in range(3):
+                p.blob((q[0] + (b - 1) * 2.6 * s, q[1] + 3 * s), 1.8 * s, 1.8 * s, C.hex('c81a1a'), width=0.5)
+
+
+def paper_dragon(p, x, y, s=1.0, col=C.hex('3a8a3a'), belly=C.hex('d8c060')):
+    """A mummers' dragon: a painted canvas body over two men, a snapping head on a pole.
+    (x, y) is the ground under its middle; it faces left."""
+    p.push(x, y, s)
+    p.blob((0, 2), 120, 8, C(0.1, 0.05, 0.02, 0.3), ink=False)
+    # the men's legs under the cloth
+    for lx in (-70, -50, 40, 60):
+        p.taper([(lx, -60), (lx + 2, -30), (lx + 4, -4)], 6, 5, C.hex('5a4a3a'), width=1.4, shade=0.6)
+        p.shape([(lx - 2, -6), (lx + 12, -6), (lx + 14, 0, 0), (lx - 2, 0, 0)], INK_SOFT, width=1.2)
+    body = [(-120, -110), (-80, -150), (-10, -160), (60, -152), (110, -130), (150, -96), (178, -120), (196, -150), (206, -140),
+            (190, -96), (150, -64), (100, -56), (-110, -56), (-128, -80)]
+    p.shape(body, ('v', col.light(0.15), col.dark(0.2)), width=2.2, shade=0.8, rim=0.3)
+    p.clip_shape(body)
+    for i in range(-120, 200, 22):
+        for r in range(4):
+            p.shape([(i + (r % 2) * 11, -150 + r * 22), (i + 11 + (r % 2) * 11, -150 + r * 22), (i + 5.5 + (r % 2) * 11, -138 + r * 22)],
+                    col.dark(0.25).alpha(0.4), ink=INK.alpha(0.3), width=0.8)
+    p.shape([(-130, -70), (190, -70), (190, -50), (-130, -50)], belly, width=1.2)
+    p.unclip()
+    # spines along the back
+    for i in range(9):
+        q = (-90 + i * 24, -152 - math.sin(i * 0.4) * 6)
+        p.shape([(q[0] - 8, q[1] + 4, 0), (q[0] + 2, q[1] - 18, 0), (q[0] + 8, q[1] + 4, 0)], CRIMSON, width=1.1, smooth=False, shade=0.5)
+    # the pole and the head
+    p.taper([(-118, -60), (-150, -170)], 3, 3, C.hex('6a4426'), width=1.2)
+    hx, hy = -170, -186
+    head = [(hx + 40, hy + 18), (hx + 30, hy - 14), (hx + 6, hy - 26), (hx - 24, hy - 22), (hx - 58, hy - 8), (hx - 62, hy + 4),
+            (hx - 30, hy + 8), (hx - 60, hy + 20), (hx - 56, hy + 30), (hx - 20, hy + 30), (hx + 20, hy + 34)]
+    p.shape(head, col.light(0.1), width=2.0, shade=0.8, rim=0.3)
+    for k in range(5):
+        p.shape([(hx - 50 + k * 8, hy + 4, 0), (hx - 46 + k * 8, hy + 12, 0), (hx - 42 + k * 8, hy + 4, 0)], LEAD_WHITE, width=0.8, smooth=False)
+    p.blob((hx - 6, hy - 10), 7, 6, GOLD_LIGHT, width=1.2)
+    p.blob((hx - 7, hy - 10), 2.4, 4, INK, ink=False)
+    for a in (-0.6, 0.0):
+        p.taper([(hx + 20, hy - 18), polar((hx + 20, hy - 18), 30, -math.pi / 2 + a - 0.6)], 5, 1, GOLD, width=1.0)
+    p.blob((hx - 60, hy - 4), 2.6, 2, INK, ink=False)
+    # a ragged paper collar where the head meets the pole
+    for k in range(6):
+        p.shape([(hx + 22 + k * 4, hy + 20), (hx + 30 + k * 4, hy + 44, 0), (hx + 26 + k * 4, hy + 18)], [CRIMSON, GOLD_LIGHT][k % 2], width=0.8)
+    p.pop()
+
+
+def pageant_wagon(p, x, y, s=1.0, c1=CRIMSON, c2=GOLD):
+    """A players' two-storey pageant wagon on great wheels, curtained below, a painted
+    backcloth of castle and clouds above. (x, y) = ground under the middle."""
+    p.push(x, y, s)
+    p.blob((0, 2), 200, 10, C(0.1, 0.05, 0.02, 0.3), ink=False)
+    wood = C.hex('7a4a2a')
+    # lower tiring-house with curtains
+    p.shape([(-170, -60, 0), (170, -60, 0), (170, -200, 0), (-170, -200, 0)], ('v', wood.light(0.1), wood.dark(0.2)), width=2, smooth=False)
+    cur = [(-160, -66, 0), (160, -66, 0), (160, -192, 0), (-160, -192, 0)]
+    p.shape(cur, ('h', c1.light(0.1), c1.dark(0.25)), width=1.6, smooth=False)
+    p.clip_shape(cur, smooth=False)
+    for xx in range(-160, 160, 22):
+        p.fold_band([(xx, -192), (xx + 3, -66)], 2, 6, c1.dark(0.5).alpha(0.45))
+    p.unclip()
+    swag_y = -192
+    for i in range(5):
+        xa = -160 + i * 64
+        p.shape([(xa, swag_y, 0), (xa + 64, swag_y, 0), (xa + 32, swag_y + 22)], c2, width=1.2, shade=0.5)
+    # upper stage floor
+    p.shape([(-190, -200, 0), (190, -200, 0), (200, -216, 0), (-200, -216, 0)], wood.light(0.2), width=1.8, smooth=False, shade=0.6)
+    # posts and painted backcloth
+    for px in (-180, 180):
+        p.shape([(px - 6, -216, 0), (px + 6, -216, 0), (px + 6, -400, 0), (px - 6, -400, 0)], ('h', wood.light(0.2), wood.dark(0.2)), width=1.6, smooth=False)
+    back = [(-174, -216, 0), (174, -216, 0), (174, -380, 0), (-174, -380, 0)]
+    p.shape(back, ('v', C.hex('6a9ad0'), C.hex('d8e8f0')), width=1.6, smooth=False)
+    p.clip_shape(back, smooth=False)
+    for cx, cy in ((-110, -350), (60, -330), (140, -360)):
+        p.blob((cx, cy), 40, 14, LEAD_WHITE, ink=INK.alpha(0.4), width=1.0)
+    # a painted castle
+    p.shape([(20, -216, 0), (20, -300, 0), (34, -300, 0), (34, -310, 0), (48, -310, 0), (48, -300, 0), (62, -300, 0), (62, -310, 0), (76, -310, 0),
+             (76, -300, 0), (90, -300, 0), (90, -216, 0)], STONE.light(0.2), width=1.2, smooth=False)
+    p.shape([(46, -216, 0), (46, -250), (55, -260), (64, -250), (64, -216, 0)], INK.alpha(0.6), width=0.8)
+    bg.hills(p, -230, C.hex('6a9a50'), 14, n=4, rect_bottom=-216)
+    p.unclip()
+    # roof canopy with scalloped valance and pennants
+    p.shape([(-200, -400, 0), (200, -400, 0), (190, -420, 0), (-190, -420, 0)], c1, width=1.8, smooth=False, shade=0.6)
+    for i in range(10):
+        xa = -196 + i * 39.2
+        p.shape([(xa, -400, 0), (xa + 39.2, -400, 0), (xa + 19.6, -386)], c2 if i % 2 else c1, width=1.0, shade=0.5)
+    for px, col in ((-180, c2), (0, c1), (180, c2)):
+        p.line([(px, -420), (px, -470)], INK, 2)
+        p.shape([(px, -470, 0), (px + 36, -462), (px, -452, 0)], col, width=1.0, shade=0.5)
+    # wheels
+    for wx in (-120, 120):
+        p.blob((wx, -38), 40, 40, None, ink=INK, width=6)
+        p.blob((wx, -38), 40, 40, None, ink=wood.light(0.1), width=3.6)
+        for a in range(8):
+            p.line([(wx, -38), polar((wx, -38), 38, a * math.pi / 4 + 0.2)], wood.dark(0.1), 3)
+        p.blob((wx, -38), 8, 8, IRON, width=1.2, shade=0.6)
+    p.shape([(-190, -58, 0), (190, -58, 0), (190, -66, 0), (-190, -66, 0)], wood.dark(0.2), width=1.4, smooth=False)
+    p.pop()
+
+
+def handstand(p, fig, x, ground_y, height, lean=0.0, flip=False):
+    """Draw an RFig upside down on its hands (hands on the ground at x), legs in the air.
+    The figure's ground shadow is skipped (it would float at its feet)."""
+    reach = 1.04 * height
+    p.blob((x, ground_y + 2), 26 * height / 100, 4, C(0.1, 0.05, 0.02, 0.28), ink=False)
+    orig = p.blob
+    first = [True]
+
+    def blob(*a, **k):
+        if first[0]:
+            first[0] = False
+            return None
+        return orig(*a, **k)
+    p.blob = blob
+    try:
+        p.push(x, ground_y - reach * math.cos(lean), 1.0, rot=math.pi + lean)
+        fig.draw(p, 0, 0, height, flip=flip)
+        p.pop()
+    finally:
+        del p.blob
+
+
+def coronet_high(col=CRIMSON):
+    """coronet_fur set a little higher on the brow, so the ermine band clears the eyes."""
+    inner = coronet_fur(col)
+
+    def fn(p, hc):
+        inner(p, (hc[0], hc[1] - 3.2))
+    return fn

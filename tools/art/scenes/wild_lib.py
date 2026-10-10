@@ -22,9 +22,10 @@ WI_STOCK = {
     'wi_wassail': ((17.5, -90), (24, -103), (-9.5, -62), (-10.5, -47), False),
     # an archer drawing at birds overhead: bow arm nearly straight up and forward,
     # the drawing hand at the cheek, its elbow lifted behind the head
-    'wi_draw_up': ((19, -93.5), (27, -105), (-10, -95), (3, -86.5), False),
-    # a horn raised to the lips in the near hand, elbow out and down
-    'wi_horn':    ((14, -66), (7, -78), (-9.5, -62), (-10.5, -47), False),
+    'wi_draw_up': ((19, -93.5), (27, -105), (-13, -86), (3, -86.5), False),
+    # a horn raised to the lips in the near hand: elbow down in front of the chest,
+    # the fist just under the chin holding the horn, whose bell points forward and up
+    'wi_horn':    ((15, -68), (10.5, -83), (-9.5, -62), (-10.5, -47), False),
     # both hands low in front, holding a cloth or tray at the hips
     'wi_carry':   ((11, -62), (20, -64), (-6, -63), (17, -63.5), True),
 }
@@ -1383,7 +1384,8 @@ def oakling(p, x, y, s=1.0, season='summer', flip=False, step=0.0, sapling=False
 # ================================================================== treefolk
 
 TF_ARMS = {
-    'stand': (((-25, -56), (-27, -36)), ((25, -56), (27, -36))),
+    # arms hang from the shoulders close to the trunk, forearms angled a little forward
+    'stand': (((-18, -56), (-20, -37)), ((18, -56), (23, -38))),
     'raise': (((-28, -84), (-36, -104)), ((28, -84), (36, -104))),
     'reach': (((-25, -56), (-29, -38)), ((28, -84), (34, -106))),
     'guard': (((-32, -66), (-46, -60)), ((32, -66), (46, -60))),
@@ -1585,6 +1587,52 @@ def hunting_horn(which='f', to_mouth=False):
         p.blob((x + 15.5, y - 7.6), 1.4, 3.4, C.hex('3a2a1a'), rot=0.8, width=0.8)
         for q in (pts[1], pts[2]):
             p.taper([v_add(q, (0, -2)), v_add(q, (0.4, 2))], 0.6, 0.6, STEEL, width=0.5)
+    return fn
+
+
+def horn_blown(which='f', col=C.hex('4a3426')):
+    """An ox horn set to the lips: mouthpiece at the mouth, the dark horn curving
+    forward through the fist and up to a flared bell, banded with silver."""
+    def fn(p, j):
+        hx, hy = j['head']
+        mouth = (hx + 5.6, hy + 3.4)
+        x, y = j['hand_' + which]
+        pts = [mouth, (x - 0.5, y - 1.0), (x + 6, y - 1.5), (x + 12, y - 5), (x + 16, y - 11)]
+        vtaper(p, pts, [0.7, 1.2, 1.7, 2.4, 3.4], ('h', C.hex('d8c8a0'), col, col.dark(0.3)), width=1.0, shade=0.7)
+        bell = pts[-1]
+        p.blob(v_add(bell, (0.6, -0.8)), 1.6, 3.6, C.hex('1e1610'), rot=0.75, width=0.9)
+        for t in (0.35, 0.62, 0.85):
+            k = t * (len(pts) - 1)
+            i0 = int(k)
+            q = v_lerp(pts[i0], pts[i0 + 1], k - i0)
+            d = v_norm(v_sub(pts[i0 + 1], pts[i0]))
+            n = v_perp(d)
+            w = 1.3 + 2.0 * t
+            p.taper([v_add(q, v_mul(n, w)), v_sub(q, v_mul(n, w))], 0.55, 0.55, STEEL.light(0.2), width=0.5)
+        # a sound of the horn: soft rings from the bell
+        for k in range(3):
+            p.cx.new_path()
+            c = v_add(bell, (2 + k * 4, -3 - k * 4))
+            p.cx.arc(c[0], c[1], 3 + k * 3, -1.9, 0.3)
+            p.stroke(C.hex('e8ffc0').alpha(0.5 - k * 0.12), 1.4)
+    return fn
+
+
+def axe_held(which='f', length=40, col=C.hex('7a5a3a')):
+    """A woodsman's felling axe held forward, the head up above the fist."""
+    def fn(p, j):
+        x, y = j['hand_' + which]
+        d = v_norm((0.45, -1.0))
+        butt = v_sub((x, y), v_mul(d, length * 0.3))
+        top = v_add((x, y), v_mul(d, length * 0.7))
+        p.taper([butt, (x, y), top], 1.1, 1.0, col, width=0.9, shade=0.5)
+        n = v_perp(d)
+        a = v_sub(top, v_mul(d, 1.5))
+        b = v_sub(top, v_mul(d, 8.0))
+        blade = [v_add(a, v_mul(n, -1.2)), v_add(v_add(a, v_mul(n, 7.5)), v_mul(d, 2.6)) + (0,),
+                 v_add(v_add(b, v_mul(n, 7.5)), v_mul(d, -2.2)) + (0,), v_add(b, v_mul(n, -1.2)), v_add(v_lerp(a, b, 0.5), v_mul(n, -3.2))]
+        p.shape(blade, ('h', STEEL.light(0.3), STEEL, STEEL.dark(0.3)), width=0.9, shade=0.6)
+        p.line([v_add(a, v_mul(n, 7.0)), v_add(b, v_mul(n, 7.0))], LEAD_WHITE.alpha(0.8), 0.6)
     return fn
 
 
@@ -2160,3 +2208,160 @@ def wyrm(p, path, w=40, col=C.hex('4a6a4a'), belly=C.hex('c8c098'), seam=None, h
         p.taper([(54, -2), (72, -14), (88, -10)], 1.4, 0.3, col.dark(0.2), width=0.8)
         p.pop()
     return out
+
+
+# ================================================================== tribal (1.23) helpers
+
+HEATHER = C.hex('8a5a8a')
+HEATHER_LIGHT = C.hex('b88ab8')
+
+
+def heather(p, rect, n=260, col=HEATHER):
+    """Clumps of flowering ling over a moor: low dark mounds pricked with purple."""
+    x0, y0, x1, y1 = rect
+    r = p.rng
+    for _ in range(n):
+        y = r.uniform(y0, y1)
+        t = (y - y0) / max(1, (y1 - y0))
+        x = r.uniform(x0, x1)
+        s = 0.5 + t * 1.3
+        p.blob((x, y), 9 * s, 4 * s, C.hex('4a4a2a').mix(col, 0.15), ink=False)
+        for k in range(4):
+            q = (x + r.uniform(-7, 7) * s, y - r.uniform(1, 5) * s)
+            p.blob(q, 1.8 * s, 1.4 * s, col.mix(HEATHER_LIGHT, r.random() * 0.6), ink=False)
+
+
+def sheep(p, x, y, s=1.0, flip=False, col=C.hex('e8e2d4'), head_up=0.0):
+    """A woolly sheep in side view, black face and legs."""
+    p.push(x, y, s, flip)
+    for lx, far in ((-12, True), (9, True), (-8, False), (13, False)):
+        c = INK_SOFT.dark(0.2) if far else INK_SOFT
+        p.taper([(lx, -14), (lx + 0.5, -6), (lx, 0)], 1.8, 1.4, c, width=1.0)
+    body = [(-22, -16), (-24, -26), (-16, -34), (-2, -36), (12, -34), (22, -28), (22, -18), (12, -12), (-10, -11), (-20, -12)]
+    p.shape(body, ('v', col.light(0.1), col, col.dark(0.2)), width=1.6, shade=0.6, rim=0.4)
+    r = p.rng
+    for _ in range(14):
+        q = (r.uniform(-20, 20), r.uniform(-33, -14))
+        p.blob(q, 3.0, 2.4, col.light(0.12), ink=INK.alpha(0.25), width=0.6)
+    hy = -30 - head_up * 8
+    p.shape([(18, hy + 2), (22, hy - 4), (30, hy - 1), (33, hy + 5), (29, hy + 8), (21, hy + 7)], INK_SOFT, width=1.2, shade=0.5)
+    p.blob((20, hy - 1), 3.2, 1.6, INK_SOFT.dark(0.1), rot=-0.4, width=0.8)
+    p.blob((27, hy + 1.5), 0.7, 0.7, LEAD_WHITE, ink=False)
+    p.blob((19, hy - 4), 5, 3.6, col.light(0.1), width=0.8)
+    p.pop()
+
+
+def drystone_wall(p, x0, x1, y, h=40, col=STONE, gap=None):
+    """A dry-stone field wall: rows of uneven flat stones, a capstone row on top."""
+    r = p.rng
+    rows = int(h / 9)
+    for k in range(rows + 1):
+        yy = y - k * 9
+        x = x0 + (k % 2) * 7
+        while x < x1:
+            w = r.uniform(12, 22)
+            if gap and gap[0] < x < gap[1] - k * 2:
+                x += w
+                continue
+            cap = k == rows
+            hh = 10 if cap else 8
+            pts = [(x, yy), (x + 1, yy - hh), (x + w - 1, yy - hh + r.uniform(-1.5, 1.5)), (x + w, yy)]
+            p.shape(pts, col.mix(C.hex('8a8070'), r.random() * 0.5).dark(r.uniform(0, 0.25)), width=1.2, shade=0.6)
+            if r.random() < 0.3:
+                p.blob((x + w * 0.5, yy - hh * 0.5), 3, 1.5, C.hex('c8b44a').alpha(0.55), ink=False)
+            x += w + 1
+
+
+def tor(p, x, y, w, h, col=C.hex('8a8a90')):
+    """A granite tor: stacked weathered slabs on a moor top."""
+    r = p.rng
+    yy = y
+    k = 0
+    while yy > y - h:
+        ww = w * (1 - 0.24 * k) * r.uniform(0.85, 1.0)
+        hh = r.uniform(40, 58)
+        cx0 = x + r.uniform(-14, 14)
+        pts = [(cx0 - ww / 2, yy, 0), (cx0 - ww / 2 + r.uniform(4, 14), yy - hh * 0.55), (cx0 - ww / 2 + r.uniform(10, 20), yy - hh, 0),
+               (cx0 + r.uniform(-20, 20), yy - hh - r.uniform(0, 6)), (cx0 + ww / 2 - r.uniform(6, 16), yy - hh + r.uniform(-4, 4), 0), (cx0 + ww / 2, yy, 0)]
+        p.shape(pts, ('v', col.light(0.18), col.dark(0.25)), width=2.0, shade=0.8, rim=0.4)
+        p.clip_shape(pts)
+        strokes(p, (cx0 - ww / 2, yy - hh, cx0 + ww / 2, yy), 0.1, col.dark(0.5), 30, (8, 20), (1, 1.8), (0.15, 0.35), 0.2)
+        for _ in range(3):
+            p.blob((r.uniform(cx0 - ww / 3, cx0 + ww / 3), yy - r.uniform(4, hh - 4)), r.uniform(4, 8), r.uniform(2, 4), C.hex('c8b44a').alpha(0.5), ink=False)
+        for _ in range(2):
+            jx = cx0 + r.uniform(-ww * 0.35, ww * 0.35)
+            p.line([(jx, yy - hh + 3), (jx + r.uniform(-4, 4), yy - 2)], col.dark(0.55), 1.6)
+        p.unclip()
+        yy -= hh - 2
+        k += 1
+
+
+def roots_arch(p, x, y, w, h, col=BARK):
+    """A den mouth under great roots: a dark hollow framed by twisting root ribbons."""
+    hole = [(x - w * 0.5, y), (x - w * 0.42, y - h * 0.6), (x, y - h), (x + w * 0.42, y - h * 0.6), (x + w * 0.5, y)]
+    p.shape(hole, ('v', C.hex('0e0a08'), C.hex('241a12')), width=2.2)
+    r = p.rng
+    for k in range(7):
+        sx = x - w * 0.7 + k * w * 0.23
+        pts = [(sx, y - h * 1.1), (sx + r.uniform(-20, 20), y - h * 0.6), (sx + r.uniform(-25, 25), y - h * 0.2), (sx + r.uniform(-30, 30), y + 6)]
+        if abs(sx - x) < w * 0.3:
+            pts = [(sx, y - h * 1.15), (x + (sx - x) * 2.2, y - h * 0.85), (x + (sx - x) * 3.2, y - h * 0.3), (x + (sx - x) * 3.6, y + 4)]
+        out = vtaper(p, pts, [9, 7, 5, 3], ('h', col.light(0.15), col.dark(0.25)), width=1.8, shade=0.7)
+        bark(p, out, col)
+
+
+def coppice_stool(p, x, y, s=1.0, col=C.hex('7a6450'), shoots=7, season='spring'):
+    """A cut hazel stool: a low knotted boss with straight young rods springing from it."""
+    r = p.rng
+    for k in range(shoots):
+        a = -math.pi / 2 + (k - shoots / 2) * 0.13 + r.uniform(-0.05, 0.05)
+        L = r.uniform(60, 110) * s
+        base = (x + (k - shoots / 2) * 3 * s, y - 8 * s)
+        tip = polar(base, L, a)
+        p.taper([base, v_lerp(base, tip, 0.5), tip], 2.2 * s, 0.6 * s, col.light(0.1), width=1.0)
+        for t in (0.55, 0.8):
+            q = v_lerp(base, tip, t)
+            p.blob(polar(q, 5 * s, a + 1.0), 4 * s, 2.2 * s, SEASON_LEAF[season][0], rot=a + 1.0, width=0.7)
+    p.blob((x, y - 4 * s), 18 * s, 9 * s, ('v', col.light(0.15), col.dark(0.3)), width=1.6, shade=0.7)
+    p.blob((x - 4 * s, y - 9 * s), 5 * s, 2.4 * s, C.hex('d8c8a0'), width=0.8)
+
+
+def catkins(p, c, rx, ry, n=20, col=C.hex('e0cc6a')):
+    """Hazel catkins: yellow lamb's tails hanging from a crown."""
+    r = p.rng
+    for _ in range(n):
+        q = (c[0] + r.uniform(-rx, rx), c[1] + r.uniform(-ry, ry))
+        p.taper([q, v_add(q, (r.uniform(-1, 1), 6)), v_add(q, (r.uniform(-2, 2), 12))], 1.6, 0.8, col, ink=INK.alpha(0.4), width=0.6)
+
+
+def bluebells(p, rect, n=120):
+    x0, y0, x1, y1 = rect
+    r = p.rng
+    for _ in range(n):
+        x = r.uniform(x0, x1)
+        y = r.uniform(y0, y1)
+        s = 0.5 + (y - y0) / max(1, y1 - y0)
+        p.line([(x, y), (x + 2 * s, y - 10 * s)], C.hex('3e6a2a'), 1.2)
+        for k in range(3):
+            p.blob((x + 2 * s + k * 1.6 * s, y - 9 * s + k * 2.6 * s), 1.6 * s, 2.0 * s, C.hex('5a5ab8').mix(C.hex('8a6ad0'), r.random() * 0.5), ink=False)
+
+
+def acorn(p, c, s=1.0, glow=None):
+    """A great acorn in its scaly cup, lit like a relic."""
+    x, y = c
+    if glow:
+        p.glow((x, y), 160 * s, glow, 0.5)
+    nut = [(x - 26 * s, y - 10 * s), (x - 24 * s, y + 30 * s), (x - 10 * s, y + 58 * s), (x, y + 66 * s, 0), (x + 10 * s, y + 58 * s), (x + 24 * s, y + 30 * s), (x + 26 * s, y - 10 * s)]
+    p.shape(nut, ('h', C.hex('e0b060'), C.hex('b07a30'), C.hex('6a4418')), width=2.4, shade=0.9, rim=0.5)
+    p.fold_band([(x - 14 * s, y), (x - 15 * s, y + 30 * s), (x - 6 * s, y + 52 * s)], 0.5, 4 * s, LEAD_WHITE.alpha(0.35))
+    for k in range(4):
+        p.line([(x - 18 * s + k * 12 * s, y), (x - 14 * s + k * 9 * s, y + 46 * s)], C.hex('6a4418').alpha(0.3), 1.0)
+    cup = [(x - 32 * s, y - 4 * s), (x - 30 * s, y - 24 * s), (x - 16 * s, y - 36 * s), (x + 16 * s, y - 36 * s), (x + 30 * s, y - 24 * s), (x + 32 * s, y - 4 * s), (x, y + 2 * s)]
+    p.shape(cup, ('v', C.hex('8a7040'), C.hex('5a4424')), width=2.2, shade=0.8, rim=0.4)
+    p.clip_shape(cup)
+    for row in range(5):
+        for k in range(9):
+            q = (x - 32 * s + k * 8 * s + (row % 2) * 4 * s, y - 32 * s + row * 7 * s)
+            p.shape([(q[0] - 4 * s, q[1]), (q[0], q[1] - 4 * s), (q[0] + 4 * s, q[1]), (q[0], q[1] + 4 * s)], C.hex('9a8050').mix(C.hex('5a4424'), row * 0.12), width=0.8, shade=0.5)
+    p.unclip()
+    p.taper([(x + 2 * s, y - 36 * s), (x + 6 * s, y - 48 * s), (x + 14 * s, y - 54 * s)], 3.2 * s, 2.0 * s, C.hex('6a5030'), width=1.2, shade=0.6)

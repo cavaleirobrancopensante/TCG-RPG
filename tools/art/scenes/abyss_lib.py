@@ -2006,3 +2006,192 @@ def skull_throne(p, x, y, w=300, h=420, col=BONE_OLD.dark(0.2), cloth=C.hex('3a1
     for sx in (-1, 1):
         long_bone(p, (x + sx * w * 0.5, y - 200), (x + sx * w * 0.5, y - 150), 9, col)
         skull(p, (x + sx * w * 0.5, y - 214), 22, col, front=True)
+
+
+# ------------------------------------------------------------------ tribal set (1.23)
+
+def reeds(p, x0, x1, y, n=30, h=(40, 90), col=C.hex('3a4430'), head=C.hex('5a4028')):
+    """A bed of fen reeds and bulrushes."""
+    r = p.rng
+    for _ in range(n):
+        x = r.uniform(x0, x1)
+        hh = r.uniform(*h)
+        lean = r.uniform(-12, 12)
+        p.taper([(x, y), (x + lean * 0.4, y - hh * 0.5), (x + lean, y - hh)], 2.2, 0.6, col.mix(col.light(0.3), r.random() * 0.5), width=1.0)
+        if r.random() < 0.4:
+            p.blob((x + lean * 0.9, y - hh * 0.9), 2.6, 8, head, rot=math.atan2(lean, hh), width=1.0, shade=0.6)
+
+
+def lych_gate(p, x, y, s=1.0, wood=C.hex('3a2a1e'), roof=C.hex('2e2a2c')):
+    """A churchyard lych-gate: two heavy oak posts, a braced beam, a shingled gable roof
+    and a half-open wicket."""
+    w, h = 170 * s, 230 * s
+    for sx in (-1, 1):
+        px = x + sx * w / 2
+        p.shape([(px - 11 * s, y, 0), (px - 9 * s, y - h, 0), (px + 9 * s, y - h, 0), (px + 11 * s, y, 0)], ('h', wood.light(0.2), wood, wood.dark(0.35)), width=2, smooth=False)
+        for k in range(4):
+            yy = y - h * (0.2 + k * 0.2)
+            p.line([(px - 7 * s, yy), (px + 6 * s, yy + 6 * s)], INK.alpha(0.35), 1.2)
+        # braces
+        p.taper([(px, y - h + 50 * s), (px - sx * 40 * s, y - h + 6 * s)], 4 * s, 4 * s, wood.dark(0.1), width=1.6)
+    p.shape([(x - w / 2 - 24 * s, y - h + 10 * s, 0), (x + w / 2 + 24 * s, y - h + 10 * s, 0), (x + w / 2 + 24 * s, y - h - 8 * s, 0), (x - w / 2 - 24 * s, y - h - 8 * s, 0)],
+            ('v', wood.light(0.15), wood.dark(0.2)), width=2, smooth=False)
+    # gable roof with shingles
+    rf = [(x - w / 2 - 50 * s, y - h, 0), (x, y - h - 110 * s, 0), (x + w / 2 + 50 * s, y - h, 0), (x + w / 2 + 40 * s, y - h + 10 * s, 0), (x, y - h - 94 * s, 0), (x - w / 2 - 40 * s, y - h + 10 * s, 0)]
+    p.shape([(x - w / 2 - 44 * s, y - h + 4 * s, 0), (x, y - h - 104 * s, 0), (x + w / 2 + 44 * s, y - h + 4 * s, 0)], ('v', roof.light(0.15), roof.dark(0.3)), width=2.2, smooth=False)
+    p.clip_shape([(x - w / 2 - 44 * s, y - h + 4 * s, 0), (x, y - h - 104 * s, 0), (x + w / 2 + 44 * s, y - h + 4 * s, 0)], smooth=False)
+    for k in range(9):
+        yy = y - h - 100 * s + k * 13 * s
+        p.line([(x - 200 * s, yy), (x + 200 * s, yy)], INK.alpha(0.4), 1.2, smooth=False)
+        for xx in range(-10, 11):
+            p.line([(x + xx * 16 * s + (k % 2) * 8 * s, yy), (x + xx * 16 * s + (k % 2) * 8 * s, yy + 13 * s)], INK.alpha(0.25), 1.0, smooth=False)
+    p.unclip()
+    p.shape(rf, wood.dark(0.2), width=1.8, smooth=False)
+    # a plain wooden cross on the gable, weathered
+    p.taper([(x, y - h - 104 * s), (x, y - h - 140 * s)], 3 * s, 3 * s, wood.dark(0.1), width=1.4)
+    p.taper([(x - 12 * s, y - h - 128 * s), (x + 12 * s, y - h - 128 * s)], 3 * s, 3 * s, wood.dark(0.1), width=1.4)
+
+
+def wicket(p, x, y, w, h, ang=0.0, wood=C.hex('4a3826')):
+    """A slatted wooden gate leaf hinged at x, swung open by ang (0 shut, 1 wide)."""
+    ww = w * (1 - ang * 0.7)
+    pts = [(x, y, 0), (x, y - h, 0), (x + ww, y - h + ang * 14, 0), (x + ww, y + ang * 10, 0)]
+    p.shape(pts, ('h', wood.light(0.1), wood.dark(0.25)), width=1.8, smooth=False)
+    for k in range(1, 5):
+        t = k / 5
+        p.line([(x + ww * t, y - h + ang * 14 * t), (x + ww * t, y + ang * 10 * t)], INK.alpha(0.45), 1.4, smooth=False)
+    p.line([(x, y - h * 0.3), (x + ww, y - h * 0.3 + ang * 12)], wood.dark(0.4), 4, smooth=False)
+    p.line([(x, y - h * 0.8), (x + ww, y - h * 0.8 + ang * 13)], wood.dark(0.4), 4, smooth=False)
+
+
+def barrow_hill(p, x, y, w=520, h=230, col=C.hex('2a3424'), door=True, glow=GHOST_GLOW):
+    """A long grassy burial mound with a stone-framed passage mouth."""
+    pts = [(x - w / 2, y, 0), (x - w * 0.42, y - h * 0.45), (x - w * 0.2, y - h * 0.92), (x, y - h), (x + w * 0.22, y - h * 0.9), (x + w * 0.42, y - h * 0.42), (x + w / 2, y, 0)]
+    p.shape(pts, ('v', col.light(0.12), col.dark(0.3)), width=2.2, shade=0.6, rim=0.3)
+    p.clip_shape(pts)
+    r = p.rng
+    for _ in range(90):
+        q = (r.uniform(x - w / 2, x + w / 2), r.uniform(y - h, y))
+        p.line([q, (q[0] + r.uniform(-3, 3), q[1] - r.uniform(5, 12))], col.light(0.3).alpha(0.5), 1.2)
+    p.unclip()
+    if door:
+        dw, dh = w * 0.11, h * 0.55
+        p.glow((x, y - dh * 0.5), dw * 3, glow, 0.35)
+        p.shape([(x - dw, y, 0), (x - dw, y - dh, 0), (x + dw, y - dh, 0), (x + dw, y, 0)], ('v', glow.alpha(0.5), PITCH), width=2, smooth=False)
+        for sx in (-1, 1):
+            p.shape([(x + sx * dw, y, 0), (x + sx * dw, y - dh - 6, 0), (x + sx * (dw + 22), y - dh - 6, 0), (x + sx * (dw + 26), y, 0)], ('h', STONE.dark(0.2), STONE.dark(0.5)), width=2, smooth=False, shade=0.5)
+        p.shape([(x - dw - 34, y - dh - 4, 0), (x + dw + 34, y - dh - 4, 0), (x + dw + 30, y - dh - 30, 0), (x - dw - 30, y - dh - 30, 0)], ('v', STONE.dark(0.15), STONE.dark(0.45)), width=2, smooth=False, shade=0.5)
+
+
+def iron_gate(p, x0, y0, x1, y1, col=IRON_DARK, open_=0.0):
+    """A tall barred iron gate leaf with spiked tips and cross bars."""
+    n = 7
+    for k in range(n + 1):
+        x = lerp(x0, x1, k / n)
+        p.taper([(x, y1), (x, y0)], 3.2, 3.2, col, width=1.4, shade=0.5)
+        p.shape([(x - 5, y0 + 2, 0), (x, y0 - 14, 0), (x + 5, y0 + 2, 0)], col.light(0.2), width=1.2, smooth=False)
+    for yy in (y0 + 20, (y0 + y1) / 2, y1 - 20):
+        p.taper([(x0, yy), (x1, yy)], 3.6, 3.6, col, width=1.4, shade=0.5)
+    for k in range(n):
+        cx0 = lerp(x0, x1, (k + 0.5) / n)
+        p.blob((cx0, (y0 + y1) / 2 - 40), 6, 9, None, ink=col, width=2.4)
+
+
+def bronze_bell(p, c, s=1.0, col=C.hex('8a6a3a'), crack=True):
+    """A great bronze bell, mouth down, with a cast band and a crack."""
+    x, y = c
+    pts = [(x - 20 * s, y - 70 * s), (x - 28 * s, y - 40 * s), (x - 36 * s, y - 6 * s), (x - 48 * s, y + 14 * s, 0), (x + 48 * s, y + 14 * s, 0),
+           (x + 36 * s, y - 6 * s), (x + 28 * s, y - 40 * s), (x + 20 * s, y - 70 * s), (x, y - 76 * s)]
+    p.shape(pts, ('h', col.light(0.45), col.light(0.1), col, col.dark(0.45)), width=2.4, shade=0.7, rim=0.4)
+    p.blob((x, y + 14 * s), 48 * s, 7 * s, col.dark(0.6), width=2.0)
+    for yy, ww in ((-48, 26), (-2, 38)):
+        p.line([(x - ww * s, y + yy * s), (x + ww * s, y + (yy + 2) * s)], col.dark(0.35), 3 * s)
+        p.line([(x - ww * s, y + (yy - 2) * s), (x + ww * s, y + yy * s)], col.light(0.5).alpha(0.6), 1.4)
+    # cast frieze of little skulls between the bands
+    for k in range(5):
+        skull(p, (x - 22 * s + k * 11 * s, y - 25 * s), 3.4 * s, col.light(0.35), front=True, jaw=False)
+    p.line([(x - 14 * s, y - 64 * s), (x - 18 * s, y - 40 * s)], col.light(0.6).alpha(0.6), 4 * s)
+    if crack:
+        p.line([(x + 12 * s, y + 12 * s), (x + 16 * s, y - 4 * s), (x + 10 * s, y - 18 * s), (x + 14 * s, y - 34 * s)], INK, 2.2, smooth=False)
+    # crown loop
+    p.blob((x, y - 80 * s), 10 * s, 8 * s, None, ink=col.dark(0.3), width=5 * s)
+    # clapper
+    p.taper([(x, y - 60 * s), (x + 2 * s, y + 6 * s)], 2.4 * s, 2 * s, IRON_DARK, width=1.2)
+    p.blob((x + 2 * s, y + 10 * s), 6 * s, 6 * s, IRON_DARK, width=1.4, shade=0.6)
+
+
+def skel_spear(length=118, col=C.hex('4a3a2a'), pennon=None):
+    """A spear held upright in a skeleton's (or demon's) front hand, butt on the ground."""
+    def fn(p, j):
+        h = j['hand_f']
+        foot = (h[0] - 1.5, -1)
+        top = (h[0] + 2.5, -length)
+        p.taper([foot, top], 1.2, 1.0, col, width=1.2, shade=0.6)
+        d = v_norm(v_sub(top, foot))
+        n = v_perp(d)
+        tip = v_add(top, v_mul(d, 11))
+        p.shape([v_add(top, v_mul(n, 2.2)), v_add(v_lerp(top, tip, 0.4), v_mul(n, 2.6)), tip + (0,), v_sub(v_lerp(top, tip, 0.4), v_mul(n, 2.6)), v_sub(top, v_mul(n, 2.2))],
+                ('h', STEEL.light(0.2), IRON), width=1.1)
+        for k in range(3):
+            q = v_add(top, (0, 2 + k * 1.6))
+            p.blob(q, 1.6, 0.5, C.hex('8a4a22').alpha(0.7), ink=False)
+        if pennon:
+            q = v_sub(top, v_mul(d, 2))
+            p.shape([q, (q[0] + 16, q[1] + 2), (q[0] + 11, q[1] + 6, 0), (q[0] + 18, q[1] + 10, 0), (q[0] + 2, q[1] + 11)], pennon, width=1.1, shade=0.6)
+    return fn
+
+
+def war_drum(drum_at=(14, -46), col=C.hex('6a2a22'), hide=C.hex('c8b898')):
+    """A side drum slung at the hip, beaten with two sticks held point down onto the hide.
+    The front hand lifts its stick for the next stroke; the far hand's stick strikes."""
+    def fn(p, j):
+        dx, dy = drum_at
+        # strap over the far shoulder
+        p.taper([j['sh_b'], (dx - 6, dy - 6)], 1.0, 1.0, C.hex('3a2418'), width=0.9)
+        body = [(dx - 10, dy - 4, 0), (dx + 10, dy - 4, 0), (dx + 10, dy + 9, 0), (dx - 10, dy + 9, 0)]
+        p.shape(body, ('h', col.light(0.3), col, col.dark(0.4)), width=1.6, smooth=False)
+        for k in range(5):
+            x0 = dx - 10 + k * 5
+            p.line([(x0, dy - 3), (x0 + 5, dy + 8)], OLD_GOLD, 0.9, smooth=False)
+            p.line([(x0 + 5, dy - 3), (x0, dy + 8)], OLD_GOLD, 0.9, smooth=False)
+        p.blob((dx, dy - 4), 10, 2.6, hide, width=1.4, shade=0.4)
+        p.blob((dx, dy + 9), 10, 2.0, col.dark(0.3), width=1.2)
+        # the far stick, its tip on the hide
+        hb = j['hand_b']
+        p.taper([hb, (dx - 2, dy - 4.5)], 0.6, 0.5, C.hex('d8ccaa'), width=0.7)
+        p.blob((dx - 2, dy - 4.5), 1.0, 0.8, C.hex('d8ccaa'), width=0.6)
+        # the near stick raised, point up and forward
+        hf = j['hand_f']
+        tip = (hf[0] + 3, hf[1] - 11)
+        p.taper([(hf[0] - 1, hf[1] + 2), tip], 0.6, 0.5, C.hex('d8ccaa'), width=0.7)
+        p.blob(tip, 1.0, 1.0, C.hex('d8ccaa'), width=0.6)
+    return fn
+
+
+def baton(length=24, col=C.hex('1a1012'), cap=OLD_GOLD, d=(0.8, -0.6)):
+    """A commander's baton or rod held in the front hand, pointing forward and up."""
+    def fn(p, j):
+        h = j['hand_f']
+        dd = v_norm(d)
+        a = v_sub(h, v_mul(dd, 4))
+        b = v_add(h, v_mul(dd, length))
+        p.taper([a, b], 1.4, 1.2, col, width=1.2, shade=0.6)
+        for t in (0.35, 0.7):
+            p.blob(v_lerp(a, b, t), 1.8, 1.0, cap, rot=math.atan2(dd[1], dd[0]) + 1.57, width=0.7)
+        p.blob(b, 2.6, 2.6, cap, width=1.0, shade=0.6)
+        p.glow(b, 8, EMBER, 0.5)
+    return fn
+
+
+def sceptre(length=60, col=OLD_GOLD, gem=BLOOD_LIGHT):
+    """A tall sceptre held upright in the front hand, foot resting low."""
+    def fn(p, j):
+        h = j['hand_f']
+        foot = (h[0] - 0.5, h[1] + 22)
+        top = (h[0] + 1.5, h[1] - length + 22)
+        p.taper([foot, top], 1.3, 1.1, col, width=1.2, shade=0.6)
+        for t in (0.15, 0.8):
+            p.blob(v_lerp(foot, top, t), 2.0, 1.1, col.light(0.2), width=0.8)
+        skull(p, (top[0], top[1] - 4.5), 4.2, BONE_OLD, horns=BONE_OLD.dark(0.2), glow=EMBER_LIGHT)
+        p.blob((top[0], top[1] - 13), 1.8, 1.8, gem, width=0.8)
+    return fn

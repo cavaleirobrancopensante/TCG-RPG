@@ -136,3 +136,52 @@ The long-game mythic: a 5/5 for six that brings back a creature of mana value 4 
 
 **The Black Contract** · Mythic · Relic (Pact) · 2BB · Enemy creatures get -1/-1. At the beginning of your upkeep, you lose 1 life.
 A one-sided -1/-1 to every enemy creature, paid for with a life every turn. It kills tokens and x/1s on sight and shrinks everything else for as long as you can afford it, which makes it the most dramatic card in the faith while still putting its owner on a clock. Sign, and your enemies wither; sign, and so do you.
+
+### Tribal cards (1.23)
+
+The Pact's two tribes are the Undead and the Demons, and they play in opposite directions. The Undead are cheap, wide and stubborn: small bodies, Restless Dead tokens from death and sacrifice, and payoffs that count heads (kinship, a +1/+0 lord, a drain bell, a shrink curse that scales with the host) and finally hand the whole host dread under the Barrow-King. The Demons are few, large and expensive in life: a cost cutter, enter triggers that reward each new fiend, a lord that taxes its owner for every demon in play, and a mythic duke whose court grows more dangerous with each arrival. To give both tribes depth, the old Zombies, Spirits and Liches are now Undead (Tomb Crawler, Famished Ghoul, Charnel Glutton, Ossuary Ghoul, Barrow Wight, Wailing Wraith, Hollow-Crowned Lich, Bone-Lord of the Ossuary, Malgrith) and the Restless Dead tokens are Undead Zombies, so the faith has fifteen Undead and thirteen Demons. Grave Chill and Unmaking Rite become instants: a shrink that answers an attack and a kill that costs life are the natural tricks of the faith, and both stay at their old cost because neither outclasses the instant removal of the era.
+
+**Lych-Gate Shambler** · Common · Creature (Undead Zombie) · B · 1/1 · This gets +1/+0 for each other Undead you control.
+The tribal one-drop: a 1/1 that hits harder the wider the host becomes. Only power grows, so it stays fragile and trades with anything once the board is cleared. The lych-gate is where a parish coffin rests before burial, which makes it the right door for the dead to come back through.
+
+**Cackling Imp** · Common · Creature (Demon Imp) · 1B · 1/2 · Whenever another Demon enters under your control, target enemy creature gets -1/-1 until end of turn.
+A cheap Demon that rewards every later Demon with a small shrink, enough to kill a token or win a combat. It does nothing on its own, which suits a common two-drop. Imps are the petty servants of greater fiends, and their glee at another's suffering is the oldest picture of them.
+
+**Bone-Rattle Picket** · Common · Creature (Undead Skeleton) · 2B · 2/2 · When this dies, create a 1/1 Restless Dead Undead Zombie token.
+An on-rate 2/2 that leaves a token behind, so it counts twice for kinship and the Corpse-Bell and feeds every sacrifice outlet. It keeps the rule that the Pact raises the dead only from death or sacrifice. A dead sentry still keeping his post at the barrow is the Undead's stubbornness in one figure.
+
+**Sulphur Brute** · Common · Creature (Demon) · 2B · 4/3 · When this enters, you lose 2 life.
+The honest common Demon: a full point above rate for three mana, paid for in life. It triggers the Imp, the Herald's discount and the Duke, and it walks its owner toward Bloodied. A fiend coming up through a farmhouse cellar keeps the horror close to home.
+
+**Chill of the Charnel Host** · Common · Spell (Curse) · 1B · Target enemy creature gets -1/-1 until end of turn for each Undead you control.
+The Undead removal: weak with one corpse, a kill with three or four. It is an instant so it can answer an attack or ambush a blocker, and it fizzles with no Undead in play, which keeps it honest. The cold of a single dead hand multiplied by a host is the image of the whole tribe.
+
+**Tithe of the Pit** · Common · Spell (Pact) · 2B · Draw a card for each Demon you control. You lose 1 life for each Demon you control.
+The Demon card draw, always paired with life as the Pact's draw must be. With one Demon it is weak, with two it is a fair Bargain in Blood, and with three it refills the hand at a real price. Every whisper of a fiend is billed to the master who keeps him.
+
+**Marsh-Light Shade** · Common · Creature (Undead Spirit) · 3B · 3/2 · Dread (can only be blocked by Pact creatures and Constructs).
+A common evasive Undead between the Hound and the Wight: four mana, a point under rate for dread. It gives the Undead a clock that is not only width. The will-o'-the-wisp that leads travellers off the causeway into the fen is old folklore of the drowned dead.
+
+**Drummer of the Dead March** · Uncommon · Creature (Undead Skeleton) · 2B · 2/2 · Other Undead you control get +1/+0.
+The Undead lord at uncommon, held to +1/+0 so the rare Bone-Lord keeps the stronger Zombie anthem. It turns a crowd of 1/1 tokens into a real attack and is a priority target, as a lord should be. The danse macabre led by a drumming skeleton is one of the most familiar late medieval images of death.
+
+**Herald of the Burning Gate** · Uncommon · Creature (Demon) · 2B · 2/2 · Your Demon creature cards cost 1 less to play.
+The Demon enabler: a weak body that brings the big fiends a turn early. Demons already cost life as well as mana, so cutting the mana is where the tribe gains speed. The herald who holds the gate while something larger comes through tells the player exactly what he is for.
+
+**Gravecaller Ghast** · Uncommon · Creature (Undead Zombie) · 3B · 3/3 · Whenever another Undead enters under your control, this gets +1/+1 for the rest of the duel.
+An on-rate 3/3 that grows permanently with every Undead that arrives, tokens and reanimated creatures included. It rewards the slow, wide game of the tribe and becomes a must-answer threat if left alone. The image of the dead feeding their cold into one swollen corpse fits the Pact's arithmetic.
+
+**Brimstone Exhalation** · Uncommon · Spell (Curse) · 2BB · All enemy creatures get -1/-1 until end of turn for each Demon you control.
+A one-sided sweeper that only works for a player committed to Demons: with one it clears tokens, with two or three it clears a board. Four mana and the need for a board in play keep it from being a plain wrath. Sulphur and choking fumes are the smell of hell in every medieval vision of it.
+
+**Corpse-Bell of the Barrow** · Uncommon · Relic · 2B · Whenever another Undead enters under your control, the enemy player loses 1 life and you gain 1 life.
+The Undead drain engine. Tokens from death, reanimation and cheap bodies each tip the race by two, so the relic is strong only in a deck built for it. A bell cast to ring the dead to rest and recast to wake them is a plain profanation, and the flavour says so.
+
+**Barrow-King of the Hollow Hills** · Rare · Creature (Undead Spirit) · 3BB · 4/4 · Other Undead you control have dread (they can only be blocked by Pact creatures and Constructs).
+The Undead build-around: the whole host becomes evasive, which turns a wide board into lethal damage against most faiths. He gives nothing to himself and is a 4/4 for five, a point under rate, so removing him ends the threat. The old king riding out of the hollow hill with his dead host is English and Northern barrow lore.
+
+**Brimstone Marshal** · Rare · Creature (Demon) · 3BB · 4/4 · Other Demons you control get +1/+1. When this enters, you lose 1 life for each Demon you control.
+The Demon lord. The anthem is restricted to Demons, so it does not tread on the Church's team anthems, and its price grows with the very board it strengthens. It is a strong rare that punishes a player already low on life. A marshal of hell drilling ranks of lesser fiends is the infernal mirror of an earthly army.
+
+**Azgaroth, Duke of the Ninth Pit** · Mythic · Creature (Demon Lord) · 4BB · 5/5 · Dread. Other Demons you control have deathtouch (any damage they deal to a creature destroys it). Whenever another Demon enters under your control, the enemy discards a card at random. When this enters, you lose 3 life.
+The Demon mythic. He is a 5/5 dread for six that costs 3 life, makes every other Demon a deathtouch threat and strips a card with each new fiend, so his court snowballs. He does nothing for himself beyond his body, and a single removal spell ends the court, which keeps him splashy but answerable. Dukes are a rank from the old demonologies, and a court of debtors who never leave is the Pact's idea of nobility.

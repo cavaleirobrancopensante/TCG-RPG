@@ -1340,3 +1340,327 @@ def land_lyceum(p):
     olive_tree(p, 90, 600, 1.1)
     cypress(p, 870, 600, 1.4)
     ground(p, H * 0.92, C.hex('8a7a50'), dry=False, grass=OLIVE)
+
+
+# ------------------------------------------------------------------ tribal cards (1.23)
+
+def lyceum_c_021(p):
+    """Spear of the Second Rank: over the shoulder of the man in front, his spear reaches the enemy he cannot see."""
+    sea_sky(p, 'day', 0.6)
+    bg.clouds(p, H * 0.16, 2, xs=[300, 760])
+    L.mountains(p, H * 0.6, C.hex('9a9aa8'), [(160, 80), (560, 110), (880, 70)])
+    bg.hills(p, H * 0.66, C.hex('a8a46a'), 25, n=5)
+    ground(p, H * 0.72, C.hex('b8a06a'), dry=True)
+    # dust of the advance
+    for k in range(12):
+        p.blob((p.rng.uniform(500, 1000), p.rng.uniform(380, 470)), p.rng.uniform(40, 90), p.rng.uniform(20, 36), C.hex('e8dcc0').alpha(0.35), ink=False)
+    # ranks behind: a forest of upright spears and crests
+    phalanx_tips(p, 60, 330, 470, 80, n=11)
+    for i, x in enumerate((90, 190)):
+        hoplite(head=corinthian(VERMILION if i else C.hex('1a1a22')), main=C.hex('7a2a24'), hoplon='owl', hoplon_field=LEAD_WHITE, hoplon_r=26,
+                props_front=[spear('f', 140)]).draw(p, x, 560, 340)
+    # the hero in the second rank, spear levelled over the front man's shoulder
+    hoplite(head=corinthian(C.hex('f0e8d8'), closed=True), main=C.hex('8a2a24'), hoplon='book', hoplon_field=ULTRA, hoplon_r=26,
+            chlamys=C.hex('6a1e1a'), props_front=[spear_fwd('f', -0.22, 40, 150)]).draw(p, 400, 600, 450)
+    # the front-rank man, nearer the enemy and partly hiding him
+    hoplite(pose='guard', head=corinthian(VERMILION, closed=True), main=C.hex('7a2a24'), hoplon='star', hoplon_field=VERMILION.dark(0.15), hoplon_r=27,
+            props_front=[spear_fwd('f', -0.12, 40, 120)]).draw(p, 600, 612, 450)
+
+
+def lyceum_c_022(p):
+    """Pupil of the Painted Porch: with the master's stool and his own tablet, he hurries to the lecture."""
+    stoa_interior(p, mural=painted_battle, order='doric')
+    for x in (40, 960):
+        column(p, x, 166, H * 0.74, 46, 'doric', MARBLE)
+    marble_floor(p, H * 0.74, C.hex('ece4d2'), C.hex('8a3a2a'), rows=5)
+    # far end of the porch: the master already speaking to a circle of hearers
+    philosopher(pose='ly_finger', himation=C.hex('1e3a8a'), hair='white', beard='long', age='old').draw(p, 760, 470, 210)
+    for (x, col, fl) in ((660, C.hex('b8786a'), False), (860, C.hex('8aa0b8'), True), (900, C.hex('a8b890'), True)):
+        L.SeatedGreek(pose='ly_knees', garb='tunic', main=col, hair='curly', hair_col=HAIR_DARK, sleeves='none', trim=None).draw(p, x, 474, 150, flip=fl)
+    # a folding stool waiting on the floor beside him
+    sx, sy = 190, 600
+    for a, b in (((sx - 34, sy), (sx + 30, sy - 70)), ((sx + 34, sy), (sx - 30, sy - 70))):
+        rod(p, [a, b], 4, 4, C.hex('6b4a2e'), width=1.6, shade=0.6)
+    p.shape([(sx - 40, sy - 76), (sx + 40, sy - 76), (sx + 34, sy - 64), (sx - 34, sy - 64)], C.hex('b84a2a'), width=1.6, shade=0.6)
+    amphora(p, 260, 604, 0.5, TERRACOTTA)
+    Greek(pose='ly_book', garb='tunic', main=C.hex('cfc2a0'), sleeves='none', hair='curly', hair_col=C.hex('5a3a20'),
+          chlamys=C.hex('3a6a5a'), props_front=[held_tablet()], eyes='down', age='young', width=0.92).draw(p, 430, 606, 450)
+
+
+def lyceum_c_023(p):
+    """Hoplite of Plataea: the Persian arrows fall like hail; the line stands and waits for the omens."""
+    sea_sky(p, 'dusk', 0.6, sun=(200, H * 0.6))
+    L.mountains(p, H * 0.6, C.hex('6a6078'), [(120, 150), (360, 100), (620, 130)])
+    bg.hills(p, H * 0.66, C.hex('8a7a5a'), 25, n=5)
+    ground(p, H * 0.72, C.hex('a08a5a'), dry=True)
+    # the wicker wall of the Persian archers far off
+    for k in range(18):
+        x = 640 + k * 20
+        p.shape(rect(x, 400, x + 18, 432), C.hex('c8a868'), width=1, smooth=False)
+        p.blob((x + 9, 396), 4, 4, C.hex('3a3048'), width=0.8)
+    # the sky full of arrows
+    for k in range(40):
+        x = p.rng.uniform(80, 980)
+        y = p.rng.uniform(70, 340)
+        p.line([(x, y), (x - 34, y - 12)], INK_SOFT.alpha(0.85), 1.8, smooth=False)
+        p.shape([(x, y, 0), (x - 7, y - 5, 0), (x - 5, y + 1, 0)], IRON, width=0.8, smooth=False)
+    for k in range(16):
+        x = p.rng.uniform(80, 960)
+        y = p.rng.uniform(520, 620)
+        arrow_stuck(p, (x, y), -2.7, 30)
+    hoplite(pose='guard', head=corinthian(C.hex('1a1a22'), closed=True), main=C.hex('8a2a24'), hoplon='bull', hoplon_field=VERMILION.dark(0.2), hoplon_r=27,
+            chlamys=C.hex('6a1e1a'), props_front=[spear('f', 136)]).draw(p, 430, 604, 470)
+    # arrows lodged in his shield
+    for (dx, dy) in ((-40, 268), (-5, 330), (-60, 362), (-20, 400)):
+        arrow_stuck(p, (430 + dx, dy), -2.75, 52)
+
+
+def lyceum_c_024(p):
+    """Questioner in the Agora: "What is courage?" The general has no answer ready."""
+    sea_sky(p, 'day', 0.62)
+    bg.clouds(p, H * 0.18, 2, xs=[220, 820])
+    # the stoa along the far side of the agora
+    p.shape(rect(-10, 180, W + 10, 430), ('v', C.hex('c8a888'), C.hex('9a7a5a')), ink=False, smooth=False)
+    colonnade(p, [40 + k * 115 for k in range(9)], 150, 430, 'doric', MARBLE_WARM, entab=56)
+    marble_floor(p, 430, C.hex('e2d4b4'), C.hex('c8b48a'), rows=5, veins=False)
+    # market stalls with awnings, olives and jars
+    for (x, col) in ((120, VERMILION), (870, ULTRA)):
+        p.shape([(x - 80, 380, 0), (x + 80, 380, 0), (x + 90, 410, 0), (x - 90, 410, 0)], col, width=1.8, smooth=False, shade=0.5)
+        p.shape(rect(x - 76, 410, x + 76, 470), C.hex('8a6a44'), width=1.8, smooth=False, shade=0.5)
+        for k in range(4):
+            amphora(p, x - 54 + k * 36, 468, 0.32, [TERRACOTTA, C.hex('2a2420'), OCHRE][k % 3])
+    # the general, arms at rest, puzzled
+    hoplite(pose='stand', head=attic(LEAD_WHITE, BRONZE, VERMILION), main=C.hex('2a3a7a'), cuirass=BRONZE_LIGHT.dark(0.1), hair='short', hair_col=HAIR_DARK,
+            beard='short', cloak='mantle', cloak_col=VERMILION, lining=VERMILION.light(0.3), mouth='stern', eyes='down').draw(p, 650, 606, 450, flip=True)
+    philosopher(pose='ly_finger', himation=C.hex('8a6a40'), main=C.hex('e0d6c0'), hair='bald', hair_col=HAIR_GREY, beard='short', age='old',
+                mouth='open', eyes='open', width=1.05).draw(p, 360, 606, 440)
+
+
+def lyceum_c_025(p):
+    """Farmer Called to the Muster: he leaves the olive harvest with the shield two harvests bought."""
+    bg.dawn_sky(p)
+    bg.hills(p, H * 0.6, C.hex('8a9a7a'), 30, n=5)
+    # the farmhouse and its threshing floor
+    p.shape(rect(700, 330, 900, 440), ('v', C.hex('e0d0b0'), C.hex('b8a080')), width=2, smooth=False)
+    p.shape([(690, 334, 0), (800, 290, 0), (910, 334, 0)], TERRACOTTA, width=2, smooth=False, shade=0.5)
+    p.shape(rect(770, 370, 810, 440), C.hex('4a3020'), width=1.6, smooth=False)
+    bg.hills(p, H * 0.7, C.hex('8a9a5a'), 18, n=4)
+    for x in (560, 980):
+        olive_tree(p, x, 460, 0.55)
+    ground(p, H * 0.74, C.hex('9a8a50'), dry=False, grass=OLIVE)
+    olive_tree(p, 130, 600, 1.15)
+    # the harvest left behind: a basket of olives, a ladder against the tree, a beating pole
+    p.shape([(200, 560), (290, 560), (280, 604), (210, 604)], C.hex('a07a40'), width=2, shade=0.7)
+    for k in range(5):
+        p.line([(204, 566 + k * 8), (286, 566 + k * 8)], C.hex('6a4a20').alpha(0.7), 1.6)
+    for k in range(18):
+        p.blob((210 + p.rng.uniform(0, 70), 556 + p.rng.uniform(-6, 4)), 6, 7, C.hex('3a2a3a'), width=0.8)
+    rod(p, [(40, 600), (70, 440)], 4, 4, C.hex('8a6a40'), width=1.4)
+    rod(p, [(80, 600), (110, 440)], 4, 4, C.hex('8a6a40'), width=1.4)
+    for k in range(4):
+        y = 575 - k * 38
+        p.line([(44 + k * 7.1, y), (84 + k * 7.1, y)], C.hex('8a6a40'), 4, smooth=False)
+    hoplite(pose='guard', head=corinthian(C.hex('d8d0c0'), closed=False), main=C.hex('a89060'), cuirass=C.hex('d8c8a0'), hair='curly', hair_col=HAIR_DARK,
+            beard='short', hoplon='olive', hoplon_field=C.hex('6a7a3a'), hoplon_r=26, props_front=[spear('f', 136)], eyes='open').draw(p, 470, 606, 460)
+
+
+def lyceum_c_026(p):
+    """Lock Shields: rim over rim the bronze closes, and the charge breaks on it."""
+    sea_sky(p, 'storm', 0.62)
+    bg.hills(p, H * 0.62, C.hex('6a6a58'), 26, n=5)
+    ground(p, H * 0.66, C.hex('8a7a58'), dry=True)
+    phalanx_tips(p, 120, 900, 300, 60, n=22)
+    devices = ['owl', 'book', 'star', 'olive', 'wave']
+    fields = [LEAD_WHITE, ULTRA, VERMILION.dark(0.15), C.hex('2a2a2a'), AEGEAN_DEEP]
+    xs = [180, 340, 500, 660, 820]
+    for i, x in enumerate(xs):
+        hoplite(pose='guard', head=corinthian([VERMILION, C.hex('1a1a22'), LEAD_WHITE][i % 3], closed=True), main=C.hex('7a2a24'),
+                props_front=[spear('f', 128)]).draw(p, x + 30, 606, 430)
+    # the shields, each overlapping the next, the left rim over its neighbour
+    for i in reversed(range(5)):
+        hoplon(p, (xs[i], 440), 104, devices[i], fields[i], turn=0.95)
+    # the enemy's spent blows: a broken spear and a dropped axe on the ground
+    rod(p, [(40, 600), (150, 560)], 3, 3, C.hex('8a6a40'), width=1.4)
+    p.shape([(900, 596), (940, 586), (950, 600), (920, 610)], IRON.light(0.2), width=1.4, shade=0.6)
+    rod(p, [(860, 612), (930, 596)], 3, 3, UMBER, width=1.2)
+
+
+def lyceum_c_027(p):
+    """Morning Lecture: before the market opens, the master is already speaking and the pupils come with lamps."""
+    hz = sea_sky(p, 'dawn', 0.66, sun=(820, H * 0.66))
+    bg.hills(p, H * 0.68, C.hex('8a7a8a'), 20, n=4)
+    bg.town(p, 820, H * 0.7, 0.7, MARBLE_WARM, TERRACOTTA, spires=0)
+    for x in (40, 290, 710, 960):
+        column(p, x, 120, H * 0.76, 48, 'ionic', C.hex('e8dcd0'))
+    entablature(p, -10, W + 10, 70, 50, 'ionic', C.hex('e8dcd0'))
+    marble_floor(p, H * 0.76, C.hex('e8dcc8'), C.hex('7a5a6a'), rows=4)
+    # long shadows of dawn across the floor
+    for x in (40, 290, 710):
+        p.shape([(x - 20, H * 0.77, 0), (x + 20, H * 0.77, 0), (x - 160, H, 0), (x - 230, H, 0)], C(0.1, 0.05, 0.1, 0.18), ink=False, smooth=False)
+    # a pupil still arriving with his lamp
+    Greek(pose='hold', garb='tunic', main=C.hex('8aa0b8'), sleeves='none', hair='curly', hair_col=HAIR_DARK, props_front=[held_lamp('f')],
+          age='young').draw(p, 830, 560, 280, flip=True)
+    L.SeatedGreek(pose='ly_knees', garb='tunic', main=C.hex('b8786a'), hair='short', hair_col=C.hex('5a3a20'), sleeves='none', trim=None, eyes='up').draw(p, 650, 606, 300, flip=True)
+    oil_lamp(p, (560, 600), 0.7)
+    p.shape(rect(240, 480, 400, 606), ('v', MARBLE.dark(0.05), MARBLE_SHADE), width=2, smooth=False)
+    p.shape(rect(232, 470, 408, 484), MARBLE.light(0.1), width=1.8, smooth=False)
+    meander(p, 248, 392, 520, 14, MARBLE_SHADE.dark(0.3))
+    L.BenchGreek(pose='ly_hand_out', garb='toga', main=C.hex('ece4d4'), himation=C.hex('5a2e5e'), hair='white', beard='long', age='old',
+                 sleeves='fitted', trim=GOLD).draw(p, 300, 606, 470)
+
+
+# ------------------------------------------------------------------ uncommons (tribal)
+
+def lyceum_u_014(p):
+    """Polemarch of the Phalanx: on the right of the line, he raises his spear and the whole phalanx moves."""
+    sea_sky(p, 'day', 0.62)
+    bg.clouds(p, H * 0.14, 3, xs=[180, 560, 860])
+    L.mountains(p, H * 0.62, C.hex('9aa0b0'), [(240, 90), (700, 120)])
+    bg.hills(p, H * 0.67, C.hex('9aa86a'), 22, n=5)
+    ground(p, H * 0.74, C.hex('b09a62'), dry=True)
+    # the line stretching away to the left, shields and crests
+    for k in range(16):
+        x = 40 + k * 26
+        y = 470 - k * 2
+        p.line([(x + 4, y), (x + 8, y - 100)], C.hex('6a4a2a'), 2, smooth=False)
+        p.blob((x, y - 30), 14, 16, [BRONZE, ULTRA, VERMILION.dark(0.1)][k % 3], width=1.2, shade=0.5)
+        p.blob((x + 2, y - 52), 6, 7, BRONZE_DARK, width=1)
+        p.shape([(x - 4, y - 58), (x + 2, y - 66), (x + 10, y - 58)], VERMILION if k % 2 else C.hex('1a1a22'), width=0.8)
+    # a piper giving the time on the double aulos
+    def aulos(p_, j):
+        h = j['hand_f']
+        for a in (-0.15, 0.1):
+            rod(p_, [(j['head'][0] + 5, j['head'][1] + 3), (h[0] + 6 * math.cos(a), h[1] + 6 * math.sin(a))], 0.7, 0.9, C.hex('d8c8a0'), width=0.7)
+    Greek(pose='hold', garb='tunic', main=C.hex('d8ccb0'), sleeves='none', hair='curly', hair_col=HAIR_DARK, head=fillet(VERMILION),
+          props_front=[aulos]).draw(p, 760, 600, 320)
+    hoplite(pose='raise', head=attic(C.hex('1a1a22'), BRONZE, LEAD_WHITE), main=C.hex('8a2a24'), cuirass=BRONZE_LIGHT.dark(0.05), hair='short',
+            hair_col=HAIR_DARK, beard='short', hoplon='star', hoplon_field=ULTRA, hoplon_r=26, cloak='cape', cloak_col=VERMILION,
+            chlamys=VERMILION.dark(0.1), props_front=[spear('f', 150)], mouth='open').draw(p, 470, 606, 450)
+
+
+def lyceum_u_015(p):
+    """Lochagos of the File: his file closes up behind him, man after man, and the enemy stops to count them."""
+    sea_sky(p, 'dusk', 0.6, sun=(880, H * 0.6))
+    bg.hills(p, H * 0.62, C.hex('7a6a6a'), 22, n=5)
+    ground(p, H * 0.68, C.hex('9a8258'), dry=True)
+    # the file receding behind him, each man smaller
+    for i in range(5, 0, -1):
+        hh = 450 * (0.82 ** i)
+        x = 330 - i * 52
+        y = 606 - i * 34
+        hoplite(pose='guard', head=corinthian([VERMILION, C.hex('1a1a22')][i % 2], closed=True), main=C.hex('7a2a24'),
+                hoplon=['owl', 'book'][i % 2], hoplon_field=[LEAD_WHITE, ULTRA][i % 2], hoplon_r=26, props_front=[spear('f', 140)]).draw(p, x, y, hh)
+    # the enemy hesitating at the right, small and wary
+    for (x, y, hh) in ((820, 470, 190), (900, 480, 200)):
+        brute(pose='stand', props_front=[axe('f')], mouth='calm', eyes='open').draw(p, x, y, hh, flip=True)
+    hoplite(pose='ly_calm', head=corinthian(LEAD_WHITE, closed=False), main=C.hex('8a2a24'), cuirass=BRONZE_LIGHT.dark(0.05), hair='curly', hair_col=HAIR_DARK,
+            beard='short', hoplon='bull', hoplon_field=VERMILION.dark(0.2), hoplon_r=27, chlamys=C.hex('5a1e1a'), mouth='stern').draw(p, 520, 606, 460)
+
+
+def lyceum_u_016(p):
+    """Lecture at the Painted Porch: the master reads, and a row of pupils writes every word upon their tablets."""
+    stoa_interior(p, mural=painted_battle, order='ionic')
+    for x in (40, 960):
+        column(p, x, 166, H * 0.74, 50, 'ionic', MARBLE)
+    marble_floor(p, H * 0.74, C.hex('ece4d2'), C.hex('3a5a3a'), rows=5)
+    # rows of pupils on benches, writing
+    for (x, y, hh, col) in ((560, 560, 260, C.hex('b8786a')), (690, 566, 270, C.hex('8aa0b8')), (820, 572, 280, C.hex('a8b890')),
+                            (620, 612, 310, C.hex('c8a870')), (790, 616, 320, C.hex('9a7aa8'))):
+        L.BenchGreek(pose='ly_book', garb='tunic', main=col, sleeves='none', hair='curly', hair_col=HAIR_DARK, trim=None,
+                     props_front=[held_tablet()], eyes='down').draw(p, x, y, hh, flip=True)
+        p.shape(rect(x - 40, y - hh * 0.27, x + 10, y), C.hex('6b4a2e'), width=1.6, smooth=False, shade=0.5)
+    philosopher(pose='ly_scroll', himation=C.hex('2a5a3a'), main=C.hex('ece4d4'), hair='short', hair_col=HAIR_GREY, beard='long', age='old',
+                props_front=[held_scroll('both')], eyes='down', trim=GOLD).draw(p, 300, 606, 480)
+
+
+def lyceum_u_017(p):
+    """Scholarch of the Porch: the old head of the school hands the lamp to the one who will keep it after him."""
+    library(p, dark=True, lamp_at=(500, 300))
+    p.glow((500, 300), 300, C.hex('ffd88a'), 0.35)
+    # the old scholarch offering the lamp
+    philosopher(pose='offer', himation=C.hex('5a2e5e'), main=C.hex('ece4d4'), hair='white', beard='long', age='old', trim=GOLD,
+                props_front=[held_lamp('f')], eyes='open').draw(p, 380, 606, 480)
+    # the successor receiving it
+    philosopher(pose='present', himation=C.hex('1e3a8a'), main=C.hex('e0d6c0'), hair='curly', hair_col=HAIR_DARK, beard='short', age='young',
+                eyes='down').draw(p, 640, 606, 470, flip=True)
+    scroll_closed(p, (860, 596), 130, 12, 0.2, tag=VERMILION)
+
+
+def lyceum_u_018(p):
+    """Othismos: the spears are broken; shield to back, rank on rank, the phalanx pushes as one man."""
+    sea_sky(p, 'storm', 0.6)
+    bg.hills(p, H * 0.6, C.hex('6a6458'), 22, n=5)
+    ground(p, H * 0.66, C.hex('8a7650'), dry=True)
+    for k in range(10):
+        p.blob((p.rng.uniform(300, 900), p.rng.uniform(360, 460)), p.rng.uniform(40, 90), p.rng.uniform(20, 30), C.hex('d8ccb0').alpha(0.35), ink=False)
+    # the enemy line pushed back, frost biting at their feet
+    for (x, hh) in ((930, 380), (820, 410)):
+        brute(pose='stand', props_front=[axe('f')], mouth='open', main=C.hex('5a4a3a')).draw(p, x, 606, hh, flip=True)
+    frost(p, (720, 540, 1000, 626), 40)
+    ice_shards(p, 820, 612, 0.8)
+    # broken spear shafts on the ground
+    for (a, b) in (((180, 610), (300, 590)), ((560, 618), (650, 600))):
+        rod(p, [a, b], 3, 3, C.hex('8a6a40'), width=1.4)
+    # rank on rank pressing forward, each shield in the back of the man in front
+    for i, x in enumerate((180, 330, 480, 630)):
+        hoplite(pose='guard', head=corinthian([C.hex('1a1a22'), VERMILION, LEAD_WHITE, VERMILION][i], closed=True), main=C.hex('7a2a24'),
+                hoplon=['wave', 'owl', 'book', 'star'][i], hoplon_field=[AEGEAN_DEEP, LEAD_WHITE, ULTRA, VERMILION.dark(0.15)][i], hoplon_r=27,
+                props_front=[xiphos('f')] if i == 3 else []).draw(p, x, 606, 420 + i * 10)
+
+
+# ------------------------------------------------------------------ rares and mythic (tribal)
+
+def lyceum_r_010(p):
+    """Socrates at Delium: in the rout he walks from the field as calmly as through the agora, and no one dares touch him."""
+    sea_sky(p, 'dusk', 0.6, sun=(140, H * 0.6))
+    bg.hills(p, H * 0.62, C.hex('6a6a5a'), 26, n=5)
+    ground(p, H * 0.7, C.hex('8a7a50'), dry=True)
+    # the rout: small figures running, dropped shields
+    for (x, y, hh) in ((640, 450, 120), (720, 460, 110), (560, 470, 130), (880, 440, 100)):
+        Greek(pose='spread', garb='tunic', main=C.hex('7a2a24'), sleeves='none', hair='curly', hair_col=HAIR_DARK).draw(p, x, y, hh, flip=True)
+    for (x, y) in ((700, 500), (820, 520), (600, 540)):
+        hoplon(p, (x, y), 16, 'owl', LEAD_WHITE, turn=0.4)
+    # Boeotian riders hanging back on the ridge
+    for x in (860, 940):
+        L.mule(p, x, 420, 0.42, flip=True, col=C.hex('4a3a30'), blanket=None, halter=False)
+        Greek(pose='hold', garb='tunic', main=C.hex('3a4a6a'), sleeves='none', head=petasos(), hair='short').draw(p, x + 6, 368, 80, flip=True)
+    olive_tree(p, 120, 600, 0.9, fruit=False)
+    hoplite(pose='guard', head=None, hair='bald', hair_col=HAIR_GREY, beard='short', age='old', main=C.hex('8a6a4a'), cuirass=BRONZE.dark(0.1),
+            hoplon='owl', hoplon_field=C.hex('2a2a2a'), hoplon_r=26, props_front=[spear('f', 140)], eyes='open', width=1.08).draw(p, 400, 606, 460)
+
+
+def lyceum_r_011(p):
+    """Trophy of Marathon: on the plain where the enemy turned, his arms hang from the oak beside the burial mound."""
+    hz = sea_sky(p, 'dawn', 0.6, sun=(780, H * 0.6))
+    sea(p, hz, 'dawn', y1=hz + 40)
+    for x in (700, 820):
+        ship(p, x, hz + 18, 0.18, C.hex('c8b8a8'), C.hex('5a2a2a'), oars=False)
+    land = [(-20, H + 10, 0), (-20, hz + 30), (400, hz + 36), (W + 20, hz + 40), (W + 20, H + 10, 0)]
+    p.shape(land, ('v', C.hex('9aa070'), C.hex('7a7a48')), ink=INK.alpha(0.4), width=1.6, smooth=False)
+    # the Soros, the mound of the Athenian dead
+    p.shape([(60, hz + 60), (130, hz + 10), (230, hz + 4), (300, hz + 60)], ('v', C.hex('8a9a5a'), C.hex('6a7040')), width=1.8, shade=0.6)
+    ground(p, H * 0.82, C.hex('a09a60'), dry=False, grass=OLIVE)
+    tropaion(p, 500, 612, 1.3)
+
+
+def lyceum_m_004(p):
+    """Xenophon of the Ten Thousand: from the mountain he shows them the sea, and the army shouts "Thalatta!"."""
+    hz = sea_sky(p, 'day', 0.5)
+    bg.clouds(p, H * 0.14, 2, xs=[620, 880])
+    sea(p, hz, 'day', y1=hz + 60)
+    L.mountains(p, hz + 70, C.hex('7a8a9a'), [(560, 60), (760, 40)])
+    # the mountain top where they stand, and the cairn they raised
+    p.shape([(-20, H + 10, 0), (-20, 400), (300, 420), (640, 470), (W + 20, 520), (W + 20, H + 10, 0)], ('v', C.hex('9a8a6a'), C.hex('5a4a38')), width=2.2, shade=0.6)
+    for k in range(16):
+        q = (780 + (k % 5) * 30 - (k // 5) * 12 + p.rng.uniform(-4, 4), 600 - (k // 5) * 26)
+        p.blob(q, 22, 15, STONE.mix(OCHRE, 0.15), width=1.6, shade=0.7)
+    rod(p, [(800, 500), (790, 380)], 3, 3, C.hex('8a6a40'), width=1.2)
+    hoplon(p, (800, 440), 30, 'star', VERMILION.dark(0.1), turn=0.9)
+    # the Ten Thousand behind him, spears raised in the shout
+    phalanx_tips(p, 20, 280, 470, 160, n=10)
+    for (x, y, hh) in ((70, 520, 250), (170, 530, 260), (250, 560, 280)):
+        hoplite(pose='raise', head=corinthian(VERMILION, closed=False), main=C.hex('7a2a24'), beard='short', hair='curly', hair_col=HAIR_DARK,
+                mouth='open', hoplon='book', hoplon_field=ULTRA, hoplon_r=26, props_front=[spear('f', 150)]).draw(p, x, y, hh)
+    hoplite(pose='ly_hand_out', head=attic(LEAD_WHITE, BRONZE, VERMILION), main=C.hex('2a3a7a'), cuirass=BRONZE_LIGHT.dark(0.05), hair='curly',
+            hair_col=C.hex('5a3a20'), beard='short', hoplon='owl', hoplon_field=LEAD_WHITE, hoplon_r=26, cloak='mantle', cloak_col=VERMILION,
+            lining=VERMILION.light(0.3), eyes='open', trim=GOLD).draw(p, 500, 606, 470)

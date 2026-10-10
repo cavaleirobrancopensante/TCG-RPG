@@ -172,7 +172,7 @@ func _ready() -> void:
 	await _frames(3)
 	var d: DeckBuilder = main.screen
 	d._auto()
-	# filters: one faith, creatures only, cost 2 — every card shown must match
+	# filters: one faith, creatures only, cost 2: every card shown must match
 	d.faiths = {"sanctum": true}
 	d.f_type = 1
 	d.f_cost = 2
@@ -272,13 +272,7 @@ func _interactive_battle() -> void:
 		st.keep(0, [0])
 		b._mulligan_done.emit()
 		await _wait(0.5)
-	while b.busy:
-		await _wait(0.2)
-	if st.active == 1:
-		while st.active == 1 and st.phase != "over":
-			await _wait(0.5)
-			if b.mode == "block":
-				b._on_main()
+	await _until_my_main(b)
 	# Rig the player's side: lands in play and the cards we want in hand.
 	var me := st.side(0)
 	for i in 4:
@@ -296,6 +290,8 @@ func _interactive_battle() -> void:
 	# 1) Targeted burn at the enemy's face.
 	var life_before: int = st.side(1).life
 	b._begin_play(0)
+	if b.mode != "target":
+		print("no target mode: busy=%s can_play=%s priority=%d phase=%s step=%s stack=%d window=%s idle_main=%s hand=%s" % [b.busy, st.can_play(0, 0), st.priority, st.phase, st.step, st.stack.size(), st.window_open, b.idle_main, me.hand])
 	assert(b.mode == "target", "should ask for a target")
 	b._on_player_target(1)
 	while b.busy or b.mode != "idle":
@@ -307,11 +303,28 @@ func _interactive_battle() -> void:
 	b._begin_play(0)
 	await _settle(b)
 	assert(st.side(0).creatures.size() >= 2, "creatures summoned")
+	# an instant and an untapped land kept for the enemy's turn
+	me.hand.append("wild_c_014")
+	me.lands.append({"id": "land_wild", "color": "G", "tapped": false})
+	var cast_instant := false
 	b._on_main()   # end turn
 	var guard := 0
-	while (st.active == 1 or b.busy) and guard < 200:
+	var saw_stop := false
+	while not (st.active == 0 and b.idle_main and not b.busy) and st.phase != "over" and guard < 300:
 		guard += 1
 		await _wait(0.3)
+		if b.waiting_priority and not b.busy:
+			saw_stop = true
+			var wi := me.hand.find("wild_c_014")
+			if not cast_instant and wi >= 0 and st.can_play(0, wi) and not me.creatures.is_empty() and b.figures.has(me.creatures[0].uid):
+				b._begin_play(wi)            # answer at instant speed through the real screen
+				await _frames(2)
+				if b.mode == "target":
+					b._on_figure_tapped(b.figures[me.creatures[0].uid])
+					cast_instant = true
+				continue
+			b._on_main()       # pass / resolve
+			continue
 		if b.mode == "block" and not b.busy:
 			# Block the first attacker with our first untapped creature, by tapping.
 			var mine = null
@@ -323,11 +336,18 @@ func _interactive_battle() -> void:
 				b._on_figure_tapped(b.figures[st.attackers[0]])
 				assert(b.pending_blocks.size() == 1, "block assigned by taps")
 			b._on_main()
+	print("interactive: the game stopped for the player %s" % ("at least once" if saw_stop else "never (nothing castable)"))
+	print("interactive: instant cast in the enemy's turn: %s" % cast_instant)
+	if cast_instant:
+		assert(not me.hand.has("wild_c_014") and me.graveyard.has("wild_c_014"), "the instant resolved")
 	if st.phase == "over":
 		print("interactive battle ended early, skipping attack check")
-	else:
+	elif b.mode == "attack":
+		print("interactive: main 1 skipped straight to attacks")
+	if st.phase != "over":
 		# 3) Attack by tapping our creatures.
-		b._on_alt()
+		if b.mode != "attack":
+			b._on_alt()
 		assert(b.mode == "attack", "attack mode")
 		var ready := st.attack_candidates(0).size()
 		assert(b.sel_attackers.size() == ready, "everyone is selected to attack by default")
@@ -350,9 +370,31 @@ func _interactive_battle() -> void:
 func _settle(b: BattleScene) -> void:
 	await _frames(2)
 	var guard := 0
-	while (b.busy or b.mode == "target") and guard < 100:
+	while (b.busy or b.mode == "target" or b.waiting_priority) and guard < 100:
 		guard += 1
+		if b.waiting_priority and not b.busy:
+			b._on_main()
 		await _wait(0.2)
+
+
+## Play on (passing, blocking with nothing) until the player is idle in his own main phase 1.
+func _until_my_main(b: BattleScene) -> void:
+	var st := b.st
+	var guard := 0
+	while st.phase != "over" and guard < 600:
+		guard += 1
+		await _wait(0.25)
+		if b.busy:
+			continue
+		if st.active == 0 and st.phase == "main1" and b.idle_main and b.mode == "idle":
+			break
+		if b.waiting_priority or b.mode == "block":
+			b._on_main()
+		elif b.mode == "attack":
+			b._on_main()       # no stop: the attack step came up; attack and go on
+		elif b.idle_main and st.active == 0:
+			b._on_main()       # a main phase we don't need: end the turn
+	assert(st.phase != "over", "the duel ended before the player's main phase")
 
 
 func check_mull(st: BattleState) -> void:

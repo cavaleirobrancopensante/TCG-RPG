@@ -136,3 +136,52 @@ The emperor who wrote the Meditations in camp on the Danube. A 5/6 with vigilanc
 
 **The View from Above** · Mythic · Spell (Meditation) · 3UU · Foresight 5, then draw three cards. Tax 2 (the enemy's next non-land card costs 2 more).
 The Stoa's great sorcery: the deepest foresight in the faith, three cards, and a tax that slows the enemy's answer. It touches no creature, so it cannot win alone, but it fills the hand for every Composure payoff. The view from above is a meditation Marcus returns to again and again (9.30).
+
+### Tribal cards (1.23)
+
+The Stoa's two tribes play the same patient game from two sides. **Hoplites** are the wall: tough, vigilant bodies that grow stronger the more of them stand together (kinship, the Polemarch and Strategos, Trophy of Marathon) and that become a line which attacks without ever leaving the gate open. **Philosophers** are the engine: each one that enters sorts the library, draws cards or makes the next Philosopher cheaper, which keeps the hand full for Composure. The two meet in Socrates and Xenophon, both men who carried the shield and the argument, so a mixed deck is rewarded rather than split. The phalanx soldiers of the first 45 cards (the Ephebe, the Bronze-Shield Hoplite, the Disciplined Phalanx, the Veteran of the Long Walls, the Unbroken Shieldwall and the Strategos) are now Human Hoplites, and the Strategos's lord bonus follows them; Measured Rebuke and Grip of the Cold Sea become instants, since a bounce or a freeze is most at home in answer to an attack.
+
+**Spear of the Second Rank** · Common · Creature (Human Hoplite) · 1U · 1/3 · This gets +1/+0 for each other Hoplite you control.
+The common kinship member: a modest blocker alone, a real attacker in a full line. It teaches that Hoplites want company. In the phalanx the second rank's spears reached past the front rank's shoulders, so the man who could not see the enemy still struck him.
+
+**Pupil of the Painted Porch** · Common · Creature (Human Philosopher) · U · 1/1 · Whenever another Philosopher enters under your control, foresight 1.
+A one-drop that pays off over the whole game: every later Philosopher smooths a draw. The body is tiny, as a pupil should be, and foresight 1 is the gentlest version of the trigger. Students of the Porch really did fetch and carry for their masters, as Cleanthes did.
+
+**Hoplite of Plataea** · Common · Creature (Human Hoplite) · 3U · 3/4 · Vigilance.
+A plain top-end Hoplite on rate (a 4/4 for four, with a point traded for vigilance). It gives the tribe a common body that can finish a game. Herodotus tells how the Spartans at Plataea stood under the Persian arrows until the sacrifices were favourable, then advanced.
+
+**Questioner in the Agora** · Common · Creature (Human Philosopher) · 2U · 2/3 · When this enters, tax 1.
+A fair three-drop Philosopher with a small sting, so the tribe has a common body that also slows the enemy. It triggers every Philosopher payoff on arrival. Socrates's habit of asking generals to define courage (the Laches) is the model.
+
+**Farmer Called to the Muster** · Common · Creature (Human Hoplite) · 1U · 2/2 · Vigilance.
+The cheap Hoplite: a vigilant 2/2 that fills the line early and feeds kinship and lords. A point over vanilla, which the Stoa's slow clock allows at two mana. The hoplite was a citizen farmer who bought his own panoply, and the bronze cost him dear.
+
+**Lock Shields** · Common · Spell (Discipline), instant · 1U · Hoplite creatures you control get +0/+3 until end of turn.
+The tribe's combat trick: cast in the enemy's attack, it turns a row of blocks into a row of walls. Toughness only, so it stays a defensive Stoa card and does not trespass on the Revel's temporary attack bonuses. Thucydides notes that each man sheltered under the shield of the man on his right.
+
+**Morning Lecture** · Common · Spell (Meditation) · U · Foresight 2 for each Philosopher you control, then draw a card.
+A cantrip that grows with the school: weak alone, a deep look at the library with three Philosophers. One mana keeps it a filler, not a payoff. The Porch was a public place, and the lectures began early.
+
+**Polemarch of the Phalanx** · Uncommon · Creature (Human Hoplite) · 2U · 2/2 · Other Hoplite creatures you control get +1/+0 and have vigilance.
+The Hoplite lord: a fragile 2/2 that turns the line into an attacking force that still guards the gate. Power plus vigilance pairs neatly with the Strategos's +0/+1. The polemarch held the place of honour on the right wing, as Callimachus did at Marathon.
+
+**Lochagos of the File** · Uncommon · Creature (Human Hoplite) · 2U · 2/3 · Whenever another Hoplite enters under your control, tap target enemy creature.
+A Hoplite payoff in the faith's own currency: each new man in the line clears a blocker. It rewards playing the tribe on curve and attacking afterwards. A lochagos commanded a file or company of the phalanx.
+
+**Lecture at the Painted Porch** · Uncommon · Spell (Meditation) · 2U · Draw a card for each Philosopher you control.
+The Philosopher draw spell: on rate with two, a bargain with three or more, nothing with none. It asks for a board of thinkers before it pays. The painted battles of the Stoa Poikile are behind the master, as on the Zeno card.
+
+**Scholarch of the Porch** · Uncommon · Creature (Human Philosopher) · 2U · 2/3 · Your Philosopher creature cards cost 1 less to play.
+The tribal cost cutter, fair on a 2/3 body that does nothing else. It lets the school arrive a turn early and fuels the Pupil, Socrates and Lecture. The scholarch was the head of a school; the Stoa's passed from Zeno to Cleanthes to Chrysippus.
+
+**Othismos** · Uncommon · Spell (Discipline), instant · 2U · Freeze target enemy creature. Hoplite creatures you control get +0/+2 until end of turn.
+A bigger trick for the line: it stops one attacker for two turns and stiffens the blockers. Three mana at instant speed is the price of doing two things. Othismos was the shoving match of two phalanxes once the spears had broken.
+
+**Socrates at Delium** · Rare · Creature (Human Hoplite Philosopher) · 1UU · 2/3 · Unmoved. Whenever another Philosopher enters under your control, draw a card.
+The bridge between the tribes and the Philosopher draw engine: every thinker who follows him replaces itself. The body is small and must be protected, and the engine needs other Philosophers, so it is slow, as the spec asks. Alcibiades in the Symposium describes Socrates walking out of the rout at Delium so calmly that no enemy dared touch him, which is unmoved exactly.
+
+**Trophy of Marathon** · Rare · Relic · 2U · Hoplite creatures you control get +1/+1.
+The Hoplite anthem as a relic: harder to remove than a lord and the build-around for a Hoplite deck. It is restricted to the tribe, so it does not tread on the Church's team-wide anthems. A tropaion was set up where the enemy turned (trope) to flee, and the trophy of Marathon was famous for centuries.
+
+**Xenophon of the Ten Thousand** · Mythic · Creature (Human Hoplite Philosopher) · 3UU · 4/5 · Vigilance. Other Hoplite creatures you control get +1/+1. When this enters, draw a card for each Philosopher you control.
+The tribal mythic: a lord for the line and a refill for the school in one body, splashy but still a creature that a destroy or a bounce answers. He counts himself, so he always draws at least one. Xenophon, pupil of Socrates, led the Ten Thousand out of Persia to the Black Sea, where they cried "Thalatta!" at the sight of it.

@@ -1,4 +1,4 @@
-"""The Old Ways: druids, hedge-witches, beasts of the forest, treefolk, standing stones."""
+"""The Old Ways: druids, huntsmen, beasts of the forest, treefolk, standing stones."""
 import math
 import cairo
 from core import *
@@ -156,7 +156,7 @@ def wild_c_003(p):
 
 
 def wild_c_004(p):
-    """Bramble Spider: her web between the blackthorns, and the finches fly around it."""
+    """Bramble Spider: his web between the blackthorns, and the finches fly around it."""
     sky(p, 'mist')
     treeline(p, 400, C.hex('9aa89a'), 80, mist=MIST)
     ground(p, 520, C.hex('7a8a5a'), tufts=30)
@@ -365,7 +365,7 @@ def wild_c_008(p):
 
 
 def wild_c_009(p):
-    """Barrowland Bear: the druids call her grandmother and give her the path."""
+    """Barrowland Bear: the druids call him grandfather and give him the path."""
     sky(p, 'mist')
     treeline(p, 340, C.hex('8a9a90'), 120, pines=True, mist=MIST)
     for x, hh in ((70, 420), (900, 460), (790, 340)):
@@ -427,7 +427,7 @@ def wild_c_011(p):
     for x in (82, 120):
         p.blob((x, 524), 10, 10, None, width=2)
     Figure(pose='point', garb='tunic', main=C.hex('8a6a4a'), hair='short', head='cap', belt='leather').draw(p, 40, 530, 90)
-    Figure(pose='pray', garb='gown', main=C.hex('6a7a9a'), head='veil', hood_col=LEAD_WHITE, belt='leather').draw(p, 160, 530, 84)
+    Figure(pose='stand', garb='tunic', main=C.hex('5a6a8a'), second=C.hex('4a4a3a'), hair='curly', hair_col=C.hex('8a5a2a'), beard='short', belt='leather').draw(p, 160, 530, 84)
     make_beast('aurochs', pose='walk').draw(p, 560, 610, 3.0)
     for x in (80, 300, 940):
         grass_tuft(p, x, 612, 2.0, C.hex('6a9a3a'))
@@ -833,7 +833,7 @@ def wild_c_020(p):
 
 
 def wild_u_001(p):
-    """Wolfmother of the Fen: where she runs, she never runs alone."""
+    """Wolfsire of the Fen: where he runs, he never runs alone."""
     sky(p, 'dawn')
     p.glow((300, 380), 300, C.hex('ffe2b0'), 0.4)
     treeline(p, 390, C.hex('7a8a8a'), 70, mist=MIST)
@@ -848,7 +848,7 @@ def wild_u_001(p):
         reeds(p, x, y, hh, 9)
     make_beast('wolf', pose='run', col=C.hex('8a8478'), belly=C.hex('d8d0c0')).draw(p, 250, 540, 1.7)
     make_beast('wolf', pose='run', col=C.hex('6a6660'), belly=C.hex('c8c0b0'), dark=C.hex('3a3632')).draw(p, 650, 612, 2.6)
-    # splashes where she runs
+    # splashes where he runs
     r = p.rng
     for _ in range(14):
         q = (r.uniform(500, 820), r.uniform(560, 610))
@@ -1640,7 +1640,7 @@ def wild_m_001(p):
     herne = Figure(pose='wi_horn', garb='surcoat', main=C.hex('2e3a28'), second=C.hex('3a3020'), skin=C.hex('c8b8a0'), head='hood',
                    hood_col=C.hex('2a2a20'), hair='none', beard='long', hair_col=C.hex('4a4a3a'), cloak='mantle',
                    cloak_col=C.hex('3a2a1e'), lining=C.hex('5a4a2a'), eyes='open', mouth='stern',
-                   props_front=[hunting_horn('f')], belt='leather')
+                   props_front=[horn_blown('f')], belt='leather')
     herne.head_fn = None
     old_head = herne._headgear
 
@@ -1779,3 +1779,344 @@ def land_wild(p):
     for x in (300, 700, 380, 640):
         mushroom(p, x, 600 - (x % 7) * 3, 1.3 if x % 2 else 1.0, 'agaric' if x > 500 else 'brown')
     fireflies(p, (200, 300, 800, 560), 10, C.hex('fff8c0'))
+
+
+# ---------------------------------------------------------------- tribal cards (1.23)
+
+def wild_c_021(p):
+    """Moorland Wolf: alone a thin grey shadow on the heather; seldom alone."""
+    sky(p, 'dusk')
+    p.glow((760, 380), 280, C.hex('f0a060'), 0.4)
+    hills(p, 380, C.hex('5a4a6a'), 50)
+    hills(p, 420, C.hex('6a5a6a'), 30)
+    # two more of the pack on the far ridge, against the afterglow
+    for x, y, s, fl in ((640, 404, 0.55, False), (720, 410, 0.5, True)):
+        make_beast('wolf', pose='walk', col=C.hex('3a3040'), belly=C.hex('3a3040'), dark=C.hex('2a2030')).draw(p, x, y, s, flip=fl)
+    moor = [(-20, H + 10, 0), (-20, 450), (300, 440), (600, 460), (W + 20, 445), (W + 20, H + 10, 0)]
+    p.shape(moor, ('v', C.hex('6a5a4a'), C.hex('3a2e24')), width=2)
+    p.clip_shape(moor)
+    strokes(p, (0, 440, W, H), -math.pi / 2, C.hex('8a6a5a'), 300, (4, 10), (1.2, 2), (0.15, 0.3))
+    p.unclip()
+    heather(p, (0, 450, W, H), 420)
+    tor(p, 760, 470, 200, 70, C.hex('6a6a74'))
+    # a broad granite outcrop breaking through the heather, the wolf on its crown
+    rock = [(140, 640, 0), (170, 560), (230, 500, 0), (320, 478), (440, 470), (560, 476), (640, 500, 0), (700, 560), (740, 640, 0)]
+    p.shape(rock, ('v', C.hex('a8a8b0'), C.hex('6a6a74'), C.hex('3a3a44')), width=2.4, shade=0.9, rim=0.5)
+    p.clip_shape(rock)
+    strokes(p, (140, 470, 740, 640), 0.08, C.hex('2a2a34'), 80, (10, 26), (1, 2), (0.15, 0.35), 0.2)
+    rr = p.rng
+    for jx in (260, 380, 520, 630):
+        p.line([(jx, 480), (jx + rr.uniform(-12, 12), 560), (jx + rr.uniform(-16, 16), 640)], C.hex('3a3a44'), 2.0)
+    p.line([(200, 540), (420, 548), (690, 540)], C.hex('3a3a44'), 1.8)
+    for _ in range(10):
+        p.blob((rr.uniform(200, 680), rr.uniform(490, 620)), rr.uniform(5, 10), rr.uniform(3, 5), C.hex('c8b44a').alpha(0.5), ink=False)
+    p.unclip()
+    make_beast('wolf', pose='stand', col=C.hex('8a8680'), belly=C.hex('d8d2c4'), neck=14, head_pitch=6).draw(p, 430, 480, 2.25)
+    for x in (80, 900):
+        grass_tuft(p, x, 612, 2.2, C.hex('7a6a3a'))
+    heather(p, (0, 590, W, H + 20), 30)
+
+
+def wild_c_022(p):
+    """Ridge-Runner Wolf: he runs the skyline so the flock below can see him coming."""
+    sky(p, 'day')
+    bg.clouds(p, 70, 3, xs=[180, 520, 840], scale=1.0)
+    # the dale far below with its fields and a scattering flock
+    hills(p, 300, C.hex('8aa0b0'), 40)
+    fields(p, 330, rows=3)
+    for x, y, fl in ((640, 446, True), (700, 458, True), (590, 462, False), (760, 450, True), (540, 450, True), (670, 476, True)):
+        sheep(p, x, y, 0.8, flip=fl, head_up=0.6)
+    # the ridge sweeping up from the right across the picture
+    ridge = [(-20, H + 10, 0), (-20, 590), (200, 575), (420, 562), (680, 500), (880, 440), (W + 20, 405), (W + 20, H + 10, 0)]
+    p.shape(ridge, ('v', C.hex('8a8a4a'), C.hex('4a4a2a')), width=2.4)
+    p.clip_shape(ridge)
+    strokes(p, (0, 400, W, H), -math.pi / 2 - 0.3, C.hex('b8a860'), 340, (5, 12), (1.2, 2), (0.15, 0.35))
+    p.unclip()
+    drystone_wall(p, 760, 1020, 470, 28, STONE.dark(0.1))
+    for x, y in ((80, 600), (900, 560), (300, 610)):
+        grass_tuft(p, x, y, 2.0, C.hex('8a8a4a'))
+    make_beast('wolf', pose='run', col=C.hex('7a746c'), belly=C.hex('d0c8b8'), dark=C.hex('3e3a36')).draw(p, 430, 590, 2.4)
+
+
+def wild_c_023(p):
+    """Run with the Pack: four wolves through the snowy wood, the leader burning with the pack's strength."""
+    sky(p, 'night', stars=40)
+    moon(p, (220, 110), 34, glow=0.4)
+    treeline(p, 360, C.hex('1a2430'), 150, pines=True)
+    for x, hh in ((90, 420), (900, 460), (980, 380)):
+        tree(p, x, 470, hh, 'pine', 'winter')
+    ground(p, 440, C.hex('c8d0e0'), tufts=0)
+    snow(p, (0, 0, W, H), 120)
+    r = p.rng
+    for x, y, s in ((140, 520, 1.25), (300, 560, 1.5), (210, 610, 1.7)):
+        make_beast('wolf', pose='run', col=C.hex('5a5a64'), belly=C.hex('a8acb8'), dark=C.hex('2a2a34')).draw(p, x, y, s)
+    p.glow((640, 470), 260, C.hex('d8ff90'), 0.4)
+    make_beast('wolf', pose='leap', col=C.hex('8a8a90'), belly=C.hex('e0e4ec'), glow=C.hex('d8ff90')).draw(p, 640, 610, 2.4)
+    # kicked-up snow behind the runners
+    for _ in range(40):
+        q = (r.uniform(60, 560), r.uniform(560, 620))
+        p.blob(q, r.uniform(3, 8), r.uniform(2, 5), LEAD_WHITE.alpha(0.8), width=0.6)
+    for _ in range(18):
+        q = (r.uniform(480, 820), r.uniform(330, 560))
+        p.glow(q, r.uniform(5, 10), C.hex('e0ffa0'), 0.6)
+
+
+def wild_c_024(p):
+    """Coppiced Hazel: cut to the stool every seventh year, and every seventh year he comes back thicker."""
+    sky(p, 'day', horizon=0.55)
+    treeline(p, 350, C.hex('6a8a5a'), 150)
+    for x, hh in ((90, 430), (930, 450)):
+        tree(p, x, 470, hh, 'oak', 'spring', w=40)
+    rays_from(p, (300, -60), 5, 0.7, C.hex('fff8d0'), strength=0.18, angle=math.pi / 2 - 0.2)
+    ground(p, 450, C.hex('5f8a3a'), tufts=30)
+    bluebells(p, (0, 470, W, H), 260)
+    # the coppice: cut stools springing with rods, a bundle of cut poles
+    for x, y, s in ((170, 520, 0.9), (800, 530, 1.0), (300, 470, 0.6), (690, 480, 0.6)):
+        coppice_stool(p, x, y, s)
+    for k in range(6):
+        p.taper([(760 + k * 4, 610), (900 + k * 6, 585 - k * 2)], 2.6, 2.2, C.hex('8a7058'), width=1.0)
+    p.taper([(820, 612), (826, 588)], 2, 2, C.hex('a88a5a'), width=0.8)
+    treefolk(p, 480, 606, 330, 'oak', 'spring', pose='stand', col=C.hex('8a705a'), crown_scale=0.8, beard=False, eye_col=C.hex('e8f890'))
+    catkins(p, (480, 250), 90, 40, 26)
+    # the green power welling in his twig hand
+    p.glow((556, 486), 60, C.hex('d8ff80'), 0.7)
+    p.blob((556, 486), 9, 9, ('r', C.hex('f8ffd0'), C.hex('a8e060')), width=1.2)
+    bluebells(p, (0, 590, W, H + 10), 40)
+
+
+def wild_c_025(p):
+    """Hedge-Elm of the Moot: when the moot is full, the old elm leans in to hear."""
+    sky(p, 'autumn')
+    hills(p, 380, C.hex('9aa08a'), 40)
+    fields(p, 400, cols=(C.hex('b8a860'), C.hex('a89a50'), C.hex('8a9a4a')), rows=2)
+    hill = [(-20, H + 10, 0), (-20, 520), (250, 470), (520, 460), (800, 480), (W + 20, 520), (W + 20, H + 10, 0)]
+    p.shape(hill, ('v', C.hex('8a9a4a'), C.hex('5a6a2a')), ink=INK.alpha(0.5), width=2)
+    ground(p, 520, C.hex('7a8a3a'), tufts=30, leaves=(AUTUMN, 50))
+    falling_leaves(p, (0, 100, W, 560), 40)
+    # the moot: elders of the shire about the speaking stone
+    p.shape([(560, 570), (570, 540), (640, 532), (690, 544), (700, 572)], ('v', STONE.light(0.2), STONE.dark(0.2)), width=2, shade=0.8)
+    Figure(pose='point', garb='robe', main=C.hex('6a4a3a'), second=C.hex('4a3428'), hair='white', beard='long', age='old',
+           belt='leather', cloak='mantle', cloak_col=C.hex('5a5a3a')).draw(p, 640, 540, 150, flip=True)
+    Figure(pose='staff', garb='tunic', main=C.hex('5a6a3a'), second=C.hex('4a4030'), hair='short', hair_col=UMBER, beard='short',
+           belt='leather', props_front=[PR.staff('f', 'plain', 110)]).draw(p, 760, 600, 190, flip=True)
+    Figure(pose='hold', garb='tunic', main=C.hex('8a3a2a'), second=C.hex('4a3a2a'), hair='curly', hair_col=C.hex('6a4a2a'), beard='short',
+           belt='leather', head='cap').draw(p, 870, 612, 200, flip=True)
+    treefolk(p, 330, 608, 420, 'oak', 'autumn', pose='stride', col=C.hex('6a5a48'), crown_scale=1.0, eye_col=C.hex('f0e080'),
+             mouth='open')
+    for x in (60, 480, 950):
+        grass_tuft(p, x, 614, 2.0, C.hex('7a8a3a'))
+
+
+def wild_c_026(p):
+    """Stand Like Oaks: the axemen came at dawn; by noon they were sharpening their axes and wondering."""
+    sky(p, 'dawn')
+    p.glow((150, 400), 260, C.hex('ffe0a0'), 0.5)
+    treeline(p, 390, C.hex('4a5a50'), 140, mist=C.hex('e8d8c8'))
+    ground(p, 450, C.hex('5a7a34'), tufts=30, ferns=6)
+    r = p.rng
+    # chips of bark and notched axes at the feet of the grove
+    p.glow((660, 360), 300, C.hex('d8ff90'), 0.3)
+    for x, y, h, fl in ((560, 560, 300, True), (880, 590, 330, True)):
+        treefolk(p, x, y, h, 'oak', 'summer', pose='stand', flip=fl, crown_scale=0.9, eye_col=C.hex('e8f890'), glow=C.hex('d8ff90'))
+    treefolk(p, 730, 612, 400, 'oak', 'summer', pose='guard', flip=True, crown_scale=0.9, eye_col=C.hex('e8f890'), glow=C.hex('d8ff90'), mouth='closed')
+    for _ in range(20):
+        q = (r.uniform(500, 900), r.uniform(560, 615))
+        p.blob(q, r.uniform(3, 6), r.uniform(1.5, 3), C.hex('d8c098'), rot=r.uniform(0, 3), width=0.7)
+    Figure(pose='guard', garb='tunic', main=C.hex('8a5a34'), second=C.hex('5a4a34'), hair='short', hair_col=C.hex('3a2a1a'), beard='short',
+           belt='leather', head='cap', sleeves='fitted', mouth='open', props_front=[axe_held('f', 46)]).draw(p, 250, 612, 330)
+    Figure(pose='hold', garb='tunic', main=C.hex('5a6a7a'), second=C.hex('3a3a3a'), hair='curly', hair_col=C.hex('6a4a2a'), beard='short',
+           belt='leather', sleeves='fitted', props_front=[axe_held('f', 40)]).draw(p, 100, 600, 270)
+
+
+def wild_c_027(p):
+    """Dusk-Runner Wolf: shepherds bar the fold at sunset; he was over the wall at noon."""
+    sky(p, 'dusk')
+    p.glow((500, 400), 300, C.hex('f0a060'), 0.4)
+    hills(p, 380, C.hex('4a3a5a'), 60)
+    ground(p, 430, C.hex('4a5a34'), tufts=30)
+    # the shepherd's hut with a lit door far off
+    p.shape([(840, 440, 0), (840, 410, 0), (900, 410, 0), (900, 440, 0)], C.hex('8a8070'), width=1.4, smooth=False, shade=0.5)
+    p.shape([(832, 412, 0), (870, 388, 0), (908, 412, 0)], C.hex('5a4a3a'), width=1.4, smooth=False)
+    p.glow((862, 428), 20, C.hex('ffc060'), 0.8)
+    p.shape([(856, 440, 0), (856, 424, 0), (866, 424, 0), (866, 440, 0)], C.hex('ffc060'), width=1.0, smooth=False)
+    # the flock bunched in the fold, faces turned to the wall
+    for x, y in ((600, 520), (700, 516), (800, 524), (660, 552), (760, 556), (880, 546)):
+        sheep(p, x, y, 1.45, flip=True, head_up=0.8)
+    drystone_wall(p, -30, W + 30, 596, 64, STONE.dark(0.2), gap=None)
+    make_beast('wolf', pose='leap', col=C.hex('5a524c'), belly=C.hex('a89c8c'), dark=C.hex('2a2420'), tail_up=0.3).draw(p, 330, 620, 2.4)
+    for x in (60, 940):
+        grass_tuft(p, x, 614, 2.2, C.hex('4a5a34'))
+
+
+def wild_u_014(p):
+    """Pack-Leader of the Moors: he eats first, sleeps last, and every wolf on the moor knows his howl."""
+    sky(p, 'mist', horizon=0.6)
+    hills(p, 380, C.hex('9a9aa8'), 60)
+    mist_band(p, 380, 60, MIST, 0.6)
+    moor = [(-20, H + 10, 0), (-20, 430), (400, 420), (W + 20, 440), (W + 20, H + 10, 0)]
+    p.shape(moor, ('v', C.hex('7a6a5a'), C.hex('4a3a2e')), width=2)
+    heather(p, (0, 430, W, H), 220)
+    standing_stone(p, 160, 520, 60, 150, STONE)
+    # the pack following in file down the moor track
+    for x, y, s in ((880, 470, 0.7), (790, 490, 0.85), (690, 520, 1.0)):
+        make_beast('wolf', pose='walk', col=C.hex('6a6660'), belly=C.hex('b8b0a0'), dark=C.hex('3a3632')).draw(p, x, y, s, flip=True)
+    mist_band(p, 470, 40, MIST, 0.35)
+    make_beast('wolf', pose='stand', col=C.hex('a8a49c'), belly=C.hex('e8e4dc'), dark=C.hex('4a4844'), neck=22, head_pitch=8).draw(p, 430, 600, 2.6, flip=True)
+    heather(p, (0, 600, W, H + 10), 30)
+
+
+def wild_u_015(p):
+    """Old Grey Wolf: every cub the pack raises makes him a little prouder."""
+    sky(p, 'autumn', horizon=0.5)
+    treeline(p, 340, C.hex('6a5a4a'), 140, mist=C.hex('f0d8b0'))
+    ground(p, 440, C.hex('6a6a3a'), tufts=20, leaves=(AUTUMN, 80))
+    falling_leaves(p, (0, 60, W, 560), 30)
+    # the den under the roots of a great oak
+    trunk = [(520, 560), (600, 470), (640, 300), (660, 120), (650, -20), (930, -20), (900, 120), (920, 300), (960, 470), (1040, 560)]
+    p.shape(trunk, ('h', BARK.light(0.1), BARK, BARK.dark(0.3)), width=2.4, shade=0.7)
+    bark(p, trunk, BARK)
+    for a, b in (((660, 140), (480, 40)), ((900, 120), (1000, 30))):
+        branch(p, a, b, 30, 10, BARK)
+    leaf_mass(p, (560, 20), 200, 60, 'autumn')
+    leaf_mass(p, (860, 0), 200, 60, 'autumn')
+    roots_arch(p, 770, 520, 220, 140, BARK.dark(0.1))
+    ground(p, 560, C.hex('6a6a3a'), tufts=10, leaves=(AUTUMN, 30))
+    # cubs tumbling at the den mouth
+    for x, y, s, fl, pose in ((720, 600, 0.75, True, 'stand'), (840, 590, 0.7, False, 'crouch'), (630, 612, 0.7, True, 'trot')):
+        make_beast('wolf', pose=pose, col=C.hex('8a7a6a'), belly=C.hex('d8c8b0'), neck=10).draw(p, x, y, s, flip=fl)
+    make_beast('wolf', pose='stand', col=C.hex('9a9890'), belly=C.hex('e0dcd4'), dark=C.hex('5a5854'), neck=-10, head_pitch=-8).draw(p, 330, 612, 2.5)
+
+
+def wild_u_016(p):
+    """Old Moot-Oak: laws were given under his boughs before there were kings to give them."""
+    sky(p, 'gold')
+    p.glow((500, 300), 400, C.hex('ffe8a0'), 0.4)
+    hills(p, 400, C.hex('8a9a7a'), 40)
+    ground(p, 450, C.hex('6a8a3a'), tufts=30, flowers=20)
+    stone_ring(p, 500, 500, 420, 60, 10, 90, 40, STONE, front=False)
+    rays_from(p, (500, -40), 7, 1.0, C.hex('fff0c0'), strength=0.14)
+    treefolk(p, 500, 590, 470, 'oak', 'summer', pose='grasp', crown_scale=1.15, wide=1.25, eye_col=C.hex('fff0a0'),
+             moss=True)
+    # the grove gathered about him: oaklings and saplings bowing in
+    for x, y, s, fl, sap in ((170, 600, 2.4, False, False), (300, 612, 1.8, False, True), (820, 604, 2.5, True, False), (690, 616, 1.7, True, True)):
+        oakling(p, x, y, s, 'summer', flip=fl, step=0.15, sapling=sap)
+    stone_ring(p, 500, 500, 420, 60, 10, 90, 40, STONE, back=False, gap=math.pi / 2)
+
+
+def wild_u_017(p):
+    """Acorn of the Elder Oak: plant it, and the wood will owe you a favour for three hundred years."""
+    sky(p, 'day', horizon=0.5)
+    treeline(p, 360, C.hex('3e5a34'), 180)
+    for x, hh in ((60, 520), (950, 520)):
+        tree(p, x, 500, hh, 'oak', 'summer', w=60)
+    rays_from(p, (520, -60), 6, 0.6, C.hex('fff8d0'), strength=0.2)
+    ground(p, 470, C.hex('4f7a32'), tufts=20, ferns=8)
+    # an altar stone grown over with roots, a bed of oak leaves
+    altar = [(300, 616, 0), (320, 560), (350, 524), (500, 512), (650, 522), (690, 566), (704, 616, 0)]
+    p.shape(altar, ('v', STONE.light(0.2), STONE.dark(0.3)), width=2.4, shade=0.8, rim=0.4)
+    p.clip_shape(altar)
+    strokes(p, (330, 500, 680, 615), 0.05, STONE.dark(0.5), 60, (8, 20), (1, 1.8), (0.1, 0.3), 0.2)
+    p.unclip()
+    r = p.rng
+    for sx, sg in ((300, 1), (704, -1)):
+        for k in range(3):
+            pts = [(sx - sg * (20 + k * 30), 616), (sx + sg * (10 + k * 6), 580 - k * 10), (sx + sg * (40 + k * 20), 540 - k * 6), (sx + sg * (70 + k * 30), 530 + k * 4)]
+            vtaper(p, pts, [7, 5, 3.4, 1.4], BARK, width=1.4, shade=0.6)
+    ivy(p, [(320, 610), (340, 580), (330, 550), (360, 530)], every=1)
+    for k in range(9):
+        a = math.pi + k * math.pi / 8
+        oak_leaf(p, polar((500, 508), 70, a * 0 + math.pi * (0.95 + k * 0.012)) if False else (430 + k * 18, 512 + (k % 2) * 4), -math.pi / 2 + (k - 4) * 0.35, 46, OAK_LEAF.light(0.05 * (k % 3)))
+    acorn(p, (500, 400), 1.6, glow=C.hex('fff0a0'))
+    # a seedling already pressing out of its point
+    p.taper([(500, 506), (498, 520)], 2, 2, C.hex('8ab84a'), width=0.8)
+    for _ in range(14):
+        q = (r.uniform(380, 620), r.uniform(240, 500))
+        p.glow(q, r.uniform(4, 8), C.hex('fff8c0'), 0.6)
+
+
+def wild_u_018(p):
+    """Pack Hunt: the stag turned to face one wolf, and the other five did the rest."""
+    sky(p, 'winter')
+    treeline(p, 360, C.hex('5a6070'), 160, pines=True, mist=C.hex('e0e4ec'))
+    for x, hh in ((70, 430), (940, 460)):
+        tree(p, x, 470, hh, 'oak', 'winter')
+    ground(p, 440, C.hex('e8ecf0'), tufts=0)
+    snow(p, (0, 0, W, H), 90)
+    braced = ((-30, -10, 10), (-20, -14, 6), (36, -24, 10), (24, -30, 6))
+    for x, y, s in ((300, 500, 0.9), (720, 490, 0.85)):
+        make_beast('wolf', pose='crouch', col=C.hex('6a6a74'), belly=C.hex('b8bcc8'), dark=C.hex('3a3a44')).draw(p, x, y, s, flip=x > 500)
+    make_beast('stag', pose='stand', legs=braced, neck=-20, head_pitch=-14, antler_tines=6, col=DEER.dark(0.05)).draw(p, 540, 580, 2.1, flip=True)
+    make_beast('wolf', pose='crouch', col=C.hex('6a6a70'), belly=C.hex('c8ccd4'), dark=C.hex('3a3a40'), neck=-6).draw(p, 190, 600, 1.7)
+    make_beast('wolf', pose='leap', col=C.hex('8a8680'), belly=C.hex('e0dcd4'), glow=C.hex('d8ff90')).draw(p, 850, 625, 1.9, flip=True)
+    r = p.rng
+    for _ in range(30):
+        q = (r.uniform(100, 900), r.uniform(560, 620))
+        p.blob(q, r.uniform(3, 8), r.uniform(2, 4), LEAD_WHITE.alpha(0.85), width=0.6)
+
+
+def wild_r_010(p):
+    """Grey Sire of the Long Winter: in the hungry year he came down from the fells, and every wolf followed."""
+    sky(p, 'storm')
+    hills(p, 330, C.hex('6a7080'), 90)
+    snow_fell = [(-20, H + 10, 0), (-20, 420), (300, 400), (700, 440), (W + 20, 420), (W + 20, H + 10, 0)]
+    p.shape(snow_fell, ('v', C.hex('d8dce4'), C.hex('a8b0c0')), width=2)
+    # the village far below, its windows lit against the dark
+    for x in (760, 800, 850, 890):
+        p.shape([(x, 460, 0), (x, 444, 0), (x + 30, 444, 0), (x + 30, 460, 0)], C.hex('5a5450'), width=1.0, smooth=False)
+        p.shape([(x - 4, 446, 0), (x + 15, 432, 0), (x + 34, 446, 0)], LEAD_WHITE.dark(0.1), width=1.0, smooth=False)
+        p.glow((x + 15, 454), 10, C.hex('ffc060'), 0.8)
+    # the pack as shadows in the drifting snow behind him
+    for x, y, s in ((120, 470, 0.7), (230, 480, 0.8), (920, 480, 0.75), (60, 500, 0.9)):
+        make_beast('wolf', pose='walk', col=C.hex('7a8090'), belly=C.hex('7a8090'), dark=C.hex('5a6070'), glow=C.hex('e8f0ff')).draw(p, x, y, s, flip=x > 500)
+    mist_band(p, 480, 50, C.hex('e8ecf4'), 0.6)
+    make_beast('wolf', pose='walk', col=C.hex('d0d4d8'), belly=LEAD_WHITE, dark=C.hex('7a808a'), glow=C.hex('a8e0ff'), neck=-4).draw(p, 500, 612, 3.6)
+    snow(p, (0, 0, W, H), 260)
+
+
+def wild_r_011(p):
+    """Grandsire Hornbeam: ironwood, the charcoal burners call him, and they have broken three axes on his kin."""
+    sky(p, 'mist', horizon=0.6)
+    treeline(p, 360, C.hex('5a6a5a'), 160, mist=C.hex('d8e0d4'))
+    # the charcoal burners' clamp smoking in the clearing
+    p.shape([(780, 460), (820, 410), (900, 400), (960, 420), (990, 470)], ('v', C.hex('5a4a3a'), C.hex('2a2018')), width=2, shade=0.7)
+    for k in range(5):
+        q = (880 + k * 6, 390 - k * 50)
+        p.blob(q, 30 + k * 14, 18 + k * 6, C.hex('9a9890').alpha(0.4 - k * 0.06), ink=False)
+    ground(p, 450, C.hex('4f6a34'), tufts=30, leaves=(C.hex('a88a4a'), 30))
+    for x, y, s in ((140, 560, 2.0), (840, 600, 1.8)):
+        oakling(p, x, y, s, 'summer', flip=x > 500, sapling=True)
+    treefolk(p, 500, 606, 450, 'ash', 'summer', pose='guard', col=C.hex('8a8a84'), crown_scale=1.0,
+             eye_col=C.hex('d8f890'), beard=True)
+    # broken axe heads and hafts at his roots
+    r = p.rng
+    for x, y in ((300, 604), (650, 610)):
+        p.taper([(x - 60, y + 4), (x, y - 6)], 4.6, 4.0, C.hex('7a5a3a'), width=1.4, shade=0.5)
+        p.taper([(x + 16, y - 10), (x + 60, y - 16)], 4.6, 4.0, C.hex('7a5a3a'), width=1.4, shade=0.5)
+        blade = [(x + 60, y - 34), (x + 90, y - 42, 0), (x + 94, y + 4, 0), (x + 64, y - 2)]
+        p.shape(blade, ('h', STEEL.light(0.25), STEEL.dark(0.25)), width=1.6, shade=0.6)
+        p.line([(x + 76, y - 38), (x + 72, y - 18), (x + 80, y - 2)], INK, 2.0)
+
+
+def wild_m_004(p):
+    """Wolfwood, the Denning Oak: the wolves den among his roots, and the oaks stand taller for his shade."""
+    sky(p, 'night', stars=70)
+    moon(p, (790, 110), 40, glow=0.45)
+    hills(p, 400, C.hex('1e2a3a'), 50)
+    for x, hh in ((90, 360), (930, 380)):
+        tree(p, x, 470, hh, 'oak', 'night', w=34)
+    ground(p, 440, C.hex('243424'), tufts=30, ferns=6)
+    p.glow((500, 300), 380, C.hex('c8ff90'), 0.25)
+    for x, y, s, fl in ((130, 560, 1.9, False), (880, 566, 1.9, True)):
+        oakling(p, x, y, s, 'night', flip=fl, step=0.1)
+    roots_arch(p, 500, 600, 260, 110, BARK.dark(0.2))
+    treefolk(p, 500, 560, 450, 'oak', 'night', pose='stand', wide=1.3, crown_scale=1.1, eye_col=C.hex('d8ff90'),
+             glow=C.hex('c8ff90'))
+    # the pack about his roots: two coming out of the den, one howling to the moon
+    for x, y, s, fl in ((300, 616, 1.3, True), (720, 618, 1.3, False)):
+        make_beast('wolf', pose='walk', col=C.hex('6a6a74'), belly=C.hex('b8bcc8'), dark=C.hex('3a3a44'), glow=C.hex('d8ff90')).draw(p, x, y, s, flip=fl)
+    make_beast('wolf', pose='stand', col=C.hex('8a8a94'), belly=C.hex('d8dce8'), dark=C.hex('4a4a54'), neck=34, head_pitch=24,
+               mouth='howl', glow=C.hex('d8ff90')).draw(p, 860, 626, 1.4, flip=True)
+    r = p.rng
+    for _ in range(24):
+        q = (r.uniform(150, 850), r.uniform(150, 580))
+        p.glow(q, r.uniform(5, 10), C.hex('e0ffa0'), 0.6)
