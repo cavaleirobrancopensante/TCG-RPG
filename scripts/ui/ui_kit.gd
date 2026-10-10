@@ -37,6 +37,10 @@ static func make_theme() -> Theme:
 	t.set_color("font_color", "CheckButton", TEXT)
 	t.set_color("font_hover_color", "CheckButton", RED)
 	t.set_color("default_color", "RichTextLabel", TEXT)
+	t.set_stylebox("normal", "LineEdit", Tapestry.stylebox("button"))
+	t.set_stylebox("focus", "LineEdit", Tapestry.stylebox("hover"))
+	t.set_color("font_color", "LineEdit", TEXT)
+	t.set_color("caret_color", "LineEdit", RED)
 	t.set_stylebox("panel", "PanelContainer", Tapestry.stylebox("panel", 16))
 	t.set_stylebox("panel", "Panel", Tapestry.stylebox("panel", 16))
 	var clear := StyleBoxEmpty.new()
@@ -58,6 +62,34 @@ static func make_theme() -> Theme:
 	t.set_stylebox("slider", "HSlider", slider)
 	_theme = t
 	return t
+
+
+## Modal parchment question over `parent`. ok_cb runs when confirmed.
+static func confirm(parent: Node, heading: String, text: String, ok_label: String, ok_cb: Callable) -> void:
+	var overlay := ColorRect.new()
+	overlay.color = Color(0.08, 0.05, 0.03, 0.6)
+	full_rect(overlay)
+	parent.add_child(overlay)
+	var center := CenterContainer.new()
+	full_rect(center)
+	overlay.add_child(center)
+	var plate := PanelContainer.new()
+	center.add_child(plate)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 14)
+	plate.add_child(v)
+	v.add_child(title(heading, 32))
+	var l := label(text, 20, TEXT, true)
+	l.custom_minimum_size.x = 460
+	v.add_child(l)
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 16)
+	v.add_child(row)
+	row.add_child(button(ok_label, func():
+		overlay.queue_free()
+		ok_cb.call(), 180))
+	row.add_child(button("Cancel", overlay.queue_free, 180))
 
 
 ## Blackletter heading in rubric red.

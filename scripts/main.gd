@@ -32,7 +32,7 @@ class MenuBg extends Control:
 		Tapestry.draw_band(self, r, 16, "rings")
 		# the miniature
 		var pw := minf(size.x * 0.5, 640.0)
-		var panel := Rect2(Vector2((size.x - pw) * 0.5, UIKit.TOP + 30), Vector2(pw, size.y * 0.40))
+		var panel := Rect2(Vector2((size.x - pw) * 0.5, UIKit.TOP + 26), Vector2(pw, size.y * 0.30))
 		Tapestry.draw_diaper(self, panel, Tapestry.ULTRAMARINE, Color(Tapestry.GILT, 0.5), 26)
 		var ground := Rect2(panel.position.x, panel.end.y - 36, panel.size.x, 36)
 		Tapestry.draw_ground(self, ground)
@@ -83,6 +83,7 @@ func _ready() -> void:
 
 ## Everything the game prepares before the title page, with real progress.
 func _boot() -> void:
+	GameState.apply_display()
 	var ls := LoadingScreen.open(self, [["Preparing the parchment", 4.0], ["Gilding the borders", 1.0],
 		["Cutting the type", 1.0], ["Tuning the instruments", 1.0], ["Opening the book", 1.0]])
 	await ls.flush()
@@ -153,17 +154,29 @@ func show_menu() -> void:
 	var v := VBoxContainer.new()
 	v.set_anchors_preset(Control.PRESET_CENTER)
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
-	v.add_theme_constant_override("separation", 16)
+	v.add_theme_constant_override("separation", 8)
 	m.add_child(v)
-	var title := UIKit.title("TCG · RPG", 72)
+	var title := UIKit.title("TCG · RPG", 54)
+	title.add_theme_constant_override("line_spacing", -14)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(title)
-	var sub := UIKit.label("Six faiths. One deck.", 20, UIKit.DIM)
+	var sub := UIKit.label("Six faiths. One deck.", 18, UIKit.DIM)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(sub)
-	if GameState.has_save():
-		v.add_child(UIKit.button("Continue", _continue_game, 320))
-	v.add_child(UIKit.button("New game", _confirm_new_game, 320))
+	var items := [["New game", _open_new_game], ["Load game", _open_load_game], ["Settings", _open_settings]]
+	if not OS.has_feature("web"):      # a browser tab is closed by the browser, not the game
+		items.append(["Quit game", func(): get_tree().quit()])
+	for it in items:
+		var b := UIKit.button(it[0], it[1], 320)
+		b.custom_minimum_size.y = 46
+		b.add_theme_font_size_override("font_size", 20)
+		b.add_theme_stylebox_override("normal", Tapestry.stylebox("button", 8))
+		b.add_theme_stylebox_override("hover", Tapestry.stylebox("hover", 8))
+		b.add_theme_stylebox_override("pressed", Tapestry.stylebox("pressed", 8))
+		b.add_theme_stylebox_override("disabled", Tapestry.stylebox("disabled", 8))
+		if it[0] == "Load game":
+			b.disabled = not GameState.has_save()
+		v.add_child(b)
 	var ver := UIKit.label(version_text(), 17, UIKit.DIM)
 	ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ver.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
@@ -173,7 +186,11 @@ func show_menu() -> void:
 	_set_screen(m)
 	await get_tree().process_frame
 	if is_instance_valid(v):
-		v.position = Vector2((m.size.x - v.size.x) * 0.5, m.size.y * 0.40 + UIKit.TOP + 46)
+		v.position = Vector2((m.size.x - v.size.x) * 0.5, m.size.y * 0.30 + UIKit.TOP + 34)
+		# never run into the version line at the bottom
+		var bottom_room := m.size.y - 52.0
+		if v.position.y + v.size.y > bottom_room:
+			v.position.y = maxf(UIKit.TOP + 10, bottom_room - v.size.y)
 
 
 ## "Version 1.6 · build 3f2a9c1 · 10 Oct 2026" — build details are stamped by the web deploy.
@@ -188,16 +205,34 @@ static func version_text() -> String:
 	return t
 
 
-func _confirm_new_game() -> void:
-	if GameState.has_save():
-		show_dialog("New game", "This will overwrite your saved game. Are you sure?",
-			[["Start over", _new_game], ["Cancel", Callable()]])
-	else:
-		_new_game()
+func _open_new_game() -> void:
+	var sc := SlotScreen.create("new")
+	sc.chosen.connect(func(n): _new_game(n))
+	ui_layer.add_child(sc)
 
 
-func _new_game() -> void:
-	GameState.new_game()
+func _open_load_game() -> void:
+	var sc := SlotScreen.create("load")
+	sc.chosen.connect(func(n): _continue_game(n))
+	sc.closed.connect(show_menu)      # a deleted slot may change the menu
+	ui_layer.add_child(sc)
+
+
+func _open_settings() -> void:
+	ui_layer.add_child(SettingsScreen.new())
+
+
+## In the world: save into any slot.
+func open_save_slots() -> void:
+	_pause_world(true)
+	var sc := SlotScreen.create("save")
+	sc.chosen.connect(func(n): GameState.save_game(n))
+	sc.closed.connect(func(): _pause_world(false))
+	ui_layer.add_child(sc)
+
+
+func _new_game(n: int = 1) -> void:
+	GameState.new_game(n)
 	await start_world()
 	show_dialog("Welcome, Wanderer",
 		"Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.\n\n"
@@ -205,8 +240,8 @@ func _new_game() -> void:
 		[["Open my boosters", func(): open_boosters(true)]])
 
 
-func _continue_game() -> void:
-	if GameState.load_game():
+func _continue_game(n: int = 0) -> void:
+	if GameState.load_game(n):
 		GameState.ensure_deck()
 		await start_world()
 	else:
@@ -258,9 +293,7 @@ func _build_hud() -> void:
 	col.add_child(hud_boosters)
 	col.add_child(UIKit.button("Deck", open_deck_builder, 190))
 	col.add_child(UIKit.button("Journal", show_journal, 190))
-	col.add_child(UIKit.button("Save", func():
-		GameState.save_game()
-		show_dialog("Saved", "Your journey has been recorded.", [["OK", Callable()]]), 190))
+	col.add_child(UIKit.button("Save", open_save_slots, 190))
 	col.add_child(UIKit.button("Menu", func():
 		GameState.save_game()
 		show_menu(), 190))

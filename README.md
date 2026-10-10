@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **1.6**. Full design: [DESIGN.md](DESIGN.md).
+Version **1.7**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
@@ -91,6 +91,23 @@ no image files — so it stays crisp on any screen and new cards are illustrated
   - Entering the world (new game / continue): painting the land row by row, laying roads,
     planning the scenery, drawing it in eight bands, rousing the wanderers.
 - `tests/loading_shots.tscn` captures both screens mid-progress.
+
+## Browser version and updates
+
+Every push to `main` is built by GitHub Actions (`.github/workflows/web.yml`): it imports
+the project, runs the rule tests, exports the web build and publishes it to GitHub Pages.
+The bottom of the main menu shows the version, build and date. Each build lives in its own
+folder, so players get the new one on their next visit (GitHub may cache up to ~10 minutes).
+One-time setup: repo **Settings → Pages → Source: GitHub Actions**.
+
+## Menus and saving (1.7)
+
+- Main menu: **New game · Load game · Settings · Quit game** (Quit is hidden in browsers).
+- **Six save slots** with place, gold, cards, wins, lairs, faiths, date and play time.
+  New game asks which slot to begin in; the game auto-saves into your slot; **Save** in the
+  world (or "Save to another slot…" at an inn) saves into any slot and continues there.
+  Old single-file saves move into slot I automatically.
+- Settings: music volume, music follows the game, duel animation speed, full screen, your name.
 
 ## Card set status
 

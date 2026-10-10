@@ -13,6 +13,7 @@ func _ready() -> void:
 	test_enemy_decks()
 	test_ai_battles()
 	test_game_state()
+	test_save_slots()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -174,3 +175,32 @@ func test_game_state() -> void:
 		for npc in c["npcs"]:
 			for m in npc["missions"]:
 				check(not GameState.mission_def(m).is_empty(), "mission def %s" % m)
+
+
+func test_save_slots() -> void:
+	print("-- save slots")
+	DirAccess.remove_absolute(GameState.LEGACY_SAVE)
+	for n in range(1, GameState.SLOTS + 1):
+		GameState.delete_slot(n)
+	check(not GameState.has_save(), "no saves after delete")
+	GameState.new_game(3)
+	GameState.gold = 777
+	GameState.save_game()
+	check(GameState.slot_exists(3) and not GameState.slot_exists(1), "new game saves into its slot")
+	GameState.gold = 111
+	GameState.save_game(5)                       # save into another slot, keep playing there
+	check(GameState.slot == 5, "switched to slot 5")
+	check(int(GameState.slot_info(3)["gold"]) == 777, "slot 3 summary")
+	check(int(GameState.slot_info(5)["gold"]) == 111, "slot 5 summary")
+	check(GameState.load_game(3) and GameState.gold == 777 and GameState.slot == 3, "load slot 3")
+	check(GameState.latest_slot() in [3, 5], "latest slot")
+	GameState.delete_slot(5)
+	check(not GameState.slot_exists(5), "delete slot")
+	# legacy single-file saves move into slot 1
+	GameState.delete_slot(3)
+	GameState.delete_slot(1)
+	var f := FileAccess.open(GameState.LEGACY_SAVE, FileAccess.WRITE)
+	f.store_string(JSON.stringify({"gold": 42, "collection": {}, "deck": {}}))
+	f.close()
+	check(GameState.has_save() and GameState.load_game(1) and GameState.gold == 42, "legacy save migrated")
+	GameState.delete_slot(1)

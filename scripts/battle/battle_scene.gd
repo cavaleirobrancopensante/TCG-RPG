@@ -47,6 +47,9 @@ var _grounds: Array = []         # earth bands under the two fields
 
 func start(p_info: Dictionary) -> void:
 	info = p_info
+	var before := Engine.time_scale
+	Engine.time_scale = before * float(GameState.settings.get("duel_speed", 1.0))
+	tree_exiting.connect(func(): Engine.time_scale = before)
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
 	_build_ui()

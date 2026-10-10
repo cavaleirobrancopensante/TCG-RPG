@@ -1,12 +1,14 @@
 extends Node
 ## Everything about the player's run: gold, collection, deck, world progress, missions.
-## Saved as JSON in user://save.json.
+## Saved as JSON in numbered slots: user://slot_1.json … user://slot_6.json.
+## The game auto-saves into the slot you are playing; "Save" in the world saves into any slot.
 
 signal gold_changed(value: int)
 signal collection_changed
 signal mission_updated(mission_id: String)
 
-const SAVE_PATH := "user://save.json"
+const LEGACY_SAVE := "user://save.json"
+const SLOTS := 6
 const START_GOLD := 150
 const START_BOOSTERS := 3
 
@@ -23,6 +25,12 @@ var defeated: Dictionary = {}     # faction -> wins counted while missions are a
 var missions: Dictionary = {}     # mission_id -> {"state": "active"/"done"/"claimed", "progress": int}
 var pending_boosters: int = 0     # boosters earned but not opened yet
 var stats: Dictionary = {"wins": 0, "losses": 0, "boosters_opened": 0}
+var slot := 1                     # the slot this run auto-saves into
+var play_time := 0.0              # seconds played in this run
+var _session_start := 0
+
+var settings: Dictionary = {"duel_speed": 1.0, "fullscreen": false}
+const SETTINGS_PATH := "user://settings.cfg"
 
 var world_data: Dictionary = {}   # loaded from data/world.json
 var rng := RandomNumberGenerator.new()
@@ -30,6 +38,7 @@ var rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
 	rng.randomize()
+	_load_settings()
 	var text := FileAccess.get_file_as_string("res://data/world.json")
 	var parsed = JSON.parse_string(text)
 	if typeof(parsed) == TYPE_DICTIONARY:
@@ -40,7 +49,11 @@ func _ready() -> void:
 
 # ---------------------------------------------------------------- new / save / load
 
-func new_game() -> void:
+func new_game(into_slot: int = 1) -> void:
+	slot = into_slot
+	player_name = settings.get("player_name", "Wanderer")
+	play_time = 0.0
+	_session_start = Time.get_ticks_msec()
 	gold = START_GOLD
 	collection.clear()
 	foils.clear()
@@ -56,29 +69,149 @@ func new_game() -> void:
 	current_city = ""
 
 
+# ---------------------------------------------------------------- settings
+
+func _load_settings() -> void:
+	var cf := ConfigFile.new()
+	if cf.load(SETTINGS_PATH) == OK:
+		for k in cf.get_section_keys("game") if cf.has_section("game") else []:
+			settings[k] = cf.get_value("game", k)
+
+
+func set_setting(key: String, value) -> void:
+	settings[key] = value
+	var cf := ConfigFile.new()
+	cf.load(SETTINGS_PATH)          # keep the music section
+	cf.set_value("game", key, value)
+	cf.save(SETTINGS_PATH)
+
+
+func apply_display() -> void:
+	var fs: bool = settings.get("fullscreen", false)
+	var want := DisplayServer.WINDOW_MODE_FULLSCREEN if fs else DisplayServer.WINDOW_MODE_WINDOWED
+	if DisplayServer.window_get_mode() != want and not OS.has_feature("headless"):
+		DisplayServer.window_set_mode(want)
+
+
+# ---------------------------------------------------------------- save slots
+
+func slot_path(n: int) -> String:
+	return "user://slot_%d.json" % n
+
+
+func slot_exists(n: int) -> bool:
+	return FileAccess.file_exists(slot_path(n))
+
+
 func has_save() -> bool:
-	return FileAccess.file_exists(SAVE_PATH)
+	_migrate_legacy()
+	for n in range(1, SLOTS + 1):
+		if slot_exists(n):
+			return true
+	return false
 
 
-func save_game() -> void:
+## The most recently saved slot, or 0 if none.
+func latest_slot() -> int:
+	var best := 0
+	var best_t := -1.0
+	for n in range(1, SLOTS + 1):
+		var info := slot_info(n)
+		if not info.is_empty() and float(info.get("saved_unix", 0)) > best_t:
+			best_t = float(info.get("saved_unix", 0))
+			best = n
+	return best
+
+
+## Summary for the load / save screens ({} if the slot is empty).
+func slot_info(n: int) -> Dictionary:
+	if not slot_exists(n):
+		return {}
+	var data = JSON.parse_string(FileAccess.get_file_as_string(slot_path(n)))
+	if typeof(data) != TYPE_DICTIONARY:
+		return {"broken": true}
+	return data.get("meta", {"saved_at": "?", "place": "?"})
+
+
+func delete_slot(n: int) -> void:
+	if slot_exists(n):
+		DirAccess.remove_absolute(slot_path(n))
+
+
+func _migrate_legacy() -> void:
+	if FileAccess.file_exists(LEGACY_SAVE) and not slot_exists(1):
+		DirAccess.rename_absolute(LEGACY_SAVE, slot_path(1))
+
+
+func current_play_time() -> float:
+	return play_time + (Time.get_ticks_msec() - _session_start) / 1000.0
+
+
+## Saves the run. With n > 0 it saves into that slot and keeps playing there.
+func save_game(n: int = 0) -> void:
+	if n > 0:
+		slot = n
+	play_time = current_play_time()
+	_session_start = Time.get_ticks_msec()
 	var data := {
-		"version": 1, "gold": gold, "collection": collection, "foils": foils, "deck": deck,
+		"version": 2, "gold": gold, "collection": collection, "foils": foils, "deck": deck,
 		"player_name": player_name, "player_pos": [player_pos.x, player_pos.y],
 		"cleared_lairs": cleared_lairs, "visited_cities": visited_cities,
 		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters,
-		"stats": stats,
+		"stats": stats, "play_time": play_time,
+		"meta": _meta(),
 	}
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	_extra_save(data)
+	var f := FileAccess.open(slot_path(slot), FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(data, "\t"))
 
 
-func load_game() -> bool:
-	if not has_save():
+func _meta() -> Dictionary:
+	var owned := 0
+	for id in owned_all():
+		owned += int(owned_all()[id])
+	var place := "On the road"
+	var best_d := INF
+	for c in world_data.get("cities", []):
+		var d := player_pos.distance_to(Vector2(c["x"], c["y"]))
+		if d < best_d:
+			best_d = d
+			place = ("In " if d < 160 else "Near ") + String(c["name"])
+	var t := Time.get_datetime_dict_from_system()
+	var months := ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+	return {
+		"player_name": player_name, "gold": gold, "cards": owned, "wins": int(stats.get("wins", 0)),
+		"lairs": cleared_lairs.size(), "place": place, "play_time": play_time,
+		"faiths": DeckTools.best_factions(deck, 2),
+		"saved_at": "%d %s %d, %02d:%02d" % [t["day"], months[t["month"] - 1], t["year"], t["hour"], t["minute"]],
+		"saved_unix": Time.get_unix_time_from_system(),
+		"game_version": str(ProjectSettings.get_setting("application/config/version", "")),
+	}
+
+
+## Hook for newer save fields (decks etc.).
+func _extra_save(_data: Dictionary) -> void:
+	pass
+
+
+func _extra_load(_data: Dictionary) -> void:
+	pass
+
+
+## Loads a slot (default: the most recent one).
+func load_game(n: int = 0) -> bool:
+	_migrate_legacy()
+	if n <= 0:
+		n = latest_slot()
+	if n <= 0 or not slot_exists(n):
 		return false
-	var data = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
+	var data = JSON.parse_string(FileAccess.get_file_as_string(slot_path(n)))
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
+	slot = n
+	play_time = float(data.get("play_time", 0.0))
+	_session_start = Time.get_ticks_msec()
 	gold = int(data.get("gold", START_GOLD))
 	collection = _int_dict(data.get("collection", {}))
 	foils = _int_dict(data.get("foils", {}))
@@ -94,6 +227,7 @@ func load_game() -> bool:
 		missions[m]["progress"] = int(missions[m].get("progress", 0))
 	pending_boosters = int(data.get("pending_boosters", 0))
 	stats = data.get("stats", stats)
+	_extra_load(data)
 	# Drop cards that no longer exist in the database (set revisions).
 	for d in [collection, foils, deck]:
 		for id in d.keys():
