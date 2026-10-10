@@ -121,7 +121,7 @@ func _draw() -> void:
 	# --- mandorla of light (summoning) ---
 	var glow_t := clampf(summon_t / 0.5, 0.0, 1.0)
 	var fade_glow := 1.0 - clampf((summon_t - 0.6) / 0.4, 0.0, 1.0)
-	if summon_t < 1.0:
+	if summon_t < 1.0 and glow_t > 0.05:
 		var m_h := 120.0 * glow_t
 		var m_w := 46.0 * glow_t
 		var mc := feet + Vector2(0, -m_h * 0.5)

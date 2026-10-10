@@ -11,10 +11,12 @@ func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	main = load("res://scenes/main.tscn").instantiate()
 	add_child(main)
+	if not main.is_booted:
+		await main.booted
 	await _wait(0.6)
 	await _shot("01_menu")
 
-	main._new_game()
+	await main._new_game()
 	await _wait(0.3)
 	await _shot("02_welcome")
 	_close()

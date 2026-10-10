@@ -64,8 +64,11 @@ class MenuBg extends Control:
 			draw_string(font, p + Vector2(-w * 0.5, 64), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, UIKit.faction_ink(f))
 
 
+signal booted
+var is_booted := false
+
+
 func _ready() -> void:
-	ui_theme = UIKit.make_theme()
 	hud_layer = CanvasLayer.new()
 	hud_layer.layer = 1
 	add_child(hud_layer)
@@ -73,7 +76,43 @@ func _ready() -> void:
 	ui_layer.layer = 5
 	add_child(ui_layer)
 	GameState.gold_changed.connect(func(_g): _update_hud())
+	await _boot()
+	is_booted = true
+	booted.emit()
+
+
+## Everything the game prepares before the title page, with real progress.
+func _boot() -> void:
+	var ls := LoadingScreen.open(self, [["Preparing the parchment", 4.0], ["Gilding the borders", 1.0],
+		["Cutting the type", 1.0], ["Tuning the instruments", 1.0], ["Opening the book", 1.0]])
+	await ls.flush()
+	ls.stage(0)
+	if not Tapestry.parchment_ready():
+		var st := Tapestry.parchment_begin()
+		await ls.step(0.1)
+		for y in range(0, 256, 8):
+			Tapestry.parchment_rows(st, y, y + 8)
+			await ls.step(0.1 + 0.9 * float(y + 8) / 256.0)
+		Tapestry.parchment_end(st)
+	ls.stage(1)
+	var kinds := ["button", "hover", "pressed", "disabled", "panel"]
+	for k in kinds.size():
+		Tapestry.nine_patch(kinds[k])
+		await ls.step(float(k + 1) / kinds.size())
+	ls.stage(2)
+	for f in ["black", "book", "italic"]:
+		Tapestry.font(f)
+	ui_theme = UIKit.make_theme()
+	await ls.step(1.0)
+	ls.stage(3)
+	Music.attach_bar()
+	await ls.step(0.5)
+	Music.set_context("menu")
+	await ls.step(1.0)
+	ls.stage(4)
 	show_menu()
+	await ls.flush()
+	await ls.close()
 
 
 var _music_timer := 0.0
@@ -141,7 +180,7 @@ func _confirm_new_game() -> void:
 
 func _new_game() -> void:
 	GameState.new_game()
-	start_world()
+	await start_world()
 	show_dialog("Welcome, Wanderer",
 		"Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.\n\n"
 		+ "You carry nothing but three sealed booster packs. Open them — your first deck will be built from the faiths that answer you.",
@@ -151,23 +190,31 @@ func _new_game() -> void:
 func _continue_game() -> void:
 	if GameState.load_game():
 		GameState.ensure_deck()
-		start_world()
+		await start_world()
 	else:
 		show_dialog("Oops", "The save file could not be read.", [["OK", Callable()]])
 
 
 # ================================================================== world
 
+## Builds the open world behind a loading screen that tracks the real work.
 func start_world() -> void:
+	var ls := LoadingScreen.open(self, Overworld.BUILD_STAGES)
+	await ls.flush()
 	_set_screen(null)
 	if world:
 		world.queue_free()
+	if hud:
+		hud.queue_free()
+		hud = null
 	world = Overworld.new()
 	add_child(world)
 	world.city_entered.connect(_on_city_entered)
 	world.lair_reached.connect(_on_lair_reached)
 	world.enemy_engaged.connect(_on_enemy_engaged)
+	await world.build(ls, 0)
 	_build_hud()
+	await ls.close()
 
 
 func _build_hud() -> void:

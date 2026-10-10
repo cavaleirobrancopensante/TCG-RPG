@@ -37,6 +37,16 @@ var _next_enemy_id := 1
 var _pressing := false
 
 
+## Stages for the loading screen, in the order build() runs them.
+const BUILD_STAGES := [
+	["Painting the land", 6.0], ["Laying the roads", 1.0], ["Planting forests and raising mountains", 2.0],
+	["Illuminating the map", 3.0], ["Rousing the wanderers", 1.0],
+]
+const DECOR_BANDS := 8
+
+var built := false
+
+
 func _ready() -> void:
 	_rng.randomize()
 	var wd: Dictionary = GameState.world_data
@@ -44,9 +54,6 @@ func _ready() -> void:
 	world_size = Vector2(sz[0], sz[1])
 	cities = wd.get("cities", [])
 	lairs = wd.get("lairs", [])
-	_build_terrain()
-	_build_roads()
-	_build_decor()
 	camera = Camera2D.new()
 	camera.zoom = Vector2(0.75, 0.75)
 	camera.position_smoothing_enabled = true
@@ -61,9 +68,38 @@ func _ready() -> void:
 	move_target = player_pos
 	camera.position = player_pos
 	camera.reset_smoothing()
+	active = false
+
+
+## Builds the world piece by piece, reporting real progress to the loading screen
+## (`ls` may be null). `first` is the index of BUILD_STAGES[0] in the screen's list.
+func build(ls: LoadingScreen = null, first: int = 0) -> void:
+	_stage(ls, first)
+	await _build_terrain(ls)
+	_stage(ls, first + 1)
+	_build_roads()
+	await _tick(ls, 1.0)
+	_stage(ls, first + 2)
+	await _plan_decor(ls)
+	_stage(ls, first + 3)
+	await _build_decor(ls)
+	_stage(ls, first + 4)
 	for i in ENEMY_COUNT:
 		_spawn_enemy()
+		await _tick(ls, float(i + 1) / ENEMY_COUNT)
 	inside_city = _city_at(player_pos)   # don't re-open a city we start inside
+	built = true
+	active = true
+
+
+func _stage(ls: LoadingScreen, i: int) -> void:
+	if ls:
+		ls.stage(i)
+
+
+func _tick(ls: LoadingScreen, f: float) -> void:
+	if ls:
+		await ls.step(f)
 
 
 # ------------------------------------------------------------------ terrain
@@ -89,14 +125,20 @@ var _road_pts: Array = []
 
 
 class Decor extends Node2D:
-	## Static painted scenery, drawn once.
+	## Static painted scenery for one horizontal band (or the cities and lairs).
 	var world: Overworld
+	var y0 := 0.0
+	var y1 := 0.0
+	var places := false
 
 	func _draw() -> void:
-		world._draw_decor(self)
+		if places:
+			world._draw_places(self)
+		else:
+			world._draw_items(self, y0, y1)
 
 
-func _build_terrain() -> void:
+func _build_terrain(ls: LoadingScreen = null) -> void:
 	var cell := 20.0
 	var w := int(world_size.x / cell)
 	var h := int(world_size.y / cell)
@@ -120,6 +162,7 @@ func _build_terrain() -> void:
 			var pc := parch.get_pixel(x % 256, y % 256)
 			col = col * Color(pc.r / Tapestry.PARCHMENT.r, pc.g / Tapestry.PARCHMENT.g, pc.b / Tapestry.PARCHMENT.b)
 			img.set_pixel(x, y, col)
+		await _tick(ls, float(y + 1) / h)
 	var spr := Sprite2D.new()
 	spr.texture = ImageTexture.create_from_image(img)
 	spr.centered = false
@@ -129,29 +172,25 @@ func _build_terrain() -> void:
 	add_child(spr)
 
 
-var _decor: Node2D
+var _decor: Node2D          # the cities-and-lairs layer
+var _items: Array = []      # planned scenery: [kind, pos, scale, extra]
 
 
-## Redraw the static map (e.g. after a lair is cleared).
+## Redraw the places layer (e.g. after a lair is cleared).
 func refresh_decor() -> void:
 	if _decor:
 		_decor.queue_redraw()
 
 
-func _build_decor() -> void:
-	var decor := Decor.new()
-	_decor = decor
-	decor.world = self
-	decor.z_index = -4
-	add_child(decor)
-
-
-## Trees, mountains, fields, waves, cities and lairs — the illustrated map.
-func _draw_decor(ci: CanvasItem) -> void:
+## Decide where every tree, mountain, field and wave goes (row by row).
+func _plan_decor(ls: LoadingScreen = null) -> void:
+	_items.clear()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 4242
 	var step := 120.0
 	var y := 60.0
+	var rows := int((world_size.y - 100) / (step * 0.8)) + 1
+	var row := 0
 	while y < world_size.y - 40:
 		var x := 60.0
 		while x < world_size.x - 40:
@@ -164,24 +203,74 @@ func _draw_decor(ci: CanvasItem) -> void:
 			var r := rng.randf()
 			if n < -0.40:
 				if r < 0.35:
-					Tapestry.draw_waves(ci, p, 1.3)
+					_items.append(["waves", p, 1.3, null])
 			elif n > 0.42:
 				if r < 0.75:
-					Tapestry.draw_mountain(ci, p, rng.randf_range(1.1, 1.8))
+					_items.append(["mountain", p, rng.randf_range(1.1, 1.8), null])
 			elif n > 0.12:
 				if f == "abyss":
 					if r < 0.5:
-						_dead_tree(ci, p, rng.randf_range(1.2, 1.7))
+						_items.append(["dead", p, rng.randf_range(1.2, 1.7), null])
 				elif r < 0.85:
-					Tapestry.draw_tree(ci, p, rng.randf_range(1.5, 2.2), Tapestry.LEAF.darkened(0.1) if f == "wild" else REGION_COLORS["wild"].darkened(0.15))
+					_items.append(["tree", p, rng.randf_range(1.5, 2.2), Tapestry.LEAF.darkened(0.1) if f == "wild" else REGION_COLORS["wild"].darkened(0.15)])
 			else:
 				if r < 0.10:
-					Tapestry.draw_tree(ci, p, rng.randf_range(1.4, 2.0))
+					_items.append(["tree", p, rng.randf_range(1.4, 2.0), Tapestry.LEAF])
 				elif r < 0.18:
-					Tapestry.draw_bush(ci, p, 1.5)
+					_items.append(["bush", p, 1.5, null])
 				elif r < 0.26 and _near_place(p, 900.0) and f != "abyss":
-					Tapestry.draw_field(ci, p, 1.8, rng.randf_range(-0.4, 0.4))
+					_items.append(["field", p, 1.8, rng.randf_range(-0.4, 0.4)])
 		y += step * 0.8
+		row += 1
+		await _tick(ls, float(row) / rows)
+
+
+## Add the scenery in bands, one per frame, so the drawing cost is spread and measured.
+func _build_decor(ls: LoadingScreen = null) -> void:
+	var band_h := world_size.y / DECOR_BANDS
+	for b in DECOR_BANDS:
+		var d := Decor.new()
+		d.world = self
+		d.y0 = b * band_h if b > 0 else -INF
+		d.y1 = (b + 1) * band_h if b < DECOR_BANDS - 1 else INF
+		d.z_index = -4
+		add_child(d)
+		if ls:
+			await ls.flush()          # the band is drawn during this frame
+			await ls.step(float(b + 1) / (DECOR_BANDS + 1))
+	var places := Decor.new()
+	places.world = self
+	places.places = true
+	places.z_index = -3
+	add_child(places)
+	_decor = places
+	if ls:
+		await ls.flush()
+		await ls.step(1.0)
+
+
+func _draw_items(ci: CanvasItem, y0: float, y1: float) -> void:
+	for it in _items:
+		var p: Vector2 = it[1]
+		if p.y < y0 or p.y >= y1:
+			continue
+		var sc: float = it[2]
+		match it[0]:
+			"waves":
+				Tapestry.draw_waves(ci, p, sc)
+			"mountain":
+				Tapestry.draw_mountain(ci, p, sc)
+			"dead":
+				_dead_tree(ci, p, sc)
+			"tree":
+				Tapestry.draw_tree(ci, p, sc, it[3])
+			"bush":
+				Tapestry.draw_bush(ci, p, sc)
+			"field":
+				Tapestry.draw_field(ci, p, sc, it[3])
+
+
+func _draw_places(ci: CanvasItem) -> void:
 	for l in lairs:
 		var lp := Vector2(l["x"], l["y"])
 		Tapestry.draw_lair(ci, lp, 1.3, l["faction"], GameState.cleared_lairs.has(l["id"]), 0.0)

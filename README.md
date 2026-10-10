@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **1.4**. Full design: [DESIGN.md](DESIGN.md).
+Version **1.5**. Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
@@ -78,6 +78,19 @@ no image files — so it stays crisp on any screen and new cards are illustrated
   waves, inked roads, castles with conical roofs and faith banners, cave lairs, scroll labels;
   enemies and the pilgrim player walk the map as small figures.
 - `tests/gallery.tscn` renders every card, one page per faith.
+
+## Loading (1.5)
+
+- **Boot splash** (`art/splash.png`, rendered by `tests/make_splash.tscn`): shown by the engine
+  itself while Godot starts, before any game code can run.
+- **True loading bar** (`scripts/ui/loading_screen.gd`): driven by real work finished on the
+  player's device, never by timers. Work is split into small pieces that report progress; the
+  screen redraws whenever ~30 ms of work has passed, so fast devices finish quickly and slow
+  ones still see the bar move. The six faith roundels light up as the bar passes them.
+  - Boot: preparing the parchment, gilding the borders, cutting the type, tuning the instruments.
+  - Entering the world (new game / continue): painting the land row by row, laying roads,
+    planning the scenery, drawing it in eight bands, rousing the wanderers.
+- `tests/loading_shots.tscn` captures both screens mid-progress.
 
 ## Card set status
 

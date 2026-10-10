@@ -187,7 +187,7 @@ static func archetype(card: Dictionary) -> Dictionary:
 # ============================================================ primitives
 
 static func _poly(pts: PackedVector2Array, fill: Color) -> void:
-	if pts.size() < 3:
+	if not Tapestry.poly_ok(pts):
 		return
 	_ci.draw_colored_polygon(pts, Color(fill, fill.a * _a))
 	var closed := pts.duplicate()
@@ -217,6 +217,8 @@ static func _ell(c: Vector2, rx: float, ry: float, n: int = 18, from: float = 0.
 
 ## A limb as a tapered quad from a to b.
 static func _limb(a: Vector2, b: Vector2, wa: float, wb: float, col: Color) -> void:
+	if a.distance_squared_to(b) < 0.0001:
+		return
 	var d := (b - a).normalized().orthogonal()
 	_poly(_pv([a + d * wa, b + d * wb, b - d * wb, a - d * wa]), col)
 
