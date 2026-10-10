@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **1.7**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
+Version **1.8**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
@@ -63,7 +63,7 @@ Inspired by medieval manuscript illumination and tapestry: ink outlines, flat co
 parchment, ultramarine and vermilion, gold leaf. Everything is drawn procedurally in code —
 no image files — so it stays crisp on any screen and new cards are illustrated automatically.
 
-- **Type**: UnifrakturMaguntia (blackletter titles) and IM Fell English (text), both SIL OFL, in `art/fonts/`.
+- **Type** (1.8): Grenze Gotisch for titles (a readable gothic) and Alegreya for text (a calligraphic book face), with Noto Sans Symbols for icons — all SIL OFL, in `art/fonts/`.
 - **Cards**: parchment leaves with a faith border band (crosses, thorns, leaves, dots, rings, rivets),
   a blackletter name, an arched miniature on a gilt-diapered field, rubricated type line, a red
   drop capital, and power/toughness on a heater shield. Card backs show the six faiths in a roundel.

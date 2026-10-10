@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b2o00cwqqcyup"
-path="res://.godot/imported/IMFeENrm28P.ttf-7c2bfa5a9be9daac3fa1058c71c7ce33.fontdata"
+uid="uid://c1uooa8l8d2lk"
+path="res://.godot/imported/GrenzeGotisch.ttf-706b61df01b7002d1417813012ae8d55.fontdata"
 
 [deps]
 
-source_file="res://art/fonts/IMFeENrm28P.ttf"
-dest_files=["res://.godot/imported/IMFeENrm28P.ttf-7c2bfa5a9be9daac3fa1058c71c7ce33.fontdata"]
+source_file="res://art/fonts/GrenzeGotisch.ttf"
+dest_files=["res://.godot/imported/GrenzeGotisch.ttf-706b61df01b7002d1417813012ae8d55.fontdata"]
 
 [params]
 
