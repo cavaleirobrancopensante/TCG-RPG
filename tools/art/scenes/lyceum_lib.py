@@ -34,21 +34,34 @@ HAIR_GREY = C.hex('9a948a')
 
 # extra poses (unique prefix so other faiths are untouched)
 POSES.update({
-    'ly_write':    ((17, -60), (6, -59), True, 1, -1),
-    'ly_shoulder': ((14, -56), (-9, -90), False, 1, 1),
-    'ly_finger':   ((15, -88), (2, -60), True, 1, -1),
-    'ly_lips':     ((7, -84), (-9, -51), False, 1, 1),
-    'ly_palm':     ((27, -72), (-9, -52), False, 1, 1),
-    'ly_oath':     ((19, -92), (-12, -60), False, 1, 1),
-    'ly_hoplite':  ((14, -64), (-11, -60), False, 1, 1),
-    'ly_spearlow': ((20, -58), (-11, -60), False, 1, 1),
-    'ly_chin':     ((6, -78), (3, -62), True, 1, -1),
-    'ly_scroll':   ((16, -64), (-4, -62), True, 1, -1),
-    'ly_lean':     ((10, -70), (-11, -60), False, 1, 1),
+    # hand targets chosen so the arm either hangs nearly straight or the elbow
+    # drops by the side and the forearm leads forward to the hand
+    'ly_write':    ((19, -61), (7, -60), True, 1, -1),
+    'ly_shoulder': ((13, -50), (-6, -97), False, 1, 1),
+    'ly_finger':   ((20, -80), (-10, -50), False, 1, 1),
+    'ly_lips':     ((11, -80), (-10, -50), False, 1, 1),
+    'ly_palm':     ((27, -72), (-10, -50), False, 1, 1),
+    'ly_oath':     ((19, -92), (-1, -62), True, 1, 1),
+    'ly_hoplite':  ((22, -62), (-1, -62), True, 1, 1),
+    'ly_spearlow': ((25, -56), (-1, -62), True, 1, 1),
+    'ly_chin':     ((8, -80), (9, -64), True, 1, -1),
+    'ly_scroll':   ((24, -64), (8, -63), True, 1, -1),
+    'ly_lean':     ((20, -58), (-10, -50), False, 1, 1),
     'ly_both_up':  ((20, -100), (-18, -98), False, 1, -1),
     'ly_ear':      ((4, -92), (3, -62), True, 1, -1),
-    'ly_hand_out': ((24, -64), (-9, -52), False, 1, 1),
+    'ly_hand_out': ((26, -66), (-10, -50), False, 1, 1),
+    'ly_book':     ((22, -66), (11, -65), True, 1, -1),
+    'ly_hang':     ((13, -50), (-10, -50), False, 1, 1),
+    'ly_knees':    ((23, -60), (15, -61), True, 1, -1),
 })
+
+
+def rod(p, pts, w0, w1, fill, **kw):
+    """A straight tapered shaft (spear, pole, mast). A two-point taper is a closed
+    spline that overshoots its ends; resampling keeps the ends where they belong."""
+    a, b = pts
+    n = 10
+    p.taper([v_lerp(a, b, i / (n - 1)) for i in range(n)], w0, w1, fill, **kw)
 
 
 def rect(x0, y0, x1, y1):
@@ -532,6 +545,136 @@ def library(p, dark=False, lamp_at=None, window=False):
         p.cx.fill()
 
 
+def stone_courses(p, poly, rows=5, col=C.hex('b8a27a'), seed_off=0):
+    """Ashlar courses inside a quadrilateral face given as (bl, br, tr, tl)."""
+    bl, br, tr, tl = poly
+    p.clip_shape([q + (0,) for q in poly], smooth=False)
+    for r in range(1, rows):
+        t = r / rows
+        a = v_lerp(bl, tl, t)
+        b = v_lerp(br, tr, t)
+        p.line([a, b], INK.alpha(0.28), 1.2, smooth=False)
+    for r in range(rows):
+        t0, t1 = r / rows, (r + 1) / rows
+        n = 9
+        for k in range(n):
+            u = ((k + (0.5 if r % 2 else 0.0)) / n) ** 1.5
+            a = v_lerp(v_lerp(bl, br, u), v_lerp(tl, tr, u), t0)
+            b = v_lerp(v_lerp(bl, br, u), v_lerp(tl, tr, u), t1)
+            p.line([a, b], INK.alpha(0.22), 1.0, smooth=False)
+    p.unclip()
+
+
+def long_wall(p, near, far, h0, h1, top0=10, top1=1.5, col=C.hex('cdb68a'), towers=(0.18, 0.4, 0.6, 0.78), side=1):
+    """A defensive wall on the ground from near to far (perspective: height h0 to h1),
+    with a walk on top, merlons and square towers. side: which way the lit face looks."""
+    def at(t):
+        g = v_lerp(near, far, t)
+        h = lerp(h0, h1, t)
+        tp = lerp(top0, top1, t)
+        return g, h, tp
+    face_col = col if side > 0 else col.dark(0.22)
+    g0, g1 = near, far
+    face = [g0, g1, (g1[0], g1[1] - h1), (g0[0], g0[1] - h0)]
+    p.shape([q + (0,) for q in face], ('h', face_col.light(0.05), face_col.dark(0.1)), width=1.8, smooth=False)
+    stone_courses(p, face, 4, col)
+    walk = [(g0[0], g0[1] - h0), (g1[0], g1[1] - h1), (g1[0] - side * top1 * 0.6, g1[1] - h1 - top1), (g0[0] - side * top0 * 0.6, g0[1] - h0 - top0)]
+    p.shape([q + (0,) for q in walk], col.light(0.2), width=1.4, smooth=False)
+    # merlons on the outer edge
+    n = 26
+    for k in range(n):
+        t0 = (k / n) ** 1.25
+        t1 = ((k + 0.45) / n) ** 1.25
+        ga, ha, ta = at(t0)
+        gb, hb, tb = at(t1)
+        mh = ha * 0.16
+        p.shape([(ga[0], ga[1] - ha, 0), (gb[0], gb[1] - hb, 0), (gb[0], gb[1] - hb - mh, 0), (ga[0], ga[1] - ha - mh, 0)], face_col.light(0.08), ink=INK.alpha(0.6), width=1.0, smooth=False)
+    for t in towers:
+        g, h, tp = at(t)
+        w = h * 0.55
+        th = h * 1.5
+        d = v_norm(v_sub(far, near))
+        a = (g[0] - d[0] * w * 0.5, g[1] - d[1] * w * 0.5)
+        b = (g[0] + d[0] * w * 0.5, g[1] + d[1] * w * 0.5)
+        tower = [a, b, (b[0], b[1] - th), (a[0], a[1] - th)]
+        p.shape([q + (0,) for q in tower], ('h', face_col.light(0.1), face_col.dark(0.15)), width=1.6, smooth=False)
+        stone_courses(p, tower, 5, col)
+        side_w = w * 0.35
+        sideface = [b, (b[0] + side_w, b[1] - side_w * 0.4), (b[0] + side_w, b[1] - th - side_w * 0.4), (b[0], b[1] - th)]
+        p.shape([q + (0,) for q in sideface], face_col.dark(0.3), width=1.4, smooth=False)
+        roof = [(a[0], a[1] - th), (b[0], b[1] - th), (b[0] + side_w, b[1] - th - side_w * 0.4), (a[0] + side_w, a[1] - th - side_w * 0.4)]
+        p.shape([q + (0,) for q in roof], col.light(0.25), width=1.2, smooth=False)
+        p.shape(rect(lerp(a[0], b[0], 0.42), b[1] - th * 0.7, lerp(a[0], b[0], 0.58), b[1] - th * 0.5), C.hex('2a1e14'), width=0.8, smooth=False)
+        for k in range(3):
+            u0, u1 = k / 3 + 0.04, k / 3 + 0.2
+            x0, x1 = lerp(a[0], b[0], u0), lerp(a[0], b[0], u1)
+            y0 = lerp(a[1], b[1], u0) - th
+            p.shape(rect(x0, y0 - th * 0.12, x1, y0), face_col.light(0.1), ink=INK.alpha(0.6), width=1.0, smooth=False)
+
+
+def mule(p, x, y, s=1.0, flip=False, col=C.hex('7a6450'), blanket=VERMILION, halter=True):
+    """A mule in side view, feet at (x, y), facing right (flip faces left), about
+    220*s tall to the ear tips. Returns the halter ring in world space."""
+    p.push(x, y, s, flip)
+    dark = col.dark(0.3)
+    pale = C.hex('d2c4aa')
+    hoof = C.hex('3a2c22')
+    p.blob((0, -1), 90, 6, C(0.1, 0.05, 0.02, 0.28), ink=False)
+    # far legs and tail (behind the body)
+    p.taper([(-44, -96), (-44, -72), (-52, -48), (-46, -20), (-46, -5)], 12, 5, dark, width=1.6, shade=0.6)
+    p.taper([(34, -92), (34, -60), (32, -30), (34, -5)], 9, 5, dark, width=1.6, shade=0.6)
+    for fx in (-46, 34):
+        p.shape([(fx - 6, -6), (fx + 6, -6), (fx + 8, 0, 0), (fx - 7, 0, 0)], hoof, width=1.2)
+    p.taper([(-70, -108), (-84, -88), (-86, -62), (-84, -46)], 4, 2.4, dark, width=1.4, shade=0.5)
+    p.shape([(-88, -58), (-80, -60), (-78, -38), (-84, -28, 0), (-92, -38)], dark.dark(0.2), width=1.2, shade=0.5)
+    # barrel of the body
+    body = [(-74, -100), (-64, -122), (-20, -128), (30, -124), (60, -116), (72, -96), (60, -76), (20, -70), (-30, -72), (-62, -80)]
+    p.shape(body, col, width=2.2, shade=1.0, rim=0.5)
+    p.clip_shape(body)
+    p.texture((-80, -130, 80, -60))
+    p.blob((0, -74), 60, 10, pale.alpha(0.6), ink=False)
+    p.unclip()
+    # near legs: hind with the hock, fore straight
+    p.taper([(-60, -100), (-56, -74), (-64, -50), (-58, -22), (-58, -5)], 15, 5.6, col, width=1.8, shade=0.8, rim=0.3)
+    p.taper([(48, -96), (48, -62), (46, -30), (48, -5)], 11, 5.4, col, width=1.8, shade=0.8, rim=0.3)
+    for fx in (-58, 48):
+        p.blob((fx, -24), 5, 4, col.dark(0.15), width=1.0)
+        p.shape([(fx - 6.5, -6), (fx + 6.5, -6), (fx + 9, 0, 0), (fx - 7.5, 0, 0)], hoof, width=1.2)
+    # neck and head, ears long
+    neck = [(36, -118), (66, -150), (86, -178), (106, -176), (88, -136), (72, -96)]
+    p.shape(neck, col, width=2.2, shade=0.9, rim=0.4)
+    p.taper([(40, -122), (68, -156), (88, -182)], 3.5, 3.5, dark.dark(0.2), width=1.2)
+    for (ex, tx) in ((92, 84), (102, 104)):
+        p.shape([(ex - 5, -180), (tx, -222, 0), (ex + 6, -182)], col.dark(0.08), width=1.6, shade=0.7)
+        p.line([(ex, -184), (tx + 1, -214)], C.hex('c88a7a').alpha(0.7), 2)
+    head = [(88, -182), (108, -188), (124, -168), (142, -146), (140, -134), (126, -130), (112, -138), (94, -160)]
+    p.shape(head, col, width=2.0, shade=0.8, rim=0.3)
+    p.shape([(122, -150), (142, -146), (140, -134), (126, -130), (116, -136)], pale, width=1.4, shade=0.4)
+    p.blob((106, -172), 3.2, 2.4, INK, ink=False)
+    p.blob((105.5, -172.8), 1, 0.8, LEAD_WHITE, ink=False)
+    p.line([(101, -176), (109, -177)], dark, 1.2)
+    p.blob((137, -143), 2, 1.4, INK, ink=False)
+    p.line([(128, -133), (138, -135)], INK.alpha(0.7), 1.2)
+    ring = None
+    if halter:
+        p.line([(96, -178), (110, -150), (130, -140)], UMBER.dark(0.3), 2.4)
+        p.line([(118, -152), (132, -146), (138, -142)], UMBER.dark(0.3), 2.4)
+        p.blob((120, -140), 3, 3, None, ink=BRONZE, width=2)
+        ring = (120, -140)
+    # saddle cloth with fringe
+    if blanket:
+        cloth = [(-30, -126), (30, -124), (34, -96), (-32, -98)]
+        p.shape(cloth, ('v', blanket.light(0.1), blanket.dark(0.2)), width=1.8, shade=0.6)
+        p.line([(-28, -118), (31, -116)], GOLD, 2)
+        for k in range(10):
+            xx = -30 + k * 6.6
+            p.line([(xx, -97), (xx, -90)], GOLD, 1.4, smooth=False)
+    p.pop()
+    if ring is None:
+        return None
+    return (x + (-ring[0] if flip else ring[0]) * s, y + ring[1] * s)
+
+
 def fresco_wall(p, y0, y1, col=C.hex('a8322a')):
     """Pompeian red wall with painted panels and a black dado."""
     p.shape(rect(-10, y0, W + 10, y1), ('v', col.light(0.05), col.dark(0.1)), ink=False, smooth=False)
@@ -576,7 +719,7 @@ def ring(p, c, rx, ry, rot=0.0, w=6, col=BRONZE, ticks=0, part=None):
 def armillary(p, c, r, stand=True, col=BRONZE):
     x, y = c
     if stand:
-        p.taper([(x, y + r * 0.9), (x, y + r * 1.7)], r * 0.07, r * 0.1, col.dark(0.1), width=2, shade=0.8)
+        rod(p, [(x, y + r * 0.9), (x, y + r * 1.7)], r * 0.07, r * 0.1, col.dark(0.1), width=2, shade=0.8)
         p.shape([(x - r * 0.55, y + r * 1.95, 0), (x + r * 0.55, y + r * 1.95, 0), (x + r * 0.35, y + r * 1.7), (x - r * 0.35, y + r * 1.7)], col.dark(0.1), width=2, shade=0.8)
         p.blob((x, y + r * 1.25), r * 0.13, r * 0.09, col, width=1.6, shade=0.6)
         # half-ring cradle
@@ -681,7 +824,7 @@ def codex(p, c, w, h, cover=ULTRA, glow=False, initial=VERMILION):
     # illuminated initial
     p.shape(rect(x - w * 0.44, y - h * 0.36, x - w * 0.3, y - h * 0.18), initial, width=1.4, smooth=False)
     p.blob((x - w * 0.37, y - h * 0.27), w * 0.04, w * 0.05, GOLD, ink=INK.alpha(0.6), width=1)
-    p.taper([(x - w * 0.4, y - h * 0.15), (x - w * 0.43, y + h * 0.1)], 1.5, 0.5, MALACHITE, width=0.8)
+    rod(p, [(x - w * 0.4, y - h * 0.15), (x - w * 0.43, y + h * 0.1)], 1.5, 0.5, MALACHITE, width=0.8)
     # ribbon
     p.taper([(x + w * 0.02, y - h * 0.4), (x + w * 0.05, y + h * 0.3), (x + w * 0.02, y + h * 0.75)], 3, 2.4, VERMILION, width=1.2)
 
@@ -695,7 +838,7 @@ def wax_tablet(p, c, w, h, rot=0.0, stylus=True):
         p.line([(-w / 2 + 16, yy), (w / 2 - 16 - p.rng.uniform(0, 30), yy)], C.hex('c8a870').alpha(0.6), 1.2, smooth=False)
         yy += 10
     if stylus:
-        p.taper([(w / 2 - 20, h / 2 + 10), (w / 2 + 30, -h / 2 + 4)], 2.4, 1.2, BRONZE, width=1.2, shade=0.5)
+        rod(p, [(w / 2 - 20, h / 2 + 10), (w / 2 + 30, -h / 2 + 4)], 2.4, 1.2, BRONZE, width=1.2, shade=0.5)
     p.pop()
 
 
@@ -763,8 +906,8 @@ def ship(p, x, y, s=1.0, sail=LEAD_WHITE, stripe=VERMILION, oars=True, hull=C.he
             p.line([(xx, -6), (xx - 14, 22)], C.hex('8a6a40'), 2.2, smooth=False)
     p.blob((0, 8), 160, 6, C(1, 1, 1, 0.3), ink=False)
     if not broken:
-        p.taper([(-10, -18), (-10, -170)], 2.6, 2.2, UMBER, width=1.6)
-        p.taper([(-90, -150), (70, -156)], 2.0, 2.0, UMBER, width=1.4)
+        rod(p, [(-10, -18), (-10, -170)], 2.6, 2.2, UMBER, width=1.6)
+        rod(p, [(-90, -150), (70, -156)], 2.0, 2.0, UMBER, width=1.4)
         if sail_up:
             pts = [(-86, -150), (68, -155), (74, -40), (-6, -30), (-84, -44)]
             p.shape(pts, ('h', sail.dark(0.12), sail, sail.dark(0.18)), width=2, shade=0.5)
@@ -778,7 +921,7 @@ def ship(p, x, y, s=1.0, sail=LEAD_WHITE, stripe=VERMILION, oars=True, hull=C.he
         for q in ((-10, -170), (70, -156), (-90, -150)):
             p.line([q, (130 if q[0] > 0 else -150, -12)], INK.alpha(0.5), 1.0, smooth=False)
     else:
-        p.taper([(-10, -18), (-6, -80)], 2.6, 2.2, UMBER, width=1.6)
+        rod(p, [(-10, -18), (-6, -80)], 2.6, 2.2, UMBER, width=1.6)
         p.shape([(-6, -80, 0), (-2, -90, 0), (4, -82, 0), (-4, -76, 0)], UMBER.light(0.2), width=1.2, smooth=False)
     p.pop()
 
@@ -903,7 +1046,7 @@ def owl(p, c, s=1.0, tufts=False, col=C.hex('9a7a52'), eye=C.hex('f2b22a'), head
     for side in (-1, 1):
         fx = side * 9
         for k in (-1, 0, 1):
-            p.taper([(fx, -8), (fx + k * 4 + side * 1, -1)], 2.2, 1.6, C.hex('c9a24a'), width=1.2)
+            rod(p, [(fx, -8), (fx + k * 4 + side * 1, -1)], 2.2, 1.6, C.hex('c9a24a'), width=1.2)
             p.shape([(fx + k * 4 + side * 1 - 1.5, -2), (fx + k * 4 + side * 1 + 1.5, -2), (fx + k * 4 + side * 1.5, 4, 0)], INK, ink=False)
     p.pop()
 
@@ -949,7 +1092,7 @@ def sundial(p, x, y, s=1.0):
         a = math.pi + math.pi * (k + 0.5) / 9
         p.line([(0, -122), polar((0, -122), 50, a)], INK.alpha(0.5), 1.2, smooth=False)
     p.unclip()
-    p.taper([(0, -124), (6, -150)], 1.6, 1, BRONZE_DARK, width=1)
+    rod(p, [(0, -124), (6, -150)], 1.6, 1, BRONZE_DARK, width=1)
     p.line([(0, -122), (-30, -140)], C(0, 0, 0, 0.35), 3, smooth=False)
     p.pop()
 
@@ -974,8 +1117,8 @@ def tent(p, x0, x1, y_ground, h, col=C.hex('c8b48a'), stripe=VERMILION):
 
 def standard(p, x, y, h=260, col=VERMILION, eagle=True):
     """A legionary standard: pole, crossbar banner with fringe, a gilt top."""
-    p.taper([(x, y), (x, y - h)], 3, 2.4, UMBER, width=1.6, shade=0.6)
-    p.taper([(x - 34, y - h * 0.78), (x + 34, y - h * 0.78)], 2, 2, GOLD_DARK, width=1.2)
+    rod(p, [(x, y), (x, y - h)], 3, 2.4, UMBER, width=1.6, shade=0.6)
+    rod(p, [(x - 34, y - h * 0.78), (x + 34, y - h * 0.78)], 2, 2, GOLD_DARK, width=1.2)
     p.shape([(x - 30, y - h * 0.78, 0), (x + 30, y - h * 0.78, 0), (x + 30, y - h * 0.5, 0), (x - 30, y - h * 0.5, 0)], col, width=1.8, smooth=False, shade=0.6)
     for k in range(10):
         p.line([(x - 28 + k * 6.2, y - h * 0.5), (x - 28 + k * 6.2, y - h * 0.5 + 8)], GOLD, 1.6, smooth=False)
@@ -994,7 +1137,7 @@ def balance_scale(which='b', s=1.0):
         h = j['hand_' + which]
         x, y = h
         p.line([(x, y), (x, y + 4)], INK, 1.0)
-        p.taper([(x - 13 * s, y + 4), (x + 13 * s, y + 4)], 0.8, 0.8, BRONZE, width=1.0)
+        rod(p, [(x - 13 * s, y + 4), (x + 13 * s, y + 4)], 0.8, 0.8, BRONZE, width=1.0)
         for k in (-1, 1):
             px = x + k * 13 * s
             p.line([(px, y + 4), (px - 4 * s, y + 14 * s)], INK.alpha(0.7), 0.7)
@@ -1006,6 +1149,24 @@ def balance_scale(which='b', s=1.0):
 
 def held_scroll(which='f', open_=False, length=14):
     def fn(p, j):
+        if which == 'both':
+            # unrolled between the two hands, a roller in each fist
+            a, b = j['hand_b'], j['hand_f']
+            if a[0] > b[0]:
+                a, b = b, a
+            a = (a[0] + 1.0, a[1] + 0.5)
+            b = (b[0] - 1.0, b[1] + 0.5)
+            hh = 7.5
+            p.shape([(a[0], a[1] - hh), (b[0], b[1] - hh - 1), (b[0], b[1] + hh - 1), (a[0], a[1] + hh)], ('h', PARCH.dark(0.08), PARCH.light(0.1), PARCH.dark(0.05)), width=1.3, shade=0.3)
+            n = 5
+            for k in range(n):
+                t = (k + 0.8) / (n + 0.6)
+                ya = lerp(a[1] - hh + 2, a[1] + hh - 2, t)
+                yb = lerp(b[1] - hh + 1, b[1] + hh - 3, t)
+                p.line([(a[0] + 2.2, ya), (b[0] - 2.2, yb - 0.3)], INK.alpha(0.45), 0.6)
+            for q in (a, b):
+                p.shape(rect(q[0] - 1.5, q[1] - hh - 2, q[0] + 1.5, q[1] + hh + 2), ('h', PARCH.dark(0.2), PARCH.light(0.1), PARCH.dark(0.3)), width=1.0, smooth=False)
+            return
         h = j['hand_' + which]
         x, y = h
         if open_:
@@ -1047,10 +1208,11 @@ def axe(which='f'):
         d = v_norm((d[0] * 0.3 + 0.2, -1))
         top = v_add(h, v_mul(d, 26))
         bot = v_sub(h, v_mul(d, 10))
-        p.taper([bot, top], 1.2, 1.0, UMBER, width=1.1, shade=0.6)
+        rod(p, [bot, top], 1.2, 1.0, UMBER, width=1.1, shade=0.6)
         n = v_perp(d)
         b0 = v_sub(top, v_mul(d, 6))
         p.shape([v_add(top, v_mul(n, 1)), v_add(v_add(top, v_mul(n, 9)), v_mul(d, 4)), v_add(v_sub(b0, v_mul(d, 6)), v_mul(n, 10)), v_sub(b0, v_mul(d, 2))], IRON.light(0.2), width=1.2, shade=0.6)
+    fn.grip = which
     return fn
 
 
@@ -1064,13 +1226,14 @@ def spear(which='f', length=130):
         x, y = h
         foot = (x - 3, 2)
         top = (x + 5, -length + j['k'])
-        p.taper([foot, top], 1.0, 0.9, C.hex('8a6a40'), width=1.1, shade=0.6)
+        rod(p, [foot, top], 1.0, 0.9, C.hex('8a6a40'), width=1.1, shade=0.6)
         d = v_norm(v_sub(top, foot))
         n = v_perp(d)
         tip = v_add(top, v_mul(d, 11))
         p.shape([v_add(top, v_mul(n, 0.8)) + (0,), v_add(v_add(top, v_mul(d, 3)), v_mul(n, 2.2)), tip + (0,), v_sub(v_add(top, v_mul(d, 3)), v_mul(n, 2.2)), v_sub(top, v_mul(n, 0.8)) + (0,)],
                 ('h', BRONZE_LIGHT, BRONZE_DARK), width=1.1)
-        p.taper([foot, v_add(foot, v_mul(d, 6))], 1.2, 1.1, BRONZE, width=1.0)
+        rod(p, [foot, v_add(foot, v_mul(d, 6))], 1.2, 1.1, BRONZE, width=1.0)
+    fn.grip = which
     return fn
 
 
@@ -1083,6 +1246,7 @@ def staff(which='f', length=112, col=C.hex('7a5a36')):
         p.taper([foot, v_lerp(foot, top, 0.3), v_add(v_lerp(foot, top, 0.6), (0.8, 0)), top], 1.4, 1.1, col, width=1.3, shade=0.6)
         p.blob(v_lerp(foot, top, 0.45), 1.6, 1.0, col.dark(0.2), width=0.8)
         p.blob(top, 1.6, 1.4, col.light(0.1), width=0.9)
+    fn.grip = which
     return fn
 
 
@@ -1116,7 +1280,7 @@ def corinthian(crest=VERMILION, closed=True, col=BRONZE, crest_dir=1):
         p.line([(hx - 6.4, hy - 6), (hx - 2, hy - 10.6)], col.light(0.6).alpha(0.8), 0.9)
         if crest:
             # holder then horsehair crest sweeping back
-            p.taper([(hx + 0.4, ycrest + 0.4), (hx + 0.4, ycrest - 2.4)], 0.8, 0.8, col.dark(0.1), width=0.7)
+            rod(p, [(hx + 0.4, ycrest + 0.4), (hx + 0.4, ycrest - 2.4)], 0.8, 0.8, col.dark(0.1), width=0.7)
             cp = [(hx + 6.0 * crest_dir, ycrest - 0.6), (hx + 2.6, ycrest - 5.8), (hx - 3.6, ycrest - 6.6), (hx - 8.6, ycrest - 3.6), (hx - 11, ycrest + 1.6), (hx - 11.2, ycrest + 7)]
             p.taper(cp, 2.0, 2.2, crest, width=1.2, shade=0.8, rim=0.3)
             for k in range(1, len(cp) - 1):
@@ -1157,7 +1321,7 @@ def gold_laurel():
             q = polar((hx + 0.4, hy - 1.6), 6.8, ang)
             p.blob(q, 2.2, 0.95, GOLD, rot=ang + 1.0, width=0.6)
             p.blob(polar((hx + 0.4, hy - 1.6), 7.4, ang + 0.1), 1.6, 0.7, GOLD_LIGHT, rot=ang + 1.4, width=0.5)
-        p.taper([(hx - 6.4, hy - 0.6), (hx - 8.4, hy + 3.6)], 0.5, 0.4, VERMILION, width=0.4)
+        rod(p, [(hx - 6.4, hy - 0.6), (hx - 8.4, hy + 3.6)], 0.5, 0.4, VERMILION, width=0.4)
     return fn
 
 
@@ -1230,7 +1394,65 @@ def hoplon(p, c, R=21, device='book', field=None, col=BRONZE, turn=0.86):
         p.blob(polar((x, y), R * 0.91 * turn, a, R * 0.91), 0.7 * s, 0.7 * s, col.light(0.5), ink=False)
 
 
-class Greek(Figure):
+def ly_ik(s, t, l1, l2, out=0.35):
+    """Two-bone limb from s to t. The elbow takes the lower of the two bends (it
+    hangs with gravity), with a mild preference for pointing away from the body,
+    so the forearm leads forward to the hand instead of folding into the chest."""
+    d = v_len(v_sub(t, s))
+    d = min(max(d, 0.01), l1 + l2 - 0.05)
+    base = math.atan2(t[1] - s[1], t[0] - s[0])
+    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
+    a = math.acos(max(-1.0, min(1.0, cos_a)))
+    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
+    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
+    side = 1.0 if s[0] >= 0 else -1.0
+    e = max((e1, e2), key=lambda q: q[1] + out * side * q[0])
+    dirv = v_norm(v_sub(t, e))
+    return e, v_add(e, v_mul(dirv, l2))
+
+
+# shared poses re-aimed for the gravity elbow (only for Stoa figures)
+LY_POSES = {
+    'hold':  ((22, -63), (-10, -50), False, 1, 1),
+    'staff': ((21, -64), (-10, -50), False, 1, 1),
+    'book':  ((22, -66), (11, -65), True, 1, -1),
+    'pray':  ((16, -75), (15, -74), True, 1, -1),
+}
+
+
+class LyJoints:
+    """Skeleton with the gravity elbow rule above (shared by every Stoa figure)."""
+
+    def joints(self):
+        k = 24.0 if self.kneel else 0.0
+        j = {
+            'head': (1.8, -91 + k),
+            'neck': (0.6, -83.5 + k),
+            'sh_f': (9.0 * self.width, -80.5 + k),
+            'sh_b': (-8.0 * self.width, -80.5 + k),
+            'waist': (0.0, -57 + k),
+            'hip': (0.0, -48 + k),
+        }
+        pf, pb, bfront, bend_f, bend_b = LY_POSES.get(self.pose) or POSES[self.pose]
+        if getattr(self, 'hoplon', None):
+            # the hoplon is strapped on the forearm, carried across the body;
+            # the spear hand comes out past its rim
+            pb, bfront = (-1, -62), True
+            edge = -2.5 + 0.86 * self.hoplon_r + 4.5
+            if pf[1] > -75 and pf[0] < edge:
+                pf = (edge, pf[1])
+        j['el_f'], j['hand_f'] = ly_ik(j['sh_f'], (pf[0], pf[1] + k), 16.5, 15.5)
+        j['el_b'], j['hand_b'] = ly_ik(j['sh_b'], (pb[0], pb[1] + k), 16.5, 15.5)
+        j['back_front'] = bfront
+        j['k'] = k
+        return j
+
+
+class LyFigure(LyJoints, Figure):
+    pass
+
+
+class Greek(LyJoints, Figure):
     """Figure with Greek dress and arms: himation, muscled cuirass with pteruges,
     greaves and sandals, a round hoplon on the left arm."""
 
@@ -1271,15 +1493,27 @@ class Greek(Figure):
         if self.cloak:
             self._cloak_front(j)
         self._head(j)
-        if self.hoplon:
-            hb = j['hand_b']
-            hoplon(p, (hb[0] + 3, hb[1] + 2), self.hoplon_r, self.hoplon, self.hoplon_field)
         if j['back_front']:
             self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+        if self.hoplon:
+            # strapped on the forearm, held in front of the torso; the spear arm
+            # is behind its rim, the hand showing beyond it
+            self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+            hb = j['hand_b']
+            hoplon(p, (hb[0] - 1.5, hb[1] + 2.5), self.hoplon_r, self.hoplon, self.hoplon_field)
+            hf = j['hand_f']
+            self._hand(hf, v_norm(v_sub(hf, j['el_f'])))
+        else:
+            self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
         if self.props_front:
             for fn in self.props_front:
                 fn(p, j)
+            # a hand that grips a shaft is painted again over it
+            for fn in self.props_front:
+                g = getattr(fn, 'grip', None)
+                if g:
+                    h, el = j['hand_' + g], j['el_' + g]
+                    self._hand(h, v_norm(v_sub(h, el)))
         p.pop()
 
     def _hair(self, hc):
@@ -1314,13 +1548,19 @@ class Greek(Figure):
             p.blob(c, 2.5, 2.8, self.skin, rot=up, width=1.2, shade=0.4)
             for f in (-0.36, -0.12, 0.12, 0.36):
                 a = up + f
-                p.taper([polar(c, 1.8, a), polar(c, 6.0 - abs(f) * 3, a)], 0.75, 0.6, self.skin, width=1.0)
-            p.taper([polar(c, 1.6, up + 1.3), polar(c, 4.6, up + 0.9)], 0.75, 0.6, self.skin, width=1.0)
+                rod(p, [polar(c, 1.8, a), polar(c, 6.0 - abs(f) * 3, a)], 0.75, 0.6, self.skin, width=1.0)
+            rod(p, [polar(c, 1.6, up + 1.3), polar(c, 4.6, up + 0.9)], 0.75, 0.6, self.skin, width=1.0)
+            return
+        if is_f and pose == 'point':
+            c = v_add(at, v_mul(d, 1.4))
+            p.blob(c, 2.4, 2.1, self.skin, rot=ang, width=1.2, shade=0.5)
+            rod(p, [polar(c, 1.6, ang - 0.15), polar(c, 7.6, ang - 0.15)], 0.85, 0.7, self.skin, width=1.0)
+            rod(p, [polar(c, 1.4, ang - 1.1), polar(c, 3.8, ang - 0.7)], 0.75, 0.6, self.skin, width=0.9)
             return
         if is_f and pose in ('ly_finger', 'ly_lips', 'ly_ear'):
             p.blob(at, 2.4, 2.6, self.skin, width=1.2, shade=0.5)
-            p.taper([(at[0] + 0.4, at[1] - 1.6), (at[0] + 0.8, at[1] - 7.8)], 0.85, 0.7, self.skin, width=1.0)
-            p.taper([(at[0] - 1.8, at[1] + 0.4), (at[0] - 3.4, at[1] - 2.2)], 0.75, 0.6, self.skin, width=0.9)
+            rod(p, [(at[0] + 0.4, at[1] - 1.6), (at[0] + 0.8, at[1] - 7.8)], 0.85, 0.7, self.skin, width=1.0)
+            rod(p, [(at[0] - 1.8, at[1] + 0.4), (at[0] - 3.4, at[1] - 2.2)], 0.75, 0.6, self.skin, width=0.9)
             return
         super()._hand(at, d)
 
@@ -1441,6 +1681,138 @@ class Greek(Figure):
         p.blob((9, -80 + k), 1.8, 1.8, GOLD, width=0.8, shade=0.4)
 
 
+class SeatedGreek(Greek):
+    """A Greek sitting on the ground, knees drawn up, forearms resting on the knees.
+    The upper body is the standing figure lowered by the seat; the legs are drawn here."""
+    DROP = 39.0
+
+    def draw(self, p, x, y, height=480, flip=False):
+        self.p = p
+        s = height / 100.0
+        D = self.DROP
+        p.push(x, y, s, flip)
+        p.lw = 2.6
+        p.blob((8, -0.5), 30, 3.6, C(0.1, 0.05, 0.02, 0.28), ink=False)
+        cloth = self.main
+        skin = self.skin.dark(0.04)
+        # far leg (darker), then the body, then the near leg over the skirt
+        self._leg((-2, -10), (16, -33), (19, -3), cloth.dark(0.2), skin.dark(0.15))
+        p.push(0, D, 1.0)
+        j = self.joints()
+        self.j = j
+        if self.chlamys:
+            self._chlamys_back(j)
+        if self.props_back:
+            for fn in self.props_back:
+                fn(p, j)
+        if not j['back_front']:
+            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        p.clip_shape(rect(-40, -140, 40, -D - 9))
+        self._body(j)
+        p.unclip()
+        p.pop()
+        self._leg((3, -9), (23, -31), (27, -3), cloth, skin)
+        p.push(0, D, 1.0)
+        self._head(j)
+        if j['back_front']:
+            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+        if self.props_front:
+            for fn in self.props_front:
+                fn(p, j)
+        p.pop()
+        p.pop()
+
+    def _leg(self, hip, knee, ankle, cloth, skin):
+        p = self.p
+        # thigh: bare near the knee, the tunic skirt over the upper part
+        d = v_norm(v_sub(knee, hip))
+        n = v_perp(d)
+        mid = v_lerp(hip, knee, 0.6)
+        rod(p, [v_lerp(hip, knee, 0.4), knee], 4.6, 4.0, skin, width=1.6, shade=0.6)
+        # the skirt drapes over the lap from the hip to the ground and along the thigh
+        skirt = [(hip[0] - 13, hip[1] - 4), (hip[0] - 13.5, -0.5, 0), (hip[0] + 4, -0.5, 0), v_add(mid, v_mul(n, 5.0)) + (0,),
+                 v_sub(mid, v_mul(n, 5.4)) + (0,), (hip[0] + 2, hip[1] - 9)]
+        p.shape(skirt, cloth, width=1.8, shade=0.9, rim=0.4)
+        p.line([v_lerp(hip, mid, 0.3), v_lerp(hip, mid, 0.95)], cloth.dark(0.4).alpha(0.6), 1.0)
+        if self.trim:
+            p.line([v_add(mid, v_mul(n, 5.4)), v_sub(mid, v_mul(n, 6.2))], self.trim, 1.4)
+        # shin and foot
+        rod(p, [knee, ankle], 3.6, 2.5, skin, width=1.6, shade=0.6)
+        if self.greaves:
+            g0 = v_lerp(knee, ankle, 0.12)
+            rod(p, [g0, v_lerp(knee, ankle, 0.9)], 4.0, 3.0, ('h', BRONZE_LIGHT, BRONZE, BRONZE_DARK), width=1.4, shade=0.8)
+        p.blob(knee, 3.7, 3.5, skin, width=1.4, shade=0.5)
+        ax, ay = ankle
+        p.shape([(ax - 3, ay - 1.5), (ax + 2, ay - 2.5), (ax + 8.5, ay + 1.0, 0), (ax - 3.5, ay + 1.5, 0)], skin, width=1.4, shade=0.4)
+        p.line([(ax - 3.5, ay + 1.4), (ax + 8.5, ay + 1.2)], UMBER.dark(0.2), 1.5, smooth=False)
+
+
+class BenchGreek(Greek):
+    """A Greek seated on a bench or throne: thighs level, shins down, the long
+    garment falling over the knees to the ankles. Feet at y; seat top at y - 27 units."""
+    DROP = 22.0
+
+    def draw(self, p, x, y, height=480, flip=False):
+        self.p = p
+        s = height / 100.0
+        D = self.DROP
+        p.push(x, y, s, flip)
+        p.lw = 2.6
+        p.blob((8, -0.5), 24, 3.4, C(0.1, 0.05, 0.02, 0.28), ink=False)
+        p.push(0, D, 1.0)
+        j = self.joints()
+        self.j = j
+        if self.cloak:
+            self._cloak_back(j)
+        if self.props_back:
+            for fn in self.props_back:
+                fn(p, j)
+        if not j['back_front']:
+            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        p.clip_shape(rect(-40, -140, 40, -D - 22))
+        self._body(j)
+        p.unclip()
+        p.pop()
+        self._lap()
+        p.push(0, D, 1.0)
+        if self.cloak:
+            self._cloak_front(j)
+        self._head(j)
+        if j['back_front']:
+            self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, over=True)
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+        if self.props_front:
+            for fn in self.props_front:
+                fn(p, j)
+        p.pop()
+        p.pop()
+
+    def _lap(self):
+        p = self.p
+        col = self.himation or self.main
+        under = self.main
+        # feet under the hem
+        for fx in (14, 22):
+            p.shape([(fx - 3, -0.6), (fx - 2.4, -3.0), (fx + 4, -3.2), (fx + 6.5, -0.6, 0)], self.skin, width=1.4, shade=0.4)
+            p.line([(fx - 3, -0.5), (fx + 6.5, -0.5)], UMBER.dark(0.2), 1.5, smooth=False)
+        # the undergarment falling between the shins
+        p.shape([(10, -24), (25, -27), (26, -4), (18, -2.5), (10, -4)], under.dark(0.08), width=1.8, shade=0.8, rim=0.3)
+        # himation wrapped over the thighs and knees, hanging in folds to the shins
+        lap = [(-12, -36), (-4, -40), (14, -33), (26, -31), (29, -26), (27, -12), (24, -7), (16, -5.5), (9, -8), (8, -22), (-10, -24)]
+        p.shape(lap, col, width=2.2, shade=1.0, rim=0.5, light=(-0.8, -0.5))
+        p.clip_shape(lap)
+        p.texture((-14, -42, 30, -4))
+        for k in range(4):
+            x0 = 12 + k * 4
+            p.fold_band([(x0, -30), (x0 + 0.6, -18), (x0 - 0.4, -6)], 0.3, 1.8, col.dark(0.5).alpha(0.3))
+            p.line([(x0, -30), (x0 + 0.6, -18), (x0 - 0.4, -6)], col.dark(0.55).alpha(0.5), 1.1)
+        p.line([(-8, -31), (8, -32), (24, -29)], col.light(0.4).alpha(0.5), 1.2)
+        p.unclip()
+        if self.trim and self.trim != GOLD:
+            p.line([(24, -7.5), (16, -6), (9, -8.5)], self.trim, 1.6)
+
+
 def philosopher(**kw):
     kw.setdefault('garb', 'toga')
     kw.setdefault('sleeves', 'fitted')
@@ -1479,7 +1851,7 @@ def brute(**kw):
     kw.setdefault('mouth', 'open')
     kw.setdefault('width', 1.2)
     kw.setdefault('skin', C.hex('e8c0a0'))
-    return Figure(**kw)
+    return LyFigure(**kw)
 
 
 def statue(**kw):

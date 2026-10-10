@@ -2,28 +2,28 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwlnunidqar7s"
-path="res://.godot/imported/machine_r_007.png-d2b36ddb85e3934a2f4008a48c18557a.ctex"
+uid="uid://bic68gahkl54q"
+path="res://.godot/imported/abyss_r_009.webp-c534f70626edd9db5aa10d025eecb6d8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/cards/machine_r_007.png"
-dest_files=["res://.godot/imported/machine_r_007.png-d2b36ddb85e3934a2f4008a48c18557a.ctex"]
+source_file="res://art/cards/abyss_r_009.webp"
+dest_files=["res://.godot/imported/abyss_r_009.webp-c534f70626edd9db5aa10d025eecb6d8.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.85
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

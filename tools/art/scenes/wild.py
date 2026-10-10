@@ -1,5 +1,6 @@
 """The Old Ways: druids, hedge-witches, beasts of the forest, treefolk, standing stones."""
 import math
+import cairo
 from core import *
 import bg
 import props as PR
@@ -60,11 +61,11 @@ def wild_c_001(p):
     # the hunt far off on the hill
     for i, x in enumerate((150, 190, 225, 262)):
         hound(p, x, 372 + (i % 2) * 4, 0.32, pose='run')
-    Figure(pose='hold', garb='tunic', main=C.hex('7a2a24'), hair='short', head='cap', second=C.hex('3a2a1a')).draw(p, 110, 380, 60)
+    WFigure(pose='hold', garb='tunic', main=C.hex('7a2a24'), hair='short', head='cap', second=C.hex('3a2a1a')).draw(p, 110, 380, 60)
     ground(p, 470, C.hex('7a8a3a'), tufts=40, leaves=(AUTUMN, 30))
     # the hedge; the fox bursts out of it, its tail still in the thorns
     hedge(p, 520, h=160, season='hedge')
-    make_beast('fox', pose='leap', tail_up=0.3).draw(p, 560, 790, 3.3)
+    make_beast('fox', pose='leap', tail_up=0.3).draw(p, 680, 700, 2.75)
     r = p.rng
     for x in (120, 190, 260, 320, 370, 410, 450):
         leaf_mass(p, (x, 540 - r.uniform(0, 50)), r.uniform(50, 64), r.uniform(70, 90), 'hedge')
@@ -195,7 +196,7 @@ def wild_c_005(p):
     sky(p, 'autumn')
     treeline(p, 360, C.hex('b0905a'), 70, mist=C.hex('f2dcb0'))
     ground(p, 440, C.hex('8a8a3a'), tufts=30, leaves=(AUTUMN, 80))
-    tree(p, 760, 470, 470, 'oak', 'autumn', w=56)
+    tree(p, 770, 470, 420, 'oak', 'autumn', w=54)
     rays_from(p, (300, -40), 4, 0.6, C.hex('fff0c0'), strength=0.18, angle=math.pi / 2 - 0.3)
     falling_leaves(p, (150, 120, 900, 480), 18)
     # acorns on the ground
@@ -204,12 +205,15 @@ def wild_c_005(p):
         q = (r.uniform(420, 820), r.uniform(560, 610))
         p.blob(q, 4, 5, C.hex('a8742e'), width=0.9, shade=0.6)
         p.blob((q[0], q[1] - 4), 4.4, 2.2, C.hex('6a5030'), width=0.8)
-    Druid(pose='present', garb='gown', main=C.hex('8a5a2a'), second=C.hex('6a4020'), head='hood', hood_col=C.hex('5a6a3a'),
+    Druid(pose='wi_drop', garb='gown', main=C.hex('8a5a2a'), second=C.hex('6a4020'), head='hood', hood_col=C.hex('5a6a3a'),
           belt='cord', wreath='oak', trim=None, sleeves='fitted', eyes='down',
           props_front=[basket_held('b', kind='acorn')]).draw(p, 400, 600, 450)
-    # an acorn falling from her fingers
-    p.blob((470, 380), 5, 6, C.hex('a8742e'), width=1.0, shade=0.6)
-    p.blob((470, 375), 5.2, 2.6, C.hex('6a5030'), width=0.8)
+    # an acorn falling from her fingers towards the waking sapling
+    for q, s in (((536, 352), 1.0), ((538, 440), 0.9)):
+        p.blob(q, 5 * s, 6 * s, C.hex('a8742e'), width=1.0, shade=0.6)
+        p.blob((q[0], q[1] - 5 * s), 5.2 * s, 2.6 * s, C.hex('6a5030'), width=0.8)
+    for k in range(3):
+        p.line([(536, 338 - k * 12), (536, 332 - k * 12)], C.hex('fff0c0').alpha(0.5 - k * 0.12), 1.6)
     p.glow((520, 590), 50, C.hex('e8f0a0'), 0.4)
     oakling(p, 540, 604, 1.7, 'summer', sapling=True)
 
@@ -229,21 +233,40 @@ def wild_c_006(p):
 
 
 import figure as FG
-FG.POSES.setdefault('whistle', ((8, -86), (-9, -51), False, 1, 1))
-FG.POSES.setdefault('wassail', ((22, -88), (-9, -52), False, 1, 1))
 
 
 def magpie(p, c, s=1.0, flip=False):
+    """A magpie taking off: long wedge tail, white belly and shoulder, wings raised
+    with fingered primaries showing their white flash."""
+    blk = C.hex('1c2030')
+    blue = C.hex('2a3a5a')
     p.push(c[0], c[1], s, flip)
-    p.shape([(-6, -2), (-20, -24), (-8, -30, 0), (4, -6)], C.hex('1e2230'), width=1.2, shade=0.6)
-    p.shape([(-14, 0), (-38, 2, 0), (-36, 6), (-12, 5)], C.hex('1e2a3a'), width=1.2, shade=0.6)
-    p.shape([(-12, 2), (-4, -4), (6, -5), (12, -3), (10, 3), (0, 6), (-10, 5)], C.hex('1a1a22'), width=1.4, shade=0.6)
-    p.shape([(-4, 4), (6, 2), (8, -1), (-6, 0)], LEAD_WHITE, ink=False)
-    p.blob((10, -5), 4, 3.6, C.hex('1a1a22'), width=1.2)
-    p.shape([(13, -6, 0), (18, -4.6, 0), (13, -3.6, 0)], INK, width=0.8, smooth=False)
-    p.blob((11, -6), 0.8, 0.8, LEAD_WHITE, ink=False)
-    p.shape([(-2, -2), (-14, -26), (-2, -32, 0), (8, -6)], C.hex('2a3044'), width=1.2, shade=0.6)
-    p.shape([(-4, -6), (-10, -18), (-4, -20), (2, -8)], LEAD_WHITE, ink=False)
+
+    def wing(dx, dy, col, flash):
+        pts = [(-4 + dx, -2 + dy), (0 + dx, -12 + dy), (-3 + dx, -24 + dy), (-10 + dx, -34 + dy, 0), (-12 + dx, -28 + dy),
+               (-16 + dx, -31 + dy, 0), (-17 + dx, -25 + dy), (-21 + dx, -26 + dy, 0), (-20 + dx, -20 + dy), (-24 + dx, -19 + dy, 0),
+               (-19 + dx, -12 + dy), (-12 + dx, -4 + dy)]
+        p.shape(pts, ('v', col.light(0.15), col), width=1.2, shade=0.6)
+        if flash:
+            p.shape([(-4 + dx, -16 + dy), (-8 + dx, -27 + dy), (-14 + dx, -24 + dy), (-12 + dx, -15 + dy)], LEAD_WHITE.alpha(0.9), ink=False)
+        for k in range(3):
+            p.line([(-6 - k * 4 + dx, -8 + dy), (-10 - k * 4 + dx, -26 + dy + k * 2)], INK.alpha(0.4), 0.6)
+    wing(4, -1, blk.dark(0.2), False)
+    # long graduated tail with a green-blue sheen
+    p.shape([(-10, 0), (-30, -3), (-44, -2, 0), (-42, 3), (-30, 5), (-10, 5)], ('h', blue.light(0.2), blue), width=1.2, shade=0.6)
+    p.line([(-12, 2), (-42, 0)], blue.light(0.4).alpha(0.6), 0.8)
+    # body: black breast and back, white belly
+    body = [(-12, 2), (-6, -4), (4, -6), (11, -4), (12, 2), (4, 6), (-6, 6)]
+    p.shape(body, blk, width=1.3, shade=0.6)
+    p.shape([(-6, 4), (2, 5), (8, 2), (3, 0), (-5, 1)], LEAD_WHITE, ink=False)
+    # head and beak
+    p.blob((11, -5), 4.2, 3.8, blk, width=1.2, shade=0.5)
+    p.shape([(14.5, -6, 0), (19.5, -4.6, 0), (14.5, -3.6, 0)], INK, width=0.8, smooth=False)
+    p.blob((12.4, -6.2), 0.9, 0.9, LEAD_WHITE, ink=False)
+    p.blob((12.6, -6.2), 0.45, 0.45, INK, ink=False)
+    # feet tucked
+    p.line([(0, 6), (-3, 9)], INK_SOFT, 0.9)
+    wing(0, 0, blk, True)
     p.pop()
 
 
@@ -290,7 +313,7 @@ def wild_c_008(p):
         out = vtaper(p, pts, [26 - i * 3.4 for i in range(len(pts))], ('h', rc.light(0.1), rc.dark(0.4)), width=2, shade=0.7)
         bark(p, out, rc)
     # sett holes
-    holes = [((520, 470), 70, 44), ((830, 520), 50, 32)]
+    holes = [((520, 470), 82, 60), ((840, 525), 50, 32)]
     for c, rx, ry in holes:
         p.blob(c, rx + 14, ry + 10, C.hex('5a4228'), width=2, shade=0.5)
         p.blob(c, rx, ry, ('v', C.hex('0a0806'), C.hex('241a10')), width=2)
@@ -304,19 +327,29 @@ def wild_c_008(p):
         p.line([(x, y), (x + 2, y - 16), (x + 6, y - 22)], C.hex('4a6a3a'), 1.4)
         for k in range(3):
             p.blob((x + 3 + k * 2, y - 20 + k * 5), 2.2, 3.0, C.hex('6a6ad0').mix(VIOLET, 0.3), width=0.6)
-    # the badger, half out of the near hole
+    # the badger, half out of the near hole: its rear is still in the dark tunnel
     cx = p.cx
     cx.save()
     cx.new_path()
-    cx.rectangle(520, 0, W, H)
-    cx.new_sub_path()
+    cx.rectangle(522, 0, W, H)
+    cx.clip()
+    make_beast('badger', pose='walk').draw(p, 640, 560, 2.9)
+    cx.restore()
+    p.clip_shape([polar((520, 470), 1, a * math.tau / 40, 1) for a in range(40)])
+    p.unclip()
+    cx.save()
+    cx.new_path()
     cx.save()
     cx.translate(520, 470)
-    cx.scale(70, 44)
+    cx.scale(82, 60)
     cx.arc(0, 0, 1, 0, math.tau)
     cx.restore()
     cx.clip()
-    make_beast('badger', pose='walk').draw(p, 600, 556, 3.4)
+    g = cairo.LinearGradient(515, 0, 590, 0)
+    g.add_color_stop_rgba(0, 0.03, 0.02, 0.02, 0.95)
+    g.add_color_stop_rgba(1, 0.03, 0.02, 0.02, 0.0)
+    cx.set_source(g)
+    cx.paint()
     cx.restore()
     # the far hole: a spade left in a heap of fresh earth
     p.shape([(60, 600), (100, 520), (180, 500), (260, 530), (300, 600)], ('v', C.hex('6a4a2c'), C.hex('3a2818')), width=2, shade=0.6)
@@ -364,7 +397,7 @@ def wild_c_010(p):
     frame_trunk(p, 'left', 40, 80, BARK.dark(0.1), 'dark', ivy_on=True)
     make_beast('wolf', pose='trot', col=C.hex('7a7874')).draw(p, 760, 540, 1.9, flip=True)
     make_beast('wolf', pose='walk', col=C.hex('9a968c')).draw(p, 880, 600, 2.3, flip=True)
-    Figure(pose='point', garb='tunic', main=C.hex('4a5a32'), second=C.hex('5a4a32'), head='cap', hair='short',
+    WFigure(pose='point', garb='tunic', main=C.hex('4a5a32'), second=C.hex('5a4a32'), head='cap', hair='short',
            beard='short', hair_col=C.hex('6a4a2a'), belt='leather', cloak='cape', cloak_col=C.hex('6a5434'), mouth='open',
            props_back=[bow('b')], props_front=[hunting_horn('b')], shoes=C.hex('3a2a1a'), sleeves='fitted').draw(p, 380, 604, 450)
 
@@ -385,8 +418,8 @@ def wild_c_011(p):
     p.shape([(70, 520, 0), (130, 520, 0), (130, 498, 0), (70, 498, 0)], C.hex('8a6a3a'), width=1.6, smooth=False, shade=0.5)
     for x in (82, 120):
         p.blob((x, 524), 10, 10, None, width=2)
-    Figure(pose='point', garb='tunic', main=C.hex('8a6a4a'), hair='short', head='cap').draw(p, 40, 530, 90)
-    Figure(pose='pray', garb='gown', main=C.hex('6a7a9a'), head='veil', hood_col=LEAD_WHITE).draw(p, 160, 530, 84)
+    WFigure(pose='point', garb='tunic', main=C.hex('8a6a4a'), hair='short', head='cap').draw(p, 40, 530, 90)
+    WFigure(pose='pray', garb='gown', main=C.hex('6a7a9a'), head='veil', hood_col=LEAD_WHITE).draw(p, 160, 530, 84)
     make_beast('aurochs', pose='walk').draw(p, 560, 610, 3.0)
     for x in (80, 300, 940):
         grass_tuft(p, x, 612, 2.0, C.hex('6a9a3a'))
@@ -470,9 +503,10 @@ def wild_c_013(p):
         p.line([q, v_add(q, (sg * 48, -10))], SAP.dark(0.3), 1.0)
     p.rays((572, 200), 30, 90, 16, C.hex('f8ffc0').alpha(0.5), 2)
     # the druid's hands letting the last seeds fall
-    for (sx, sy), wr, ang in (((-60, 40), (250, 140), 0.35), ((-60, 190), (270, 238), 0.15)):
-        sleeve(p, (sx, sy), wr, 50, 40, DRUID_GREEN, cuff=GOLD_DARK)
-        open_hand(p, v_add(wr, (6, 0)), ang, 2.4, curl=0.25)
+    # (thumbs turned towards each other: the far left hand above, the near right below)
+    for (sx, sy), wr, ang, ts, col in (((-60, 40), (250, 140), 0.35, 1, DRUID_GREEN.dark(0.12)), ((-60, 190), (270, 238), 0.15, -1, DRUID_GREEN)):
+        sleeve(p, (sx, sy), wr, 50, 40, col, cuff=GOLD_DARK)
+        open_hand(p, v_add(wr, (6, 0)), ang, 2.4, curl=0.25, thumb_side=ts, skin=SKIN if ts < 0 else SKIN.dark(0.06))
     for k in range(5):
         q = (420 + k * 26 + r.uniform(-8, 8), 250 + k * 14)
         p.blob(q, 5, 7, C.hex('a8742e'), rot=k, width=1.0, shade=0.6)
@@ -509,7 +543,7 @@ def wild_c_015(p):
     mist_band(p, 470, 60, C.hex('f6e0b8'), 0.5)
     # mud churned between them
     p.blob((500, 600), 220, 18, C.hex('5a4228'), ink=False)
-    braced = ((35, 30, 45), (22, 20, 40), (-15, -45, -25), (-5, -35, -15))
+    braced = ((8, 2, 14), (18, 10, 22), (-25, -60, -30), (-12, -48, -20))
     make_beast('stag', pose='charge', legs=braced, neck=-26, head_pitch=-16, antler_tines=6).draw(p, 330, 606, 2.5)
     make_beast('stag', pose='charge', legs=braced, neck=-26, head_pitch=-16, antler_tines=5, col=DEER.dark(0.15)).draw(p, 690, 606, 2.5, flip=True)
     p.rays((506, 330), 20, 60, 10, LEAD_WHITE.alpha(0.7), 2)
@@ -537,26 +571,30 @@ def fiend(p, c, s=1.0):
         for t in (-1, 0, 1):
             p.taper([foot, v_add(foot, (t * 4, 6)), v_add(foot, (t * 5 + 1, 9))], 1.2, 0.3, BONE.dark(0.3), width=0.7)
     # torso
-    body = [(-18, -22), (-8, -30), (10, -30), (20, -20), (16, 4), (8, 22), (-10, 22), (-18, 4)]
-    p.shape(body, ('v', skin.light(0.1), skin.dark(0.35)), width=2.2, shade=0.9, rim=0.5)
-    p.clip_shape(body)
-    for y in (-8, 0, 8):
-        p.line([(-8, y), (0, y + 2), (8, y)], skin.dark(0.4).alpha(0.6), 1.2)
-    p.line([(0, -26), (0, 16)], skin.dark(0.4).alpha(0.5), 1.2)
-    p.line([(-14, -16), (-4, -12)], skin.light(0.3).alpha(0.5), 1.2)
-    p.unclip()
-    # rag about the loins
-    p.shape([(-12, 14), (12, 12), (14, 30, 0), (6, 24), (0, 34, 0), (-6, 25), (-13, 30, 0)], C.hex('2a2420'), width=1.4)
     # arms flung up, clawing
     for k, (sh, el, hd) in enumerate((((-16, -22), (-34, -30), (-46, -50)), ((16, -22), (32, -38), (36, -62)))):
         col = skin.dark(0.2) if k == 0 else skin
-        vtaper(p, [sh, el, hd], [6, 4.6, 3.6], col, width=1.6, shade=0.8)
+        vtaper(p, [sh, v_lerp(sh, el, 0.5), el, v_lerp(el, hd, 0.45), hd], [6.4, 6.6, 4.6, 4.6, 3.4], col, width=1.6, shade=0.8, rim=0.3)
         d = v_norm(v_sub(hd, el))
         for t in (-0.6, -0.2, 0.2, 0.6):
             a = math.atan2(d[1], d[0]) + t
             f = polar(hd, 6, a)
             p.taper([hd, f, polar(f, 4, a + 0.6)], 1.4, 0.3, col, width=0.9)
             p.taper([polar(f, 3.6, a + 0.6), polar(f, 6.5, a + 1.0)], 0.7, 0.1, BONE, width=0.5)
+    # neck, then a broad chest narrowing to a lean waist
+    p.taper([(3, -26), (4, -36)], 5.5, 4.5, skin.dark(0.15), width=1.4, shade=0.6)
+    body = [(-21, -24), (-12, -31), (0, -31.5), (12, -31), (22, -23), (20, -12), (13, 0), (10, 18), (-9, 18), (-13, 0), (-20, -12)]
+    p.shape(body, ('v', skin.light(0.1), skin.dark(0.35)), width=2.2, shade=0.9, rim=0.5)
+    p.clip_shape(body)
+    p.line([(-16, -16), (-9, -11), (-1, -12)], skin.dark(0.45).alpha(0.7), 1.3)
+    p.line([(2, -12), (10, -11), (17, -16)], skin.dark(0.45).alpha(0.7), 1.3)
+    for y in (-4, 3, 10):
+        p.line([(-7, y), (0, y + 1.5), (7, y)], skin.dark(0.4).alpha(0.55), 1.1)
+    p.line([(0, -12), (0, 16)], skin.dark(0.4).alpha(0.5), 1.1)
+    p.fold_band([(-17, -22), (-12, -18), (-5, -18)], 0.5, 2.2, skin.light(0.35).alpha(0.4))
+    p.unclip()
+    # rag about the loins
+    p.shape([(-12, 14), (12, 12), (14, 30, 0), (6, 24), (0, 34, 0), (-6, 25), (-13, 30, 0)], C.hex('2a2420'), width=1.4)
     # head: horns, swept ears, a snarling snout
     hc = (4, -42)
     p.taper([(hc[0] - 4, hc[1] - 8), (hc[0] - 10, hc[1] - 18), (hc[0] - 20, hc[1] - 22)], 2.6, 0.4, BONE.dark(0.2), width=1.2, shade=0.5)
@@ -687,7 +725,6 @@ def wild_c_018(p):
     for k in range(3):
         p.blob((540 + k * 18, 160 - k * 14), 16 + k * 5, 8 + k * 3, LEAD_WHITE.alpha(0.18), ink=False)
 
-FG.POSES.setdefault('draw_up', ((24, -96), (4, -84), True, 1, -1))
 
 
 def wild_c_019(p):
@@ -759,7 +796,7 @@ def wild_c_020(p):
         y = 400 + k * 22
         tree(p, x, y, 70 + k * 18, 'oak', 'spring')
     # the sower far off, striding with his seed-lip
-    Figure(pose='spread', garb='tunic', main=C.hex('8a7a5a'), hair='short', head='cap', second=C.hex('5a4a34')).draw(p, 260, 410, 120)
+    WFigure(pose='spread', garb='tunic', main=C.hex('8a7a5a'), hair='short', head='cap', second=C.hex('5a4a34')).draw(p, 260, 410, 120)
     r = p.rng
     for _ in range(30):
         p.blob((r.uniform(270, 340), r.uniform(320, 400)), 1.6, 1.6, GOLD_LIGHT, ink=False)
@@ -832,7 +869,7 @@ def wild_u_002(p):
     # mallards bursting up from the reeds
     for q, s, f in (((760, 300), 2.6, False), ((840, 360), 2.2, True), ((700, 380), 2.0, False)):
         songbird(p, q, s, 'robin' if False else 'wren', flip=f, wing=1.0)
-    Figure(pose='draw_up', garb='tunic', main=C.hex('6a6a3a'), second=C.hex('4a4a2a'), head='hood', hood_col=C.hex('5a5a34'),
+    WFigure(pose='wi_draw_up', garb='tunic', main=C.hex('6a6a3a'), second=C.hex('4a4a2a'), head='hood', hood_col=C.hex('5a5a34'),
            hair_col=UMBER, beard='short', belt='leather', props_front=[bow_up(46)], sleeves='fitted', shoes=C.hex('3a2a1a'),
            eyes='up').draw(p, 470, 588, 440)
     # a brace of duck hung from the punt pole
@@ -861,9 +898,9 @@ def wild_u_004(p):
     rays_from(p, (560, -40), 4, 0.5, C.hex('fff8d0'), strength=0.2, angle=math.pi / 2 + 0.15)
     ground(p, 460, C.hex('5a8a3a'), tufts=40, ferns=6, flowers=20)
     make_beast('bear', pose='walk', col=BEAR.light(0.05)).draw(p, 260, 560, 2.3)
-    Figure(pose='guard', garb='tunic', main=C.hex('3e6a32'), second=C.hex('5a4a2a'), head='hood', hood_col=C.hex('4a5a2a'),
+    WFigure(pose='staff', garb='tunic', main=C.hex('3e6a32'), second=C.hex('5a4a2a'), head='hood', hood_col=C.hex('4a5a2a'),
            beard='short', hair_col=C.hex('8a5a2a'), belt='leather', cloak='cape', cloak_col=C.hex('6a4a2a'), mouth='stern',
-           props_front=[PR.spear('f', 128)], props_back=[hunting_horn('b')], sleeves='fitted', shoes=C.hex('3a2a1a')).draw(p, 520, 606, 430)
+           props_front=[PR.spear('f', 128), grip('f')], props_back=[hunting_horn('b')], sleeves='fitted', shoes=C.hex('3a2a1a')).draw(p, 520, 606, 430)
     make_beast('boar', pose='walk').draw(p, 790, 610, 2.4)
 
 
@@ -882,12 +919,13 @@ def wild_u_005(p):
         y = 560 + k * 10
         p.taper([(x, y), (x + 2, y - 18)], 1.6, 0.5, SAP, width=0.8)
         p.blob((x + 5, y - 18), 5, 2.4, SAP.light(0.2), rot=-0.4, width=0.6)
+    falling_leaves(p, (150, 150, 520, 420), 8, (AUTUMN_GOLD, AUTUMN))
     oakling(p, 230, 592, 2.6, 'summer', step=0.4)
     oakling(p, 330, 606, 3.1, 'summer', step=-0.4)
     Druid(pose='staff', garb='robe', main=C.hex('7a6a4a'), second=C.hex('5a4a34'), head='hood', hood_col=C.hex('4f5f34'),
           age='old', eyes='open', belt='cord', wreath='oak', sleeves='bell',
-          props_back=[leaf_staff('f', 116)], props_front=[basket_held('b', kind='acorn')]).draw(p, 590, 606, 450)
-    falling_leaves(p, (150, 150, 900, 420), 14, (AUTUMN_GOLD, AUTUMN))
+          props_back=[leaf_staff('f', 106)], props_front=[basket_held('b', kind='acorn'), grip('f')]).draw(p, 590, 606, 450)
+    falling_leaves(p, (700, 150, 900, 420), 6, (AUTUMN_GOLD, AUTUMN))
     for k in range(3):
         q = (660 - k * 30, 470 + k * 40)
         p.blob(q, 4, 5, C.hex('a8742e'), width=0.9, shade=0.6)
@@ -1009,12 +1047,13 @@ def wild_u_007(p):
         top = (x + lean * hh, 520 - hh)
         p.shape([(x - 15, 520, 0), (top[0] - 15, top[1], 0), (top[0] - 6, top[1] - 12, 0), (top[0], top[1] + 4, 0), (top[0] + 8, top[1] - 16, 0), (top[0] + 15, top[1], 0), (x + 15, 520, 0)],
                 ('h', C.hex('9a7a54'), C.hex('5a4a34')), width=2, smooth=False)
-    b = make_beast('boar', pose='charge', col=C.hex('4a3a30'), dark=C.hex('241a14'))
+    # through the breach and out towards us, head down, tusks first (it charges left)
+    b = make_beast('boar', pose='charge', col=C.hex('4a3a30'), dark=C.hex('241a14'), neck=-8, head_pitch=10)
     b.S = dict(b.S)
     b.S['head_scale'] = 1.4
-    b.draw(p, 470, 612, 4.4)
+    b.draw(p, 500, 612, 4.4, flip=True)
     for _ in range(12):
-        q = (r.uniform(180, 300), r.uniform(560, 610))
+        q = (r.uniform(640, 800), r.uniform(560, 610))
         p.blob(q, r.uniform(4, 9), r.uniform(3, 6), C.hex('5a4228'), width=1.0)
 
 
@@ -1061,7 +1100,7 @@ def wild_u_008(p):
         for a in (-2.6, -2.0, -1.4, -0.8, -0.3):
             pp.taper([tip, polar(tip, 6, a), polar(tip, 9, a + 0.4)], 1.2, 0.2, BARK.dark(0.15), width=0.7)
         pp.blob(v_add(tip, (0, -1)), 3.2, 2.4, C.hex('4a3420'), width=0.8)
-    Woodwose(pose='hold', garb='tunic', main=C.hex('7a5a3a'), second=C.hex('6a4a30'), hair='long', hair_col=C.hex('6a4a2a'),
+    Woodwose(pose='hold', garb='tunic', main=C.hex('7a5a3a'), second=C.hex('6a4a30'), trim=C.hex('5a4028'), hair='long', hair_col=C.hex('6a4a2a'),
              beard='long', head='laurel', belt=None, sleeves='fitted', mouth='stern', skin=C.hex('d8b090'),
              shoes=C.hex('6a4a30'), props_front=[club]).draw(p, 450, 600, 470)
 
@@ -1124,7 +1163,8 @@ def wild_u_010(p):
     for k in range(16):
         q = (p.rng.uniform(200, 480), p.rng.uniform(200, 520))
         p.glow(q, 10, C.hex('e8ffa0'), 0.6)
-    make_beast('bear', pose='rear', mouth='roar', glow=C.hex('e0ff80')).draw(p, 360, 610, 2.9)
+    make_beast('bear', pose='rear', mouth='roar', glow=C.hex('e0ff80'),
+               legs=((60, 95, 120), (45, 85, 115), (-12, -60, -30), (-22, -64, -36))).draw(p, 360, 610, 2.9)
     automaton_hound(p, 700, 600, 2.5, flip=True, pose='charge')
     r = p.rng
     for _ in range(10):
@@ -1147,19 +1187,25 @@ def wild_u_011(p):
     for a, b in limbs[:4]:
         q = v_lerp(a, b, 0.8)
         p.shape([(q[0] - 9, q[1] - 4), (q[0] + 9, q[1] - 6), (q[0] + 10, q[1] + 6), (q[0] - 8, q[1] + 7)], C.hex('c8904a'), width=1.2, shade=0.6)
-    for x in range(380, 640, 50):
-        p.line([(x, 300 + (x % 3) * 10), (x + 40, 305)], VERMILION.alpha(0.8), 1.4)
+    # red ribbons tied on the limbs
+    for a, b in limbs[1:5]:
+        q = v_lerp(a, b, 0.5)
+        p.blob(q, 3, 3, VERMILION, width=0.8)
+        for sg in (-1, 1):
+            p.taper([q, v_add(q, (sg * 5, 14)), v_add(q, (sg * 2, 28))], 2.4, 1.0, VERMILION, width=0.8)
     # lanterns and torch-glow
     for q in ((340, 360), (690, 380)):
         p.glow(q, 120, C.hex('ffc070'), 0.35)
     r = p.rng
     # villagers: a man pouring cider on the roots, a woman raising the bowl, a boy with a lantern
-    Figure(pose='offer', garb='tunic', main=C.hex('7a3a2a'), second=C.hex('5a3a2a'), hair='short', hair_col=UMBER, beard='short',
+    WFigure(pose='offer', garb='tunic', main=C.hex('7a3a2a'), second=C.hex('5a3a2a'), hair='short', hair_col=UMBER, beard='short',
            head='cap', belt='leather', fur=C.hex('d8c8a8'), props_front=[PR.loaf('f')]).draw(p, 330, 610, 330)
-    Figure(pose='wassail', garb='gown', main=C.hex('3a5a7a'), second=C.hex('2a4a6a'), head='veil', hood_col=LEAD_WHITE,
-           trim=None, belt='cord').draw(p, 700, 612, 320, flip=True)
-    # the wassail bowl held high, steaming
-    bowl = (650, 330)
+    wife = WFigure(pose='wi_wassail', garb='gown', main=C.hex('3a5a7a'), second=C.hex('2a4a6a'), head='veil', hood_col=LEAD_WHITE,
+                   trim=None, belt='cord')
+    wife.draw(p, 700, 612, 320, flip=True)
+    # the wassail bowl held high in her hand, steaming
+    hf = wife.joints()['hand_f']
+    bowl = (700 - hf[0] * 3.2, 612 + hf[1] * 3.2 - 12)
     p.shape([(bowl[0] - 26, bowl[1] - 6), (bowl[0] + 26, bowl[1] - 6), (bowl[0] + 18, bowl[1] + 14), (bowl[0] - 18, bowl[1] + 14)], ('h', C.hex('a87a4a'), C.hex('6a4a2a')), width=1.8, shade=0.7)
     p.blob((bowl[0], bowl[1] - 6), 26, 6, C.hex('c88a3a'), width=1.4)
     for k in range(3):
@@ -1168,7 +1214,7 @@ def wild_u_011(p):
     for k in range(10):
         q = (430 + k * 6, 540 + (k % 3) * 8)
         p.blob(q, 3, 4, C.hex('e0a040').alpha(0.8), width=0.6)
-    Figure(pose='lantern', garb='tunic', main=C.hex('6a6a3a'), hair='curly', hair_col=C.hex('a86a2a'), props_front=[PR.lantern()]).draw(p, 160, 615, 220)
+    WFigure(pose='lantern', garb='tunic', main=C.hex('6a6a3a'), hair='curly', hair_col=C.hex('a86a2a'), props_front=[PR.lantern()]).draw(p, 160, 615, 220)
 
 
 def wild_u_012(p):
@@ -1209,7 +1255,8 @@ def wild_u_012(p):
         for k in range(2):
             p.taper([q, v_add(q, (k * 8 - 4, 30))], 3.4, 2, C.hex('d8c06a'), width=1.0)
     for f, side in ((forks[0], 1), (forks[1], -1)):
-        sleeve(p, (f[0] - 420 * side, f[1] + 260), (f[0] - 26 * side, f[1] + 16), 44, 28, C.hex('6a5a3a'), cuff=C.hex('4a3a24'))
+        # the dowser's own forearms, reaching up from the bottom corners (we see through his eyes)
+        sleeve(p, (f[0] - 250 * side, H + 60), (f[0] - 26 * side, f[1] + 16), 52, 30, C.hex('7a6a48'), cuff=C.hex('4a3a24'))
         p.taper([f, v_add(f, (-22 * side, -26))], 7, 6, hazel, width=1.8, shade=0.6)
         fist(p, v_add(f, (-4 * side, 10)), 3.4, ang=0.55 * side, side=side)
 
@@ -1285,12 +1332,16 @@ def wild_r_001(p):
     mistletoe(p, (420, 140), 26)
     mistletoe(p, (700, 186), 30)
     # acolytes holding a white cloth to catch the falling sprigs
-    for x, fl in ((220, False), (370, True)):
-        Figure(pose='offer', garb='robe', main=DRUID_WHITE.dark(0.08), head='hood', eyes='up', belt='cord').draw(p, x, 600, 220, flip=fl)
-    p.shape([(240, 470), (300, 490), (350, 470), (340, 500), (300, 520), (250, 500)], LEAD_WHITE, width=1.6, shade=0.5)
+    # (the cloth is painted first so the acolytes' hands close over its corners)
+    cloth = [(222, 454), (263, 443), (300, 454), (337, 443), (378, 454), (366, 492), (300, 520), (234, 492)]
+    p.shape(cloth, LEAD_WHITE, width=1.6, shade=0.5)
+    for a, b in (((263, 446), (282, 512)), ((337, 446), (318, 512)), ((300, 456), (300, 518))):
+        p.fold_band([a, v_lerp(a, b, 0.5), b], 0.3, 2.2, STONE.alpha(0.45))
+    for x, fl in ((190, False), (410, True)):
+        WFigure(pose='offer', garb='robe', main=DRUID_WHITE.dark(0.08), head='hood', eyes='up', belt='cord').draw(p, x, 600, 220, flip=fl)
     Druid(pose='raise', garb='robe', main=DRUID_WHITE, second=C.hex('d8d0b8'), hair='white', beard='long', age='old', head=None,
           wreath='mistletoe', belt='gold', cloak='mantle', cloak_col=C.hex('d8d2c0'), lining=GOLD_LIGHT, eyes='up',
-          props_front=[sickle('f')], props_back=[leaf_staff('b', 110, glow=C.hex('e8ffd0'))]).draw(p, 560, 606, 440)
+          props_front=[sickle('f')], props_back=[leaf_staff('b', 92, glow=C.hex('e8ffd0'))]).draw(p, 560, 606, 440)
     for k in range(4):
         q = (520 + k * 14, 220 + k * 30)
         p.blob(q, 6, 2.4, C.hex('9ab86a'), rot=k, width=0.8)
@@ -1483,7 +1534,7 @@ def wild_r_007(p):
             p.shape([(x + k * 14 * s, y), (x + k * 6 * s, y - 60 * s), (x + k * 10 * s + 6 * s, y - 64 * s), (x + k * 18 * s + 6 * s, y)], C.hex('c89a4a').dark(0.3), width=1.6)
     # the riders black against the moon
     def silfig():
-        return Figure(pose='point', garb='tunic', main=sil, second=sil, skin=sil, hair='short', hair_col=sil, head='hood', hood_col=sil,
+        return WFigure(pose='point', garb='tunic', main=sil, second=sil, skin=sil, hair='short', hair_col=sil, head='hood', hood_col=sil,
                       cloak='cape', cloak_col=sil, props_front=[PR.spear('f', 120)], shoes=sil, blush=0)
     old = p.ink
     rider(p, 520, 470, 2.2, sil, silfig(), horse_kw=dict(glow=None), leg_col=sil)
@@ -1555,13 +1606,15 @@ def herne_head(p, hc):
     hx, hy = hc
     for sg in (-1, 1):
         antler(p, (hx + sg * 3, hy - 8), 90 + sg * 30, 26, 4, C.hex('c8b48c'), 1.4, sg)
-    p.glow((hx + 3, hy - 1), 6, C.hex('c8ff90'), 0.7)
+    for e in ((hx + 1.4, hy - 1.2), (hx + 4.7, hy - 1.15)):
+        p.glow(e, 2.6, C.hex('c8ff90'), 0.8)
+        p.blob(e, 0.6, 0.45, C.hex('f0ffc0'), ink=False)
 
 
 def wild_m_001(p):
     """Herne, Lord of the Wild Hunt: antlered and silent, he rides out from the old oak at midnight."""
     sky(p, 'night', stars=70)
-    moon(p, (820, 110), 34, glow=0.4)
+    moon(p, (690, 82), 30, glow=0.4)
     hills(p, 400, C.hex('1e2840'), 40)
     ground(p, 440, C.hex('1e2a24'), tufts=30)
     # the old oak, its hollow blazing with green light
@@ -1575,7 +1628,7 @@ def wild_m_001(p):
     # hounds pouring out after him
     make_beast('wolf', pose='run', col=C.hex('3a3a44'), glow=C.hex('c8ff90')).draw(p, 300, 600, 1.6)
     make_beast('wolf', pose='leap', col=C.hex('4a4a54'), glow=C.hex('c8ff90')).draw(p, 200, 560, 1.4)
-    herne = Figure(pose='hold', garb='surcoat', main=C.hex('2e3a28'), second=C.hex('3a3020'), skin=C.hex('c8b8a0'), head='hood',
+    herne = WFigure(pose='hold', garb='surcoat', main=C.hex('2e3a28'), second=C.hex('3a3020'), skin=C.hex('c8b8a0'), head='hood',
                    hood_col=C.hex('2a2a20'), hair='none', beard='long', hair_col=C.hex('4a4a3a'), cloak='mantle',
                    cloak_col=C.hex('3a2a1e'), lining=C.hex('5a4a2a'), eyes='open', mouth='stern',
                    props_front=[hunting_horn('f')], belt='leather')
@@ -1586,7 +1639,7 @@ def wild_m_001(p):
         old_head(hc)
         herne_head(p, hc)
     herne._headgear = hg
-    rider(p, 620, 560, 2.6, C.hex('1a1616'), herne, horse_kw=dict(glow=C.hex('c8ff90')), leg_col=C.hex('3a3020'))
+    rider(p, 610, 590, 2.95, C.hex('1a1616'), herne, horse_kw=dict(glow=C.hex('c8ff90')), leg_col=C.hex('3a3020'))
     r = p.rng
     for _ in range(20):
         q = (r.uniform(300, 900), r.uniform(200, 560))

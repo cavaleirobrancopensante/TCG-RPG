@@ -6,6 +6,40 @@ import math
 from core import *
 import bg
 from figure import Figure, ik
+import figure as _figure
+
+# Extra poses for the artificers. figure.ik keeps the "out and down" elbow when the bend
+# flag is non-zero and the other (lower, closer to the side) elbow when it is 0, which is
+# what a forearm carried forward needs. Same tuple layout as figure.POSES.
+_figure.POSES.update({
+    'ma_stand': ((12, -49), (-10, -49), False, 1, 1),       # arms hanging at the sides
+    'ma_hold': ((24, -58), (-10, -49), False, 0, 1),        # a tool carried forward at the waist
+    'ma_hold_hi': ((26, -64), (-10, -49), False, 0, 1),     # a tool held up a little higher
+    'ma_both': ((24, -58), (10, -54), True, 0, 1),          # both hands forward at the waist
+    'ma_both_hi': ((28, -66), (14, -62), True, 0, 1),       # both hands forward, chest high
+    'ma_lantern': ((19, -50), (-10, -49), False, 0, 1),     # lamp or bucket hanging forward
+    'ma_point': ((39, -73), (-10, -49), False, 0, 1),       # arm stretched out, pointing
+    'ma_raise': ((18, -104), (-10, -49), False, 1, 1),      # tool or fist raised high
+    'ma_raise_both': ((30, -84), (-28, -84), False, 1, 1),  # both arms up in wonder
+    'ma_gesture': ((32, -78), (-10, -49), False, 1, 1),     # open hand lifted toward something
+})
+
+
+class Artificer(Figure):
+    """Figure whose front hand opens (fingers fanned) for the gesturing poses."""
+    OPEN = ('ma_gesture', 'ma_point', 'ma_raise_both')
+
+    def _hand(self, at, d):
+        if self.pose in self.OPEN and (at is self.j['hand_f'] or self.pose == 'ma_raise_both'):
+            p = self.p
+            ang = math.atan2(d[1], d[0])
+            c = v_add(at, v_mul(d, 2.0))
+            p.blob(c, 2.6, 2.2, self.skin, rot=ang, width=1.3, shade=0.4)
+            for f in (-0.5, -0.15, 0.2, 0.55):
+                p.taper([polar(c, 1.6, ang + f), polar(c, 5.4, ang + f)], 0.7, 0.55, self.skin, width=1.0)
+            p.taper([polar(c, 1.4, ang - 1.3), polar(c, 4.2, ang - 1.0)], 0.75, 0.6, self.skin, width=1.0)
+            return
+        Figure._hand(self, at, d)
 
 TAU = math.tau
 
@@ -317,7 +351,9 @@ def wind_key(p, c, s=1.0, col=BRASS, rot=0.0):
     p.taper([(0, 0), (-10 * s, 0)], 1.6 * s, 1.6 * s, col.dark(0.1), width=1.2, shade=0.6)
     for sgn in (-1, 1):
         p.blob((-14 * s, sgn * 5 * s), 4.2 * s, 5.4 * s, metal(col, 'v'), width=1.4, shade=0.7)
-        p.blob((-14 * s, sgn * 5 * s), 1.6 * s, 2.2 * s, INK.alpha(0.85), ink=False)
+        # solid lobes with a bevel line (pierced lobes read as a pair of cartoon eyes)
+        p.blob((-14 * s, sgn * 5 * s), 2.6 * s, 3.6 * s, None, ink=col.dark(0.35).alpha(0.8), width=1.0)
+        p.line([(-16.2 * s, sgn * 2.6 * s), (-16.6 * s, sgn * 6.6 * s)], col.light(0.55).alpha(0.75), 1.0)
     p.blob((-10 * s, 0), 2.4 * s, 2.4 * s, col, width=1.2, shade=0.6)
     p.pop()
 
@@ -817,9 +853,13 @@ def scaffold(p, x0, x1, y_top, y_bot, col=OAK):
 def crane(p, base_x, base_y, top_y, arm_len, col=OAK_D, hook=None):
     """A treadwheel crane: a mast, a jib, a rope and hook."""
     p.taper([(base_x, base_y), (base_x, top_y)], 9, 7, col, width=2, shade=0.7)
-    p.taper([(base_x - 30, base_y), (base_x, top_y + 80)], 5, 4, col, width=1.6, shade=0.6)
+    sg = 1 if arm_len >= 0 else -1
+    p.taper([(base_x - 30 * sg, base_y), (base_x, top_y + 80)], 5, 4, col, width=1.6, shade=0.6)
     end = (base_x + arm_len, top_y + 30)
-    p.taper([(base_x - 40, top_y + 10), end], 6, 4, col, width=1.8, shade=0.7)
+    # the jib is pinned to the mast head and stayed back to it by a rope
+    p.taper([(base_x - 14 * sg, top_y + 4), end], 6, 4, col, width=1.8, shade=0.7)
+    p.line([(base_x, top_y - 4), v_lerp((base_x - 14 * sg, top_y + 4), end, 0.75)], INK.alpha(0.7), 1.4, smooth=False)
+    p.blob((base_x, top_y + 6), 4.5, 4.5, metal(IRONC, 'v'), width=1.4)
     hook = hook or (end[0], top_y + 200)
     p.line([end, hook], INK, 2.4, smooth=False)
     p.line([(hook[0], hook[1]), (hook[0] + 6, hook[1] + 10), (hook[0], hook[1] + 18), (hook[0] - 6, hook[1] + 12)], IRONC, 3)
@@ -860,7 +900,7 @@ class Automaton:
                  col=BRASS, col2=STEELC, trim=COPPER, eye_col=FURN, width=1.0, hand_f=(24, -56),
                  hand_b=(-18, -48), stack=False, key=False, porthole=True, crest=None,
                  shield_col=None, spear=False, gauge_on=False, pauldron=True, neck=0.0,
-                 head_scale=1.0, extra_back=None, extra_front=None, stride=0.0, held=None):
+                 head_scale=1.0, extra_back=None, extra_front=None, stride=0.0, held=None, bend_f=1, bend_b=1):
         self.__dict__.update(locals())
         del self.__dict__['self']
 
@@ -872,8 +912,16 @@ class Automaton:
             'sh_f': (15 * w, -76 + n * 0.3), 'sh_b': (-13 * w, -76 + n * 0.3),
             'neck': (1.5, -82 + n), 'head': (2.5, -91 + n),
         }
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], self.hand_f, 18, 17, 1)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], self.hand_b, 18, 17, 1)
+        # hand targets are given for a width-1 body: spread them with the shoulders so a
+        # broad construct does not end with its hands on its hips
+        def spread(h, shx):
+            # move the hand out by as much as the shoulder moved out, only if it is on that side
+            return (h[0] + (shx * (w - 1) if h[0] * shx > 0 else 0.0), h[1])
+        hf = spread(self.hand_f, 15)
+        hb = spread(self.hand_b, -13)
+        # bend 1: elbow out and down (figure.ik default); bend 0: the other, lower elbow
+        j['el_f'], j['hand_f'] = ik(j['sh_f'], hf, 18, 17, self.bend_f)
+        j['el_b'], j['hand_b'] = ik(j['sh_b'], hb, 18, 17, self.bend_b)
         return j
 
     def draw(self, p, x, y, h, flip=False, rot=0.0):

@@ -83,13 +83,13 @@ def revel_c_001(p):
     p.shape([(700, 560, 0), (900, 520, 0), (920, 540, 0), (720, 584, 0)], C.hex('6a4426'), width=2, smooth=False, shade=0.7)
     for lx in (760, 860):
         p.taper([(lx, 560 - (lx - 700) * 0.2), (lx + 30, 460 - (lx - 700) * 0.2)], 6, 5, C.hex('5a3a22'), width=1.6, shade=0.6)
-    RFig(pose=((10, -86), (-14, -40), False, 1, 1), garb='jerkin', seat='lounge', main=C.hex('3a5a6a'), hose=C.hex('5a4a3a'), hair='short', hair_col=C.hex('2a1a10'),
+    RFig(pose=((22, -50), (-17, -38), False, 1, 1, 0.6, 1.4), garb='jerkin', seat='lounge', main=C.hex('3a5a6a'), hose=C.hex('5a4a3a'), hair='short', hair_col=C.hex('2a1a10'),
          beard='short', eyes='closed', mouth='open', belt='leather', sleeves='fitted').draw(p, 880, 604 + 19 * 3.0, 300, flip=True)
     zzz(p, 900, 380, 1.0, GOLD_LIGHT)
     spilled_goblet(p, 600, 596, 1.2, C.hex('a08060'), C.hex('d8a040'))
-    RFig(pose=((25, -100), (-16, -60), False, 1, 1), garb='jerkin', stance='wide', main=C.hex('9a2a22'), second=C.hex('6a1a1a'),
+    RFig(pose=((19, -106), (-21, -56), False, 1, 1, 1.4, 1.4), garb='jerkin', stance='wide', main=C.hex('9a2a22'), second=C.hex('6a1a1a'),
          hose=C.hex('5a3a2a'), hair='curly', hair_col=C.hex('7a3a1a'), beard='short', mouth='open', belt='leather',
-         sleeves='fitted', width=1.25, props_front=[stool('f')], props_back=[tankard('b', slosh=True)]).draw(p, 450, 602, 450)
+         sleeves='fitted', width=1.25, props_front=[stool('f'), tankard('b')]).draw(p, 450, 602, 450)
 
 
 def revel_c_002(p):
@@ -105,7 +105,7 @@ def revel_c_002(p):
     # wine press vat with a treader
     vx, vy = 190, 560
     RFig(pose='spread', garb='tunic', main=C.hex('8a4a6a'), hair='curly', hair_col=C.hex('4a2a1a'), mouth='open',
-         head=vine_crown()).draw(p, vx, vy - 40, 240)
+         head=vine_crown()).draw(p, vx, vy - 20, 240)
     p.shape([(vx - 120, vy, 0), (vx - 130, vy - 90, 0), (vx + 130, vy - 90, 0), (vx + 120, vy, 0)], ('h', C.hex('9a6a3a'), C.hex('6a4426')), width=2, smooth=False, shade=0.5)
     for xx in range(vx - 120, vx + 130, 26):
         p.line([(xx, vy - 88), (xx + 1, vy - 2)], INK.alpha(0.3), 1.2, smooth=False)
@@ -117,7 +117,7 @@ def revel_c_002(p):
     p.taper([(vx + 120, vy - 30), (vx + 160, vy - 20)], 6, 6, C.hex('6a4426'), width=1.4)
     p.taper([(vx + 160, vy - 18), (vx + 170, vy + 30)], 4, 2, WINE_LIGHT, width=1.0)
     p.blob((vx + 172, vy + 36), 30, 7, WINE, width=1.0)
-    RFig(pose=((16, -66), (-15, -104), False, 1, 0), garb='tunic', stance='dance', main=C.hex('6e2a6a'), second=C.hex('4a1a4a'),
+    RFig(pose=((21, -62), (-15, -104), False, 1, 0, 0.3, 1.4), garb='tunic', stance='dance', main=C.hex('6e2a6a'), second=C.hex('4a1a4a'),
          hose=SKIN.dark(0.05), shoes=C.hex('8a5a32'), hair='curly', hair_col=C.hex('3a2414'), mouth='open', eyes='up',
          belt='gold', head=vine_crown(), sleeves='none', props_front=[fawn_skin, thyrsus('f', 112)],
          props_back=[grapes('b')]).draw(p, 520, 600, 460)
@@ -128,16 +128,16 @@ def revel_c_002(p):
 def revel_c_003(p):
     """Masquerade Duelist: gilded mask, crimson cape, blade at guard in the masque hall."""
     ballroom_bg(p)
-    RFig(pose='present', garb='gown', main=C.hex('2a6a7a'), head=lady_head(C.hex('c89048'), crown=False), hair='long', hair_col=C.hex('c89048'),
-         belt='gold', trim=GOLD, fur=ERMINE).draw(p, 180, 560, 300)
+    RFig(pose='re_offer', garb='gown', main=C.hex('2a6a7a'), head=lady_head(C.hex('c89048'), crown=False), hair='long', hair_col=C.hex('c89048'),
+         belt='gold', trim=GOLD, fur=ERMINE, props_front=[fan('f', C.hex('8a2a4a'))]).draw(p, 180, 560, 300)
     p.cx.save()
-    RFig(pose='present', garb='jerkin', main=C.hex('5a2a6a'), hose=C.hex('2a1a2a'), head=mask_half(LEAD_WHITE, GOLD), hair='short',
-         hair_col=C.hex('2a1a10'), belt='gold', sleeves='fitted').draw(p, 830, 560, 300, flip=True)
+    RFig(pose='re_toast', garb='jerkin', main=C.hex('5a2a6a'), hose=C.hex('2a1a2a'), head=mask_half(LEAD_WHITE, GOLD), hair='short',
+         hair_col=C.hex('2a1a10'), belt='gold', sleeves='fitted', props_front=[goblet('f')]).draw(p, 830, 560, 300, flip=True)
     p.cx.restore()
-    RFig(pose='guard', garb='jerkin', stance='stride', main=BLACK_VELVET, second=C.hex('3a1a2a'), hose=CRIMSON.dark(0.2), hose2=BLACK_VELVET,
+    RFig(pose='re_fence', garb='jerkin', stance='lunge', main=BLACK_VELVET, second=C.hex('3a1a2a'), hose=CRIMSON.dark(0.2), hose2=BLACK_VELVET,
          hair='short', hair_col=C.hex('2a1a10'), head=mask_half(GOLD, GOLD_LIGHT, feathers=[CRIMSON, LEAD_WHITE, CRIMSON]),
          belt='gold', sleeves='fitted', cloak='cape', cloak_col=CRIMSON, mouth='stern', fur=None,
-         props_front=[rapier('f', ang=-0.42, length=56)], emblem=lambda p, c: [p.line([(c[0] - 6, c[1] - 14 + i * 5), (c[0] + 6, c[1] - 14 + i * 5)], GOLD.alpha(0.8), 1.0) for i in range(5)]
+         props_front=[rapier('f', ang=-0.22, length=50)], emblem=lambda p, c: [p.line([(c[0] - 6, c[1] - 14 + i * 5), (c[0] + 6, c[1] - 14 + i * 5)], GOLD.alpha(0.8), 1.0) for i in range(5)]
          ).draw(p, 480, 600, 460)
 
 
@@ -147,7 +147,7 @@ def revel_c_004(p):
     seat_y = chaise(p, 450, 610, 440, VELVET, GOLD, 150, 'left')
     cushion(p, (290, seat_y - 80), 38, 52, GOLD.dark(0.1), 0.3)
     cushion(p, (330, seat_y - 46), 32, 38, AMETHYST, -0.2)
-    RFig(pose='cup', garb='gown', seat='lounge', main=PLUM, second=PLUM.dark(0.2), trim=GOLD, fur=ERMINE, hair='curly', hair_col=C.hex('6a4a2a'),
+    RFig(pose='re_cup', garb='gown', seat='lounge', main=PLUM, second=PLUM.dark(0.2), trim=GOLD, fur=ERMINE, hair='curly', hair_col=C.hex('6a4a2a'),
          beard='short', head=chaperon(CRIMSON), belt='gold', props_front=[goblet('f')], eyes='open', width=1.1,
          shoes=C.hex('8a1a2a')).draw(p, 350, seat_y - 6 + 19 * 5.0, 500)
     # little table with fruit and a parrot on a perch
@@ -190,10 +190,15 @@ def revel_c_005(p):
     bench(p, 280, 700, 590, 70)
     jug(p, 740, 600, 2.4, C.hex('b06a3a'))
     goblet_w(p, 680, 600, 0.9, C.hex('a08060'), None)
-    RFig(pose=((5, -60), (3, -58), True, 1, -1), garb='tunic', seat='lounge', main=C.hex('a87a4a'), second=C.hex('7a5a3a'),
+    # he leans back against the post, one hand slack on his knee, the other on the bench
+    sc = 4.5
+    hip = (300, 590 - 70)
+    p.push(hip[0], hip[1], 1.0, rot=-0.04)
+    RFig(pose=((19, -50), (-15, -46), False, 1, 1, 0.6, 1.4), garb='jerkin', seat='lounge', main=C.hex('a87a4a'), second=C.hex('7a5a3a'),
          hose=C.hex('6a5a3a'), shoes=C.hex('5a3a22'), hair='short', hair_col=C.hex('6a4a2a'), beard='short', eyes='closed',
-         belt='leather', head=straw_hat_over_eyes, sleeves='fitted', width=1.15).draw(p, 380, 590 - 70 + 19 * 4.2, 420)
-    zzz(p, 470, 270, 1.6)
+         belt='leather', head=straw_hat_over_eyes, sleeves='fitted', width=1.15).draw(p, 0, 17.5 * sc + 7, sc * 100)
+    p.pop()
+    zzz(p, 360, 200, 1.6)
 
 
 def revel_c_006(p):
@@ -201,7 +206,7 @@ def revel_c_006(p):
     bedchamber_bg(p)
     bg.light_shafts(p, (760, 220), 0.6, 3, length=600, strength=0.16)
     canopy_bed(p, 90, 470, 600)
-    RFig(pose=((9, -86), (-13, -106), False, 1, 0), garb='robe', seat='chair', main=C.hex('2f6f74'), second=C.hex('1f4f54'), fur=ERMINE,
+    RFig(pose=((18, -106), (-15, -106), False, 1, 1, 1.4, 1.4), garb='robe', seat='chair', main=C.hex('2f6f74'), second=C.hex('1f4f54'), fur=ERMINE,
          trim=GOLD, belt='gold', hair='curly', hair_col=C.hex('c89048'), head=nightcap(), eyes='closed', mouth='open', width=1.45,
          blush=1.0, shoes=C.hex('8a1a2a')).draw(p, 400, 606, 470)
     # breakfast tray on a stool
@@ -240,17 +245,17 @@ def revel_c_007(p):
     # guests at the table, the nearest recoiling
     RFig(pose='spread', garb='gown', seat='chair', main=C.hex('2f5a7a'), hair='curly', hair_col=C.hex('8a5a2a'), beard='short',
          mouth='open', head=chaperon(GOLD_DARK, False), fur=ERMINE).draw(p, 690, 660, 420, flip=True)
-    RFig(pose='cup', garb='gown', seat='chair', main=C.hex('6a2a5a'), head=lady_head(C.hex('5a3a1a')), hair='long', hair_col=C.hex('5a3a1a'),
+    RFig(pose='re_toast', garb='gown', seat='chair', main=C.hex('6a2a5a'), head=lady_head(C.hex('5a3a1a')), hair='long', hair_col=C.hex('5a3a1a'),
          props_front=[goblet('f')]).draw(p, 890, 660, 400, flip=True)
     laden_table(p, 560, 1010, 470, LEAD_WHITE, 34, 80, items=[
         (lambda p, x, y, s: roast_fowl(p, x, y, s), 700, 1.2), (lambda p, x, y, s: candlestick(p, x, y, s), 620, 1.0),
         (lambda p, x, y, s: goblet_w(p, x, y, s), 800, 1.0), (lambda p, x, y, s: fruit_bowl(p, x, y, s), 900, 1.1),
         (lambda p, x, y, s: candlestick(p, x, y, s), 970, 1.0)])
     stage(p, 60, 470, 470, 90)
-    RFig(pose=((14, -82), (-20, -98), False, 1, 0), garb='jerkin', stance='wide', main=C.hex('d8a030'), parti=CRIMSON,
+    RFig(pose=((25, -82), (-14, -58), False, 1, 1, 0.3, 1.4), garb='jerkin', stance='wide', main=C.hex('d8a030'), parti=CRIMSON,
          hose=CRIMSON.dark(0.2), hose2=C.hex('d8a030').dark(0.2), dagged=[CRIMSON, GOLD], hair='curly', hair_col=C.hex('2a1a10'),
          mouth='open', eyes='open', sleeves='fitted', belt='gold',
-         props_back=[torch('b', 26, -1.6, 1.3)], props_front=[torch('f', 22, -0.4, 0.8)]).draw(p, 260, 486, 390)
+         props_front=[torch('f', 24, -1.15, 0.9)]).draw(p, 260, 486, 390)
     fire_jet(p, [(298, 152), (380, 160), (470, 180), (560, 210), (640, 230)], 6, 46)
     sparks(p, (420, 120, 720, 280), 20)
 
@@ -259,7 +264,7 @@ def revel_c_008(p):
     """Gluttonous Baron: seven courses gone, a fowl leg in one fist, his cup held out for more."""
     hall_bg(p, hang=C.hex('2a4a3a'), floor=(C.hex('2a1a1a'), C.hex('b89a6a')), chandelier=True)
     great_chair(p, 500, 620, 1.3, CRIMSON)
-    RFig(pose=((20, -68), (-18, -84), False, 1, 1), garb='robe', seat='chair', main=C.hex('8a1a2a'), second=C.hex('5a1020'), fur=ERMINE,
+    RFig(pose=((25, -64), (-17, -94), False, 1, 1, 0.3, 1.4), garb='robe', seat='chair', main=C.hex('8a1a2a'), second=C.hex('5a1020'), fur=ERMINE,
          trim=GOLD, belt='gold', hair='short', hair_col=C.hex('4a2a1a'), beard='forked', head=coronet_fur(C.hex('8a1a2a')),
          width=1.75, blush=1.2, mouth='open', props_front=[drumstick('f')], props_back=[goblet('b')]).draw(p, 470, 640, 520)
     # napkin tucked in
@@ -273,7 +278,7 @@ def revel_c_008(p):
     for x in (250, 600, 760):
         p.blob((x, 500), 26, 6, STONE.light(0.2), width=1.2)
         p.taper([(x - 10, 498), (x + 10, 496)], 2, 2, BONE, width=0.9)
-    RFig(pose='offer', garb='tunic', main=C.hex('2a4a3a'), parti=GOLD_DARK, hose=C.hex('2a4a3a'), hose2=GOLD_DARK, hair='short',
+    RFig(pose='re_offer', garb='tunic', main=C.hex('2a4a3a'), parti=GOLD_DARK, hose=C.hex('2a4a3a'), hose2=GOLD_DARK, hair='short',
          hair_col=C.hex('8a6a3a'), eyes='down', belt='leather', sleeves='fitted',
          props_front=[held(lambda p, x, y: peacock_dish(p, x - 4, y - 1, 0.32))]).draw(p, 900, 610, 360, flip=True)
 
@@ -285,11 +290,11 @@ def revel_c_009(p):
     firework(p, (760, 100), 60, C.hex('ff6a9a'))
     firework(p, (600, 200), 40, C.hex('8ad0ff'))
     crowd(p, 520, 0, W, 12, 1.25, masks=True, raised=0.35, dark=0.15)
-    RFig(pose=((24, -102), (-14, -70), False, 1, 1), garb='jerkin', stance='stride', main=PLUM, parti=C.hex('d8a030'),
+    RFig(pose=((19, -105), (-23, -58), False, 1, 1, 1.4, 1.4), garb='jerkin', stance='stride', main=PLUM, parti=C.hex('d8a030'),
          hose=C.hex('d8a030').dark(0.2), hose2=PLUM.dark(0.2), cloak='mantle', cloak_col=C.hex('1f4f8a'), lining=GOLD,
          hair='curly', hair_col=C.hex('3a2414'), head=combo(mask_beak(), feathered_cap(CRIMSON, GOLD_LIGHT, GOLD)),
          sleeves='fitted', belt='gold', mouth='open',
-         props_front=[bottle('f', WINE, 0.5, GOLD)], props_back=[torch('b', 28, -1.4, 1.2)]).draw(p, 470, 604, 460)
+         props_front=[bottle('f', WINE, 0.5, GOLD), torch('b', 28, -1.75, 1.2)]).draw(p, 470, 604, 460)
 
 
 def revel_c_010(p):
@@ -310,9 +315,9 @@ def revel_c_010(p):
     for i in range(14):
         p.blob((90 + i * 22 + p.rng.uniform(-6, 6), 590 - p.rng.uniform(0, 30)), 10, 6, C.hex('a89070').alpha(0.4), ink=False)
     horse(p, 410, 600, 2.3, C.hex('4a2e1e'), VELVET, GOLD)
-    RFig(pose=((19, -60), (-10, -104), False, 1, 0), garb='surcoat', seat='chair', mail=True, main=VELVET, second=VELVET,
+    RFig(pose=((20, -58), (-19, -103), False, 1, 1, -1.0, 1.4), garb='surcoat', seat='chair', mail=True, main=VELVET, second=VELVET,
          hair='none', head=plumed_helm(STEEL, GOLD, CRIMSON), mouth='open', belt='sword', emblem=lambda p, c: PR.fleur(p, c, 5, GOLD),
-         props_front=[lance('f', 128, -0.03)], props_back=[goblet('b')]).draw(p, 405, 600 - 104 * 2.3 + 19 * 3.2, 320)
+         props_front=[goblet('b'), lance('f', 128, -0.05)]).draw(p, 405, 600 - 104 * 2.3 + 19 * 3.4, 340)
 
 
 def revel_c_011(p):
@@ -337,9 +342,9 @@ def revel_c_011(p):
     barrel(p, (220, 600), 2.4, col=C.hex('7a4a2a'))
     goblet_w(p, 560, 604, 1.0, C.hex('a08060'), None, 1.4)
     p.blob((620, 606), 40, 6, WINE, width=0.8)
-    RFig(pose=((12, -48), (6, -58), True, 1, -1), garb='jerkin', seat='lounge', goat=True, main=C.hex('a87a4a'), second=C.hex('7a5a3a'),
+    RFig(pose=((19, -51), (-15, -46), False, 1, 1, 0.6, 1.4), garb='jerkin', seat='lounge', goat=True, main=C.hex('a87a4a'), second=C.hex('7a5a3a'),
          hair='curly', hair_col=C.hex('3a2414'), beard='short', head=satyr_head(), eyes='closed', mouth='calm', sleeves='fitted',
-         belt=None, width=1.1, props_front=[panpipes('b')]).draw(p, 320, 596 + 19 * 4.2, 420)
+         belt=None, width=1.1, props_front=[panpipes('f')]).draw(p, 320, 596 + 19 * 4.2, 420)
     zzz(p, 410, 230, 1.6)
     for i in range(6):
         grapes_at(p, (430 + i * 90, 590 + (i % 2) * 10), 1.8, AMETHYST, leaf=True)
@@ -351,9 +356,11 @@ def revel_c_012(p):
     crowd(p, 470, 0, W, 13, 1.1, raised=0.25, body=70)
     bull(p, 400, 604, 1.9)
     # the garland boy with the lead rope
-    RFig(pose=((-14, -66), (-10, -54), False, 1, 1), garb='tunic', main=C.hex('d8a030'), parti=CRIMSON, hose=CRIMSON, hose2=C.hex('d8a030'),
+    RFig(pose=((24, -60), (-14, -58), False, 1, 1, 0.3, 1.4), garb='tunic', main=C.hex('d8a030'), parti=CRIMSON, hose=CRIMSON, hose2=C.hex('d8a030'),
          hair='curly', hair_col=C.hex('c89048'), head=vine_crown(LEAF, ROSE), stance='stride', belt='gold', sleeves='fitted').draw(p, 840, 604, 330, flip=True)
-    p.line([(400 + 166 * 1.9, 604 - 86 * 1.9), (720, 470), (840 + 14 * 3.3, 604 - 66 * 3.3)], C.hex('c8a060'), 2.4)
+    hand = (840 - 24 * 3.3, 604 - 60 * 3.3)
+    p.line([(400 + 166 * 1.9, 604 - 86 * 1.9), (738, 428), hand], C.hex('8a6a3a'), 3.2)
+    p.blob(hand, 7.5, 6.2, SKIN, width=1.4, shade=0.4)
     for i in range(40):
         q = (p.rng.uniform(80, 920), p.rng.uniform(140, 560))
         col = [VERMILION, GOLD_LIGHT, LEAD_WHITE, ROSE][i % 4]
@@ -505,7 +512,7 @@ def revel_c_014(p):
         state = 'spent' if i < 6 else ('burst' if i in (6, 7) else 'new')
         firecracker(p, q[0], q[1], 1.6, [CRIMSON, GOLD_DARK, VERMILION][i % 3], state)
     # the boy who lit it, and a soldier caught below
-    RFig(pose=((24, -78), (-10, -52), False, 1, 1), garb='tunic', main=C.hex('2a6a5a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a6a5a'),
+    RFig(pose=((27, -72), (-11, -51), False, 1, 1, 0.3, 1.4), garb='tunic', main=C.hex('2a6a5a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a6a5a'),
          hair='curly', hair_col=C.hex('8a5a2a'), stance='stride', mouth='open', sleeves='fitted', belt='leather',
          props_front=[torch('f', 22, -1.0, 0.6)]).draw(p, 160, 604, 340)
     RFig(pose=((10, -94), (-6, -90), False, 1, 1), garb='surcoat', mail=True, main=C.hex('3a4a6a'), second=C.hex('3a4a6a'), head='nasal',
@@ -518,9 +525,9 @@ def revel_c_015(p):
     """Spilled Brandy: one clumsy elbow, one candle, and the evening became memorable."""
     tavern_bg(p, window_x=180, shelf=True)
     RFig(pose='spread', garb='jerkin', seat='chair', main=C.hex('2a5a3a'), second=C.hex('1a3a2a'), hair='curly', hair_col=C.hex('2a1a10'),
-         beard='short', mouth='open', head=feathered_cap(C.hex('6a2a2a'), GOLD_LIGHT, GOLD), sleeves='fitted', belt='leather').draw(p, 470, 660, 470)
-    RFig(pose='cup', garb='jerkin', seat='chair', main=C.hex('6a4a2a'), hair='short', hair_col=C.hex('8a6a3a'), mouth='open', eyes='open',
-         sleeves='fitted', props_front=[tankard('f')]).draw(p, 820, 660, 380, flip=True)
+         beard='short', mouth='open', head=feathered_cap(C.hex('6a2a2a'), GOLD_LIGHT, GOLD), sleeves='fitted', belt='leather').draw(p, 460, 690, 540)
+    RFig(pose='re_toast', garb='jerkin', seat='chair', main=C.hex('6a4a2a'), hair='short', hair_col=C.hex('8a6a3a'), mouth='open', eyes='open',
+         sleeves='fitted', props_front=[tankard('f')]).draw(p, 840, 640, 460, flip=True)
     # the board
     top = [(60, 440, 0), (940, 440, 0), (1000, 560, 0), (0, 560, 0)]
     p.shape(top, ('v', C.hex('7a5232'), C.hex('5a3a22')), width=2.2, smooth=False)
@@ -547,7 +554,7 @@ def revel_c_016(p):
     specs = [(170, 400, C.hex('6a2a2a'), 'short', None, False), (360, 440, C.hex('2a4a6a'), 'curly', 'short', False),
              (590, 450, C.hex('7a5a2a'), 'bald', 'long', True), (790, 410, C.hex('3a5a2a'), 'curly', None, True)]
     for i, (x, h, col, hair, beard, flip) in enumerate(specs):
-        RFig(pose=((14, -96), (-14, -66), False, 1, 1), garb='jerkin', stance='wide' if i % 2 else 'stride', main=col, second=col.dark(0.2),
+        RFig(pose=((19, -106), (-14, -58), False, 1, 1, 1.4, 1.4), garb='jerkin', stance='wide' if i % 2 else 'stride', main=col, second=col.dark(0.2),
              hose=col.dark(0.4), hair=hair, hair_col=[C.hex('2a1a10'), C.hex('8a5a2a'), C.hex('5a3a1a'), C.hex('c8a060')][i], beard=beard,
              mouth='open', eyes=['closed', 'up', 'open', 'closed'][i], sleeves='fitted', belt='leather', width=1.15,
              props_front=[tankard('f', slosh=True)]).draw(p, x, 606, h, flip=flip)
@@ -572,7 +579,7 @@ def revel_c_017(p):
     barrel(p, (230, 600), 1.8)
     barrel(p, (60, 600), 2.0)
     # the thrower, follow-through
-    RFig(pose=((30, -74), (-24, -66), False, 1, 1), garb='tunic', stance='lunge', main=C.hex('5a6a3a'), second=C.hex('3a4a2a'),
+    RFig(pose=((35, -72), (-28, -59), False, 1, 1, 0.3, 0.3), garb='tunic', stance='lunge', main=C.hex('5a6a3a'), second=C.hex('3a4a2a'),
          hose=C.hex('4a3a2a'), hair='short', hair_col=C.hex('3a2414'), beard='short', mouth='open', sleeves='fitted',
          belt='leather', width=1.2, scapular=LEAD_WHITE.dark(0.05)).draw(p, 380, 604, 440)
     # the flagon in flight, trailing fire
@@ -584,7 +591,7 @@ def revel_c_017(p):
     sparks(p, (560, 120, 900, 320), 22)
     # the target flinches at the right edge
     RFig(pose='spread', garb='surcoat', main=C.hex('2a3a6a'), mail=True, head='nasal', hair='short', hair_col=UMBER, beard='short', mouth='open',
-         stance='stride', belt='sword', emblem='cross_black').draw(p, 900, 604, 360, flip=True)
+         stance='stride', belt='sword', emblem='cross_black').draw(p, 870, 604, 360, flip=True)
 
 
 def revel_c_018(p):
@@ -600,7 +607,7 @@ def revel_c_018(p):
     RFig(pose=((26, -80), (-10, -54), False, 1, 1), garb='robe', main=CHEF_WHITE, second=CHEF_WHITE.dark(0.1), hair='short', hair_col=C.hex('3a2414'),
          beard='short', head=cook_coif(), belt='cord', mouth='open', eyes='open', width=1.3, sleeves='fitted',
          props_front=[flagon('f', flame=False)]).draw(p, 230, 606, 420)
-    p.taper([(230 + 30 * 4.2, 606 - 72 * 4.2), (380, 380), (460, 440)], 2, 2, C.hex('d8a040').alpha(0.8), width=0.8)
+    p.taper([(372, 226), (392, 236), (420, 320), (450, 430)], 2.4, 1.6, C.hex('d8a040').alpha(0.85), width=0.8)
     RFig(pose='spread', garb='gown', main=C.hex('8a6a2a'), head=lady_head(C.hex('2a1a10')), hair='long', hair_col=C.hex('2a1a10'),
          trim=GOLD, mouth='open', fur=ERMINE).draw(p, 840, 606, 380, flip=True)
 
@@ -648,7 +655,7 @@ def wall_rack(p, x, y, n=5):
 
 def revel_u_001(p):
     """Duelist of the Velvet Court: undefeated with the blade, and in every argument about wine."""
-    hall_bg(p, hang=VELVET, floor=(C.hex('2a0a14'), C.hex('d8b880')), chandelier=True)
+    hall_bg(p, hang=C.hex('2a4a5a'), floor=(C.hex('2a0a14'), C.hex('d8b880')), chandelier=True)
     bg.curtain(p, 'left', C.hex('5a0a1a'), 150)
     bg.curtain(p, 'right', C.hex('5a0a1a'), 150)
     # a side table with the disputed vintage
@@ -659,7 +666,7 @@ def revel_u_001(p):
     goblet_w(p, 716, 496, 0.9, STEEL.light(0.2), WINE)
     # a thrown glove
     p.shape([(560, 600), (590, 596), (604, 586), (612, 592), (600, 604), (566, 608)], C.hex('f0e6d0'), width=1.2, shade=0.5)
-    RFig(pose='cup', garb='jerkin', stance='stride', main=VELVET, second=C.hex('5a0a1a'), hose=BLACK_VELVET, hose2=VELVET.dark(0.3),
+    RFig(pose='re_toast', garb='jerkin', stance='stride', main=VELVET, second=C.hex('5a0a1a'), hose=BLACK_VELVET, hose2=VELVET.dark(0.3),
          cloak='mantle', cloak_col=BLACK_VELVET, lining=GOLD, hair='curly', hair_col=C.hex('2a1a10'), beard='short',
          head=feathered_cap(BLACK_VELVET, CRIMSON, GOLD, LEAD_WHITE), sleeves='fitted', belt='gold', fur=None,
          emblem=lambda p, c: [p.blob((c[0] - 1 + (i % 2) * 3, c[1] - 12 + i * 4), 0.8, 0.8, GOLD, ink=False) for i in range(7)],
@@ -678,10 +685,10 @@ def revel_u_002(p):
     p.fill(('v', C.hex('3a2a2a'), C.hex('5a4030')))
     lantern_string(p, [(80, 200), (500, 160), (920, 200)], s=0.7, sag=40)
     stage(p, 360, 860, 440, 60)
-    RFig(pose=((16, -82), (-18, -100), False, 1, 1), garb='jerkin', stance='wide', main=BLACK_VELVET, parti=C.hex('c83a1a'),
+    RFig(pose=((26, -66), (-25, -84), False, 1, 1, 0.3, 1.4), garb='jerkin', stance='wide', main=BLACK_VELVET, parti=C.hex('c83a1a'),
          hose=C.hex('c83a1a'), hose2=BLACK_VELVET, dagged=[C.hex('c83a1a'), GOLD, BLACK_VELVET], hair='short', hair_col=INK_SOFT,
          head=mask_half(BLACK_VELVET, GOLD, feathers=[C.hex('ff7a2a'), GOLD, C.hex('c83a1a')]), mouth='open', sleeves='fitted', belt='gold',
-         props_front=[torch('f', 24, -0.9, 0.7)], props_back=[torch('b', 26, -1.7, 1.2)]).draw(p, 650, 456, 380, flip=True)
+         props_front=[torch('f', 24, -1.0, 0.8), torch('b', 26, -1.95, 1.2)]).draw(p, 650, 456, 380, flip=True)
     mx, my = 650 - 5.4 * 3.8, 456 - 87.5 * 3.8
     fire_jet(p, [(mx, my), (mx - 80, my + 10), (mx - 170, my + 40), (mx - 260, my + 90), (mx - 330, my + 150)], 6, 56)
     sparks(p, (100, 200, 500, 460), 30)
@@ -698,14 +705,14 @@ def revel_u_003(p):
     # a courtier struck by a flying plum
     RFig(pose='spread', garb='gown', main=C.hex('6a5a2a'), fur=ERMINE, hair='bald', hair_col=C.hex('8a8070'), beard='long', age='old',
          mouth='open', head=chaperon(C.hex('3a2a5a'))).draw(p, 880, 600, 380, flip=True)
-    p.line([(470, 400), (620, 250), (790, 228)], LEAD_WHITE.alpha(0.5), 1.6)
+    p.line([(362, 360), (520, 240), (680, 200), (800, 228)], LEAD_WHITE.alpha(0.5), 1.6)
     p.blob((818, 236), 9, 8, AMETHYST, width=1.2, shade=0.7)
     p.star((830, 228), 10, GOLD_LIGHT, 4)
     for c, rx, ry, col in (((320, 590), 160, 30, C.hex('8a1a2a')), ((260, 556), 70, 40, GOLD.dark(0.1)), ((420, 566), 80, 36, C.hex('2a6a4a')), ((200, 520), 50, 50, C.hex('6a2a6a'))):
         cushion(p, c, rx, ry, col, 0.0)
     RFig(pose=((26, -80), (-12, -58), False, 1, 1), garb='jerkin', seat='lounge', main=C.hex('2a7a3a'), parti=C.hex('e0b030'), hose=C.hex('e0b030'),
          hose2=C.hex('2a7a3a'), dagged=[C.hex('2a7a3a'), C.hex('e0b030'), VERMILION], hair='none', head=jester_cap(C.hex('2a7a3a'), C.hex('e0b030'), VERMILION),
-         mouth='open', eyes='open', sleeves='fitted', belt='gold', props_back=[marotte('b', C.hex('2a7a3a'), C.hex('e0b030'))]).draw(p, 240, 546 + 19 * 4.0, 400)
+         mouth='open', eyes='open', sleeves='fitted', belt='gold', props_front=[marotte('b', C.hex('2a7a3a'), C.hex('e0b030'))]).draw(p, 240, 546 + 19 * 4.0, 400)
     fruit_bowl(p, 500, 600, 1.4)
 
 
@@ -715,14 +722,14 @@ def revel_u_004(p):
     lantern_string(p, [(100, 120), (480, 90), (900, 130)], s=0.85, sag=50)
     seat_y = chaise(p, 600, 604, 400, C.hex('2a6a6a'), GOLD, 140, 'right')
     cushion(p, (760, seat_y - 80), 34, 48, VELVET, -0.3)
-    RFig(pose=((24, -68), (14, -56), False, 1, 1), garb='gown', seat='lounge', main=C.hex('8a1a3a'), second=C.hex('6a1030'), trim=GOLD, fur=ERMINE,
+    RFig(pose=((24, -70), (-14, -56), False, 1, 1, 0.3, 1.4), garb='gown', seat='lounge', main=C.hex('8a1a3a'), second=C.hex('6a1030'), trim=GOLD, fur=ERMINE,
          lining=GOLD, sleeves='bell', hair='long', hair_col=C.hex('3a2414'), head=lady_head(C.hex('3a2414'), crown=True, gem=C.hex('2a8a6a')),
          belt='gold', props_front=[fan('f')]).draw(p, 730, seat_y - 6 + 19 * 4.4, 440, flip=True)
     laden_table(p, 60, 330, 500, LEAD_WHITE, 26, 80, runner=C.hex('2a6a6a'), items=[
         (lambda p, x, y, s: roast_fowl(p, x, y, s), 120, 1.0), (lambda p, x, y, s: fruit_bowl(p, x, y, s), 230, 1.0),
         (lambda p, x, y, s: goblet_w(p, x, y, s), 300, 0.9)])
-    RFig(pose='offer', garb='tunic', main=C.hex('2a6a6a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a6a6a'), hair='curly', hair_col=C.hex('8a5a2a'),
-         eyes='down', sleeves='fitted', belt='leather', props_front=[held(lambda p, x, y: pie(p, x - 2, y - 1, 0.4))]).draw(p, 380, 610, 300)
+    RFig(pose='re_offer', garb='tunic', main=C.hex('2a6a6a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a6a6a'), hair='curly', hair_col=C.hex('8a5a2a'),
+         eyes='down', sleeves='fitted', belt='leather', props_front=[held(lambda p, x, y: pie(p, x - 2, y - 1, 0.4))]).draw(p, 380, 610, 330)
 
 
 def revel_u_005(p):
@@ -736,12 +743,12 @@ def revel_u_005(p):
         p.shape([(x - 6, 330, 0), (x + 6, 330, 0), (x + 4, 360, 0), (x - 4, 360, 0)], GOLD_DARK, width=1.2, smooth=False)
         candlestick(p, x, 330, 1.0, True)
     bg.tile_floor(p, 470, C.hex('2a1a2a'), C.hex('b89a70'), rows=5)
-    RFig(pose='guard', garb='jerkin', stance='lunge', main=BLACK_VELVET, second=C.hex('3a2a3a'), hose=BLACK_VELVET, hair='white', beard='forked',
+    RFig(pose='re_fence', garb='jerkin', stance='lunge', main=BLACK_VELVET, second=C.hex('3a2a3a'), hose=BLACK_VELVET, hair='white', beard='forked',
          age='old', sleeves='fitted', belt='gold', mouth='stern', emblem=lambda p, c: [p.line([(c[0] - 6, c[1] - 12 + i * 5), (c[0] + 7, c[1] - 12 + i * 5)], GOLD.alpha(0.7), 0.9) for i in range(5)],
-         props_front=[rapier('f', ang=-0.12, length=60)]).draw(p, 330, 604, 440)
-    RFig(pose=((10, -60), (-14, -86), False, 1, 1), garb='jerkin', stance='wide', main=C.hex('8a6a2a'), parti=CRIMSON, hose=CRIMSON, hose2=C.hex('8a6a2a'),
+         props_front=[rapier('f', ang=0.06, length=58)]).draw(p, 330, 604, 440)
+    RFig(pose=((22, -60), (-19, -94), False, 1, 1, 0.3, 1.4), garb='jerkin', stance='wide', main=C.hex('8a6a2a'), parti=CRIMSON, hose=CRIMSON, hose2=C.hex('8a6a2a'),
          hair='curly', hair_col=C.hex('c89048'), head=combo(mask_half(LEAD_WHITE, GOLD)), mouth='open', blush=1.4, sleeves='fitted', belt='leather',
-         props_front=[rapier('f', ang=1.1, length=50)], props_back=[bottle('b', WINE, -0.5)]).draw(p, 760, 604, 400, flip=True)
+         props_front=[rapier('f', ang=1.0, length=50), bottle('b', WINE, -0.5)]).draw(p, 760, 604, 400, flip=True)
 
 
 def revel_u_006(p):
@@ -792,9 +799,9 @@ def revel_u_007(p):
         [roast_fowl, pie, fruit_bowl, cheese, roast_boar, bread_loaf][i % 6](p, q[0], q[1], sc * (0.6 if i % 6 == 4 else 1.0))
         candlestick(p, q[0] + 40 * sc, q[1] - 10 * sc, sc, True)
     great_chair(p, 200, 640, 1.4, C.hex('6a3a1a'))
-    RFig(pose=((8, -70), (22, -74), False, 1, 1), garb='robe', seat='chair', main=C.hex('3a5a2a'), second=C.hex('2a4a1a'), fur=C.hex('8a6a4a'),
+    RFig(pose=((26, -72), (-14, -58), False, 1, 1, 0.3, 1.4), garb='robe', seat='chair', main=C.hex('3a5a2a'), second=C.hex('2a4a1a'), fur=C.hex('8a6a4a'),
          trim=GOLD, belt='gold', hair='white', beard='long', age='old', head=coronet_fur(C.hex('3a5a2a')), width=1.5, mouth='open', blush=1.0,
-         props_back=[goblet('b')]).draw(p, 170, 650, 530)
+         props_front=[goblet('f')]).draw(p, 170, 650, 530)
 
 
 def mist(p, y, col=C(1, 1, 1, 0.25), n=6):
@@ -815,7 +822,7 @@ def revel_u_008(p):
         h = j['hand_f']
         bottle_at(p, h[0], h[1] + 6, 1.7, C.hex('2a1a1a'), T, GOLD, cork=False)
         p.blob(h, 2.3, 1.9, SKIN, width=1.0, shade=0.4)
-    RFig(pose=((20, -84), (10, -64), False, 1, 1), garb='robe', seat='chair', main=C.hex('2a1a2a'), second=C.hex('1a0a1a'), fur=C.hex('4a3a3a'),
+    RFig(pose=((20, -84), (-15, -54), False, 1, 1, 1.4, 1.4), garb='robe', seat='chair', main=C.hex('4a2a3a'), second=C.hex('2a1a2a'), fur=C.hex('4a3a3a'),
          trim=GOLD, hair='short', hair_col=C.hex('1a1010'), beard='forked', head=chaperon(WINE), eyes='open', mouth='calm', belt='gold',
          props_front=[big_bottle]).draw(p, 310, 670, 560)
     hx, hy = 310 + 20 * S, 670 - (84 - 22) * S
@@ -847,16 +854,15 @@ def revel_u_009(p):
     RFig(pose='pray', garb='robe', main=C.hex('5a3a2a'), hair='bald', hair_col=STONE, age='old', beard='short', eyes='down').draw(p, 900, 470, 230, flip=True)
     mist(p, 470, C(1, 0.95, 0.9, 0.3), 5)
     # the victor lunging
-    RFig(pose=((26, -70), (-18, -82), False, 1, 1), garb='jerkin', stance='lunge', main=LEAD_WHITE.dark(0.05), second=C.hex('2a2a3a'), hose=BLACK_VELVET,
+    RFig(pose='re_fence', garb='jerkin', stance='lunge', main=LEAD_WHITE.dark(0.05), second=C.hex('2a2a3a'), hose=BLACK_VELVET,
          hair='curly', hair_col=C.hex('2a1a10'), mouth='stern', sleeves='fitted', belt='leather',
-         props_front=[rapier('f', ang=-0.05, length=70)]).draw(p, 330, 604, 440)
+         props_front=[rapier('f', ang=0.02, length=66)]).draw(p, 330, 604, 440)
     # the loser falls back
     def falling(pp):
         RFig(pose='spread', garb='jerkin', stance='stride', main=CRIMSON, second=C.hex('5a0a1a'), hose=C.hex('3a2a2a'), hair='short',
              hair_col=C.hex('8a5a2a'), mouth='open', eyes='closed', sleeves='fitted', belt='gold',
              props_front=[rapier('b', ang=2.6, length=50)]).draw(pp, 0, 0, 420, flip=True)
-    lean(p, 760, 604, 0.42, falling)
-    feathered_cap(CRIMSON, LEAD_WHITE)(p, (880, 150)) if False else None
+    lean(p, 720, 604, 0.36, falling)
     p.push(870, 170, 4.0, rot=0.7)
     feathered_cap(CRIMSON, LEAD_WHITE, GOLD)(p, (0, 8))
     p.pop()
@@ -886,9 +892,9 @@ def revel_u_010(p):
         fire_jet(p, pts, 4, 18, puff=False)
     sparks(p, (100, 100, 900, 460), 30)
     # front dancers, whirling hand in hand
-    RFig(pose='spread', garb='gown', main=CRIMSON, trim=GOLD, hair='long', hair_col=C.hex('3a2414'), head=lady_head(C.hex('3a2414'), gem=GOLD),
+    RFig(pose='re_torch_up', garb='gown', main=CRIMSON, trim=GOLD, hair='long', hair_col=C.hex('3a2414'), head=lady_head(C.hex('3a2414'), gem=GOLD),
          belt='gold', mouth='open').draw(p, 200, 610, 400)
-    RFig(pose='spread', garb='tunic', stance='dance', main=C.hex('d8a030'), parti=CRIMSON, hose=CRIMSON, hose2=C.hex('d8a030'), hair='curly',
+    RFig(pose='re_both_up', garb='tunic', stance='dance', main=C.hex('d8a030'), parti=CRIMSON, hose=CRIMSON, hose2=C.hex('d8a030'), hair='curly',
          hair_col=C.hex('8a5a2a'), head=vine_crown(), mouth='open', sleeves='fitted', belt='gold').draw(p, 800, 610, 420, flip=True)
 
 
@@ -897,17 +903,20 @@ def revel_u_011(p):
     cellar_bg(p)
     # the great cask with its tap, a reveller drinking straight from it
     barrel(p, (560, 420), 1.4, side=True, col=C.hex('6a4426'), tap=True)
-    p.taper([(560 + 50 * 1.4, 420 + 26 * 1.4), (560 + 52 * 1.4, 520)], 2.6, 2.2, WINE_LIGHT, width=0.8)
-    RFig(pose=((10, -62), (-14, -50), False, 1, 1), garb='jerkin', seat='lounge', main=C.hex('6a2a5a'), hose=C.hex('3a2a3a'), hair='curly', hair_col=C.hex('3a2414'),
-         beard='short', mouth='open', eyes='closed', sleeves='fitted', belt='gold', props_front=[goblet('f', tilt=0.4)]).draw(p, 690, 604 + 19 * 4.0, 400, flip=True)
+    p.taper([(560 + 50 * 1.4, 420 + 26 * 1.4), (560 + 52 * 1.4, 486)], 2.6, 2.2, WINE_LIGHT, width=0.8)
+    RFig(pose=((25, -60), (-15, -46), False, 1, 1, 0.6, 1.4), garb='jerkin', seat='lounge', main=C.hex('6a2a5a'), hose=C.hex('3a2a3a'), hair='curly', hair_col=C.hex('3a2414'),
+         beard='short', mouth='open', eyes='closed', sleeves='fitted', belt='gold', props_front=[goblet('f')]).draw(p, 560 + 52 * 1.4 + 25 * 4.0, 604 + 19 * 4.0, 400, flip=True)
     # guests asleep against the casks
-    RFig(pose=((5, -60), (3, -58), True, 1, -1), garb='gown', seat='lounge', main=C.hex('2a5a7a'), fur=ERMINE, hair='short', hair_col=C.hex('c8a060'), eyes='closed',
+    RFig(pose=((22, -46), (-15, -46), False, 1, 1, 0.0, 1.4), garb='gown', seat='lounge', main=C.hex('2a5a7a'), fur=ERMINE, hair='short', hair_col=C.hex('c8a060'), eyes='closed',
          head=chaperon(GOLD_DARK)).draw(p, 110, 604 + 19 * 3.6, 360)
     zzz(p, 160, 330, 1.2)
-    # a man rolling an empty barrel away
-    barrel(p, (380, 590), 0.7, side=True, col=C.hex('7a5232'))
-    RFig(pose=((20, -54), (8, -50), False, 1, 1), garb='tunic', stance='lunge', main=C.hex('7a6a3a'), hair='short', hair_col=C.hex('5a3a1a'),
-         sleeves='fitted', belt='leather', mouth='open').draw(p, 280, 604, 300)
+    # a man carrying off an empty keg
+    def keg(p, j):
+        barrel(p, (22, -53), 0.28, side=True, col=C.hex('7a5232'))
+        for hnd in (j['hand_f'], j['hand_b']):
+            p.blob(hnd, 2.4, 2.0, SKIN, width=1.0, shade=0.4)
+    RFig(pose=((29, -48), (12, -60), True, 1, 1, 0.3, 0.0), garb='tunic', stance='stride', main=C.hex('7a6a3a'), hair='short', hair_col=C.hex('5a3a1a'),
+         sleeves='fitted', belt='leather', mouth='open', props_front=[keg]).draw(p, 280, 604, 330)
     for i, (x, rt) in enumerate(((470, 1.4), (520, -1.5), (860, 1.57), (600, 0.3))):
         bottle_w(p, x, 612, 1.0, [GLASS_GREEN, WINE, C.hex('5a3a1a')][i % 3], rt)
     for i in range(6):
@@ -1000,14 +1009,13 @@ def revel_r_001(p):
     crowd(p, 520, 0, 260, 3, 1.0, masks=True, dark=0.3, raised=0.3)
     crowd(p, 520, 760, 1000, 3, 1.0, masks=True, dark=0.3, raised=0.3)
     # the arc of the juggle
-    c = (500, 170)
-    p.cx.new_path()
-    p.cx.arc(c[0], c[1] + 40, 170, math.pi * 1.05, math.pi * 1.95)
-    p.stroke(C(1, 0.8, 0.4, 0.35), 3)
-    salamander(p, (340, 230), 1.8, -1.1)
-    salamander(p, (500, 80), 1.9, 0.1)
-    salamander(p, (665, 220), 1.8, 1.2)
-    RFig(pose=((22, -96), (-20, -96), False, 1, 1), garb='jerkin', stance='wide', main=C.hex('1f4f8a'), parti=C.hex('e07a20'),
+    c = (506, 300)
+    pts = [(c[0] + math.cos(a) * 140, c[1] + math.sin(a) * 225) for a in [math.pi * (1.0 + i / 20) for i in range(21)]]
+    p.line(pts, C(1, 0.8, 0.4, 0.35), 3)
+    salamander(p, (380, 165), 1.7, -1.3)
+    salamander(p, (506, 78), 1.8, 0.1)
+    salamander(p, (636, 170), 1.7, 1.3)
+    RFig(pose=((28, -73), (-25, -73), False, 1, 1, 0.3, 0.3), garb='jerkin', stance='wide', main=C.hex('1f4f8a'), parti=C.hex('e07a20'),
          hose=C.hex('e07a20'), hose2=C.hex('1f4f8a'), dagged=[C.hex('e07a20'), C.hex('1f4f8a'), GOLD], hair='curly', hair_col=C.hex('2a1a10'),
          head=feathered_cap(C.hex('e07a20'), GOLD_LIGHT, GOLD, C.hex('1f4f8a')), mouth='open', eyes='up', sleeves='fitted', belt='gold').draw(p, 500, 606, 420)
 
@@ -1031,17 +1039,17 @@ def revel_r_002(p):
         h = j['hand_f']
         p.taper([h, (h[0] + 4, h[1] - 3)], 0.7, 0.5, SKIN, width=0.8)
         PR.flame(p, (h[0] + 6, h[1] - 6), 1.6, glow_r=12)
-    RFig(pose=((24, -66), (6, -56), False, 1, 1), garb='gown', seat='lounge', main=C.hex('5a1a6a'), second=C.hex('3a0a4a'), fur=ERMINE, trim=GOLD,
+    RFig(pose=((23, -58), (-14, -52), False, 1, 1, 0.6, 1.4), garb='gown', seat='lounge', main=C.hex('5a1a6a'), second=C.hex('3a0a4a'), fur=ERMINE, trim=GOLD,
          cloak='mantle', cloak_col=CRIMSON, lining=ERMINE, hair='curly', hair_col=C.hex('c8a060'), head='crown', eyes='down', mouth='calm', belt='gold',
          props_front=[flick]).draw(p, 380, seat_y - 6 + 19 * 4.6, 460)
     # fan-bearers
-    RFig(pose='staff', garb='tunic', main=C.hex('2a6a6a'), hose=GOLD_DARK, hair='curly', hair_col=INK_SOFT, skin=C.hex('b07a52'), eyes='down',
+    RFig(pose='re_staff', garb='tunic', main=C.hex('2a6a6a'), hose=GOLD_DARK, hair='curly', hair_col=INK_SOFT, skin=C.hex('b07a52'), eyes='down',
          sleeves='fitted', belt='gold', props_front=[flabellum('f')]).draw(p, 150, 604, 340)
-    RFig(pose='staff', garb='tunic', main=C.hex('2a6a6a'), hose=GOLD_DARK, hair='short', hair_col=C.hex('6a4a2a'), eyes='down',
+    RFig(pose='re_staff', garb='tunic', main=C.hex('2a6a6a'), hose=GOLD_DARK, hair='short', hair_col=C.hex('6a4a2a'), eyes='down',
          sleeves='fitted', belt='gold', props_front=[flabellum('f')]).draw(p, 850, 604, 340, flip=True)
     # a page brings the cup to his lips
-    RFig(pose='offer', garb='tunic', main=CRIMSON, parti=GOLD, hose=GOLD, hose2=CRIMSON, hair='curly', hair_col=C.hex('c8a060'), eyes='down',
-         sleeves='fitted', belt='gold', kneel=True, props_front=[goblet('f')]).draw(p, 690, 604, 300, flip=True)
+    RFig(pose=((26, -70), (-11, -51), False, 1, 1, 0.3, 1.4), garb='tunic', main=CRIMSON, parti=GOLD, hose=GOLD, hose2=CRIMSON, hair='curly', hair_col=C.hex('c8a060'), eyes='down',
+         sleeves='fitted', belt='gold', kneel=True, props_front=[goblet('f')]).draw(p, 700, 604, 320, flip=True)
 
 
 def revel_r_003(p):
@@ -1061,9 +1069,9 @@ def revel_r_003(p):
     p.fill(('v', C.hex('3a3a4a'), C.hex('5a5a6a')))
     # witnesses asleep on a bench
     bench(p, 680, 940, 560, 50, C.hex('5a5a6a'))
-    RFig(pose=((5, -60), (3, -58), True, 1, -1), garb='robe', seat='chair', main=C.hex('3a4a6a'), hair='short', hair_col=C.hex('8a6a3a'), eyes='closed',
+    RFig(pose='re_lap', garb='robe', seat='chair', main=C.hex('3a4a6a'), hair='short', hair_col=C.hex('8a6a3a'), eyes='closed', belt='gold',
          head=feathered_cap(C.hex('3a4a6a'), LEAD_WHITE)).draw(p, 740, 560 - 50 + 19 * 2.8 + 6, 280, flip=True)
-    RFig(pose=((5, -60), (3, -58), True, 1, -1), garb='gown', seat='chair', main=C.hex('6a3a5a'), hair='long', hair_col=C.hex('3a2414'), eyes='closed',
+    RFig(pose='re_lap', garb='gown', seat='chair', main=C.hex('6a3a5a'), hair='long', hair_col=C.hex('3a2414'), eyes='closed', belt='gold',
          head=lady_head(C.hex('3a2414'))).draw(p, 860, 560 - 50 + 19 * 2.8 + 6, 270, flip=True)
     zzz(p, 800, 300, 1.0)
     # the fallen rival
@@ -1113,9 +1121,9 @@ def revel_r_005(p):
     timber_wall(p, 470, C.hex('b8a07a'))
     hearth(p, 140, 470, 180, 160)
     plank_floor(p, 470)
-    RFig(pose=((22, -72), (-20, -70), False, 1, 1), garb='tunic', seat='chair', main=C.hex('8a3a1a'), second=C.hex('5a2a10'), fur=C.hex('7a5a3a'),
+    RFig(pose=((26, -68), (-24, -64), False, 1, 1, 0.3, 0.3), garb='tunic', seat='chair', main=C.hex('8a3a1a'), second=C.hex('5a2a10'), fur=C.hex('7a5a3a'),
          hair='curly', hair_col=C.hex('6a3a1a'), beard='long', mouth='open', belt='leather', width=1.7, sleeves='fitted', blush=1.2,
-         props_front=[goblet('f', s=1.0, col=C.hex('a08060'))], props_back=[drumstick('b')]).draw(p, 500, 690, 780)
+         props_front=[goblet('f', s=1.0, col=C.hex('a08060')), drumstick('b')]).draw(p, 500, 690, 780)
     # the groaning board, patched with fresh planks
     top = [(80, 440, 0), (920, 440, 0), (960, 500, 0), (40, 500, 0)]
     p.shape(top, ('v', C.hex('8a6a42'), C.hex('6a4a2a')), width=2.2, smooth=False)
@@ -1141,9 +1149,9 @@ def revel_r_005(p):
     for k in range(1, 8):
         t = k / 8
         p.line([(840 - 60 * t, 440 - 190 * t), (870 - 60 * t, 440 - 190 * t)], C.hex('6a4426'), 3)
-    RFig(pose=((-16, -76), (-10, -66), False, 1, 1), garb='tunic', main=C.hex('2a5a6a'), hair='short', hair_col=C.hex('3a2414'), sleeves='fitted', belt='leather',
+    RFig(pose='re_offer', garb='tunic', main=C.hex('2a5a6a'), hair='short', hair_col=C.hex('3a2414'), sleeves='fitted', belt='leather',
          props_front=[flagon('f')]).draw(p, 820, 330, 130, flip=True)
-    RFig(pose='offer', garb='tunic', main=C.hex('6a5a2a'), hair='curly', hair_col=C.hex('8a5a2a'), sleeves='fitted', belt='leather',
+    RFig(pose='re_offer', garb='tunic', main=C.hex('6a5a2a'), hair='curly', hair_col=C.hex('8a5a2a'), sleeves='fitted', belt='leather',
          props_front=[held(lambda p, x, y: pie(p, x, y - 1, 0.5))]).draw(p, 200, 440, 140)
 
 
@@ -1208,14 +1216,20 @@ def revel_r_007(p):
     bg.tile_floor(p, 470, C.hex('2a1430'), C.hex('a8885a'), rows=5)
     chandelier_at(p, 380, 120, 0.8)
     # a footman hauling the last curtain shut
-    RFig(pose=((-20, -100), (-14, -90), False, 1, 1), garb='tunic', main=C.hex('2a3a6a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a3a6a'),
-         hair='short', hair_col=C.hex('6a4a2a'), stance='lunge', sleeves='fitted', belt='gold', mouth='stern').draw(p, 720, 600, 340, flip=True)
+    RFig(pose=((27, -92), (24, -80), True, 1, 1, 0.3, 0.0), garb='tunic', main=C.hex('2a3a6a'), parti=GOLD_DARK, hose=GOLD_DARK, hose2=C.hex('2a3a6a'),
+         hair='short', hair_col=C.hex('6a4a2a'), stance='lunge', sleeves='fitted', belt='gold', mouth='stern').draw(p, 700, 600, 340)
+    # the curtain's leading edge gathered in his fists
+    p.taper([(796, 96), (791, 200), (789, 287), (782, 328), (790, 440)], 9, 12, ('h', C.hex('8a1828'), C.hex('4a0816')), width=1.8)
+    p.line([(793, 110), (786, 300), (788, 430)], C.hex('2a0410').alpha(0.6), 1.6)
+    for q in ((700 + 27 * 3.4, 600 - 92 * 3.4), (700 + 24 * 3.4, 600 - 80 * 3.4)):
+        p.blob(q, 8.5, 7.2, SKIN, width=1.5, shade=0.4)
+        p.line([(q[0] - 5, q[1] - 2), (q[0] + 5, q[1] - 2)], SKIN_SHADE.dark(0.2), 1.0)
     # the dance goes on
-    RFig(pose='present', garb='gown', main=C.hex('8a1a3a'), trim=GOLD, fur=ERMINE, hair='long', hair_col=C.hex('c89048'), head=lady_head(C.hex('c89048'), crown=True),
+    RFig(pose=((26, -72), (-14, -58), False, 1, 1, 0.3, 1.4), garb='gown', main=C.hex('8a1a3a'), trim=GOLD, fur=ERMINE, hair='long', hair_col=C.hex('c89048'), head=lady_head(C.hex('c89048'), crown=True),
          belt='gold', mouth='open').draw(p, 360, 606, 430)
-    RFig(pose=((14, -74), (-12, -100), False, 1, 1), garb='jerkin', stance='dance', main=C.hex('2a6a5a'), parti=GOLD, hose=GOLD, hose2=C.hex('2a6a5a'),
+    RFig(pose=((20, -70.5), (-15, -106), False, 1, 1, 0.3, 1.4), garb='jerkin', stance='dance', main=C.hex('2a6a5a'), parti=GOLD, hose=GOLD, hose2=C.hex('2a6a5a'),
          hair='curly', hair_col=C.hex('2a1a10'), head=mask_half(GOLD, GOLD_LIGHT, feathers=[LEAD_WHITE, C.hex('2a6a5a')]), mouth='open', sleeves='fitted',
-         belt='gold', props_back=[goblet('b')]).draw(p, 520, 606, 440, flip=True)
+         belt='gold', props_front=[goblet('b')]).draw(p, 560, 606, 440, flip=True)
     for x in (110, 920):
         candelabra(p, x, 600, 1.8, GOLD, True)
 
@@ -1244,9 +1258,9 @@ def revel_r_008(p):
     mask_w(p, (780, 600), 0.8, GOLD_DARK, 'half', -0.3)
     bunting(p, [(480, 560), (940, 580)], (CRIMSON.dark(0.3), GOLD_DARK, C.hex('3a2a2a')), size=12, sag=20)
     # the masked torchbearer walks away
-    RFig(pose=((20, -66), (-16, -56), False, 1, 1), garb='robe', stance='stride', main=C.hex('1a1418'), second=C.hex('100a10'), cloak='mantle',
+    RFig(pose=((24, -70), (-14, -58), False, 1, 1, 0.3, 1.4), garb='robe', stance='stride', main=C.hex('1a1418'), second=C.hex('100a10'), cloak='mantle',
          cloak_col=C.hex('2a1018'), lining=CRIMSON, hair='none', head=combo(mask_full(LEAD_WHITE, GOLD, BLACK_VELVET), chaperon(C.hex('2a1018'))),
-         belt='gold', props_front=[torch('f', 30, -1.2, 1.4)]).draw(p, 230, 610, 440, flip=True)
+         belt='gold', props_front=[torch('f', 30, -1.25, 1.4)]).draw(p, 230, 610, 440)
 
 
 def revel_r_009(p):
@@ -1278,11 +1292,11 @@ def revel_m_001(p):
     p.fill(C(0.05, 0.0, 0.08, 0.35))
     chandelier_at(p, 500, 90, 0.85)
     great_chair(p, 520, 520, 1.5, C.hex('3a1a4a'), C.hex('1a0a1a'), GOLD)
-    RFig(pose=((22, -100), (20, -64), False, 1, 1), garb='gown', main=C.hex('3a0a3a'), second=C.hex('2a0a2a'), trim=GOLD, fur=ERMINE, cloak='mantle',
+    RFig(pose=((19, -104), (-14, -56), False, 1, 1, 1.4, 1.4), garb='gown', main=C.hex('3a0a3a'), second=C.hex('2a0a2a'), trim=GOLD, fur=ERMINE, cloak='mantle',
          cloak_col=C.hex('1a0a20'), lining=C.hex('8a1a3a'), sleeves='bell', hair='long', hair_col=INK, skin=C.hex('f2dcc8'),
          head=lady_head(INK, GOLD, GOLD, C(0.6, 0.4, 0.7, 0.5), C.hex('3aa86a'), crown=True), belt='gold', eyes='open', mouth='calm', blush=0.2,
          props_front=[goblet('f', col=GOLD, wine=C.hex('3a8a4a'), s=1.2)]).draw(p, 500, 600, 470)
-    hx, hy = 500 + 22 * 4.7, 600 - 100 * 4.7
+    hx, hy = 500 + 19 * 4.7, 600 - 104 * 4.7
     for k in range(3):
         pts = [(hx + 2 + k * 6, hy - 40), (hx - 10 + k * 14, hy - 70), (hx + 6 + k * 8, hy - 100)]
         p.line(pts, C.hex('6aff9a').alpha(0.35), 3)
@@ -1320,11 +1334,11 @@ def revel_m_002(p):
             a = k * math.pi + t * 3.6
             pts.append((480 + math.cos(a) * (120 + 60 * t), 340 + math.sin(a) * (180 - 60 * t) - 40 * t))
         fire_jet(p, pts, 3, 14, puff=False)
-    RFig(pose=((10, -86), (-22, -74), False, 1, 1), garb='jerkin', stance='stride', main=CRIMSON, parti=GOLD, hose=GOLD.dark(0.2), hose2=CRIMSON.dark(0.3),
+    RFig(pose=((22, -94), (-26, -70), False, 1, 1, 1.4, 0.6), garb='jerkin', stance='stride', main=CRIMSON, parti=GOLD, hose=GOLD.dark(0.2), hose2=CRIMSON.dark(0.3),
          cloak='mantle', cloak_col=C.hex('2a0a10'), lining=C.hex('ff8a2a'), hair='curly', hair_col=C.hex('1a0a08'), beard='short',
          head=feathered_cap(BLACK_VELVET, C.hex('ff8a2a'), GOLD, GOLD_LIGHT), sleeves='fitted', belt='gold', fur=None, mouth='open',
          emblem=lambda p, c: [flame_tongue(p, (c[0], c[1] + 6), 12, 4, glow=False)],
-         props_front=[goblet('f', flame=True, tilt=0.9)], props_back=[rapier('b', ang=-2.6, length=58)]).draw(p, 480, 604, 470)
+         props_front=[goblet('f', flame=True, tilt=0.15)], props_back=[rapier('b', ang=-2.6, length=58)]).draw(p, 480, 604, 470)
     sparks(p, (300, 100, 700, 460), 30)
 
 

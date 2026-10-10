@@ -11,7 +11,105 @@ import cairo
 from core import *
 import bg
 import props as PR
-from figure import Figure, ik
+from figure import Figure, POSES
+import figure as _figmod
+
+
+def ik(s, t, l1, l2, bend=1.0, side=None):
+    """Elbow for a two-bone limb from s reaching for t. The elbow bends down and out
+    from the body, and never rises above the shoulder unless the hand is raised."""
+    d = v_len(v_sub(t, s))
+    d = min(max(d, 0.01), l1 + l2 - 0.05)
+    base = math.atan2(t[1] - s[1], t[0] - s[0])
+    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
+    a = math.acos(max(-1.0, min(1.0, cos_a)))
+    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
+    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
+    if side is None:
+        side = 1.0 if s[0] >= 0 else -1.0
+    raised = t[1] < s[1] - 6
+
+    def score(e):
+        sc = e[1] + 0.35 * side * (e[0] - s[0])
+        if not raised and e[1] < s[1] - 1:
+            sc -= 100
+        return sc
+    best, other = (e1, e2) if score(e1) >= score(e2) else (e2, e1)
+    e = best if bend != 0 else other
+    dirv = v_norm(v_sub(t, e))
+    return e, v_add(e, v_mul(dirv, l2))
+
+
+class AbFigure(Figure):
+    """Figure whose elbows never ride up above the shoulder for a lowered hand;
+    hands=(front, back) overrides the pose's hand targets."""
+
+    def __init__(self, hands=None, **kw):
+        super().__init__(**kw)
+        self.hands = hands
+
+    def joints(self):
+        j = super().joints()
+        k = j['k']
+        pf, pb, bfront, bend_f, bend_b = POSES[self.pose]
+        if self.hands:
+            pf, pb = self.hands
+        for w, t, bend in (('f', (pf[0], pf[1] + k), bend_f), ('b', (pb[0], pb[1] + k), bend_b)):
+            s = j['sh_' + w]
+            l1, l2 = 16.5, 15.5
+            # a hand held close to the body means the arm points at the viewer:
+            # foreshorten it instead of folding the elbow out like a wing
+            d = v_len(v_sub(t, s))
+            if d < 0.86 * (l1 + l2):
+                f = max(0.7, d / (0.86 * (l1 + l2)))
+                l1, l2 = l1 * f, l2 * f
+            j['el_' + w], j['hand_' + w] = ik(s, t, l1, l2, bend)
+        return j
+
+    def draw(self, p, x, y, height=480, flip=False):
+        """As Figure.draw, but a far arm brought in front of the body is drawn with its
+        upper arm hidden behind the torso: only the forearm and hand cross over."""
+        self.p = p
+        s = height / 100.0
+        p.push(x, y, s, flip)
+        p.lw = 2.6
+        j = self.joints()
+        self.j = j
+        k = j['k']
+        p.blob((1, -0.5), 24 if not self.kneel else 30, 3.6, C(0.1, 0.05, 0.02, 0.28), ink=False)
+        if self.wings:
+            PR.wings(p, (j['sh_b'][0] + 2, j['sh_b'][1] + 2), self.wings, self.wing_col, k)
+        if self.cloak:
+            self._cloak_back(j)
+        if self.props_back:
+            for fn in self.props_back:
+                fn(p, j)
+        # the far arm, whole, behind the body
+        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._legs(j)
+        self._body(j)
+        if self.cloak:
+            self._cloak_front(j)
+        self._head(j)
+        if j['back_front']:
+            el, hd = j['el_b'], j['hand_b']
+            d = v_norm(v_sub(hd, el))
+            n = v_perp(d)
+            c0 = v_sub(el, v_mul(d, 1.2))
+            far = 40
+            clip = [v_add(c0, v_mul(n, far)), v_add(v_add(c0, v_mul(n, far)), v_mul(d, far)),
+                    v_add(v_sub(c0, v_mul(n, far)), v_mul(d, far)), v_sub(c0, v_mul(n, far))]
+            p.clip_shape(clip, smooth=False)
+            self._arm(j['sh_b'], el, hd, back=True, over=True)
+            p.unclip()
+        if self.shield:
+            hb = j['hand_b']
+            PR.heater_shield(p, (hb[0] - 3.5, hb[1] + 7), self.shield, s=1.08)
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+        if self.props_front:
+            for fn in self.props_front:
+                fn(p, j)
+        p.pop()
 
 # ------------------------------------------------------------------ palette
 
@@ -1533,7 +1631,7 @@ def hound(p, x, y, s=4.0, flip=False, skin=C.hex('2e1a1a'), mane=EMBER, eye=C.he
 
 # ------------------------------------------------------------------ cultists and liches
 
-class Cultist(Figure):
+class Cultist(AbFigure):
     """A Figure whose hood throws its upper face into shadow; eyes may burn."""
 
     def __init__(self, shadow=0.55, glow_eyes=None, **kw):

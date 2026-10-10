@@ -689,6 +689,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Toll into the lands of %s: %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "TCG · RPG",
    "note": "scripts/main.gd"
   },
@@ -809,6 +813,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Gate toll: %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "%s awaits within.\nFaith: %s · Level %d · %d life\n\n",
    "note": "scripts/main.gd"
   },
@@ -858,6 +866,14 @@
   },
   {
    "key": "Onward",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You fled",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You drop %d gold as you run.",
    "note": "scripts/main.gd"
   },
   {
@@ -1229,6 +1245,10 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
+   "key": "%s cards are cheaper here. Every copy you buy raises the price here; prices settle back day by day. ▲ dearer than usual, ▼ cheaper.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
    "key": "Buy · %d gold",
    "note": "scripts/ui/city_screen.gd"
   },
@@ -1241,6 +1261,10 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
+   "key": "Cards of other faiths fetch more here than %s cards. Every copy you sell lowers the price here for a while.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
    "key": "Nothing spare to sell.",
    "note": "scripts/ui/city_screen.gd"
   },
@@ -1249,11 +1273,27 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
-   "key": "A warm fire, a bed and a ledger. Your progress is saved whenever you rest here.",
+   "key": "A warm fire, a bed and a ledger.",
    "note": "scripts/ui/city_screen.gd"
   },
   {
-   "key": "Rest & save (slot %s)",
+   "key": "Sleep here (%d gold)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "You sleep well.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "A night's sleep: the day passes, prices settle, and you start your next duel with %d extra life.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Rested: you start your next duel with %d extra life.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Save (slot %s)",
    "note": "scripts/ui/city_screen.gd"
   },
   {

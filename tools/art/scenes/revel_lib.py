@@ -29,6 +29,53 @@ SHORT_GARB = ('tunic', 'surcoat', 'jerkin')
 
 # ====================================================================== figures
 
+def rik(s, t, l1, l2, bend=1.0, out=1.4):
+    """Like figure.ik, but `out` weighs how far the elbow swings out from the body
+    against how low it hangs (1.4 is figure.ik; 0 means simply the lowest elbow, as
+    for a cup at the lips; a negative value tucks the elbow back, as for a couched lance)."""
+    d = v_len(v_sub(t, s))
+    d = min(max(d, 0.01), l1 + l2 - 0.05)
+    base = math.atan2(t[1] - s[1], t[0] - s[0])
+    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
+    a = math.acos(max(-1.0, min(1.0, cos_a)))
+    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
+    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
+    side = 1.0 if s[0] >= 0 else -1.0
+
+    def score(e):
+        return e[1] + out * side * e[0]
+    best, other = (e1, e2) if score(e1) >= score(e2) else (e2, e1)
+    e = best if bend != 0 else other
+    dirv = v_norm(v_sub(t, e))
+    return e, v_add(e, v_mul(dirv, l2))
+
+
+# Revel poses: front hand, back hand, back arm in front, bends, and the elbow `out`
+# weights for the front and back arm (see rik). Hands are kept a natural reach from
+# the shoulder so the elbows bend softly down and out.
+RE_POSES = {
+    're_stand':     ((12, -51), (-11, -51), False, 1, 1, 1.4, 1.4),
+    're_lips':      ((11, -77), (-11, -51), False, 1, 1, 0.0, 1.4),     # cup at the lips
+    're_cup':       ((25, -70), (-11, -51), False, 1, 1, 0.3, 1.4),     # cup held out
+    're_cup_hip':   ((25, -70), (-14, -58), False, 1, 1, 0.3, 1.4),     # cup out, fist on hip
+    're_raise':     ((17, -107), (-11, -51), False, 1, 1, 1.4, 1.4),    # arm high
+    're_raise_hip': ((17, -107), (-14, -58), False, 1, 1, 1.4, 1.4),
+    're_fence':     ((37, -73), (-22, -97), False, 1, 1, 0.3, 1.4),     # en garde, back hand up
+    're_fence_hip': ((37, -73), (-14, -58), False, 1, 1, 0.3, 1.4),
+    're_couch':     ((22, -56), (-12, -98), False, 1, 1, -1.0, 1.4),    # lance couched, cup aloft
+    're_juggle':    ((24, -64), (-20, -64), False, 1, 1, 0.3, 0.3),
+    're_torch_up':  ((26, -66), (-15, -106), False, 1, 1, 0.3, 1.4),    # front hand out, back hand high
+    're_both_up':   ((17, -107), (-15, -106), False, 1, 1, 1.4, 1.4),
+    're_lap':       ((16, -51), (-6, -52), False, 1, 1, 0.6, 1.4),      # hand resting on the knee
+    're_toast':     ((19, -76), (-11, -51), False, 1, 1, 0.5, 1.4),     # cup raised to the face
+    're_toast_hip': ((19, -76), (-14, -58), False, 1, 1, 0.5, 1.4),
+    're_offer':     ((24, -66), (-11, -51), False, 1, 1, 0.3, 1.4),
+    're_staff':     ((20, -63), (-11, -51), False, 1, 1, 0.0, 1.4),     # upright staff held at the side
+}
+for _k, _v in RE_POSES.items():
+    POSES.setdefault(_k, _v[:5])
+
+
 class RFig(Figure):
     """A Figure that can also sit (seat='chair'), lounge with legs stretched out
     (seat='lounge'), take a stance (lunge, wide, dance), wear motley (parti colour
@@ -56,12 +103,16 @@ class RFig(Figure):
             'waist': (0.0, -57 + k),
             'hip': (0.0, -48 + k),
         }
-        pose = self.pose if isinstance(self.pose, tuple) else POSES[self.pose]
-        pf, pb, bfront, bend_f, bend_b = pose
+        if isinstance(self.pose, tuple):
+            pose = self.pose
+        else:
+            pose = RE_POSES.get(self.pose) or POSES[self.pose]
+        pf, pb, bfront, bend_f, bend_b = pose[:5]
+        out_f, out_b = (pose[5], pose[6]) if len(pose) >= 7 else (1.4, 1.4)
         hf = (pf[0], pf[1] + k)
         hb = (pb[0], pb[1] + k)
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], hf, 16.5, 15.5, bend_f)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], hb, 16.5, 15.5, bend_b)
+        j['el_f'], j['hand_f'] = rik(j['sh_f'], hf, 16.5, 15.5, bend_f, out_f)
+        j['el_b'], j['hand_b'] = rik(j['sh_b'], hb, 16.5, 15.5, bend_b, out_b)
         j['back_front'] = bfront
         j['k'] = k
         return j
@@ -542,6 +593,8 @@ def torch(which='f', length=26, ang=-1.3, big=1.0):
         p.taper([bot, top], 1.1, 1.5, UMBER, width=1.0, shade=0.6)
         p.blob(top, 2.2, 1.8, C.hex('3a2a1a'), width=0.8)
         flame_tongue(p, v_add(top, (0, -1)), 12 * big, 3.6 * big, lean=-1.5)
+        # the fist round the shaft
+        p.blob(h, 2.4, 2.0, SKIN, rot=ang, width=1.0, shade=0.4)
     return fn
 
 
@@ -562,6 +615,10 @@ def thyrsus(which='f', length=108):
                 p.line([(c[0] - 2.4 + q * 1.6, c[1] - 3.6 + r * 2), (c[0] - 1.6 + q * 1.6, c[1] - 2.4 + r * 2)], INK.alpha(0.5), 0.5)
         for col, dx in ((CRIMSON, 3), (AMETHYST, -3)):
             p.taper([(top[0], top[1] + 1), (top[0] + dx * 2, top[1] + 8), (top[0] + dx * 1.2, top[1] + 16), (top[0] + dx * 2.6, top[1] + 22)], 0.9, 0.6, col, width=0.6)
+        # the fist closed round the staff
+        hx = lerp(foot[0], top[0], (foot[1] - y) / (foot[1] - top[1]))
+        p.blob((hx, y), 2.5, 2.1, SKIN, width=1.0, shade=0.4)
+        p.line([(hx - 1.6, y - 0.6), (hx + 1.6, y - 0.6)], SKIN_SHADE.dark(0.2), 0.5)
     return fn
 
 
@@ -679,6 +736,7 @@ def panpipes(which='b'):
             p.shape([(x + i * 1.8 - 0.8, y - 2, 0), (x + i * 1.8 + 0.8, y - 2, 0), (x + i * 1.8 + 0.8, y - 2 + hh, 0), (x + i * 1.8 - 0.8, y - 2 + hh, 0)],
                     C.hex('c8a860'), width=0.6, smooth=False, shade=0.5)
         p.line([(x - 1, y + 1.5), (x + 10, y + 1.5)], CRIMSON, 0.9)
+        p.blob((x, y + 1), 2.3, 1.9, SKIN, width=1.0, shade=0.4)
     return fn
 
 

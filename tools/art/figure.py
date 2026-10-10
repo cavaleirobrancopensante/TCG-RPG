@@ -135,7 +135,9 @@ class Figure:
         if self.props_back:
             for fn in self.props_back:
                 fn(p, j)
-        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True, hand=not j['back_front'])
+        self._no_hand = j['back_front']
+        self._arm(j['sh_b'], j['el_b'], j['hand_b'], back=True)
+        self._no_hand = False
         self._legs(j)
         self._body(j)
         if self.cloak:
@@ -148,7 +150,9 @@ class Figure:
         elif j['back_front']:
             # the far arm is hidden by the body; only its hand comes round in front
             self._forearm_tip(j['el_b'], j['hand_b'])
-        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False, hand=False)
+        self._no_hand = True
+        self._arm(j['sh_f'], j['el_f'], j['hand_f'], back=False)
+        self._no_hand = False
         if self.props_front:
             for fn in self.props_front:
                 fn(p, j)
@@ -316,7 +320,7 @@ class Figure:
             row += 1
         p.unclip()
 
-    def _arm(self, sh, el, hnd, back=False, over=False, hand=True):
+    def _arm(self, sh, el, hnd, back=False, over=False):
         p = self.p
         col = self.main if not self.mail else STEEL.dark(0.1)
         if self.garb in ('surcoat',) and not self.mail:
@@ -347,7 +351,7 @@ class Figure:
             if self.mail:
                 self._mail_rings(sleeve)
             p.fold([v_lerp(sh, mid, 0.6), v_lerp(mid, hnd, 0.4)], col, 1.2, hi=False)
-        if hand:
+        if not getattr(self, '_no_hand', False):
             self._hand(hnd, v_norm(v_sub(hnd, el)))
 
     def _hand(self, at, d):

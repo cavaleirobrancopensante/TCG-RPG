@@ -24,6 +24,21 @@ DEMON_RED = C.hex('a8352a')
 MOSS = C.hex('5c7d2e')
 FUR = C.hex('7a5232')
 
+# my own poses: (front hand, back hand, back arm in front, front bend, back bend).
+# Each bend was checked so the elbow hangs down by the side, never up and out.
+POSES['g_write'] = ((25, -61), (14, -57), True, 0, -1)      # seated, writing at a desk
+POSES['g_lounge'] = ((24, -72), (-19, -52), False, 1, 1)    # seated, cup forward, leaning back on a hand
+POSES['g_plant'] = ((22, -62), (-9, -47), False, 0, 1)      # kneeling, one hand steadying a sapling, the other at his side
+POSES['g_toast'] = ((20, -86), (-18, -52), False, 1, 1)     # cup raised, staff held out at the side
+POSES['g_slump'] = ((22, -52), (-15, -53), False, 1, 1)     # seated asleep, cup hand on the knee, other hand on the bench
+POSES['g_pole'] = ((21, -62), (-10, -50), False, 0, 1)      # one hand on a pole held upright in front, the other relaxed
+POSES['g_sprinkle'] = ((30, -100), (-16, -50), False, 1, 1)  # aspergillum raised high, bucket at the side
+POSES['g_cart'] = ((17, -52), (14, -50), True, 0, -1)       # pushing a handcart
+POSES['g_scroll'] = ((21, -60), (-9, -51), False, 0, 1)     # holding a letter in front
+POSES['g_read'] = ((24, -62), (16, -62), True, 0, 1)        # reading a book held in both hands
+POSES['g_alarm'] = ((24, -76), (16, -70), True, 1, 1)       # hands up in alarm
+POSES['g_unmask'] = ((22, -68), (-22, -54), False, 0, 1)    # mask lowered in front, cup held out at the side
+
 
 # ------------------------------------------------------------------ basics
 
@@ -449,6 +464,21 @@ def demon_head(horn=BONE.dark(0.25), mask=None, eye=C.hex('ffcf4a'), hat=None):
     return fn
 
 
+class PrayFigure(Figure):
+    """A figure praying with joined hands held a little forward of the chest, both
+    elbows hanging down by the sides (the stock 'pray' pose folds them out)."""
+    def __init__(self, **kw):
+        kw['pose'] = 'pray'
+        super().__init__(**kw)
+
+    def joints(self):
+        j = super().joints()
+        k = j['k']
+        j['el_f'], j['hand_f'] = ik(j['sh_f'], (22, -70 + k), 16.5, 15.5, 0)
+        j['el_b'], j['hand_b'] = ik(j['sh_b'], (20, -69 + k), 16.5, 15.5, 1)
+        return j
+
+
 class SatyrFigure(Figure):
     """A satyr: goat legs with backward hocks and hooves below a short tunic."""
     def _legs(self, j):
@@ -527,17 +557,44 @@ class SeatedFigure(Figure):
             p.fold(pts, m, 1.4)
 
 
-def himation(col=MARBLE, trim=None):
+def himation(col=MARBLE, trim=None, mode="stand"):
     """A Greek mantle drawn over the chest from the back shoulder to the front hip,
     hanging in folds. Use as Figure(emblem=himation(...))."""
     def fn(p, cp):
         k = cp[1] + 64
-        pts = [(-9.5, -82 + k), (-3, -83 + k), (4, -74 + k), (11, -60 + k), (13.5, -46 + k), (13, -26 + k), (8, -24 + k, 0), (6.5, -42 + k), (2, -54 + k), (-6, -62 + k), (-11, -70 + k)]
-        p.shape(pts, col, width=1.8, shade=0.9, rim=0.4)
-        for f in ([(-5, -78 + k), (3, -66 + k), (9, -50 + k)], [(-8, -72 + k), (0, -62 + k), (7, -48 + k), (10, -32 + k)], [(-2, -80 + k), (6, -68 + k), (11, -54 + k)]):
-            p.fold(f, col, 1.4)
+        if mode == 'seated':
+            # wrapped over the back shoulder, around the hips and across the lap
+            bottom = [(36, -27), (30, -22), (18, -21), (4, -22), (-12.5, -26)]
+        elif mode == 'kneel':
+            bottom = [(15, -16), (6, -12), (-6, -12), (-16, -14)]
+        else:
+            bottom = [(14.5, -24 + k), (8, -19 + k), (-1, -20 + k), (-9, -23 + k), (-14, -27 + k)]
+        # the upper edge runs from the back shoulder over the chest to the front hip,
+        # leaving the front shoulder and arm free; the rest wraps the lower body
+        upper = [(-10, -83 + k), (-4, -84 + k), (1, -78 + k), (6, -69 + k), (10.5, -59 + k), (13, -50 + k)]
+        if mode == 'seated':
+            front = [(20, -40), (32, -36)]
+        else:
+            front = [(14, -40 + k)]
+        back = [(-12.6, -44 + k), (-11.8, -60 + k), (-11, -74 + k)]
+        pts = upper + front + bottom + back
+        p.shape(pts, col, width=1.8, shade=0.9, rim=0.45)
+        p.clip_shape(pts)
+        p.texture((-16, -90 + k, 40, 4))
+        # radiating swags from the shoulder knot and hanging folds below the hip
+        ex = bottom[0]
+        for i, t in enumerate((0.2, 0.42, 0.64, 0.86)):
+            end = v_lerp(bottom[-1], ex, t)
+            mid = v_lerp((-7, -78 + k), end, 0.5)
+            mid = (mid[0] + 4, mid[1] - 2)
+            p.fold_band([(-7, -79 + k), mid, end], 0.3, 2.6, col.dark(0.45).alpha(0.35))
+            p.line([(-6, -78 + k), mid, end], col.dark(0.5).alpha(0.5), 1.2)
+            p.fold_band([(-5, -78 + k), (mid[0] + 2.5, mid[1]), (end[0] + 2.5, end[1])], 0.2, 1.4, col.light(0.55).alpha(0.35))
+        p.unclip()
+        # the rolled upper edge
+        p.taper(upper + front[:1], 1.4, 1.8, col.light(0.12), width=1.0, shade=0.5)
         if trim:
-            p.line([(-11, -70 + k), (-6, -62 + k), (2, -54 + k), (6.5, -42 + k), (8, -24 + k)], trim, 1.6)
+            p.line([(q[0], q[1] - 1.4) for q in bottom], trim, 1.6)
     return fn
 
 
@@ -621,27 +678,78 @@ def tree_crown(p, c, rx, ry, col=LEAF, n=28, light=True, leaf_r=0.75):
     """A dense crown: dark back clumps, mid clumps, lit clumps, each clump with
     small lit lobes toward the light, and leaf flecks."""
     r = p.rng
-    n = int(n * 1.4)
-    for layer, (dk, k) in enumerate(((0.35, 1.0), (0.12, 0.85), (-0.12, 0.6))):
-        for i in range(n if layer < 2 else n // 2):
-            a = r.uniform(0, math.tau)
-            rr = math.sqrt(r.uniform(0, 1))
-            q = (c[0] + math.cos(a) * rx * rr * k, c[1] + math.sin(a) * ry * rr * k - (layer * ry * 0.12))
-            if layer == 2:
-                q = (q[0] - rx * 0.18, q[1] - ry * 0.12)
-            sz = r.uniform(0.2, 0.3) * min(rx, ry) * leaf_r
-            base = col.dark(dk) if dk > 0 else col.light(-dk)
-            clump(p, q, sz * 1.15, sz, base)
-            if layer > 0:
-                for kk in range(3):
-                    qq = (q[0] - sz * 0.35 + r.uniform(-sz * 0.4, sz * 0.4), q[1] - sz * 0.35 + r.uniform(-sz * 0.3, sz * 0.2))
-                    p.blob(qq, sz * 0.38, sz * 0.3, base.light(0.18).alpha(0.8), rot=r.uniform(0, 3), ink=False)
+    # 1. one silhouette mass: outlined lobes, then the same lobes shrunk without
+    # ink so only the scalloped outer edge keeps its outline
+    m = max(8, int(n * 0.8))
+    lobes = []
+    for i in range(m):
+        a = math.tau * i / m + r.uniform(-0.2, 0.2)
+        rr = r.uniform(0.62, 0.85)
+        q = (c[0] + math.cos(a) * rx * rr, c[1] + math.sin(a) * ry * rr)
+        sz = min(rx, ry) * r.uniform(0.3, 0.42)
+        lobes.append((q, sz))
+    lobes.append((c, min(rx, ry) * 0.8))
+    lobes.append(((c[0] - rx * 0.3, c[1]), min(rx, ry) * 0.7))
+    lobes.append(((c[0] + rx * 0.3, c[1]), min(rx, ry) * 0.7))
+    deep = col.dark(0.3)
+    for q, sz in lobes:
+        p.blob(q, sz * 1.15, sz, deep, ink=INK, width=1.8)
+    cx = p.cx
+    cx.new_path()
+    for q, sz in lobes:
+        cx.save()
+        cx.translate(*q)
+        cx.scale(sz * 1.15 - 1.4, sz - 1.4)
+        cx.new_sub_path()
+        cx.arc(0, 0, 1, 0, math.tau)
+        cx.restore()
+    g = cairo.LinearGradient(c[0] - rx * 0.6, c[1] - ry * 0.9, c[0] + rx * 0.5, c[1] + ry * 0.9)
+    for t, cc in ((0, col.dark(0.12)), (0.55, col.dark(0.32)), (1, col.dark(0.55))):
+        g.add_color_stop_rgba(t, *cc)
+    cx.set_source(g)
+    cx.fill_preserve()
+    cx.save()
+    cx.clip()
+    # 2. leaf clusters inside, lit toward the upper left, shadowed below right
+    cnt = int(n * 4.5 * leaf_r + 14)
+    for i in range(cnt):
+        a = r.uniform(0, math.tau)
+        rr = math.sqrt(r.uniform(0, 1)) * 0.92
+        q = (c[0] + math.cos(a) * rx * rr, c[1] + math.sin(a) * ry * rr)
+        lit = -((q[0] - c[0]) / rx * 0.6 + (q[1] - c[1]) / ry * 0.8)
+        tone = col.light(max(0.0, lit) * 0.28) if lit > 0 else col.dark(min(0.4, -lit * 0.35 + 0.08))
+        sz = min(rx, ry) * r.uniform(0.11, 0.17) * (leaf_r / 0.75) ** 0.5
+        sz = max(sz, 3.5)
+        # a little leafy cluster: three overlapping small leaves
+        for kk in range(3):
+            qq = (q[0] + r.uniform(-sz * 0.7, sz * 0.7), q[1] + r.uniform(-sz * 0.5, sz * 0.5))
+            p.blob(qq, sz * 0.75, sz * 0.5, tone, rot=r.uniform(0, 3.1), ink=INK.alpha(0.35), width=0.8)
+        p.blob((q[0] - sz * 0.3, q[1] - sz * 0.35), sz * 0.35, sz * 0.22, tone.light(0.25).alpha(0.8), rot=r.uniform(0, 3), ink=False)
+    # 3. shadow under the crown so it sits as one solid volume
+    p.blob((c[0] + rx * 0.1, c[1] + ry * 0.85), rx * 0.8, ry * 0.25, col.dark(0.6).alpha(0.3), ink=False)
+    cx.restore()
     if light:
         for i in range(n * 2):
             a = r.uniform(0, math.tau)
             rr = math.sqrt(r.uniform(0, 1))
             q = (c[0] + math.cos(a) * rx * rr * 0.85 - rx * 0.15, c[1] + math.sin(a) * ry * rr * 0.8 - ry * 0.15)
             p.blob(q, 2.4, 1.6, col.light(0.4).alpha(0.8), rot=r.uniform(0, 3), ink=False)
+
+
+def oak_leaf(p, c, L, ang, col=LEAF):
+    """A single lobed oak leaf of length L pointing along ang, with its midrib."""
+    d = (math.cos(ang), math.sin(ang))
+    n = v_perp(d)
+    pts = [c]
+    for i, t in enumerate((0.2, 0.38, 0.56, 0.74, 0.9)):
+        w = L * (0.36 if i % 2 == 0 else 0.25) * (1.0 - t * 0.3)
+        pts.append(v_add(v_add(c, v_mul(d, L * t)), v_mul(n, w)))
+    pts.append(v_add(c, v_mul(d, L)))
+    for i, t in enumerate((0.9, 0.74, 0.56, 0.38, 0.2)):
+        w = L * (0.36 if i % 2 == 0 else 0.25) * (1.0 - t * 0.3)
+        pts.append(v_sub(v_add(c, v_mul(d, L * t)), v_mul(n, w)))
+    p.shape(pts, col, width=0.9, shade=0.5)
+    p.line([c, v_add(c, v_mul(d, L * 0.9))], col.dark(0.35), 0.7)
 
 
 def oak(p, x, y, s=1.0, col=LEAF, trunk=C.hex('5e4630'), crown=True, gnarl=1.0):

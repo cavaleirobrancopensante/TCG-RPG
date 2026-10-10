@@ -177,6 +177,26 @@ Hospice) are open to most heroes.
   with backgrounds. The first Holy Church cards and the basic lands have it; the rest of
   the set follows.
 
+
+## Painted art for every card, and an economy (1.19)
+
+- Every one of the 300 cards and the six basic lands has its own painted miniature: a
+  scene made for that card, in the manner of an illuminated manuscript, with figures,
+  faces, drapery and a full setting. They are painted offline by tools/art (Python and
+  cairo, one scene function per card, see tools/art/ART_GUIDE.md) and baked into small
+  WebP images. Figures hold what they carry in their fists, elbows hang naturally, and
+  shields are strapped to the far forearm.
+- Gold is scarce now. Duels, missions and lairs pay less; boosters cost 150 and singles
+  40/120/400/1400 by rarity; the tournament costs 300 to enter.
+- Every city has its own market: its own faith's cards are cheaper there, cards of other
+  faiths sell for more there, and every copy you buy or sell moves that city's price
+  (shown with ▲ and ▼), settling back day by day. A day passes with every duel and every
+  night at an inn.
+- The road costs money: a gate toll at cities not of your faith, a toll at the borders of
+  other faiths' lands, a night at the inn (20 gold) that sends you into your next duel with
+  3 extra life. Losing a duel costs a fifth of your purse, fleeing one a tenth (and you keep
+  your place on the road). Nobody is ever charged more than they have.
+
 ## Portraits and arrows (1.16)
 
 - Each side of a duel shows its hero's portrait: your chosen hero, and the face of the

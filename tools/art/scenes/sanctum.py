@@ -8,15 +8,47 @@ from sanctum_lib import *
 import sanctum_lib as L
 
 
+# a herald's hands: the front fist round the trumpet's tube, the other at rest
+TRUMPET_HANDS = ((22, -95), (-9, -52), False, 1, 1)
+
+
+def _trumpet_blow():
+    """A long straight herald's trumpet set to the lips, the front fist round the
+    tube, a white banner with a red cross hanging from it. Drawn in props_front,
+    so it repaints the fist closing over the tube."""
+    def fn(p, j):
+        hx, hy = j['head']
+        mouth = (hx + 4.6, hy + 3.4)
+        bell = (hx + 44, hy - 17)
+        d = v_norm(v_sub(bell, mouth))
+        n = v_perp(d)
+        p.taper([mouth, v_lerp(mouth, bell, 0.5), bell], 0.75, 1.3, GOLD, width=1.1, shade=0.6)
+        p.blob(v_lerp(mouth, bell, 0.62), 1.6, 1.6, GOLD, width=0.8)
+        fl = v_add(bell, v_mul(d, 7))
+        p.shape([v_add(bell, v_mul(n, 1.3)), v_add(fl, v_mul(n, 5.2)), v_sub(fl, v_mul(n, 5.2)), v_sub(bell, v_mul(n, 1.3))], GOLD, width=1.2, shade=0.6)
+        p.blob(fl, 1.6, 5.2, GOLD_DARK, rot=math.atan2(d[1], d[0]), width=1.0)
+        a = v_lerp(mouth, bell, 0.68)
+        b = v_lerp(mouth, bell, 0.92)
+        p.shape([a, b, (b[0] + 0.5, b[1] + 11), (b[0] - 2.5, b[1] + 8, 0), (a[0] + 4, a[1] + 13, 0), (a[0] + 0.5, a[1] + 9)], LEAD_WHITE, width=1.1, shade=0.4)
+        cx0, cy0 = v_lerp(a, b, 0.5)
+        p.taper([(cx0, cy0 + 2), (cx0, cy0 + 9.5)], 0.6, 0.6, VERMILION, width=0.4)
+        p.taper([(cx0 - 2.6, cy0 + 4.6), (cx0 + 2.6, cy0 + 4.6)], 0.6, 0.6, VERMILION, width=0.4)
+        # the fist round the tube
+        h = j['hand_f']
+        p.blob(h, 2.5, 2.3, SKIN, rot=math.atan2(d[1], d[0]), width=1.2, shade=0.5)
+        p.blob(v_add(h, v_mul(n, 1.6)), 1.1, 0.9, SKIN, width=0.9)
+    return fn
+
+
 def sanctum_c_013(p):
     """Asperges: the priest in a cope sprinkles holy water over the kneeling faithful."""
     bg.nave(p)
-    Figure(pose='pray', garb='tunic', main=C.hex('5c7aa8'), hair='curly', hair_col=C.hex('6a4a2a'), kneel=True,
+    Fig(pose='pray', garb='tunic', main=C.hex('5c7aa8'), hair='curly', hair_col=C.hex('6a4a2a'), kneel=True,
            eyes='down', belt='leather').draw(p, 760, 600, 360, flip=True)
-    Figure(pose='pray', garb='gown', main=C.hex('8e3f3a'), head='veil', hood_col=LEAD_WHITE, kneel=True,
+    Fig(pose='pray', garb='gown', main=C.hex('8e3f3a'), head='veil', hood_col=LEAD_WHITE, kneel=True,
            eyes='down', belt=None, trim=None).draw(p, 880, 610, 340, flip=True)
-    Figure(pose='sprinkle', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=C.hex('8e1f24'), trim=GOLD,
-           hair='tonsure', hair_col=UMBER, props_front=[PR.aspergillum()], props_back=[PR.bucket('b')]).draw(p, 360, 600, 460)
+    Fig(pose='sprinkle', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=C.hex('8e1f24'), trim=GOLD,
+           hair='tonsure', hair_col=UMBER, props_front=[PR.bucket('b'), PR.aspergillum()]).draw(p, 360, 600, 460)
 
 
 def sanctum_c_002(p):
@@ -196,7 +228,8 @@ def sanctum_c_004(p):
     p.blob((636, 424), 4, 6, C.hex('a88a5a'), width=1.2)
     bg.tile_floor(p, 560, C.hex('9a7a58'), C.hex('d8c8a4'))
     Fig(pose='hold', garb='habit', main=BENEDICTINE, hair='tonsure', hair_col=C.hex('5a4a3a'), beard='short', age='old', belt='leather',
-        head='cowl', props_front=[_keys('f')], props_back=[PR.staff('b', 'plain', 108, OAK)], mouth='stern', width=1.1).draw(p, 690, 600, 450, flip=True)
+        head='cowl', props_front=[_keys('f')], props_back=[PR.staff('b', 'plain', 108, OAK)], mouth='stern', width=1.1,
+        hands=((15, -63), (-18, -62), False, 1, 1)).draw(p, 690, 600, 450, flip=True)
 
 
 def sanctum_c_005(p):
@@ -229,7 +262,7 @@ def sanctum_c_005(p):
                 p.taper([q, (q[0] + sd * 5 + 2, q[1] - 2)], 0.8, 0.2, LEAF, width=0.7)
     Fig(pose='hold', garb='robe', main=C.hex('8a6a4a'), head='pilgrim', hair='short', beard='short', hair_col=UMBER, halo=True,
         cloak='mantle', cloak_col=CRIMSON, lining=VERMILION.light(0.2), belt='leather', eyes='up',
-        props_back=[PR.staff('b', 'gourd', 112, OAK)], props_front=[palm]).draw(p, 400, 600, 470)
+        props_back=[PR.staff('b', 'gourd', 112, OAK)], props_front=[palm], hands=((15, -63), (-19, -60), False, 1, 1)).draw(p, 400, 600, 470)
 
 
 def _bowl(which='f'):
@@ -303,25 +336,37 @@ def sanctum_c_009(p):
             props_front=[PR.candle('f', big=True)]).draw(p, x, 566, 270, flip=True)
     # the thurifer swinging the censer high
     thur = Fig(pose='hold', garb='alb', main=LEAD_WHITE, hair='curly', hair_col=C.hex('6a4a2a'), emblem=_cassock_cotta(), belt=None, blush=0.8,
-               hands=((20, -86), (-8, -56), False, 1, 1), eyes='up')
+               hands=((33, -72), (-8, -56), False, 1, 1), eyes='up')
 
     def censer_swing(p, j):
         x, y = j['hand_f']
-        c = (x + 16, y - 6)
+        c = (x + 11, y - 13)
         for dx in (-2, 0, 2):
-            p.line([(x, y), (c[0] + dx, c[1] + 3)], GOLD_DARK, 0.8)
-        L.smoke(p, c[0], c[1] - 4, 60, LEAD_WHITE, 0.45, 1.6, 3, 4)
+            p.line([(x + 0.5, y - 1), (c[0] + dx, c[1] + 3)], GOLD_DARK, 0.8)
+        L.smoke(p, c[0], c[1] - 4, 50, LEAD_WHITE, 0.4, 1.6, 3, 4)
         p.shape([(c[0] - 4.6, c[1] - 3), (c[0] + 4.6, c[1] - 3), (c[0] + 4, c[1] + 2.6), (c[0], c[1] + 4.6), (c[0] - 4, c[1] + 2.6)], GOLD, width=1.4, shade=0.8)
         p.shape([(c[0] - 4.2, c[1] - 3), (c[0] - 2, c[1] - 6.6), (c[0] + 2, c[1] - 6.6), (c[0] + 4.2, c[1] - 3)], GOLD.light(0.1), width=1.3, shade=0.6)
         p.glow(c, 7, FLAME, 0.5)
         # motion arcs
         p.cx.new_path()
-        p.cx.arc(x, y, 18, -0.6, 1.0)
+        p.cx.arc(x, y, 18, -1.4, 0.2)
         p.stroke(GOLD_LIGHT.alpha(0.5), 1.4)
     thur.props_front = [censer_swing]
     thur.draw(p, 330, 600, 440)
     # the incense rising in a tall column
-    L.smoke(p, 452, 160, 170, LEAD_WHITE, 0.35, 5, 3, 10)
+    L.smoke(p, 528, 170, 160, LEAD_WHITE, 0.3, 5, 3, 10)
+
+
+def _crescent(p, c, r, col=C.hex('f4ecc8')):
+    """A waxing crescent moon with a soft glow."""
+    p.glow(c, r * 3, col, 0.35)
+    pts = [polar(c, r, math.pi * (0.5 + i / 12.0)) for i in range(13)]
+    ic = (c[0] + r * 0.45, c[1])
+    ir = math.hypot(r * 0.45, r)
+    a0 = math.atan2(-r, -r * 0.45) % math.tau
+    a1 = math.atan2(r, -r * 0.45)
+    inner = [polar(ic, ir, a0 + (a1 - a0) * i / 12.0) for i in range(1, 12)]
+    p.shape([pts[0] + (0,)] + pts[1:-1] + [pts[-1] + (0,)] + inner, col, width=1.6, shade=0.3)
 
 
 def _kite_shield(c, s, field=ULTRA, charge='keys'):
@@ -352,7 +397,8 @@ def _kite_shield(c, s, field=ULTRA, charge='keys'):
 def sanctum_c_010(p):
     """Abbey Man-at-Arms: by torchlight in the abbey yard he stands guard with the
     abbey's shield of the keys, the orphans asleep in the straw behind him."""
-    bg.night_sky(p, moon=True, stars=50)
+    bg.night_sky(p, moon=False, stars=50)
+    _crescent(p, (780, 110), 30)
     L.ashlar(p, (-5, 150, W + 5, 520), C.hex('6a6070'), 36, 80, 0.8)
     for x in (80, 920):
         p.shape([(x - 40, 520, 0), (x - 40, 180), (x, 140), (x + 40, 180), (x + 40, 520, 0)], C.hex('2a2236'), width=2)
@@ -374,13 +420,11 @@ def sanctum_c_010(p):
     for x in (690, 780, 870):
         p.fold([(x, 520), (x + 6, 594)], C.hex('7a5a8a'), 1.4)
     p.line([(610, 540), (940, 538)], GOLD.alpha(0.7), 3)
-    shield = _kite_shield((440, 420), 2.6)
-
-    def nasal_spear(p, j):
-        pass
-    Fig(pose='guard', garb='tunic', main=C.hex('b8a27a'), second=C.hex('6a5a40'), head='nasal', hair='short', beard='short', hair_col=UMBER,
-        belt='sword', mail=True, mouth='stern', width=1.15, props_back=[PR.spear('f', 128)]).draw(p, 360, 600, 470)
-    shield(p)
+    def kite(p, j):
+        hb = j['hand_b']
+        _kite_shield((hb[0] - 4, hb[1] + 10), 0.34)(p)
+    Fig(pose='sa_spear', garb='tunic', main=C.hex('b8a27a'), second=C.hex('6a5a40'), head='nasal', hair='short', beard='short', hair_col=UMBER,
+        belt='sword', mail=True, mouth='stern', width=1.15, props_back=[PR.spear('f', 128)], props_front=[kite]).draw(p, 380, 600, 470)
 
 
 def sanctum_c_012(p):
@@ -402,7 +446,7 @@ def sanctum_c_012(p):
     p.shape([(-5, 160, 0), (160, 160, 0), (160, 176, 0), (-5, 176, 0)], LEAD_WHITE, width=1.6, smooth=False)
     # the poor
     Fig(pose='cup', garb='gown', main=C.hex('7a4a5a'), head='veil', hood_col=C.hex('a89070'), cloak='mantle', cloak_col=C.hex('5a5a6a'),
-        hands=((18, -68), (2, -60), True, 1, -1), eyes='up', belt=None).draw(p, 640, 604, 380, flip=True)
+        hands=((21, -62), (13, -60), True, 1, -1), eyes='up', belt=None).draw(p, 640, 604, 380, flip=True)
     child(p, 560, 606, 200, flip=True, pose='cup', main=C.hex('8a6a4a'), hands=((14, -72), (-8, -52), False, 1, 1), eyes='up')
     Fig(pose='staff', garb='robe', main=C.hex('6a6a5a'), hair='white', beard='long', age='old', hood_col=C.hex('6a6a5a'), head='hood', eyes='open',
         props_back=[PR.staff('f', 'tau', 84, OAK)]).draw(p, 790, 604, 360, flip=True)
@@ -551,7 +595,7 @@ def sanctum_c_016(p):
         p.shape([(x - 3, y - 2), (x + 3, y - 2), (x + 2.5, y + 4), (x - 2.5, y + 4)], LEAD_WHITE, width=1.0, shade=0.5)
         p.blob((x, y - 2), 3, 1, GOLD, width=0.8)
     Fig(pose='bless', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=VERMILION, trim=GOLD, head='mitre', hair='white', age='old',
-        beard='short', props_back=[PR.staff('b', 'crook', 106, GOLD_DARK)], props_front=[chrism], hands=((27, -62), (2, -60), True, 1, -1)).draw(p, 452, 600, 470)
+        beard='short', props_front=[chrism], hands=((27, -62), (4, -60), True, 1, -1)).draw(p, 452, 600, 470)
 
 
 def _crypt(p, tone=C.hex('6a5e58')):
@@ -745,7 +789,7 @@ def sanctum_u_001(p):
         p.taper([(hx - 6, hy - 3), (hx, hy - 6), (hx + 6, hy - 4.5)], 1.8, 1.8, LEAD_WHITE, width=0.9)
         p.blob((hx - 3, hy - 4.5), 1.4, 1.2, VERMILION.alpha(0.6), ink=False)
     knight = Fig(pose='cup', garb='tunic', main=LEAD_WHITE.dark(0.05), second=C.hex('8a8070'), hair='short', hair_col=C.hex('8a5a2a'), beard='short',
-                 head=bandage, belt=None, eyes='down', hands=((16, -66), (-8, -54), False, 1, 1), blush=0.2)
+                 head=bandage, belt=None, eyes='down', hands=((15, -91), (-8, -54), False, 1, 1), blush=0.2)
     p.blob((150, 466), 54, 22, LEAD_WHITE, width=1.6, shade=0.5)
     _sitting_in_bed(p, 200, 520, 430, knight)
     p.shape([(40, 520, 0), (440, 520, 0), (440, 560, 0), (40, 560, 0)], OAK, width=1.6, smooth=False, shade=0.5)
@@ -866,8 +910,11 @@ def sanctum_u_003(p):
 
 
 def _wheat(p, x, y, h, col=C.hex('e0b850')):
-    p.line([(x, y), (x + 3, y - h)], col.dark(0.2), 1.4)
-    p.blob((x + 3, y - h - 6), 2.6, 7, col, width=0.9)
+    p.line([(x, y), (x + 3, y - h)], col.dark(0.25), 1.4)
+    tip = (x + 3.4, y - h - 6)
+    p.blob(tip, 2.6, 7, col.dark(0.18), rot=0.08, ink=False)
+    p.blob((tip[0] - 0.7, tip[1] - 0.8), 1.5, 5.4, col.light(0.25), rot=0.08, ink=False)
+    p.line([(tip[0] + 0.4, tip[1] - 6), (tip[0] + 1.6, tip[1] - 13)], col.dark(0.1).alpha(0.8), 1.0)
 
 
 def _sheaf(p, x, y, s=1.0):
@@ -908,7 +955,7 @@ def sanctum_u_004(p):
         Fig(pose='hold', garb='habit', main=C.hex('8a7458'), hair='short', hair_col=UMBER, beard='short', belt='cord', head='hood',
             props_front=[_sickle('f')], hands=((14, -40), (-8, -50), False, 1, 1)).draw(p, x, y, h)
     Fig(pose='bless', garb='habit', main=CISTERCIAN, scapular=BLACK_HABIT, hair='white', age='old', beard='short', belt='leather',
-        props_back=[PR.staff('b', 'crook', 104, OAK)], eyes='open').draw(p, 330, 604, 470)
+        props_back=[PR.staff('b', 'crook', 104, OAK)], eyes='open', hands=((15, -80), (-17, -60), False, 1, 1)).draw(p, 330, 604, 470)
     for i in range(30):
         x = p.rng.uniform(140, 520)
         _wheat(p, x, p.rng.uniform(590, 625), 40)
@@ -1048,9 +1095,9 @@ def sanctum_u_008(p):
     p.shape([(-48, -20, 0), (-48, -230, 0), (48, -230, 0), (48, -20, 0)], CRIMSON, width=1.8)
     p.pop()
     # the tyrant falling backwards
-    p.push(610, 520, 1.0, rot=0.75)
+    p.push(600, 530, 1.0, rot=0.55)
     Fig(pose='spread', garb='gown', main=PURPLE, cloak='mantle', cloak_col=CRIMSON, fur=LEAD_WHITE, hair='curly', hair_col=C.hex('2a1a10'), beard='forked',
-        mouth='open', eyes='up', belt='gold', trim=GOLD).draw(p, 0, 0, 380)
+        mouth='open', eyes='up', belt='gold', trim=GOLD).draw(p, 0, 0, 400, flip=True)
     p.pop()
     # the crown bouncing on the steps
     p.push(400, 560, 5.0, rot=-0.5)
@@ -1082,11 +1129,11 @@ def sanctum_u_009(p):
             p.blob((x, y - 6), 1.6, 1.6, GOLD, width=0.8)
         return fn
     Fig(pose='stand', garb='surcoat', main=ULTRA, mail=True, head='coif', hair='short', beard='short', hair_col=C.hex('6a4a2a'), belt='sword',
-        shield='lily', mouth='stern', eyes='down', props_front=[sheathing()], hands=((8, -50), (-12, -60), False, 1, 1)).draw(p, 200, 604, 430)
+        shield='lily', mouth='stern', eyes='down', props_front=[sheathing()], hands=((12, -50), (0, -60), True, 1, 1)).draw(p, 200, 604, 430)
     Fig(pose='stand', garb='surcoat', main=VERMILION, mail=True, head='coif', hair='short', beard='forked', hair_col=C.hex('2a1a10'), belt='sword',
-        shield='cross_white', mouth='stern', eyes='down', props_front=[sheathing()], hands=((8, -50), (-12, -60), False, 1, 1)).draw(p, 800, 604, 430, flip=True)
+        shield='cross_white', mouth='stern', eyes='down', props_front=[sheathing()], hands=((12, -50), (0, -60), True, 1, 1)).draw(p, 800, 604, 430, flip=True)
     Fig(pose='bless', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=C.hex('6a2a7a'), trim=GOLD, head='mitre', hair='white', beard='long', age='old',
-        props_back=[PR.staff('b', 'crook', 104, GOLD_DARK)], eyes='open').draw(p, 500, 600, 450)
+        props_back=[PR.staff('b', 'crook', 104, GOLD_DARK)], eyes='open', hands=((15, -80), (-19, -60), False, 1, 1)).draw(p, 500, 600, 450)
 
 
 def _banner_pole(p, base, top, col, charge=None):
@@ -1229,7 +1276,7 @@ def sanctum_u_013(p):
     L.altar(p, 500, 600, 420, 120, frontal=LEAD_WHITE.dark(0.05))
     # the throne (exposition canopy) and the monstrance
     p.shape([(420, 480, 0), (580, 480, 0), (570, 450, 0), (430, 450, 0)], GOLD, width=1.6, smooth=False, shade=0.6)
-    PR.monstrance(p, (500, 452), 5.2)
+    PR.monstrance(p, (500, 400), 4.4)
     for x in (300, 360, 640, 700):
         L.candlestick(p, x, 480, 110 if x in (300, 700) else 90)
     L.smoke(p, 250, 520, 300, LEAD_WHITE, 0.25, 10, 3, 20)
@@ -1245,13 +1292,14 @@ def sanctum_r_002(p):
     """Seraph of the Dawn Watch: the six winged seraph, red and gold, keeps watch
     above the cathedral as the sun rises behind its towers."""
     bg.dawn_sky(p)
-    p.glow((500, 560), 500, C.hex('ffd890'), 0.6)
-    bg.clouds(p, 520, 4, xs=[120, 380, 640, 900], scale=1.2)
-    bg.hills(p, 560, C.hex('7a7aa0'), 20, n=6)
-    L.cathedral_facade(p, 500, 640, 0.42, lit=0.6)
-    bg.clouds(p, 600, 3, xs=[200, 500, 800], scale=1.0)
-    L.seraph(p, (500, 260), 1.1)
-    p.stars((150, 30, 850, 200), 14, GOLD_LIGHT.alpha(0.9), (2, 5))
+    p.stars((150, 30, 850, 160), 14, GOLD_LIGHT.alpha(0.9), (2, 5))
+    p.glow((520, 600), 520, C.hex('ffd890'), 0.6)
+    bg.hills(p, 520, C.hex('8a86a8'), 24, n=6)
+    bg.clouds(p, 500, 3, xs=[120, 820, 960], scale=1.0)
+    L.cathedral_facade(p, 170, 640, 0.4, lit=0.7)
+    bg.hills(p, 590, C.hex('6a7a5a'), 14, n=5)
+    L.seraph(p, 560, 604, 430)
+    bg.clouds(p, 600, 3, xs=[330, 620, 900], scale=1.1)
 
 
 def sanctum_r_003(p):
@@ -1283,7 +1331,7 @@ def sanctum_r_004(p):
     L.krak(p, 640, 400, 1.25)
     # men-at-arms along the wall
     for x, h, fl in ((780, 300, True), (900, 280, True)):
-        Fig(pose='guard', garb='tunic', main=C.hex('b8a27a'), head='nasal', hair='short', beard='short', mail=True, belt='leather',
+        Fig(pose='staff', garb='tunic', main=C.hex('b8a27a'), head='nasal', hair='short', beard='short', mail=True, belt='leather',
             props_back=[PR.spear('f', 128)], mouth='stern').draw(p, x, 560 + (300 - h) * 0.2, h, flip=fl)
     Fig(pose='staff', garb='surcoat', main=HOSP_RED, mail=True, head='coif', hair='white', beard='long', age='old', emblem='cross_white',
         cloak='mantle', cloak_col=HOSP_BLACK, lining=C.hex('4a4650'), belt='sword', mouth='stern', props_back=[PR.staff('f', 'tau', 112, OAK)],
@@ -1311,11 +1359,11 @@ def sanctum_r_005(p):
     bg.tile_floor(p, 540, C.hex('9a7a58'), C.hex('e0d0ac'))
     for x, y, w, hl in ((150, 580, 260, True), (860, 580, 260, False)):
         L.bed(p, x, y, w, 56, C.hex('a83a3a'), head_left=hl, sleeper=L.sleeping_head(C.hex('6a5a4a'), beard='short', s=3.4))
-    for x in (60, 940):
-        PR.maltese(p, (x, 470), 20, LEAD_WHITE)
-    Fig(pose='guard', garb='surcoat', main=HOSP_RED, mail=True, head='coif', hair='white', beard='forked', age='old', emblem='cross_white',
+    for x in (280, 916):
+        PR.heater_shield(p, (x, 330), 'maltese', HOSP_RED, 3.4)
+    Fig(pose='sa_hilt', garb='surcoat', main=HOSP_RED, mail=True, head='coif', hair='white', beard='forked', age='old', emblem='cross_white',
         cloak='mantle', cloak_col=HOSP_BLACK, lining=C.hex('4a4650'), belt='sword', mouth='stern', width=1.1,
-        props_front=[_sword_down], hands=((14, -56), (-12, -60), False, 1, 1), shield='maltese').draw(p, 500, 604, 480)
+        props_front=[_sword_down]).draw(p, 500, 604, 480)
 
 
 # ====================================================================== batch 7
@@ -1360,8 +1408,8 @@ def sanctum_r_006(p):
     Fig(pose='hold', garb='alb', main=LEAD_WHITE, hair='curly', hair_col=C.hex('8a5a2a'), emblem=_cassock_cotta(BLACK_HABIT), belt=None,
         props_back=[PR.processional_cross('f', 130)], eyes='down').draw(p, 130, 590, 330)
     Fig(pose='raise', garb='alb', main=LEAD_WHITE, hair='short', hair_col=C.hex('6a6a6a'), beard='short', age='old', mouth='open',
-        emblem=_priest_vest(), belt=None, props_front=[_crucifix('f', 1.0)], props_back=[PR.book('b', CRIMSON, open_=True)],
-        hands=((24, -94), (-6, -62), False, 1, 1)).draw(p, 360, 600, 460)
+        emblem=_priest_vest(), belt=None, props_front=[PR.book('b', CRIMSON, open_=True), _crucifix('f', 1.0)],
+        hands=((24, -94), (5, -61), True, 1, 1)).draw(p, 360, 600, 460)
 
 
 def _tiara(p, hc):
@@ -1499,7 +1547,7 @@ def sanctum_r_009(p):
         for k in range(2):
             ax = x + sd * (70 + k * 60)
             p.shape(L.pointed_opening(ax - 24, ax + 24, y - 150, y - 40, 0.9, 6), GOLD.light(0.1), width=1.6)
-            Figure(pose='book', garb='robe', main=[VERMILION, MALACHITE][k], cloak='mantle', cloak_col=LEAD_WHITE, halo=True, hair='short', beard='short',
+            Fig(pose='book', garb='robe', main=[VERMILION, MALACHITE][k], cloak='mantle', cloak_col=LEAD_WHITE, halo=True, hair='short', beard='short',
                    hair_col=UMBER, props_front=[PR.book('both', ULTRA)]).draw(p, ax, y - 44, 92, flip=sd > 0)
     # central crystal window with the relic
     win = [(x - 40, y - 40, 0), (x - 40, y - 150), (x, y - 176, 0), (x + 40, y - 150), (x + 40, y - 40, 0)]
@@ -1585,7 +1633,7 @@ def sanctum_m_001(p):
     demon(p, 720, 616, 2.0, flip=True, col=C.hex('2a1e2a'), cower=1.0)
     Fig(pose='sword_up', garb='surcoat', main=LEAD_WHITE, second=C.hex('d8d0c0'), mail=True, halo=True, wings='red', hair='curly',
         hair_col=C.hex('c8902e'), cloak='mantle', cloak_col=CRIMSON, lining=GOLD, belt='gold', trim=GOLD, emblem=_breastplate,
-        shield='cross_red', props_front=[_flaming_sword], eyes='down', mouth='stern', hands=((22, -88), (-13, -62), False, 1, 1)).draw(p, 470, 604, 480)
+        shield='cross_red', props_front=[_flaming_sword], eyes='down', mouth='stern', hands=((22, -88), (0, -60), True, 1, 1)).draw(p, 470, 604, 480)
 
 
 def sanctum_m_003(p):
@@ -1613,9 +1661,9 @@ def sanctum_m_003(p):
     bg.clouds(p, 420, 5, xs=[100, 300, 500, 700, 900], scale=1.0)
     # trumpeting angels
     Fig(pose='hold', garb='alb', main=LEAD_WHITE, halo=True, wings='rainbow', hair='curly', hair_col=C.hex('c8902e'), belt='gold',
-        props_front=[PR.trumpet()], eyes='up').draw(p, 200, 400, 230)
+        props_front=[_trumpet_blow()], hands=TRUMPET_HANDS, eyes='up').draw(p, 200, 400, 230)
     Fig(pose='hold', garb='alb', main=LEAD_WHITE, halo=True, wings='rainbow', hair='curly', hair_col=C.hex('d8a850'), belt='gold',
-        props_front=[PR.trumpet()], eyes='up').draw(p, 800, 400, 230, flip=True)
+        props_front=[_trumpet_blow()], hands=TRUMPET_HANDS, eyes='up').draw(p, 800, 400, 230, flip=True)
     # Christ in Majesty
     L.mandorla(p, (500, 230), 130, 200)
     p.shape([(400, 400), (440, 380), (500, 384), (560, 380), (600, 400), (560, 420), (440, 420)], LEAD_WHITE, width=1.4)
@@ -1667,8 +1715,8 @@ def sanctum_c_007(p):
     for i in range(50):
         p.star((p.rng.uniform(0, W), p.rng.uniform(545, H)), p.rng.uniform(2, 4), LEAD_WHITE, 4)
     bg.clouds(p, H * 0.72, 3, xs=[120, 380, 600], scale=1.3)
-    Figure(pose='hold', garb='alb', main=LEAD_WHITE, hair='curly', hair_col=C.hex('c8902e'), halo=True, wings='rainbow', belt='gold', trim=GOLD,
-           props_front=[PR.trumpet()], eyes='up').draw(p, 400, 560, 440)
+    Fig(pose='hold', garb='alb', main=LEAD_WHITE, hair='curly', hair_col=C.hex('c8902e'), halo=True, wings='rainbow', belt='gold', trim=GOLD,
+        props_front=[_trumpet_blow()], hands=TRUMPET_HANDS, eyes='up').draw(p, 400, 570, 450)
 
 
 def sanctum_c_011(p):
@@ -1684,9 +1732,10 @@ def sanctum_c_011(p):
     p.shape([(540, 380), (580, 380), (574, 396), (546, 396)], GOLD, width=1.4, shade=0.6)
     p.glow((560, 370), 240, C.hex('ffcf70'), 0.5)
     PR.flame(p, (560, 368), 2.4)
-    Figure(pose='guard', garb='surcoat', main=HOSP_BLACK, second=HOSP_BLACK, mail=True, head='coif', hair='short',
+    Fig(pose='guard', garb='surcoat', main=HOSP_BLACK, second=HOSP_BLACK, mail=True, head='coif', hair='short',
            beard='short', hair_col=UMBER, emblem='maltese', belt='sword', shield='maltese', cloak='mantle',
-           cloak_col=HOSP_BLACK, lining=C.hex('4a4650'), props_front=[PR.sword(up=True)], mouth='stern', eyes='open').draw(p, 330, 600, 470)
+           cloak_col=HOSP_BLACK, lining=C.hex('4a4650'), props_front=[PR.sword(up=True)], mouth='stern', eyes='open',
+           hands=((20, -62), (0, -59), True, 1, 1)).draw(p, 330, 600, 470)
 
 
 def sanctum_c_020(p):
@@ -1698,8 +1747,8 @@ def sanctum_c_020(p):
                                              (780, 470, 180, MALACHITE, 'cap'), (700, 520, 240, C.hex('8e3f3a'), 'veil'), (610, 570, 290, OCHRE, None)]):
         Fig(pose='pray', garb='habit' if head == 'cowl' else 'gown' if head == 'veil' else 'robe', main=col, head=head,
             hood_col=LEAD_WHITE if head == 'veil' else None, hair='short', hair_col=UMBER, eyes='up').draw(p, x, y, h, flip=True)
-    Figure(pose='staff', garb='alb', main=LEAD_WHITE, hair='short', hair_col=UMBER, belt='cord',
-           props_back=[PR.processional_cross('f', 128)], cloak='cape', cloak_col=CRIMSON).draw(p, 400, 604, 430, flip=True)
+    Fig(pose='staff', garb='alb', main=LEAD_WHITE, hair='short', hair_col=UMBER, belt='cord',
+           props_back=[PR.processional_cross('f', 116)], cloak='cape', cloak_col=CRIMSON).draw(p, 440, 604, 420, flip=True)
 
 
 def _rose_bush(p, x, y, s=1.0):
@@ -1728,14 +1777,13 @@ def sanctum_r_001(p):
     p.shape([(740, 480, 0), (760, 480, 0), (758, 496, 0), (742, 496, 0)], OAK, width=1.2, smooth=False)
     for x, h in ((560, 230), (640, 210)):
         Fig(pose='pray', garb='habit', main=BENEDICTINE, head='veil', hood_col=C.hex('1a181e'), belt='leather', eyes='down').draw(p, x, 500, h, flip=True)
-    ab = Fig(pose='hold', garb='habit', main=BENEDICTINE, head='veil', hood_col=C.hex('1a181e'), belt='leather', hands=((9, -78), (6, -60), False, 1, 1),
-             props_back=[PR.staff('b', 'crook', 104, C.hex('6b4a2a'))], eyes='open', age='old', cloak='cope', cloak_col=C.hex('2a2630'), trim=GOLD,
-             sleeves='fitted')
+    def finger(p, j):
+        x, y = j['hand_b']
+        p.taper([(x + 0.6, y - 1.6), (x + 0.4, y - 6.2)], 0.8, 0.65, SKIN, width=1.1)
+    ab = Fig(pose='hold', garb='habit', main=BENEDICTINE, head='veil', hood_col=C.hex('1a181e'), belt='leather', hands=((15, -60), (5.4, -82), True, 1, 1),
+             props_back=[PR.staff('f', 'crook', 104, C.hex('6b4a2a'))], props_front=[finger], eyes='open', age='old', cloak='cope',
+             cloak_col=C.hex('2a2630'), trim=GOLD, sleeves='fitted')
     ab.draw(p, 330, 600, 470)
-    # the finger laid on the lips
-    u = 4.7
-    hx, hy = 330 + 9 * u, 600 - 78 * u
-    p.taper([(hx, hy), (330 + 5.6 * u, 600 - 87.6 * u)], 0.7 * u, 0.55 * u, SKIN, width=1.2)
 
 
 def _raven(p, x, y, s=1.0, flip=False):
@@ -1763,6 +1811,6 @@ def sanctum_m_002(p):
         PR.chalice('b')(p, j)
         x, y = j['hand_b']
         p.taper([(x - 1, y - 12), (x + 2, y - 18), (x - 1, y - 22)], 0.8, 0.4, MALACHITE, width=0.7)
-    Figure(pose='staff2', garb='habit', main=BENEDICTINE, hair='white', beard='long', age='old', halo=True,
+    Fig(pose='staff2', garb='habit', main=BENEDICTINE, hair='white', beard='long', age='old', halo=True,
            head='cowl', props_front=[PR.book('b', CRIMSON, open_=True)], props_back=[PR.staff('f', 'crook', 112, C.hex('6b4a2a'))],
            eyes='open', mouth='stern').draw(p, 440, 600, 480)

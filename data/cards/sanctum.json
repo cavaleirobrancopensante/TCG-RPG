@@ -62,7 +62,8 @@
       }
     ],
     "text": "When this enters, gain 2 life.",
-    "flavor": "Her voice was the first thing the dark ever feared."
+    "flavor": "Her voice was the first thing the dark ever feared.",
+    "art": "res://art/cards/sanctum_c_003.webp"
   },
   {
     "id": "sanctum_c_004",
@@ -82,7 +83,8 @@
     ],
     "effects": [],
     "text": "Guardian (blocks as if it had +0/+2).",
-    "flavor": "No one passes the cloister gate unless the bell has rung for him."
+    "flavor": "No one passes the cloister gate unless the bell has rung for him.",
+    "art": "res://art/cards/sanctum_c_004.webp"
   },
   {
     "id": "sanctum_c_005",
@@ -107,7 +109,8 @@
       }
     ],
     "text": "When this dies, gain 3 life.",
-    "flavor": "He fell on the road, and the road itself remembered him as holy."
+    "flavor": "He fell on the road, and the road itself remembered him as holy.",
+    "art": "res://art/cards/sanctum_c_005.webp"
   },
   {
     "id": "sanctum_c_006",
@@ -127,7 +130,8 @@
     ],
     "effects": [],
     "text": "Lifelink (damage this deals also gains you that much life).",
-    "flavor": "He owns a rope belt, a bowl and a breviary, and he gives away the bowl."
+    "flavor": "He owns a rope belt, a bowl and a breviary, and he gives away the bowl.",
+    "art": "res://art/cards/sanctum_c_006.webp"
   },
   {
     "id": "sanctum_c_007",
@@ -175,7 +179,8 @@
       }
     ],
     "text": "As long as you have more life than you started with, this gets +1/+1.",
-    "flavor": "Sworn to keep the roads open from Lent to Pentecost, he rides bolder with every pilgrim who comes home."
+    "flavor": "Sworn to keep the roads open from Lent to Pentecost, he rides bolder with every pilgrim who comes home.",
+    "art": "res://art/cards/sanctum_c_008.webp"
   },
   {
     "id": "sanctum_c_009",
@@ -202,7 +207,8 @@
       }
     ],
     "text": "When this dies, target creature you control gets +1/+1 permanently.",
-    "flavor": "When he fell, the censer kept swinging, and the smoke rose straight to Heaven."
+    "flavor": "When he fell, the censer kept swinging, and the smoke rose straight to Heaven.",
+    "art": "res://art/cards/sanctum_c_009.webp"
   },
   {
     "id": "sanctum_c_010",
@@ -222,7 +228,8 @@
     ],
     "effects": [],
     "text": "Guardian (blocks as if it had +0/+2).",
-    "flavor": "Behind his shield sleep the orphans of three burned villages."
+    "flavor": "Behind his shield sleep the orphans of three burned villages.",
+    "art": "res://art/cards/sanctum_c_010.webp"
   },
   {
     "id": "sanctum_c_011",
@@ -268,7 +275,8 @@
       }
     ],
     "text": "When this enters, gain 4 life.",
-    "flavor": "Every loaf that leaves his hands comes back as a prayer."
+    "flavor": "Every loaf that leaves his hands comes back as a prayer.",
+    "art": "res://art/cards/sanctum_c_012.webp"
   },
   {
     "id": "sanctum_c_013",
@@ -314,7 +322,8 @@
       }
     ],
     "text": "Destroy target tapped enemy creature with power 2 or less.",
-    "flavor": "\"You were warned at the threshold. Begone.\""
+    "flavor": "\"You were warned at the threshold. Begone.\"",
+    "art": "res://art/cards/sanctum_c_014.webp"
   },
   {
     "id": "sanctum_c_015",
@@ -336,7 +345,8 @@
       }
     ],
     "text": "Pacify target enemy creature (it can't attack for the rest of the duel).",
-    "flavor": "\"Peace be with you.\" The brute lowered his axe and could not remember why he had raised it."
+    "flavor": "\"Peace be with you.\" The brute lowered his axe and could not remember why he had raised it.",
+    "art": "res://art/cards/sanctum_c_015.webp"
   },
   {
     "id": "sanctum_c_016",
@@ -367,7 +377,8 @@
       }
     ],
     "text": "Target creature you control gets +1/+1 permanently. Gain 2 life.",
-    "flavor": "Sealed with the gift of the Holy Spirit, he rose a soldier of Christ."
+    "flavor": "Sealed with the gift of the Holy Spirit, he rose a soldier of Christ.",
+    "art": "res://art/cards/sanctum_c_016.webp"
   },
   {
     "id": "sanctum_c_017",
@@ -390,7 +401,8 @@
       }
     ],
     "text": "Destroy target tapped enemy creature.",
-    "flavor": "Spoken once, in the old tongue, and the thing was simply gone."
+    "flavor": "Spoken once, in the old tongue, and the thing was simply gone.",
+    "art": "res://art/cards/sanctum_c_017.webp"
   },
   {
     "id": "sanctum_c_018",
@@ -412,7 +424,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, gain 1 life.",
-    "flavor": "Each flame is a prayer that keeps burning after the pilgrim has gone home."
+    "flavor": "Each flame is a prayer that keeps burning after the pilgrim has gone home.",
+    "art": "res://art/cards/sanctum_c_018.webp"
   },
   {
     "id": "sanctum_c_019",
@@ -448,7 +461,8 @@
       }
     ],
     "text": "2, Tap: target creature you control gets +0/+1 permanently.",
-    "flavor": "Every brother signs himself on the way in, and goes out a little stronger than he came."
+    "flavor": "Every brother signs himself on the way in, and goes out a little stronger than he came.",
+    "art": "res://art/cards/sanctum_c_019.webp"
   },
   {
     "id": "sanctum_c_020",
@@ -500,7 +514,8 @@
       }
     ],
     "text": "Lifelink. When this enters, gain 2 life.",
-    "flavor": "She tends the wounded of both armies, and asks no one his banner."
+    "flavor": "She tends the wounded of both armies, and asks no one his banner.",
+    "art": "res://art/cards/sanctum_u_001.webp"
   },
   {
     "id": "sanctum_u_002",
@@ -524,7 +539,8 @@
       }
     ],
     "text": "When this dies, pacify target enemy creature (it can't attack for the rest of the duel).",
-    "flavor": "The chieftain who killed him knelt at his grave a year later and asked to be baptised."
+    "flavor": "The chieftain who killed him knelt at his grave a year later and asked to be baptised.",
+    "art": "res://art/cards/sanctum_u_002.webp"
   },
   {
     "id": "sanctum_u_003",
@@ -551,7 +567,8 @@
       }
     ],
     "text": "Sanctified (protection from the Covenant). Whenever this attacks, gain 1 life.",
-    "flavor": "Non nobis, Domine, non nobis, sed nomini tuo da gloriam."
+    "flavor": "Non nobis, Domine, non nobis, sed nomini tuo da gloriam.",
+    "art": "res://art/cards/sanctum_u_003.webp"
   },
   {
     "id": "sanctum_u_004",
@@ -584,7 +601,8 @@
       }
     ],
     "text": "Other creatures you control get +0/+1. As long as you have more life than you started with, they get +1/+1 instead.",
-    "flavor": "Ora et labora. Under his rule the fields grew green and the brothers grew strong."
+    "flavor": "Ora et labora. Under his rule the fields grew green and the brothers grew strong.",
+    "art": "res://art/cards/sanctum_u_004.webp"
   },
   {
     "id": "sanctum_u_005",
@@ -609,7 +627,8 @@
       }
     ],
     "text": "When this enters, destroy target tapped enemy creature.",
-    "flavor": "He seeks the truth patiently, and the lie cannot endure his gaze."
+    "flavor": "He seeks the truth patiently, and the lie cannot endure his gaze.",
+    "art": "res://art/cards/sanctum_u_005.webp"
   },
   {
     "id": "sanctum_u_006",
@@ -630,7 +649,8 @@
     ],
     "effects": [],
     "text": "Flying, guardian.",
-    "flavor": "Angel of God, my guardian dear, to whom God's love commits me here."
+    "flavor": "Angel of God, my guardian dear, to whom God's love commits me here.",
+    "art": "res://art/cards/sanctum_u_006.webp"
   },
   {
     "id": "sanctum_u_007",
@@ -658,7 +678,8 @@
       }
     ],
     "text": "Flying. As long as you have more life than you started with, this has lifelink.",
-    "flavor": "May Thy holy angels dwell herein, to keep us in peace."
+    "flavor": "May Thy holy angels dwell herein, to keep us in peace.",
+    "art": "res://art/cards/sanctum_u_007.webp"
   },
   {
     "id": "sanctum_u_008",
@@ -682,7 +703,8 @@
       }
     ],
     "text": "Destroy target tapped enemy creature with power 4 or greater.",
-    "flavor": "He hath put down the mighty from their seat, and hath exalted the humble."
+    "flavor": "He hath put down the mighty from their seat, and hath exalted the humble.",
+    "art": "res://art/cards/sanctum_u_008.webp"
   },
   {
     "id": "sanctum_u_009",
@@ -710,7 +732,8 @@
       }
     ],
     "text": "Pacify target enemy creature (it can't attack for the rest of the duel). Gain 3 life.",
-    "flavor": "From Thursday evening until Monday dawn, no lord may lift his sword. The bishops have spoken."
+    "flavor": "From Thursday evening until Monday dawn, no lord may lift his sword. The bishops have spoken.",
+    "art": "res://art/cards/sanctum_u_009.webp"
   },
   {
     "id": "sanctum_u_010",
@@ -742,7 +765,8 @@
       }
     ],
     "text": "Gain 3 life. Then, if you have more life than you started with, creatures you control get +1/+1 permanently.",
-    "flavor": "We praise Thee, O God; we acknowledge Thee to be the Lord."
+    "flavor": "We praise Thee, O God; we acknowledge Thee to be the Lord.",
+    "art": "res://art/cards/sanctum_u_010.webp"
   },
   {
     "id": "sanctum_u_011",
@@ -767,7 +791,8 @@
       }
     ],
     "text": "Creatures you control get +0/+2 permanently.",
-    "flavor": "Holy Mary, pray for us. Saint Michael, pray for us. And the whole host answers."
+    "flavor": "Holy Mary, pray for us. Saint Michael, pray for us. And the whole host answers.",
+    "art": "res://art/cards/sanctum_u_011.webp"
   },
   {
     "id": "sanctum_u_012",
@@ -792,7 +817,8 @@
       }
     ],
     "text": "Angels you control get +1/+1.",
-    "flavor": "Painted in gold leaf by a monk who fasted forty days, it shows the nine choirs at worship."
+    "flavor": "Painted in gold leaf by a monk who fasted forty days, it shows the nine choirs at worship.",
+    "art": "res://art/cards/sanctum_u_012.webp"
   },
   {
     "id": "sanctum_u_013",
@@ -816,7 +842,8 @@
       }
     ],
     "text": "As long as you have more life than you started with, creatures you control have lifelink.",
-    "flavor": "O saving Victim, opening wide the gate of Heaven to man below."
+    "flavor": "O saving Victim, opening wide the gate of Heaven to man below.",
+    "art": "res://art/cards/sanctum_u_013.webp"
   },
   {
     "id": "sanctum_r_001",
@@ -871,7 +898,8 @@
     ],
     "effects": [],
     "text": "Flying, sanctified.",
-    "flavor": "He has kept watch over the cathedral since before the first stone was laid."
+    "flavor": "He has kept watch over the cathedral since before the first stone was laid.",
+    "art": "res://art/cards/sanctum_r_002.webp"
   },
   {
     "id": "sanctum_r_003",
@@ -904,7 +932,8 @@
       }
     ],
     "text": "As long as you have more life than you started with, this gets +2/+2 and has lifelink.",
-    "flavor": "Only the pure of heart may find the Grail, and only the pure of heart are strong enough to carry it home."
+    "flavor": "Only the pure of heart may find the Grail, and only the pure of heart are strong enough to carry it home.",
+    "art": "res://art/cards/sanctum_r_003.webp"
   },
   {
     "id": "sanctum_r_004",
@@ -929,7 +958,8 @@
       }
     ],
     "text": "Other creatures you control have guardian.",
-    "flavor": "Two thousand men held the Krak for a hundred years, because each man held the one beside him."
+    "flavor": "Two thousand men held the Krak for a hundred years, because each man held the one beside him.",
+    "art": "res://art/cards/sanctum_r_004.webp"
   },
   {
     "id": "sanctum_r_005",
@@ -950,7 +980,8 @@
     ],
     "effects": [],
     "text": "Guardian, lifelink.",
-    "flavor": "Our lords the sick, the Rule calls them, and he guards his lords as a knight should."
+    "flavor": "Our lords the sick, the Rule calls them, and he guards his lords as a knight should.",
+    "art": "res://art/cards/sanctum_r_005.webp"
   },
   {
     "id": "sanctum_r_006",
@@ -978,7 +1009,8 @@
       }
     ],
     "text": "Destroy target tapped enemy creature. Then pacify target enemy creature (it can't attack for the rest of the duel).",
-    "flavor": "Exorcizo te, immundissime spiritus. The words are old, and the thing that hears them is older, and still it must obey."
+    "flavor": "Exorcizo te, immundissime spiritus. The words are old, and the thing that hears them is older, and still it must obey.",
+    "art": "res://art/cards/sanctum_r_006.webp"
   },
   {
     "id": "sanctum_r_007",
@@ -1001,7 +1033,8 @@
       }
     ],
     "text": "Gain 10 life.",
-    "flavor": "In the fiftieth year debts are forgiven, the land rests, and every pilgrim at the Holy Door goes home made new."
+    "flavor": "In the fiftieth year debts are forgiven, the land rests, and every pilgrim at the Holy Door goes home made new.",
+    "art": "res://art/cards/sanctum_r_007.webp"
   },
   {
     "id": "sanctum_r_008",
@@ -1025,7 +1058,8 @@
       }
     ],
     "text": "Creatures you control get +1/+1.",
-    "flavor": "Behold the wood of the Cross, on which hung the salvation of the world."
+    "flavor": "Behold the wood of the Cross, on which hung the salvation of the world.",
+    "art": "res://art/cards/sanctum_r_008.webp"
   },
   {
     "id": "sanctum_r_009",
@@ -1051,7 +1085,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, if you have more life than you started with, target creature you control gets +1/+1 permanently.",
-    "flavor": "Behind the gold and crystal lies a single bone, and it is enough."
+    "flavor": "Behind the gold and crystal lies a single bone, and it is enough.",
+    "art": "res://art/cards/sanctum_r_009.webp"
   },
   {
     "id": "sanctum_m_001",
@@ -1079,7 +1114,8 @@
       }
     ],
     "text": "Flying, lifelink. When this enters, destroy target tapped enemy creature.",
-    "flavor": "When the last candle gutters, he is the light that remains."
+    "flavor": "When the last candle gutters, he is the light that remains.",
+    "art": "res://art/cards/sanctum_m_001.webp"
   },
   {
     "id": "sanctum_m_002",
@@ -1148,6 +1184,7 @@
       }
     ],
     "text": "Destroy up to three target tapped enemy creatures.",
-    "flavor": "He shall come again with glory to judge the living and the dead."
+    "flavor": "He shall come again with glory to judge the living and the dead.",
+    "art": "res://art/cards/sanctum_m_003.webp"
   }
 ]

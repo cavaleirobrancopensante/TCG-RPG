@@ -20,7 +20,8 @@
       }
     ],
     "text": "When this dies, the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "Even his last breath was promised to someone else."
+    "flavor": "Even his last breath was promised to someone else.",
+    "art": "res://art/cards/abyss_c_001.webp"
   },
   {
     "id": "abyss_c_002",
@@ -38,7 +39,8 @@
       "dread"
     ],
     "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
-    "flavor": "It is small, it is spiteful, and it is never where you swing."
+    "flavor": "It is small, it is spiteful, and it is never where you swing.",
+    "art": "res://art/cards/abyss_c_002.webp"
   },
   {
     "id": "abyss_c_003",
@@ -62,7 +64,8 @@
       }
     ],
     "text": "When this enters, you lose 1 life.",
-    "flavor": "The oath was signed in a fingertip of blood. The rest came due later."
+    "flavor": "The oath was signed in a fingertip of blood. The rest came due later.",
+    "art": "res://art/cards/abyss_c_003.webp"
   },
   {
     "id": "abyss_c_004",
@@ -81,7 +84,8 @@
       "deathtouch"
     ],
     "text": "Deathtouch (any damage this deals to a creature destroys it).",
-    "flavor": "Its touch carries the cold of every grave it has crawled from."
+    "flavor": "Its touch carries the cold of every grave it has crawled from.",
+    "art": "res://art/cards/abyss_c_004.webp"
   },
   {
     "id": "abyss_c_005",
@@ -107,7 +111,8 @@
       }
     ],
     "text": "As long as you have 10 or less life (Bloodied), this gets +1/+1.",
-    "flavor": "The closer you come to the grave, the better it can smell you."
+    "flavor": "The closer you come to the grave, the better it can smell you.",
+    "art": "res://art/cards/abyss_c_005.webp"
   },
   {
     "id": "abyss_c_006",
@@ -126,7 +131,8 @@
       "dread"
     ],
     "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
-    "flavor": "Honest dogs bolt at its scent. Only the damned dare stand in its path."
+    "flavor": "Honest dogs bolt at its scent. Only the damned dare stand in its path.",
+    "art": "res://art/cards/abyss_c_006.webp"
   },
   {
     "id": "abyss_c_007",
@@ -150,7 +156,8 @@
       }
     ],
     "text": "When this enters, the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "His hymns are sung backwards, and every note takes something."
+    "flavor": "His hymns are sung backwards, and every note takes something.",
+    "art": "res://art/cards/abyss_c_007.webp"
   },
   {
     "id": "abyss_c_008",
@@ -184,7 +191,8 @@
       }
     ],
     "text": "Sacrifice another creature: this gets +2/+2 until end of turn.",
-    "flavor": "It is never full. It is only, for a moment, less empty."
+    "flavor": "It is never full. It is only, for a moment, less empty.",
+    "art": "res://art/cards/abyss_c_008.webp"
   },
   {
     "id": "abyss_c_009",
@@ -211,7 +219,8 @@
       }
     ],
     "text": "When this enters, target enemy creature gets -2/-2 until end of turn.",
-    "flavor": "He scatters ash on the furrows and calls it a blessing."
+    "flavor": "He scatters ash on the furrows and calls it a blessing.",
+    "art": "res://art/cards/abyss_c_009.webp"
   },
   {
     "id": "abyss_c_010",
@@ -242,7 +251,8 @@
       }
     ],
     "text": "When this dies, create a 1/1 Restless Dead Zombie token.",
-    "flavor": "Break it apart and the pieces keep walking."
+    "flavor": "Break it apart and the pieces keep walking.",
+    "art": "res://art/cards/abyss_c_010.webp"
   },
   {
     "id": "abyss_c_011",
@@ -266,7 +276,8 @@
       }
     ],
     "text": "When this enters, you lose 2 life.",
-    "flavor": "The chain holds the fiend. Nothing holds the price."
+    "flavor": "The chain holds the fiend. Nothing holds the price.",
+    "art": "res://art/cards/abyss_c_011.webp"
   },
   {
     "id": "abyss_c_012",
@@ -285,7 +296,8 @@
       "dread"
     ],
     "text": "Dread (can only be blocked by Covenant creatures and Constructs).",
-    "flavor": "It still wears the gold it was buried with, and it wants yours."
+    "flavor": "It still wears the gold it was buried with, and it wants yours.",
+    "art": "res://art/cards/abyss_c_012.webp"
   },
   {
     "id": "abyss_c_013",
@@ -309,7 +321,8 @@
       }
     ],
     "text": "Target enemy creature gets -2/-2 until end of turn.",
-    "flavor": "The cold of the crypt does not stay in the crypt."
+    "flavor": "The cold of the crypt does not stay in the crypt.",
+    "art": "res://art/cards/abyss_c_013.webp"
   },
   {
     "id": "abyss_c_014",
@@ -332,7 +345,8 @@
       }
     ],
     "text": "Destroy target enemy creature with power 2 or less.",
-    "flavor": "The flesh remembers that it is only borrowed."
+    "flavor": "The flesh remembers that it is only borrowed.",
+    "art": "res://art/cards/abyss_c_014.webp"
   },
   {
     "id": "abyss_c_015",
@@ -359,7 +373,8 @@
       }
     ],
     "text": "Draw two cards. You lose 2 life.",
-    "flavor": "Two secrets for two drops. The scribe never mentions the interest."
+    "flavor": "Two secrets for two drops. The scribe never mentions the interest.",
+    "art": "res://art/cards/abyss_c_015.webp"
   },
   {
     "id": "abyss_c_016",
@@ -381,7 +396,8 @@
       }
     ],
     "text": "The enemy player loses 2 life and you gain 2 life.",
-    "flavor": "Their warmth drains out like wine from a cracked chalice."
+    "flavor": "Their warmth drains out like wine from a cracked chalice.",
+    "art": "res://art/cards/abyss_c_016.webp"
   },
   {
     "id": "abyss_c_017",
@@ -403,7 +419,8 @@
       }
     ],
     "text": "The enemy discards two cards at random.",
-    "flavor": "A single word in the night, and every plan they had unravels."
+    "flavor": "A single word in the night, and every plan they had unravels.",
+    "art": "res://art/cards/abyss_c_017.webp"
   },
   {
     "id": "abyss_c_018",
@@ -426,7 +443,8 @@
       }
     ],
     "text": "Return target creature card with mana value 3 or less from your graveyard to play.",
-    "flavor": "Rest was promised to him. The Covenant does not honour other men's promises."
+    "flavor": "Rest was promised to him. The Covenant does not honour other men's promises.",
+    "art": "res://art/cards/abyss_c_018.webp"
   },
   {
     "id": "abyss_c_019",
@@ -455,7 +473,8 @@
       }
     ],
     "text": "Sacrifice a creature: the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "Its stone is never dry, and its keepers never ask whose turn is next."
+    "flavor": "Its stone is never dry, and its keepers never ask whose turn is next.",
+    "art": "res://art/cards/abyss_c_019.webp"
   },
   {
     "id": "abyss_c_020",
@@ -488,7 +507,8 @@
       }
     ],
     "text": "Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.",
-    "flavor": "The broken oath swings in the wind, and every man below remembers his own."
+    "flavor": "The broken oath swings in the wind, and every man below remembers his own.",
+    "art": "res://art/cards/abyss_c_020.webp"
   },
   {
     "id": "abyss_u_001",
@@ -523,7 +543,8 @@
       }
     ],
     "text": "Sacrifice another creature: draw a card and you lose 1 life.",
-    "flavor": "He reads the future in knucklebones, and he is never short of knucklebones."
+    "flavor": "He reads the future in knucklebones, and he is never short of knucklebones.",
+    "art": "res://art/cards/abyss_u_001.webp"
   },
   {
     "id": "abyss_u_002",
@@ -550,7 +571,8 @@
       }
     ],
     "text": "Whenever this attacks, target enemy creature gets -1/-1 until end of turn.",
-    "flavor": "Its cry finds the weak place in every heart and widens it."
+    "flavor": "Its cry finds the weak place in every heart and widens it.",
+    "art": "res://art/cards/abyss_u_002.webp"
   },
   {
     "id": "abyss_u_003",
@@ -570,7 +592,8 @@
       "dread"
     ],
     "text": "Deathtouch, dread.",
-    "flavor": "The Covenant pays its assassins in years taken from their victims."
+    "flavor": "The Covenant pays its assassins in years taken from their victims.",
+    "art": "res://art/cards/abyss_u_003.webp"
   },
   {
     "id": "abyss_u_004",
@@ -596,7 +619,8 @@
       }
     ],
     "text": "Dread. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "It serves well, and it is always, always hungry."
+    "flavor": "It serves well, and it is always, always hungry.",
+    "art": "res://art/cards/abyss_u_004.webp"
   },
   {
     "id": "abyss_u_005",
@@ -625,7 +649,8 @@
       }
     ],
     "text": "When this enters, the enemy discards a card at random. When this dies, the enemy discards a card at random.",
-    "flavor": "He never lies. He simply lets you hear what you wanted to hear."
+    "flavor": "He never lies. He simply lets you hear what you wanted to hear.",
+    "art": "res://art/cards/abyss_u_005.webp"
   },
   {
     "id": "abyss_u_006",
@@ -659,7 +684,8 @@
       }
     ],
     "text": "Pay 2 life: this gets +1/+1 until end of turn.",
-    "flavor": "Every wound he takes, he takes on credit."
+    "flavor": "Every wound he takes, he takes on credit.",
+    "art": "res://art/cards/abyss_u_006.webp"
   },
   {
     "id": "abyss_u_007",
@@ -684,7 +710,8 @@
       }
     ],
     "text": "When this enters, return target creature card with mana value 4 or less from your graveyard to play.",
-    "flavor": "\"Rise. Your rest was never part of the bargain.\""
+    "flavor": "\"Rise. Your rest was never part of the bargain.\"",
+    "art": "res://art/cards/abyss_u_007.webp"
   },
   {
     "id": "abyss_u_008",
@@ -711,7 +738,8 @@
       }
     ],
     "text": "Destroy target enemy creature. You lose 2 life.",
-    "flavor": "Every unmaking costs the maker a little of his own soul."
+    "flavor": "Every unmaking costs the maker a little of his own soul.",
+    "art": "res://art/cards/abyss_u_008.webp"
   },
   {
     "id": "abyss_u_009",
@@ -736,7 +764,8 @@
       }
     ],
     "text": "All creatures get -2/-2 until end of turn.",
-    "flavor": "The old bones sigh, and everything that lives grows a little lighter."
+    "flavor": "The old bones sigh, and everything that lives grows a little lighter.",
+    "art": "res://art/cards/abyss_u_009.webp"
   },
   {
     "id": "abyss_u_010",
@@ -764,7 +793,8 @@
       }
     ],
     "text": "If you have 10 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
-    "flavor": "The contract was always clear. It was only written very small."
+    "flavor": "The contract was always clear. It was only written very small.",
+    "art": "res://art/cards/abyss_u_010.webp"
   },
   {
     "id": "abyss_u_011",
@@ -786,7 +816,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "It is never empty, and no one asks what it is filled with."
+    "flavor": "It is never empty, and no one asks what it is filled with.",
+    "art": "res://art/cards/abyss_u_011.webp"
   },
   {
     "id": "abyss_u_012",
@@ -818,7 +849,8 @@
       }
     ],
     "text": "Sacrifice a creature: target enemy creature gets -2/-2 until end of turn.",
-    "flavor": "One life for the knife, one for the curse. The arithmetic of the pit is simple."
+    "flavor": "One life for the knife, one for the curse. The arithmetic of the pit is simple.",
+    "art": "res://art/cards/abyss_u_012.webp"
   },
   {
     "id": "abyss_u_013",
@@ -851,7 +883,8 @@
       }
     ],
     "text": "Tap, pay 2 and 2 life: the enemy discards a card at random.",
-    "flavor": "Its smoke mocks the incense of the sanctuary. It carries no prayers up, only thoughts away."
+    "flavor": "Its smoke mocks the incense of the sanctuary. It carries no prayers up, only thoughts away.",
+    "art": "res://art/cards/abyss_u_013.webp"
   },
   {
     "id": "abyss_r_001",
@@ -889,7 +922,8 @@
       }
     ],
     "text": "As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
-    "flavor": "He swore to guard the weak. Then a voice offered to make him strong."
+    "flavor": "He swore to guard the weak. Then a voice offered to make him strong.",
+    "art": "res://art/cards/abyss_r_001.webp"
   },
   {
     "id": "abyss_r_002",
@@ -915,7 +949,8 @@
       }
     ],
     "text": "Dread. Whenever this attacks, the enemy discards a card at random.",
-    "flavor": "In the morning you remember that you had a plan. You cannot remember what it was."
+    "flavor": "In the morning you remember that you had a plan. You cannot remember what it was.",
+    "art": "res://art/cards/abyss_r_002.webp"
   },
   {
     "id": "abyss_r_003",
@@ -941,7 +976,8 @@
       }
     ],
     "text": "Dread. When this enters, you lose 3 life.",
-    "flavor": "He arrives on a tide of smoke, and presents his bill at the door."
+    "flavor": "He arrives on a tide of smoke, and presents his bill at the door.",
+    "art": "res://art/cards/abyss_r_003.webp"
   },
   {
     "id": "abyss_r_004",
@@ -967,7 +1003,8 @@
       }
     ],
     "text": "Deathtouch. At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "It traded its heart for a crown, and found the crown was hollow too."
+    "flavor": "It traded its heart for a crown, and found the crown was hollow too.",
+    "art": "res://art/cards/abyss_r_004.webp"
   },
   {
     "id": "abyss_r_005",
@@ -1017,7 +1054,8 @@
       }
     ],
     "text": "Other Zombies you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
-    "flavor": "Every skull on his walls once knelt to him. Most of them still do."
+    "flavor": "Every skull on his walls once knelt to him. Most of them still do.",
+    "art": "res://art/cards/abyss_r_005.webp"
   },
   {
     "id": "abyss_r_006",
@@ -1044,7 +1082,8 @@
       }
     ],
     "text": "Return target creature card from your graveyard to play. You lose 4 life.",
-    "flavor": "A mockery of the true rising. The body walks, and nothing looks out of its eyes."
+    "flavor": "A mockery of the true rising. The body walks, and nothing looks out of its eyes.",
+    "art": "res://art/cards/abyss_r_006.webp"
   },
   {
     "id": "abyss_r_007",
@@ -1066,7 +1105,8 @@
       }
     ],
     "text": "Destroy all creatures.",
-    "flavor": "By dawn the field was quiet, and the Covenant counted it a victory."
+    "flavor": "By dawn the field was quiet, and the Covenant counted it a victory.",
+    "art": "res://art/cards/abyss_r_007.webp"
   },
   {
     "id": "abyss_r_008",
@@ -1093,7 +1133,8 @@
       }
     ],
     "text": "The enemy discards three cards at random. You lose 3 life.",
-    "flavor": "First the names of friends go, then the prayers, then the reason for prayer."
+    "flavor": "First the names of friends go, then the prayers, then the reason for prayer.",
+    "art": "res://art/cards/abyss_r_008.webp"
   },
   {
     "id": "abyss_r_009",
@@ -1126,7 +1167,8 @@
       }
     ],
     "text": "Tap: draw a card and you lose 1 life.",
-    "flavor": "Every page is a soul, and every soul is overdue."
+    "flavor": "Every page is a soul, and every soul is overdue.",
+    "art": "res://art/cards/abyss_r_009.webp"
   },
   {
     "id": "abyss_m_001",
@@ -1157,7 +1199,8 @@
       }
     ],
     "text": "Dread. When this enters, destroy target enemy creature and you lose 3 life.",
-    "flavor": "Where he walks, the ground forgets it was ever green."
+    "flavor": "Where he walks, the ground forgets it was ever green.",
+    "art": "res://art/cards/abyss_m_001.webp"
   },
   {
     "id": "abyss_m_002",
@@ -1192,7 +1235,8 @@
       }
     ],
     "text": "When this enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
-    "flavor": "He has outlived every debtor, and he collects from their sons."
+    "flavor": "He has outlived every debtor, and he collects from their sons.",
+    "art": "res://art/cards/abyss_m_002.webp"
   },
   {
     "id": "abyss_m_003",
@@ -1222,6 +1266,7 @@
       }
     ],
     "text": "Enemy creatures get -1/-1. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "Sign, and your enemies wither. Sign, and so do you."
+    "flavor": "Sign, and your enemies wither. Sign, and so do you.",
+    "art": "res://art/cards/abyss_m_003.webp"
   }
 ]

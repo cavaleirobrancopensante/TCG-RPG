@@ -663,6 +663,16 @@ def land_wild_revel(p):
     goblet(p, (580, 600), 1.6)
 
 
+def open_scroll_lands(p_, j):
+    """A scroll unrolled between both hands (a Figure prop)."""
+    a, b = j['hand_b'], j['hand_f']
+    for q in (a, b):
+        p_.taper([(q[0], q[1] - 6), (q[0], q[1] + 6)], 1.6, 1.6, PARCH.dark(0.1), width=1.0, shade=0.5)
+    p_.shape([(a[0], a[1] - 5, 0), (b[0], b[1] - 5, 0), (b[0], b[1] + 5, 0), (a[0], a[1] + 5, 0)], PARCH, width=1.0, smooth=False, shade=0.4)
+    for i in range(3):
+        p_.line([(a[0] + 1.5, a[1] - 2.5 + i * 2.5), (b[0] - 1.5, b[1] - 2.5 + i * 2.5)], INK.alpha(0.45), 0.6)
+
+
 def land_wild_lyceum(p):
     """Philosophers' Grove: under tall plane trees at dusk a path leads to a marble
     exedra and a herm, students walking and arguing in twos, a temple pale on the
@@ -693,13 +703,34 @@ def land_wild_lyceum(p):
     for x in (-110, 110):
         p.blob((x, cy(x, -20)), 8, 14, MARBLE, width=1.4, shade=0.6)
     p.pop()
-    # students walking in twos
-    for (x, y, s, cols) in ((340, 480, 1.4, (LEAD_WHITE, C.hex('c8b890'))), (620, 520, 2.0, (C.hex('9aa8b8'), LEAD_WHITE)), (300, 560, 2.4, (C.hex('d8c8a8'), C.hex('8a9a7a')))):
-        tiny_person(p, x, y, s, cols[0])
-        tiny_person(p, x + 14 * s, y + 2, s, cols[1])
+    # cypresses on the far hill and swallows in the dusk
+    for x in (610, 660, 830, 860):
+        cypress(p, x, 372, 44)
+    for (x, y) in ((420, 150), (450, 170), (560, 130), (600, 160)):
+        bird(p, (x, y), 1.2)
+    p.star((700, 110), 6, LEAD_WHITE, 4)
     # plane trees in rows
-    for x, y, s in ((90, 600, 1.4), (250, 480, 0.9), (340, 450, 0.7), (660, 450, 0.7), (760, 480, 0.9), (920, 610, 1.4)):
-        plane_tree(p, x, y, s)
+    for x, y, s_ in ((250, 480, 0.9), (340, 450, 0.7), (660, 450, 0.7), (760, 480, 0.9)):
+        plane_tree(p, x, y, s_)
+    # a sundial on its column beside the path
+    p.push(-436, 56, 1.0)
+    rect(p, 606, 470, 626, 540, ('h', MARBLE.light(0.2), MARBLE_SHADE), width=1.4)
+    rect(p, 598, 538, 634, 548, MARBLE_SHADE, width=1.2)
+    p.blob((616, 468), 22, 6, MARBLE.light(0.1), width=1.4, shade=0.5)
+    p.shape([(616, 468, 0), (628, 452, 0), (628, 468, 0)], BRONZE, width=1.0, smooth=False)
+    p.pop()
+    # philosophers walking and disputing under the trees
+    toga = dict(garb='toga', belt=None, sleeves='fitted', shoes=UMBER)
+    Figure(pose='point', main=C.hex('8a8a9a'), hair='white', beard='long', age='old',
+           emblem=himation(LEAD_WHITE.dark(0.05)), mouth='open', **toga).draw(p, 300, 604, 220)
+    Figure(pose='g_read', main=C.hex('a8987a'), hair='curly', hair_col=C.hex('3a2a1a'), beard='short',
+           emblem=himation(C.hex('e8dcc4'), OLIVE), props_front=[open_scroll_lands], eyes='down', **toga).draw(p, 392, 608, 214, flip=True)
+    Figure(pose='spread', main=C.hex('7a8a7a'), hair='short', hair_col=C.hex('5a4a3a'), beard='short',
+           emblem=himation(C.hex('ece4d0')), mouth='open', **toga).draw(p, 690, 560, 150, flip=True)
+    Figure(pose='stand', main=C.hex('9a8a7a'), hair='bald', hair_col=C.hex('d8d0c0'), beard='long', age='old',
+           emblem=himation(C.hex('e0d8c8')), eyes='down', **toga).draw(p, 630, 556, 146)
+    for x, y, s_ in ((90, 600, 1.4), (920, 610, 1.4)):
+        plane_tree(p, x, y, s_)
     flowers(p, (0, 560, 1000, 626), 30)
     # fallen plane leaves
     for i in range(30):
@@ -760,12 +791,61 @@ def land_wild_machine(p):
 
 # ------------------------------------------------------------------ Revel and Stoa, Technocracy
 
+def peacock(p, x, y, s=1.0, flip=False):
+    """A peacock walking, its long train trailing behind, about 200 long at s=1."""
+    blue = C.hex('1f5aa8')
+    green = C.hex('2f7a4a')
+    p.push(x, y, s, flip)
+    p.blob((-30, -2), 90, 6, C(0, 0, 0, 0.22), ink=False)
+    # the train
+    train = [(-6, -40), (-60, -36), (-120, -22), (-150, -10), (-130, -2), (-70, -8), (-10, -26)]
+    p.shape(train, ('h', green.dark(0.2), green, green.light(0.15)), width=1.6, shade=0.6)
+    p.clip_shape(train)
+    for i in range(26):
+        q = (p.rng.uniform(-145, -10), p.rng.uniform(-38, -4))
+        p.line([(q[0] + 8, q[1] - 2), q], green.light(0.35).alpha(0.6), 0.9)
+    for (ex, ey) in ((-130, -12), (-110, -20), (-108, -8), (-88, -26), (-86, -12), (-66, -30), (-64, -16), (-44, -32), (-42, -20)):
+        p.blob((ex, ey), 5, 3.4, GOLD.light(0.1), width=0.6)
+        p.blob((ex, ey), 3, 2.2, C.hex('2a8a7a'), ink=False)
+        p.blob((ex, ey), 1.4, 1.2, ULTRA_DEEP, ink=False)
+    p.unclip()
+    # legs
+    for lx in (-4, 6):
+        p.taper([(lx, -26), (lx + 1, -12), (lx + 2, -1)], 1.6, 1.2, C.hex('8a7a6a'), width=0.9)
+        p.line([(lx - 3, 0), (lx + 6, 0)], C.hex('8a7a6a'), 1.4)
+    # body, neck and head with its crest
+    p.blob((2, -36), 20, 12, ('h', blue.light(0.2), blue, blue.dark(0.3)), rot=-0.2, width=1.6, shade=0.7)
+    p.blob((-4, -36), 12, 9, C.hex('6a5a3a'), rot=-0.2, width=1.0, shade=0.5)
+    for k in range(5):
+        p.line([(-12 + k * 3, -42), (-10 + k * 3, -30)], INK.alpha(0.4), 0.8)
+    p.taper([(14, -42), (20, -56), (22, -70)], 6, 4, blue.light(0.15), width=1.4, shade=0.6)
+    p.blob((24, -72), 5, 4.4, blue.light(0.2), width=1.2, shade=0.5)
+    p.shape([(28, -73), (33, -71.5, 0), (28, -70)], C.hex('c8b890'), width=0.8)
+    p.blob((25, -73), 1.6, 1.0, LEAD_WHITE, ink=False)
+    p.blob((25.4, -73), 0.7, 0.7, INK, ink=False)
+    for k in range(4):
+        b = (22 + k * 1.2, -76)
+        p.line([b, (b[0] - 2 + k * 1.4, b[1] - 8)], blue, 0.8)
+        p.blob((b[0] - 2 + k * 1.4, b[1] - 8.5), 1.0, 1.0, blue.light(0.2), width=0.5)
+    p.pop()
+
+
 def land_revel_lyceum(p):
     """Garden of Epicurus: a walled garden in the warm afternoon; a rose pergola
     shades cushions and a low table of fruit beside a marble fountain, cypresses
     and a herm stand by the wall, and two friends talk quietly."""
     bg.sky(p, C.hex('4a7ac8'), C.hex('a8c8e8'), C.hex('fbf0d8'), 0.6)
+    bg.clouds(p, 110, 2, xs=[300, 700], scale=0.8)
+    for (x, y) in ((420, 140), (455, 158), (600, 120)):
+        bird(p, (x, y), 1.3)
     ridge(p, 320, C.hex('a8a890'), 30, 6)
+    # a temple on the hill and the treetops of the city beyond the wall
+    rect(p, 520, 214, 640, 262, MARBLE, width=1.4, shade=0.4)
+    for x in range(528, 640, 14):
+        p.line([(x, 222), (x, 260)], MARBLE_SHADE.dark(0.2), 1.8, smooth=False)
+    p.shape([(512, 216, 0), (580, 190, 0), (648, 216, 0)], MARBLE, width=1.4, smooth=False)
+    tree_crown(p, (220, 262), 90, 34, C.hex('5d8a3c'), n=10)
+    tree_crown(p, (800, 258), 100, 36, C.hex('557f38'), n=10)
     # garden wall
     wall = C.hex('e0c8a0')
     rect(p, -20, 280, 1020, 420, ('v', wall.light(0.1), wall.dark(0.2)), width=2)
@@ -813,22 +893,31 @@ def land_revel_lyceum(p):
     for x in (640, 880):
         ivy(p, [(x, 600), (x + 6, 520), (x - 4, 440), (x + 4, 372)], LEAF, s=0.7, flowers=False)
     # cushions and a low table of fruit beneath it
-    for x, col in ((700, CRIMSON), (820, PURPLE)):
-        p.blob((x, 560), 40, 14, col, width=1.6, shade=0.7)
-        for dx in (-34, 34):
-            p.blob((x + dx, 560), 4, 4, GOLD, width=0.8)
+    for x, col in ((670, CRIMSON), (850, PURPLE)):
+        p.blob((x, 548), 44, 14, col.dark(0.2), width=1.6, shade=0.7)
+        p.blob((x, 532), 40, 14, col, width=1.6, shade=0.7)
+        for dx in (-36, 36):
+            p.blob((x + dx, 534), 4, 4, GOLD, width=0.8)
     rect(p, 730, 540, 790, 548, wood, width=1.4)
     for x in (736, 784):
         rect(p, x - 3, 548, x + 3, 570, wood, width=1)
     grapes(p, (752, 530), 1.0)
     p.blob((774, 534), 7, 6, C.hex('e8a03a'), width=1, shade=0.6)
-    tiny_person(p, 690, 548, 2.0, C.hex('e8d8c0'))
-    tiny_person(p, 830, 548, 2.0, C.hex('c8607a'))
+    # two friends at ease under the roses, talking over the fruit
+    def kylix(p_, j):
+        h = j['hand_f']
+        p_.shape([(h[0] - 4.5, h[1] - 5.5), (h[0] + 6.5, h[1] - 5.5), (h[0] + 4, h[1] - 2.6), (h[0] - 2, h[1] - 2.6)], GOLD, width=0.9, shade=0.7)
+        p_.blob((h[0] + 1, h[1] - 5.5), 5.5, 1.1, WINE, width=0.7)
+    SeatedFigure(pose='g_lounge', main=C.hex('e8dcc4'), hair='curly', hair_col=C.hex('5a3a1a'), beard='short', belt=None, sleeves='fitted',
+                 emblem=himation(C.hex('c8607a'), GOLD_DARK, 'seated'), props_front=[kylix], shoes=UMBER).draw(p, 660, 566, 200)
+    SeatedFigure(pose='g_write', main=C.hex('9ab0c8'), hair='white', beard='long', age='old', belt=None, sleeves='fitted',
+                 emblem=himation(C.hex('ece4d0'), None, 'seated'), props_front=[open_scroll_lands], eyes='down', shoes=UMBER).draw(p, 860, 566, 200, flip=True)
     # rose bushes along the left
     for x in (40, 130, 300):
         tree_crown(p, (x, 560), 50, 30, LEAF, n=6, light=False)
         for k in range(7):
             p.blob((x + p.rng.uniform(-40, 40), 560 + p.rng.uniform(-24, 20)), 5, 5, [ROSE_PINK, LEAD_WHITE, CRIMSON][k % 3], width=0.8, shade=0.5)
+    peacock(p, 260, 606, 1.35)
     flowers(p, (0, 590, 1000, 626), 24)
 
 
@@ -916,34 +1005,56 @@ def land_lyceum_machine(p):
     stoa(p, [140, 210, 280, 350, 420, 490], 330, 430, MARBLE.dark(0.15), 'ionic', TERRACOTTA.dark(0.2), n_steps=2)
     for x in (175, 245, 315, 385, 455):
         p.glow((x, 400), 30, C.hex('ffcf6a'), 0.3)
-    # the tower
-    tx = 600
-    tw = [(tx - 70, 440, 0), (tx - 60, 150, 0), (tx + 60, 150, 0), (tx + 70, 440, 0)]
-    p.shape(tw, ('h', MARBLE.light(0.1), MARBLE.dark(0.1), MARBLE.dark(0.5)), width=2.2)
-    for y in range(170, 440, 30):
-        p.line([(tx - 66 + (440 - y) * 0.0, y), (tx + 66, y)], MARBLE_SHADE.dark(0.3).alpha(0.6), 1.2, smooth=False)
-    for y in (220, 310, 390):
-        p.shape([(tx - 10, y + 30, 0), (tx - 10, y + 6), (tx, y - 4), (tx + 10, y + 6), (tx + 10, y + 30, 0)], C.hex('ffd27a'), width=1.4)
-        p.glow((tx, y + 16), 26, C.hex('ffcf6a'), 0.35)
-    # the open crown with columns and the orrery
-    rect(p, tx - 78, 140, tx + 78, 156, MARBLE, width=1.8)
-    for x in (tx - 66, tx - 22, tx + 22, tx + 66):
-        rect(p, x - 5, 80, x + 5, 140, MARBLE.light(0.1), width=1.4, shade=0.5)
-    rect(p, tx - 78, 70, tx + 78, 82, MARBLE, width=1.8)
-    oc = (tx, 108)
-    p.glow(oc, 90, GOLD_LIGHT, 0.35)
-    for rr, rot in ((28, 0.3), (40, -0.2), (52, 0.1)):
-        p.ellipse_path(oc, rr, rr * 0.35, rot)
-        p.stroke(INK, 4)
-        p.ellipse_path(oc, rr, rr * 0.35, rot)
-        p.stroke(BRASS, 2.2)
-    p.blob(oc, 9, 9, ('r', GOLD_LIGHT, FLAME), width=1.4)
-    for rr, a, col, sz in ((28, 0.8, AZURE, 4), (40, 2.6, VERMILION, 5), (52, 4.2, LEAD_WHITE, 4.5), (40, 5.4, OCHRE, 3.6)):
-        q = (oc[0] + math.cos(a) * rr, oc[1] + math.sin(a) * rr * 0.35)
-        p.blob(q, sz, sz, col, width=1.0, shade=0.6)
-    # a long brass telescope pointing at the moon
-    p.taper([(tx + 30, 96), (tx + 150, 40)], 5, 7, brass_fill(BRASS), width=1.4)
-    p.blob((tx + 150, 40), 3.4, 7, BRASS.dark(0.2), rot=-0.4, width=1.2)
+    # the observatory: a broad round drum of marble under a ribbed dome, the
+    # shutter slit open and a long brass telescope reaching out toward the moon
+    tx = 610
+    drum = [(tx - 96, 440, 0), (tx - 92, 250, 0), (tx + 92, 250, 0), (tx + 96, 440, 0)]
+    p.shape(drum, ('h', MARBLE.light(0.1), MARBLE.dark(0.08), MARBLE.dark(0.5)), width=2.2)
+    p.clip_shape(drum, smooth=False)
+    for y in range(266, 440, 26):
+        p.line([(tx - 100, y), (tx + 100, y + 4)], MARBLE_SHADE.dark(0.3).alpha(0.5), 1.2, smooth=False)
+    for x in range(-90, 91, 30):
+        p.line([(tx + x, 250), (tx + x * 1.04, 440)], MARBLE_SHADE.dark(0.3).alpha(0.25), 1.0, smooth=False)
+    p.unclip()
+    # pilasters and round-headed windows lit within
+    for x in (tx - 60, tx, tx + 60):
+        p.shape([(x - 11, 330, 0), (x - 11, 302), (x, 290), (x + 11, 302), (x + 11, 330, 0)], C.hex('ffd27a'), width=1.4)
+        p.line([(x, 292), (x, 330)], INK.alpha(0.6), 1.0)
+        p.glow((x, 314), 26, C.hex('ffcf6a'), 0.35)
+    for x in (tx - 30, tx + 30):
+        p.shape([(x - 9, 412, 0), (x - 9, 388), (x, 378), (x + 9, 388), (x + 9, 412, 0)], C.hex('ffd27a'), width=1.2)
+    rect(p, tx - 18, 400, tx + 18, 440, C.hex('3a2a1e'), width=1.6)
+    p.shape([(tx - 18, 400), (tx, 384), (tx + 18, 400)], MARBLE.light(0.1), width=1.4, smooth=False)
+    # cornice
+    rect(p, tx - 104, 238, tx + 104, 254, ('v', MARBLE.light(0.2), MARBLE_SHADE), width=2)
+    for x in range(tx - 98, tx + 100, 14):
+        rect(p, x, 254, x + 6, 260, MARBLE_SHADE, width=0.8)
+    # the dome
+    dome_col = C.hex('6a9a8a')
+    dome = [(tx - 98, 240, 0)] + [(tx - 98 * math.cos(t * math.pi / 16), 240 - 104 * math.sin(t * math.pi / 16)) for t in range(1, 16)] + [(tx + 98, 240, 0)]
+    p.shape(dome, ('h', dome_col.light(0.35), dome_col, dome_col.dark(0.45)), width=2.2, shade=0.6)
+    p.clip_shape(dome)
+    for f in (-0.8, -0.55, -0.3, 0.3, 0.55, 0.8):
+        pts = [(tx + 98 * f * math.cos(t * math.pi / 12 * 0.5), 240 - 104 * math.sin(t * math.pi / 24)) for t in range(0, 13)]
+        p.line(pts, dome_col.dark(0.4).alpha(0.7), 1.6)
+    for yy in (200, 168):
+        p.line([(tx - 120, yy), (tx + 120, yy)], dome_col.dark(0.35).alpha(0.5), 1.2, smooth=False)
+    p.unclip()
+    # the open shutter slit
+    slit = [(tx - 14, 240, 0), (tx - 14, 150), (tx - 8, 138), (tx + 8, 138), (tx + 14, 150), (tx + 14, 240, 0)]
+    p.shape(slit, ('v', C.hex('2a1a10'), C.hex('5a3a1a')), width=1.6)
+    p.glow((tx, 200), 40, C.hex('ffcf6a'), 0.45)
+    p.blob((tx, 136), 8, 4, BRASS, width=1.2, shade=0.6)
+    # the brass telescope from the slit toward the moon
+    tel_a, tel_b = (tx - 4, 196), (tx + 150, 92)
+    p.taper([tel_a, tel_b], 7, 10, brass_fill(BRASS), width=1.4, shade=0.8)
+    for t in (0.3, 0.6, 0.85):
+        q = v_lerp(tel_a, tel_b, t)
+        p.line([polar(q, 8, math.atan2(tel_b[1] - tel_a[1], tel_b[0] - tel_a[0]) + math.pi / 2), polar(q, -8, math.atan2(tel_b[1] - tel_a[1], tel_b[0] - tel_a[0]) + math.pi / 2)], BRASS_DARK, 2.4)
+    p.blob(tel_b, 4.6, 10, BRASS.dark(0.2), rot=-0.6, width=1.2, shade=0.6)
+    p.blob(tel_b, 2.4, 6, C.hex('cfe6ff'), rot=-0.6, ink=False)
+    p.blob((tx, 120), 4, 4, GOLD, width=1.0)
+    p.taper([(tx, 116), (tx, 98)], 1.6, 0.8, GOLD, width=0.8)
     # foreground rocks and a path with a tiny astronomer
     p.shape([(560, 640, 0), (600, 520), (700, 500), (800, 540), (860, 640, 0)], ('v', C.hex('4a4438'), C.hex('1a1814')), width=2)
     p.shape([(-20, 640, 0), (-20, 560), (80, 540), (200, 570), (260, 640, 0)], ('v', C.hex('3a3830'), C.hex('14120e')), width=2)
