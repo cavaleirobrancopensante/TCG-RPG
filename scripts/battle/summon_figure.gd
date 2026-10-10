@@ -19,6 +19,7 @@ var sick := false
 var enemy := false            # enemy figures face down the screen
 var mark := ""                # "", "attack", "block", "target", "select"
 var block_link := Vector2.ZERO
+var in_back := false          # behind another figure in a stack: no name scroll
 
 var summon_t := 1.0           # 0 → 1 during the summon animation
 var fade := 1.0               # death dissolve
@@ -179,11 +180,12 @@ func _draw() -> void:
 		draw_rect(fr, Color(mark_col, pulse), false, 3.5)
 		draw_rect(fr.grow(-4), Color(Tapestry.INK, 0.5 * pulse), false, 1.0)
 
-	# --- name scroll ---
-	var nm: String = card.get("name", "")
-	if nm.length() > 18:
-		nm = nm.substr(0, 17) + "…"
-	Tapestry.draw_scroll_label(self, Vector2(center_x, SIZE.y - 9), nm, 11, Color(Tapestry.INK, a))
+	# --- name scroll (front of a stack only) ---
+	if not in_back:
+		var nm: String = I18n.t(card.get("name", ""))
+		if nm.length() > 18:
+			nm = nm.substr(0, 17) + "…"
+		Tapestry.draw_scroll_label(self, Vector2(center_x, SIZE.y - 9), nm, 11, Color(Tapestry.INK, a))
 
 	# --- power/toughness on a heater shield ---
 	var sc_pos := Vector2(SIZE.x - 22, 18)
