@@ -73,25 +73,44 @@ static func font(kind: String = "book") -> Font:
 
 static func parchment() -> ImageTexture:
 	if _parchment == null:
-		var n := FastNoiseLite.new()
-		n.seed = 77
-		n.frequency = 0.012
-		n.fractal_octaves = 5
-		var img := n.get_seamless_image(256, 256)
-		var g := FastNoiseLite.new()
-		g.seed = 5
-		g.frequency = 0.25
-		var grain := g.get_seamless_image(256, 256)
-		img.convert(Image.FORMAT_RGB8)
-		for y in 256:
-			for x in 256:
-				var v := img.get_pixel(x, y).r
-				var gr := grain.get_pixel(x, y).r
-				var c := PARCHMENT_LIGHT.lerp(PARCHMENT_DARK, clampf((v - 0.35) * 1.3, 0.0, 1.0))
-				c = c.darkened((gr - 0.5) * 0.06)
-				img.set_pixel(x, y, c)
-		_parchment = ImageTexture.create_from_image(img)
+		var st := parchment_begin()
+		parchment_rows(st, 0, 256)
+		parchment_end(st)
 	return _parchment
+
+
+static func parchment_ready() -> bool:
+	return _parchment != null
+
+
+## Incremental generation (used by the loading screen): begin → rows → end.
+static func parchment_begin() -> Dictionary:
+	var n := FastNoiseLite.new()
+	n.seed = 77
+	n.frequency = 0.012
+	n.fractal_octaves = 5
+	var g := FastNoiseLite.new()
+	g.seed = 5
+	g.frequency = 0.25
+	var img := n.get_seamless_image(256, 256)
+	img.convert(Image.FORMAT_RGB8)
+	return {"img": img, "grain": g.get_seamless_image(256, 256)}
+
+
+static func parchment_rows(st: Dictionary, y0: int, y1: int) -> void:
+	var img: Image = st["img"]
+	var grain: Image = st["grain"]
+	for y in range(y0, mini(y1, 256)):
+		for x in 256:
+			var v := img.get_pixel(x, y).r
+			var gr := grain.get_pixel(x, y).r
+			var c := PARCHMENT_LIGHT.lerp(PARCHMENT_DARK, clampf((v - 0.35) * 1.3, 0.0, 1.0))
+			c = c.darkened((gr - 0.5) * 0.06)
+			img.set_pixel(x, y, c)
+
+
+static func parchment_end(st: Dictionary) -> void:
+	_parchment = ImageTexture.create_from_image(st["img"])
 
 
 ## Tiles the parchment manually (no texture-repeat flag needed on the CanvasItem).
@@ -169,8 +188,20 @@ static func stylebox(kind: String, margin: int = 12) -> StyleBoxTexture:
 
 # ------------------------------------------------------------------ ink drawing helpers
 
-static func ink_poly(ci: CanvasItem, pts: PackedVector2Array, fill: Color, w: float = 2.0, ink: Color = INK) -> void:
+## Signed-area check so degenerate shapes (zero size during animations) are skipped.
+static func poly_ok(pts: PackedVector2Array) -> bool:
 	if pts.size() < 3:
+		return false
+	var a := 0.0
+	for i in pts.size():
+		var p := pts[i]
+		var q := pts[(i + 1) % pts.size()]
+		a += p.x * q.y - q.x * p.y
+	return absf(a) > 0.5
+
+
+static func ink_poly(ci: CanvasItem, pts: PackedVector2Array, fill: Color, w: float = 2.0, ink: Color = INK) -> void:
+	if not poly_ok(pts):
 		return
 	ci.draw_colored_polygon(pts, fill)
 	var closed := pts.duplicate()

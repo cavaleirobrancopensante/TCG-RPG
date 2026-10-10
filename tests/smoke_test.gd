@@ -9,6 +9,8 @@ func _ready() -> void:
 	Engine.time_scale = 8.0
 	main = load("res://scenes/main.tscn").instantiate()
 	add_child(main)
+	if not main.is_booted:
+		await main.booted
 	await _frames(5)
 	print("menu ok")
 	assert(Music.tracks.size() == 60, "60 tracks in catalogue")
@@ -17,7 +19,7 @@ func _ready() -> void:
 	assert(Music.current.get("kind", "") == "anthem", "menu plays an anthem")
 	print("music ok: menu → ", Music.current["title"])
 
-	main._new_game()
+	await main._new_game()
 	await _frames(5)
 	main.open_boosters(true)
 	await _frames(3)

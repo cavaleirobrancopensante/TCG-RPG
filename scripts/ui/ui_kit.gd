@@ -161,11 +161,11 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 			ci.draw_circle(c + Vector2(0, -r * 0.86), r * 0.12, col)                         # pommel
 			ci.draw_rect(Rect2(c.x - r * 0.07, c.y - r * 0.78, r * 0.14, r * 0.34), col)      # grip
 			ci.draw_rect(Rect2(c.x - r * 0.42, c.y - r * 0.46, r * 0.84, r * 0.12), col)      # crossguard
-			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.15, -r * 0.34), c + Vector2(r * 0.15, -r * 0.34),
+			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.15, -r * 0.34), c + Vector2(r * 0.15, -r * 0.34),
 				c + Vector2(r * 0.10, r * 0.55), c + Vector2(0, r * 0.85), c + Vector2(-r * 0.10, r * 0.55)]), col)   # blade
 			ci.draw_line(c + Vector2(0, -r * 0.30), c + Vector2(0, r * 0.62), Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.4))
 			# blood running down the blade and dripping from the point
-			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.11, r * 0.30), c + Vector2(r * 0.11, r * 0.30),
+			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.11, r * 0.30), c + Vector2(r * 0.11, r * 0.30),
 				c + Vector2(r * 0.07, r * 0.58), c + Vector2(0, r * 0.85), c + Vector2(-r * 0.07, r * 0.58)]), blood)
 			ci.draw_line(c + Vector2(-r * 0.06, r * 0.05), c + Vector2(-r * 0.06, r * 0.32), blood, maxf(1.0, width * 0.6))
 			ci.draw_circle(c + Vector2(0, r * 1.0), r * 0.08, blood)
@@ -180,7 +180,7 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 				var t := float(i) / 20.0
 				var y := lerpf(-r * 0.9, r * 0.8, t)
 				pts.append(c + Vector2(-sin(t * PI) * r * 0.55, y))
-			ci.draw_colored_polygon(pts, Color(col, col.a * 0.55))
+			_fill(ci, pts, Color(col, col.a * 0.55))
 			ci.draw_polyline(pts + PackedVector2Array([pts[0]]), col, width * 0.6, true)
 			ci.draw_line(c + Vector2(0, -r * 0.8), c + Vector2(0, r * 0.95), col, width * 0.7, true)
 		"revel":     # masquerade half-mask with ribbons and a plume
@@ -190,10 +190,10 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 				c + Vector2(r * 0.45, -r * 0.30), c + Vector2(r * 0.95, -r * 0.42), c + Vector2(r * 0.80, r * 0.05),
 				c + Vector2(r * 0.45, r * 0.28), c + Vector2(r * 0.12, r * 0.22), c + Vector2(0, r * 0.05),
 				c + Vector2(-r * 0.12, r * 0.22), c + Vector2(-r * 0.45, r * 0.28), c + Vector2(-r * 0.80, r * 0.05)])
-			ci.draw_colored_polygon(mask, col)
+			_fill(ci, mask, col)
 			for sgn in [-1.0, 1.0]:
 				var e := c + Vector2(sgn * r * 0.42, -r * 0.05)
-				ci.draw_colored_polygon(PackedVector2Array([e + Vector2(-r * 0.24, 0), e + Vector2(0, -r * 0.12),
+				_fill(ci, PackedVector2Array([e + Vector2(-r * 0.24, 0), e + Vector2(0, -r * 0.12),
 					e + Vector2(r * 0.24, 0), e + Vector2(0, r * 0.10)]), dark)
 				# ribbons fluttering outward from the ties
 				var rb := PackedVector2Array()
@@ -207,7 +207,7 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 				var t := k / 8.0
 				pl.append(c + Vector2(r * (0.70 + 0.10 * sin(t * 3.0)), -r * (0.42 + 0.55 * t)))
 			ci.draw_polyline(pl, col, maxf(1.0, width * 0.9), true)
-			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(r * 0.72, -r * 0.55), c + Vector2(r * 1.0, -r * 0.85),
+			_fill(ci, PackedVector2Array([c + Vector2(r * 0.72, -r * 0.55), c + Vector2(r * 1.0, -r * 0.85),
 				c + Vector2(r * 0.86, -r * 1.0), c + Vector2(r * 0.66, -r * 0.80)]), col)
 		"lyceum":    # a column with an owl perched on top
 			var dark := Color(0.10, 0.06, 0.04, col.a)
@@ -222,7 +222,7 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 			# the owl
 			# the owl, in profile facing right
 			# tail feathers spilling over the back of the capital
-			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.16, -r * 0.30), c + Vector2(-r * 0.40, -r * 0.06),
+			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.16, -r * 0.30), c + Vector2(-r * 0.40, -r * 0.06),
 				c + Vector2(-r * 0.30, -r * 0.02), c + Vector2(-r * 0.06, -r * 0.22)]), col)
 			# body leaning slightly forward
 			var body := PackedVector2Array()
@@ -230,9 +230,9 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 				var a := TAU * k / 18.0
 				var v := Vector2(cos(a) * r * 0.21, sin(a) * r * 0.30).rotated(0.22)
 				body.append(c + Vector2(0, -r * 0.44) + v)
-			ci.draw_colored_polygon(body, col)
+			_fill(ci, body, col)
 			# folded wing along the side
-			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.04, -r * 0.62), c + Vector2(-r * 0.20, -r * 0.42),
+			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.04, -r * 0.62), c + Vector2(-r * 0.20, -r * 0.42),
 				c + Vector2(-r * 0.22, -r * 0.20), c + Vector2(-r * 0.04, -r * 0.30)]), col)
 			ci.draw_polyline(PackedVector2Array([c + Vector2(-r * 0.04, -r * 0.62), c + Vector2(-r * 0.20, -r * 0.42),
 				c + Vector2(-r * 0.22, -r * 0.20)]), Color(0, 0, 0, col.a * 0.35), maxf(1.0, width * 0.4), true)
@@ -241,12 +241,12 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 					Color(0, 0, 0, col.a * 0.3), maxf(1.0, width * 0.3))
 			# round head with one ear tuft at the back
 			ci.draw_circle(c + Vector2(r * 0.06, -r * 0.76), r * 0.18, col)
-			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.10, -r * 0.84), c + Vector2(-r * 0.10, -r * 1.02),
+			_fill(ci, PackedVector2Array([c + Vector2(-r * 0.10, -r * 0.84), c + Vector2(-r * 0.10, -r * 1.02),
 				c + Vector2(r * 0.04, -r * 0.90)]), col)
 			# eye and hooked beak
 			ci.draw_circle(c + Vector2(r * 0.12, -r * 0.79), r * 0.075, dark)
 			ci.draw_circle(c + Vector2(r * 0.13, -r * 0.79), r * 0.03, col)
-			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(r * 0.21, -r * 0.76), c + Vector2(r * 0.33, -r * 0.70),
+			_fill(ci, PackedVector2Array([c + Vector2(r * 0.21, -r * 0.76), c + Vector2(r * 0.33, -r * 0.70),
 				c + Vector2(r * 0.27, -r * 0.62), c + Vector2(r * 0.20, -r * 0.66)]), col)
 			ci.draw_line(c + Vector2(r * 0.21, -r * 0.70), c + Vector2(r * 0.29, -r * 0.67), dark, maxf(1.0, width * 0.3))
 			# talons gripping the capital
@@ -259,5 +259,11 @@ static func draw_sigil(ci: CanvasItem, faction: String, c: Vector2, r: float, co
 				var a := TAU * float(i) / float(teeth * 4)
 				var rr := r * (0.85 if (i % 4) < 2 else 0.62)
 				pts.append(c + Vector2(cos(a), sin(a)) * rr)
-			ci.draw_colored_polygon(pts, col)
+			_fill(ci, pts, col)
 			ci.draw_circle(c, r * 0.28, Color(0.1, 0.1, 0.12, 0.9))
+
+
+## Fill that skips shapes too small to triangulate (sigils at mana-pip size).
+static func _fill(ci: CanvasItem, pts: PackedVector2Array, col: Color) -> void:
+	if Tapestry.poly_ok(pts):
+		ci.draw_colored_polygon(pts, col)

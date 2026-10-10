@@ -39,6 +39,12 @@ func _ready() -> void:
 		add_child(p)
 		_players.append(p)
 	_load_settings()
+
+
+## Called by the game once its look (parchment, fonts, theme) is prepared.
+func attach_bar() -> void:
+	if _bar:
+		return
 	var layer := CanvasLayer.new()
 	layer.layer = 50
 	add_child(layer)
