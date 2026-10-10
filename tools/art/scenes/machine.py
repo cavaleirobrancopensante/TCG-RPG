@@ -54,7 +54,7 @@ def machine_c_001(p):
     brick_wall(p, (0, 0, W, 500), BRICK.dark(0.1))
     # pipes along the wall
     pipe(p, [(-20, 150), (300, 150), (340, 190), (340, 330)], 11, COPPER, flanges=(1, 3))
-    pipe(p, [(1020, 210), (720, 210)], 9, IRONC.light(0.2), flanges=(1,))
+    pipe(p, [(1020, 210), (730, 210), (700, 240), (700, 512)], 9, IRONC.light(0.2), flanges=(1, 2))
     gauge(p, (300, 120), 22, BRASS, 0.8)
     # vent with glow
     vx, vy = 300, 420
@@ -127,7 +127,7 @@ def machine_c_003(p):
     for (x, y) in ((610, 455), (640, 452)):
         bolt_head(p, (x, y), 4, STEELC)
     servo(p, 760, 452, 4.6, BRASS, step=2.5)
-    Figure(pose='offer', garb='tunic', main=C.hex('4a6a8a'), second=C.hex('6a5a40'), hair='curly', hair_col=C.hex('a0622a'),
+    Figure(pose='ma_both_hi', garb='tunic', main=C.hex('4a6a8a'), second=C.hex('6a5a40'), hair='curly', hair_col=C.hex('a0622a'),
            head=goggles(), emblem=apron(LEATHER, -29), belt='leather', sleeves='fitted', eyes='open',
            props_front=[tool('mouse', 'f')]).draw(p, 330, 600, 440)
 
@@ -178,12 +178,12 @@ def machine_c_005(p):
     p.line([(-20, 560), (1020, 430)], IRONC.light(0.3), 4, smooth=False)
     p.line([(-20, 580), (1020, 450)], IRONC.light(0.3), 4, smooth=False)
     # chain from cart to hauler
-    chain(p, [(250, 515), (420, 470), (560, 452)], 12, IRONC.light(0.15), 2.2)
+    chain(p, [(250, 515), (390, 446), (503, 352)], 12, IRONC.light(0.15), 2.2)
     p.push(190, 552, 1.0, rot=-0.125)
     ore_cart(p, 0, 0, 1.9)
     p.pop()
     Automaton(torso='boiler', head='visor', legs='tracks', arm_f='claw', arm_b='claw', col=IRONC.light(0.25),
-              col2=STEELC, trim=BRASS, eye_col=FURN, width=1.35, hand_f=(26, -60), hand_b=(-2, -66),
+              col2=STEELC, trim=BRASS, eye_col=FURN, width=1.35, hand_f=(24, -50), hand_b=(-20, -50), bend_f=0,
               stack=True, head_scale=1.3).draw(p, 640, 520, 400, rot=-0.125)
     steam(p, (500, 120), (-0.6, -0.4), 5, 2.2, SOOT.light(0.35), 0.5)
 
@@ -219,18 +219,24 @@ def machine_c_006(p):
 
     def pavise(p2, j):
         x0, x1 = 6, 34
-        pts = [(x0, -88, 0), (x1, -86, 0), (x1 + 2, -14, 0), (x0 + 2, -12, 0)]
+        pts = [(x0, -78, 0), (x1, -76, 0), (x1 + 2, -10, 0), (x0 + 2, -8, 0)]
         plate(p2, pts, IRONC.light(0.25), rivet_r=0, smooth=False)
-        for yy in (-78, -50, -22):
+        for yy in (-70, -44, -18):
             p2.line([(x0, yy), (x1 + 1, yy + 1)], BRASS.dark(0.1), 2.0, smooth=False)
             for kk in range(4):
                 rivet(p2, (x0 + 4 + kk * 8, yy + 0.6), 1.3, BRASS_L)
         for xx in (x0 + 4, x1 - 2):
             for kk in range(8):
-                rivet(p2, (xx + kk * 0.08, -84 + kk * 9.5), 1.0, STEELC)
-        p2.line([(x0 + 3, -86), (x0 + 5, -14)], C(1, 1, 1, 0.3), 2)
+                rivet(p2, (xx + kk * 0.08, -74 + kk * 9), 1.0, STEELC)
+        p2.line([(x0 + 3, -76), (x0 + 5, -10)], C(1, 1, 1, 0.3), 2)
+        # steel fingers hooked over the pavise's edge: the sentry grips it
+        hx, hy = j['hand_f']
+        ex = x1 + 1.0 + (hy + 50) * 0.028
+        for k in range(3):
+            fy = hy - 2.4 + k * 2.4
+            p2.taper([(ex + 3.4, fy - 0.6), (ex + 0.6, fy - 1.0), (ex - 3.0, fy + 0.4)], 1.25, 0.9, metal(STEELC), width=1.1, shade=0.6)
     Automaton(torso='hulk', head='visor', legs='pillar', arm_f='hand', arm_b='hand', col=IRONC.light(0.3), col2=STEELC.dark(0.1),
-              trim=BRASS, width=1.5, hand_f=(26, -50), hand_b=(-24, -48), eye_col=FURN, neck=4, porthole=False, head_scale=1.6,
+              trim=BRASS, width=1.5, hand_f=(20.5, -52), hand_b=(-24, -48), eye_col=FURN, neck=4, porthole=False, head_scale=1.6,
               extra_front=[pavise]).draw(p, 470, 600, 440)
 
 
@@ -252,19 +258,21 @@ def machine_c_007(p):
     """Piston Laborer: noon in the quarry; the men sit to their bread while the
     laborer hoists another block over its head."""
     quarry(p)
-    crane(p, 860, 470, 150, -160, OAK_D, hook=(700, 330))
-    p.shape([(670, 330, 0), (730, 330, 0), (735, 380, 0), (665, 380, 0)], ('v', C.hex('d8ccb0'), C.hex('a89a7c')), width=2, smooth=False)
+    crane(p, 880, 470, 150, -90, OAK_D, hook=(790, 300))
+    p.shape([(760, 318, 0), (820, 318, 0), (825, 368, 0), (755, 368, 0)], ('v', C.hex('d8ccb0'), C.hex('a89a7c')), width=2, smooth=False)
+    for xx in (766, 814):
+        p.line([(790, 316), (xx, 320)], INK, 2.0, smooth=False)
     p.cx.new_path()
     p.cx.rectangle(0, 470, W, H - 470)
     p.fill(('v', C.hex('b8a888'), C.hex('8a7a5e')))
-    for (x, y, w, h) in ((60, 520, 120, 70), (820, 540, 150, 60), (900, 480, 80, 50)):
+    for (x, y, w, h) in ((-40, 500, 110, 64), (820, 540, 150, 60), (900, 480, 80, 50)):
         p.shape([(x, y + h, 0), (x, y, 0), (x + w, y - 6, 0), (x + w, y + h, 0)], ('v', C.hex('e0d4b8'), C.hex('a8987a')), width=2, smooth=False, shade=0.4)
     # the men at their lunch
-    Figure(pose='cup', garb='tunic', main=C.hex('8a6a4a'), hair='short', hair_col=UMBER, beard='short', kneel=True,
-           head='cap', second=C.hex('5a4a3a'), belt='leather', props_front=[PR.chalice()], eyes='open').draw(p, 130, 520, 230)
-    Figure(pose='hold', garb='tunic', main=C.hex('6a7a5a'), hair='short', beard='short', hair_col=C.hex('3a2a1a'), kneel=True,
-           belt='cord', props_front=[PR.loaf()], eyes='down', mouth='open').draw(p, 230, 530, 220, flip=True)
-    p.blob((180, 528), 22, 6, OCHRE.dark(0.1), width=1.4, shade=0.5)
+    p.blob((212, 574), 26, 7, OCHRE.dark(0.1), width=1.4, shade=0.5)
+    Figure(pose='ma_hold_hi', garb='tunic', main=C.hex('8a6a4a'), hair='short', hair_col=UMBER, beard='short', kneel=True,
+           head='cap', second=C.hex('5a4a3a'), belt='leather', props_front=[PR.chalice()], eyes='open').draw(p, 130, 575, 260)
+    Figure(pose='ma_hold', garb='tunic', main=C.hex('6a7a5a'), hair='short', beard='short', hair_col=C.hex('3a2a1a'), kneel=True,
+           belt='cord', props_front=[PR.loaf()], eyes='down', mouth='open').draw(p, 292, 580, 250, flip=True)
 
     def block(p2, j):
         pts = [(-22, -132, 0), (30, -134, 0), (32, -102, 0), (-20, -100, 0)]
@@ -277,7 +285,7 @@ def machine_c_007(p):
     Automaton(torso='box', head='bucket', legs='jointed', arm_f='hand', arm_b='hand', col=BRONZE, col2=STEELC, trim=COPPER,
               hand_f=(22, -104), hand_b=(-16, -104), width=1.15, stride=2, head_scale=1.2, stack=True,
               extra_front=[block]).draw(p, 560, 600, 410)
-    steam(p, (420, 600), (-1, -0.3), 4, 1.2, C.hex('e8dcc0'), 0.5)
+    steam(p, (470, 604), (-1, -0.25), 3, 1.1, C.hex('e8dcc0'), 0.45)
 
 
 def machine_c_008(p):
@@ -314,7 +322,7 @@ def machine_c_008(p):
         gear(p2, (c[0] - 2, c[1] - 17), 4, 8, COPPER, 0.3, width=0.9, spokes=0)
         p2.taper([(c[0] + 4, c[1] - 18), (c[0] + 8, c[1] - 24)], 0.8, 0.6, STEELC, width=0.8)
         p2.line([(c[0] + 6, c[1] - 14), sh], C.hex('6a5a3a'), 1.6)
-    Figure(pose='lantern', garb='robe', main=C.hex('6a5a48'), hair='white', beard='short', age='old', head=goggles(LEATHER.dark(0.2)),
+    Figure(pose='ma_lantern', garb='robe', main=C.hex('6a5a48'), hair='white', beard='short', age='old', head=goggles(LEATHER.dark(0.2)),
            emblem=apron(LEATHER.dark(0.1), -2), belt='leather', props_back=[sack], props_front=[PR.lantern()], eyes='down',
            width=1.05).draw(p, 400, 600, 430)
 
@@ -349,7 +357,7 @@ def machine_c_009(p):
     servo(p, 260, 458, 4.0, COPPER.light(0.15), step=-1.5, kind='wheel')
     servo(p, 360, 470, 3.0, STEELC, kind='hover', eye_col=ARC)
     gear(p, (440, 452), 14, 10, BRASS, 0.3, width=1.2, spokes=0)
-    Figure(pose='hold', garb='jerkin', main=C.hex('7a3a2a'), second=C.hex('4a3a2a'), hair='short', hair_col=C.hex('4a2a1a'), beard='short',
+    Figure(pose='ma_hold_hi', garb='jerkin', main=C.hex('7a3a2a'), second=C.hex('4a3a2a'), hair='short', hair_col=C.hex('4a2a1a'), beard='short',
            head=goggles(), emblem=apron(LEATHER, -33), belt='leather', sleeves='fitted', mouth='calm',
            props_front=[tool('wrench', 'f')]).draw(p, 720, 600, 450, flip=True)
 
@@ -367,7 +375,7 @@ def machine_c_010(p):
     p.shape([(30, 212, 0), (215, 170, 0), (400, 212, 0)], C.hex('e2d8c0'), width=2, smooth=False, shade=0.5)
     bg.meadow(p, 430, C.hex('8a9a5a'))
     a = dict(torso='cuirass', head='helm', legs='jointed', arm_f='spear', arm_b='shield', col=BRONZE, col2=BRONZE.dark(0.2),
-             trim=GOLD, crest=CRIMSON, shield_col=BRONZE, hand_f=(20, -60), hand_b=(-2, -62), porthole=False, eye_col=ARC)
+             trim=GOLD, crest=CRIMSON, shield_col=BRONZE, hand_f=(25, -58), hand_b=(-2, -62), bend_f=0, porthole=False, eye_col=ARC)
     Automaton(**a).draw(p, 790, 520, 270)
     Automaton(**a).draw(p, 680, 540, 320)
     Automaton(**a).draw(p, 440, 602, 450)
@@ -437,8 +445,10 @@ def machine_c_012(p):
         x = 620 + k * 34
         p.shape([(x, 570, 0), (x + 28, 570, 0), (x + 24, 556, 0), (x + 4, 556, 0)], ('v', FURN_CORE, FURN) if k == 0 else metal(STEELC.dark(0.15), 'v'), width=1.4, smooth=False)
     p.glow((630, 560), 40, FURN, 0.5)
-    steam(p, (380, 360), (-1, -0.6), 4, 1.3, STEAM, 0.8)
-    servo(p, 300, 420, 3.8, BRASS, flip=True, step=3, kind='walk')
+    steam(p, (400, 350), (-1, -0.5), 4, 1.3, STEAM, 0.8)
+    # the new servo has dropped from the vent and toddles off across the floor
+    steam(p, (360, 590), (-1, -0.3), 3, 0.9, STEAM, 0.5)
+    servo(p, 300, 596, 4.2, BRASS, flip=True, step=3, kind='walk')
 
 
 def wolf(p, x, y, s=1.0, flip=False, col=C.hex('7a7268'), pose='snarl'):
@@ -498,8 +508,8 @@ def machine_c_013(p):
             if yy < -2:
                 p2.line([(h[0] + 3 + k * 0.9, yy), (h[0] + 7 + k * 0.9, yy - 0.4)], INK.alpha(0.45), 0.6, smooth=False)
         p2.blob((h[0] + 28, 1.5), 2.2, 1.6, PARCH.dark(0.15), width=0.8)
-    Figure(pose='present', garb='robe', main=BLACK_HABIT, hair='bald', hair_col=C.hex('9a9080'), head='zucchetto', second=C.hex('3a3040'),
-           belt='leather', age='old', eyes='open', props_front=[invoice]).draw(p, 140, 600, 220)
+    Figure(pose='ma_both_hi', garb='robe', main=C.hex('3a4a6a'), hair='bald', hair_col=C.hex('9a9080'), head='cap', second=C.hex('2a3450'),
+           belt='leather', age='old', eyes='up', beard='short', fur=C.hex('8a7a62'), props_front=[invoice]).draw(p, 140, 600, 240)
 
 
 def machine_c_014(p):
@@ -551,8 +561,8 @@ def machine_c_014(p):
         p.line(pts, ARC.alpha(0.35), 4)
     servo(p, c[0], c[1] + 80, 6.4, BRASS, eye_col=ARC, step=1.5)
     sparks(p, (c[0] + 14, c[1] - 30), 10, 6, 40, ARC.light(0.3))
-    Figure(pose='point', garb='jerkin', main=C.hex('3a4a6a'), second=C.hex('5a4a3a'), hair='short', hair_col=C.hex('2a1a10'),
-           head=goggles(), emblem=apron(LEATHER, -33), belt='leather', sleeves='fitted', eyes='up').draw(p, 140, 610, 400)
+    Artificer(pose='ma_gesture', garb='jerkin', main=C.hex('3a4a6a'), second=C.hex('5a4a3a'), hair='short', hair_col=C.hex('2a1a10'),
+              head=goggles(), emblem=apron(LEATHER, -33), belt='leather', sleeves='fitted', eyes='up').draw(p, 160, 610, 420)
 
 
 def machine_c_015(p):
@@ -575,16 +585,17 @@ def machine_c_015(p):
         p.blob((50 + k * 52, 510), 8, 8, metal(STEELC, 'v'), width=1.2)
     servo(p, 160, 498, 5.0, BRASS, kind='wheel', tag=True)
     servo(p, 330, 498, 5.0, BRASS, kind='wheel', tag=True)
+    # the clerk stands behind his counter
+    Figure(pose='ma_both', garb='robe', main=C.hex('34364e'), second=C.hex('24263a'), hair='bald', hair_col=C.hex('8a8070'), age='old',
+           fur=C.hex('6a5a4a'), eyes='down', mouth='stern', belt=None, props_front=[tool('stamp', 'f')]).draw(p, 780, 620, 450, flip=True)
     # the counter
     p.shape([(470, 626, 0), (470, 400, 0), (1020, 400, 0), (1020, 626, 0)], ('v', OAK.dark(0.1), OAK_D.dark(0.3)), width=2.2, smooth=False)
     for xx in (520, 700, 880):
         p.shape([(xx, 430, 0), (xx + 140, 430, 0), (xx + 140, 600, 0), (xx, 600, 0)], None, ink=OAK.light(0.2).alpha(0.5), width=1.6, smooth=False)
-    Figure(pose='present', garb='robe', main=BLACK_HABIT, second=C.hex('3a3040'), hair='bald', hair_col=C.hex('8a8070'), age='old',
-           fur=C.hex('6a5a4a'), eyes='down', mouth='stern', belt=None, props_front=[tool('stamp', 'f')]).draw(p, 780, 620, 450, flip=True)
     p.shape([(470, 410, 0), (1020, 410, 0), (1020, 390, 0), (470, 390, 0)], ('v', OAK.light(0.2), OAK), width=2, smooth=False)
     # slip and ink pad on the counter
-    p.shape([(600, 396, 0), (680, 392, 0), (684, 402, 0), (602, 406, 0)], PARCH, width=1.2, smooth=False)
-    p.blob((645, 398), 8, 3, CRIMSON, width=0.8)
+    p.shape([(626, 396, 0), (706, 392, 0), (710, 402, 0), (628, 406, 0)], PARCH, width=1.2, smooth=False)
+    p.blob((690, 399), 6, 2.4, CRIMSON, width=0.8)
     p.shape([(880, 398, 0), (930, 398, 0), (930, 404, 0), (880, 404, 0)], C.hex('3a1a1a'), width=1.2, smooth=False)
 
 
@@ -596,15 +607,27 @@ def machine_c_016(p):
     hanging_tools(p, 640, 110, [('tongs', 0), ('hammer', 40), ('tongs', 80)])
     iron_floor(p, 480, C.hex('4a3e36'), glow=(200, 560))
     # the construct waiting at the right with its chest open
+    def open_chest(p2, j):
+        # the breastplate is off: a dark cavity with the mainspring and a gear train
+        cav = [(-8, -78, 0), (10, -78, 0), (10, -54, 0), (-8, -54, 0)]
+        p2.shape(cav, ('v', C.hex('1a1412'), C.hex('3a2a22')), width=1.4, smooth=False)
+        p2.clip_shape(cav)
+        gear(p2, (-1, -70), 6, 10, BRASS, 0.2, width=1.0, spokes=4)
+        gear(p2, (6, -62), 4.2, 8, COPPER, 0.5, width=0.9, spokes=0)
+        spring(p2, (-6, -58), (8, -57), 2.0, 5, STEELC, 1.0)
+        p2.unclip()
+        for q in ((-8, -76), (-8, -56)):
+            p2.shape([(q[0] - 2.4, q[1] - 1.4, 0), (q[0], q[1] - 1.4, 0), (q[0], q[1] + 1.4, 0), (q[0] - 2.4, q[1] + 1.4, 0)], metal(BRASS), width=0.8, smooth=False)
     Automaton(torso='box', head='visor', legs='jointed', arm_f='hand', arm_b='hand', col=STEELC.dark(0.1), col2=IRONC.light(0.2),
-              trim=BRASS, hand_f=(14, -44), hand_b=(-14, -44), porthole=True, eye_col=ARC.dark(0.2), head_scale=1.1).draw(p, 860, 560, 330, flip=True)
+              trim=BRASS, hand_f=(16, -44), hand_b=(-15, -44), porthole=False, eye_col=ARC.dark(0.2), head_scale=1.1,
+              extra_front=[open_chest]).draw(p, 860, 600, 380, flip=True)
     # quench trough
     p.shape([(380, 600, 0), (390, 500, 0), (720, 500, 0), (730, 600, 0)], ('h', OAK.light(0.1), OAK_D), width=2.2, smooth=False)
     p.blob((555, 502), 165, 12, ('v', C.hex('3a5a6a'), C.hex('1a2a3a')), width=2)
     for xx in (395, 712):
         p.line([(xx, 505), (xx + (5 if xx < 500 else -5), 598)], IRONC, 6, smooth=False)
-    steam(p, (560, 490), (0.15, -1), 7, 2.3, STEAM, 0.9, step=24)
-    steam(p, (640, 490), (0.5, -1), 5, 1.8, STEAM, 0.7, step=24)
+    steam(p, (560, 490), (0.15, -1), 6, 1.9, STEAM, 0.85, step=24)
+    steam(p, (500, 490), (-0.3, -1), 4, 1.4, STEAM, 0.6, step=22)
 
     def hot_plate(p2, q, d):
         x, y = q
@@ -612,13 +635,9 @@ def machine_c_016(p):
         p2.glow((x + 4, y + 2), 26, FURN, 0.7)
         p2.shape(pts, ('v', FURN_CORE, FURN, C.hex('c8401a')), width=1.2, shade=0.6)
         p2.line([(x + 4, y - 8), (x + 5, y + 11)], C.hex('c8401a'), 1.0)
-    Figure(pose='hold', garb='jerkin', main=C.hex('6a4a3a'), second=C.hex('4a3a2a'), sleeves='none', hair='short', hair_col=INK_SOFT,
+    Figure(pose='ma_hold', garb='jerkin', main=C.hex('6a4a3a'), second=C.hex('4a3a2a'), sleeves='none', hair='short', hair_col=INK_SOFT,
            beard='long', width=1.2, emblem=apron(LEATHER.dark(0.1), -33), belt='leather', mouth='stern', head=goggles(up=False, lens=FURN.light(0.4)),
-           props_front=[tool('tongs', 'f', length=24, hold=hot_plate)]).draw(p, 330, 610, 450)
-    # the guild stamp on an anvil
-    anvil(p, (860, 610), 1.4)
-    p.blob((850, 548), 18, 6, metal(BRASS, 'v'), width=1.4, shade=0.6)
-    p.shape([(842, 548, 0), (858, 548, 0), (856, 520, 0), (844, 520, 0)], OAK_D, width=1.2, smooth=False)
+           props_front=[tool('tongs', 'f', length=26, hold=hot_plate)]).draw(p, 330, 610, 450)
 
 
 def machine_c_017(p):
@@ -648,7 +667,7 @@ def machine_c_017(p):
     p.glow(target, 120, ARC, 0.5)
     wolf(p, 760, 570, 4.6, flip=True)
     sparks(p, target, 14, 10, 70, ARC.light(0.2))
-    Figure(pose='hold', garb='robe', main=C.hex('4a4a5a'), second=C.hex('3a3a4a'), hair='short', hair_col=C.hex('6a6a6a'), beard='forked',
+    Figure(pose='ma_hold_hi', garb='robe', main=C.hex('4a4a5a'), second=C.hex('3a3a4a'), hair='short', hair_col=C.hex('6a6a6a'), beard='forked',
            age='old', head=goggles(LEATHER.dark(0.3)), belt='leather', cloak='mantle', cloak_col=C.hex('2a3a5a'), eyes='open',
            props_front=[tool('calipers', 'f')]).draw(p, 110, 610, 380)
 
@@ -930,8 +949,8 @@ def machine_u_002(p):
     for (x, s) in ((420, 3.4), (540, 3.0)):
         p.shape([(x - 50, 420, 0), (x + 40, 410, 0), (x + 40, 418, 0), (x - 50, 428, 0)], OAK.light(0.1), width=1.4, smooth=False)
         servo(p, x, 460, s, BRASS, flip=True, step=2)
-    Figure(pose='hold', garb='tunic', main=C.hex('6a5a3a'), hair='short', hair_col=UMBER, belt='leather', head=goggles(),
-           props_front=[tool('hammer', 'f')]).draw(p, 860, 520, 200, flip=True)
+    Figure(pose='ma_hold', garb='tunic', main=C.hex('6a5a3a'), hair='short', hair_col=UMBER, belt='leather', head=goggles(),
+           props_front=[tool('hammer', 'f')]).draw(p, 860, 520, 210, flip=True)
 
     def chain_office(p2, chest):
         k = chest[1] + 64
@@ -953,29 +972,48 @@ def machine_u_003(p):
     gear(p, (500, 250), 230, 36, C.hex('5a5060'), 0.05, width=2, spokes=8, recess=C.hex('14121a'))
     bg.tile_floor(p, 470, C.hex('3a3440'), C.hex('6a6270'))
     a = dict(torso='barrel', head='dome', legs='jointed', arm_f='hand', arm_b='hand', col=BRASS, col2=STEELC, trim=COPPER, eye_col=ARC)
-    pos = [(250, 470, 230, False, BRASS), (750, 470, 230, True, COPPER.light(0.1)), (110, 600, 380, False, COPPER.light(0.1)), (890, 600, 380, True, BRASS)]
-    # coupling rods ringing the group (drawn behind the near pair)
-    ring = [(270, 300), (730, 300), (860, 400), (500, 470), (140, 400), (270, 300)]
-    for i in range(len(ring) - 1):
-        p.taper([ring[i], ring[i + 1]], 6, 6, metal(BRASS_L), width=1.8, shade=0.6)
-    for q in ring[:-1]:
-        gear(p, q, 22, 10, BRASS, 0.3, width=1.4, spokes=4)
-    for (x, y, h, fl, col) in pos[:2]:
-        d = dict(a)
-        d['col'] = col
-        Automaton(hand_f=(26, -62), hand_b=(-22, -60), **d).draw(p, x, y, h, flip=fl)
-    gear(p, (500, 470), 40, 14, COPPER, 0.1, width=1.8, spokes=5)
-    eye(p, (500, 470), 6, ARC)
-    for (x, y, h, fl, col) in pos[2:]:
-        d = dict(a)
-        d['col'] = col
-        Automaton(hand_f=(30, -62), hand_b=(-20, -58), **d).draw(p, x, y, h, flip=fl)
-    # the front pair grip the ring's links
-    for (x0, y0) in ((140 + 30 * 3.8, 600 - 62 * 3.8), (890 - 30 * 3.8, 600 - 62 * 3.8)):
-        p.taper([(x0, y0), (500, 470)], 6, 6, metal(BRASS_L), width=1.8, shade=0.6)
-        gear(p, (x0, y0), 16, 9, BRASS, 0.2, width=1.3, spokes=0)
+    back = [(270, 470, 230, False, BRASS), (730, 470, 230, True, COPPER.light(0.1))]
+    front = [(130, 600, 380, False, COPPER.light(0.1)), (870, 600, 380, True, BRASS)]
+
+    def hand_at(x, y, h, fl, bot):
+        hx, hy = bot.joints()['hand_f']
+        s = h / 100.0
+        return (x - hx * s if fl else x + hx * s, y + hy * s)
+    # two meshing coupling gears at the centre: the upper one driven by the far pair,
+    # the lower one by the near pair; their teeth engage so each pair answers the other
+    g_top, r_top = (500, 352), 34
+    g_bot, r_bot = (500, 448), 58
+    bots = []
+    for (x, y, h, fl, col) in back:
+        d = dict(a, col=col)
+        bot = Automaton(hand_f=(30, -56), hand_b=(-18, -48), bend_f=0, **d)
+        bots.append((bot, x, y, h, fl))
+        bot.draw(p, x, y, h, flip=fl)
+    # far rods: from each far hand to a crank pin on the upper gear
+    for (bot, x, y, h, fl) in bots:
+        hp = hand_at(x, y, h, fl, bot)
+        pin = (g_top[0] + (-14 if not fl else 14), g_top[1] - 6)
+        p.taper([hp, pin], 4, 4, metal(BRASS_L), width=1.6, shade=0.6)
+        p.blob(hp, 5, 5, metal(BRASS, 'v'), width=1.2)
+    gear(p, g_top, r_top, 12, BRASS, 0.12, width=1.6, spokes=4)
+    gear(p, g_bot, r_bot, 18, COPPER, 0.0, width=1.8, spokes=5)
+    eye(p, g_bot, 7, ARC)
+    for q in (g_top,):
+        rivet(p, (q[0] - 14, q[1] - 6), 3, STEELC)
+        rivet(p, (q[0] + 14, q[1] - 6), 3, STEELC)
+    for (x, y, h, fl, col) in front:
+        d = dict(a, col=col)
+        bot = Automaton(hand_f=(34, -54), hand_b=(-20, -50), bend_f=0, **d)
+        bot.draw(p, x, y, h, flip=fl)
+        hp = hand_at(x, y, h, fl, bot)
+        pin = (g_bot[0] + (-30 if not fl else 30), g_bot[1] + 8)
+        p.taper([hp, pin], 6, 6, metal(BRASS_L), width=1.8, shade=0.6)
+        rivet(p, pin, 4, STEELC)
+        # the rod ends in a clevis gripped by the hand
+        p.blob(hp, 8, 8, metal(BRASS, 'v'), width=1.4, shade=0.6)
+        rivet(p, hp, 2.6, STEELC)
     for k in range(6):
-        p.star((500 + math.cos(k) * 200, 300 + math.sin(k * 1.3) * 120), 5, ARC.light(0.4))
+        p.star((500 + math.cos(k) * 220, 220 + math.sin(k * 1.3) * 90), 5, ARC.light(0.4))
 
 
 def machine_u_004(p):
@@ -996,11 +1034,11 @@ def machine_u_004(p):
         p.blob((440 + (k % 6) * 22, 600 - (k // 6) * 14), 14, 10, SOOT.light(0.1 * (k % 3)), width=1.2, shade=0.7)
 
     def held_servo(p2, q, d):
-        servo(p2, q[0] + 3, q[1] + 10, 0.42, BRASS, step=4)
-    Figure(pose='hold', garb='jerkin', main=C.hex('4a3a32'), second=C.hex('3a2e28'), sleeves='none', skin=SKIN.dark(0.15), hair='bald',
+        servo(p2, q[0] + 4, q[1] + 15, 0.7, BRASS, step=4)
+    Figure(pose='ma_hold_hi', garb='jerkin', main=C.hex('4a3a32'), second=C.hex('3a2e28'), sleeves='none', skin=SKIN.dark(0.15), hair='bald',
            hair_col=INK_SOFT, beard='short', width=1.25, emblem=apron(LEATHER.dark(0.25), -33), belt='leather', mouth='stern',
-           head=goggles(up=False, lens=FURN.light(0.3)), props_front=[tool('tongs', 'f', length=26, hold=held_servo)]).draw(p, 480, 610, 460)
-    sparks(p, (690, 380), 10, 10, 60, FLAME)
+           head=goggles(up=False, lens=FURN.light(0.3)), props_front=[tool('tongs', 'f', length=30, hold=held_servo)]).draw(p, 470, 610, 460)
+    sparks(p, (750, 330), 10, 14, 50, FLAME)
 
 
 def crow(p, c, s=1.0, flip=False, wing=1.0):
@@ -1051,9 +1089,25 @@ def machine_u_005(p):
         p2.blob(c, 10, 8, metal(IRONC.light(0.1), 'v'), width=1.8, shade=0.8)
         gear(p2, c, 6, 10, BRASS, 0.4, width=1.0, spokes=0)
         p2.taper([c, (c[0] - 14, c[1] - 6)], 2.2, 2, metal(STEELC), width=1.2)
-    Automaton(torso='boiler', head='visor', legs='jointed', arm_f='hammer', arm_b='claw', col=C.hex('8a6a4a'), col2=STEELC, trim=BRASS,
-              width=1.35, hand_f=(34, -88), hand_b=(-16, -48), stack=True, head_scale=1.3, stride=4,
-              extra_back=[cam]).draw(p, 360, 600, 440)
+    def great_hammer(p2, h, d, n):
+        # a long iron haft cocked back over the shoulder, the great head at its end
+        hd = v_norm((-0.55, -1.0))
+        a = v_sub(h, v_mul(hd, 6))
+        b = v_add(h, v_mul(hd, 30))
+        p2.taper([a, b], 2.0, 2.0, metal(IRONC.light(0.2)), width=1.4, shade=0.6)
+        hn = v_perp(hd)
+        L, T = 11, 6
+        pts = [v_add(v_add(b, v_mul(hn, L)), v_mul(hd, -T)) + (0,), v_add(v_add(b, v_mul(hn, L)), v_mul(hd, T)) + (0,),
+               v_add(v_sub(b, v_mul(hn, L)), v_mul(hd, T)) + (0,), v_add(v_sub(b, v_mul(hn, L)), v_mul(hd, -T)) + (0,)]
+        p2.shape(pts, metal(IRONC.light(0.15)), width=2.0, smooth=False, shade=0.8, rim=0.3)
+        for sg in (-1, 1):
+            p2.line([v_add(v_add(b, v_mul(hn, sg * 7)), v_mul(hd, -T)), v_add(v_add(b, v_mul(hn, sg * 7)), v_mul(hd, T))], INK.alpha(0.5), 1.0)
+            rivet(p2, v_add(b, v_mul(hn, sg * 4)), 1.2, BRASS)
+        # the hand wraps the haft
+        p2.blob(h, 3.4, 3.0, metal(C.hex('8a6a4a'), 'v'), width=1.3, shade=0.7)
+    Automaton(torso='boiler', head='visor', legs='jointed', arm_f='none', arm_b='claw', col=C.hex('8a6a4a'), col2=STEELC, trim=BRASS,
+              width=1.35, hand_f=(24, -103), hand_b=(-16, -48), stack=True, head_scale=1.3, stride=4,
+              extra_back=[cam], held=great_hammer).draw(p, 380, 600, 420)
     for k in range(4):
         p.line([(540 + k * 16, 150 + k * 8), (560 + k * 20, 220 + k * 12)], C(1, 1, 1, 0.45), 3)
 
@@ -1076,7 +1130,7 @@ def machine_u_006(p):
                 gear(p, (x2 - 14 * s, fy - 47 * s), 7 * s, 9, COPPER, 0.5, width=1.2, spokes=0)
         for i, x in enumerate(xs):
             Automaton(torso='box', head='visor', legs='jointed', arm_f='spear', arm_b='shield', col=STEELC.dark(0.05), col2=IRONC.light(0.2),
-                      trim=COPPER, shield_col=COPPER.light(0.05), hand_f=(20, -58), hand_b=(-2, -60), stride=3 if i % 2 else -2,
+                      trim=COPPER, shield_col=COPPER.light(0.05), hand_f=(25, -57), hand_b=(-2, -60), bend_f=0, stride=3 if i % 2 else -2,
                       eye_col=FURN, porthole=False).draw(p, x, fy, h)
         if fy < 600:
             p.cx.new_path()
@@ -1107,12 +1161,13 @@ def machine_u_007(p):
         rivets(p, (x - 18, top - 44), (x + 38, top - 44), 4, 2.4, COPPER)
     for i, x in enumerate(xs):
         Automaton(torso='barrel', head='dome', legs='jointed', col=BRASS if i % 2 == 0 else COPPER.light(0.1), col2=STEELC, trim=COPPER,
-                  hand_f=(22, -50), hand_b=(-18, -48), eye_col=ARC).draw(p, x, 520, hs[i] * 0.8)
+                  hand_f=(18, -44), hand_b=(-15, -44), eye_col=ARC).draw(p, x, 520, hs[i] * 0.8)
         sparks(p, (x + 20, 520 - hs[i] * 0.55), 6, 4, 30, FLAME)
-    Figure(pose='hold', garb='jerkin', main=C.hex('5a3a2a'), hair='short', hair_col=UMBER, head=goggles(), emblem=apron(LEATHER, -33),
-           belt='leather', sleeves='fitted', props_front=[tool('wrench', 'f')]).draw(p, 520, 612, 330)
-    Figure(pose='hold', garb='jerkin', main=C.hex('3a4a5a'), hair='curly', hair_col=C.hex('2a1a10'), beard='short', head=goggles(LEATHER),
-           emblem=apron(LEATHER, -33), belt='leather', sleeves='fitted', props_front=[tool('hammer', 'f')]).draw(p, 900, 616, 320, flip=True)
+    # fitters at work on the near constructs, tools set to the new plates
+    Figure(pose='ma_gesture', garb='jerkin', main=C.hex('5a3a2a'), hair='short', hair_col=UMBER, head=goggles(), emblem=apron(LEATHER, -33),
+           belt='leather', sleeves='fitted', props_front=[tool('wrench', 'f')]).draw(p, 490, 612, 330)
+    Figure(pose='ma_hold_hi', garb='jerkin', main=C.hex('3a4a5a'), hair='curly', hair_col=C.hex('2a1a10'), beard='short', head=goggles(LEATHER),
+           emblem=apron(LEATHER, -33), belt='leather', sleeves='fitted', props_front=[tool('hammer', 'f')]).draw(p, 950, 616, 320, flip=True)
 
 
 def machine_u_008(p):
@@ -1132,7 +1187,7 @@ def machine_u_008(p):
         p2.line([(h[0] - 1, h[1] + 0.5), (h[0] + 5, h[1] + 0.5)], GOLD, 1.2)
         for k in range(3):
             p2.blob((h[0] + 8 + k * 1.2, h[1] + 9 + k * 2.4), 1.4, 1.4, GOLD, width=0.6)
-    Figure(pose='offer', garb='robe', main=C.hex('5a1e2a'), second=C.hex('3a1420'), hair='short', hair_col=C.hex('8a8a8a'), beard='short',
+    Figure(pose='ma_hold_hi', garb='robe', main=C.hex('5a1e2a'), second=C.hex('3a1420'), hair='short', hair_col=C.hex('8a8a8a'), beard='short',
            age='old', head='cap', fur=C.hex('d8d0c0'), belt='gold', props_front=[purse], eyes='down').draw(p, 470, 660, 440)
     # the desk
     p.shape([(220, 626, 0), (240, 440, 0), (780, 440, 0), (800, 626, 0)], ('v', OAK.dark(0.1), OAK_D.dark(0.3)), width=2.4, smooth=False)
@@ -1148,7 +1203,7 @@ def machine_u_008(p):
     blueprint_sheet(p, [(600, 430, 0), (720, 424, 0), (712, 412, 0), (604, 416, 0)], BLUEP, 'none')
     servo(p, 300, 420, 2.6, COPPER.light(0.1), step=1.5)
 
-    Figure(pose='present', garb='tunic', main=C.hex('3a5a6a'), second=C.hex('4a3a2a'), hair='curly', hair_col=C.hex('6a3a1a'),
+    Figure(pose='ma_both_hi', garb='tunic', main=C.hex('3a5a6a'), second=C.hex('4a3a2a'), hair='curly', hair_col=C.hex('6a3a1a'),
            head=goggles(), belt='leather', sleeves='fitted', props_front=[tool('blueprint', 'f', drawing='automaton')], eyes='open',
            mouth='open').draw(p, 880, 626, 470, flip=True)
 
@@ -1258,11 +1313,16 @@ def machine_u_011(p):
     p.shape([(30, 405, 0), (160, 375, 0), (160, 385, 0), (30, 415, 0)], OAK, width=1.6, smooth=False)
     pipe(p, [(160, 420), (220, 410)], 8, IRONC)
     gear(p, (90, 300), 46, 16, BRASS, 0.2, width=1.8, spokes=6)
-    gear(p, (160, 240), 28, 12, COPPER, 0.4, width=1.6, spokes=5)
+    gear(p, (143, 254), 28, 12, COPPER, 0.4, width=1.6, spokes=5)
     p.taper([(90, 300), (110, 390)], 4, 4, metal(STEELC), width=1.4)
     # the self-driven trip hammer
-    gear(p, (760, 200), 70, 22, BRASS, 0.1, width=2, spokes=6)
-    p.blob((760, 200), 30, 22, metal(IRONC, 'v'), width=1.8, shade=0.7)
+    # the cam wheel turns on a wall bracket; its iron tappet bears down on the helve
+    p.shape([(744, 140, 0), (776, 140, 0), (776, 226, 0), (744, 226, 0)], metal(IRONC.dark(0.2)), width=1.6, smooth=False)
+    gear(p, (760, 214), 62, 20, BRASS, 0.1, width=2, spokes=6)
+    p.blob((760, 214), 16, 16, metal(IRONC, 'v'), width=1.8, shade=0.7)
+    rivet(p, (760, 214), 5, STEELC)
+    p.taper([(760, 214), (748, 276)], 9, 8, metal(IRONC.light(0.1)), width=1.6, shade=0.7)
+    p.blob((748, 278), 9, 7, metal(IRONC.light(0.15), 'v'), width=1.6, shade=0.7)
     p.taper([(880, 300), (640, 270)], 12, 10, OAK_D, width=2, shade=0.7)
     p.blob((880, 300), 14, 14, metal(IRONC, 'v'), width=1.6)
     p.shape([(600, 240, 0), (660, 250, 0), (650, 330, 0), (590, 320, 0)], metal(IRONC.light(0.15)), width=2.2, smooth=False, shade=0.8)
@@ -1270,7 +1330,6 @@ def machine_u_011(p):
     anvil(p, (640, 490), 1.8)
     p.shape([(600, 410, 0), (680, 410, 0), (676, 418, 0), (604, 418, 0)], ('h', FURN_CORE, FURN), width=1.2, smooth=False)
     sparks(p, (640, 410), 12, 8, 70, FLAME, spread=math.pi, start=math.pi)
-    chain(p, [(560, 0), (640, 240)], 10, IRONC, 1.8)
     # a newborn servo stepping off
     servo(p, 790, 520, 4.4, BRASS, flip=False, step=3)
     p.glow((790, 450), 60, FURN, 0.2)
@@ -1408,7 +1467,7 @@ def machine_r_001(p):
     p.shape([(wx0 - 14, wb, 0), (wx1 + 14, wb, 0), (wx1 + 14, wb + 18, 0), (wx0 - 14, wb + 18, 0)], OAK, width=2, smooth=False)
     pigeonholes(p, 40, 60, 5, 4, 46, 40)
     # the high desk
-    Figure(pose='hold', garb='robe', main=BLACK_HABIT, second=C.hex('2a2830'), hair='short', hair_col=C.hex('8a8478'), age='old',
+    Figure(pose='ma_both', garb='robe', main=C.hex('5a2434'), second=C.hex('3a1822'), hair='short', hair_col=C.hex('8a8478'), age='old',
            head=spectacles(), fur=C.hex('5a4a3a'), belt='gold', eyes='down', mouth='stern', width=0.9,
            props_front=[tool('stamp', 'f')]).draw(p, 300, 640, 470)
     p.shape([(120, 626, 0), (140, 420, 0), (480, 420, 0), (500, 626, 0)], ('v', OAK.dark(0.1), OAK_D.dark(0.3)), width=2.4, smooth=False)
@@ -1434,14 +1493,14 @@ def machine_r_002(p):
         for k in range(6):
             p.blob((x - 30 + k * 12, y + 36 - (k % 2) * 5), 10, 7, C.hex('1a1618'), width=1.2, shade=0.6)
     bg.hills(p, 480, C.hex('4a4a3a'), 30)
+    p.cx.new_path()
+    p.cx.rectangle(0, 560, W, H)
+    p.fill(('v', C.hex('4a4032'), C.hex('2a2420')))
     # the town at its feet
     bg.town(p, 820, 540, 0.8, C.hex('a8987a'), C.hex('8a3a2a'))
     for x in (60, 120, 900, 960):
         bg.tiny_tree(p, x, 560, 1.0, C.hex('3a4a2a'), 'pine')
-    ore_cart(p, 140, 590, 0.6)
-    p.cx.new_path()
-    p.cx.rectangle(0, 560, W, H)
-    p.fill(('v', C.hex('4a4032'), C.hex('2a2420')))
+    ore_cart(p, 170, 592, 0.7)
 
     def coal_scoop(p2, q, d, n):
         x, y = q
@@ -1449,7 +1508,7 @@ def machine_r_002(p):
         for k in range(5):
             p2.blob((x - 4 + k * 3.4, y - 3 - (k % 2) * 1.5), 2.4, 2.0, SOOT, width=0.7)
     Automaton(torso='boiler', head='dome', legs='pillar', arm_f='hand', arm_b='hand', col=C.hex('7a5a3a'), col2=IRONC.light(0.2), trim=BRASS,
-              width=1.6, hand_f=(32, -74), hand_b=(-28, -56), eye_col=FURN, stack=True, head_scale=1.6, stride=5, neck=4,
+              width=1.6, hand_f=(29, -47), hand_b=(-19, -45), eye_col=FURN, stack=True, head_scale=1.6, stride=5, neck=4,
               held=coal_scoop).draw(p, 470, 610, 470)
     steam(p, (180, 600), (-0.5, -0.5), 4, 1.6, C.hex('9a8a7a'), 0.5)
     steam(p, (720, 600), (0.5, -0.5), 4, 1.6, C.hex('9a8a7a'), 0.5)
@@ -1465,29 +1524,34 @@ def machine_r_003(p):
     # finished helpers in a row
     for k in range(6):
         servo(p, 600 + k * 70, 470 - k * 4, 3.2 - k * 0.15, BRASS if k % 2 else COPPER.light(0.15), flip=True)
-    def extra_arms(p2, j, front=False):
-        for (sh, hand) in (((10, -70), (34, -66)), ((-8, -70), (26, -72))) if front else (((12, -64), (36, -54)),):
-            el, h = ik(sh, hand, 15, 14, 1)
-            p2.taper([sh, el], 2.6, 2.4, metal(STEELC), width=1.3, shade=0.6)
-            p2.taper([el, h], 2.6, 2.6, metal(BRASS), width=1.3, shade=0.6)
-            p2.blob(el, 2.6, 2.6, metal(BRASS, 'v'), width=1.0, shade=0.7)
+    def extra_arms(p2, j):
+        # a second pair of lighter arms on swivel mounts at the chest side, working
+        # at the servo with a welding nozzle and a driver
+        for (sh, hand, kind) in (((19, -58), (31, -37), 'weld'), ((17, -50), (28, -29), 'drive')):
+            el, h = ik(sh, hand, 15, 14, 0)
+            p2.blob(sh, 3.4, 3.4, metal(COPPER, 'v'), width=1.2, shade=0.7)
+            p2.taper([sh, el], 2.4, 2.2, metal(STEELC), width=1.3, shade=0.6)
+            p2.taper([el, h], 2.4, 2.2, metal(BRASS), width=1.3, shade=0.6)
+            p2.blob(el, 2.5, 2.5, metal(BRASS, 'v'), width=1.0, shade=0.7)
+            rivet(p2, sh, 0.9, BRASS_L)
             d = v_norm(v_sub(h, el))
-            n = v_perp(d)
-            for sg in (-1, 1):
-                p2.line([h, v_add(v_add(h, v_mul(d, 5)), v_mul(n, sg * 2))], INK, 2.4)
-                p2.line([h, v_add(v_add(h, v_mul(d, 5)), v_mul(n, sg * 2))], STEELC, 1.2)
-    Automaton(torso='barrel', head='lamp', legs='jointed', arm_f='claw', arm_b='claw', col=BRASS, col2=STEELC, trim=COPPER,
-              hand_f=(36, -60), hand_b=(26, -56), eye_col=FURN, width=1.2, head_scale=1.2,
-              extra_front=[lambda p2, j: extra_arms(p2, j, True)]).draw(p, 330, 600, 440)
+            tip = v_add(h, v_mul(d, 7))
+            if kind == 'weld':
+                p2.taper([h, tip], 2.0, 0.8, metal(COPPER), width=1.1, shade=0.6)
+            else:
+                p2.taper([h, tip], 1.6, 0.6, metal(STEELC), width=1.0, shade=0.6)
+                p2.line([v_lerp(h, tip, 0.3), v_lerp(h, tip, 0.3)], INK, 1.0)
+    # the servo under construction stands on the bench, gripped by the main claw
     workbench(p, 470, 980, 520, 50, OAK)
-    # the servo under construction
-    sx = 560
+    sx = 590
     servo(p, sx, 500, 4.6, BRASS, key=False)
-    p.shape([(sx - 10, 430), (sx + 26, 428), (sx + 30, 436), (sx - 8, 440)], C(0, 0, 0, 0), ink=False)
-    sparks(p, (sx + 10, 440), 10, 4, 40, FLAME)
-    for (x, y) in ((640, 506), (680, 500), (720, 510)):
+    Automaton(torso='barrel', head='lamp', legs='jointed', arm_f='claw', arm_b='claw', col=BRASS, col2=STEELC, trim=COPPER,
+              hand_f=(30, -52), hand_b=(-15, -46), eye_col=FURN, width=1.2, head_scale=1.2,
+              extra_front=[extra_arms]).draw(p, 430, 600, 440)
+    sparks(p, (sx - 14, 450), 12, 4, 44, FLAME)
+    for (x, y) in ((670, 506), (710, 500), (750, 510)):
         bolt_head(p, (x, y), 6, STEELC)
-    gear(p, (780, 496), 18, 10, COPPER, 0.2, width=1.4, spokes=4)
+    gear(p, (810, 496), 18, 10, COPPER, 0.2, width=1.4, spokes=4)
 
 
 def machine_r_004(p):
@@ -1509,7 +1573,7 @@ def machine_r_004(p):
     p.line([(200, 536), (200, 568)], FURN, 4)
     p.line([(200, 536), (200, 568)], FURN_CORE, 1.6)
     Automaton(torso='box', head='visor', legs='jointed', arm_f='welder', arm_b='claw', col=C.hex('4a5a6a'), col2=STEELC, trim=COPPER,
-              width=1.3, hand_f=(34, -64), hand_b=(-18, -52), eye_col=ARC, stack=False, head_scale=1.25, porthole=True,
+              width=1.3, hand_f=(34, -64), hand_b=(-24, -42), eye_col=ARC, stack=False, head_scale=1.25, porthole=True,
               stride=3).draw(p, 330, 600, 440)
     tip = (330 + (34 + 9) * 4.4, 600 - 64 * 4.4 + 4)
     target = (720, 470)
@@ -1528,23 +1592,26 @@ def machine_r_005(p):
     cogspire_skyline(p, 420, C.hex('7a7090'), C.hex('5a5068'))
     cobbles(p, 480, C.hex('8a8070'))
     # a step ladder behind
-    p.line([(180, 600), (230, 330)], OAK_D, 9)
-    p.line([(280, 600), (250, 330)], OAK_D, 9)
-    for k in range(5):
-        y = 560 - k * 55
-        p.line([(186 + k * 9, y), (276 - k * 5, y)], OAK, 6, smooth=False)
+    lx0, lx1, ltop = 150, 240, 380
+    p.line([(lx0 - 20, 604), (lx0 + 6, ltop)], OAK_D, 9)
+    p.line([(lx1 + 16, 604), (lx1 - 4, ltop)], OAK_D, 9)
+    for k in range(4):
+        y = 560 - k * 50
+        t = (604 - y) / (604 - ltop)
+        p.line([(lx0 - 20 + 26 * t, y), (lx1 + 16 - 20 * t, y)], OAK, 6, smooth=False)
+    p.shape([(lx0 - 6, ltop + 6, 0), (lx1 + 8, ltop + 6, 0), (lx1 + 8, ltop - 4, 0), (lx0 - 6, ltop - 4, 0)], ('v', OAK.light(0.15), OAK), width=1.8, smooth=False)
 
     def big_key(p2, j):
         wind_key(p2, (-25, -66), 3.2, BRASS, rot=0.25)
     Automaton(torso='barrel', head='helm', legs='pillar', arm_f='hammer', arm_b='hand', col=C.hex('9a6a3a'), col2=IRONC.light(0.2),
-              trim=BRASS_L, crest=None, width=1.8, hand_f=(34, -52), hand_b=(-28, -44), eye_col=FURN, head_scale=1.5,
-              extra_back=[big_key], porthole=True, gauge_on=True).draw(p, 560, 605, 430)
-    # the artificer leaning on the key bow
-    Figure(pose='spread', garb='jerkin', main=C.hex('3a5a4a'), second=C.hex('4a3a2a'), hair='short', hair_col=C.hex('5a3a1a'),
-           head=goggles(), emblem=apron(LEATHER, -33), belt='leather', sleeves='fitted', mouth='open').draw(p, 260, 340, 260)
+              trim=BRASS_L, crest=None, width=1.8, hand_f=(30, -50), hand_b=(-20, -46), eye_col=FURN, head_scale=1.5,
+              extra_back=[big_key], porthole=True, gauge_on=True).draw(p, 600, 605, 430)
+    # the artificer on the ladder top, both hands on the key bow, heaving it round
+    Figure(pose='ma_both_hi', garb='jerkin', main=C.hex('3a5a4a'), second=C.hex('4a3a2a'), hair='short', hair_col=C.hex('5a3a1a'),
+           head=goggles(), emblem=apron(LEATHER, -33), belt='leather', sleeves='fitted', mouth='stern').draw(p, 196, ltop, 250)
     for k in range(3):
-        a = -1.2 + k * 0.5
-        p.line([polar((340, 280), 70, a), polar((340, 280), 90, a)], C(1, 1, 1, 0.6), 3)
+        a = -2.0 + k * 0.45
+        p.line([polar((310, 300), 120, a), polar((310, 300), 142, a)], C(1, 1, 1, 0.6), 3)
 
 
 def machine_r_006(p):
@@ -1569,19 +1636,24 @@ def machine_r_006(p):
         pipe(p, [(x + 75, 150), (x + 115, 150)], 8, COPPER)
     iron_floor(p, 470, C.hex('3a2e28'), glow=(560, 560))
     # catwalk
-    p.shape([(-20, 340, 0), (1020, 340, 0), (1020, 356, 0), (-20, 356, 0)], metal(IRONC.light(0.1), 'v'), width=2, smooth=False)
+    p.shape([(-20, 380, 0), (1020, 380, 0), (1020, 396, 0), (-20, 396, 0)], metal(IRONC.light(0.1), 'v'), width=2, smooth=False)
     for k in range(22):
         x = k * 48
-        p.line([(x, 280), (x, 340)], INK, 4, smooth=False)
-        p.line([(x, 280), (x, 340)], IRONC.light(0.2), 2, smooth=False)
-    p.line([(-20, 280), (1020, 280)], INK, 6, smooth=False)
-    p.line([(-20, 280), (1020, 280)], BRASS, 3, smooth=False)
+        p.line([(x, 320), (x, 380)], INK, 4, smooth=False)
+        p.line([(x, 320), (x, 380)], IRONC.light(0.2), 2, smooth=False)
+    p.line([(-20, 320), (1020, 320)], INK, 6, smooth=False)
+    p.line([(-20, 320), (1020, 320)], BRASS, 3, smooth=False)
     Figure(pose='raise', garb='robe', main=C.hex('2a3a4a'), second=C.hex('1a2a3a'), hair='short', hair_col=INK_SOFT, beard='forked',
            head='cap', fur=C.hex('6a5a4a'), cloak='mantle', cloak_col=C.hex('6a1a1a'), lining=C.hex('d8c8a0'), belt='gold',
-           mouth='stern').draw(p, 420, 340, 270)
+           mouth='stern').draw(p, 430, 381, 320)
     # a servo going down the chute into the cold furnace's fire
-    p.shape([(560, 360, 0), (640, 360, 0), (590, 440, 0), (550, 440, 0)], metal(IRONC), width=2, smooth=False, shade=0.6)
-    servo(p, 598, 404, 2.4, BRASS, flip=True, step=4)
+    p.shape([(600, 396, 0), (680, 396, 0), (630, 470, 0), (590, 470, 0)], metal(IRONC), width=2, smooth=False, shade=0.6)
+    servo(p, 632, 438, 2.4, BRASS, flip=True, step=4)
+    # below, a stoker obeys the signal and feeds the next furnace harder
+    Figure(pose='ma_both', garb='jerkin', main=C.hex('5a4a3a'), second=C.hex('3a2e24'), sleeves='none', skin=SKIN.dark(0.1),
+           hair='short', hair_col=INK_SOFT, beard='short', head=goggles(LEATHER.dark(0.2)), emblem=apron(LEATHER.dark(0.15), -33),
+           belt='leather', mouth='open', props_front=[tool('shovel', 'f', coal=True)]).draw(p, 690, 606, 230)
+    p.glow((790, 470), 120, FURN, 0.25)
 
 
 def machine_r_007(p):
@@ -1596,7 +1668,7 @@ def machine_r_007(p):
     for x in (360, 640):
         p.shape([(x - 34, 90, 0), (x + 34, 90, 0), (x + 34, 230, 0), (x, 260, 0), (x - 34, 230, 0)], ('v', BLUEP.light(0.1), BLUEP.dark(0.2)), width=2, smooth=False)
         gear(p, (x, 160), 22, 12, BRASS, 0.2, width=1.4, spokes=5)
-    gyrocopter(p, 820, 130, 2.2, BRASS)
+    gyrocopter(p, 770, 168, 2.0, BRASS)
     bg.tile_floor(p, 480, C.hex('7a5a3a'), C.hex('e0d0b0'))
     # plinths with machines
     for (x, w, h) in ((500, 170, 60), (180, 100, 40), (820, 100, 40)):
@@ -1604,7 +1676,7 @@ def machine_r_007(p):
         p.shape([(x - w, 480 + h, 0), (x - w, 480, 0), (x + w, 480, 0), (x + w, 480 + h, 0)], ('h', C.hex('f0e6cc'), C.hex('b0a080')), width=2, smooth=False)
         p.blob((x, 480), w, 22, C.hex('f4ecd8'), width=2)
     Automaton(torso='barrel', head='dome', legs='jointed', col=BRASS_L.dark(0.05), col2=STEELC.light(0.1), trim=COPPER, width=1.2,
-              hand_f=(26, -70), hand_b=(-20, -52), arm_f='hand', eye_col=ARC, gauge_on=True, head_scale=1.15).draw(p, 500, 480, 390)
+              hand_f=(26, -70), hand_b=(-20, -52), arm_f='hand', eye_col=ARC, gauge_on=True, head_scale=1.15).draw(p, 500, 486, 380)
     hound(p, 180, 480, 2.2, COPPER.light(0.15), pose='sit')
     servo(p, 790, 480, 3.4, BRASS)
     servo(p, 850, 480, 3.0, STEELC, kind='wheel')
@@ -1616,11 +1688,11 @@ def machine_r_007(p):
         p.blob((x, 536), 9, 9, metal(BRASS_L, 'v'), width=1.4)
     p.line([(90, 545), (295, 575), (500, 545), (705, 575), (910, 545)], CRIMSON.dark(0.2), 9)
     p.line([(90, 545), (295, 575), (500, 545), (705, 575), (910, 545)], CRIMSON.light(0.2), 4)
-    Figure(pose='stand', garb='gown', main=C.hex('2f5a8a'), head='veil', hood_col=LEAD_WHITE, belt='gold', trim=GOLD,
+    Figure(pose='ma_stand', garb='gown', main=C.hex('2f5a8a'), head='veil', hood_col=LEAD_WHITE, belt='gold', trim=GOLD,
            eyes='up').draw(p, 60, 640, 300)
-    Figure(pose='point', garb='tunic', main=C.hex('a8402a'), hair='curly', hair_col=C.hex('c8902e'), belt='leather',
+    Artificer(pose='ma_gesture', garb='tunic', main=C.hex('a8402a'), hair='curly', hair_col=C.hex('c8902e'), belt='leather',
            mouth='open', eyes='up').draw(p, 300, 650, 200)
-    Figure(pose='stand', garb='robe', main=C.hex('5a3a5a'), hair='short', hair_col=C.hex('3a2a1a'), beard='short', head='cap',
+    Figure(pose='ma_stand', garb='robe', main=C.hex('5a3a5a'), hair='short', hair_col=C.hex('3a2a1a'), beard='short', head='cap',
            fur=C.hex('8a6a4a'), eyes='up').draw(p, 950, 650, 310, flip=True)
 
 
@@ -1721,10 +1793,10 @@ def machine_r_009(p):
         p.blob((600 + (k % 3) * 16, 560 - (k // 3) * 12), 10, 8, SOOT, width=1.1, shade=0.6)
     servo(p, 620, 590, 3.6, BRASS, flip=True, step=2)
     # arguing engineers, small at the sides
-    Figure(pose='point', garb='robe', main=C.hex('5a3a2a'), hair='white', beard='long', age='old', head=spectacles(C.hex('3a2a2a')),
-           belt='leather', mouth='open').draw(p, 120, 610, 300)
+    Artificer(pose='ma_point', garb='robe', main=C.hex('5a3a2a'), hair='white', beard='long', age='old', head=spectacles(C.hex('3a2a2a')),
+              belt='leather', mouth='open').draw(p, 120, 612, 340)
     Figure(pose='spread', garb='robe', main=C.hex('2a4a3a'), hair='bald', hair_col=C.hex('8a8070'), beard='short', age='old',
-           belt='cord', mouth='open').draw(p, 880, 610, 300, flip=True)
+           belt='cord', mouth='open').draw(p, 880, 612, 340, flip=True)
 
 
 def machine_m_001(p):
@@ -1761,12 +1833,14 @@ def machine_m_001(p):
     p.unclip()
     porthole(p, (c[0], c[1] - 10), 46, BRASS_D, glow_col=FURN)
     p.glow((c[0], c[1] - 10), 90, FURN_CORE, 0.6)
-    gauge(p, (c[0] - 90, c[1] - 70), 20, BRASS_L, 0.9)
-    gauge(p, (c[0] + 90, c[1] - 70), 20, BRASS_L, 0.6)
+    # gauges set asymmetrically, so the heart never reads as a face
+    gauge(p, (c[0] + 92, c[1] - 74), 20, BRASS_L, 0.6)
+    gauge(p, (c[0] - 104, c[1] + 6), 15, BRASS_L, 0.9)
     iron_floor(p, 470, C.hex('3a302a'), glow=(500, 520))
-    for (x, s, fl) in ((360, 3.4, True), (500, 3.8, False), (640, 3.4, False)):
-        servo(p, x, 560 if x != 500 else 580, s, BRASS, flip=fl, step=2)
+    # the iron step at its foot, then the servos walking out from it
     p.shape([(400, 470, 0), (600, 470, 0), (630, 500, 0), (370, 500, 0)], metal(IRONC.light(0.1), 'v'), width=2, smooth=False)
+    for (x, s, fl) in ((340, 3.4, True), (500, 3.8, False), (660, 3.4, False)):
+        servo(p, x, 570 if x != 500 else 590, s, BRASS, flip=fl, step=2)
 
 
 def machine_m_002(p):
@@ -1793,7 +1867,13 @@ def machine_m_002(p):
         p.shape([(x - 50, 220, 0), (x - 50, 140, 0), (x + 50, 140, 0), (x + 50, 220, 0)], metal(IRONC.light(0.15)), width=2, smooth=False, shade=0.6)
         for k in range(4):
             p.shape([(x - 50 + k * 30, 140, 0), (x - 50 + k * 30, 122, 0), (x - 32 + k * 30, 122, 0), (x - 32 + k * 30, 140, 0)], metal(IRONC.light(0.15)), width=1.6, smooth=False)
-        p.taper([(x + 30, 170), (x + 120 if x > 500 else x - 120, 150)], 9, 7, metal(BRONZE), width=1.8)
+        # a bronze gun run out through the turret's outer wall, with a muzzle ring
+        sg = 1 if x > 500 else -1
+        base, muz = (x + sg * 44, 176), (x + sg * 118, 162)
+        p.taper([base, muz], 9, 7, metal(BRONZE), width=1.8, shade=0.6)
+        p.blob(muz, 4, 9, metal(BRONZE.light(0.1), 'v'), width=1.6)
+        p.blob((muz[0] + sg * 2, muz[1]), 1.6, 4.4, INK, ink=False)
+        p.shape([(x + sg * 38, 162, 0), (x + sg * 52, 162, 0), (x + sg * 52, 190, 0), (x + sg * 38, 190, 0)], metal(IRONC), width=1.4, smooth=False)
         p.shape([(x - 14, 136, 0), (x - 14, 80, 0), (x + 30, 92, 0), (x - 10, 104, 0)], CRIMSON, width=1.4, smooth=False)
     # the hull
     hull = [(120, 300), (160, 210, 0), (840, 210, 0), (900, 250), (940, 300, 0), (860, 380), (500, 400), (170, 380)]
@@ -1882,8 +1962,8 @@ def machine_m_003(p):
         p.pop()
     # tiny clerks attending
     for (x, fl) in ((120, False), (880, True)):
-        Figure(pose='book', garb='robe', main=BLACK_HABIT, hair='bald', hair_col=C.hex('8a8070'), head=spectacles(), age='old',
-               belt='cord', props_front=[PR.book('both', CRIMSON.dark(0.2))], eyes='down').draw(p, x, 620, 230, flip=fl)
+        Figure(pose='ma_both', garb='robe', main=C.hex('2e3044'), hair='bald', hair_col=C.hex('8a8070'), head=spectacles(), age='old',
+               belt='cord', props_front=[PR.book('both', CRIMSON.dark(0.2), open_=True)], eyes='down').draw(p, x, 620, 250, flip=fl)
     # the output tray and its single small coin
     p.shape([(430, 520, 0), (570, 520, 0), (560, 500, 0), (440, 500, 0)], metal(BRASS), width=2, smooth=False, shade=0.6)
     p.blob((500, 506), 9, 3.5, metal(GOLD, 'v'), width=1.2)

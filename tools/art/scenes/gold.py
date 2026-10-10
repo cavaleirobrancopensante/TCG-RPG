@@ -8,11 +8,6 @@ import props as PR
 from figure import Figure, POSES
 from gold_lib import *
 
-POSES.setdefault('g_write', ((24, -60), (12, -61), True, 1, -1))
-POSES.setdefault('g_lounge', ((22, -66), (-14, -56), False, 1, 1))
-POSES.setdefault('g_plant', ((20, -40), (12, -46), True, 1, -1))
-POSES.setdefault('g_toast', ((20, -86), (-12, -55), False, 1, 1))
-
 FRANCISCAN = C.hex('7d6247')
 SACKCLOTH = C.hex('8f7a5c')
 
@@ -49,13 +44,24 @@ def gold_sanctum_abyss(p):
     p.glow((140, 560), 220, HELLFIRE, 0.5)
     for x in (30, 90, 160, 230):
         p.taper([(x, 600), (x + 10, 560), (x + 4, 520)], 4, 1, FLAME.alpha(0.7), ink=False)
-    # shadow claws reaching from the pit, falling short
-    for (base, mid, tip, w) in (((120, 560), (190, 470), (270, 455), 16), ((60, 540), (110, 420), (190, 380), 13)):
-        p.taper([base, mid, tip], w, 4, C.hex('1c0a14').alpha(0.92), ink=C.hex('5a1020'), width=1.6)
-        for a in (-0.6, -0.1, 0.4):
-            d = v_norm(v_sub(tip, mid))
-            ang = math.atan2(d[1], d[0]) + a
-            p.taper([tip, polar(tip, 34, ang), polar(tip, 46, ang + 0.5)], 3.4, 0.6, C.hex('1c0a14'), ink=C.hex('5a1020'), width=1.2)
+    # shadow claws reaching from the pit, falling short of him
+    shade_c = C.hex('1c0a14').alpha(0.94)
+    edge = C.hex('7a1828')
+    for (base, el, wrist, w, spread) in (((150, 600), (200, 500), (300, 470), 20, 0.0), ((70, 560), (100, 440), (200, 392), 16, 0.2)):
+        p.taper([base, el, wrist], w, w * 0.55, shade_c, ink=edge, width=1.8)
+        d = v_norm(v_sub(wrist, el))
+        ang = math.atan2(d[1], d[0])
+        palm = v_add(wrist, v_mul(d, w * 0.7))
+        p.blob(palm, w * 1.2, w * 0.9, shade_c, rot=ang, ink=edge, width=1.6)
+        for a in (-0.7, -0.22, 0.24, 0.66):
+            k1 = polar(palm, w * 0.95, ang + a + spread)
+            k2 = polar(k1, w * 2.0, ang + a * 1.2 + 0.3)
+            tip = polar(k2, w * 1.7, ang + a * 1.2 + 1.1)
+            p.taper([k1, k2, tip], w * 0.38, 1.2, shade_c, ink=edge, width=1.3)
+            p.shape([tip, polar(tip, w * 0.6, ang + a * 1.2 + 1.9), polar(tip, w * 0.25, ang + a * 1.2 + 0.4)], BONE.dark(0.4), width=0.8)
+        thumb = polar(palm, w * 0.8, ang - 1.6)
+        p.taper([thumb, polar(thumb, w * 1.6, ang - 0.9), polar(thumb, w * 2.6, ang - 0.2)], w * 0.38, 1.2, shade_c, ink=edge, width=1.3)
+        p.glow(palm, w * 3, HELLFIRE, 0.12)
     bg.meadow(p, 600, C.hex('6a7a3a'), flowers=False)
     # the torn pact, its red seal broken
     for (c, rot, flip) in (((345, 596), -0.3, False), ((395, 604), 0.25, True)):
@@ -68,8 +74,8 @@ def gold_sanctum_abyss(p):
     p.blob((372, 606), 7, 5, CRIMSON, width=1.2, shade=0.6)
     p.line([(366, 604), (378, 608)], INK, 1.2)
     # the penitent, kneeling toward the chapel
-    Figure(pose='pray', garb='rags', main=SACKCLOTH, hair='short', hair_col=C.hex('3a2a1a'), beard='short', kneel=True,
-           eyes='up', belt='cord', props_front=[PR.rosary('b')], sleeves='fitted').draw(p, 500, 606, 480)
+    PrayFigure(garb='habit', main=SACKCLOTH, hair='short', hair_col=C.hex('3a2a1a'), beard='short', kneel=True,
+           eyes='up', belt='cord', props_front=[PR.rosary('b')], sleeves='fitted', width=1.05).draw(p, 520, 606, 490)
     # dawn light on his face
     p.glow((560, 300), 90, C.hex('ffe2a0'), 0.18)
 
@@ -126,9 +132,9 @@ def gold_sanctum_wild(p):
         p_.taper([(top[0] - 5, top[1] + 17), (top[0] + 5, top[1] + 17)], 1.0, 1.0, VERMILION, width=0.5)
         p_.taper([(top[0], top[1] + 8), (top[0], top[1] - 6)], 0.9, 0.9, GOLD, width=0.7)
         p_.taper([(top[0] - 3.4, top[1] - 2.4), (top[0] + 3.4, top[1] - 2.4)], 0.8, 0.8, GOLD, width=0.7)
-    Figure(pose='staff', garb='alb', main=LEAD_WHITE, hair='curly', hair_col=C.hex('a8742e'), belt=None, cloak='cape',
-           cloak_col=VERMILION, props_back=[banner], eyes='open').draw(p, 300, 588, 340)
-    Figure(pose='sprinkle', garb='habit', main=FRANCISCAN, hair='tonsure', hair_col=C.hex('8a8070'), age='old', belt='cord',
+    Figure(pose='g_pole', garb='alb', main=LEAD_WHITE, hair='curly', hair_col=C.hex('a8742e'), belt=None, cloak='cape',
+           cloak_col=VERMILION, props_back=[banner], eyes='open', sleeves='fitted').draw(p, 300, 588, 360)
+    Figure(pose='g_sprinkle', garb='habit', main=FRANCISCAN, hair='tonsure', hair_col=C.hex('8a8070'), age='old', belt='cord', sleeves='fitted',
            props_front=[PR.aspergillum()], props_back=[PR.bucket('b')], eyes='open', beard='short').draw(p, 500, 604, 450)
 
 
@@ -146,47 +152,107 @@ def gold_sanctum_revel(p):
     p.glow((850, 350), 90, GOLD_LIGHT, 0.3)
     # rows of pews receding
     wood = C.hex('6a4426')
-    for i, (y, x0, x1) in enumerate(((470, 560, 760), (500, 600, 800), (536, 640, 860))):
-        rect(p, x0, y - 40, x1, y, ('v', wood.light(0.1), wood.dark(0.2)), width=1.6)
-        rect(p, x0 - 6, y - 46, x1 + 6, y - 40, wood.light(0.15), width=1.4)
     # the old friar, kneeling behind, praying for him
-    Figure(pose='pray', garb='habit', main=FRANCISCAN, hair='tonsure', hair_col=C.hex('cfc8b8'), age='old', kneel=True,
+    PrayFigure(garb='habit', main=FRANCISCAN, hair='tonsure', hair_col=C.hex('cfc8b8'), age='old', kneel=True,
            eyes='closed', belt='cord', props_front=[PR.rosary('b')]).draw(p, 150, 560, 380)
-    # the noble's pew: back rail, bench and carved end
-    rect(p, 230, 360, 560, 520, ('v', wood.light(0.05), wood.dark(0.25)), width=2.2, shade=0.3)
-    for x in range(250, 560, 52):
-        rect(p, x, 376, x + 40, 506, wood.dark(0.1), width=1.2, shade=0.5)
-    rect(p, 220, 350, 570, 364, wood.light(0.15), width=1.6)
-    # the noble, asleep
+    # the noble's pew seen from the side: a high carved back behind him, the bench
+    # under him, and the book rest of the pew in front with its poppyhead end
+    pew = wood.dark(0.05)
+    back_pts = [(286, 604, 0), (286, 380), (296, 362), (316, 356), (334, 366), (338, 390), (334, 604, 0)]
+    p.shape(back_pts, ('h', pew.light(0.2), pew, pew.dark(0.3)), width=2.2, shade=0.5)
+    p.blob((312, 350), 13, 15, pew.light(0.12), width=1.8, shade=0.7)
+    for a_ in (-0.8, 0, 0.8):
+        p.blob(polar((312, 348), 11, -math.pi / 2 + a_), 4.6, 7.4, pew.light(0.18), rot=a_, width=1.2, shade=0.6)
+    for y in (420, 470, 520):
+        p.shape([(296, y, 0), (326, y, 0), (326, y + 36, 0), (296, y + 36, 0)], pew.dark(0.15), width=1.2, smooth=False, shade=0.5)
+    rect(p, 300, 480, 500, 496, ('v', pew.light(0.2), pew.dark(0.2)), width=1.8)
+    for x in (318, 482):
+        rect(p, x - 6, 496, x + 6, 604, pew.dark(0.25), width=1.4, shade=0.5)
+    # embroidered cushion on the bench
+    p.shape([(330, 482), (336, 470), (460, 468), (470, 480)], C.hex('2f5a3a'), width=1.4, shade=0.6)
+    for x in (334, 466):
+        p.blob((x, 476), 3, 4, GOLD, width=0.8)
+    # the noble, asleep, arm hanging and the cup tipping from his fingers
     def cup(p_, j):
         h = j['hand_f']
-        p_.push(h[0] + 2, h[1] + 2, 1.0, rot=0.9)
-        goblet(p_, (0, 0), 0.7)
+        p_.push(h[0] + 1.6, h[1] + 2.4, 1.0, rot=1.25)
+        goblet(p_, (0, 0), 0.75)
         p_.pop()
-        for i in range(4):
-            p_.blob((h[0] + 6 + i * 0.6, h[1] + 4 + i * 4), 0.7, 1.2, WINE, ink=False)
-    p.push(390, 600, 1.0, rot=-0.05)
-    SeatedFigure(pose='cup', main=C.hex('a8283a'), second=C.hex('7a1a2a'), width=1.35, hair='curly', hair_col=C.hex('6a4020'),
-                 eyes='closed', mouth='open', fur=C.hex('f4efe2'), head='cap', sleeves='wide', belt='gold', blush=1.0,
-                 props_front=[cup], shoes=C.hex('3a2a3a')).draw(p, 0, 0, 470)
+        for i in range(5):
+            p_.blob((h[0] + 9 + i * 0.4, h[1] + 3 + i * 3.6), 0.7, 1.2, WINE, ink=False)
+        p_.blob((h[0] + 11, h[1] + 28 + j['k'] * 0), 4.5, 0.9, WINE.alpha(0.8), ink=False)
+    def chain(p_, cp):
+        # a gold chain of office across the shoulders and a pendant jewel
+        k = cp[1] + 64
+        pts = [(-8.5, -79 + k), (-5, -71 + k), (0.8, -67 + k), (6.5, -71 + k), (9.5, -79 + k)]
+        p_.line(pts, INK, 2.4)
+        p_.line(pts, GOLD, 1.5)
+        p_.blob((0.8, -64.5 + k), 2.0, 2.4, GOLD, width=0.9, shade=0.6)
+        p_.blob((0.8, -64.5 + k), 1.0, 1.2, C.hex('2a6a9a'), ink=False)
+        # brocade: little gold pomegranates on the houppelande
+        for (x, y) in ((-5, -50), (3, -46), (-7, -40), (6, -38), (14, -30), (24, -31), (-3, -33)):
+            yy = y + (k if y < -40 else 0)
+            p_.blob((x, yy), 1.1, 1.4, GOLD.alpha(0.75), width=0.4)
+            p_.line([(x, yy - 1.4), (x, yy - 2.4)], GOLD_DARK.alpha(0.8), 0.6)
+    def cap(p_, hc):
+        hx, hy = hc
+        # a soft velvet chaperon cap with its liripipe trailing behind
+        p_.taper([(hx - 4, hy - 7), (hx - 9, hy - 2), (hx - 11, hy + 8), (hx - 9, hy + 16)], 3.2, 1.6, C.hex('7a1a2a'), width=1.0, shade=0.6)
+        p_.shape([(hx - 7, hy - 4.5), (hx - 6.6, hy - 9.6), (hx - 1, hy - 12.4), (hx + 5.6, hy - 10.4), (hx + 7.6, hy - 6.4), (hx + 3, hy - 6.0), (hx - 2, hy - 5.4)],
+                 C.hex('8a1e30'), width=1.3, shade=0.8)
+        p_.taper([(hx - 7, hy - 4.6), (hx + 0.6, hy - 6.6), (hx + 7.6, hy - 6.2)], 1.6, 1.6, C.hex('5a1020'), width=0.9, shade=0.5)
+    p.push(400, 604, 1.0, rot=-0.04)
+    SeatedFigure(pose='g_slump', main=C.hex('2a4a7a'), second=C.hex('1a2e52'), width=1.25, hair='curly', hair_col=C.hex('6a4020'),
+                 eyes='closed', mouth='open', fur=C.hex('c8a070'), head=cap, sleeves='wide', belt=None, blush=1.0,
+                 emblem=chain, props_front=[cup], shoes=C.hex('3a2a3a'), lining=C.hex('c8a070')).draw(p, 0, 0, 440)
     p.pop()
-    # carved pew end with a poppyhead finial, in front
-    end = [(560, 600, 0), (560, 420), (570, 380), (588, 360), (606, 380), (614, 420), (614, 600, 0)]
+    # the book rest of the pew in front of his knees, with the carved end
+    end = [(586, 604, 0), (586, 440), (594, 404), (610, 386), (626, 404), (634, 440), (634, 604, 0)]
     p.shape(end, ('h', wood.light(0.2), wood, wood.dark(0.3)), width=2.2, shade=0.5)
-    p.blob((587, 352), 14, 16, wood.light(0.1), width=1.8, shade=0.7)
-    for a in (-0.8, 0, 0.8):
-        p.blob(polar((587, 350), 12, -math.pi / 2 + a), 5, 8, wood.light(0.15), rot=a, width=1.2, shade=0.6)
-    p.shape([(574, 450), (587, 430), (600, 450), (587, 470)], wood.dark(0.2), width=1.2)
-    p.blob((587, 520), 8, 8, GOLD.dark(0.1), width=1.2, shade=0.6)
-    # the lapdog asleep on the floor
-    p.push(660, 606, 1.4)
-    p.blob((0, 0), 34, 5, C(0, 0, 0, 0.25), ink=False)
-    p.blob((0, -14), 30, 14, LEAD_WHITE.dark(0.05), width=1.8, shade=0.7)
-    p.blob((26, -12), 12, 10, LEAD_WHITE.dark(0.05), width=1.6, shade=0.6)
-    p.shape([(22, -18), (16, -4), (26, -4)], OCHRE.light(0.2), width=1.2)
-    p.line([(30, -12), (36, -11)], INK, 1.2)
-    p.blob((37, -10), 2, 1.6, INK, ink=False)
-    p.line([(-28, -10), (-40, -18), (-34, -24)], LEAD_WHITE.dark(0.1), 4)
+    p.blob((610, 378), 14, 16, wood.light(0.1), width=1.8, shade=0.7)
+    for a_ in (-0.8, 0, 0.8):
+        p.blob(polar((610, 376), 12, -math.pi / 2 + a_), 5, 8, wood.light(0.15), rot=a_, width=1.2, shade=0.6)
+    p.shape([(597, 470), (610, 450), (623, 470), (610, 490)], wood.dark(0.2), width=1.2)
+    p.blob((610, 540), 8, 8, GOLD.dark(0.1), width=1.2, shade=0.6)
+    # his little spaniel, curled asleep on the floor beside the pew
+    spaniel(p, 700, 606, 1.25)
+
+
+def spaniel(p, x, y, s=1.0):
+    """A small white and chestnut lapdog curled asleep, about 120 wide at s=1."""
+    white = C.hex('f2ece0')
+    brown = C.hex('9a5a2a')
+    p.push(x, y, s)
+    p.blob((0, -2), 62, 7, C(0, 0, 0, 0.25), ink=False)
+    # the tail curled round the front
+    p.taper([(-46, -20), (-56, -34), (-44, -48), (-30, -46)], 7, 3, white.dark(0.05), width=1.4, shade=0.5)
+    for k in range(4):
+        q = v_lerp((-52, -30), (-34, -46), k / 3)
+        p.line([q, (q[0] - 4, q[1] - 3)], brown.alpha(0.5), 1.0)
+    body = [(-50, -8), (-52, -30), (-36, -48), (-6, -54), (22, -48), (40, -30), (42, -8), (0, -4)]
+    p.shape(body, white, width=2.0, shade=0.8, rim=0.4)
+    p.clip_shape(body)
+    p.blob((-18, -40), 22, 14, brown, ink=False, shade=0.5)
+    p.blob((14, -24), 12, 9, brown.light(0.1), ink=False)
+    for i in range(10):
+        q = (-40 + i * 8, -30 + (i % 3) * 4)
+        p.line([q, (q[0] + 3, q[1] + 6)], white.dark(0.25).alpha(0.6), 1.0)
+    p.unclip()
+    # paws tucked in front and the head resting on them
+    p.blob((30, -9), 12, 5, white, width=1.4, shade=0.5)
+    p.blob((48, -10), 10, 5, white, width=1.4, shade=0.5)
+    head = [(30, -18), (34, -36), (48, -42), (62, -36), (70, -24), (66, -14), (48, -10)]
+    p.shape(head, white, width=1.8, shade=0.7)
+    p.blob((50, -32), 10, 8, brown, ink=False)
+    # long chestnut ear
+    p.shape([(40, -36), (34, -30), (32, -14), (38, -8), (46, -14), (48, -30)], brown, width=1.4, shade=0.7)
+    for k in range(3):
+        p.line([(37 + k * 2.6, -30), (36 + k * 3, -12)], brown.dark(0.3).alpha(0.6), 0.9)
+    # closed eye, nose, red collar with a tiny bell
+    p.line([(54, -28), (57, -26.5), (60, -28)], INK, 1.4)
+    p.blob((70, -22), 2.6, 2.0, INK, ink=False)
+    p.taper([(34, -14), (38, -10), (44, -9)], 2.0, 2.0, VERMILION, width=0.9)
+    p.blob((44, -8), 2.4, 2.4, GOLD, width=0.8, shade=0.6)
     p.pop()
 
 
@@ -242,6 +308,7 @@ def gold_sanctum_lyceum(p):
     for k in range(3):
         scroll_rolled(p, (660, 292 - k * 11), 44, 0.05 * k)
     # the desk
+    p.push(-10, 0, 1.0)
     wood = C.hex('6a4426')
     desk = [(490, 402, 0), (700, 372, 0), (708, 388, 0), (498, 420, 0)]
     for x in (520, 690):
@@ -252,15 +319,19 @@ def gold_sanctum_lyceum(p):
     for i in range(4):
         p.line([(560, 396 + i * 3), (640, 384 + i * 3)], INK.alpha(0.4), 0.8, smooth=False)
     p.blob((680, 368), 7, 5, INK, width=1.2)
+    p.pop()
     # a stool
-    rect(p, 360, 470, 470, 482, wood, width=1.6, shade=0.5)
-    for x in (370, 458):
+    rect(p, 370, 470, 480, 482, wood, width=1.6, shade=0.5)
+    for x in (380, 468):
         rect(p, x - 5, 482, x + 5, 600, wood.dark(0.2), width=1.4)
     def quill(p_, j):
         h = j['hand_f']
-        p_.taper([(h[0] + 2, h[1] + 3), (h[0] + 4, h[1] - 4), (h[0] + 3.5, h[1] - 9)], 0.2, 0.9, LEAD_WHITE, width=0.7)
-    SeatedFigure(pose='g_write', main=C.hex('8a96aa'), hair='white', beard='long', age='old', halo=True, belt=None,
-                 emblem=himation(MARBLE.dark(0.02), PURPLE), eyes='down', props_front=[quill], shoes=C.hex('5a3a22')).draw(p, 395, 600, 490)
+        p_.taper([(h[0] + 2.4, h[1] + 2.6), (h[0] + 1.4, h[1] - 3), (h[0] - 1.5, h[1] - 9)], 0.2, 0.9, LEAD_WHITE, width=0.7)
+        for k in range(4):
+            q = v_lerp((h[0] + 1.4, h[1] - 3), (h[0] - 1.5, h[1] - 9), k / 3)
+            p_.line([q, (q[0] - 1.6, q[1] + 0.6)], LEAD_WHITE.dark(0.15), 0.6)
+    SeatedFigure(pose='g_write', main=C.hex('8a96aa'), hair='white', beard='long', age='old', halo=True, belt=None, sleeves='fitted',
+                 emblem=himation(MARBLE.dark(0.02), PURPLE, 'seated'), eyes='down', props_front=[quill], shoes=C.hex('5a3a22')).draw(p, 420, 600, 490)
 
 
 def gold_sanctum_machine(p):
@@ -343,7 +414,7 @@ def gold_abyss_wild(p):
     bg.clouds(p, 210, 2, col=C.hex('4a3a5a').alpha(0.75), xs=[260, 700], scale=1.2)
     ridge(p, 420, C.hex('3a3048'), 40, 6)
     for x, h in ((140, 46), (180, 60), (215, 40)):
-        rect(p, x - 9, 418 - h, x + 9, 420, C.hex('6a6470'), width=1.4, shade=0.6)
+        p.shape([(x - 10, 421, 0), (x - 9, 418 - h * 0.7), (x - 4, 418 - h), (x + 5, 418 - h + 3), (x + 9, 418 - h * 0.6), (x + 10, 421, 0)], ('h', C.hex('8a8490'), C.hex('4a4450')), width=1.4, shade=0.6)
     haze(p, 360, 470, C.hex('8acb8a'), 0.0, 0.22)
     ridge(p, 480, C.hex('3a3a2a'), 30, 5)
     # heath
@@ -353,20 +424,39 @@ def gold_abyss_wild(p):
         p.blob((x, y), p.rng.uniform(6, 14), p.rng.uniform(3, 6), C.hex('6a3a5a').light(p.rng.uniform(0, 0.2)), ink=False)
     # the treefolk
     bark = C.hex('4a3a2e')
-    x0 = 500
-    # left arm, clawing outward
-    p.taper([(430, 300), (340, 280), (250, 230), (200, 240)], 26, 8, ('h', bark.light(0.2), bark.dark(0.2)), width=2, shade=0.7)
-    for a in (-0.7, -0.2, 0.3, 0.7):
-        tip = polar((205, 240), 48, math.pi + a)
-        p.taper([(210, 238), v_lerp((210, 238), tip, 0.6), tip], 5, 1, bark.dark(0.1), width=1.4)
-    # right arm: the gallows bough
-    bough = [(570, 270), (660, 240), (760, 250), (850, 280)]
-    p.taper(bough, 26, 9, ('h', bark.light(0.15), bark.dark(0.25)), width=2, shade=0.7)
-    p.taper([(840, 278), (880, 320), (870, 350)], 7, 2, bark, width=1.4)
+    barkfill = ('h', bark.light(0.25), bark, bark.dark(0.35))
+    # crown: a ragged, thinning oak crown with dead limbs poking through
+    for br in ([(470, 210), (420, 140), (350, 96), (300, 92)], [(530, 205), (590, 130), (660, 96), (700, 104)], [(500, 200), (505, 120), (488, 60)]):
+        p.taper(br, 14, 3, bark.dark(0.1), width=1.6, shade=0.6)
+    tree_crown(p, (380, 128), 120, 62, C.hex('34462a'), n=14, light=False)
+    tree_crown(p, (620, 118), 120, 58, C.hex('2f4226'), n=14, light=False)
+    tree_crown(p, (500, 96), 110, 56, C.hex('3a4c2c'), n=12, light=False)
+    for br in ([(330, 120), (282, 88), (262, 96)], [(300, 150), (250, 150)], [(660, 110), (716, 80), (736, 92)], [(690, 140), (744, 150)], [(500, 70), (512, 38)]):
+        p.taper(br, 5, 1, bark.dark(0.25), width=1.2)
+    # left arm: a gnarled limb, bent at the elbow, reaching with twig claws
+    sh_l, el_l, wr_l = (440, 300), (340, 340), (250, 262)
+    p.taper([sh_l, v_lerp(sh_l, el_l, 0.5), el_l], 32, 24, barkfill, width=2, shade=0.7, rim=0.4)
+    p.blob(el_l, 16, 14, bark.dark(0.05), width=1.8, shade=0.7)
+    p.taper([el_l, v_lerp(el_l, wr_l, 0.5), wr_l], 22, 12, barkfill, width=2, shade=0.7, rim=0.4)
+    for ln in ([(430, 296), (380, 316), (344, 332)], [(336, 330), (300, 300), (262, 268)]):
+        p.line(ln, bark.dark(0.5).alpha(0.6), 1.4)
+    p.blob((380, 316), 5, 4, bark.dark(0.5), width=1.0)
+    for a in (-0.9, -0.4, 0.1, 0.6):
+        base_a = math.atan2(wr_l[1] - el_l[1], wr_l[0] - el_l[0]) + a
+        k1 = polar(wr_l, 30, base_a)
+        tip = polar(k1, 26, base_a + 0.5 * (1 if a > -0.2 else -1))
+        p.taper([wr_l, k1, tip], 6, 1, bark.dark(0.1), width=1.4)
+    # right arm: the gallows bough, crooked and knotted
+    bough = [(568, 292), (640, 266), (720, 252), (800, 262), (862, 294)]
+    p.taper(bough, 30, 10, barkfill, width=2, shade=0.7, rim=0.4)
+    p.blob((720, 252), 10, 8, bark.dark(0.05), width=1.4, shade=0.6)
+    p.line([(590, 286), (660, 262), (740, 254)], bark.dark(0.5).alpha(0.6), 1.4)
+    p.taper([(850, 288), (884, 326), (874, 356)], 8, 2, bark, width=1.4)
+    p.taper([(800, 262), (826, 230), (850, 226)], 6, 1.5, bark, width=1.2)
     # the broken noose
     rope = C.hex('b89a62')
-    p.line([(760, 254), (762, 300), (758, 340)], rope, 4)
-    p.line([(760, 254), (762, 300), (758, 340)], rope.dark(0.3), 1.2)
+    p.line([(760, 258), (762, 300), (758, 340)], INK, 6)
+    p.line([(760, 258), (762, 300), (758, 340)], rope, 4)
     p.cx.new_path()
     p.cx.arc(758, 362, 20, 0, math.tau)
     p.stroke(INK, 7)
@@ -378,20 +468,18 @@ def gold_abyss_wild(p):
         p.line([(752, 339 + k * 5), (765, 340 + k * 5)], INK.alpha(0.6), 1.0, smooth=False)
     p.line([(758, 382), (754, 396)], rope, 3)
     p.line([(758, 382), (764, 394)], rope, 3)
-    # crown
-    for b in ([(480, 200), (420, 120), (360, 80)], [(520, 190), (580, 110), (640, 70)], [(500, 190), (505, 100), (490, 50)]):
-        p.taper(b, 12, 3, bark.dark(0.1), width=1.6, shade=0.6)
-    tree_crown(p, (500, 120), 230, 80, C.hex('3a4a2a'), n=30, light=False)
-    for b in ([(380, 110), (330, 60), (300, 70)], [(640, 90), (700, 60), (720, 80)]):
-        p.taper(b, 5, 1, bark.dark(0.2), width=1.2)
-    # trunk body with roots for feet
-    trunk = [(370, 620), (410, 600), (430, 540), (420, 420), (430, 300), (450, 210), (500, 190), (560, 210), (580, 300), (575, 420), (575, 540), (600, 600), (650, 625),
-             (560, 615), (530, 590), (500, 610), (470, 590), (440, 616)]
+    # trunk body: broad at the shoulders, flaring into roots that grip the heath
+    trunk = [(350, 624), (396, 606), (424, 560), (430, 470), (418, 400), (424, 320), (440, 240), (470, 196), (500, 188), (532, 196), (562, 240), (578, 320),
+             (584, 400), (572, 470), (578, 560), (606, 606), (662, 626), (590, 616), (556, 600), (530, 618), (500, 600), (470, 618), (444, 600), (408, 618)]
     p.shape(trunk, ('h', bark.light(0.3), bark, bark.dark(0.45)), width=2.6, shade=0.7, rim=0.6)
     p.clip_shape(trunk)
-    for i in range(20):
-        x = p.rng.uniform(420, 580)
-        p.line([(x, 620), (x + p.rng.uniform(-10, 10), 450), (x + p.rng.uniform(-14, 14), 220)], bark.dark(0.55).alpha(0.55), 1.6)
+    p.texture((340, 180, 670, 630))
+    for i in range(22):
+        x = p.rng.uniform(420, 584)
+        p.line([(x, 620), (x + p.rng.uniform(-10, 10), 460), (x + p.rng.uniform(-14, 14), 200)], bark.dark(0.55).alpha(0.55), 1.6)
+    for (c, r) in (((452, 470), 9), ((548, 420), 7), ((470, 560), 6)):
+        p.blob(c, r, r * 1.5, bark.dark(0.55), width=1.2)
+        p.blob((c[0] - 2, c[1] - 2), r * 0.5, r * 0.8, bark.dark(0.7), ink=False)
     p.unclip()
     # the face
     p.shape([(450, 270), (480, 258), (500, 266), (520, 258), (552, 270), (540, 280), (500, 276), (460, 280)], bark.dark(0.4), width=1.6)
@@ -444,10 +532,10 @@ def gold_abyss_revel(p):
     # guests drawing back on either side
     Figure(pose='spread', garb='surcoat', main=C.hex('2f4e8f'), second=C.hex('1f2e5a'), hair='curly', hair_col=C.hex('3a2614'),
            head=demon_mask_only(C.hex('e8dcc8')), eyes='open', mouth='open', belt='gold', cloak='cape', cloak_col=GOLD_DARK).draw(p, 820, 570, 360, flip=True)
-    Figure(pose='pray', garb='gown', main=C.hex('d9a83a'), second=C.hex('a87a2a'), hair='long', hair_col=C.hex('7a4a22'), head=demon_mask_only(C.hex('1a1a1a')),
+    PrayFigure(garb='gown', main=C.hex('d9a83a'), second=C.hex('a87a2a'), hair='long', hair_col=C.hex('7a4a22'), head=demon_mask_only(C.hex('1a1a1a')),
            eyes='open', mouth='open', belt='gold', fur=LEAD_WHITE).draw(p, 905, 580, 340, flip=True)
-    Figure(pose='point', garb='gown', main=C.hex('2f7a5c'), hair='curly_long', hair_col=C.hex('c8902e'), head=demon_mask_only(GOLD_LIGHT),
-           eyes='open', mouth='open', belt='gold', sleeves='wide').draw(p, 150, 575, 350)
+    Figure(pose='spread', garb='gown', main=C.hex('2f7a5c'), hair='curly_long', hair_col=C.hex('c8902e'), head=demon_mask_only(GOLD_LIGHT),
+           eyes='open', mouth='open', belt='gold', sleeves='fitted').draw(p, 150, 575, 350)
     # a dropped lute and a fallen mask
     p.push(330, 600, 1.0, rot=0.3)
     p.blob((0, 0), 30, 20, OCHRE, width=2, shade=0.8)
@@ -455,10 +543,27 @@ def gold_abyss_revel(p):
     p.taper([(26, -4), (80, -20)], 4, 3, UMBER, width=1.4)
     p.pop()
     mask_on_stick(p, (640, 604), 1.0, LEAD_WHITE, rot=0.6)
-    # the demon
-    Figure(pose='cup', garb='tunic', main=C.hex('2a1420'), second=C.hex('1a0c14'), trim=GOLD, skin=DEMON_RED, hair='none', beard='forked', hair_col=C.hex('1a0c10'),
-           head=demon_head(mask=GOLD), cloak='mantle', cloak_col=CRIMSON, lining=C.hex('e0b040'), belt='gold',
-           props_back=[bat_wings(C.hex('2a0c18'), 1.15), demon_tail()], props_front=[cup_in_hand()], mouth='calm', blush=0.0,
+    # the demon, his gilded mask lowered from his face, his cup held aside
+    def mask_lowered(p_, j):
+        h = j['hand_f']
+        p_.push(h[0] - 2.2, h[1] - 9.5, 0.3)
+        p_.taper([(4, 6), (10, 40)], 1.5, 1.5, GOLD_DARK, width=1.2)
+        pts = [(-18, -2), (-12, -9), (-4, -8), (0, -4), (4, -8), (12, -9), (18, -2), (16, 4), (8, 7), (0, 3), (-8, 7), (-16, 4)]
+        p_.shape(pts, GOLD, width=1.6, shade=0.8, rim=0.3)
+        for dx in (-8, 8):
+            p_.shape([(dx - 5, -1), (dx, -4), (dx + 5, -1), (dx, 1.5)], INK, width=0.8)
+        for i in range(4):
+            p_.taper([(14, -8), (20 + i * 3, -24 - i * 3 + i * i * 0.8)], 1.6, 0.4, [VERMILION, GOLD_LIGHT, LEAD_WHITE, ROSE_PINK][i], width=0.8)
+        p_.pop()
+        # the fingers closed round the stick
+        p_.blob((h[0] + 0.6, h[1] + 0.6), 2.0, 1.6, DEMON_RED, width=1.0, shade=0.5)
+    def cup_aside(p_, j):
+        h = j['hand_b']
+        goblet(p_, (h[0] + 0.4, h[1] + 1.2), 0.8, GOLD)
+        p_.blob((h[0] + 0.4, h[1] + 0.8), 1.8, 1.5, DEMON_RED.dark(0.15), width=0.9, shade=0.5)
+    Figure(pose='g_unmask', garb='tunic', main=C.hex('2a1420'), second=C.hex('1a0c14'), trim=GOLD, skin=DEMON_RED, hair='none', beard=None, hair_col=C.hex('2a0c10'),
+           head=demon_head(), cloak='mantle', cloak_col=CRIMSON, lining=C.hex('e0b040'), belt='gold', sleeves='fitted', mouth='stern',
+           props_back=[bat_wings(C.hex('2a0c18'), 1.15), demon_tail()], props_front=[mask_lowered, cup_aside], blush=0.0,
            emblem=lambda p_, cp: [p_.blob((cp[0] + dx, cp[1] + dy), 0.9, 0.9, GOLD, width=0.5) for dx, dy in ((0, -10), (0, -5), (0, 0), (0, 5))],
            shoes=C.hex('1a0c14')).draw(p, 480, 600, 470)
     p.glow((520, 270), 70, HELLFIRE, 0.12)
@@ -491,7 +596,8 @@ def gold_abyss_lyceum(p):
     # the doorway back to the sunlit Porch
     door = [(110, 560, 0), (110, 260, 0), (300, 260, 0), (300, 560, 0)]
     p.clip_shape(door, smooth=False)
-    bg.sky(p, C.hex('5a8ad0'), C.hex('a8c8e8'), C.hex('f6ecd0'), 0.55)
+    bg.sky(p, C.hex('3a6ac0'), C.hex('7aa8e0'), C.hex('e8e4d0'), 0.85)
+    ridge(p, 440, C.hex('9aa8a0'), 16, 4)
     rect(p, 100, 470, 320, 560, ('v', MARBLE, MARBLE_SHADE), ink=False)
     for x in (140, 205, 270):
         greek_column(p, x, 330, 470, 20, MARBLE)
@@ -530,20 +636,24 @@ def gold_abyss_lyceum(p):
     for e in ((528, 196), (562, 196)):
         p.glow(e, 16, SICKLY, 0.7)
         p.blob(e, 4.5, 2.6, SICKLY.light(0.5), ink=False)
-    # the clawed hand on his shoulder
-    p.taper([(600, 260), (580, 300), (560, 330)], 10, 6, sh, ink=C.hex('5a2a6a'), width=1.4)
-    for a in (0.6, 1.1, 1.6):
-        p.taper([(560, 330), polar((560, 330), 24, a)], 3, 0.6, sh, ink=C.hex('5a2a6a'), width=1.0)
     # the apostate
     grey = C.hex('cfc8bc')
-    Figure(pose='present', garb='toga', main=C.hex('6a6478'), hair='short', hair_col=C.hex('4a3a2a'), beard='forked', belt=None,
+    Figure(pose='g_read', garb='toga', main=C.hex('6a6478'), hair='short', hair_col=C.hex('4a3a2a'), beard='forked', belt=None, sleeves='fitted',
            emblem=himation(grey, C.hex('3a2a4a')), eyes='down', mouth='calm', age='old', shoes=C.hex('3a2a1a')).draw(p, 470, 604, 470)
-    open_book(p, (560, 312), 1.4, PARCH.mix(SICKLY, 0.3), glow=SICKLY, rot=-0.1)
+    open_book(p, (568, 316), 1.35, PARCH.mix(SICKLY, 0.3), glow=SICKLY, rot=-0.1)
     for k in range(5):
         a = -math.pi / 2 + (k - 2) * 0.3
-        p.line([polar((560, 300), 30, a), polar((560, 300), 70 + k * 6, a)], SICKLY.alpha(0.45), 2)
+        p.line([polar((568, 304), 30, a), polar((568, 304), 70 + k * 6, a)], SICKLY.alpha(0.45), 2)
     for k in range(6):
-        p.star((520 + k * 18, 250 - (k % 3) * 22), 3.4, SICKLY.light(0.4), 4)
+        p.star((530 + k * 18, 252 - (k % 3) * 22), 3.4, SICKLY.light(0.4), 4)
+    # the shadow's clawed hand laid over his shoulder from behind
+    edge = C.hex('5a2a6a')
+    p.taper([(620, 214), (584, 226), (552, 236)], 13, 9, sh, ink=edge, width=1.4)
+    p.blob((546, 240), 11, 8, sh, rot=0.4, ink=edge, width=1.4)
+    for a in (1.0, 1.35, 1.7, 2.05):
+        k1 = polar((546, 240), 8, a)
+        k2 = polar(k1, 14, a - 0.15)
+        p.taper([k1, k2, polar(k2, 10, a + 0.5)], 3.2, 0.8, sh, ink=edge, width=1.0)
 
 
 def gold_abyss_machine(p):
@@ -575,18 +685,19 @@ def gold_abyss_machine(p):
     # heap of bones by the engine
     bones_heap(p, 760, 604, 110, 60)
     # the cultist with his cart
-    cart_x = 230
+    cart_x = 300
     p.shape([(cart_x - 70, 560, 0), (cart_x + 60, 560, 0), (cart_x + 70, 520, 0), (cart_x - 80, 520, 0)], C.hex('5a3a22'), width=2, smooth=False, shade=0.6)
     bones_heap(p, cart_x - 5, 524, 70, 34)
     for wx in (cart_x - 40, cart_x + 40):
         p.blob((wx, 580), 20, 20, C.hex('4a2e1a'), width=2, shade=0.6)
         p.blob((wx, 580), 5, 5, IRON, width=1.2)
-    p.taper([(cart_x - 76, 530), (cart_x - 130, 500)], 3, 3, C.hex('4a2e1a'), width=1.4)
-    Figure(pose='hold', garb='robe', main=C.hex('2a1a22'), head='hood', hood_col=C.hex('2a1a22'), eyes='down', skin=C.hex('c8b8a8'),
-           belt='cord', sleeves='wide').draw(p, 60, 604, 330)
+    for dy in (0, 6):
+        p.taper([(cart_x - 76, 524 + dy), (cart_x - 198, 430 + dy * 0.3)], 3.2, 2.6, C.hex('4a2e1a'), width=1.4, shade=0.5)
+    Figure(pose='g_cart', garb='robe', main=C.hex('3a2430'), head='hood', hood_col=C.hex('3a2430'), eyes='down', skin=C.hex('c8b8a8'),
+           belt='cord', sleeves='fitted').draw(p, 56, 604, 330)
     # the engine
     construct(p, 520, 604, 470, body=C.hex('8a7a6a'), eye=HELLFIRE, hopper=True, furnace=HELLFIRE, head='skull', wide=1.3,
-              hf=(26, -60), hb=(-16, -40))
+              hf=(23, -42), hb=(-16, -40))
     # bone dust in the air
     for i in range(40):
         p.blob((p.rng.uniform(300, 900), p.rng.uniform(150, 560)), 1.6, 1.6, BONE.alpha(0.4), ink=False)
@@ -655,20 +766,37 @@ def gold_wild_revel(p):
         for k in range(3):
             p_.blob((h[0] + 7 + k * 1.2, h[1] - 9 + k * 3.5), 0.8, 1.2, WINE.light(0.2), ink=False)
     def leopard(p_, cp):
+        # a leopard skin knotted on the back shoulder, falling across the chest to
+        # the front hip, with a ragged furry lower edge, a dangling paw and the tail
         k = cp[1] + 64
-        pts = [(-9, -82 + k), (-3, -83 + k), (7, -64 + k), (11, -50 + k), (6, -47 + k), (-1, -60 + k), (-9, -72 + k)]
-        p_.shape(pts, C.hex('c08838'), width=1.4, shade=0.8)
+        hide = C.hex('d89a3a')
+        upper = [(-10, -83 + k), (-4.5, -84 + k), (0.5, -78 + k), (5.5, -69 + k), (10, -59 + k), (13.5, -49 + k)]
+        lower = []
+        for i in range(13):
+            t = i / 12
+            x = lerp(14.5, -12.5, t)
+            y = lerp(-44 + k, -50 + k, t) + math.sin(t * 9) * 1.2
+            lower.append((x, y + (1.6 if i % 2 else -0.6), 0 if i % 2 else 1))
+        lower = [(q[0], q[1], 0) if q[2] == 0 else (q[0], q[1]) for q in lower]
+        back = [(-12.0, -60 + k), (-11.2, -74 + k)]
+        upper = upper[:-1] + [(12.5, -52 + k)]
+        pts = upper + lower + back
+        p_.shape(pts, hide, width=1.5, shade=0.85, rim=0.5)
         p_.clip_shape(pts)
-        for i in range(34):
-            q = (p_.rng.uniform(-9, 11), p_.rng.uniform(-84, -46) + k)
-            p_.blob(q, 0.9, 0.75, None, ink=C.hex('3a2010'), width=1.0)
-            p_.blob(q, 0.35, 0.3, C.hex('7a4a1a'), ink=False)
-        for f_ in ([(-6, -80 + k), (2, -66 + k), (7, -54 + k)], [(-8, -74 + k), (-1, -62 + k), (4, -52 + k)]):
-            p_.fold(f_, C.hex('c08838'), 1.2)
+        p_.texture((-16, -90 + k, 18, -30 + k))
+        for i in range(90):
+            q = (p_.rng.uniform(-13, 15), p_.rng.uniform(-86, -40) + k)
+            r_ = p_.rng.uniform(0.9, 1.3)
+            for a_ in range(4):
+                p_.blob(polar(q, r_ * 0.75, a_ * 1.6 + i), r_ * 0.45, r_ * 0.32, C.hex('2a160a'), rot=a_ * 1.6 + i, ink=False)
+            p_.blob(q, r_ * 0.45, r_ * 0.4, C.hex('a8601a'), ink=False)
+        for f_ in ([(-7, -80 + k), (1, -66 + k), (8, -52 + k)], [(-9, -72 + k), (-2, -58 + k), (4, -44 + k)], [(-11, -62 + k), (-6, -50 + k)]):
+            p_.fold(f_, hide, 1.3)
         p_.unclip()
-        p_.shape([(9, -50 + k), (12, -42 + k), (10, -36 + k, 0), (7, -44 + k)], C.hex('d8a050'), width=1.0)
-        for d in (-1, 0, 1):
-            p_.blob((10 + d, -36 + k), 0.6, 0.6, INK, ink=False)
+        # rolled edge over the chest
+        p_.taper(upper, 1.2, 1.6, hide.light(0.15), width=0.9, shade=0.5)
+        # the knot on the back shoulder
+        p_.blob((-8.5, -81 + k), 2.6, 2.2, hide.dark(0.1), width=1.0, shade=0.6)
     s = SatyrFigure(pose='g_toast', garb='tunic', main=C.hex('6a2a5a'), second=C.hex('4a1a3a'), skin=C.hex('e8b890'), hair='curly',
                     hair_col=C.hex('4a2a14'), beard='long', head=satyr_head(), belt=None, emblem=leopard, sleeves='none', mouth='open',
                     props_back=[thyrsus], props_front=[big_cup], blush=1.0)
@@ -720,18 +848,22 @@ def gold_wild_lyceum(p):
     p.blob((850, 534), 12, 4, TERRACOTTA.dark(0.2), width=1.2)
     for k in range(2):
         p.line([(824, 560 + k * 16), (876, 560 + k * 16)], INK.alpha(0.6), 1.4)
-    # the sapling
-    x, y = 640, 590
-    p.taper([(x, y), (x + 2, y - 50), (x - 2, y - 96)], 3, 1.4, UMBER, width=1.2)
-    for k in range(9):
-        a = -math.pi / 2 + (k - 4) * 0.38
-        q = polar((x, y - 74), 14 + (k % 3) * 6, a)
-        p.blob(q, 9, 4.5, SAP.light(0.1) if k % 2 else SAP, rot=a, width=1.0, shade=0.5)
-        if k % 3 == 0:
-            p.blob(v_add(q, (3, 3)), 2, 2.4, C.hex('9a6a32'), width=0.6)
+    # the oak sapling, its stem in his hands
+    x, y = 626, 592
+    p.taper([(x, y), (x + 2, y - 70), (x - 2, y - 150), (x + 3, y - 190)], 4, 1.6, UMBER, width=1.2, shade=0.5)
+    for (by, side, ln) in ((-120, 1, 34), (-150, -1, 30), (-176, 1, 22)):
+        p.taper([(x, y + by), (x + side * ln * 0.6, y + by - 10), (x + side * ln, y + by - 22)], 1.6, 0.8, UMBER, width=0.9)
+    for k in range(22):
+        a = -math.pi / 2 + (k - 10.5) * 0.27
+        c0 = (x + p.rng.uniform(-4, 4), y - 150 + (k % 3) * 16)
+        q = polar(c0, 10 + (k % 4) * 9, a)
+        oak_leaf(p, q, 15, a + p.rng.uniform(-0.3, 0.3), SAP.light(0.12) if k % 2 else SAP.dark(0.08))
+    for q in ((x + 22, y - 150), (x - 18, y - 128)):
+        p.blob(q, 2.4, 3, C.hex('9a6a32'), width=0.6)
+        p.blob((q[0], q[1] - 2.6), 2.6, 1.4, C.hex('6a4a22'), width=0.6)
     # the old philosopher kneeling
-    Figure(pose='g_plant', garb='toga', main=C.hex('b8a888'), hair='bald', hair_col=C.hex('e8e0d0'), beard='long', age='old', kneel=True,
-           emblem=himation(LEAD_WHITE.dark(0.04), OLIVE), belt=None, eyes='down', shoes=C.hex('6a4a2a')).draw(p, 520, 604, 470)
+    Figure(pose='g_plant', garb='toga', main=C.hex('9a8a6a'), hair='bald', hair_col=C.hex('e8e0d0'), beard='long', age='old', kneel=True, sleeves='fitted',
+           emblem=himation(LEAD_WHITE.dark(0.04), OLIVE, 'kneel'), belt=None, eyes='down', shoes=C.hex('6a4a2a')).draw(p, 520, 604, 470)
 
 
 def gold_wild_machine(p):
@@ -780,11 +912,12 @@ def gold_wild_machine(p):
         p_.shape([(top[0], top[1] + 7), (top[0] - 4, top[1] + 9, 0), (top[0], top[1] + 11)], IRON.mix(COPPER, 0.4), width=1.0)
         p_.shape([(top[0] - 1.5, top[1] + 4), (top[0], top[1] - 10, 0), (top[0] + 1.5, top[1] + 4)], IRON, width=1.0)
         ivy(p_, [(h[0], -4), (h[0] + 2, -30), (h[0] - 1, -50)], MOSS, s=0.35)
+    hf = (22, -43)
     p.push(470, 604, 4.7)
-    halberd(p, {'hand_f': (20.5, -60)})
+    halberd(p, {'hand_f': ik((12, -74), hf, 17, 16, 1)[1]})
     p.pop()
     construct(p, 470, 604, 470, body=C.hex('a8884a').mix(C.hex('6a8a6a'), 0.3), eye=C.hex('9ad0ff'), moss=True,
-              hf=(20, -60), hb=(-12, -36))
+              hf=hf, hb=(-14, -40))
 
 
 # ------------------------------------------------------------------ Revel, Stoa and Technocracy
@@ -813,13 +946,21 @@ def gold_revel_lyceum(p):
     # steps down to the agora
     steps(p, 60, 940, 470, 4, 34, MARBLE, 40)
     # the envoy, waiting at the far right
-    Figure(pose='hold', garb='surcoat', main=C.hex('2f6a4a'), second=C.hex('1f4a32'), hair='short', hair_col=C.hex('2a1a10'), beard='short',
+    Figure(pose='g_scroll', garb='surcoat', main=C.hex('2f6a4a'), second=C.hex('1f4a32'), hair='short', hair_col=C.hex('2a1a10'), beard='short',
            head='cap', props_front=[PR.scroll('f')], eyes='open', mouth='stern', belt='leather').draw(p, 900, 470, 260, flip=True)
     # the two Stoics, standing and refuting
-    Figure(pose='point', garb='toga', main=C.hex('9a9488'), hair='short', hair_col=C.hex('6a6050'), beard='long', age='old', belt=None,
+    def open_scroll(p_, j):
+        # a scroll unrolled between both hands
+        a, b = j['hand_b'], j['hand_f']
+        for q in (a, b):
+            p_.taper([(q[0], q[1] - 6), (q[0], q[1] + 6)], 1.6, 1.6, PARCH.dark(0.1), width=1.0, shade=0.5)
+        p_.shape([(a[0], a[1] - 5, 0), (b[0], b[1] - 5, 0), (b[0], b[1] + 5, 0), (a[0], a[1] + 5, 0)], PARCH, width=1.0, smooth=False, shade=0.4)
+        for i in range(3):
+            p_.line([(a[0] + 1.5, a[1] - 2.5 + i * 2.5), (b[0] - 1.5, b[1] - 2.5 + i * 2.5)], INK.alpha(0.45), 0.6)
+    Figure(pose='point', garb='toga', main=C.hex('9a9488'), hair='short', hair_col=C.hex('6a6050'), beard='long', age='old', belt=None, sleeves='fitted',
            emblem=himation(LEAD_WHITE.dark(0.06)), eyes='open', mouth='open', shoes=UMBER).draw(p, 730, 604, 420, flip=True)
-    Figure(pose='book', garb='toga', main=C.hex('7a8a9a'), hair='curly', hair_col=C.hex('3a2a1a'), beard='short', belt=None,
-           emblem=himation(C.hex('e8e0d0')), props_front=[PR.scroll('f')], eyes='open', mouth='stern', shoes=UMBER).draw(p, 840, 610, 400, flip=True)
+    Figure(pose='g_read', garb='toga', main=C.hex('7a8a9a'), hair='curly', hair_col=C.hex('3a2a1a'), beard='short', belt=None, sleeves='fitted',
+           emblem=himation(C.hex('e8e0d0')), props_front=[open_scroll], eyes='open', mouth='stern', shoes=UMBER).draw(p, 840, 610, 400, flip=True)
     # the cushion, the bowl of fruit and the wine jar
     p.shape([(170, 506), (186, 474), (380, 470), (412, 490), (400, 520), (186, 524)], ('v', CRIMSON.light(0.2), CRIMSON.dark(0.2)), width=2, shade=0.6)
     for x in (180, 404):
@@ -847,12 +988,16 @@ def gold_revel_lyceum(p):
                 p_.blob(q, 1.5, 1.5, ROSE_PINK, width=0.6, shade=0.5)
                 p_.blob(q, 0.6, 0.6, CRIMSON, ink=False)
     def cup(p_, j):
+        # a shallow wine cup (kylix) balanced on his fingers
         h = j['hand_f']
-        p_.blob((h[0] + 2, h[1] - 1), 6, 1.4, GOLD, width=0.9, shade=0.6)
-        p_.blob((h[0] + 2, h[1] - 1.4), 4.6, 0.8, WINE, ink=False)
-        p_.taper([(h[0] + 2, h[1]), (h[0] + 2, h[1] + 3)], 0.6, 0.6, GOLD, width=0.6)
+        p_.shape([(h[0] - 4.5, h[1] - 5.5), (h[0] + 6.5, h[1] - 5.5), (h[0] + 4, h[1] - 2.6), (h[0] - 2, h[1] - 2.6)], GOLD, width=0.9, shade=0.7)
+        p_.blob((h[0] + 1, h[1] - 5.5), 5.5, 1.1, WINE, width=0.7)
+        p_.taper([(h[0] + 1, h[1] - 2.6), (h[0] + 1, h[1] - 1)], 0.7, 0.7, GOLD, width=0.6)
+        p_.blob((h[0] + 1, h[1] - 0.8), 2.4, 0.7, GOLD, width=0.6)
+        p_.taper([(h[0] - 4.5, h[1] - 5), (h[0] - 6.5, h[1] - 4.5)], 0.6, 0.6, GOLD, width=0.5)
+        p_.taper([(h[0] + 6.5, h[1] - 5), (h[0] + 8.5, h[1] - 4.5)], 0.6, 0.6, GOLD, width=0.5)
     SeatedFigure(pose='g_lounge', main=C.hex('c8607a'), second=C.hex('8a3a5a'), width=1.3, hair='curly', hair_col=C.hex('5a3a1a'), head=roses,
-                 eyes='open', mouth='calm', belt='gold', sleeves='wide', blush=1.0, emblem=himation(C.hex('f0d8a0'), GOLD_DARK),
+                 eyes='open', mouth='calm', belt=None, sleeves='fitted', blush=1.0, emblem=himation(C.hex('f0d8a0'), GOLD_DARK, 'seated'),
                  props_front=[cup], shoes=GOLD_DARK).draw(p, 260, 612, 420)
 
 
@@ -882,9 +1027,14 @@ def gold_revel_machine(p):
         p.shape([(x - 26, 478, 0), (x - 22, 452), (x + 22, 452), (x + 26, 478, 0)], C.hex('2f5a34'), width=1.6, shade=0.6)
     lantern_string(p, (0, 300), (1000, 290), 60, 12, C.hex('ff9a5a'))
     # revellers watching, masked
-    for k, (x, col) in enumerate(((90, ROSE_PINK), (140, C.hex('d9a83a')), (190, VIOLET), (840, CRIMSON), (900, C.hex('2f7a5c')))):
-        tiny_person(p, x, 560 + (k % 2) * 8, 3.0, col, head_col=SKIN, arms_up=(k % 2 == 0))
-        p.blob((x + 1, 560 + (k % 2) * 8 - 77), 6, 3, GOLD if k % 2 else LEAD_WHITE, width=1.0)
+    guests = ((70, 586, 'gown', ROSE_PINK, 'curly_long', C.hex('c8902e'), 'spread', False, GOLD),
+              (150, 596, 'tunic', VIOLET, 'short', C.hex('3a2614'), 'point', False, LEAD_WHITE),
+              (230, 590, 'gown', C.hex('d9a83a'), 'long', C.hex('6a3a1a'), 'g_alarm', False, C.hex('1a1a1a')),
+              (850, 590, 'tunic', CRIMSON, 'curly', C.hex('2a1a10'), 'point', True, GOLD),
+              (930, 598, 'gown', C.hex('2f7a5c'), 'curly_long', C.hex('a8742e'), 'spread', True, LEAD_WHITE))
+    for (x, y, garb, col, hair, hcol, pose, flip, mask) in guests:
+        Figure(pose=pose, garb=garb, main=col, second=col.dark(0.3), hair=hair, hair_col=hcol, head=demon_mask_only(mask),
+               mouth='open', belt='gold', sleeves='fitted', shoes=C.hex('2a1a14')).draw(p, x, y, 190, flip=flip)
     # crates of rockets and a powder barrel
     for x in (300, 340):
         rect(p, x - 22, 560, x + 22, 604, C.hex('8a6a42'), width=1.6, shade=0.6)
@@ -894,7 +1044,7 @@ def gold_revel_machine(p):
     for y in (566, 592):
         p.line([(678, y), (762, y)], IRON, 3)
     # the automaton, flinging a rocket
-    j = construct(p, 500, 604, 450, body=COPPER.light(0.1), eye=C.hex('ffd27a'), rockets=True, hf=(24, -96), hb=(-14, -50), bend_f=0)
+    j = construct(p, 500, 604, 450, body=COPPER.light(0.1), eye=C.hex('ffd27a'), rockets=True, hf=(30, -100), hb=(-20, -44), bend_f=1)
     hand = (500 + j['hand_f'][0] * 4.5, 604 + j['hand_f'][1] * 4.5)
     p.glow(hand, 80, FLAME, 0.55)
     for i in range(18):
@@ -942,9 +1092,18 @@ def gold_lyceum_machine(p):
     p.taper([(600, 414), (630, 360)], 1.6, 1.0, BRASS, width=1)
     p.taper([(660, 414), (630, 360)], 1.6, 1.0, BRASS, width=1)
     p.blob((630, 360), 4, 4, BRASS, width=1)
-    # an oil lamp
-    p.shape([(250, 560), (280, 548), (320, 552), (330, 560), (300, 570), (260, 570)], TERRACOTTA, width=1.6, shade=0.7)
-    PR.flame(p, (326, 540), 3.4, 60)
+    # a bronze lampstand with a burning oil lamp
+    lx = 230
+    for dx in (-22, 0, 22):
+        p.taper([(lx, 560), (lx + dx, 600)], 2.4, 2.0, BRONZE, width=1.0)
+        p.blob((lx + dx, 601), 4, 2, BRONZE.dark(0.2), width=0.8)
+    p.taper([(lx, 600), (lx, 460)], 4, 3, ('h', BRONZE.light(0.3), BRONZE, BRONZE.dark(0.3)), width=1.2, shade=0.6)
+    for y in (520, 490):
+        p.blob((lx, y), 6, 3, BRONZE.light(0.1), width=1.0, shade=0.5)
+    p.blob((lx, 460), 22, 5, BRONZE, width=1.2, shade=0.6)
+    p.shape([(lx - 22, 456), (lx - 8, 444), (lx + 16, 446), (lx + 30, 452), (lx + 16, 460), (lx - 14, 460)], TERRACOTTA, width=1.4, shade=0.7)
+    p.glow((lx + 30, 430), 120, C.hex('ffcf6a'), 0.5)
+    PR.flame(p, (lx + 30, 448), 4.2, 30)
     # the armillary sphere on a stand
     c = (790, 470)
     rect(p, 760, 590, 820, 604, BRONZE, width=1.4)

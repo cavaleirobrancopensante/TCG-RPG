@@ -15,7 +15,8 @@ def lyceum_c_001(p):
     """Owl of the Archive: an owl asleep-awake on a stack of scrolls in the night archive."""
     L.library(p, dark=True, lamp_at=(250, 470))
     # desk with a heap of scrolls and codices
-    p.shape(rect(330, 470, 800, 500), ('v', C.hex('7a5232'), C.hex('4a301c')), width=2.4, smooth=False)
+    p.shape(rect(150, 470, 800, 500), ('v', C.hex('7a5232'), C.hex('4a301c')), width=2.4, smooth=False)
+    p.shape(rect(170, 500, 200, 620), C.hex('4a301c'), width=2, smooth=False)
     p.shape(rect(350, 500, 380, 620), C.hex('4a301c'), width=2, smooth=False)
     p.shape(rect(750, 500, 780, 620), C.hex('4a301c'), width=2, smooth=False)
     scroll_closed(p, (470, 458), 170, 12, 0.0, tag=VERMILION)
@@ -41,10 +42,13 @@ def lyceum_c_002(p):
     bg.hills(p, H * 0.7, C.hex('8a9a5a'), 30, n=5)
     olive_tree(p, 110, 520, 1.0)
     ground(p, H * 0.82, C.hex('a8925a'), dry=False, grass=OLIVE)
-    altar(p, 650, 590, 100, 80)
+    altar(p, 610, 590, 100, 80)
+    # his spear set aside against the olive while he swears
+    rod(p, [(170, 590), (250, 150)], 3.6, 3.2, C.hex('8a6a40'), width=1.4, shade=0.6)
+    p.shape([(250, 150, 0), (243, 118), (252, 92, 0), (259, 120)], ('h', BRONZE_LIGHT, BRONZE_DARK), width=1.4)
     Greek(pose='ly_oath', garb='tunic', main=C.hex('efe6d0'), sleeves='none', chlamys=C.hex('9a3a2a'), hair='curly', hair_col=HAIR_DARK,
           head=corinthian(VERMILION, closed=False), greaves=True, belt='leather', hoplon='olive', hoplon_field=ULTRA, hoplon_r=20,
-          props_back=[spear('b', 132)], eyes='up', age='young').draw(p, 420, 600, 450)
+          eyes='up', age='young').draw(p, 440, 600, 450)
 
 
 def lyceum_c_003(p):
@@ -60,7 +64,7 @@ def lyceum_c_003(p):
     p.blob((205, 360), 26, 24, BRONZE, width=2, shade=0.9)
     for k in range(10):
         a = math.tau * k / 10
-        p.taper([polar((205, 360), 18, a), polar((205, 360), 32, a)], 4, 1.5, BRONZE_DARK, width=1)
+        rod(p, [polar((205, 360), 18, a), polar((205, 360), 32, a)], 4, 1.5, BRONZE_DARK, width=1)
     p.blob((205, 362), 16, 15, BRONZE_LIGHT, width=1.6, shade=0.8)
     p.blob((198, 356), 2.4, 2, INK, ink=False)
     p.blob((212, 356), 2.4, 2, INK, ink=False)
@@ -227,7 +231,7 @@ def lyceum_c_010(p):
     hz = sea_sky(p, 'cold', 0.5)
     sea(p, hz, 'cold')
     island(p, 820, hz, 300, 70, C.hex('8a929a'), temple=True, haze=0.4)
-    ship(p, 560, hz + 26, 0.55, LEAD_WHITE.dark(0.2), C.hex('6a3a3a'), oars=False, broken=True)
+    ship(p, 640, hz + 26, 0.55, LEAD_WHITE.dark(0.2), C.hex('6a3a3a'), oars=False, broken=True)
     p.push(560, hz + 26, 0.55, rot=0.4)
     p.pop()
     # surf line and shingle beach
@@ -236,49 +240,84 @@ def lyceum_c_010(p):
         x = k * 76
         p.line([(x - 40, H * 0.76 + 4), (x, H * 0.76 - 6), (x + 40, H * 0.76 + 4)], LEAD_WHITE.alpha(0.7), 4)
     # wreckage: broken mast, a bale, an amphora on its side, a plank
-    p.taper([(600, 590), (700, 520), (860, 470)], 9, 7, C.hex('7a5a36'), width=2, shade=0.7)
-    p.shape([(840, 470), (900, 440), (930, 470), (880, 500)], LEAD_WHITE.dark(0.15), width=1.6, shade=0.6)
-    p.shape(rect(700, 540, 790, 600), C.hex('8a6a40'), width=2, shade=0.7, smooth=False)
-    p.line([(700, 570), (790, 570)], INK.alpha(0.6), 2, smooth=False)
+    # a broken spar with the torn, striped sail still lashed to it, draped over a sea chest
+    p.shape(rect(700, 530, 800, 600), ('v', C.hex('9a7a4a'), C.hex('6a4a2a')), width=2, shade=0.7, smooth=False)
+    p.shape(rect(694, 522, 806, 538), C.hex('7a5a36'), width=1.8, smooth=False)
+    for xx in (712, 788):
+        p.shape(rect(xx - 4, 530, xx + 4, 600), BRONZE_DARK, width=1.2, smooth=False)
+    rod(p, [(590, 600), (930, 486)], 8, 6, C.hex('7a5a36'), width=2, shade=0.7)
+    p.shape([(926, 478, 0), (944, 468, 0), (938, 486, 0), (950, 494, 0), (932, 494, 0)], C.hex('c8b08a'), width=1.4)
+    sail = [(640, 584), (700, 566), (760, 540), (830, 516), (880, 500), (900, 530), (870, 560), (880, 590), (836, 604), (800, 590),
+            (770, 612, 0), (740, 594), (700, 612, 0), (660, 604)]
+    p.shape(sail, ('h', C.hex('e8dcc4'), C.hex('c8b898')), width=2, shade=0.6, rim=0.3)
+    p.clip_shape(sail)
+    for k in range(3):
+        x0 = 700 + k * 70
+        p.shape([(x0, 500, 0), (x0 + 24, 500, 0), (x0 + 14, 620, 0), (x0 - 10, 620, 0)], VERMILION.dark(0.2).alpha(0.75), ink=False, smooth=False)
+    for k in range(5):
+        x0 = 680 + k * 44
+        p.line([(x0 + 10, 560 - k * 12), (x0, 610)], INK.alpha(0.3), 1.4)
+    p.unclip()
     p.push(140, 590, 0.9, rot=-1.3)
     amphora(p, 0, 0, 1.0)
     p.pop()
     for k in range(10):
-        q = (p.rng.uniform(100, 900), p.rng.uniform(560, 620))
+        q = (p.rng.uniform(80, 580), p.rng.uniform(560, 620))
         p.blob(q, p.rng.uniform(4, 9), p.rng.uniform(3, 5), STONE.dark(0.1), width=1.2, shade=0.6)
-    Greek(pose='book', garb='tunic', main=C.hex('7a5a8a'), sleeves='fitted', hair='curly', hair_col=HAIR_DARK, beard='short',
-          chlamys=C.hex('3a4a6a'), belt='leather', skin=SKIN_OLIVE, props_front=[PR.book('both', CRIMSON, open_=True)],
+    Greek(pose='hold', garb='tunic', main=C.hex('7a5a8a'), sleeves='none', hair='curly', hair_col=HAIR_DARK, beard='short',
+          chlamys=C.hex('3a4a6a'), belt='leather', skin=SKIN_OLIVE, props_front=[PR.book('f', CRIMSON, open_=True)],
           eyes='down').draw(p, 380, 606, 450)
 
 
 def lyceum_c_011(p):
     """Veteran of the Long Walls: grizzled and scarred, he keeps the wall between Athens and her harbour."""
-    sea_sky(p, 'dusk', 0.6, sun=(820, H * 0.58))
-    sea(p, H * 0.6, 'dusk', y1=H * 0.68)
-    # harbour with ships at the far end of the walls
-    for k, x in enumerate((700, 800, 900)):
-        ship(p, x, H * 0.66, 0.22, LEAD_WHITE.dark(0.1), VERMILION, oars=False)
-    bg.hills(p, H * 0.7, C.hex('8a7a5a'), 20, n=4)
-    # the long walls receding to the sea
-    for off, dark in ((0, 0.0), (80, 0.15)):
-        pts = [(-10, 470 + off * 0.4, 0), (900, H * 0.66, 0), (900, H * 0.66 - 8, 0), (-10, 360 + off * 0.4, 0)]
-        p.shape(pts, ('h', C.hex('c8b48a').dark(dark), C.hex('a89470').dark(dark)), width=2, smooth=False)
-        for t in range(16):
-            xx = lerp(-10, 900, (t / 16) ** 1.4)
-            yy0 = lerp(360 + off * 0.4, H * 0.66 - 8, (t / 16) ** 1.4)
-            hh = lerp(18, 3, t / 16)
-            p.shape(rect(xx, yy0 - hh, xx + hh * 1.4, yy0), C.hex('c8b48a').dark(dark), ink=INK.alpha(0.5), width=1, smooth=False)
-    # the wall-walk he stands on
-    p.shape(rect(-10, 520, W + 10, H + 10), ('v', C.hex('c0aa80'), C.hex('7a6648')), width=2.4, smooth=False)
-    for x in range(0, 1000, 120):
-        p.line([(x, 520), (x - 20, H)], INK.alpha(0.3), 1.6, smooth=False)
-    for x in (560, 700, 840):
-        p.shape(rect(x, 480, x + 70, 524), C.hex('d0ba90'), width=2, shade=0.6, smooth=False)
-    hoplite(pose='ly_lean', head=corinthian(C.hex('d8d0c0'), closed=False), main=C.hex('6a3a2a'), hair='curly', hair_col=HAIR_GREY,
+    hz = sea_sky(p, 'dusk', 0.52, sun=(860, H * 0.52))
+    bg.clouds(p, H * 0.2, 2, xs=[620, 860], col=C.hex('f4c8b0').alpha(0.6))
+    sea(p, hz, 'dusk', y1=hz + 40)
+    # the plain of Attica between city and sea
+    land = [(-20, H + 10, 0), (-20, hz + 8), (300, hz + 2), (640, hz + 14), (W + 20, hz + 30), (W + 20, H + 10, 0)]
+    p.shape(land, ('v', C.hex('a08a5a'), C.hex('7a6a3a')), ink=INK.alpha(0.4), width=1.6, smooth=False)
+    r = p.rng
+    for k in range(14):
+        x = r.uniform(0, W)
+        y = r.uniform(hz + 30, 470)
+        p.blob((x, y), r.uniform(20, 50), r.uniform(4, 9), [C.hex('8a9a4a'), C.hex('b09a5a'), C.hex('6a7a3a')][k % 3].alpha(0.7), ink=False)
+    for k in range(22):
+        x = r.uniform(0, W)
+        y = r.uniform(hz + 20, 460)
+        bg.tiny_tree(p, x, y, 0.4 + (y - hz) / 300, OLIVE.dark(0.1), 'round')
+    # the harbour at the end of the walls, ships drawn up
+    for x in (800, 880, 950):
+        ship(p, x, hz + 26, 0.16, LEAD_WHITE.dark(0.1), VERMILION, oars=False)
+    bg.town(p, 770, hz + 30, 0.5, MARBLE_WARM, TERRACOTTA, spires=0)
+    # the two long walls running from the city to the sea, the road between them
+    vp = (790, hz + 30)
+    road = [(380, 470, 0), (vp[0] - 8, vp[1], 0), (vp[0] + 8, vp[1], 0), (1010, 480, 0)]
+    p.shape(road, ('v', C.hex('c8b080'), C.hex('d8c090')), ink=False, smooth=False)
+    L.long_wall(p, (1010, 470), (vp[0] + 10, vp[1] + 1), 90, 7, 14, 1.5, C.hex('cdb68a'), towers=(0.1, 0.33, 0.55, 0.75), side=-1)
+    L.long_wall(p, (330, 470), (vp[0] - 10, vp[1]), 90, 7, 14, 1.5, C.hex('d6c094'), towers=(0.12, 0.36, 0.58, 0.78), side=1)
+    # the parapet of the wall-walk he guards, merlons against the dusk
+    wall = C.hex('c8b088')
+    p.shape(rect(-10, 470, W + 10, 530), ('v', wall.light(0.05), wall.dark(0.15)), width=2.2, smooth=False)
+    stone_courses(p, [(-10, 530), (W + 10, 530), (W + 10, 470), (-10, 470)], 2, wall)
+    for x in range(-20, int(W) + 20, 110):
+        p.shape(rect(x, 428, x + 62, 472), ('h', wall.light(0.15), wall.dark(0.12)), width=2, smooth=False)
+        p.shape(rect(x, 428, x + 62, 436), wall.light(0.2), width=1.4, smooth=False)
+    # the walk itself, worn flagstones
+    p.shape(rect(-10, 530, W + 10, H + 10), ('v', C.hex('b8a07a'), C.hex('7a6648')), width=2.4, smooth=False)
+    for k, y in enumerate((556, 590)):
+        p.line([(-10, y), (W + 10, y)], INK.alpha(0.25), 1.4, smooth=False)
+        for x in range(-40 + k * 60, 1000, 120):
+            p.line([(x, y - (26 if k == 0 else 34)), (x - 6, y)], INK.alpha(0.25), 1.4, smooth=False)
+    # his kit against the parapet: a water jar and the crested helmet's spare plume box
+    amphora(p, 760, 540, 0.62, TERRACOTTA, band=True)
+    p.shape(rect(600, 500, 690, 540), C.hex('7a5a36'), width=2, shade=0.6, smooth=False)
+    p.line([(600, 512), (690, 512)], INK.alpha(0.5), 1.6, smooth=False)
+    hoplite(pose='ly_hoplite', head=corinthian(C.hex('d8d0c0'), closed=False), main=C.hex('6a3a2a'), hair='curly', hair_col=HAIR_GREY,
             beard='short', age='old', mouth='stern', hoplon='bull', hoplon_field=C.hex('3a3a3a'), hoplon_r=23,
-            props_front=[spear('f', 128)], chlamys=C.hex('5a2a22')).draw(p, 360, 600, 470)
+            props_front=[spear('f', 114)], chlamys=C.hex('5a2a22')).draw(p, 330, 604, 470)
     # a scar across the cheek
-    p.line([(372, 157), (383, 176)], C.hex('8a3a2a').alpha(0.85), 2.2)
+    p.line([(343.5, 162), (351, 176)], C.hex('8a3a2a').alpha(0.85), 2.2)
 
 
 def lyceum_c_012(p):
@@ -318,12 +357,12 @@ def lyceum_c_013(p):
     # golden threads from the scroll wrapping round him
     for k in range(5):
         y = 330 + k * 44
-        p.line([(330, 340 + k * 6), (480, y - 30), (620, y), (700, y + 10), (760, y - 6)], GOLD_DARK.alpha(0.6), 4.5)
-        p.line([(330, 340 + k * 6), (480, y - 30), (620, y), (700, y + 10), (760, y - 6)], GOLD_LIGHT.alpha(0.9), 2)
+        p.line([(345, 330 + k * 6), (480, y - 30), (620, y), (700, y + 10), (760, y - 6)], GOLD_DARK.alpha(0.6), 4.5)
+        p.line([(345, 330 + k * 6), (480, y - 30), (620, y), (700, y + 10), (760, y - 6)], GOLD_LIGHT.alpha(0.9), 2)
     for k in range(3):
         p.blob((690, 360 + k * 70), 80, 14, None, ink=GOLD_LIGHT.alpha(0.8), width=2.4)
     philosopher(pose='ly_scroll', himation=C.hex('3a5a9a'), main=LINEN, hair='short', hair_col=C.hex('6a4a2a'), beard='short',
-                props_front=[held_scroll('f', open_=True, length=16)], eyes='open', mouth='open').draw(p, 250, 606, 450)
+                props_front=[held_scroll('both', open_=True)], eyes='open', mouth='open').draw(p, 250, 606, 450)
 
 
 def lyceum_c_014(p):
@@ -374,7 +413,7 @@ def lyceum_c_015(p):
     for k, col in enumerate((VERMILION, ULTRA, MALACHITE)):
         scroll_closed(p, (150 + k * 30, 390 + k * 36), 160, 15, 0.1, tag=col)
     wax_tablet(p, (820, 540), 150, 100, -0.2)
-    p.taper([(240, 560), (300, 540)], 2, 1, LEAD_WHITE, width=1)
+    rod(p, [(240, 560), (300, 540)], 2, 1, LEAD_WHITE, width=1)
 
 
 def lyceum_c_016(p):
@@ -414,7 +453,7 @@ def lyceum_c_017(p):
     p.shape(rect(280, 520, 300, 610), C.hex('4a301c'), width=2, smooth=False)
     p.shape(rect(720, 520, 740, 610), C.hex('4a301c'), width=2, smooth=False)
     hoplite(pose='sword_up', head=attic(LEAD_WHITE), main=C.hex('8a2a24'), cloak='mantle', cloak_col=VERMILION, hair='short',
-            beard='short', mouth='open', props_front=[xiphos('f', up=True)], hoplon=None).draw(p, 760, 606, 450, flip=True)
+            beard='short', mouth='open', props_front=[xiphos('f', up=True)], hoplon='star', hoplon_field=VERMILION.dark(0.15)).draw(p, 760, 606, 450, flip=True)
     philosopher(pose='ly_finger', himation=C.hex('2a4a8a'), hair='bald', hair_col=C.hex('8a8070'), beard='forked', age='old',
                 eyes='open', mouth='open').draw(p, 240, 606, 450)
 
@@ -460,7 +499,7 @@ def lyceum_c_018(p):
     p.push(790, 400, 0.55)
     amphora(p, 0, 0, 1.0)
     p.pop()
-    p.taper([(790, 402), (790, 470)], 1.6, 1.2, C.hex('9ac8e0'), ink=False)
+    rod(p, [(790, 402), (790, 470)], 1.6, 1.2, C.hex('9ac8e0'), ink=False)
     philosopher(pose='ly_palm', himation=C.hex('6a2a2a'), main=LINEN, hair='white', beard='long', age='old',
                 eyes='down').draw(p, 230, 606, 460)
 
@@ -587,7 +626,8 @@ def lyceum_u_004(p):
     # three hoplites crouched behind locked shields, front view of the shields
     devices = ['book', 'owl', 'book']
     for i, x in enumerate((275, 500, 725)):
-        hoplite(pose='ly_hoplite', head=corinthian(VERMILION if i != 1 else C.hex('1a1a22')), main=C.hex('7a2a24'), kneel=True).draw(p, x + 20, 610, 480)
+        hoplite(pose='ly_hoplite', head=corinthian(VERMILION if i != 1 else C.hex('1a1a22')), main=C.hex('7a2a24'), kneel=True,
+                props_front=[spear('f', 118)]).draw(p, x + 20, 610, 480)
     for i, x in enumerate((275, 500, 725)):
         hoplon(p, (x, 470), 128, devices[i], [ULTRA, LEAD_WHITE, ULTRA][i], turn=0.96)
         for k in range(3):
@@ -638,34 +678,54 @@ def lyceum_u_006(p):
 def lyceum_u_007(p):
     """Navarch of the Cold Sea: at the prow of his trireme he points the fleet to its port through the floes."""
     hz = sea_sky(p, 'cold', 0.5)
-    island(p, 160, hz, 280, 60, C.hex('8a929a'), haze=0.5)
-    for k, (x, s) in enumerate(((620, 0.35), (820, 0.28), (420, 0.22))):
-        ship(p, x, hz + 18, s, C.hex('e0e4e8'), ULTRA, oars=True)
+    p.glow((760, hz - 20), 300, C.hex('f4f8fa'), 0.45)
+    L.mountains(p, hz, C.hex('a4aebc'), [(90, 70), (330, 50), (930, 90)], snow=True)
+    island(p, 640, hz, 200, 40, C.hex('8a96a4'), temple=True, haze=0.55)
     sea(p, hz, 'cold')
-    for (x, y, w) in ((80, 520, 120), (900, 560, 160), (640, 600, 100)):
-        p.shape([(x - w / 2, y), (x - w / 3, y - 14), (x + w / 3, y - 18), (x + w / 2, y - 2), (x + w / 4, y + 8), (x - w / 3, y + 8)], ('v', LEAD_WHITE, ICE_DEEP), ink=ICE_DEEP.dark(0.4), width=1.8)
-    # the prow of his own ship in the foreground: a curving bow with a painted eye and a bronze ram
-    prow = [(-10, H + 10, 0), (-10, 420), (300, 440), (560, 470), (700, 470), (780, 440), (800, 420, 0), (790, 470), (770, 520), (760, H + 10, 0)]
-    p.shape(prow, ('v', C.hex('3a3230'), C.hex('1e1a18')), width=2.6, shade=0.5)
-    p.shape([(-10, 410, 0), (300, 430), (560, 460), (700, 460), (790, 418, 0), (800, 424), (705, 476), (560, 478), (300, 450), (-10, 432, 0)], GOLD_DARK, width=1.8)
-    p.clip_shape(prow)
-    for k in range(6):
-        y = 470 + k * 26
-        p.line([(-10, y - 30), (300, y - 14), (560, y + 8), (760, y + 14)], C.hex('5a4a40').alpha(0.7), 2)
+    # the fleet following through the ice, hulls and oars showing
+    for (x, y, sc) in ((560, hz + 26, 0.3), (760, hz + 20, 0.24), (900, hz + 34, 0.34)):
+        ship(p, x, y, sc, C.hex('e4e8ec'), ULTRA, oars=True, hull=C.hex('5a4434'))
+    # floes drifting on the dark water
+    for (x, y, w) in ((470, hz + 70, 120), (700, hz + 92, 170), (930, hz + 130, 140), (560, hz + 150, 110), (820, hz + 200, 190)):
+        top = [(x - w / 2, y), (x - w / 3, y - w * 0.09), (x + w * 0.1, y - w * 0.12), (x + w / 2, y - w * 0.02), (x + w * 0.3, y + w * 0.07), (x - w * 0.3, y + w * 0.07)]
+        p.shape([(q[0], q[1] + w * 0.06) for q in top], ICE_DEEP.dark(0.25), ink=False)
+        p.shape(top, ('v', LEAD_WHITE, ICE.dark(0.05), ICE_DEEP), ink=ICE_DEEP.dark(0.45), width=1.6)
+        p.line([(x - w / 3, y - w * 0.06), (x + w * 0.05, y - w * 0.08)], LEAD_WHITE.alpha(0.9), 2)
+    # his own ship: a painted hull, oars dipping, the stem curling up at the bow
+    hull_top = [(-10, 508), (300, 512), (560, 506), (720, 490), (800, 462)]
+    hull = [(-10, H + 10, 0)] + hull_top + [(830, 420), (848, 470), (830, 530), (800, 590), (790, H + 10, 0)]
+    p.shape(hull, ('v', C.hex('8a6440'), C.hex('5a3e26')), width=2.6, shade=0.6, rim=0.3)
+    p.clip_shape(hull)
+    p.texture((-10, 400, 860, H))
+    for k in range(5):
+        y = 545 + k * 18
+        p.line([(-10, y), (400, y + 2), (700, y - 8), (840, y - 40)], C.hex('3a2818').alpha(0.4), 1.6)
+    p.shape([(-10, 512, 0), (300, 516), (560, 510), (720, 494), (812, 462), (818, 478), (726, 512), (560, 528), (300, 534), (-10, 532, 0)], ULTRA, width=1.6)
+    meander(p, -10, 690, 515, 14, GOLD)
+    p.shape([(-10, 532, 0), (300, 534), (560, 528), (726, 512), (818, 478), (822, 492), (730, 526), (560, 542), (300, 548), (-10, 546, 0)], VERMILION.dark(0.1), width=1.4)
     for k in range(9):
-        p.blob((60 + k * 60, 486 + k * 3), 8, 5, C.hex('120e0c'), width=1)
-        p.line([(60 + k * 60, 490 + k * 3), (40 + k * 60, 640)], C.hex('8a6a40'), 4)
+        p.blob((70 + k * 80, 566 - k * 1.5), 9, 6, C.hex('1a120c'), width=1.2)
     p.unclip()
-    p.blob((660, 510), 30, 16, LEAD_WHITE, width=2)
-    p.blob((666, 510), 11, 11, AEGEAN_DEEP, width=1.4)
-    p.blob((668, 510), 5, 5, INK, ink=False)
-    p.shape([(740, 560), (840, 556, 0), (850, 576), (840, 596, 0), (740, 590)], ('v', BRONZE_LIGHT, BRONZE_DARK), width=2)
+    for k in range(9):
+        q = (70 + k * 80, 566 - k * 1.5)
+        rod(p, [q, (q[0] - 46, H + 12)], 3.2, 3.6, C.hex('a07a4a'), width=1.4, shade=0.5)
+    # the curling stem post and the painted eye
+    p.taper([(800, 462), (836, 400), (850, 340), (838, 306), (818, 312), (826, 334)], 13, 6, C.hex('8a6440'), width=2.2, shade=0.7, rim=0.3)
+    p.taper([(806, 456), (840, 396), (852, 344)], 3, 2, GOLD, width=1.2)
+    p.blob((740, 548), 26, 14, LEAD_WHITE, width=2)
+    p.blob((746, 548), 9.5, 9.5, AEGEAN_DEEP, width=1.4)
+    p.blob((748, 548), 4.5, 4.5, INK, ink=False)
+    p.shape([(790, 590), (880, 584, 0), (892, 600), (880, 616, 0), (790, 616)], ('v', BRONZE_LIGHT, BRONZE_DARK), width=2)
     for k in range(10):
-        x = 790 + k * 20
-        p.blob((x, 600), 18, 6, LEAD_WHITE.alpha(0.8), ink=False)
+        p.blob((820 + k * 18, 612 + (k % 2) * 4), 16, 6, LEAD_WHITE.alpha(0.85), ink=False)
+    for k in range(9):
+        p.blob((70 + k * 80 - 44, H - 2), 18, 5, LEAD_WHITE.alpha(0.7), ink=False)
+    # a coil of rope and a lantern on the foredeck
+    for k in range(3):
+        p.blob((620, 498 - k * 5), 34 - k * 6, 8, None, ink=C.hex('a08458'), width=4)
     Greek(pose='point', garb='tunic', main=C.hex('3a4a7a'), sleeves='fitted', hair='curly', hair_col=HAIR_GREY, beard='short', age='old',
-          cloak='mantle', cloak_col=C.hex('2a3a5a'), lining=C.hex('6a7aa0'), belt='leather', fur=C.hex('d8d0c0'), mouth='stern',
-          greaves=False).draw(p, 330, 452, 400)
+          cloak='mantle', cloak_col=C.hex('6a2a2a'), lining=C.hex('c8a060'), belt='leather', fur=C.hex('d8d0c0'), mouth='stern',
+          greaves=False).draw(p, 330, 512, 410)
     frost(p, (0, 0, W, 300), 20)
 
 
@@ -707,18 +767,10 @@ def lyceum_u_009(p):
     p.shape([(600, 600, 0), (606, 400), (640, 380), (680, 396), (690, 600, 0)], ('h', STONE.light(0.1), STONE_DARK), width=2.2)
     p.line([(620, 450), (650, 470), (676, 446)], UMBER.dark(0.2), 3)
     p.blob((650, 470), 6, 6, None, ink=BRONZE, width=2.4)
-    # the mule waiting, and a small young king being taught by an old man
-    for k, (x, y) in enumerate(((760, 540), (860, 540))):
-        pass
-    p.blob((800, 520), 60, 30, C.hex('6a5a4a'), width=2, shade=0.8)
-    for dx in (-44, -30, 36, 48):
-        p.taper([(800 + dx, 530), (800 + dx * 1.05, 590)], 5, 3.4, C.hex('5a4a3a'), width=1.6)
-    p.taper([(850, 510), (880, 470), (890, 450)], 12, 10, C.hex('6a5a4a'), width=1.8, shade=0.6)
-    p.shape([(878, 450), (884, 420, 0), (892, 448)], C.hex('5a4a3a'), width=1.4)
-    p.shape([(890, 440), (902, 416, 0), (900, 446)], C.hex('5a4a3a'), width=1.4)
-    p.blob((900, 462), 16, 11, C.hex('6a5a4a'), rot=0.6, width=1.6, shade=0.5)
-    p.blob((902, 458), 2, 2, INK, ink=False)
-    p.taper([(742, 516), (730, 560)], 3, 1, C.hex('3a2a1a'), width=1)
+    p.blob((690, 470), 4, 4, BRONZE, width=1.4)
+    # the driver's mule waits by its master's stone, its lead tied to the halter peg
+    ring = L.mule(p, 866, 600, 1.3, flip=True)
+    p.line([ring, v_add(v_lerp(ring, (690, 470), 0.5), (0, 26)), (690, 470)], C.hex('a08458'), 2.4)
     Greek(pose='ly_finger', garb='toga', main=LINEN, himation=C.hex('5a5a7a'), hair='white', beard='long', age='old',
           sleeves='fitted', eyes='open').draw(p, 250, 606, 450)
 
@@ -750,24 +802,46 @@ def lyceum_u_010(p):
 
 def lyceum_u_011(p):
     """Stillness of Mind: the philosopher spoke of the vanity of striving, and the whole army sat down."""
-    sea_sky(p, 'day', 0.56)
-    bg.clouds(p, H * 0.18, 3, xs=[160, 500, 860])
-    bg.hills(p, H * 0.58, C.hex('9aa878'), 30, n=5)
-    ground(p, H * 0.62, C.hex('a89a68'), dry=False, grass=OLIVE)
-    # the army, seated in rows, spears laid down
-    rows = [(H * 0.68, 150, 0.0), (H * 0.8, 200, 0.0), (H * 0.95, 260, 0.0)]
-    for r, (y, hgt, _) in enumerate(rows):
-        n = 6 - r
-        for k in range(n):
-            x = 480 + k * (480 / n) + (r % 2) * 30
-            p.line([(x - 60, y + 4), (x + 70, y - 2)], C.hex('7a5a36'), 2.4, smooth=False)
-            Figure(pose='stand', garb='tunic', main=[VERMILION.dark(0.2), C.hex('5a6a3a'), C.hex('6a4a3a')][k % 3], kneel=True, head='nasal',
-                   hair='short', beard='short' if k % 2 else None, hair_col=HAIR_DARK, eyes='down', belt='leather', sleeves='fitted').draw(p, x, y, hgt, flip=True)
-            p.blob((x - hgt * 0.17, y - hgt * 0.4), hgt * 0.12, hgt * 0.14, [BRONZE, ULTRA, BRONZE_LIGHT][k % 3], width=1.4, shade=0.7)
+    sea_sky(p, 'day', 0.5)
+    bg.clouds(p, H * 0.16, 3, xs=[160, 520, 860])
+    L.mountains(p, H * 0.5, C.hex('9aa4b4'), [(560, 80), (860, 120)])
+    bg.hills(p, H * 0.54, C.hex('9aa878'), 26, n=5)
+    ground(p, H * 0.58, C.hex('a89a68'), dry=False, grass=OLIVE)
+    # standards planted and left, the camp beyond
+    for (x, col) in ((640, VERMILION), (900, ULTRA)):
+        L.standard(p, x, 380, 200, col, eagle=False)
+    tent(p, 700, 800, 372, 56, C.hex('d8c8a0'), VERMILION)
+    r = p.rng
+    devices = ['star', 'owl', 'bull', 'wave', 'olive', 'book']
+    fields = [ULTRA, LEAD_WHITE, VERMILION.dark(0.1), C.hex('3a3a3a'), BRONZE_LIGHT, MALACHITE]
+    tunics = [VERMILION.dark(0.2), C.hex('5a6a3a'), C.hex('6a4a3a'), C.hex('3a4a7a'), C.hex('8a6a3a')]
+    rows = [(408, 170, [430, 540, 650, 760, 870]), (494, 230, [470, 610, 750, 890]), (602, 300, [520, 720, 910])]
+    n = 0
+    for (y, hgt, xs) in rows:
+        for x in xs:
+            x = x + r.uniform(-12, 12)
+            # shield leaning behind him, spear laid on the ground before him
+            hoplon(p, (x + hgt * 0.2, y - hgt * 0.2), hgt * 0.17, devices[n % 6], fields[n % 6], turn=0.8)
+            rod(p, [(x - hgt * 0.5, y + 4), (x + hgt * 0.42, y - 1)], 1.6, 1.4, C.hex('8a6a40'), width=1.2)
+            p.shape([(x - hgt * 0.5, y + 4, 0), (x - hgt * 0.58, y + 2.5, 0), (x - hgt * 0.5, y + 1, 0)], BRONZE, width=1, smooth=False)
+            bare = n % 3 == 1
+            head = None if bare else L.attic([LEAD_WHITE, VERMILION, C.hex('2a2a2a')][n % 3], BRONZE, None)
+            L.SeatedGreek(pose='ly_knees', garb='tunic', main=tunics[n % 5], sleeves='none', hair='curly', hair_col=[HAIR_DARK, C.hex('6a4a2a'), HAIR_GREY][n % 3],
+                          beard='short' if n % 2 else None, head=head, greaves=n % 2 == 0, eyes='down' if n % 2 else 'open',
+                          trim=None).draw(p, x, y, hgt, flip=True)
+            if bare:
+                # his helmet set down on the grass
+                p.push(x - hgt * 0.26, y + 2, hgt / 100.0)
+                L.corinthian(VERMILION, closed=True)(p, (0, -8))
+                p.pop()
+            n += 1
     # the rock he speaks from
-    p.shape([(60, H + 10, 0), (80, 520), (160, 480), (300, 490), (360, 540), (380, H + 10, 0)], ('v', C.hex('a89a88'), C.hex('5a5248')), width=2.4, shade=0.6)
+    p.shape([(40, H + 10, 0), (60, 520), (150, 482), (290, 488), (360, 536), (380, H + 10, 0)], ('v', C.hex('a89a88'), C.hex('5a5248')), width=2.4, shade=0.6)
+    p.clip_shape([(40, H + 10), (60, 520), (150, 482), (290, 488), (360, 536), (380, H + 10)])
+    p.texture((40, 470, 380, H), strength=1.5)
+    p.unclip()
     philosopher(pose='spread', himation=C.hex('2a4a8a'), main=LINEN, hair='white', beard='long', age='old', eyes='open',
-                mouth='open').draw(p, 230, 494, 420)
+                mouth='open').draw(p, 210, 496, 410)
 
 
 def lyceum_u_012(p):
@@ -789,8 +863,8 @@ def lyceum_u_012(p):
     for i, (rx, ry, col, r) in enumerate(orbits):
         a = 0.6 + i * 1.3
         q = polar(c, rx, a, ry)
-        p.taper([c, q], 2.4, 1.6, BRONZE, width=1.2)
-        p.taper([q, (q[0], q[1] - 30)], 1.6, 1.2, BRONZE, width=1)
+        rod(p, [c, q], 2.4, 1.6, BRONZE, width=1.2)
+        rod(p, [q, (q[0], q[1] - 30)], 1.6, 1.2, BRONZE, width=1)
         p.blob((q[0], q[1] - 30 - r), r, r, ('r', col.light(0.4), col, col.dark(0.4)), width=1.8, shade=0.8)
         if i == 3:
             p.blob((q[0], q[1] - 30 - r), r * 1.8, r * 0.4, None, ink=GOLD_LIGHT, width=2)
@@ -800,7 +874,7 @@ def lyceum_u_012(p):
         ring(p, c, rx, ry, 0.0, 2.4, BRONZE_DARK, part=(0, math.pi))
     ring(p, c, 330, 110, 0.0, 10, GOLD, part=(0, math.pi), ticks=0)
     # the pedestal and gear-box table
-    p.taper([(500, 364), (500, 470)], 12, 16, BRONZE, width=2, shade=0.8)
+    rod(p, [(500, 364), (500, 470)], 12, 16, BRONZE, width=2, shade=0.8)
     p.shape([(300, 470, 0), (700, 470, 0), (740, 520, 0), (260, 520, 0)], ('v', C.hex('8a5a32'), C.hex('5a3a1e')), width=2.4, smooth=False)
     p.shape(rect(260, 520, 740, 610), ('v', C.hex('6a4426'), C.hex('3a2412')), width=2.4, smooth=False)
     meander(p, 270, 730, 540, 22, GOLD_DARK)
@@ -849,7 +923,7 @@ def lyceum_u_013(p):
     p.shape([(180, 600), (150, 560), (170, 520), (200, 516), (230, 528), (240, 570), (220, 604)], C.hex('8a3a2a'), width=2, shade=0.8)
     p.line([(166, 528), (206, 524)], GOLD, 3)
     p.shape(rect(780, 380, 792, 600), BRONZE_DARK, width=1.6, smooth=False)
-    p.taper([(700, 390), (870, 390)], 3, 3, BRONZE, width=1.4)
+    rod(p, [(700, 390), (870, 390)], 3, 3, BRONZE, width=1.4)
     for x in (710, 860):
         p.line([(x, 390), (x - 20, 470)], INK, 1.2)
         p.line([(x, 390), (x + 20, 470)], INK, 1.2)
@@ -876,7 +950,7 @@ def lyceum_r_001(p):
     marble_floor(p, H * 0.84, C.hex('d8ccb0'), C.hex('7a4a30'), rows=3)
     # ladder
     for x in (720, 780):
-        p.taper([(x - 30, H * 0.9), (x + 30, 60)], 4, 4, C.hex('a07a4a'), width=1.6, shade=0.6)
+        rod(p, [(x - 30, H * 0.9), (x + 30, 60)], 4, 4, C.hex('a07a4a'), width=1.6, shade=0.6)
     for k in range(10):
         t = k / 10
         y = lerp(H * 0.9, 60, t)
@@ -888,10 +962,10 @@ def lyceum_r_001(p):
         h = j['hand_b']
         p_.blob((h[0], h[1] + 4), 3, 3, None, ink=BRONZE, width=2)
         for k in range(3):
-            p_.taper([(h[0] - 1 + k, h[1] + 6), (h[0] - 2 + k * 2, h[1] + 16)], 0.6, 0.6, BRONZE, width=0.8)
+            rod(p_, [(h[0] - 1 + k, h[1] + 6), (h[0] - 2 + k * 2, h[1] + 16)], 0.6, 0.6, BRONZE, width=0.8)
             p_.blob((h[0] - 2 + k * 2, h[1] + 16), 1.2, 1, BRONZE, width=0.6)
     Greek(pose='ly_scroll', garb='robe', main=C.hex('5a4a3a'), himation=C.hex('8a6a3a'), hair='white', beard='long', age='old',
-          sleeves='fitted', props_front=[held_scroll('f', open_=True, length=18)], props_back=[keys], eyes='down', width=1.1).draw(p, 470, 610, 470)
+          sleeves='fitted', props_front=[held_scroll('both', open_=True)], props_back=[keys], eyes='down', width=1.1).draw(p, 470, 610, 470)
 
 
 def lyceum_r_002(p):
@@ -912,8 +986,8 @@ def lyceum_r_002(p):
     p.blob((310, 594), 16, 9, None, ink=IRON.dark(0.3), width=6)
     def crutch(p_, j):
         h = j['hand_f']
-        p_.taper([(h[0] + 2, 1), (h[0] + 1, h[1] + 6)], 1.4, 1.2, C.hex('8a6a40'), width=1.3, shade=0.6)
-        p_.taper([(h[0] - 4, h[1] - 1), (h[0] + 6, h[1] - 1)], 1.3, 1.3, C.hex('8a6a40'), width=1.2)
+        rod(p_, [(h[0] + 2, 1), (h[0] + 1, h[1] + 6)], 1.4, 1.2, C.hex('8a6a40'), width=1.3, shade=0.6)
+        rod(p_, [(h[0] - 4, h[1] - 1), (h[0] + 6, h[1] - 1)], 1.3, 1.3, C.hex('8a6a40'), width=1.2)
     Greek(pose='ly_lean', garb='rags', main=C.hex('9a8a6a'), himation=C.hex('7a6a50'), hair='bald', hair_col=HAIR_GREY, beard='long',
           age='old', sleeves='fitted', props_front=[crutch], eyes='open', mouth='calm', sandals=False, lean=0.0).draw(p, 440, 606, 470)
 
@@ -956,7 +1030,7 @@ def lyceum_r_004(p):
     Greek(pose='ly_chin', garb='tunic', main=LEAD_WHITE, hem=TYRIAN, trim=TYRIAN, hair='curly', hair_col=C.hex('a06a30'), sleeves='fitted',
           head=gold_laurel(), eyes='up', age='young', cloak='cape', cloak_col=TYRIAN).draw(p, 620, 606, 330, flip=True)
     Greek(pose='ly_scroll', garb='toga', main=LEAD_WHITE, himation=LEAD_WHITE.dark(0.06), hem=CRIMSON, trim=CRIMSON, hair='bald',
-          hair_col=HAIR_GREY, beard='short', age='old', sleeves='fitted', props_front=[held_scroll('f', open_=True, length=18)],
+          hair_col=HAIR_GREY, beard='short', age='old', sleeves='fitted', props_front=[held_scroll('both', open_=True)],
           eyes='open', mouth='open').draw(p, 330, 606, 470)
 
 
@@ -967,20 +1041,23 @@ def lyceum_r_005(p):
         column(p, x, 166, H * 0.74, 48, 'doric', MARBLE)
     marble_floor(p, H * 0.74, C.hex('ece4d2'), C.hex('2a4a7a'), rows=5)
     # the stone bench he sits upon, steps before it
-    p.shape(rect(330, 460, 670, 520), ('v', MARBLE.light(0.1), MARBLE_SHADE), width=2.2, smooth=False)
-    p.shape(rect(300, 520, 700, 560), ('v', MARBLE, MARBLE_SHADE.dark(0.1)), width=2.2, smooth=False)
-    for x in (340, 660):
-        p.shape([(x - 20, 460), (x - 22, 380), (x, 370), (x + 22, 380), (x + 20, 460)], MARBLE_WARM, width=2, shade=0.7)
+    p.shape(rect(300, 540, 700, 580), ('v', MARBLE, MARBLE_SHADE.dark(0.1)), width=2.2, smooth=False)
+    p.shape(rect(340, 436, 640, 548), ('v', MARBLE.light(0.1), MARBLE_SHADE), width=2.2, smooth=False)
+    p.shape(rect(330, 426, 650, 440), MARBLE.light(0.15), width=2, smooth=False)
+    meander(p, 350, 630, 470, 16, MARBLE_SHADE.dark(0.3))
+    for x in (330, 650):
+        p.shape([(x - 18, 548), (x - 20, 400), (x, 388), (x + 20, 400), (x + 18, 548)], MARBLE_WARM, width=2, shade=0.7)
+        p.blob((x, 392), 16, 10, MARBLE.light(0.1), width=1.8, shade=0.5)
     def crown_held(p_, j):
         h = j['hand_f']
         p_.shape([(h[0] - 5, h[1] - 1, 0), (h[0] - 6, h[1] - 7, 0), (h[0] - 3, h[1] - 4, 0), (h[0], h[1] - 8, 0), (h[0] + 3, h[1] - 4, 0), (h[0] + 6, h[1] - 7, 0), (h[0] + 5, h[1] - 1, 0)],
                  GOLD, width=1.2, smooth=False, shade=0.5)
-    Figure(pose='offer', garb='gown', main=C.hex('6a2a5a'), hair='short', beard='forked', hair_col=C.hex('3a2a1a'), cloak='mantle', cloak_col=VERMILION,
+    L.LyFigure(pose='offer', garb='gown', main=C.hex('6a2a5a'), hair='short', beard='forked', hair_col=C.hex('3a2a1a'), cloak='mantle', cloak_col=VERMILION,
            kneel=True, fur=C.hex('ece4d4'), props_front=[crown_held], eyes='down', belt='gold').draw(p, 180, 610, 330)
-    Figure(pose='offer', garb='gown', main=C.hex('2a5a4a'), hair='white', beard='long', age='old', cloak='mantle', cloak_col=C.hex('c8a040'),
+    L.LyFigure(pose='offer', garb='gown', main=C.hex('2a5a4a'), hair='white', beard='long', age='old', cloak='mantle', cloak_col=C.hex('c8a040'),
            kneel=True, fur=C.hex('5a4a3a'), props_front=[crown_held], eyes='down', belt='gold').draw(p, 830, 614, 320, flip=True)
-    philosopher(pose='bless' if False else 'ly_hand_out', himation=C.hex('2a3a7a'), main=LINEN, hair='white', beard='long', age='old',
-                eyes='open', trim=GOLD, kneel=True).draw(p, 500, 470, 400)
+    L.BenchGreek(pose='ly_hand_out', garb='toga', sleeves='fitted', himation=C.hex('2a3a7a'), main=LINEN, hair='white', beard='long', age='old',
+                 hair_col=HAIR_DARK, eyes='open', trim=GOLD).draw(p, 470, 562, 470)
 
 
 def lyceum_r_006(p):
@@ -1006,43 +1083,53 @@ def lyceum_r_006(p):
 
 
 def lyceum_r_007(p):
-    """All Things Return: the cosmos returns to its source and begins again; all things drawn up into the turning wheel."""
-    bg.fill_all(p, ('r', C.hex('3a2a6a'), C.hex('0a0a24')))
-    p.stars((40, 10, 960, 560), 90, GOLD_LIGHT.alpha(0.8), (1.2, 3.8))
-    c = (500, 250)
-    # the great wheel of the cosmos: concentric rings, the zodiac band, a fiery centre
-    for k, (rr, col) in enumerate(((250, ULTRA.light(0.2)), (200, AZURE), (150, MALACHITE.light(0.2)), (100, OCHRE), (55, FLAME))):
-        p.blob(c, rr, rr * 0.62, col.alpha(0.18), ink=col.alpha(0.7), width=2.4)
-    ring(p, c, 280, 174, 0.0, 12, GOLD, ticks=36)
-    for i in range(12):
-        a = math.tau * i / 12
-        p.star(polar(c, 280, a, 174), 10, GOLD_LIGHT, 8)
-    p.glow(c, 120, C.hex('fff0a0'), 0.9)
-    p.blob(c, 34, 34, ('r', LEAD_WHITE, FLAME_CORE, FLAME), width=2)
-    # spiral arms carrying all things up into it
-    for k in range(4):
-        swirl(p, c, 250, 1.2, [AZURE, GOLD_LIGHT, ROSE, SAP][k], 4, 0.55, rot=k * math.pi / 2)
-    r = p.rng
-    for k in range(14):
-        a = r.uniform(0, math.tau)
-        d = r.uniform(110, 240)
-        q = polar(c, d, a, d * 0.6)
-        kind = k % 4
-        if kind == 0:
-            p.blob(q, 9, 6, LEAF, rot=a, width=1.2, shade=0.5)
-        elif kind == 1:
-            p.blob(q, 6, 6, BRONZE, width=1.2, shade=0.6)
-        elif kind == 2:
-            p.shape([(q[0] - 8, q[1] + 6), (q[0], q[1] - 10, 0), (q[0] + 8, q[1] + 6)], VERMILION.light(0.2), width=1.2)
-        else:
-            p.blob(q, 5, 9, LEAD_WHITE.alpha(0.8), rot=a, width=1)
-    # the earth below, and an old philosopher watching from the hill
-    bg.hills(p, H * 0.78, C.hex('2a3a3a'), 30, n=5)
-    p.shape(rect(-10, H * 0.86, W + 10, H + 10), C.hex('1a2424'), ink=False, smooth=False)
-    Greek(pose='spread', garb='toga', main=C.hex('c8c0b0'), himation=C.hex('4a3a6a'), hair='white', beard='long', age='old', sleeves='fitted',
-          eyes='up').draw(p, 190, 600, 280)
-    Greek(pose='pray', garb='tunic', main=C.hex('8a6a4a'), hair='short', hair_col=HAIR_DARK, sleeves='fitted', kneel=True,
-          eyes='up').draw(p, 820, 604, 240, flip=True)
+    """All Things Return: the great year turns; what rose comes down, and all things begin again."""
+    hz = sea_sky(p, 'dusk', 0.66, sun=(500, H * 0.66))
+    p.stars((80, 20, 920, 200), 40, GOLD_LIGHT.alpha(0.8), (1.2, 3.4))
+    sea(p, hz, 'dusk')
+    island(p, 820, hz, 240, 46, C.hex('4a3a5a'), temple=True, haze=0.2)
+    island(p, 150, hz, 200, 34, C.hex('4a3a5a'), haze=0.3)
+    c = (540, 300)
+    R = 172
+    # the turning wheel of the great year, its fiery hub the cosmic fire
+    p.glow(c, 330, C.hex('ffd890'), 0.5)
+    ring(p, c, R + 22, R + 22, 0.0, 6, GOLD_DARK)
+    ring(p, c, R, R, 0.0, 16, GOLD, ticks=48)
+    for k in range(12):
+        a = k * math.tau / 12 + 0.13
+        rod(p, [polar(c, 44, a), polar(c, R - 10, a)], 5, 3.2, ('h', BRONZE_LIGHT, BRONZE, BRONZE_DARK), width=1.6, shade=0.6)
+        p.star(polar(c, R + 22, a + math.pi / 12), 9, GOLD_LIGHT, 8)
+    # seasons painted in the segments: green spring, golden summer, russet autumn, blue winter
+    for k, col in enumerate((SAP, C.hex('e8c050'), C.hex('c06a3a'), C.hex('8ab0d8'))):
+        a0 = -math.pi / 2 + k * math.pi / 2
+        pts = [polar(c, 52, a0 + 0.12)] + [polar(c, R - 14, a0 + 0.12 + t * (math.pi / 2 - 0.24) / 6) for t in range(7)] + [polar(c, 52, a0 + math.pi / 2 - 0.12)]
+        p.shape(pts, col.alpha(0.35), ink=False)
+    p.blob(c, 46, 46, ('r', LEAD_WHITE, FLAME_CORE, FLAME), width=2.4)
+    p.rays(c, 50, 80, 20, GOLD_LIGHT.alpha(0.9), 3)
+    # men on the rim: one climbs, one is crowned at the top, one falls away, one lies at the foot
+    Greek(pose='ly_both_up', garb='tunic', main=C.hex('5a8a4a'), sleeves='none', hair='curly', hair_col=HAIR_DARK,
+          eyes='up').draw(p, 346, 372, 124)
+    L.BenchGreek(pose='ly_hand_out', garb='toga', sleeves='fitted', main=LEAD_WHITE, himation=TYRIAN, hair='curly', hair_col=HAIR_DARK,
+                 beard='short', head=gold_laurel(), eyes='open', trim=GOLD).draw(p, 530, 128, 112)
+    Greek(pose='ly_both_up', garb='toga', main=C.hex('b86a3a'), sleeves='fitted', hair='white', beard='long', age='old',
+          eyes='down').draw(p, 736, 352, 124, flip=True)
+    # the robes of the old king slipping down the falling side
+    p.push(540, 500, 1.0, rot=0.0)
+    p.shape([(-60, -6), (-20, -18), (30, -16), (66, -4), (40, 4), (-40, 4)], C.hex('6a5a8a'), width=1.8, shade=0.8)
+    p.pop()
+    Greek(pose='ly_hang', garb='tunic', main=C.hex('8ab0d8'), sleeves='none', hair='short', hair_col=HAIR_DARK,
+          eyes='closed', kneel=True).draw(p, 540, 504, 100)
+    # the headland where the philosopher shows his pupil the turning
+    rock = [(-20, H + 10, 0), (-20, 520), (120, 506), (260, 516), (380, 560), (420, H + 10, 0)]
+    p.shape(rock, ('v', C.hex('7a6a6a'), C.hex('3a3030')), width=2.4, shade=0.6)
+    p.clip_shape(rock)
+    p.texture((0, 500, 420, H), strength=1.4)
+    p.unclip()
+    p.shape([(560, H + 10, 0), (620, 590), (760, 574), (900, 588), (1020, 570), (1020, H + 10, 0)], ('v', C.hex('6a5a5a'), C.hex('2a2224')), width=2.2)
+    Greek(pose='point', garb='toga', main=C.hex('d8d0c0'), himation=C.hex('3a3a6a'), hair='white', beard='long', age='old', sleeves='fitted',
+          eyes='up', trim=GOLD).draw(p, 150, 520, 300)
+    L.SeatedGreek(pose='ly_knees', garb='tunic', main=C.hex('8a6a4a'), sleeves='none', hair='curly', hair_col=HAIR_DARK, trim=None,
+                  eyes='up').draw(p, 280, 526, 200)
 
 
 def lyceum_r_008(p):
@@ -1052,10 +1139,10 @@ def lyceum_r_008(p):
     meander(p, -10, W + 10, 470, 24, GOLD, ULTRA_DEEP)
     p.rays((500, 260), 120, 420, 30, LEAD_WHITE.alpha(0.35), 4)
     # lectern of bronze with lion feet
-    p.taper([(500, 600), (500, 400)], 16, 12, BRONZE, width=2, shade=0.8)
+    rod(p, [(500, 600), (500, 400)], 16, 12, BRONZE, width=2, shade=0.8)
     p.blob((500, 470), 24, 12, BRONZE_LIGHT, width=1.8, shade=0.6)
     for k in (-1, 1):
-        p.taper([(500, 590), (500 + k * 70, 612)], 8, 6, BRONZE_DARK, width=1.8, shade=0.6)
+        rod(p, [(500, 590), (500 + k * 70, 612)], 8, 6, BRONZE_DARK, width=1.8, shade=0.6)
         p.blob((500 + k * 76, 610), 12, 8, BRONZE, width=1.6, shade=0.6)
     p.shape([(330, 360, 0), (670, 360, 0), (700, 410, 0), (300, 410, 0)], BRONZE, width=2, smooth=False, shade=0.6)
     codex(p, (500, 280), 500, 210, cover=ULTRA, glow=True)
@@ -1144,11 +1231,11 @@ def lyceum_m_001(p):
     p.glow((470, 200), 260, GOLD_LIGHT, 0.45)
     p.rays((470, 200), 70, 260, 32, GOLD.alpha(0.35), 4)
     # pupils seated round him, listening
-    pupils = [(130, 612, 270, False, C.hex('c8a870'), None), (250, 616, 290, False, C.hex('8aa0b8'), 'short'),
-              (760, 614, 290, True, C.hex('b8786a'), 'short'), (880, 612, 260, True, C.hex('a8b890'), None)]
+    pupils = [(110, 612, 300, False, C.hex('c8a870'), None), (250, 618, 330, False, C.hex('8aa0b8'), 'short'),
+              (720, 618, 330, True, C.hex('b8786a'), 'short'), (870, 612, 300, True, C.hex('a8b890'), None)]
     for (x, y, hh, fl, col, beard) in pupils:
-        Greek(pose='ly_chin' if x % 3 else 'book', garb='toga', main=col, hair='curly', hair_col=HAIR_DARK, beard=beard, sleeves='fitted',
-              kneel=True, eyes='up', props_front=[] if x % 3 else [held_scroll('f', open_=True, length=12)]).draw(p, x, y, hh, flip=fl)
+        L.SeatedGreek(pose='ly_knees', garb='tunic', main=col, hair='curly', hair_col=HAIR_DARK, beard=beard, sleeves='none',
+                      trim=None, eyes='up').draw(p, x, y, hh, flip=fl)
     philosopher(pose='ly_hand_out', himation=C.hex('1e3a8a'), main=C.hex('ece4d4'), hair='short', hair_col=C.hex('2a1a10'), beard='long',
                 skin=SKIN_OLIVE, eyes='open', trim=GOLD, width=0.92, props_back=[held_scroll('b')]).draw(p, 470, 606, 490)
 
@@ -1177,7 +1264,7 @@ def lyceum_m_002(p):
         for k in range(4):
             p_.line([(-5, -3 + k * 2), (4, -3 + k * 2)], C.hex('c8a870').alpha(0.7), 0.6, smooth=False)
         p_.pop()
-        p_.taper([(j['hand_f'][0] + 1, j['hand_f'][1] + 1), (j['hand_f'][0] + 6, j['hand_f'][1] - 9)], 0.6, 0.3, BRONZE, width=0.6)
+        rod(p_, [(j['hand_f'][0] + 1, j['hand_f'][1] + 1), (j['hand_f'][0] + 6, j['hand_f'][1] - 9)], 0.6, 0.3, BRONZE, width=0.6)
     hoplite(pose='book', head=gold_laurel(), main=C.hex('6a2346'), cuirass=C.hex('c8ccd4'), hair='curly', hair_col=C.hex('5a4030'),
             beard='short', age='old', cloak='mantle', cloak_col=TYRIAN, lining=C.hex('9a4a7a'), fur=C.hex('ece4d8'), greaves=False,
             props_front=[tablet], eyes='down', mouth='calm').draw(p, 380, 606, 490)

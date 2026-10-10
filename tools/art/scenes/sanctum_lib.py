@@ -22,16 +22,74 @@ PURPLE_VEST = C.hex('5a2a6e')
 
 # ------------------------------------------------------------------ figures
 
-class Fig(Figure):
-    """A Figure with free hand targets: hands=((fx, fy), (bx, by), back_in_front, bend_f, bend_b)."""
+def sa_ik(s, t, l1, l2, out_w=0.2):
+    """Elbow for a two-bone arm from shoulder s reaching for t. Of the two
+    solutions it takes the one whose elbow hangs lower, with a lighter preference
+    for pointing away from the body, so an arm reaching forward keeps its elbow
+    down by the side instead of winging out at shoulder height."""
+    d = v_len(v_sub(t, s))
+    d = min(max(d, 0.01), l1 + l2 - 0.05)
+    base = math.atan2(t[1] - s[1], t[0] - s[0])
+    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
+    a = math.acos(max(-1.0, min(1.0, cos_a)))
+    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
+    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
+    side = 1.0 if s[0] >= 0 else -1.0
 
-    def __init__(self, hands=None, **kw):
+    def score(e):
+        return e[1] + out_w * side * e[0]
+    e = e1 if score(e1) >= score(e2) else e2
+    dirv = v_norm(v_sub(t, e))
+    return e, v_add(e, v_mul(dirv, l2))
+
+
+def sa_arm(sh, t, side, l1=16.5, l2=15.5):
+    """Natural arm: when the hand is at or below the shoulder and within reach,
+    the upper arm hangs almost straight down by the side and the forearm comes
+    forward (foreshortened) to the hand, as a man holds a book, prays or carries
+    a lantern. Raised or fully stretched arms fall back to sa_ik."""
+    if t[1] > sh[1] + 2:
+        dx = side * 1.6 + max(-5.5, min(5.5, (t[0] - sh[0]) * 0.3))
+        e = (sh[0] + dx, sh[1] + math.sqrt(l1 * l1 - dx * dx))
+        fl = v_len(v_sub(t, e))
+        if fl <= l2 + 0.5:
+            if fl < 5.0:
+                # too short a forearm reads as a stump: lift the elbow back a little
+                e = (e[0] - side * 2.0, e[1] + 1.0) if t[1] > e[1] else (e[0], e[1] + 3.0)
+            return e, t
+    return sa_ik(sh, t, l1, l2)
+
+
+# extra poses for the Church's figures (hand targets chosen for natural arms)
+SA_POSES = {
+    # sword held upright before the chest, shield on the forearm across the body
+    'sa_watch':   ((26, -60), (1, -58), True, 1, 1),
+    # spear or staff grounded at the side, shield across the body
+    'sa_spear':   ((17, -58), (1, -58), True, 1, 1),
+    # both hands resting on the cross guard of a sword planted point down
+    'sa_hilt':    ((10, -54), (6, -55), True, 1, 1),
+    # carrying a lamp or lantern low in front, the other hand at the breast
+    'sa_lamp':    ((22, -56), (3, -66), True, 1, 1),
+}
+import figure as _figure_mod
+for _k, _v in SA_POSES.items():
+    _figure_mod.POSES.setdefault(_k, _v)
+
+
+class Fig(Figure):
+    """A Figure with free hand targets: hands=((fx, fy), (bx, by), back_in_front, bend_f, bend_b).
+    elbows=((ex, ey) or None, (ex, ey) or None) pins an elbow exactly (the hand then
+    lands exactly on its target). Arms are solved with sa_ik (elbows hang down)."""
+
+    def __init__(self, hands=None, elbows=None, **kw):
         super().__init__(**kw)
         self.hands = hands
+        self.elbows = elbows
 
     def joints(self):
+        k = 24.0 if self.kneel else 0.0
         if not self.hands:
-            return super().joints()
+            self.hands = POSE_HANDS(self.pose)
         k = 24.0 if self.kneel else 0.0
         j = {
             'head': (1.8, -91 + k),
@@ -45,11 +103,24 @@ class Fig(Figure):
         bfront = self.hands[2] if len(self.hands) > 2 else False
         bf = self.hands[3] if len(self.hands) > 3 else 1
         bb = self.hands[4] if len(self.hands) > 4 else 1
-        j['el_f'], j['hand_f'] = ik(j['sh_f'], (pf[0], pf[1] + k), 16.5, 15.5, bf)
-        j['el_b'], j['hand_b'] = ik(j['sh_b'], (pb[0], pb[1] + k), 16.5, 15.5, bb)
+        tf = (pf[0], pf[1] + k)
+        tb = (pb[0], pb[1] + k)
+        j['el_f'], j['hand_f'] = sa_arm(j['sh_f'], tf, 1.0)
+        j['el_b'], j['hand_b'] = sa_arm(j['sh_b'], tb, -1.0)
+        if self.elbows:
+            ef, eb = self.elbows
+            if ef:
+                j['el_f'], j['hand_f'] = (ef[0], ef[1] + k), tf
+            if eb:
+                j['el_b'], j['hand_b'] = (eb[0], eb[1] + k), tb
         j['back_front'] = bfront
         j['k'] = k
         return j
+
+
+def POSE_HANDS(pose):
+    import figure as fm
+    return fm.POSES[pose]
 
 
 def head_only(p, c, s, **opts):
@@ -169,7 +240,7 @@ def retable(p, x, y, w=300, h=200, scenes=None):
         # a little saint in each panel
         fh = hh * 0.62
         col = [ULTRA.light(0.3), LEAD_WHITE, CRIMSON][i] if i != 1 else LEAD_WHITE
-        Figure(pose='pray' if i != 1 else 'bless', garb='robe', main=[VERMILION, ULTRA.light(0.25), MALACHITE][i],
+        Fig(pose='pray' if i != 1 else 'bless', garb='robe', main=[VERMILION, ULTRA.light(0.25), MALACHITE][i],
                cloak='mantle', cloak_col=[ULTRA, VERMILION, CRIMSON][i], halo=True, hair='long' if i == 1 else 'short',
                beard='short' if i == 1 else None, hair_col=UMBER).draw(p, cx0, y - 14, fh)
         # crockets on the gables
@@ -286,7 +357,7 @@ def lancet(p, cx0, top, w, h, scheme=None, saint=None, frame=STONE):
 def glass_saint(col=VERMILION):
     def fn(p, x, y, h):
         p.cx.save()
-        Figure(pose='pray', garb='robe', main=col, cloak='mantle', cloak_col=ULTRA.light(0.1), halo=True, hair='short',
+        Fig(pose='pray', garb='robe', main=col, cloak='mantle', cloak_col=ULTRA.light(0.1), halo=True, hair='short',
                hair_col=UMBER).draw(p, x, y, h)
         p.cx.restore()
     return fn
@@ -355,6 +426,10 @@ def pointed_opening(x0, x1, y_spring, y_bot, apex_k=1.0, n=12):
 def ashlar(p, rect, col=LIMESTONE, row=40, brick=90, strength=1.0):
     """Coursed stone wall in rect."""
     x0, y0, x1, y1 = rect
+    p.cx.save()
+    p.cx.new_path()
+    p.cx.rectangle(x0, y0, x1 - x0, y1 - y0)
+    p.cx.clip()
     p.cx.new_path()
     p.cx.rectangle(x0, y0, x1 - x0, y1 - y0)
     p.fill(('v', col.dark(0.08), col, col.dark(0.18)))
@@ -374,6 +449,7 @@ def ashlar(p, rect, col=LIMESTONE, row=40, brick=90, strength=1.0):
             x += brick
         y += row
         r += 1
+    p.cx.restore()
 
 
 def gothic_choir(p, dark=False, tone=LIMESTONE, floor=True, windows=3, saints=False, floor_y=0.82):
@@ -763,28 +839,94 @@ def seraph_wing(p, root, ang, L, Wd, cols, mirror=False):
     p.pop()
 
 
-def seraph(p, c, s=1.0, col=VERMILION, face_opts=None):
-    """A seraph as in the Book of Hours: a head among six wings, two crossed
-    above, two spread, two veiling the body. Red and gold."""
-    x, y = c
-    reds = [GOLD_LIGHT, C.hex('f2b04a'), col.light(0.15), col, col.dark(0.2), CRIMSON]
-    p.glow((x, y), 260 * s, C.hex('ffe8b0'), 0.5)
-    # lower pair crossing to veil the body
-    seraph_wing(p, (x - 14 * s, y + 30 * s), math.pi * 0.36, 170 * s, 70 * s, reds, mirror=False)
-    seraph_wing(p, (x + 14 * s, y + 30 * s), math.pi * 0.64, 170 * s, 70 * s, reds, mirror=True)
-    # spread pair, broad and slightly raised
-    seraph_wing(p, (x - 18 * s, y + 6 * s), math.pi * 1.04, 230 * s, 84 * s, reds, mirror=True)
-    seraph_wing(p, (x + 18 * s, y + 6 * s), math.pi * -0.04, 230 * s, 84 * s, reds, mirror=False)
-    # upper pair rising and crossing above the head
-    seraph_wing(p, (x - 16 * s, y - 12 * s), -1.2, 190 * s, 70 * s, reds, mirror=False)
-    seraph_wing(p, (x + 16 * s, y - 12 * s), -math.pi + 1.2, 190 * s, 70 * s, reds, mirror=True)
-    # gilt coverts at the roots
-    for side in (-1, 1):
-        for k in range(5):
-            p.blob((x + side * (18 + k * 9) * s, y + (4 - k * 3) * s), 10 * s, 6 * s, GOLD, rot=side * 0.4, width=1.2, shade=0.5)
-    opts = dict(hair='curly', hair_col=C.hex('d49a3a'), halo=True, eyes='open')
-    opts.update(face_opts or {})
-    head_only(p, (x, y - 6 * s), 3.2 * s, **opts)
+def _qbez(a, m, b, t):
+    u = 1 - t
+    return (u * u * a[0] + 2 * u * t * m[0] + t * t * b[0], u * u * a[1] + 2 * u * t * m[1] + t * t * b[1])
+
+
+def sa_wing(p, root, mid, tip, fdir, L, cols, edge=GOLD, eyes=True):
+    """A great feathered wing whose leading edge curves from root through mid to
+    tip. Feathers hang from the edge toward fdir, sweeping to follow the wing at
+    its tip: long primaries, then secondaries, then two rows of coverts, a gilt
+    leading edge and (for seraphim) little eyes among the coverts.
+    cols: [covert light, covert, secondary, primary]."""
+    fd = v_norm(fdir)
+
+    def edge_pt(t):
+        return _qbez(root, mid, tip, t)
+
+    def tangent(t):
+        return v_norm(v_sub(edge_pt(min(1, t + 0.02)), edge_pt(max(0, t - 0.02))))
+
+    def feather(base, d, ln, wd, col):
+        n = v_perp(d)
+        q1 = v_add(base, v_mul(d, ln * 0.55))
+        q2 = v_add(base, v_mul(d, ln * 0.9))
+        tp = v_add(base, v_mul(d, ln))
+        pts = [v_add(base, v_mul(n, wd * 0.55)), v_add(q1, v_mul(n, wd)), v_add(q2, v_mul(n, wd * 0.6)), tp + (0,),
+               v_sub(q2, v_mul(n, wd * 0.5)), v_sub(q1, v_mul(n, wd * 0.85)), v_sub(base, v_mul(n, wd * 0.55))]
+        p.shape(pts, col, width=1.3, shade=0.55)
+        p.line([v_add(base, v_mul(d, ln * 0.12)), v_add(base, v_mul(d, ln * 0.88))], col.dark(0.4).alpha(0.55), 1.1)
+
+    def fdir_at(t, sweep):
+        tg = tangent(t)
+        k = sweep * t ** 2.2
+        return v_norm(v_add(v_mul(fd, 1 - k), v_mul(tg, k)))
+
+    # primaries and secondaries: drawn from root outward so the tip lies on top
+    rows = [  # (length factor, start t, sweep, width, colour index, count)
+        (1.0, 0.18, 0.85, L * 0.075, 3, 15),
+        (0.62, 0.06, 0.55, L * 0.07, 2, 13),
+        (0.34, 0.03, 0.35, L * 0.06, 1, 12),
+        (0.18, 0.02, 0.25, L * 0.05, 0, 11),
+    ]
+    for lk, t0, sweep, wd, ci, n in rows:
+        for i in range(n):
+            t = t0 + (0.99 - t0) * i / (n - 1)
+            base = edge_pt(t)
+            grow = 0.45 + 0.55 * math.sin(min(1.0, t * 1.25) * math.pi / 2)
+            ln = L * lk * grow
+            col = cols[ci].mix(cols[min(3, ci + 1)], 0.35 * (1 - t))
+            feather(base, fdir_at(t, sweep), ln, wd, col)
+    if eyes:
+        for i in range(4):
+            t = 0.3 + i * 0.17
+            q = v_add(edge_pt(t), v_mul(fdir_at(t, 0.4), L * 0.1))
+            p.blob(q, L * 0.03, L * 0.019, LEAD_WHITE, width=1.0)
+            p.blob(q, L * 0.013, L * 0.013, ULTRA_DEEP, ink=False)
+    lead = [edge_pt(k / 10) for k in range(11)]
+    p.line(lead, GOLD_DARK, 5.0)
+    p.line(lead, edge.light(0.3), 2.2)
+
+
+def seraph(p, x, feet_y, h=400):
+    """A seraph of the Dawn Watch: a radiant youth in red and gold among six
+    fiery wings, two rising to arch over his halo, two spread wide, two folded
+    down before his body. Male, reverent, glowing."""
+    s = h / 100.0
+    hc = (x + 1.8 * s, feet_y - 91 * s)
+    sh_y = feet_y - 80 * s
+    p.glow((x, hc[1] + 40), 330, C.hex('fff0c0'), 0.75)
+    holy_rays(p, (hc[0], hc[1]), 60, 520, 32, GOLD_LIGHT, 0.22)
+    fire = [C.hex('ffe08a'), C.hex('f6a53e'), C.hex('e0552e'), C.hex('a8202a')]
+    gold = [GOLD_LIGHT, C.hex('f2c35a'), C.hex('e98a3a'), C.hex('cc3f2a')]
+    deep = [C.hex('f6b25a'), C.hex('e0602e'), C.hex('b8302a'), C.hex('7a1620')]
+    for sd in (-1, 1):
+        X = lambda dx: x + sd * dx
+        # spread pair, wide and level
+        sa_wing(p, (X(28), sh_y + 18), (X(170), sh_y - 40), (X(330), sh_y - 34), (sd * 0.15, 1), 150, fire)
+    for sd in (-1, 1):
+        X = lambda dx: x + sd * dx
+        # upper pair rising behind the halo, tips leaning in to make a pointed arch
+        sa_wing(p, (X(22), sh_y - 4), (X(140), hc[1] - 50), (X(40), hc[1] - 104), (sd * 1, -0.1), 92, gold)
+    # the seraph himself
+    Fig(pose='spread', garb='alb', main=C.hex('fbefd6'), cloak='cope', cloak_col=VERMILION, trim=GOLD, lining=GOLD_LIGHT,
+        hair='curly', hair_col=C.hex('e0a83e'), halo=True, belt='gold', eyes='open', blush=0.6,
+        hands=((20, -86), (-19, -86), False, 1, 1), sway=0.0).draw(p, x, feet_y, h)
+    for sd in (-1, 1):
+        X = lambda dx: x + sd * dx
+        # lower pair folded down before the body, veiling the feet
+        sa_wing(p, (X(16), feet_y - 50 * s), (X(104), feet_y - 28 * s), (X(20), feet_y + 4), (sd * 1, 0.35), 92, deep)
 
 
 def demon(p, x, y, s=1.0, flip=False, col=C.hex('3a2a3e'), cower=0.0, eyes=C.hex('ffb030')):

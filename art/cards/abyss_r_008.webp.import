@@ -2,28 +2,28 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0yy8yufrfcpx"
-path="res://.godot/imported/revel_u_005.png-42056095da6684ea0997528ca9eb55ed.ctex"
+uid="uid://c0kjhgyfkg27w"
+path="res://.godot/imported/abyss_r_008.webp-ab3ab22fa4fd84fc43d6498f6a27972e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/cards/revel_u_005.png"
-dest_files=["res://.godot/imported/revel_u_005.png-42056095da6684ea0997528ca9eb55ed.ctex"]
+source_file="res://art/cards/abyss_r_008.webp"
+dest_files=["res://.godot/imported/abyss_r_008.webp-ab3ab22fa4fd84fc43d6498f6a27972e.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.85
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

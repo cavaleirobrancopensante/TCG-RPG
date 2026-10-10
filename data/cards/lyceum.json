@@ -20,7 +20,8 @@
       }
     ],
     "text": "When this enters, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom).",
-    "flavor": "It has read every book in the archive, mostly by sitting on them."
+    "flavor": "It has read every book in the archive, mostly by sitting on them.",
+    "art": "res://art/cards/lyceum_c_001.webp"
   },
   {
     "id": "lyceum_c_002",
@@ -39,7 +40,8 @@
     ],
     "effects": [],
     "text": "Steadfast (prevent 1 of the damage dealt to it by each source).",
-    "flavor": "At eighteen he swore the oath: never to shame his arms, never to desert the man beside him."
+    "flavor": "At eighteen he swore the oath: never to shame his arms, never to desert the man beside him.",
+    "art": "res://art/cards/lyceum_c_002.webp"
   },
   {
     "id": "lyceum_c_003",
@@ -66,7 +68,8 @@
       }
     ],
     "text": "As long as you have four or more cards in hand (composure), this gets +1/+1.",
-    "flavor": "Like Cleanthes before him, he hauls water by night so that he may sit at the Porch by day."
+    "flavor": "Like Cleanthes before him, he hauls water by night so that he may sit at the Porch by day.",
+    "art": "res://art/cards/lyceum_c_003.webp"
   },
   {
     "id": "lyceum_c_004",
@@ -90,7 +93,8 @@
       }
     ],
     "text": "When this enters, draw a card.",
-    "flavor": "Copy the text, and the text copies something into you."
+    "flavor": "Copy the text, and the text copies something into you.",
+    "art": "res://art/cards/lyceum_c_004.webp"
   },
   {
     "id": "lyceum_c_005",
@@ -110,7 +114,8 @@
     ],
     "effects": [],
     "text": "Defender (can't attack).",
-    "flavor": "\"Be like the headland against which the waves break without ceasing. It stands firm.\" (Marcus Aurelius)"
+    "flavor": "\"Be like the headland against which the waves break without ceasing. It stands firm.\" (Marcus Aurelius)",
+    "art": "res://art/cards/lyceum_c_005.webp"
   },
   {
     "id": "lyceum_c_006",
@@ -145,7 +150,8 @@
       }
     ],
     "text": "Tap, pay U: tap target enemy creature.",
-    "flavor": "\"If it is day, it is light. It is day. Therefore, sir, you may stand still.\""
+    "flavor": "\"If it is day, it is light. It is day. Therefore, sir, you may stand still.\"",
+    "art": "res://art/cards/lyceum_c_006.webp"
   },
   {
     "id": "lyceum_c_007",
@@ -165,7 +171,8 @@
     ],
     "effects": [],
     "text": "Vigilance (doesn't tap to attack).",
-    "flavor": "Forty shields, one mind, no fear."
+    "flavor": "Forty shields, one mind, no fear.",
+    "art": "res://art/cards/lyceum_c_007.webp"
   },
   {
     "id": "lyceum_c_008",
@@ -189,7 +196,8 @@
       }
     ],
     "text": "When this enters, foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom).",
-    "flavor": "He charts the heavens from a balcony of silver and glass, and reads tomorrow in their order."
+    "flavor": "He charts the heavens from a balcony of silver and glass, and reads tomorrow in their order.",
+    "art": "res://art/cards/lyceum_c_008.webp"
   },
   {
     "id": "lyceum_c_009",
@@ -213,7 +221,8 @@
       }
     ],
     "text": "When this enters, return target enemy creature to its owner's hand.",
-    "flavor": "He owns a cloak, a staff and a satchel, and he has argued kings out of their own halls."
+    "flavor": "He owns a cloak, a staff and a satchel, and he has argued kings out of their own halls.",
+    "art": "res://art/cards/lyceum_c_009.webp"
   },
   {
     "id": "lyceum_c_010",
@@ -237,7 +246,8 @@
       }
     ],
     "text": "When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
-    "flavor": "\"I made a prosperous voyage when I suffered shipwreck.\" (Zeno of Citium)"
+    "flavor": "\"I made a prosperous voyage when I suffered shipwreck.\" (Zeno of Citium)",
+    "art": "res://art/cards/lyceum_c_010.webp"
   },
   {
     "id": "lyceum_c_011",
@@ -257,7 +267,8 @@
     ],
     "effects": [],
     "text": "Steadfast (prevent 1 of the damage dealt to it by each source).",
-    "flavor": "\"It is difficulties that show what men are.\" (Epictetus)"
+    "flavor": "\"It is difficulties that show what men are.\" (Epictetus)",
+    "art": "res://art/cards/lyceum_c_011.webp"
   },
   {
     "id": "lyceum_c_012",
@@ -278,7 +289,8 @@
       }
     ],
     "text": "Return target enemy creature to its owner's hand.",
-    "flavor": "\"Reconsider.\""
+    "flavor": "\"Reconsider.\"",
+    "art": "res://art/cards/lyceum_c_012.webp"
   },
   {
     "id": "lyceum_c_013",
@@ -305,7 +317,8 @@
       }
     ],
     "text": "Tap target enemy creature. Draw a card.",
-    "flavor": "The brute paused to consider the premise, and the moment was lost."
+    "flavor": "The brute paused to consider the premise, and the moment was lost.",
+    "art": "res://art/cards/lyceum_c_013.webp"
   },
   {
     "id": "lyceum_c_014",
@@ -326,7 +339,8 @@
       }
     ],
     "text": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
-    "flavor": "The northern sea does not hurry, and it does not let go."
+    "flavor": "The northern sea does not hurry, and it does not let go.",
+    "art": "res://art/cards/lyceum_c_014.webp"
   },
   {
     "id": "lyceum_c_015",
@@ -352,7 +366,8 @@
       }
     ],
     "text": "Draw a card, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
-    "flavor": "\"To be everywhere is to be nowhere.\" (Seneca, on reading too many books)"
+    "flavor": "\"To be everywhere is to be nowhere.\" (Seneca, on reading too many books)",
+    "art": "res://art/cards/lyceum_c_015.webp"
   },
   {
     "id": "lyceum_c_016",
@@ -374,7 +389,8 @@
       }
     ],
     "text": "Draw two cards.",
-    "flavor": "Stillness first. Then clarity. Then the answer."
+    "flavor": "Stillness first. Then clarity. Then the answer.",
+    "art": "res://art/cards/lyceum_c_016.webp"
   },
   {
     "id": "lyceum_c_017",
@@ -401,7 +417,8 @@
       }
     ],
     "text": "Tax 2 (the enemy's next non-land card costs 2 more). Draw a card.",
-    "flavor": "\"Before we march,\" said the logician, \"define victory.\""
+    "flavor": "\"Before we march,\" said the logician, \"define victory.\"",
+    "art": "res://art/cards/lyceum_c_017.webp"
   },
   {
     "id": "lyceum_c_018",
@@ -428,7 +445,8 @@
       }
     ],
     "text": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs 1 more).",
-    "flavor": "\"The greatest remedy for anger is delay.\" (Seneca)"
+    "flavor": "\"The greatest remedy for anger is delay.\" (Seneca)",
+    "art": "res://art/cards/lyceum_c_018.webp"
   },
   {
     "id": "lyceum_c_019",
@@ -449,7 +467,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, foresight 1 (look at the top card of your library; you may put it on the bottom).",
-    "flavor": "A little oil, a little wick, and the whole night given to Chrysippus."
+    "flavor": "A little oil, a little wick, and the whole night given to Chrysippus.",
+    "art": "res://art/cards/lyceum_c_019.webp"
   },
   {
     "id": "lyceum_c_020",
@@ -482,7 +501,8 @@
       }
     ],
     "text": "Tap, pay 2: tap target enemy creature.",
-    "flavor": "Stretched across the harbour mouth at dusk, it teaches impatient captains to wait."
+    "flavor": "Stretched across the harbour mouth at dusk, it teaches impatient captains to wait.",
+    "art": "res://art/cards/lyceum_c_020.webp"
   },
   {
     "id": "lyceum_u_001",
@@ -508,7 +528,8 @@
       }
     ],
     "text": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs 1 more).",
-    "flavor": "Every scale in the market is honest while he is near, and every price a little dearer."
+    "flavor": "Every scale in the market is honest while he is near, and every price a little dearer.",
+    "art": "res://art/cards/lyceum_u_001.webp"
   },
   {
     "id": "lyceum_u_002",
@@ -532,7 +553,8 @@
       }
     ],
     "text": "Whenever this attacks, tap target enemy creature.",
-    "flavor": "Premise, rebuttal, and the defender left standing in confusion."
+    "flavor": "Premise, rebuttal, and the defender left standing in confusion.",
+    "art": "res://art/cards/lyceum_u_002.webp"
   },
   {
     "id": "lyceum_u_003",
@@ -565,7 +587,8 @@
       }
     ],
     "text": "As long as you have four or more cards in hand, this gets +1/+1 and has steadfast.",
-    "flavor": "\"Had there been no Chrysippus, there would have been no Stoa.\" (Diogenes Laertius)"
+    "flavor": "\"Had there been no Chrysippus, there would have been no Stoa.\" (Diogenes Laertius)",
+    "art": "res://art/cards/lyceum_u_003.webp"
   },
   {
     "id": "lyceum_u_004",
@@ -586,7 +609,8 @@
     ],
     "effects": [],
     "text": "Defender. Steadfast.",
-    "flavor": "\"What is in my power is to hold this ground. I hold it.\""
+    "flavor": "\"What is in my power is to hold this ground. I hold it.\"",
+    "art": "res://art/cards/lyceum_u_004.webp"
   },
   {
     "id": "lyceum_u_005",
@@ -610,7 +634,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, foresight 2.",
-    "flavor": "It keeps the night hours of the library, and suffers no careless readers."
+    "flavor": "It keeps the night hours of the library, and suffers no careless readers.",
+    "art": "res://art/cards/lyceum_u_005.webp"
   },
   {
     "id": "lyceum_u_006",
@@ -639,7 +664,8 @@
       }
     ],
     "text": "Vigilance. Other Soldier creatures you control get +0/+1.",
-    "flavor": "He has studied every battle ever written down, and lost none of his own."
+    "flavor": "He has studied every battle ever written down, and lost none of his own.",
+    "art": "res://art/cards/lyceum_u_006.webp"
   },
   {
     "id": "lyceum_u_007",
@@ -663,7 +689,8 @@
       }
     ],
     "text": "When this enters, freeze target enemy creature.",
-    "flavor": "\"If a man does not know to which port he sails, no wind is favourable.\" (Seneca)"
+    "flavor": "\"If a man does not know to which port he sails, no wind is favourable.\" (Seneca)",
+    "art": "res://art/cards/lyceum_u_007.webp"
   },
   {
     "id": "lyceum_u_008",
@@ -691,7 +718,8 @@
       }
     ],
     "text": "Return target enemy creature to its owner's hand. Then, if you have four or more cards in hand, draw a card.",
-    "flavor": "\"Let silence be the rule, or say only what is needed, and in few words.\" (Epictetus)"
+    "flavor": "\"Let silence be the rule, or say only what is needed, and in few words.\" (Epictetus)",
+    "art": "res://art/cards/lyceum_u_008.webp"
   },
   {
     "id": "lyceum_u_009",
@@ -719,7 +747,8 @@
       }
     ],
     "text": "Return target enemy creature with power 4 or greater to its owner's hand. Draw a card.",
-    "flavor": "\"Alexander of Macedon and his mule driver were brought to the same end by death.\" (Marcus Aurelius)"
+    "flavor": "\"Alexander of Macedon and his mule driver were brought to the same end by death.\" (Marcus Aurelius)",
+    "art": "res://art/cards/lyceum_u_009.webp"
   },
   {
     "id": "lyceum_u_010",
@@ -746,7 +775,8 @@
       }
     ],
     "text": "Draw two cards, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
-    "flavor": "\"Hold every hour in your grasp.\" (Seneca, to his friend Lucilius)"
+    "flavor": "\"Hold every hour in your grasp.\" (Seneca, to his friend Lucilius)",
+    "art": "res://art/cards/lyceum_u_010.webp"
   },
   {
     "id": "lyceum_u_011",
@@ -773,7 +803,8 @@
       }
     ],
     "text": "Tap all enemy creatures. Draw a card.",
-    "flavor": "The philosopher spoke of the vanity of striving, and the whole army sat down."
+    "flavor": "The philosopher spoke of the vanity of striving, and the whole army sat down.",
+    "art": "res://art/cards/lyceum_u_011.webp"
   },
   {
     "id": "lyceum_u_012",
@@ -795,7 +826,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, tap target enemy creature.",
-    "flavor": "As the brass planets turn, the enemy feels the weight of a fixed order."
+    "flavor": "As the brass planets turn, the enemy feels the weight of a fixed order.",
+    "art": "res://art/cards/lyceum_u_012.webp"
   },
   {
     "id": "lyceum_u_013",
@@ -817,7 +849,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs 1 more).",
-    "flavor": "Bronze letters list what a man may spend. The enemy finds that the list includes him."
+    "flavor": "Bronze letters list what a man may spend. The enemy finds that the list includes him.",
+    "art": "res://art/cards/lyceum_u_013.webp"
   },
   {
     "id": "lyceum_r_001",
@@ -854,7 +887,8 @@
       }
     ],
     "text": "Defender. Tap, pay 2: draw a card.",
-    "flavor": "He has never left the library, and he has never needed to."
+    "flavor": "He has never left the library, and he has never needed to.",
+    "art": "res://art/cards/lyceum_r_001.webp"
   },
   {
     "id": "lyceum_r_002",
@@ -882,7 +916,8 @@
       }
     ],
     "text": "Steadfast. As long as you have four or more cards in hand, other creatures you control have steadfast.",
-    "flavor": "\"You will break it,\" he said, as his master twisted his leg. When it broke: \"Did I not tell you?\""
+    "flavor": "\"You will break it,\" he said, as his master twisted his leg. When it broke: \"Did I not tell you?\"",
+    "art": "res://art/cards/lyceum_r_002.webp"
   },
   {
     "id": "lyceum_r_003",
@@ -908,7 +943,8 @@
       }
     ],
     "text": "Vigilance. When this enters, draw two cards.",
-    "flavor": "\"The impediment to action advances action. What stands in the way becomes the way.\" (Marcus Aurelius)"
+    "flavor": "\"The impediment to action advances action. What stands in the way becomes the way.\" (Marcus Aurelius)",
+    "art": "res://art/cards/lyceum_r_003.webp"
   },
   {
     "id": "lyceum_r_004",
@@ -933,7 +969,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, if you have four or more cards in hand, draw a card.",
-    "flavor": "\"While we are postponing, life speeds by.\" (Seneca)"
+    "flavor": "\"While we are postponing, life speeds by.\" (Seneca)",
+    "art": "res://art/cards/lyceum_r_004.webp"
   },
   {
     "id": "lyceum_r_005",
@@ -964,7 +1001,8 @@
       }
     ],
     "text": "Vigilance. When this enters, return target enemy creature to its owner's hand and draw two cards.",
-    "flavor": "Kings came to the Porch to move him. They went home moved."
+    "flavor": "Kings came to the Porch to move him. They went home moved.",
+    "art": "res://art/cards/lyceum_r_005.webp"
   },
   {
     "id": "lyceum_r_006",
@@ -986,7 +1024,8 @@
       }
     ],
     "text": "Freeze all enemy creatures (tap them; they don't untap during their controller's next untap step).",
-    "flavor": "Freedom from passion, the Stoics called it. The enemy called it a long winter."
+    "flavor": "Freedom from passion, the Stoics called it. The enemy called it a long winter.",
+    "art": "res://art/cards/lyceum_r_006.webp"
   },
   {
     "id": "lyceum_r_007",
@@ -1008,7 +1047,8 @@
       }
     ],
     "text": "Return all creatures to their owners' hands.",
-    "flavor": "Chrysippus taught that the cosmos returns at last to its source and begins again, the same in every part."
+    "flavor": "Chrysippus taught that the cosmos returns at last to its source and begins again, the same in every part.",
+    "art": "res://art/cards/lyceum_r_007.webp"
   },
   {
     "id": "lyceum_r_008",
@@ -1030,7 +1070,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, draw a card.",
-    "flavor": "Each morning it opens to a page no one has read before."
+    "flavor": "Each morning it opens to a page no one has read before.",
+    "art": "res://art/cards/lyceum_r_008.webp"
   },
   {
     "id": "lyceum_r_009",
@@ -1053,7 +1094,8 @@
       }
     ],
     "text": "Creatures you control have vigilance.",
-    "flavor": "Under the painted battles of Marathon and Troy, Zeno walked and taught, and the school took its name from the porch."
+    "flavor": "Under the painted battles of Marathon and Troy, Zeno walked and taught, and the school took its name from the porch.",
+    "art": "res://art/cards/lyceum_r_009.webp"
   },
   {
     "id": "lyceum_m_001",
@@ -1088,7 +1130,8 @@
       }
     ],
     "text": "Vigilance. Other Philosopher creatures you control get +1/+1. When this enters, draw a card.",
-    "flavor": "\"We have two ears and one mouth, so that we may listen more and speak less.\""
+    "flavor": "\"We have two ears and one mouth, so that we may listen more and speak less.\"",
+    "art": "res://art/cards/lyceum_m_001.webp"
   },
   {
     "id": "lyceum_m_002",
@@ -1115,7 +1158,8 @@
       }
     ],
     "text": "Vigilance, steadfast. Whenever this attacks, freeze target enemy creature.",
-    "flavor": "\"Waste no more time arguing what a good man should be. Be one.\""
+    "flavor": "\"Waste no more time arguing what a good man should be. Be one.\"",
+    "art": "res://art/cards/lyceum_m_002.webp"
   },
   {
     "id": "lyceum_m_003",
@@ -1147,6 +1191,7 @@
       }
     ],
     "text": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs 2 more).",
-    "flavor": "\"Look down from above on the countless herds of men, their solemn rites, their voyages in storm and calm.\" (Marcus Aurelius)"
+    "flavor": "\"Look down from above on the countless herds of men, their solemn rites, their voyages in storm and calm.\" (Marcus Aurelius)",
+    "art": "res://art/cards/lyceum_m_003.webp"
   }
 ]

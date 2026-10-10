@@ -23,7 +23,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Covenant mana.",
-    "flavor": "A wayside cross where the road forks: one path to the chapel, one to the pit."
+    "flavor": "A wayside cross where the road forks: one path to the chapel, one to the pit.",
+    "art": "res://art/cards/land_sanctum_abyss.webp"
   },
   {
     "id": "land_sanctum_wild",
@@ -49,7 +50,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Old Ways mana.",
-    "flavor": "The hermit blessed the spring, and the spring has never failed him."
+    "flavor": "The hermit blessed the spring, and the spring has never failed him.",
+    "art": "res://art/cards/land_sanctum_wild.webp"
   },
   {
     "id": "land_sanctum_revel",
@@ -75,7 +77,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Revel mana.",
-    "flavor": "On the saint's day the bells ring first and the taverns open after."
+    "flavor": "On the saint's day the bells ring first and the taverns open after.",
+    "art": "res://art/cards/land_sanctum_revel.webp"
   },
   {
     "id": "land_sanctum_lyceum",
@@ -101,7 +104,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Stoa mana.",
-    "flavor": "The monks copied the old philosophers and kept what was true."
+    "flavor": "The monks copied the old philosophers and kept what was true.",
+    "art": "res://art/cards/land_sanctum_lyceum.webp"
   },
   {
     "id": "land_sanctum_machine",
@@ -127,7 +131,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Technocracy mana.",
-    "flavor": "Every bell cast here is blessed before it is hung."
+    "flavor": "Every bell cast here is blessed before it is hung.",
+    "art": "res://art/cards/land_sanctum_machine.webp"
   },
   {
     "id": "land_abyss_wild",
@@ -153,7 +158,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Old Ways mana.",
-    "flavor": "Nothing grows on the heath but thorn and the ravens' patience."
+    "flavor": "Nothing grows on the heath but thorn and the ravens' patience.",
+    "art": "res://art/cards/land_abyss_wild.webp"
   },
   {
     "id": "land_abyss_revel",
@@ -179,7 +185,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Revel mana.",
-    "flavor": "The music never stops, and some of the dancers never leave."
+    "flavor": "The music never stops, and some of the dancers never leave.",
+    "art": "res://art/cards/land_abyss_revel.webp"
   },
   {
     "id": "land_abyss_lyceum",
@@ -205,7 +212,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Stoa mana.",
-    "flavor": "Behind the locked grille are the books the scholars swore never to open."
+    "flavor": "Behind the locked grille are the books the scholars swore never to open.",
+    "art": "res://art/cards/land_abyss_lyceum.webp"
   },
   {
     "id": "land_abyss_machine",
@@ -231,7 +239,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Covenant or Technocracy mana.",
-    "flavor": "The furnaces burn day and night, and no one asks what feeds them."
+    "flavor": "The furnaces burn day and night, and no one asks what feeds them.",
+    "art": "res://art/cards/land_abyss_machine.webp"
   },
   {
     "id": "land_wild_revel",
@@ -257,7 +266,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Revel mana.",
-    "flavor": "The vines were planted by the old druids and are harvested by the Revel."
+    "flavor": "The vines were planted by the old druids and are harvested by the Revel.",
+    "art": "res://art/cards/land_wild_revel.webp"
   },
   {
     "id": "land_wild_lyceum",
@@ -283,7 +293,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Stoa mana.",
-    "flavor": "Under the plane trees the students walk and argue until dusk."
+    "flavor": "Under the plane trees the students walk and argue until dusk.",
+    "art": "res://art/cards/land_wild_lyceum.webp"
   },
   {
     "id": "land_wild_machine",
@@ -309,7 +320,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Technocracy mana.",
-    "flavor": "The river turns the wheel and the wheel grinds the grain."
+    "flavor": "The river turns the wheel and the wheel grinds the grain.",
+    "art": "res://art/cards/land_wild_machine.webp"
   },
   {
     "id": "land_revel_lyceum",
@@ -335,7 +347,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Revel or Stoa mana.",
-    "flavor": "A quiet garden for pleasant conversation, if the guests stay quiet."
+    "flavor": "A quiet garden for pleasant conversation, if the guests stay quiet.",
+    "art": "res://art/cards/land_revel_lyceum.webp"
   },
   {
     "id": "land_revel_machine",
@@ -361,7 +374,8 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Revel or Technocracy mana.",
-    "flavor": "Brass tubes, black powder and a guild licence signed in haste."
+    "flavor": "Brass tubes, black powder and a guild licence signed in haste.",
+    "art": "res://art/cards/land_revel_machine.webp"
   },
   {
     "id": "land_lyceum_machine",
@@ -387,6 +401,7 @@
     ],
     "keywords": [],
     "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Stoa or Technocracy mana.",
-    "flavor": "The great orrery turns, and the astronomers write down what it says."
+    "flavor": "The great orrery turns, and the astronomers write down what it says.",
+    "art": "res://art/cards/land_lyceum_machine.webp"
   }
 ]

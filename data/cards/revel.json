@@ -14,7 +14,8 @@
     "keywords": [],
     "effects": [],
     "text": "No abilities.",
-    "flavor": "He starts every fight with a toast and ends it with a stool."
+    "flavor": "He starts every fight with a toast and ends it with a stool.",
+    "art": "res://art/cards/revel_c_001.webp"
   },
   {
     "id": "revel_c_002",
@@ -34,7 +35,8 @@
     ],
     "effects": [],
     "text": "Haste (this can attack the turn it comes into play).",
-    "flavor": "He dances straight from the wine-press into the battle line."
+    "flavor": "He dances straight from the wine-press into the battle line.",
+    "art": "res://art/cards/revel_c_002.webp"
   },
   {
     "id": "revel_c_003",
@@ -54,7 +56,8 @@
     ],
     "effects": [],
     "text": "First strike (this deals combat damage before creatures without first strike).",
-    "flavor": "Behind the gilded mask, a smile; behind the smile, a blade."
+    "flavor": "Behind the gilded mask, a smile; behind the smile, a blade.",
+    "art": "res://art/cards/revel_c_003.webp"
   },
   {
     "id": "revel_c_004",
@@ -79,7 +82,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
-    "flavor": "He has not stood up since the spring, and his wit has only grown sharper."
+    "flavor": "He has not stood up since the spring, and his wit has only grown sharper.",
+    "art": "res://art/cards/revel_c_004.webp"
   },
   {
     "id": "revel_c_005",
@@ -103,7 +107,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
-    "flavor": "There is always work to be done, and always a shady bench beside it."
+    "flavor": "There is always work to be done, and always a shady bench beside it.",
+    "art": "res://art/cards/revel_c_005.webp"
   },
   {
     "id": "revel_c_006",
@@ -130,7 +135,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
-    "flavor": "Each day he wakes a little later and a little heavier."
+    "flavor": "Each day he wakes a little later and a little heavier.",
+    "art": "res://art/cards/revel_c_006.webp"
   },
   {
     "id": "revel_c_007",
@@ -155,7 +161,8 @@
       }
     ],
     "text": "When this enters, deal 1 damage to any enemy creature or the enemy player.",
-    "flavor": "The guests applaud. The guest nearest the stage stops applauding."
+    "flavor": "The guests applaud. The guest nearest the stage stops applauding.",
+    "art": "res://art/cards/revel_c_007.webp"
   },
   {
     "id": "revel_c_008",
@@ -179,7 +186,8 @@
       }
     ],
     "text": "When this enters, you lose 2 life.",
-    "flavor": "Seven courses, nine vintages, and still he rises hungry for more."
+    "flavor": "Seven courses, nine vintages, and still he rises hungry for more.",
+    "art": "res://art/cards/revel_c_008.webp"
   },
   {
     "id": "revel_c_009",
@@ -205,7 +213,8 @@
       }
     ],
     "text": "Carouse (if you already played another non-land card this turn): this has haste.",
-    "flavor": "Behind a mask, every man is braver and none of them is sober."
+    "flavor": "Behind a mask, every man is braver and none of them is sober.",
+    "art": "res://art/cards/revel_c_009.webp"
   },
   {
     "id": "revel_c_010",
@@ -225,7 +234,8 @@
     ],
     "effects": [],
     "text": "Haste (this can attack the turn it comes into play).",
-    "flavor": "He charged the enemy line still holding his goblet, and never spilled a drop."
+    "flavor": "He charged the enemy line still holding his goblet, and never spilled a drop.",
+    "art": "res://art/cards/revel_c_010.webp"
   },
   {
     "id": "revel_c_011",
@@ -254,7 +264,8 @@
       }
     ],
     "text": "Haste (this can attack the turn it comes into play). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
-    "flavor": "He meant to join the raid. Then the afternoon grew warm."
+    "flavor": "He meant to join the raid. Then the afternoon grew warm.",
+    "art": "res://art/cards/revel_c_011.webp"
   },
   {
     "id": "revel_c_012",
@@ -281,7 +292,8 @@
       }
     ],
     "text": "When this enters, creatures you control get +1/+0 until end of turn.",
-    "flavor": "They lead him through the streets in flowers, and the crowd follows him into battle."
+    "flavor": "They lead him through the streets in flowers, and the crowd follows him into battle.",
+    "art": "res://art/cards/revel_c_012.webp"
   },
   {
     "id": "revel_c_013",
@@ -303,7 +315,8 @@
       }
     ],
     "text": "Deal 2 damage to any enemy creature or the enemy player.",
-    "flavor": "\"To your health!\" she cried, and lit the brandy."
+    "flavor": "\"To your health!\" she cried, and lit the brandy.",
+    "art": "res://art/cards/revel_c_013.webp"
   },
   {
     "id": "revel_c_014",
@@ -332,7 +345,8 @@
       }
     ],
     "text": "Deal 1 damage to target enemy creature. Carouse (if you already played another non-land card this turn): also deal 1 damage to the enemy player.",
-    "flavor": "Strung across the square for the feast day, lit one at a time, aimed carelessly."
+    "flavor": "Strung across the square for the feast day, lit one at a time, aimed carelessly.",
+    "art": "res://art/cards/revel_c_014.webp"
   },
   {
     "id": "revel_c_015",
@@ -360,7 +374,8 @@
       }
     ],
     "text": "Deal 1 damage to any enemy creature or the enemy player, then rummage (draw a card, then discard a card).",
-    "flavor": "One clumsy elbow, one candle, and the evening became memorable."
+    "flavor": "One clumsy elbow, one candle, and the evening became memorable.",
+    "art": "res://art/cards/revel_c_015.webp"
   },
   {
     "id": "revel_c_016",
@@ -394,7 +409,8 @@
       }
     ],
     "text": "Creatures you control get +1/+0 until end of turn. Carouse (if you already played another non-land card this turn): they get an additional +1/+0 until end of turn.",
-    "flavor": "Nobody remembers the second verse, so they sing the first one louder."
+    "flavor": "Nobody remembers the second verse, so they sing the first one louder.",
+    "art": "res://art/cards/revel_c_016.webp"
   },
   {
     "id": "revel_c_017",
@@ -417,7 +433,8 @@
       }
     ],
     "text": "Deal 3 damage to the enemy player.",
-    "flavor": "It was poured for him. It simply arrived faster than he expected."
+    "flavor": "It was poured for him. It simply arrived faster than he expected.",
+    "art": "res://art/cards/revel_c_017.webp"
   },
   {
     "id": "revel_c_018",
@@ -440,7 +457,8 @@
       }
     ],
     "text": "Deal 4 damage to target enemy creature.",
-    "flavor": "The chef insists it is meant to burn that brightly."
+    "flavor": "The chef insists it is meant to burn that brightly.",
+    "art": "res://art/cards/revel_c_018.webp"
   },
   {
     "id": "revel_c_019",
@@ -472,7 +490,8 @@
       }
     ],
     "text": "Tap, pay 1 life: deal 1 damage to the enemy player.",
-    "flavor": "It warms the dancers, lights the masks, and singes everyone who stands too close."
+    "flavor": "It warms the dancers, lights the masks, and singes everyone who stands too close.",
+    "art": "res://art/cards/revel_c_019.webp"
   },
   {
     "id": "revel_c_020",
@@ -508,7 +527,8 @@
       }
     ],
     "text": "R, Tap: creatures you control get +1/+0 until end of turn.",
-    "flavor": "When the drum begins, even the sleepiest baron finds his feet."
+    "flavor": "When the drum begins, even the sleepiest baron finds his feet.",
+    "art": "res://art/cards/revel_c_020.webp"
   },
   {
     "id": "revel_u_001",
@@ -537,7 +557,8 @@
       }
     ],
     "text": "First strike. Whenever this attacks, it gets +1/+1 until end of turn.",
-    "flavor": "He has never lost a duel, nor an argument about wine."
+    "flavor": "He has never lost a duel, nor an argument about wine.",
+    "art": "res://art/cards/revel_u_001.webp"
   },
   {
     "id": "revel_u_002",
@@ -562,7 +583,8 @@
       }
     ],
     "text": "Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
-    "flavor": "Every performance ends with a bow and a scorched front row."
+    "flavor": "Every performance ends with a bow and a scorched front row.",
+    "art": "res://art/cards/revel_u_002.webp"
   },
   {
     "id": "revel_u_003",
@@ -587,7 +609,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player.",
-    "flavor": "His jokes are cruel, his aim is crueller, and he delivers both lying down."
+    "flavor": "His jokes are cruel, his aim is crueller, and he delivers both lying down.",
+    "art": "res://art/cards/revel_u_003.webp"
   },
   {
     "id": "revel_u_004",
@@ -614,7 +637,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+0 counter on target creature you control.",
-    "flavor": "She never leaves her couch, yet no guest ever leaves her table hungry."
+    "flavor": "She never leaves her couch, yet no guest ever leaves her table hungry.",
+    "art": "res://art/cards/revel_u_004.webp"
   },
   {
     "id": "revel_u_005",
@@ -642,7 +666,8 @@
       }
     ],
     "text": "First strike. Carouse (if you already played another non-land card this turn): this has haste.",
-    "flavor": "He teaches only at night, and only to students who arrive already drunk."
+    "flavor": "He teaches only at night, and only to students who arrive already drunk.",
+    "art": "res://art/cards/revel_u_005.webp"
   },
   {
     "id": "revel_u_006",
@@ -671,7 +696,8 @@
       }
     ],
     "text": "Haste. When this enters, creatures you control get +1/+0 until end of turn.",
-    "flavor": "\"Tonight there is no tomorrow. Drink, and charge!\""
+    "flavor": "\"Tonight there is no tomorrow. Drink, and charge!\"",
+    "art": "res://art/cards/revel_u_006.webp"
   },
   {
     "id": "revel_u_007",
@@ -703,7 +729,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put two +1/+1 counters on this and you lose 2 life.",
-    "flavor": "Every evening he swears it will be his last feast, and every evening he is right about nothing."
+    "flavor": "Every evening he swears it will be his last feast, and every evening he is right about nothing.",
+    "art": "res://art/cards/revel_u_007.webp"
   },
   {
     "id": "revel_u_008",
@@ -732,7 +759,8 @@
       }
     ],
     "text": "Deal 1 damage to any enemy creature or the enemy player. Carouse (if you already played another non-land card this turn): also deal 2 damage to the enemy player.",
-    "flavor": "The first bottle is for the guests. The second is for the host's enemies."
+    "flavor": "The first bottle is for the guests. The second is for the host's enemies.",
+    "art": "res://art/cards/revel_u_008.webp"
   },
   {
     "id": "revel_u_009",
@@ -764,7 +792,8 @@
       }
     ],
     "text": "Deal 3 damage to target enemy creature. Carouse (if you already played another non-land card this turn): creatures you control get +1/+0 until end of turn.",
-    "flavor": "Insulted at supper, challenged at midnight, buried by breakfast."
+    "flavor": "Insulted at supper, challenged at midnight, buried by breakfast.",
+    "art": "res://art/cards/revel_u_009.webp"
   },
   {
     "id": "revel_u_010",
@@ -792,7 +821,8 @@
       }
     ],
     "text": "Deal 2 damage to each enemy creature. You lose 2 life.",
-    "flavor": "The dancers spin closer to the bonfire with every verse."
+    "flavor": "The dancers spin closer to the bonfire with every verse.",
+    "art": "res://art/cards/revel_u_010.webp"
   },
   {
     "id": "revel_u_011",
@@ -825,7 +855,8 @@
       }
     ],
     "text": "Rummage twice (each time, draw a card, then discard a card). Then deal 2 damage to the enemy player.",
-    "flavor": "By the end of the night the cellar was empty, and so, curiously, were the guests."
+    "flavor": "By the end of the night the cellar was empty, and so, curiously, were the guests.",
+    "art": "res://art/cards/revel_u_011.webp"
   },
   {
     "id": "revel_u_012",
@@ -847,7 +878,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, rummage (draw a card, then discard a card).",
-    "flavor": "Pleasure that never ends is its own slow wound."
+    "flavor": "Pleasure that never ends is its own slow wound.",
+    "art": "res://art/cards/revel_u_012.webp"
   },
   {
     "id": "revel_u_013",
@@ -871,7 +903,8 @@
       }
     ],
     "text": "Carouse (if you already played another non-land card this turn): creatures you control have first strike.",
-    "flavor": "Behind a painted face, the clumsiest guest moves like a fencing master."
+    "flavor": "Behind a painted face, the clumsiest guest moves like a fencing master.",
+    "art": "res://art/cards/revel_u_013.webp"
   },
   {
     "id": "revel_r_001",
@@ -898,7 +931,8 @@
       }
     ],
     "text": "Haste. Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
-    "flavor": "Three living flames in the air, and not one of them is happy about it."
+    "flavor": "Three living flames in the air, and not one of them is happy about it.",
+    "art": "res://art/cards/revel_r_001.webp"
   },
   {
     "id": "revel_r_002",
@@ -923,7 +957,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 2 damage to any enemy creature or the enemy player.",
-    "flavor": "He has not lifted a finger in years. He has never needed to."
+    "flavor": "He has not lifted a finger in years. He has never needed to.",
+    "art": "res://art/cards/revel_r_002.webp"
   },
   {
     "id": "revel_r_003",
@@ -953,7 +988,8 @@
       }
     ],
     "text": "First strike, haste. Carouse (if you already played another non-land card this turn): this gets +2/+0.",
-    "flavor": "He fights only after the last dance, when the candles gutter and the witnesses are asleep."
+    "flavor": "He fights only after the last dance, when the candles gutter and the witnesses are asleep.",
+    "art": "res://art/cards/revel_r_003.webp"
   },
   {
     "id": "revel_r_004",
@@ -979,7 +1015,8 @@
       }
     ],
     "text": "Haste. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "His banquet has lasted eleven years. His liver has filed several complaints."
+    "flavor": "His banquet has lasted eleven years. His liver has filed several complaints.",
+    "art": "res://art/cards/revel_r_004.webp"
   },
   {
     "id": "revel_r_005",
@@ -1011,7 +1048,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this, then rummage (draw a card, then discard a card).",
-    "flavor": "He sat down to dinner a year ago. The table has since been rebuilt around him twice."
+    "flavor": "He sat down to dinner a year ago. The table has since been rebuilt around him twice.",
+    "art": "res://art/cards/revel_r_005.webp"
   },
   {
     "id": "revel_r_006",
@@ -1034,7 +1072,8 @@
       }
     ],
     "text": "Deal 5 damage to any enemy creature or the enemy player.",
-    "flavor": "The fireworks were the finale. Nobody had planned for the encore."
+    "flavor": "The fireworks were the finale. Nobody had planned for the encore.",
+    "art": "res://art/cards/revel_r_006.webp"
   },
   {
     "id": "revel_r_007",
@@ -1064,7 +1103,8 @@
       }
     ],
     "text": "Creatures you control get +3/+0 until end of turn. You lose 3 life.",
-    "flavor": "At dawn they drew the curtains and called it midnight again."
+    "flavor": "At dawn they drew the curtains and called it midnight again.",
+    "art": "res://art/cards/revel_r_007.webp"
   },
   {
     "id": "revel_r_008",
@@ -1098,7 +1138,8 @@
       }
     ],
     "text": "Deal 3 damage to each creature and 3 damage to the enemy player. You lose 1 life.",
-    "flavor": "The carnival ended as all carnivals end: in ashes, and someone else's house."
+    "flavor": "The carnival ended as all carnivals end: in ashes, and someone else's house.",
+    "art": "res://art/cards/revel_r_008.webp"
   },
   {
     "id": "revel_r_009",
@@ -1121,7 +1162,8 @@
       }
     ],
     "text": "Creatures you control have haste.",
-    "flavor": "Under the paper lanterns no one waits for anything."
+    "flavor": "Under the paper lanterns no one waits for anything.",
+    "art": "res://art/cards/revel_r_009.webp"
   },
   {
     "id": "revel_m_001",
@@ -1152,7 +1194,8 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.",
-    "flavor": "She raises a cup to every guest; the guests who drink do not rise again."
+    "flavor": "She raises a cup to every guest; the guests who drink do not rise again.",
+    "art": "res://art/cards/revel_m_001.webp"
   },
   {
     "id": "revel_m_002",
@@ -1182,7 +1225,8 @@
       }
     ],
     "text": "Haste, first strike. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
-    "flavor": "He drinks fire, duels for sport, and has never once been on time for his own wedding."
+    "flavor": "He drinks fire, duels for sport, and has never once been on time for his own wedding.",
+    "art": "res://art/cards/revel_m_002.webp"
   },
   {
     "id": "revel_m_003",
@@ -1232,6 +1276,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, deal 1 damage to each creature and 1 damage to the enemy player, and you lose 1 life. Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn.",
-    "flavor": "It was lit for one feast day. Nobody remembers which, and nobody can put it out."
+    "flavor": "It was lit for one feast day. Nobody remembers which, and nobody can put it out.",
+    "art": "res://art/cards/revel_m_003.webp"
   }
 ]

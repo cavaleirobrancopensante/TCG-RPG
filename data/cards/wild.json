@@ -16,7 +16,8 @@
     ],
     "effects": [],
     "text": "Trample (excess combat damage goes to the player).",
-    "flavor": "Through the thorn-hedge and gone before the hounds catch the scent."
+    "flavor": "Through the thorn-hedge and gone before the hounds catch the scent.",
+    "art": "res://art/cards/wild_c_001.webp"
   },
   {
     "id": "wild_c_002",
@@ -49,7 +50,8 @@
       }
     ],
     "text": "Tap: add G.",
-    "flavor": "She coaxes the green out of the soil the way one coaxes a shy child."
+    "flavor": "She coaxes the green out of the soil the way one coaxes a shy child.",
+    "art": "res://art/cards/wild_c_002.webp"
   },
   {
     "id": "wild_c_003",
@@ -76,7 +78,8 @@
       }
     ],
     "text": "Whenever this attacks, it gets +1/+0 until end of turn.",
-    "flavor": "Its tusks have uprooted more saplings than any woodsman's axe."
+    "flavor": "Its tusks have uprooted more saplings than any woodsman's axe.",
+    "art": "res://art/cards/wild_c_003.webp"
   },
   {
     "id": "wild_c_004",
@@ -96,7 +99,8 @@
     ],
     "effects": [],
     "text": "Reach (can block creatures with flying).",
-    "flavor": "Its web hangs between the blackthorns, and the finches have learned to fly around it."
+    "flavor": "Its web hangs between the blackthorns, and the finches have learned to fly around it.",
+    "art": "res://art/cards/wild_c_004.webp"
   },
   {
     "id": "wild_c_005",
@@ -127,7 +131,8 @@
       }
     ],
     "text": "When this enters, create a 1/1 Sapling token.",
-    "flavor": "Every acorn she lets fall is a gift to someone two hundred years from now."
+    "flavor": "Every acorn she lets fall is a gift to someone two hundred years from now.",
+    "art": "res://art/cards/wild_c_005.webp"
   },
   {
     "id": "wild_c_006",
@@ -147,7 +152,8 @@
     ],
     "effects": [],
     "text": "Trample (excess combat damage goes to the player).",
-    "flavor": "It leaps the barrow-mounds where the old kings sleep."
+    "flavor": "It leaps the barrow-mounds where the old kings sleep.",
+    "art": "res://art/cards/wild_c_006.webp"
   },
   {
     "id": "wild_c_007",
@@ -167,7 +173,8 @@
     ],
     "effects": [],
     "text": "Reach (can block creatures with flying).",
-    "flavor": "It stood guard at the moot for a hundred years, and saw no need to leave."
+    "flavor": "It stood guard at the moot for a hundred years, and saw no need to leave.",
+    "art": "res://art/cards/wild_c_007.webp"
   },
   {
     "id": "wild_c_008",
@@ -187,7 +194,8 @@
     ],
     "effects": [],
     "text": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
-    "flavor": "Dig him out of one hole and he is already snoring in the next."
+    "flavor": "Dig him out of one hole and he is already snoring in the next.",
+    "art": "res://art/cards/wild_c_008.webp"
   },
   {
     "id": "wild_c_009",
@@ -214,7 +222,8 @@
       }
     ],
     "text": "Rooted: as long as you control six or more lands, this gets +1/+1.",
-    "flavor": "The druids call her grandmother, and wisely give her the path."
+    "flavor": "The druids call her grandmother, and wisely give her the path.",
+    "art": "res://art/cards/wild_c_009.webp"
   },
   {
     "id": "wild_c_010",
@@ -245,7 +254,8 @@
       }
     ],
     "text": "When this enters, create a 2/2 Wolf token.",
-    "flavor": "He keeps no kennel. The wolves simply come when he whistles."
+    "flavor": "He keeps no kennel. The wolves simply come when he whistles.",
+    "art": "res://art/cards/wild_c_010.webp"
   },
   {
     "id": "wild_c_011",
@@ -265,7 +275,8 @@
     ],
     "effects": [],
     "text": "Trample (excess combat damage goes to the player).",
-    "flavor": "The last of the wild cattle, and the whole valley still steps aside for it."
+    "flavor": "The last of the wild cattle, and the whole valley still steps aside for it.",
+    "art": "res://art/cards/wild_c_011.webp"
   },
   {
     "id": "wild_c_012",
@@ -285,7 +296,8 @@
     ],
     "effects": [],
     "text": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
-    "flavor": "Lightning has split it twice. Both times it simply grew thicker."
+    "flavor": "Lightning has split it twice. Both times it simply grew thicker.",
+    "art": "res://art/cards/wild_c_012.webp"
   },
   {
     "id": "wild_c_013",
@@ -307,7 +319,8 @@
       }
     ],
     "text": "Add GG.",
-    "flavor": "Seed into soil, soil into sap, sap into power."
+    "flavor": "Seed into soil, soil into sap, sap into power.",
+    "art": "res://art/cards/wild_c_013.webp"
   },
   {
     "id": "wild_c_014",
@@ -331,7 +344,8 @@
       }
     ],
     "text": "Target creature you control gets +3/+3 until end of turn.",
-    "flavor": "For a moment, the beast remembers what the forest was before men."
+    "flavor": "For a moment, the beast remembers what the forest was before men.",
+    "art": "res://art/cards/wild_c_014.webp"
   },
   {
     "id": "wild_c_015",
@@ -353,7 +367,8 @@
       }
     ],
     "text": "Target creature you control fights target enemy creature (each deals damage equal to its power to the other).",
-    "flavor": "In autumn the stags settle their quarrels, and the forest settles with them."
+    "flavor": "In autumn the stags settle their quarrels, and the forest settles with them.",
+    "art": "res://art/cards/wild_c_015.webp"
   },
   {
     "id": "wild_c_016",
@@ -376,7 +391,8 @@
       }
     ],
     "text": "Destroy target enemy creature with flying.",
-    "flavor": "Whatever flies must perch at last, and every perch is a branch."
+    "flavor": "Whatever flies must perch at last, and every perch is a branch.",
+    "art": "res://art/cards/wild_c_016.webp"
   },
   {
     "id": "wild_c_017",
@@ -398,7 +414,8 @@
       }
     ],
     "text": "Destroy target enemy relic.",
-    "flavor": "Leave any engine out in the rain long enough and the green will claim it."
+    "flavor": "Leave any engine out in the rain long enough and the green will claim it.",
+    "art": "res://art/cards/wild_c_017.webp"
   },
   {
     "id": "wild_c_018",
@@ -427,7 +444,8 @@
       }
     ],
     "text": "Create two 2/2 Wolf tokens.",
-    "flavor": "One howl at moonrise, and the hills answer."
+    "flavor": "One howl at moonrise, and the hills answer.",
+    "art": "res://art/cards/wild_c_018.webp"
   },
   {
     "id": "wild_c_019",
@@ -462,7 +480,8 @@
       }
     ],
     "text": "Tap, pay G: target creature you control gets +1/+1 until end of turn.",
-    "flavor": "A sprig of rowan over the byre door, and no ill thing crosses."
+    "flavor": "A sprig of rowan over the byre door, and no ill thing crosses.",
+    "art": "res://art/cards/wild_c_019.webp"
   },
   {
     "id": "wild_c_020",
@@ -503,7 +522,8 @@
       }
     ],
     "text": "Tap, pay 1G: create a 1/1 Sapling token.",
-    "flavor": "Scattered by hand in spring, gathered by the cartload in autumn."
+    "flavor": "Scattered by hand in spring, gathered by the cartload in autumn.",
+    "art": "res://art/cards/wild_c_020.webp"
   },
   {
     "id": "wild_u_001",
@@ -534,7 +554,8 @@
       }
     ],
     "text": "When this enters, create a 2/2 Wolf token.",
-    "flavor": "Where she runs, she never runs alone."
+    "flavor": "Where she runs, she never runs alone.",
+    "art": "res://art/cards/wild_u_001.webp"
   },
   {
     "id": "wild_u_002",
@@ -561,7 +582,8 @@
       }
     ],
     "text": "Reach. When this enters, destroy target enemy creature with flying.",
-    "flavor": "He reads the wind over the reed beds and knows where every wing will come down."
+    "flavor": "He reads the wind over the reed beds and knows where every wing will come down.",
+    "art": "res://art/cards/wild_u_002.webp"
   },
   {
     "id": "wild_u_003",
@@ -582,7 +604,8 @@
     ],
     "effects": [],
     "text": "Reach, regenerate.",
-    "flavor": "The standing stones are not empty. They are only patient."
+    "flavor": "The standing stones are not empty. They are only patient.",
+    "art": "res://art/cards/wild_u_003.webp"
   },
   {
     "id": "wild_u_004",
@@ -606,7 +629,8 @@
       }
     ],
     "text": "When this enters, target creature you control fights target enemy creature.",
-    "flavor": "He calls the beasts of the wood to his side, and they settle the matter together."
+    "flavor": "He calls the beasts of the wood to his side, and they settle the matter together.",
+    "art": "res://art/cards/wild_u_004.webp"
   },
   {
     "id": "wild_u_005",
@@ -637,7 +661,8 @@
       }
     ],
     "text": "When this enters, create two 1/1 Sapling tokens.",
-    "flavor": "She plants acorns as she walks; by evening they walk beside her."
+    "flavor": "She plants acorns as she walks; by evening they walk beside her.",
+    "art": "res://art/cards/wild_u_005.webp"
   },
   {
     "id": "wild_u_006",
@@ -672,7 +697,8 @@
       }
     ],
     "text": "Tap: target creature you control gets +2/+2 until end of turn.",
-    "flavor": "His face looks out from every leaf, and where he looks, things grow."
+    "flavor": "His face looks out from every leaf, and where he looks, things grow.",
+    "art": "res://art/cards/wild_u_006.webp"
   },
   {
     "id": "wild_u_007",
@@ -698,7 +724,8 @@
       }
     ],
     "text": "Trample. When this enters, destroy target enemy relic.",
-    "flavor": "Palisades, siege towers, brass engines: all just more underbrush."
+    "flavor": "Palisades, siege towers, brass engines: all just more underbrush.",
+    "art": "res://art/cards/wild_u_007.webp"
   },
   {
     "id": "wild_u_008",
@@ -731,7 +758,8 @@
       }
     ],
     "text": "Rooted: as long as you control six or more lands, this gets +2/+2 and has trample.",
-    "flavor": "When the farms thin out and the wild grows deep, the wild man comes down from the fells."
+    "flavor": "When the farms thin out and the wild grows deep, the wild man comes down from the fells.",
+    "art": "res://art/cards/wild_u_008.webp"
   },
   {
     "id": "wild_u_009",
@@ -756,7 +784,8 @@
       }
     ],
     "text": "Target creature you control gets +2/+2 permanently.",
-    "flavor": "The oak gives slowly, but it never takes back."
+    "flavor": "The oak gives slowly, but it never takes back.",
+    "art": "res://art/cards/wild_u_009.webp"
   },
   {
     "id": "wild_u_010",
@@ -786,7 +815,8 @@
       }
     ],
     "text": "Target creature you control gets +2/+2 until end of turn. Then target creature you control fights target enemy creature.",
-    "flavor": "The forest holds no courts. It holds contests."
+    "flavor": "The forest holds no courts. It holds contests.",
+    "art": "res://art/cards/wild_u_010.webp"
   },
   {
     "id": "wild_u_011",
@@ -828,7 +858,8 @@
       }
     ],
     "text": "Create two 1/1 Sapling tokens. Rooted: if you control six or more lands, create two more.",
-    "flavor": "Cider on the roots, toast in the branches, and next year's apples heard every word."
+    "flavor": "Cider on the roots, toast in the branches, and next year's apples heard every word.",
+    "art": "res://art/cards/wild_u_011.webp"
   },
   {
     "id": "wild_u_012",
@@ -859,7 +890,8 @@
       }
     ],
     "text": "Tap: add G.",
-    "flavor": "The forked stick dips, and there is water, or power, or both."
+    "flavor": "The forked stick dips, and there is water, or power, or both.",
+    "art": "res://art/cards/wild_u_012.webp"
   },
   {
     "id": "wild_u_013",
@@ -900,7 +932,8 @@
       }
     ],
     "text": "Tap, pay 2G: create a 2/2 Wolf token.",
-    "flavor": "Blow it once on a winter night, and something in the hills always answers."
+    "flavor": "Blow it once on a winter night, and something in the hills always answers.",
+    "art": "res://art/cards/wild_u_013.webp"
   },
   {
     "id": "wild_r_001",
@@ -945,7 +978,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, add G. Tap, pay G: target creature you control gets +1/+1 permanently.",
-    "flavor": "His golden sickle has cut the sacred bough for sixty winters."
+    "flavor": "His golden sickle has cut the sacred bough for sixty winters.",
+    "art": "res://art/cards/wild_r_001.webp"
   },
   {
     "id": "wild_r_002",
@@ -974,7 +1008,8 @@
       }
     ],
     "text": "Regenerate. Whenever this attacks, target creature you control gets +1/+1 permanently.",
-    "flavor": "Kings have hunted it for a thousand years. It has never once been caught."
+    "flavor": "Kings have hunted it for a thousand years. It has never once been caught.",
+    "art": "res://art/cards/wild_r_002.webp"
   },
   {
     "id": "wild_r_003",
@@ -1003,7 +1038,8 @@
       }
     ],
     "text": "Trample. Other Beasts you control get +1/+1.",
-    "flavor": "Crowned with twelve tines, he leads every beast of the marsh."
+    "flavor": "Crowned with twelve tines, he leads every beast of the marsh.",
+    "art": "res://art/cards/wild_r_003.webp"
   },
   {
     "id": "wild_r_004",
@@ -1033,7 +1069,8 @@
       }
     ],
     "text": "Reach, regenerate. Rooted: as long as you control six or more lands, this gets +3/+0.",
-    "flavor": "It was old when the barrows were raised, and it will be old when they are ploughed flat."
+    "flavor": "It was old when the barrows were raised, and it will be old when they are ploughed flat.",
+    "art": "res://art/cards/wild_r_004.webp"
   },
   {
     "id": "wild_r_005",
@@ -1054,7 +1091,8 @@
     ],
     "effects": [],
     "text": "Trample, regenerate.",
-    "flavor": "Cut it in two and throw half in the river. By morning it has found itself again."
+    "flavor": "Cut it in two and throw half in the river. By morning it has found itself again.",
+    "art": "res://art/cards/wild_r_005.webp"
   },
   {
     "id": "wild_r_006",
@@ -1079,7 +1117,8 @@
       }
     ],
     "text": "Creatures you control get +2/+2 until end of turn.",
-    "flavor": "Hooves, horns and howling, and the earth itself rides with them."
+    "flavor": "Hooves, horns and howling, and the earth itself rides with them.",
+    "art": "res://art/cards/wild_r_006.webp"
   },
   {
     "id": "wild_r_007",
@@ -1107,7 +1146,8 @@
       }
     ],
     "text": "Target creature you control fights target enemy creature. Rooted: if you control six or more lands, target creature you control then fights another target enemy creature.",
-    "flavor": "Under the October moon the hunt rides twice before dawn."
+    "flavor": "Under the October moon the hunt rides twice before dawn.",
+    "art": "res://art/cards/wild_r_007.webp"
   },
   {
     "id": "wild_r_008",
@@ -1138,7 +1178,8 @@
       }
     ],
     "text": "Create three 2/2 Oakling tokens with reach.",
-    "flavor": "The druid sang, and the wood remembered it had roots that could walk."
+    "flavor": "The druid sang, and the wood remembered it had roots that could walk.",
+    "art": "res://art/cards/wild_r_008.webp"
   },
   {
     "id": "wild_r_009",
@@ -1161,7 +1202,8 @@
       }
     ],
     "text": "At the beginning of your upkeep, add GG.",
-    "flavor": "Raised by no hand anyone remembers, aligned to no star anyone can name."
+    "flavor": "Raised by no hand anyone remembers, aligned to no star anyone can name.",
+    "art": "res://art/cards/wild_r_009.webp"
   },
   {
     "id": "wild_m_001",
@@ -1194,7 +1236,8 @@
       }
     ],
     "text": "Trample. Whenever this attacks, create a 2/2 Wolf token.",
-    "flavor": "Antlered and silent, he rides out from the old oak at midnight, and the hounds pour after him."
+    "flavor": "Antlered and silent, he rides out from the old oak at midnight, and the hounds pour after him.",
+    "art": "res://art/cards/wild_m_001.webp"
   },
   {
     "id": "wild_m_002",
@@ -1228,7 +1271,8 @@
       }
     ],
     "text": "Trample, reach. When this enters, create two 2/2 Oakling tokens.",
-    "flavor": "Empires rose and fell in the span of a single ring of its wood."
+    "flavor": "Empires rose and fell in the span of a single ring of its wood.",
+    "art": "res://art/cards/wild_m_002.webp"
   },
   {
     "id": "wild_m_003",
@@ -1270,6 +1314,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, create a 1/1 Sapling token. Rooted: if you control six or more lands, also create a 3/3 Stag token.",
-    "flavor": "Seed, flower, harvest, frost. And then, always, seed again."
+    "flavor": "Seed, flower, harvest, frost. And then, always, seed again.",
+    "art": "res://art/cards/wild_m_003.webp"
   }
 ]

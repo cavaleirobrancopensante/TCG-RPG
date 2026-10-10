@@ -7,6 +7,81 @@ from core import *
 import bg
 import props as PR
 from figure import Figure
+import figure as FG
+
+# figure poses of our own: front hand, back hand, back arm in front of body,
+# front elbow bend, back elbow bend
+WI_POSES = {
+    'wi_whistle': ((8, -86), (-9, -51), False, 1, 1),
+    'wi_wassail': ((25, -104), (-9, -52), False, 1, 1),
+    'wi_draw_up': ((31, -103), (7, -84.5), False, 1, 1),
+    'wi_drop': ((24, -64), (-12, -50), False, 1, 1),
+}
+FG.POSES.update(WI_POSES)
+
+# explicit (foreshortened) elbows for poses the two-bone solver cannot show:
+# the archer's drawing elbow sticks out behind his head, level with the shoulder
+WI_ELBOWS = {
+    'wi_draw_up': {'el_b': (-20, -87)},
+}
+
+# poses whose hands are meant to stay close to the chest (no forward push)
+_CLOSE_POSES = ('pray', 'bless', 'wi_whistle')
+# raised hands whose elbow should still hang low (hand brought up to the face)
+_LOW_ELBOW = ('wi_whistle',)
+
+
+def wi_ik(s, t, l1, l2, low=False, push=True):
+    """Two-bone arm. For a hand at or below the shoulder the elbow hangs down
+    beside the body; if the hand target is so close to the shoulder that the arm
+    would fold into a chicken wing, the hand is carried forward (the figure faces
+    right) until the arm makes a natural L. For a raised hand the elbow goes out
+    and forward."""
+    L = l1 + l2
+    side = 1.0 if s[0] >= 0 else -1.0
+    raised = t[1] < s[1] - 2
+    d = v_len(v_sub(t, s))
+    if push and not raised and d < 0.8 * L:
+        dy = t[1] - s[1]
+        need = math.sqrt(max(0.0, (0.8 * L) ** 2 - dy * dy))
+        dx = t[0] - s[0]
+        sgn = -1.0 if (dx < -3 and side < 0) else 1.0
+        t = (s[0] + sgn * max(need, abs(dx)), t[1])
+        d = v_len(v_sub(t, s))
+    d = min(max(d, 0.01), L - 0.05)
+    base = math.atan2(t[1] - s[1], t[0] - s[0])
+    cos_a = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)
+    a = math.acos(max(-1.0, min(1.0, cos_a)))
+    e1 = (s[0] + math.cos(base + a) * l1, s[1] + math.sin(base + a) * l1)
+    e2 = (s[0] + math.cos(base - a) * l1, s[1] + math.sin(base - a) * l1)
+    if raised and not low:
+        def score(e):
+            return e[1] + 1.4 * side * e[0] + 0.6 * e[0]
+    else:
+        def score(e):
+            return e[1] + 0.5 * side * e[0]
+    e = e1 if score(e1) >= score(e2) else e2
+    dirv = v_norm(v_sub(t, e))
+    return e, v_add(e, v_mul(dirv, l2))
+
+
+class WFigure(Figure):
+    """Figure with arms that hang naturally: elbows down at the side, hands carried
+    forward instead of folding the arm against the chest."""
+
+    def joints(self):
+        j = Figure.joints(self)
+        k = j['k']
+        pf, pb, bfront, bend_f, bend_b = FG.POSES[self.pose]
+        push = self.pose not in _CLOSE_POSES
+        j['el_f'], j['hand_f'] = wi_ik(j['sh_f'], (pf[0], pf[1] + k), 16.5, 15.5, low=self.pose in _LOW_ELBOW, push=push)
+        j['el_b'], j['hand_b'] = wi_ik(j['sh_b'], (pb[0], pb[1] + k), 16.5, 15.5, push=push)
+        for key, q in WI_ELBOWS.get(self.pose, {}).items():
+            j[key] = (q[0], q[1] + k)
+            hand = 'hand_' + key[-1]
+            tgt = pf if key[-1] == 'f' else pb
+            j[hand] = (tgt[0], tgt[1] + k)
+        return j
 
 # ------------------------------------------------------------------ palette
 
@@ -108,7 +183,7 @@ POSES = {
     'trot': (((40, 50, 90), (-20, -10, 10), (5, -40, -5), (45, -20, 10)), 0, 0, 0),
     'run': (((55, 75, 95), (30, 45, 80), (-30, -80, -95), (-10, -60, -80)), -4, 3, 6),
     'gather': (((-30, -110, -150), (-10, -90, -140), (60, 10, 30), (45, -5, 20)), 4, -3, 6),
-    'leap': (((75, 88, 100), (62, 80, 96), (-72, -86, -96), (-60, -78, -90)), -2, 4, 34),
+    'leap': (((30, 75, 30), (50, 85, 45), (-30, -75, -60), (-20, -65, -50)), 0, 6, 34),
     'charge': (((40, 30, 60), (-15, -25, 0), (10, -50, -20), (35, -25, 5)), -14, -2, 0),
     'rear': (((70, 140, 170), (50, 120, 160), (-12, -60, -30), (-22, -64, -36)), 14, 34, 0),
     'crouch': (((10, -20, 60), (20, -10, 70), (55, -70, 70), (45, -70, 60)), -8, -3, -14),
@@ -440,29 +515,49 @@ def stag_head(p, b):
 
 
 def antler(p, base, ang, length, tines, col=C.hex('d8c8a8'), w=2.6, flipx=1):
-    """A branched antler: main beam sweeping back and up, tines forward and up."""
+    """A red deer antler in side view: the main beam rises up and back from the
+    pedicle, then sweeps forward at the top in a lyre curve. Brow and bez tines
+    point forward low on the beam, a trez tine halfway, and the top ends in a
+    small cup (crown) of tines."""
     pts = []
     a = math.radians(ang)
     q = base
-    n = 10
+    n = 12
     for i in range(n + 1):
         t = i / n
-        aa = a + (t ** 1.4) * math.radians(55) * flipx
+        aa = a + math.radians(18) * t - math.radians(58) * t * t
         if i:
             q = v_add(q, (math.cos(aa) * length / n * flipx, -math.sin(aa) * length / n))
         pts.append(q)
-    vtaper(p, pts, [w * (1 - 0.6 * i / n) for i in range(n + 1)], col, width=1.4, shade=0.7)
-    for k in range(tines):
-        t = 0.18 + 0.78 * k / max(1, tines - 1)
-        i = int(t * n)
+    vtaper(p, pts, [w * (1 - 0.55 * i / n) for i in range(n + 1)], col, width=1.4, shade=0.7)
+    # beam angle at index i
+    def beam_ang(i):
+        t = i / n
+        return a + math.radians(18) * t - math.radians(58) * t * t
+    specs = []
+    low = [(0.1, 18, 0.4), (0.22, 30, 0.28), (0.5, 38, 0.26)]
+    n_low = min(3, max(1, tines - 2))
+    specs += low[:n_low]
+    n_crown = max(1, tines - n_low)
+    for k in range(n_crown):
+        specs.append((0.84 + 0.12 * k / max(1, n_crown - 1) if n_crown > 1 else 0.92, None, 0.2 - 0.03 * k, k))
+    for sp in specs:
+        t = sp[0]
+        i = min(n, int(round(t * n)))
         b0 = pts[i]
-        tl = length * (0.42 - 0.12 * t) * (1.15 if k == 0 else 1.0)
-        ta = math.radians(25 if k == 0 else 72 - k * 7)
+        tl = length * sp[2]
+        if sp[1] is not None:
+            ta = math.radians(sp[1])
+        else:
+            k = sp[3]
+            ta = beam_ang(i) - math.radians(70) + math.radians(55) * k
         tip = v_add(b0, (math.cos(ta) * tl * flipx, -math.sin(ta) * tl))
-        mid = v_add(v_lerp(b0, tip, 0.5), (-1.2 * flipx, 0))
-        vtaper(p, [b0, mid, tip], [w * 0.7 * (1 - 0.5 * t), w * 0.45, 0.35], col, width=1.2, shade=0.6)
-    for i in range(1, n, 2):
-        p.line([pts[i], v_add(pts[i], (1.4, -0.4))], col.dark(0.4).alpha(0.6), 0.8)
+        mid = v_add(v_lerp(b0, tip, 0.5), (0, -tl * 0.08))
+        vtaper(p, [b0, mid, tip], [w * 0.5 * (1 - 0.4 * t), w * 0.32, 0.3], col, width=1.2, shade=0.6)
+    # pearling on the beam
+    for i in range(1, n // 2):
+        p.line([pts[i], v_add(pts[i], (1.4 * flipx, -0.4))], col.dark(0.4).alpha(0.6), 0.8)
+    p.blob(base, w * 1.25, w * 0.8, col.dark(0.15), width=1.2)
 
 
 def aurochs_head(p, b):
@@ -665,9 +760,9 @@ def _stag_antlers(p, b, ha, far=False):
     col = C.hex('c8b48c') if not b.glow else C.hex('f0e6c8')
     rd = math.degrees(r)
     if far:
-        antler(p, v_add(base, (2, 0)), 115 - rd, 50 + b.antler_tines * 2, b.antler_tines, col.dark(0.25), 2.6, 1)
+        antler(p, v_add(base, (8, 2)), 118 - rd, 30 + b.antler_tines * 2, b.antler_tines, col.dark(0.28), 2.6, 1)
     else:
-        antler(p, base, 105 - rd, 54 + b.antler_tines * 2, b.antler_tines, col, 3.0, 1)
+        antler(p, base, 144 - rd, 33 + b.antler_tines * 2, b.antler_tines, col, 3.0, 1)
         if b.crown:
             # glowing crown of tines
             p.glow(v_add(base, (0, -40)), 60, C.hex('e8f0b0'), 0.25)
@@ -755,53 +850,94 @@ def bark(p, outline, col=BARK, vertical=True, birch=False):
     p.unclip()
 
 
+def _clump(r, q, a, b, unit=1.0, leaf=9.0):
+    """Outline of one clump of leaves: a rounded mass whose edge is made of small
+    pointed leaf tips with notches between them (not a smooth circle). The
+    underside is a little flatter than the top."""
+    circ = math.pi * (a + b)
+    n = int(max(7, min(34, circ * unit / leaf)))
+    pts = []
+    off = r.uniform(0, math.tau)
+    for i in range(n):
+        t = off + math.tau * i / n + r.uniform(-0.25, 0.25) * math.tau / n
+        k = r.uniform(0.88, 1.06)
+        sy = math.sin(t)
+        fy = 0.8 if sy > 0 else 1.0
+        pts.append((q[0] + math.cos(t) * a * k, q[1] + sy * b * k * fy, 0))
+        t2 = t + math.tau / n * r.uniform(0.4, 0.6)
+        k2 = r.uniform(0.72, 0.84)
+        sy2 = math.sin(t2)
+        fy2 = 0.8 if sy2 > 0 else 1.0
+        pts.append((q[0] + math.cos(t2) * a * k2, q[1] + sy2 * b * k2 * fy2))
+    return pts
+
+
 def leaf_mass(p, c, rx, ry, season='summer', n=None, flecks=True, ink=True, cols=None):
-    """A clump of foliage with a scalloped edge: many small lobes, dark below,
-    lit above, with leaf flecks catching the light. Only the outer edge is inked."""
+    """Foliage built as layered clumps of leaves: a dark silhouette with a leafy
+    serrated edge (only the outer edge inked), then mid-tone clumps each casting a
+    shadow on the ones below, lit clumps on the upper left, and single leaves
+    catching the light."""
     base, dark, hi = cols or SEASON_LEAF.get(season, SEASON_LEAF['summer'])
     r = p.rng
+    u = p._unit
     m = (rx + ry) / 2
-    n = n or max(7, int(m / 5))
-    lobes = []
+    n = n or max(6, int(m / 6))
+    leaf = 7.0 if m * u < 40 else 10.0
+    clumps = []
     for i in range(n):
         a = r.uniform(0, math.tau)
-        d = r.uniform(0.35, 1.0) ** 0.5
-        q = (c[0] + math.cos(a) * rx * 0.72 * d, c[1] + math.sin(a) * ry * 0.68 * d)
-        lr = m * r.uniform(0.22, 0.36)
-        lobes.append((q, lr * r.uniform(1.0, 1.25), lr))
-    # ring of edge lobes for a scalloped silhouette
-    ne = max(8, int(m / 4))
+        d = r.uniform(0.2, 1.0) ** 0.5
+        q = (c[0] + math.cos(a) * rx * 0.6 * d, c[1] + math.sin(a) * ry * 0.58 * d)
+        lr = m * r.uniform(0.3, 0.44)
+        clumps.append((q, lr * r.uniform(1.05, 1.3), lr))
+    ne = max(6, int(m / 6))
     for i in range(ne):
-        a = math.tau * i / ne + r.uniform(-0.15, 0.15)
-        q = (c[0] + math.cos(a) * rx * 0.78, c[1] + math.sin(a) * ry * 0.74)
-        lr = m * r.uniform(0.18, 0.28)
-        lobes.append((q, lr * 1.15, lr))
-    ik = INK.alpha(0.7) if ink else False
-    for q, a, b in lobes:
-        p.blob(q, a, b, dark, ink=ik, width=1.6)
-    for q, a, b in lobes:
-        p.blob(q, a * 0.86, b * 0.84, dark, ink=False)
-    p.blob(c, rx * 0.75, ry * 0.72, dark, ink=False)
-    # lit lobes, upper-left most
-    for q, a, b in sorted(lobes, key=lambda t: t[0][1]):
-        up = (c[1] - q[1]) / ry + (c[0] - q[0]) / rx * 0.6
-        if up < -0.25:
+        a = math.tau * i / ne + r.uniform(-0.2, 0.2)
+        q = (c[0] + math.cos(a) * rx * 0.7, c[1] + math.sin(a) * ry * 0.66)
+        lr = m * r.uniform(0.24, 0.34)
+        clumps.append((q, lr * 1.2, lr))
+    deep = dark.dark(0.18)
+    sil = [_clump(r, q, a, b, u, leaf) for q, a, b in clumps]
+    ik = INK.alpha(0.65) if ink else False
+    for s in sil:
+        p.shape(s, deep, ink=ik, width=1.4)
+    for (q, a, b) in clumps:
+        p.blob(q, a * 0.8, b * 0.74, deep, ink=False)
+    p.blob(c, rx * 0.7, ry * 0.66, deep, ink=False)
+
+    def up_of(q):
+        return (c[1] - q[1]) / ry + (c[0] - q[0]) / rx * 0.6
+
+    # mid-tone clumps, upper ones first so lower clumps sit in their shadow
+    for q, a, b in sorted(clumps, key=lambda t: t[0][1]):
+        up = up_of(q)
+        if up < -0.95:
             continue
-        col = base.mix(hi, max(0.0, min(0.45, up * 0.4)))
-        p.blob(v_add(q, (-a * 0.15, -b * 0.18)), a * 0.6, b * 0.55, col.alpha(0.9), ink=False, shade=0.4)
+        t = max(0.0, min(1.0, 0.45 + up * 0.45))
+        col = dark.mix(base, t)
+        qq = v_add(q, (-a * 0.08, -b * 0.12))
+        aa, bb = a * 0.82, b * 0.76
+        p.shape(_clump(r, v_add(qq, (a * 0.06, b * 0.16)), aa, bb, u, leaf), deep.dark(0.25).alpha(0.55), ink=False)
+        p.shape(_clump(r, qq, aa, bb, u, leaf), col, ink=False, shade=0.6, light=(-0.75, -0.7))
+        if up > -0.35:
+            hcol = base.mix(hi, max(0.1, min(0.75, 0.3 + up * 0.35)))
+            hq = v_add(qq, (-aa * 0.22, -bb * 0.28))
+            p.shape(_clump(r, hq, aa * 0.52, bb * 0.42, u, leaf * 0.8), hcol.alpha(0.92), ink=False, shade=0.35)
     if flecks:
-        k = int(rx * ry / 22) + 10
-        for _ in range(min(k, 420)):
+        k = int(rx * ry / 30) + 8
+        for _ in range(min(k, 320)):
             ang = r.uniform(0, math.tau)
             d = r.uniform(0, 1) ** 0.6
-            q = (c[0] + math.cos(ang) * rx * 0.85 * d, c[1] + math.sin(ang) * ry * 0.8 * d)
-            up = (c[1] - q[1]) / ry + (c[0] - q[0]) / rx * 0.5
-            t = r.random()
-            col = hi if up > r.uniform(-0.2, 0.9) else (base if t < 0.5 else dark.dark(0.3))
-            a0 = r.uniform(0, math.pi)
-            L = r.uniform(3, 6)
-            p.shape([polar(q, L, a0) + (0,), polar(q, L * 0.35, a0 + 1.57), polar(q, L, a0 + math.pi) + (0,), polar(q, L * 0.35, a0 - 1.57)],
-                    col.alpha(0.85), ink=False)
+            q = (c[0] + math.cos(ang) * rx * 0.82 * d, c[1] + math.sin(ang) * ry * 0.76 * d)
+            up = up_of(q)
+            if up > r.uniform(-0.2, 1.0):
+                col = hi.alpha(0.85)
+            else:
+                col = (dark.dark(0.35) if r.random() < 0.6 else base.dark(0.1)).alpha(0.8)
+            a0 = r.uniform(0.3, 1.3) * (1 if r.random() < 0.5 else -1) + math.pi / 2
+            L = r.uniform(2.6, 5.0) / u
+            p.shape([polar(q, L, a0) + (0,), polar(q, L * 0.38, a0 + 1.57), polar(q, L, a0 + math.pi) + (0,), polar(q, L * 0.38, a0 - 1.57)],
+                    col, ink=False)
 
 
 def branch(p, a, b, w0, w1, col=BARK, bend=0.15):
@@ -849,13 +985,13 @@ def tree(p, x, y, h, kind='oak', season='summer', w=None, lean=0.0, crown=None, 
     cw = crown or h * (0.42 if kind in ('oak', 'yew') else 0.3)
     for i in range(nl):
         t = (i + 0.5) / nl
-        ang = math.pi * (1.1 - 1.2 * t) if kind != 'birch' else math.pi * (0.85 - 0.7 * t)
+        ang = math.pi * (0.93 - 0.86 * t) if kind != 'birch' else math.pi * (0.85 - 0.7 * t)
         L = cw * r.uniform(0.75, 1.0)
         a = v_lerp(pts[2], top, r.uniform(0.3, 1.0))
         b = (a[0] + math.cos(ang) * L, a[1] - abs(math.sin(ang)) * L * (0.7 if kind != 'willow' else 0.5) - h * 0.08)
         limbs.append((a, b))
     for a, b in limbs:
-        branch(p, a, b, w * 0.24, w * 0.05, tc, r.uniform(-0.12, 0.12))
+        branch(p, a, b, w * 0.21, w * 0.04, tc, r.uniform(-0.12, 0.12))
         for k in range(2):
             q = v_lerp(a, b, 0.55 + 0.2 * k)
             tw = v_add(q, (r.uniform(-0.5, 0.5) * cw * 0.4, -r.uniform(0.15, 0.3) * cw))
@@ -1532,7 +1668,7 @@ def druid_head(wreath='oak', hood_col=DRUID_GREEN):
     return fn
 
 
-class Druid(Figure):
+class Druid(WFigure):
     """A Figure with a wreath worn over the hood (oak, mistletoe or rowan)."""
     def __init__(self, wreath=None, **kw):
         super().__init__(**kw)
@@ -1866,11 +2002,26 @@ def stone_giant(p, x, y, h, col=STONE, eye=C.hex('c8f090'), moss=True, pose='sta
     p.pop()
 
 
+def grip(which='f', skin=SKIN):
+    """Fingers closed over a shaft held in the hand (drawn after the shaft, so the
+    staff or spear passes through the fist instead of lying on top of it)."""
+    def fn(p, j):
+        x, y = j['hand_' + which]
+        el = j['el_' + which]
+        d = v_norm(v_sub((x, y), el))
+        c = v_add((x, y), v_mul(d, 1.2))
+        p.blob(c, 2.5, 2.2, skin, rot=math.atan2(d[1], d[0]), width=1.3, shade=0.5)
+        for k in (-1.0, 0.0, 1.0):
+            q = (c[0] + 0.9, c[1] + k * 1.1)
+            p.line([(q[0] - 1.0, q[1]), (q[0] + 1.2, q[1] + 0.2)], SKIN_SHADE.dark(0.3).alpha(0.8), 0.6)
+    return fn
+
+
 def spear_held(which='f', length=125):
     return PR.spear(which, length)
 
 
-def bow_up(length=34):
+def bow_up(length=34, skin=SKIN):
     """A longbow raised and drawn, its arrow pointing along the line of the arms."""
     def fn(p, j):
         hf, hb = j['hand_f'], j['hand_b']
@@ -1885,6 +2036,9 @@ def bow_up(length=34):
         p.shape([v_add(tip, v_mul(n, 1.2)) + (0,), v_add(tip, v_mul(d, 4)) + (0,), v_sub(tip, v_mul(n, 1.2)) + (0,)], STEEL, width=0.5, smooth=False)
         for sg in (-1, 1):
             p.shape([hb, v_add(v_sub(hb, v_mul(d, 4)), v_mul(n, sg * 1.6)), v_sub(hb, v_mul(d, 5))], LEAD_WHITE, width=0.4)
+        # the drawing hand at the jaw, fingers hooked on the string
+        p.blob(v_add(hb, (0.4, 0.6)), 2.5, 2.0, skin, rot=-0.4, width=1.2, shade=0.5)
+        p.line([v_add(hb, (1.6, -0.8)), v_add(hb, (2.2, 1.2))], SKIN_SHADE.dark(0.3), 0.7)
     return fn
 
 
@@ -1915,7 +2069,7 @@ def oak_leaf(p, base, ang, L, col=OAK_LEAF, lobes=4, ink=True, vein=True):
             p.line([q, v_lerp(q, right[i], 0.8)], col.dark(0.3).alpha(0.6), 0.7)
 
 
-class Woodwose(Figure):
+class Woodwose(WFigure):
     """The wild man of the fells: shaggy all over, hair and beard to the waist."""
     def _body(self, j):
         super()._body(j)
@@ -2017,8 +2171,19 @@ def wyrm(p, path, w=40, col=C.hex('4a6a4a'), belly=C.hex('c8c098'), seam=None, h
         p.shape([v_add(base, v_mul(v_norm(v_sub(path[i + 1], path[i - 1])), wd * 0.3)), tip + (0,), v_sub(base, v_mul(v_norm(v_sub(path[i + 1], path[i - 1])), wd * 0.3))], col.dark(0.35), width=1.2, shade=0.5)
     if seam is not None:
         q, nr, wd = lower[seam]
-        p.glow(q, wd * 2.4, C.hex('d8ff90'), 0.6)
-        p.line([v_add(q, v_mul(nr, wd)), v_sub(q, v_mul(nr, wd))], C.hex('f0ffb0'), 4)
+        # a healed cut: a jagged glowing scar laced across with green tendrils
+        p.glow(q, wd * 2.0, C.hex('d8ff90'), 0.5)
+        tg = v_perp(nr)
+        zz = []
+        for k in range(7):
+            t = -0.95 + 1.9 * k / 6
+            zz.append(v_add(v_add(q, v_mul(nr, wd * t)), v_mul(tg, (3 if k % 2 else -3) * wd / 30)))
+        p.line(zz, C.hex('6a8a3a'), 6, smooth=False)
+        p.line(zz, C.hex('f0ffb0'), 2.6, smooth=False)
+        for k in range(1, 6):
+            a = v_add(zz[k], v_mul(tg, -wd * 0.18))
+            b = v_add(zz[k], v_mul(tg, wd * 0.18))
+            p.line([a, v_add(zz[k], v_mul(nr, wd * 0.04)), b], C.hex('4f7a32'), 2.2)
     if head:
         end = path[-1]
         d = v_norm(v_sub(path[-1], path[-2]))
