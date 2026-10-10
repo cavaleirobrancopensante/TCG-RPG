@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **1.11**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
+Version **1.12**.  **Play in your browser: https://cavaleirobrancopensante.github.io/TCG-RPG/** Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
@@ -119,6 +119,15 @@ One-time setup: repo **Settings → Pages → Source: Deploy from a branch → `
 - **Filters**: faiths (any combination), type, cost, rarity, ability (keywords or enter / dies /
   upkeep effects), search by name or text, "in this deck"; sort by faith, cost, name, rarity or
   power; a mana curve of the deck.
+
+## Languages (1.12)
+
+English, Brazilian Portuguese and Spanish: tap a flag at the top right of the main menu (or
+choose in Settings). Everything is translated: menus, cards (names, rules, flavour, types),
+towns, missions, lairs and music titles. Tables are `data/i18n/pt.json` and `es.json`
+({English: translation}); `python3 tools/i18n_extract.py --missing` lists anything new that
+still needs translating, and the tests check placeholders and coverage. Shared terms are in
+`tools/i18n_glossary.md`. House style: no em or en dashes in any game text.
 
 ## Card set status
 

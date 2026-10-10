@@ -9,7 +9,7 @@ extends Control
 signal closed
 
 const SCALE := 0.52
-const COSTS := ["Any cost", "Cost 0–1", "Cost 2", "Cost 3", "Cost 4", "Cost 5", "Cost 6+"]
+const COSTS := ["Any cost", "Cost 0-1", "Cost 2", "Cost 3", "Cost 4", "Cost 5", "Cost 6+"]
 const TYPES := ["Any type", "Creature", "Spell", "Relic"]
 const RARITIES := ["Any rarity", "Common", "Uncommon", "Rare", "Mythic"]
 const KEYWORDS := ["Any ability", "Flying", "Reach", "Haste", "Lifelink", "Deathtouch", "Vigilance",
@@ -261,25 +261,25 @@ func _change(id: String, delta: int) -> void:
 
 
 func _new_deck() -> void:
-	UIKit.prompt(self, "New deck", GameState.unique_deck_name("New deck"), "Create", func(nm):
+	UIKit.prompt(self, "New deck", GameState.unique_deck_name(I18n.t("New deck")), "Create", func(nm):
 		var i := GameState.new_deck(nm)
 		if i >= 0:
 			editing = i
 		else:
-			warn_label.text = "You can keep up to %d decks." % GameState.MAX_DECKS
+			warn_label.text = I18n.t("You can keep up to %d decks.") % GameState.MAX_DECKS
 		_refresh())
 
 
 func _copy_deck() -> void:
 	var src: Dictionary = GameState.decks[editing]
-	var i := GameState.new_deck(GameState.unique_deck_name(src["name"] + " (copy)"), src["cards"])
+	var i := GameState.new_deck(GameState.unique_deck_name(I18n.t(src["name"]) + " " + I18n.t("(copy)")), src["cards"])
 	if i >= 0:
 		editing = i
 	_refresh()
 
 
 func _rename_deck() -> void:
-	UIKit.prompt(self, "Rename deck", GameState.decks[editing]["name"], "Rename", func(nm):
+	UIKit.prompt(self, "Rename deck", I18n.t(GameState.decks[editing]["name"]), "Rename", func(nm):
 		GameState.decks[editing]["name"] = nm
 		_refresh())
 
@@ -288,7 +288,7 @@ func _delete_deck() -> void:
 	if GameState.decks.size() <= 1:
 		warn_label.text = "You need at least one deck."
 		return
-	UIKit.confirm(self, "Delete \"%s\"?" % GameState.decks[editing]["name"], "The cards stay in your collection.", "Delete", func():
+	UIKit.confirm(self, I18n.t("Delete \"%s\"?") % I18n.t(GameState.decks[editing]["name"]), "The cards stay in your collection.", "Delete", func():
 		GameState.delete_deck(editing)
 		editing = clampi(editing, 0, GameState.decks.size() - 1)
 		_refresh())
@@ -304,7 +304,7 @@ func _auto() -> void:
 func _done() -> void:
 	var problem := DeckTools.validate(GameState.deck, GameState.owned_all())
 	if problem != "":
-		warn_label.text = "The deck used in duels (\"%s\") isn't ready: %s" % [GameState.decks[GameState.active_deck]["name"], problem]
+		warn_label.text = I18n.t("The deck used in duels (\"%s\") isn't ready: %s") % [I18n.t(GameState.decks[GameState.active_deck]["name"]), problem]
 		warn_label.add_theme_color_override("font_color", UIKit.RED)
 		return
 	GameState.save_game()
@@ -338,7 +338,8 @@ func _passes(c: Dictionary, in_deck: int) -> bool:
 		elif not c["keywords"].has(k.to_lower()):
 			return false
 	if f_text != "":
-		var hay := (String(c["name"]) + " " + String(c.get("text", "")) + " " + String(c.get("subtype", ""))).to_lower()
+		var hay := (String(c["name"]) + " " + String(c.get("text", "")) + " " + String(c.get("subtype", "")) + " "
+			+ I18n.t(c["name"]) + " " + I18n.t(c.get("text", "")) + " " + I18n.t(c.get("subtype", ""))).to_lower()
 		if not hay.contains(f_text):
 			return false
 	if only_in_deck and in_deck <= 0:
@@ -350,7 +351,7 @@ func _sort_key(c: Dictionary) -> Array:
 	var r := Factions.RARITIES.find(c["rarity"])
 	match f_sort:
 		1: return [c["mana_value"], Factions.ORDER.find(c["faction"]), c["name"]]
-		2: return [c["name"]]
+		2: return [I18n.t(c["name"])]
 		3: return [-r, Factions.ORDER.find(c["faction"]), c["name"]]
 		4: return [-int(c.get("power", -1)), c["mana_value"], c["name"]]
 	return [Factions.ORDER.find(c["faction"]), c["mana_value"], c["name"]]
@@ -370,10 +371,10 @@ func _refresh_now() -> void:
 	for i in GameState.decks.size():
 		var dk: Dictionary = GameState.decks[i]
 		var ok := DeckTools.validate(dk["cards"], owned) == ""
-		deck_pick.add_item("%s%s  (%d)%s" % ["★ " if i == GameState.active_deck else "", dk["name"], DeckTools.count(dk["cards"]), "" if ok else "  ✗"])
+		deck_pick.add_item("%s%s  (%d)%s" % ["★ " if i == GameState.active_deck else "", I18n.t(dk["name"]), DeckTools.count(dk["cards"]), "" if ok else "  ✗"])
 	deck_pick.select(editing)
 	active_btn.disabled = editing == GameState.active_deck
-	active_btn.text = "★ Used in duels" if editing == GameState.active_deck else "Use in duels"
+	active_btn.text = ("★ " + I18n.t("Used in duels")) if editing == GameState.active_deck else I18n.t("Use in duels")
 
 	# collection grid
 	UIKit.clear(grid)
@@ -396,7 +397,7 @@ func _refresh_now() -> void:
 		cv.tapped.connect(func(_v): _change(cid, 1))
 		cv.long_pressed.connect(func(_v): _view(cid))
 		grid.add_child(cv)
-	shown_label.text = "Showing %d of the %d different cards you own" % [ids.size(), total]
+	shown_label.text = I18n.t("Showing %d of the %d different cards you own") % [ids.size(), total]
 
 	# deck contents
 	UIKit.clear(deck_list)
@@ -407,7 +408,7 @@ func _refresh_now() -> void:
 			continue
 		var c := CardDB.get_card(id)
 		var b := Button.new()
-		b.text = "%d× %s  (%s)" % [d[id], c["name"], UIKit.cost_text(c["cost"])]
+		b.text = "%d× %s  (%s)" % [d[id], I18n.t(c["name"]), UIKit.cost_text(c["cost"])]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_size_override("font_size", 15)
 		b.add_theme_color_override("font_color", UIKit.faction_ink(c["faction"]))
@@ -417,7 +418,7 @@ func _refresh_now() -> void:
 		deck_list.add_child(b)
 	for f in Factions.ORDER:
 		land_labels[f].text = "%s: %d" % [Factions.info(f)["land_name"], int(d.get(Factions.land_id(f), 0))]
-	count_label.text = "%d cards · %d lands" % [DeckTools.count(d), DeckTools.land_count(d)]
+	count_label.text = I18n.t("%d cards · %d lands") % [DeckTools.count(d), DeckTools.land_count(d)]
 	curve.set_deck(d)
 	var problem := DeckTools.validate(d, owned)
 	warn_label.text = problem if problem != "" else "Tap a card to add it, hold to read it. Tap a deck row to remove."
@@ -434,7 +435,7 @@ func _view(start_id: String) -> void:
 		var id: String = e["id"]
 		var n := int(_deck().get(id, 0))
 		return [
-			["Add (%d in deck)" % n, func(): _change(id, 1), n < mini(DeckTools.MAX_COPIES, GameState.owned_count(id)), false],
+			[I18n.t("Add (%d in deck)") % n, func(): _change(id, 1), n < mini(DeckTools.MAX_COPIES, GameState.owned_count(id)), false],
 			["Remove", func(): _change(id, -1), n > 0, false],
 		])
 	v.closed.connect(_refresh)

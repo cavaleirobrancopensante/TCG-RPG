@@ -27,14 +27,14 @@ static func land_count(deck: Dictionary) -> int:
 static func validate(deck: Dictionary, owned: Dictionary) -> String:
 	var n := count(deck)
 	if n < MIN_DECK:
-		return "Deck needs at least %d cards (has %d)." % [MIN_DECK, n]
+		return I18n.t("Deck needs at least %d cards (has %d).") % [MIN_DECK, n]
 	for id in deck:
 		if CardDB.is_land(id):
 			continue
 		if int(deck[id]) > MAX_COPIES:
-			return "Max %d copies of %s." % [MAX_COPIES, CardDB.get_card(id).get("name", id)]
+			return I18n.t("Max %d copies of %s.") % [MAX_COPIES, CardDB.get_card(id).get("name", id)]
 		if int(deck[id]) > int(owned.get(id, 0)):
-			return "You don't own enough copies of %s." % CardDB.get_card(id).get("name", id)
+			return I18n.t("You don't own enough copies of %s.") % CardDB.get_card(id).get("name", id)
 	return ""
 
 

@@ -3,6 +3,7 @@ extends Node
 ## Basic lands are generated here (one per faith) and are not part of the set.
 
 const CARD_DIR := "res://data/cards/"
+const DATA_SHORT := {"sanctum": "Church", "abyss": "Covenant", "wild": "Old Ways", "revel": "Revel", "lyceum": "Stoa", "machine": "Technocracy"}
 
 var cards: Dictionary = {}          # id -> card Dictionary
 var pools: Dictionary = {}          # faction -> rarity -> Array[id]
@@ -88,13 +89,13 @@ func _normalise(c: Dictionary) -> void:
 
 
 func _add_basic_land(f: String) -> void:
-	var info := Factions.info(f)
+	var info: Dictionary = Factions.DATA[f]
 	var id := Factions.land_id(f)
 	cards[id] = {
 		"id": id, "name": info["land_name"], "faction": f, "rarity": "basic",
 		"type": "land", "subtype": "Basic Land", "cost": {}, "power": 0, "toughness": 0,
 		"keywords": [], "effects": [], "produces": info["mana"], "mana_value": 0,
-		"text": "Tap: add one %s mana." % info["short"],
+		"text": "Tap: add one %s mana." % DATA_SHORT[f],
 		"flavor": "",
 	}
 

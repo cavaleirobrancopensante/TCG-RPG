@@ -30,6 +30,19 @@ func _ready() -> void:
 	g.add_theme_constant_override("v_separation", 18)
 	plate.add_child(g)
 
+	# --- language
+	g.add_child(_name("Language"))
+	g.add_child(UIKit.flag_row(func(code):
+		var main := get_tree().root.get_node_or_null("Main")
+		if main:
+			main.set_language(code)
+		else:
+			I18n.setup(code)
+			GameState.set_setting("lang", code)
+		var again := SettingsScreen.new()
+		get_parent().add_child(again)
+		queue_free(), Vector2(66, 46)))
+
 	# --- music volume
 	g.add_child(_name("Music volume"))
 	var vol := HSlider.new()

@@ -63,7 +63,7 @@ func _small(t: String, cb: Callable) -> Button:
 
 func _refresh() -> void:
 	var t: Dictionary = Music.current
-	title_label.text = "♪ %s   ·   %s%s" % [t.get("title", "—"), Music.label(t), "" if Music.auto else " · manual"]
+	title_label.text = "♪ %s   ·   %s%s" % [I18n.t(t.get("title", "")), Music.label(t), "" if Music.auto else " · " + I18n.t("manual")]
 	play_btn.text = "▶" if Music.paused else "⏸"
 	if not t.is_empty():
 		_sigil_faction = t["faction"]
@@ -169,7 +169,7 @@ func _fill_list() -> void:
 		var t: Dictionary = Music.by_id[id]
 		var b := Button.new()
 		var playing: bool = Music.current.get("id", "") == id
-		b.text = "%s  %s   (%s · %d:%02d)" % ["▶" if playing else "  ", t["title"], Music.KIND_LABEL[t["kind"]], int(t["seconds"]) / 60, int(t["seconds"]) % 60]
+		b.text = "%s  %s   (%s · %d:%02d)" % ["▶" if playing else "  ", I18n.t(t["title"]), I18n.t(Music.KIND_LABEL[t["kind"]]), int(t["seconds"]) / 60, int(t["seconds"]) % 60]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.custom_minimum_size.y = 38
 		b.add_theme_font_size_override("font_size", 15)

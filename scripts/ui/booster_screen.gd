@@ -62,7 +62,7 @@ func _next_pack() -> void:
 		return
 	var remaining := GameState.pending_boosters
 	pack = GameState.open_booster()
-	title.text = "Booster pack — %d left after this one" % (remaining - 1) if remaining > 1 else "Booster pack"
+	title.text = I18n.t("Booster pack (%d more after this one)") % (remaining - 1) if remaining > 1 else I18n.t("Booster pack")
 	for entry in pack:
 		var cv := CardView.create(entry["id"], SCALE, entry["foil"])
 		cv.face_down = true
@@ -94,7 +94,7 @@ func _flip(cv: CardView) -> void:
 	if rar in ["rare", "mythic"] or cv.foil:
 		tw.tween_callback(func(): _burst(cv.global_position + cv.size * 0.5, Factions.RARITY_COLOR.get(rar, UIKit.GOLD)))
 	if revealed >= views.size():
-		btn.text = "Next pack" if GameState.pending_boosters > 0 else "Done"
+		btn.text = I18n.t("Next pack" if GameState.pending_boosters > 0 else "Done")
 
 
 func _on_button() -> void:

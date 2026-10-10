@@ -274,8 +274,8 @@ func _draw_places(ci: CanvasItem) -> void:
 	for l in lairs:
 		var lp := Vector2(l["x"], l["y"])
 		Tapestry.draw_lair(ci, lp, 1.3, l["faction"], GameState.cleared_lairs.has(l["id"]), 0.0)
-		Tapestry.draw_scroll_label(ci, lp + Vector2(0, 52), l["name"], 22, Tapestry.RUBRIC)
-		Tapestry.draw_scroll_label(ci, lp + Vector2(0, 92), "Lair · Level %d" % int(l["level"]), 16, Tapestry.INK)
+		Tapestry.draw_scroll_label(ci, lp + Vector2(0, 52), I18n.t(l["name"]), 22, Tapestry.RUBRIC)
+		Tapestry.draw_scroll_label(ci, lp + Vector2(0, 92), I18n.t("Lair · Level %d") % int(l["level"]), 16, Tapestry.INK)
 	for c in cities:
 		var cp := Vector2(c["x"], c["y"])
 		Tapestry.draw_castle(ci, cp + Vector2(0, 30), 1.35, c["faction"])
@@ -534,7 +534,7 @@ func _draw() -> void:
 		if e["chasing"]:
 			draw_arc(ep + Vector2(0, -2), 30, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)
 		FigurePainter.paint(self, look, Transform2D(0, ep), 74, face, 1.0)
-		var lbl := "Lv%d" % int(e["level"]) + ("  !" if e["chasing"] else "")
+		var lbl := I18n.t("Lv%d") % int(e["level"]) + ("  !" if e["chasing"] else "")
 		Tapestry.draw_scroll_label(self, ep + Vector2(0, -88), lbl, 16, Tapestry.VERMILION if e["chasing"] else Tapestry.INK)
 	if moving:
 		draw_arc(move_target, 18, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)

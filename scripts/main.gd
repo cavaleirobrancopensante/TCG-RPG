@@ -69,6 +69,7 @@ var is_booted := false
 
 
 func _ready() -> void:
+	I18n.setup(GameState.settings.get("lang", "en"))
 	hud_layer = CanvasLayer.new()
 	hud_layer.layer = 1
 	add_child(hud_layer)
@@ -177,6 +178,15 @@ func show_menu() -> void:
 		if it[0] == "Load game":
 			b.disabled = not GameState.has_save()
 		v.add_child(b)
+	# the language flags, top right: the first thing anyone who needs them sees
+	var flags := UIKit.flag_row(set_language)
+	flags.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	flags.offset_left = -240
+	flags.offset_right = -24
+	flags.offset_top = UIKit.TOP + 10
+	flags.offset_bottom = UIKit.TOP + 60
+	flags.alignment = BoxContainer.ALIGNMENT_END
+	m.add_child(flags)
 	var ver := UIKit.label(version_text(), 17, UIKit.DIM)
 	ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ver.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
@@ -195,14 +205,22 @@ func show_menu() -> void:
 
 ## "Version 1.6 · build 3f2a9c1 · 10 Oct 2026" — build details are stamped by the web deploy.
 static func version_text() -> String:
-	var t := "Version " + str(ProjectSettings.get_setting("application/config/version", "?"))
+	var t := I18n.t("Version %s") % str(ProjectSettings.get_setting("application/config/version", "?"))
 	var info = JSON.parse_string(FileAccess.get_file_as_string("res://build_info.json")) if FileAccess.file_exists("res://build_info.json") else null
 	if typeof(info) == TYPE_DICTIONARY:
 		if info.has("commit"):
-			t += "  ·  build " + String(info["commit"])
+			t += "  ·  " + I18n.t("build %s") % String(info["commit"])
 		if info.has("date"):
 			t += "  ·  " + String(info["date"])
 	return t
+
+
+## Switch language and rebuild what's on screen in it.
+func set_language(code: String) -> void:
+	I18n.setup(code)
+	GameState.set_setting("lang", code)
+	Music.refresh_bar()
+	show_menu()
 
 
 func _open_new_game() -> void:
@@ -235,8 +253,8 @@ func _new_game(n: int = 1) -> void:
 	GameState.new_game(n)
 	await start_world()
 	show_dialog("Welcome, Wanderer",
-		"Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.\n\n"
-		+ "You carry nothing but three sealed booster packs. Open them — your first deck will be built from the faiths that answer you.",
+		I18n.t("Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.")
+		+ "\n\n" + I18n.t("You carry nothing but three sealed booster packs. Open them, and your first deck will be built from the faiths that answer you."),
 		[["Open my boosters", func(): open_boosters(true)]])
 
 
@@ -309,8 +327,8 @@ func _build_hud() -> void:
 func _update_hud() -> void:
 	if hud == null or not is_instance_valid(hud):
 		return
-	hud_gold.text = "◉ %d gold   ✦ %d cards" % [GameState.gold, _owned_total()]
-	hud_boosters.text = "Boosters (%d)" % GameState.pending_boosters
+	hud_gold.text = I18n.t("◉ %d gold   ✦ %d cards") % [GameState.gold, _owned_total()]
+	hud_boosters.text = I18n.t("Boosters (%d)") % GameState.pending_boosters
 	hud_boosters.disabled = GameState.pending_boosters <= 0
 
 
@@ -349,8 +367,8 @@ func open_boosters(first_time: bool) -> void:
 			for f in fs:
 				names.append(Factions.info(f)["name"])
 			show_dialog("Your first deck",
-				"Your deck was built around %s, with Technocracy cards and basic lands.\n\n" % " & ".join(names)
-				+ "Cogspire, the neutral city, lies just north of you. Visit cities to take missions, trade cards and edit your deck. Beware of wanderers who stray from the roads..."
+				I18n.t("Your deck was built around %s, with Technocracy cards and basic lands.") % " & ".join(names)
+				+ "\n\n" + I18n.t("Cogspire, the neutral city, lies just north of you. Visit cities to take missions, trade cards and edit your deck. Beware of wanderers who stray from the roads...")
 				, [["Set out", Callable()]])
 		else:
 			GameState.ensure_deck()
@@ -386,10 +404,11 @@ func show_journal() -> void:
 		if m.get("type") == "defeat":
 			prog = " (%d/%d)" % [int(GameState.missions[id]["progress"]), int(m.get("count", 1))]
 		var giver := _mission_city(id)
-		lines.append("• %s%s — %s%s" % [m.get("title", id), prog, "COMPLETE, return to " if st == "done" else "", giver if st == "done" else m.get("text", "")])
+		var detail: String = (I18n.t("Complete! Return to %s.") % giver) if st == "done" else I18n.t(m.get("text", ""))
+		lines.append("• %s%s: %s" % [I18n.t(m.get("title", id)), prog, detail])
 	if lines.is_empty():
-		lines.append("No active missions. Talk to townsfolk in the cities.")
-	lines.append("\nLairs cleared: %d / %d" % [GameState.cleared_lairs.size(), GameState.world_data.get("lairs", []).size()])
+		lines.append(I18n.t("No active missions. Talk to townsfolk in the cities."))
+	lines.append(I18n.t("\nLairs cleared: %d / %d") % [GameState.cleared_lairs.size(), GameState.world_data.get("lairs", []).size()])
 	show_dialog("Journal", "\n".join(lines), [["Close", Callable()]])
 
 
@@ -397,7 +416,7 @@ func _mission_city(mid: String) -> String:
 	for c in GameState.world_data.get("cities", []):
 		for npc in c["npcs"]:
 			if npc["missions"].has(mid):
-				return "%s in %s" % [npc["name"], c["name"]]
+				return I18n.t("%s in %s") % [I18n.t(npc["name"]), c["name"]]
 	return "the giver"
 
 
@@ -429,8 +448,8 @@ func _on_lair_reached(lair_id: String) -> void:
 	var l := GameState.lair(lair_id)
 	var cleared: bool = GameState.cleared_lairs.has(lair_id)
 	world.active = false
-	var text := "%s awaits within.\nFaith: %s · Level %d · %d life\n\n" % [l["boss"], Factions.info(l["faction"])["name"], int(l["level"]), int(l["life"])]
-	text += "You have already conquered this lair. A rematch pays only gold." if cleared else "Reward: " + _reward_text(l.get("reward", {}))
+	var text := I18n.t("%s awaits within.\nFaith: %s · Level %d · %d life\n\n") % [I18n.t(l["boss"]), Factions.info(l["faction"])["name"], int(l["level"]), int(l["life"])]
+	text += I18n.t("You have already conquered this lair. A rematch pays only gold.") if cleared else I18n.t("Reward: %s") % _reward_text(l.get("reward", {}))
 	show_dialog(l["name"], text, [
 		["Challenge", func(): _start_lair(lair_id)],
 		["Leave", func(): world.active = true],
@@ -440,11 +459,11 @@ func _on_lair_reached(lair_id: String) -> void:
 func _reward_text(r: Dictionary) -> String:
 	var parts := []
 	if r.has("gold"):
-		parts.append("%d gold" % int(r["gold"]))
+		parts.append(I18n.t("%d gold") % int(r["gold"]))
 	if r.has("boosters"):
-		parts.append("%d booster(s)" % int(r["boosters"]))
+		parts.append(I18n.t("%d booster(s)") % int(r["boosters"]))
 	if r.has("card_rarity"):
-		parts.append("a %s card" % r["card_rarity"])
+		parts.append(I18n.t("a %s card") % I18n.t(r["card_rarity"]))
 	return ", ".join(parts)
 
 
@@ -493,10 +512,10 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 			var r: Dictionary = GameState.lair(lair_id).get("reward", {})
 			if r.has("gold"):
 				GameState.add_gold(int(r["gold"]))
-				parts.append("%d gold" % int(r["gold"]))
+				parts.append(I18n.t("%d gold") % int(r["gold"]))
 			if r.has("boosters"):
 				GameState.pending_boosters += int(r["boosters"])
-				parts.append("%d booster(s)" % int(r["boosters"]))
+				parts.append(I18n.t("%d booster(s)") % int(r["boosters"]))
 			if r.has("card_rarity"):
 				var fs: Array = [r["faction"]] if r.has("faction") else []
 				var cid := CardDB.random_of_rarity(r["card_rarity"], GameState.rng, fs)
@@ -505,16 +524,16 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		else:
 			var g := 15 + lvl * 10 if lair_id == "" else 40 * lvl
 			GameState.add_gold(g)
-			parts.append("%d gold" % g)
+			parts.append(I18n.t("%d gold") % g)
 			if lair_id == "" and GameState.rng.randf() < 0.35:
 				var rar := Booster.weighted_rarity(GameState.rng, {"common": 65, "uncommon": 28, "rare": 6, "mythic": 1})
 				var cid := CardDB.random_of_rarity(rar, GameState.rng, [info["faction"]])
 				GameState.add_card(cid)
 				cards.append(cid)
 		for cid in cards:
-			parts.append(CardDB.get_card(cid).get("name", cid))
+			parts.append(I18n.t(CardDB.get_card(cid).get("name", cid)))
 		GameState.save_game()
-		show_dialog("Victory", "You gain: " + ", ".join(parts), [["Onward", Callable()]], cards)
+		show_dialog("Victory", I18n.t("You gain: %s") % ", ".join(parts), [["Onward", Callable()]], cards)
 	else:
 		GameState.stats["losses"] = int(GameState.stats.get("losses", 0)) + 1
 		var lost := GameState.gold / 10
@@ -522,7 +541,7 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		var city_id := _nearest_visited_city()
 		world.respawn_at_city(city_id)
 		GameState.save_game()
-		show_dialog("Defeat", "You lose %d gold and wake up near %s." % [lost, GameState.city(city_id).get("name", "a city")], [["Get up", Callable()]])
+		show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")], [["Get up", Callable()]])
 	_update_hud()
 
 
@@ -555,8 +574,8 @@ func show_dialog(title: String, body: String, buttons: Array, card_ids: Array = 
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 14)
 	panel.add_child(v)
-	v.add_child(UIKit.title(title, 36))
-	var l := UIKit.label(body, 19, UIKit.TEXT, true)
+	v.add_child(UIKit.title(I18n.t(title), 36))
+	var l := UIKit.label(I18n.t(body), 19, UIKit.TEXT, true)
 	l.custom_minimum_size.x = 640
 	v.add_child(l)
 	if not card_ids.is_empty():

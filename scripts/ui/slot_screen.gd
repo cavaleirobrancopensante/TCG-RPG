@@ -80,14 +80,17 @@ func _plate(n: int) -> Control:
 		col.add_child(UIKit.label("Damaged save", 22, UIKit.RED))
 	else:
 		var faiths := []
-		for f in info.get("faiths", []):
-			faiths.append(Factions.info(f)["short"])
-		var title_line := "%s%s" % [info.get("place", "?"), "   (current)" if current else ""]
+		for fa in info.get("faiths", []):
+			faiths.append(Factions.info(fa)["short"])
+		var place: String = I18n.t(info.get("place", "?"))
+		if info.get("city", "") != "":
+			place = I18n.t("Near %s" if info.get("near", true) else "In %s") % info["city"]
+		var title_line := "%s%s" % [place, ("   " + I18n.t("(current)")) if current else ""]
 		col.add_child(UIKit.label(title_line, 22, UIKit.TEXT))
-		col.add_child(UIKit.label("%d gold · %d cards · %d wins · %d lairs%s" % [
+		col.add_child(UIKit.label(I18n.t("%d gold · %d cards · %d wins · %d lairs%s") % [
 			int(info.get("gold", 0)), int(info.get("cards", 0)), int(info.get("wins", 0)), int(info.get("lairs", 0)),
 			("  ·  " + " & ".join(faiths)) if not faiths.is_empty() else ""], 17, UIKit.DIM))
-		col.add_child(UIKit.label("Saved %s  ·  played %s" % [info.get("saved_at", "?"), _hms(float(info.get("play_time", 0)))], 16, UIKit.DIM))
+		col.add_child(UIKit.label(I18n.t("Saved %s  ·  played %s") % [info.get("saved_at", "?"), _hms(float(info.get("play_time", 0)))], 16, UIKit.DIM))
 	var btns := VBoxContainer.new()
 	btns.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_child(btns)
@@ -104,13 +107,13 @@ func _plate(n: int) -> Control:
 		"new":
 			btns.add_child(UIKit.button("Begin here", func():
 				if filled:
-					UIKit.confirm(self, "Overwrite slot " + _roman(n) + "?", "The journey saved here will be lost.", "Overwrite", func(): _pick(n))
+					UIKit.confirm(self, I18n.t("Overwrite slot %s?") % _roman(n), "The journey saved here will be lost.", "Overwrite", func(): _pick(n))
 				else:
 					_pick(n), 150))
 		"save":
 			btns.add_child(UIKit.button("Save here", func():
 				if filled and not current:
-					UIKit.confirm(self, "Overwrite slot " + _roman(n) + "?", "The journey saved here will be replaced by this one.", "Overwrite", func(): _pick(n))
+					UIKit.confirm(self, I18n.t("Overwrite slot %s?") % _roman(n), "The journey saved here will be replaced by this one.", "Overwrite", func(): _pick(n))
 				else:
 					_pick(n), 150))
 	return plate
@@ -125,7 +128,7 @@ func _pick(n: int) -> void:
 
 
 func _confirm_delete(n: int) -> void:
-	UIKit.confirm(self, "Delete slot " + _roman(n) + "?", "This journey will be lost for ever.", "Delete", func():
+	UIKit.confirm(self, I18n.t("Delete slot %s?") % _roman(n), "This journey will be lost for ever.", "Delete", func():
 		GameState.delete_slot(n)
 		_fill())
 
@@ -137,5 +140,5 @@ static func _roman(n: int) -> String:
 static func _hms(sec: float) -> String:
 	var m := int(sec) / 60
 	if m < 60:
-		return "%d min" % m
-	return "%d h %02d min" % [m / 60, m % 60]
+		return I18n.t("%d min") % m
+	return I18n.t("%d h %02d min") % [m / 60, m % 60]

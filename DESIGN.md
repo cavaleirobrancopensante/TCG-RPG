@@ -31,6 +31,8 @@ A traditional, Catholic-minded medieval fantasy:
   hospitallers, noblewomen, druidesses, villagers — never as warriors.
 - **Angels are referred to as "he"**, as in Scripture and tradition.
 - No modern ideology or anachronisms (no singular "they", no modern social themes).
+- **House style: no em dashes or en dashes** in any card, menu or story text, in any language.
+  Use commas, colons, full stops or a middle dot (·) instead.
   The test suite checks fighters' flavour text for this.
 
 ## 2. Set structure (target)

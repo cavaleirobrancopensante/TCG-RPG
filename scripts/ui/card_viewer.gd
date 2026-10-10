@@ -11,15 +11,15 @@ extends Control
 signal closed
 
 const KEYWORDS := {
-	"flying": "Flying — can only be blocked by creatures with flying or reach.",
-	"reach": "Reach — can block creatures with flying.",
-	"haste": "Haste — can attack the turn it arrives.",
-	"lifelink": "Lifelink — damage it deals also heals you.",
-	"deathtouch": "Deathtouch — any damage it deals to a creature is lethal.",
-	"vigilance": "Vigilance — does not tap when it attacks.",
-	"trample": "Trample — damage beyond what kills its blocker hits the player.",
-	"defender": "Defender — cannot attack.",
-	"guardian": "Guardian — gets +0/+2 while blocking.",
+	"flying": "Flying: can only be blocked by creatures with flying or reach.",
+	"reach": "Reach: can block creatures with flying.",
+	"haste": "Haste: can attack the turn it arrives.",
+	"lifelink": "Lifelink: damage it deals also heals you.",
+	"deathtouch": "Deathtouch: any damage it deals to a creature is lethal.",
+	"vigilance": "Vigilance: does not tap when it attacks.",
+	"trample": "Trample: damage beyond what kills its blocker hits the player.",
+	"defender": "Defender: cannot attack.",
+	"guardian": "Guardian: gets +0/+2 while blocking.",
 }
 const SWIPE := 70.0
 
@@ -149,26 +149,24 @@ func _fill_info(e: Dictionary) -> void:
 	UIKit.clear(info_box)
 	var c: Dictionary = e.get("data", {}) if e.has("data") else CardDB.get_card(e["id"])
 	var f: String = c.get("faction", "machine")
-	info_box.add_child(UIKit.title(c.get("name", ""), 30))
-	var line := "%s · %s" % [Factions.info(f)["name"], String(c.get("rarity", "")).capitalize()]
+	info_box.add_child(UIKit.title(I18n.t(c.get("name", "")), 30))
+	var line := "%s · %s" % [Factions.info(f)["name"], I18n.t(String(c.get("rarity", "")).capitalize())]
 	if e.get("foil", false):
-		line += " · Foil"
+		line += " · " + I18n.t("Foil")
 	info_box.add_child(UIKit.label(line, 18, UIKit.faction_ink(f), true))
-	var type_line: String = String(c.get("type", "")).capitalize()
-	if c.get("subtype", "") != "":
-		type_line += " — " + c["subtype"]
+	var type_line := I18n.type_line(c)
 	if c.get("type") != "land" and c.get("rarity") != "token":
-		type_line += "   ·   Cost " + UIKit.cost_text(c.get("cost", {}))
+		type_line += "   ·   " + I18n.t("Cost %s") % UIKit.cost_text(c.get("cost", {}))
 	if c.get("type") == "creature":
 		type_line += "   ·   %d/%d" % [c.get("power", 0), c.get("toughness", 0)]
 	info_box.add_child(UIKit.label(type_line, 17, UIKit.TEXT, true))
 	if c.get("text", "") != "":
-		info_box.add_child(UIKit.label(c["text"], 19, UIKit.TEXT, true))
+		info_box.add_child(UIKit.label(I18n.t(c["text"]), 19, UIKit.TEXT, true))
 	for kw in c.get("keywords", []):
 		if KEYWORDS.has(kw):
-			info_box.add_child(UIKit.label(KEYWORDS[kw], 15, UIKit.DIM, true))
+			info_box.add_child(UIKit.label(I18n.t(KEYWORDS[kw]), 15, UIKit.DIM, true))
 	if c.get("rarity") != "token" and c.get("type") != "land":
-		info_box.add_child(UIKit.label("You own %d" % GameState.owned_count(e["id"]), 16, UIKit.DIM))
+		info_box.add_child(UIKit.label(I18n.t("You own %d") % GameState.owned_count(e["id"]), 16, UIKit.DIM))
 	info_box.add_child(UIKit.label("%d / %d" % [index + 1, entries.size()], 17, UIKit.DIM))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)

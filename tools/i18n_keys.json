@@ -1,0 +1,3384 @@
+{
+ "interface": [
+  {
+   "key": "Church",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Covenant",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Old Ways",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Revel",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Stoa",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Technocracy",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Missing folder ",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": ".json",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Could not parse ",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Bad entry in ",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Duplicate id ",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Unknown faction/rarity on ",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Basic Land",
+   "note": "scripts/autoload/card_db.gd"
+  },
+  {
+   "key": "Wanderer",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "On the road",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "In ",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Near ",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Jan",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Feb",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Mar",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Apr",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "May",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Jun",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Jul",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Aug",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Sep",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Oct",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Nov",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Dec",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "application/config/version",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "Deck",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "%d gold",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "%d booster(s)",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
+   "key": "menu:",
+   "note": "scripts/autoload/music.gd"
+  },
+  {
+   "key": "world:wild",
+   "note": "scripts/autoload/music.gd"
+  },
+  {
+   "key": "Foe",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "A duel against %s begins!",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "a stranger",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Flee",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Your turn",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Enemy turn",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Attack! (%d)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "No attack",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cancel",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Confirm blocks",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "End turn",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "⚔ Attack",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s's turn",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s plays %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s raises %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s summons %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s sets out %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s casts %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s discards %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "modulate:a",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "color:a",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "position:y",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Play",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose a target: %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "an enemy or their creature",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "an enemy creature",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "one of your creatures",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Now tap the attacker it should block.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "That creature is tapped.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Blocker assigned.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "That creature can't block this attacker (flying?).",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Tap creatures to attack with, then confirm.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cancelled.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You are attacked! Tap your creature, then the attacker it blocks.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You have no blockers.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You flee the duel.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Result",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Victoria",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Clades",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is defeated.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You are driven back to safety.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Continue",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s has no cards left to draw!",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Token.",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Deck needs at least %d cards (has %d).",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "Max %d copies of %s.",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "You don't own enough copies of %s.",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "The Holy Church",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Cathedral",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Good",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "The Black Covenant",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Profane Altar",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Evil",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "The Old Ways",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Sacred Grove",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Neutral",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "The Revel",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Pleasure Garden",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Neutral (leaning evil)",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "The Stoa",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Library",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Neutral (leaning good)",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "The Technocracy",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Foundry",
+   "note": "scripts/core/factions.gd"
+  },
+  {
+   "key": "Human Knight",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Knight",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Human Cleric",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Cleric lantern",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Human Cultist",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Cultist",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Demon",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Fiend",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Preparing the parchment",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Gilding the borders",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Cutting the type",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Tuning the instruments",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Opening the book",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "TCG · RPG",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Six faiths. One deck.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "New game",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Load game",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Settings",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Quit game",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Version %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "build %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Welcome, Wanderer",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You carry nothing but three sealed booster packs. Open them, and your first deck will be built from the faiths that answer you.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Open my boosters",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Oops",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The save file could not be read.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "OK",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Boosters",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Journal",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Save",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "◉ %d gold   ✦ %d cards",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Boosters (%d)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Your first deck",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Your deck was built around %s, with Technocracy cards and basic lands.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Cogspire, the neutral city, lies just north of you. Visit cities to take missions, trade cards and edit your deck. Beware of wanderers who stray from the roads...",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Set out",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Complete! Return to %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "No active missions. Talk to townsfolk in the cities.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\nLairs cleared: %d / %d",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Close",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s in %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "the giver",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s awaits within.\nFaith: %s · Level %d · %d life\n\n",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You have already conquered this lair. A rematch pays only gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Reward: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Challenge",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Leave",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "a %s card",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Victory",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You gain: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Onward",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Defeat",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You lose %d gold and wake up near %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "a city",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Get up",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Tap the cards to reveal them.",
+   "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "Reveal all",
+   "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "Booster pack (%d more after this one)",
+   "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "Booster pack",
+   "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "scale:x",
+   "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "Next pack",
+   "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "Done",
+   "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "Aurea",
+   "note": "scripts/ui/card_view.gd"
+  },
+  {
+   "key": "Flying: can only be blocked by creatures with flying or reach.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Reach: can block creatures with flying.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Haste: can attack the turn it arrives.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Lifelink: damage it deals also heals you.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Deathtouch: any damage it deals to a creature is lethal.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Vigilance: does not tap when it attacks.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Trample: damage beyond what kills its blocker hits the player.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Defender: cannot attack.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Guardian: gets +0/+2 while blocking.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Plate",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Cost %s",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "You own %d",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "City",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Town",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Shop",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Sell cards",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Inn",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "◉ %d gold   ✉ %d boosters",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "[%s] %s\n%s\nReward: %s",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Accept",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Claim reward",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "In progress %d/%d",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "In progress",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Complete!",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Finished",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "New",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "a %s card (%s)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Buy booster (%d)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Booster bought.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Not enough gold.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Open boosters (%d)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Singles: %s and Technocracy cards. Tap a card to read it and buy from there.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Buy · %d gold",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Bought %s.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Cards in your decks are kept back. Tap a card to read it; sell from there.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Nothing spare to sell.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Sell · %d gold (%d spare)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "A warm fire, a bed and a ledger. Your progress is saved whenever you rest here.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Rest & save (slot %s)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Game saved.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Save to another slot…",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Duels won: %d   lost: %d   boosters opened: %d   cards owned: %d",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Any cost",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Cost 0-1",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Cost 2",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Cost 3",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Cost 4",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Cost 5",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Cost 6+",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Any type",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Any rarity",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Any ability",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Flying",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Reach",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Haste",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Lifelink",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Deathtouch",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Vigilance",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Trample",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Defender",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Guardian",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Enters effect",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Dies effect",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Upkeep effect",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Sort: faith",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Sort: cost",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Sort: name",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Sort: rarity",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Sort: power",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Search name or text…",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "In this deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Clear filters",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Use in duels",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Copy",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Rename",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Delete",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Auto",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "New deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Create",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "You can keep up to %d decks.",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "(copy)",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Rename deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "You need at least one deck.",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Delete \"%s\"?",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "The cards stay in your collection.",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "The deck used in duels (\"%s\") isn't ready: %s",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Used in duels",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Showing %d of the %d different cards you own",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "%d cards · %d lands",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Tap a card to add it, hold to read it. Tap a deck row to remove.",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Add (%d in deck)",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Remove",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "prime engine",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "demon hound",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "man-at-arms",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "fire-eater",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "Ready",
+   "note": "scripts/ui/loading_screen.gd"
+  },
+  {
+   "key": "Opening the book…",
+   "note": "scripts/ui/loading_screen.gd"
+  },
+  {
+   "key": "Auto (follow the game)",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Volume",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Normal",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Fast",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Very fast",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Back",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Language",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Main",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Music volume",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Music follows the game",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Change pieces by place and duel",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Duel animation speed",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Full screen",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Fill the whole screen",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Your name",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Settings apply to every save slot.",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Begin a New Game",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Load Game",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Save Game",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Choose a slot for your new journey.",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Choose a journey to continue.",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Choose a slot. You keep playing in the slot you save to; the game auto-saves there.",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Empty slot",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Damaged save",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Near %s",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "In %s",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "(current)",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "%d gold · %d cards · %d wins · %d lairs%s",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Saved %s  ·  played %s",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Load",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Begin here",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Overwrite slot %s?",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "The journey saved here will be lost.",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Overwrite",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Save here",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "The journey saved here will be replaced by this one.",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Delete slot %s?",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "This journey will be lost for ever.",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "II",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "III",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "IV",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "VI",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "VII",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "VIII",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "%d min",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "%d h %02d min",
+   "note": "scripts/ui/slot_screen.gd"
+  },
+  {
+   "key": "Button",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "Label",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "Panel",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "VScrollBar",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "HScrollBar",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "HSlider",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "Painting the land",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Laying the roads",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Planting forests and raising mountains",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Illuminating the map",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Rousing the wanderers",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Lair · Level %d",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Human Pilgrim",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Lv%d",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Zealous Inquisitor",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Wandering Templar",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Stern Abbot",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Militant Friar",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Pilgrim Champion",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Covenant Cultist",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Grave Acolyte",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Hollow-Eyed Warlock",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Bone Collector",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Ash Witch",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Antler Druid",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Feral Hunter",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Stone Circle Warden",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Thornwild Shaman",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Beastcaller",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Masked Duelist",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Drunken Firebrand",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Bacchant Reveler",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Silk Assassin",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Decadent Baron",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Wandering Sophist",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Stoic Hoplite",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Star-Reader",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Archive Warden",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Peripatetic Master",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Rogue Automaton",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Guild Engineer",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Clockwork Sentry",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Rail Inspector",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Brass Artificer",
+   "note": "scripts/world/world_entities.gd"
+  },
+  {
+   "key": "Stranger",
+   "note": "scripts/world/world_entities.gd"
+  }
+ ],
+ "cards": [
+  {
+   "key": "Lantern-Bearer Acolyte",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Guardian (gets +0/+2 while blocking).",
+   "note": "rules text of Lantern-Bearer Acolyte"
+  },
+  {
+   "key": "He carries the light so that others may walk without stumbling.",
+   "note": "flavour text of Lantern-Bearer Acolyte"
+  },
+  {
+   "key": "Novice of the Choir",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "When this enters, gain 2 life.",
+   "note": "rules text of Novice of the Choir"
+  },
+  {
+   "key": "Her voice was the first thing the dark ever feared.",
+   "note": "flavour text of Novice of the Choir"
+  },
+  {
+   "key": "Cloister Gatewarden",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Human Monk",
+   "note": "card subtype"
+  },
+  {
+   "key": "No one passes the cloister gate unless the bell has rung for them.",
+   "note": "flavour text of Cloister Gatewarden"
+  },
+  {
+   "key": "Martyr of the Pilgrim Road",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "When this dies, gain 3 life.",
+   "note": "rules text of Martyr of the Pilgrim Road"
+  },
+  {
+   "key": "He fell on the road, and the road itself remembered him as holy.",
+   "note": "flavour text of Martyr of the Pilgrim Road"
+  },
+  {
+   "key": "Herald of the Morning Bell",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Angel",
+   "note": "card subtype"
+  },
+  {
+   "key": "Flying.",
+   "note": "rules text of Herald of the Morning Bell"
+  },
+  {
+   "key": "He descends at Lauds, and the frost melts from the bell-rope.",
+   "note": "flavour text of Herald of the Morning Bell"
+  },
+  {
+   "key": "Knight of the Pilgrim Way",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Vigilance (doesn't tap to attack).",
+   "note": "rules text of Knight of the Pilgrim Way"
+  },
+  {
+   "key": "Sworn to keep the roads open from Lent to Pentecost and beyond.",
+   "note": "flavour text of Knight of the Pilgrim Way"
+  },
+  {
+   "key": "Abbey Man-at-Arms",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Human Soldier",
+   "note": "card subtype"
+  },
+  {
+   "key": "Behind his shield sleep the orphans of three burned villages.",
+   "note": "flavour text of Abbey Man-at-Arms"
+  },
+  {
+   "key": "Rite of Benediction",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Blessing",
+   "note": "card subtype"
+  },
+  {
+   "key": "Target creature you control gets +2/+2 until end of turn. Gain 2 life.",
+   "note": "rules text of Rite of Benediction"
+  },
+  {
+   "key": "\"Go forth, and fear nothing that walks beneath the sun.\"",
+   "note": "flavour text of Rite of Benediction"
+  },
+  {
+   "key": "Word of Banishment",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Exorcism",
+   "note": "card subtype"
+  },
+  {
+   "key": "Destroy target enemy creature with power 3 or less.",
+   "note": "rules text of Word of Banishment"
+  },
+  {
+   "key": "Spoken once, in the old tongue, and the thing was simply gone.",
+   "note": "flavour text of Word of Banishment"
+  },
+  {
+   "key": "Sister of Mercy",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Lifelink. When this enters, gain 2 life.",
+   "note": "rules text of Sister of Mercy"
+  },
+  {
+   "key": "She tends the wounded of both armies, and asks no one their banner.",
+   "note": "flavour text of Sister of Mercy"
+  },
+  {
+   "key": "Inquisitor of the Pale Flame",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Human Inquisitor",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, destroy target enemy creature with power 2 or less.",
+   "note": "rules text of Inquisitor of the Pale Flame"
+  },
+  {
+   "key": "He seeks the truth patiently, and the lie cannot endure his gaze.",
+   "note": "flavour text of Inquisitor of the Pale Flame"
+  },
+  {
+   "key": "Paladin of the Seventh Gate",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Human Paladin",
+   "note": "card subtype"
+  },
+  {
+   "key": "Vigilance, lifelink.",
+   "note": "rules text of Paladin of the Seventh Gate"
+  },
+  {
+   "key": "Each wound he takes for the weak is counted in Heaven as a prayer.",
+   "note": "flavour text of Paladin of the Seventh Gate"
+  },
+  {
+   "key": "Bell of Vespers",
+   "note": "card name (sanctum, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, gain 2 life.",
+   "note": "rules text of Bell of Vespers"
+  },
+  {
+   "key": "Its evening toll calls the weary home and the restless dead to rest.",
+   "note": "flavour text of Bell of Vespers"
+  },
+  {
+   "key": "Litany of the Faithful",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Creatures you control get +1/+2 until end of turn.",
+   "note": "rules text of Litany of the Faithful"
+  },
+  {
+   "key": "One voice begins the litany; a hundred answer; the line does not break.",
+   "note": "flavour text of Litany of the Faithful"
+  },
+  {
+   "key": "Abbess of the Silent Order",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "When this enters, gain 3 life. When this dies, creatures you control get +1/+1 permanently.",
+   "note": "rules text of Abbess of the Silent Order"
+  },
+  {
+   "key": "Forty years without a word; at her death, her sisters heard everything.",
+   "note": "flavour text of Abbess of the Silent Order"
+  },
+  {
+   "key": "Seraph of the Dawn Watch",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Flying, vigilance.",
+   "note": "rules text of Seraph of the Dawn Watch"
+  },
+  {
+   "key": "He has kept watch over the cathedral since before the first stone was laid.",
+   "note": "flavour text of Seraph of the Dawn Watch"
+  },
+  {
+   "key": "Reliquary of the First Martyr",
+   "note": "card name (sanctum, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, target creature you control gets +1/+1 permanently.",
+   "note": "rules text of Reliquary of the First Martyr"
+  },
+  {
+   "key": "Behind the gold and crystal lies a single bone, and it is enough.",
+   "note": "flavour text of Reliquary of the First Martyr"
+  },
+  {
+   "key": "Archangel of the Last Vigil",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Flying, lifelink. When this enters, destroy target enemy creature with power 4 or less and gain 4 life.",
+   "note": "rules text of Archangel of the Last Vigil"
+  },
+  {
+   "key": "When the last candle gutters, he is the light that remains.",
+   "note": "flavour text of Archangel of the Last Vigil"
+  },
+  {
+   "key": "Covenant Initiate",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When this dies, the enemy player loses 1 life and you gain 1 life.",
+   "note": "rules text of Covenant Initiate"
+  },
+  {
+   "key": "Even his last breath was promised to someone else.",
+   "note": "flavour text of Covenant Initiate"
+  },
+  {
+   "key": "Blood-Oath Thrall",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When this enters, you lose 1 life.",
+   "note": "rules text of Blood-Oath Thrall"
+  },
+  {
+   "key": "The oath was signed in a fingertip of blood. The rest came due later.",
+   "note": "flavour text of Blood-Oath Thrall"
+  },
+  {
+   "key": "Tomb Crawler",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Zombie",
+   "note": "card subtype"
+  },
+  {
+   "key": "Deathtouch.",
+   "note": "rules text of Tomb Crawler"
+  },
+  {
+   "key": "Its touch carries the cold of every grave it has crawled from.",
+   "note": "flavour text of Tomb Crawler"
+  },
+  {
+   "key": "Grave Chanter",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When this enters, the enemy player loses 1 life and you gain 1 life.",
+   "note": "rules text of Grave Chanter"
+  },
+  {
+   "key": "Her hymns are sung backwards, and every note takes something.",
+   "note": "flavour text of Grave Chanter"
+  },
+  {
+   "key": "Gloam Shade",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Spirit",
+   "note": "card subtype"
+  },
+  {
+   "key": "A shadow that forgot which body it belonged to, and stopped caring.",
+   "note": "flavour text of Gloam Shade"
+  },
+  {
+   "key": "Ossuary Ghoul",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When this dies, create a 1/1 Restless Bones token.",
+   "note": "rules text of Ossuary Ghoul"
+  },
+  {
+   "key": "Break it apart and the pieces keep walking.",
+   "note": "flavour text of Ossuary Ghoul"
+  },
+  {
+   "key": "Restless Bones",
+   "note": "token creature name"
+  },
+  {
+   "key": "Hellmaw Hound",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Demon Hound",
+   "note": "card subtype"
+  },
+  {
+   "key": "Its master's leash is forged from the screams of the hunted.",
+   "note": "flavour text of Hellmaw Hound"
+  },
+  {
+   "key": "Wither the Living",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "Curse",
+   "note": "card subtype"
+  },
+  {
+   "key": "Destroy target enemy creature with power 2 or less.",
+   "note": "rules text of Wither the Living"
+  },
+  {
+   "key": "The flesh remembers that it is only borrowed.",
+   "note": "flavour text of Wither the Living"
+  },
+  {
+   "key": "Siphon of Ashes",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "The enemy player loses 3 life and you gain 3 life.",
+   "note": "rules text of Siphon of Ashes"
+  },
+  {
+   "key": "Their warmth drains out like wine from a cracked chalice.",
+   "note": "flavour text of Siphon of Ashes"
+  },
+  {
+   "key": "Veiled Blade of the Covenant",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Human Assassin",
+   "note": "card subtype"
+  },
+  {
+   "key": "Deathtouch. When this dies, the enemy player loses 2 life and you gain 2 life.",
+   "note": "rules text of Veiled Blade of the Covenant"
+  },
+  {
+   "key": "The Covenant pays its assassins in years taken from their victims.",
+   "note": "flavour text of Veiled Blade of the Covenant"
+  },
+  {
+   "key": "Cinder-Pit Fiend",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "At the beginning of your upkeep, you lose 1 life.",
+   "note": "rules text of Cinder-Pit Fiend"
+  },
+  {
+   "key": "It serves well, and it is always, always hungry.",
+   "note": "flavour text of Cinder-Pit Fiend"
+  },
+  {
+   "key": "Grave Summoner",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Human Necromancer",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, return your best creature card from your graveyard to play.",
+   "note": "rules text of Grave Summoner"
+  },
+  {
+   "key": "\"Rise. Your rest was never part of the bargain.\"",
+   "note": "flavour text of Grave Summoner"
+  },
+  {
+   "key": "Dread Whisper",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "The enemy discards 2 cards at random.",
+   "note": "rules text of Dread Whisper"
+  },
+  {
+   "key": "A single word in the night, and every plan they had unravels.",
+   "note": "flavour text of Dread Whisper"
+  },
+  {
+   "key": "Chalice of Black Vows",
+   "note": "card name (abyss, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
+   "note": "rules text of Chalice of Black Vows"
+  },
+  {
+   "key": "It is never empty, and no one asks what it is filled with.",
+   "note": "flavour text of Chalice of Black Vows"
+  },
+  {
+   "key": "Marquis of the Wailing Pit",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Flying. When this enters, you lose 4 life.",
+   "note": "rules text of Marquis of the Wailing Pit"
+  },
+  {
+   "key": "He arrives on wings of smoke, and presents his bill at the door.",
+   "note": "flavour text of Marquis of the Wailing Pit"
+  },
+  {
+   "key": "Hollow-Crowned Lich",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Lich",
+   "note": "card subtype"
+  },
+  {
+   "key": "Deathtouch. At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
+   "note": "rules text of Hollow-Crowned Lich"
+  },
+  {
+   "key": "It traded its heart for a crown, and found the crown was hollow too.",
+   "note": "flavour text of Hollow-Crowned Lich"
+  },
+  {
+   "key": "Unmaking Rite",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "Destroy target enemy creature. You lose 2 life.",
+   "note": "rules text of Unmaking Rite"
+  },
+  {
+   "key": "Every unmaking costs the maker a little of his own soul.",
+   "note": "flavour text of Unmaking Rite"
+  },
+  {
+   "key": "Belzareth, Prince of Cinders",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Demon Lord",
+   "note": "card subtype"
+  },
+  {
+   "key": "Flying. When this enters, destroy target enemy creature. When this dies, the enemy player loses 3 life and you gain 3 life.",
+   "note": "rules text of Belzareth, Prince of Cinders"
+  },
+  {
+   "key": "Where he walks, the ground forgets it was ever green.",
+   "note": "flavour text of Belzareth, Prince of Cinders"
+  },
+  {
+   "key": "Briar Fox",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Beast",
+   "note": "card subtype"
+  },
+  {
+   "key": "Through the thorn-hedge and gone before the hounds catch the scent.",
+   "note": "flavour text of Briar Fox"
+  },
+  {
+   "key": "Hedgerow Druid",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Human Druid",
+   "note": "card subtype"
+  },
+  {
+   "key": "At the beginning of your upkeep, add G to your mana pool this turn.",
+   "note": "rules text of Hedgerow Druid"
+  },
+  {
+   "key": "She coaxes the green out of the soil the way one coaxes a shy child.",
+   "note": "flavour text of Hedgerow Druid"
+  },
+  {
+   "key": "Thornback Boar",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Its tusks have uprooted more saplings than any woodsman's axe.",
+   "note": "flavour text of Thornback Boar"
+  },
+  {
+   "key": "Oakmoot Sentinel",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Treefolk",
+   "note": "card subtype"
+  },
+  {
+   "key": "Reach.",
+   "note": "rules text of Oakmoot Sentinel"
+  },
+  {
+   "key": "It stood guard at the moot for a hundred years, and saw no need to leave.",
+   "note": "flavour text of Oakmoot Sentinel"
+  },
+  {
+   "key": "Antlered Barrow-Stag",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Trample.",
+   "note": "rules text of Antlered Barrow-Stag"
+  },
+  {
+   "key": "It leaps the barrow-mounds where the old kings sleep.",
+   "note": "flavour text of Antlered Barrow-Stag"
+  },
+  {
+   "key": "Barrowland Bear",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "The druids call it grandmother, and wisely give it the path.",
+   "note": "flavour text of Barrowland Bear"
+  },
+  {
+   "key": "Call of the Pack",
+   "note": "card name (wild, spell)"
+  },
+  {
+   "key": "Rite",
+   "note": "card subtype"
+  },
+  {
+   "key": "Create two 2/2 Wolf tokens.",
+   "note": "rules text of Call of the Pack"
+  },
+  {
+   "key": "One howl at moonrise, and the hills answer.",
+   "note": "flavour text of Call of the Pack"
+  },
+  {
+   "key": "Wolf",
+   "note": "token creature name"
+  },
+  {
+   "key": "Wildsurge",
+   "note": "card name (wild, spell)"
+  },
+  {
+   "key": "Target creature you control gets +3/+3 until end of turn.",
+   "note": "rules text of Wildsurge"
+  },
+  {
+   "key": "For a moment, the beast remembers what the forest was before men.",
+   "note": "flavour text of Wildsurge"
+  },
+  {
+   "key": "Greening Rite",
+   "note": "card name (wild, spell)"
+  },
+  {
+   "key": "Add GG to your mana pool this turn.",
+   "note": "rules text of Greening Rite"
+  },
+  {
+   "key": "Seed into soil, soil into sap, sap into power.",
+   "note": "flavour text of Greening Rite"
+  },
+  {
+   "key": "Wolfmother of the Fen",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "When this enters, create a 2/2 Wolf token.",
+   "note": "rules text of Wolfmother of the Fen"
+  },
+  {
+   "key": "Where she runs, she never runs alone.",
+   "note": "flavour text of Wolfmother of the Fen"
+  },
+  {
+   "key": "Elder of the Oak Circle",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "When this enters, create two 1/1 Oakling tokens.",
+   "note": "rules text of Elder of the Oak Circle"
+  },
+  {
+   "key": "She plants acorns as she walks; by evening they walk beside her.",
+   "note": "flavour text of Elder of the Oak Circle"
+  },
+  {
+   "key": "Oakling",
+   "note": "token creature name"
+  },
+  {
+   "key": "Stonehide Spirit",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "The standing stones are not empty. They are only patient.",
+   "note": "flavour text of Stonehide Spirit"
+  },
+  {
+   "key": "Tusked Juggernaut",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Palisades, shield-walls, siege towers: all just more underbrush.",
+   "note": "flavour text of Tusked Juggernaut"
+  },
+  {
+   "key": "Circle of Standing Stones",
+   "note": "card name (wild, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, add GG to your mana pool this turn.",
+   "note": "rules text of Circle of Standing Stones"
+  },
+  {
+   "key": "Raised by no hand anyone remembers, aligned to no star anyone can name.",
+   "note": "flavour text of Circle of Standing Stones"
+  },
+  {
+   "key": "Mistletoe Archdruid",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "His golden sickle has cut the sacred bough for sixty winters.",
+   "note": "flavour text of Mistletoe Archdruid"
+  },
+  {
+   "key": "Antler-King of the Fens",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Beast Spirit",
+   "note": "card subtype"
+  },
+  {
+   "key": "Trample, vigilance.",
+   "note": "rules text of Antler-King of the Fens"
+  },
+  {
+   "key": "Crowned with twelve tines, it judges every hunter who enters the marsh.",
+   "note": "flavour text of Antler-King of the Fens"
+  },
+  {
+   "key": "Stampede of the Wild Hunt",
+   "note": "card name (wild, spell)"
+  },
+  {
+   "key": "Creatures you control get +2/+2 until end of turn.",
+   "note": "rules text of Stampede of the Wild Hunt"
+  },
+  {
+   "key": "Hooves, horns and howling, and the earth itself rides with them.",
+   "note": "flavour text of Stampede of the Wild Hunt"
+  },
+  {
+   "key": "Cernoth, the Thousand-Year Oak",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Treefolk Spirit",
+   "note": "card subtype"
+  },
+  {
+   "key": "Trample, reach. When this enters, create two 2/2 Oakling tokens.",
+   "note": "rules text of Cernoth, the Thousand-Year Oak"
+  },
+  {
+   "key": "Empires rose and fell in the span of a single ring of its wood.",
+   "note": "flavour text of Cernoth, the Thousand-Year Oak"
+  },
+  {
+   "key": "Tavern Brawler",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Human Warrior",
+   "note": "card subtype"
+  },
+  {
+   "key": "He starts every fight with a toast and ends it with a stool.",
+   "note": "flavour text of Tavern Brawler"
+  },
+  {
+   "key": "Vine-Crowned Bacchant",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Human Bacchant",
+   "note": "card subtype"
+  },
+  {
+   "key": "Haste.",
+   "note": "rules text of Vine-Crowned Bacchant"
+  },
+  {
+   "key": "He dances straight from the wine-press into the battle line.",
+   "note": "flavour text of Vine-Crowned Bacchant"
+  },
+  {
+   "key": "Masquerade Duelist",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Human Duelist",
+   "note": "card subtype"
+  },
+  {
+   "key": "Whenever this attacks, it gets +1/+0 until end of turn.",
+   "note": "rules text of Masquerade Duelist"
+  },
+  {
+   "key": "Behind the gilded mask, a smile; behind the smile, a blade.",
+   "note": "flavour text of Masquerade Duelist"
+  },
+  {
+   "key": "Fire-Eater of the Feast",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Human Performer",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, deal 1 damage to any enemy creature or the enemy player.",
+   "note": "rules text of Fire-Eater of the Feast"
+  },
+  {
+   "key": "The guests applaud. The guest nearest the stage stops applauding.",
+   "note": "flavour text of Fire-Eater of the Feast"
+  },
+  {
+   "key": "Gluttonous Baron",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Human Noble",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, you lose 2 life.",
+   "note": "rules text of Gluttonous Baron"
+  },
+  {
+   "key": "Seven courses, nine vintages, and still he rises hungry for more.",
+   "note": "flavour text of Gluttonous Baron"
+  },
+  {
+   "key": "Carousing Lancer",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "He charged the enemy line still holding his goblet, and never spilled a drop.",
+   "note": "flavour text of Carousing Lancer"
+  },
+  {
+   "key": "Toast of Fire",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Revelry",
+   "note": "card subtype"
+  },
+  {
+   "key": "Deal 2 damage to any enemy creature or the enemy player.",
+   "note": "rules text of Toast of Fire"
+  },
+  {
+   "key": "\"To your health!\" she cried, and lit the brandy.",
+   "note": "flavour text of Toast of Fire"
+  },
+  {
+   "key": "Liquid Courage",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Target creature you control gets +3/+1 until end of turn.",
+   "note": "rules text of Liquid Courage"
+  },
+  {
+   "key": "One cup for luck, two for nerve, three for glory.",
+   "note": "flavour text of Liquid Courage"
+  },
+  {
+   "key": "Banquet Flambé",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Deal 4 damage to target enemy creature.",
+   "note": "rules text of Banquet Flambé"
+  },
+  {
+   "key": "The chef insists it is meant to burn that brightly.",
+   "note": "flavour text of Banquet Flambé"
+  },
+  {
+   "key": "Duelist of the Velvet Court",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Haste. Whenever this attacks, it gets +1/+1 until end of turn.",
+   "note": "rules text of Duelist of the Velvet Court"
+  },
+  {
+   "key": "He has never lost a duel, a wager, or an argument about wine.",
+   "note": "flavour text of Duelist of the Velvet Court"
+  },
+  {
+   "key": "Masked Firebreather",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
+   "note": "rules text of Masked Firebreather"
+  },
+  {
+   "key": "Every performance ends with a bow and a scorched front row.",
+   "note": "flavour text of Masked Firebreather"
+  },
+  {
+   "key": "Hierophant of the Bacchanal",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Haste. When this enters, creatures you control get +2/+0 until end of turn.",
+   "note": "rules text of Hierophant of the Bacchanal"
+  },
+  {
+   "key": "\"Tonight there is no tomorrow. Drink, and charge!\"",
+   "note": "flavour text of Hierophant of the Bacchanal"
+  },
+  {
+   "key": "Bottomless Wine Cask",
+   "note": "card name (revel, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, draw a card and you lose 1 life.",
+   "note": "rules text of Bottomless Wine Cask"
+  },
+  {
+   "key": "Pleasure that never ends is its own slow wound.",
+   "note": "flavour text of Bottomless Wine Cask"
+  },
+  {
+   "key": "Pyre-Dancer's Whirl",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Deal 2 damage to each enemy creature. You lose 2 life.",
+   "note": "rules text of Pyre-Dancer's Whirl"
+  },
+  {
+   "key": "The dancers spin closer to the bonfire with every verse.",
+   "note": "flavour text of Pyre-Dancer's Whirl"
+  },
+  {
+   "key": "Salamander Juggler",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Haste. Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
+   "note": "rules text of Salamander Juggler"
+  },
+  {
+   "key": "Three living flames in the air, and not one of them is happy about it.",
+   "note": "flavour text of Salamander Juggler"
+  },
+  {
+   "key": "Archduke of the Endless Feast",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Haste. At the beginning of your upkeep, you lose 1 life.",
+   "note": "rules text of Archduke of the Endless Feast"
+  },
+  {
+   "key": "His banquet has lasted eleven years. His liver has filed several complaints.",
+   "note": "flavour text of Archduke of the Endless Feast"
+  },
+  {
+   "key": "Grand Conflagration",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Deal 5 damage to any enemy creature or the enemy player.",
+   "note": "rules text of Grand Conflagration"
+  },
+  {
+   "key": "The fireworks were the finale. Nobody had planned for the encore.",
+   "note": "flavour text of Grand Conflagration"
+  },
+  {
+   "key": "Vessaria, Mistress of the Undying Feast",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Haste. Whenever this attacks, deal 2 damage to any enemy creature or the enemy player. At the beginning of your upkeep, you lose 1 life.",
+   "note": "rules text of Vessaria, Mistress of the Undying Feast"
+  },
+  {
+   "key": "She raises a cup to every guest; the guests who drink do not rise again.",
+   "note": "flavour text of Vessaria, Mistress of the Undying Feast"
+  },
+  {
+   "key": "Owl Familiar of the Archive",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Bird",
+   "note": "card subtype"
+  },
+  {
+   "key": "It has read every book in the archive, mostly by sitting on them.",
+   "note": "flavour text of Owl Familiar of the Archive"
+  },
+  {
+   "key": "Lamp-Lit Scribe",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Human Scholar",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, draw a card.",
+   "note": "rules text of Lamp-Lit Scribe"
+  },
+  {
+   "key": "Copy the text, and the text copies something into you.",
+   "note": "flavour text of Lamp-Lit Scribe"
+  },
+  {
+   "key": "Bronze-Shield Hoplite",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Defender (can't attack).",
+   "note": "rules text of Bronze-Shield Hoplite"
+  },
+  {
+   "key": "\"What is in my power is to hold this ground. I hold it.\"",
+   "note": "flavour text of Bronze-Shield Hoplite"
+  },
+  {
+   "key": "Disciplined Phalanx",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Forty shields, one mind, no fear.",
+   "note": "flavour text of Disciplined Phalanx"
+  },
+  {
+   "key": "Tower Stargazer",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Human Astronomer",
+   "note": "card subtype"
+  },
+  {
+   "key": "Flying. When this enters, draw a card.",
+   "note": "rules text of Tower Stargazer"
+  },
+  {
+   "key": "He charts the heavens from a balcony of silver and glass.",
+   "note": "flavour text of Tower Stargazer"
+  },
+  {
+   "key": "Wandering Peripatetic",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Human Philosopher",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, return target enemy creature to its owner's hand.",
+   "note": "rules text of Wandering Peripatetic"
+  },
+  {
+   "key": "He argues while he walks, and his opponents find themselves walking home.",
+   "note": "flavour text of Wandering Peripatetic"
+  },
+  {
+   "key": "Measured Rebuke",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Discourse",
+   "note": "card subtype"
+  },
+  {
+   "key": "Return target enemy creature to its owner's hand.",
+   "note": "rules text of Measured Rebuke"
+  },
+  {
+   "key": "\"Reconsider.\"",
+   "note": "flavour text of Measured Rebuke"
+  },
+  {
+   "key": "Hour of Contemplation",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Draw two cards.",
+   "note": "rules text of Hour of Contemplation"
+  },
+  {
+   "key": "Stillness first. Then clarity. Then the answer.",
+   "note": "flavour text of Hour of Contemplation"
+  },
+  {
+   "key": "Binding Argument",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Tap target enemy creature. Draw a card.",
+   "note": "rules text of Binding Argument"
+  },
+  {
+   "key": "The brute paused to consider the premise, and the moment was lost.",
+   "note": "flavour text of Binding Argument"
+  },
+  {
+   "key": "Dialectician of the Porch",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Whenever this attacks, tap target enemy creature.",
+   "note": "rules text of Dialectician of the Porch"
+  },
+  {
+   "key": "Thesis, antithesis, and the defender left standing in confusion.",
+   "note": "flavour text of Dialectician of the Porch"
+  },
+  {
+   "key": "Archive Great-Owl",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "It keeps the night-hours of the library, and suffers no careless readers.",
+   "note": "flavour text of Archive Great-Owl"
+  },
+  {
+   "key": "Strategos of the Shieldwall",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Vigilance. When this enters, tap target enemy creature.",
+   "note": "rules text of Strategos of the Shieldwall"
+  },
+  {
+   "key": "He has studied every battle ever written down, and lost none of his own.",
+   "note": "flavour text of Strategos of the Shieldwall"
+  },
+  {
+   "key": "Orrery of Fixed Stars",
+   "note": "card name (lyceum, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, tap target enemy creature.",
+   "note": "rules text of Orrery of Fixed Stars"
+  },
+  {
+   "key": "As the brass planets turn, the enemy feels the weight of a fixed order.",
+   "note": "flavour text of Orrery of Fixed Stars"
+  },
+  {
+   "key": "Stillness of Mind",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Tap all enemy creatures. Draw a card.",
+   "note": "rules text of Stillness of Mind"
+  },
+  {
+   "key": "The philosopher spoke of the vanity of striving, and the whole army sat down.",
+   "note": "flavour text of Stillness of Mind"
+  },
+  {
+   "key": "Sage of the Long Patience",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Vigilance. When this enters, draw two cards.",
+   "note": "rules text of Sage of the Long Patience"
+  },
+  {
+   "key": "\"The obstacle is the way, and I am in no hurry.\"",
+   "note": "flavour text of Sage of the Long Patience"
+  },
+  {
+   "key": "Skywarden of the Upper Stoa",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Bird Spirit",
+   "note": "card subtype"
+  },
+  {
+   "key": "It circles the colonnade at dusk, a silver thought in a silver sky.",
+   "note": "flavour text of Skywarden of the Upper Stoa"
+  },
+  {
+   "key": "Codex of the Unshaken Mind",
+   "note": "card name (lyceum, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, draw a card.",
+   "note": "rules text of Codex of the Unshaken Mind"
+  },
+  {
+   "key": "Each morning it opens to a page no one has read before.",
+   "note": "flavour text of Codex of the Unshaken Mind"
+  },
+  {
+   "key": "Aristeon, the Unmoved Sage",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Flying, vigilance. When this enters, return target enemy creature to its owner's hand and draw two cards.",
+   "note": "rules text of Aristeon, the Unmoved Sage"
+  },
+  {
+   "key": "He rose above passion so completely that one day he simply kept rising.",
+   "note": "flavour text of Aristeon, the Unmoved Sage"
+  },
+  {
+   "key": "Brass Scuttler",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Construct",
+   "note": "card subtype"
+  },
+  {
+   "key": "It skitters through the foundry vents, tightening bolts no one else can reach.",
+   "note": "flavour text of Brass Scuttler"
+  },
+  {
+   "key": "Clockwork Hound",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Loyal to whoever holds the key, which is the most honest loyalty there is.",
+   "note": "flavour text of Clockwork Hound"
+  },
+  {
+   "key": "Rivetwall Sentry",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Built to stand in a doorway until the end of the world, and slightly beyond.",
+   "note": "flavour text of Rivetwall Sentry"
+  },
+  {
+   "key": "Tinkerer's Apprentice",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Human Artificer",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, create a 1/1 Servo token.",
+   "note": "rules text of Tinkerer's Apprentice"
+  },
+  {
+   "key": "His first construct was a mouse. His second was a better mouse.",
+   "note": "flavour text of Tinkerer's Apprentice"
+  },
+  {
+   "key": "Servo",
+   "note": "token creature name"
+  },
+  {
+   "key": "Gyrocopter Scout",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Its rotors hum a single note, tuned to the frequency of the Foundry bells.",
+   "note": "flavour text of Gyrocopter Scout"
+  },
+  {
+   "key": "Piston Laborer",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "It neither tires, nor complains, nor stops for lunch.",
+   "note": "flavour text of Piston Laborer"
+  },
+  {
+   "key": "Foundry Golem",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Cast in a single pour, quenched in river-water, animated by arithmetic.",
+   "note": "flavour text of Foundry Golem"
+  },
+  {
+   "key": "Brass Dynamo",
+   "note": "card name (machine, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, add C to your mana pool this turn.",
+   "note": "rules text of Brass Dynamo"
+  },
+  {
+   "key": "Wind it once and it turns forever. Probably.",
+   "note": "flavour text of Brass Dynamo"
+  },
+  {
+   "key": "Calibrated Discharge",
+   "note": "card name (machine, spell)"
+  },
+  {
+   "key": "Device",
+   "note": "card subtype"
+  },
+  {
+   "key": "Deal 2 damage to target enemy creature.",
+   "note": "rules text of Calibrated Discharge"
+  },
+  {
+   "key": "Measured to the volt. Aimed to the inch.",
+   "note": "flavour text of Calibrated Discharge"
+  },
+  {
+   "key": "Arc-Welder Construct",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "When this enters, deal 2 damage to any enemy creature or the enemy player.",
+   "note": "rules text of Arc-Welder Construct"
+  },
+  {
+   "key": "It joins steel to steel, and enemies to the floor.",
+   "note": "flavour text of Arc-Welder Construct"
+  },
+  {
+   "key": "Bronze Phalanx Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Vigilance.",
+   "note": "rules text of Bronze Phalanx Automaton"
+  },
+  {
+   "key": "The Stoa taught discipline; the Technocracy simply built it.",
+   "note": "flavour text of Bronze Phalanx Automaton"
+  },
+  {
+   "key": "Siege Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "The wall was rated for catapults. No one had rated it for patience.",
+   "note": "flavour text of Siege Automaton"
+  },
+  {
+   "key": "Galvanic Coil",
+   "note": "card name (machine, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, deal 1 damage to any enemy creature or the enemy player.",
+   "note": "rules text of Galvanic Coil"
+  },
+  {
+   "key": "It crackles once each dawn, and something nearby flinches.",
+   "note": "flavour text of Galvanic Coil"
+  },
+  {
+   "key": "Self-Mending Forge",
+   "note": "card name (machine, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, create a 1/1 Servo token.",
+   "note": "rules text of Self-Mending Forge"
+  },
+  {
+   "key": "No smith tends it. It has long since learned to tend itself.",
+   "note": "flavour text of Self-Mending Forge"
+  },
+  {
+   "key": "Quicksilver Lancer",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Haste, vigilance.",
+   "note": "rules text of Quicksilver Lancer"
+  },
+  {
+   "key": "Its joints run with liquid metal, and it moves before the eye can follow.",
+   "note": "flavour text of Quicksilver Lancer"
+  },
+  {
+   "key": "Perpetual Engine",
+   "note": "card name (machine, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, add CC to your mana pool this turn.",
+   "note": "rules text of Perpetual Engine"
+  },
+  {
+   "key": "The engineers who designed it are still arguing over why it works.",
+   "note": "flavour text of Perpetual Engine"
+  },
+  {
+   "key": "Grand Foundry Colossus",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Its footfalls are measured in tremors, its stride in city blocks.",
+   "note": "flavour text of Grand Foundry Colossus"
+  },
+  {
+   "key": "The Prime Engine",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Vigilance, trample. When this enters, create three 1/1 Servo tokens.",
+   "note": "rules text of The Prime Engine"
+  },
+  {
+   "key": "The heart of the Foundry, beating in iron time; every other machine is its echo.",
+   "note": "flavour text of The Prime Engine"
+  },
+  {
+   "key": "Tap: add one Church mana.",
+   "note": "basic land rules text"
+  },
+  {
+   "key": "Tap: add one Covenant mana.",
+   "note": "basic land rules text"
+  },
+  {
+   "key": "Tap: add one Old Ways mana.",
+   "note": "basic land rules text"
+  },
+  {
+   "key": "Tap: add one Revel mana.",
+   "note": "basic land rules text"
+  },
+  {
+   "key": "Tap: add one Stoa mana.",
+   "note": "basic land rules text"
+  },
+  {
+   "key": "Tap: add one Technocracy mana.",
+   "note": "basic land rules text"
+  }
+ ],
+ "world": [
+  {
+   "key": "A neutral city of brass towers and ticking bridges. Every faith trades here.",
+   "note": "description of the city Cogspire"
+  },
+  {
+   "key": "Guild Clerk",
+   "note": "title of a townsperson"
+  },
+  {
+   "key": "Overseer Brask",
+   "note": "name of a townsperson (translate the title word, keep the name)"
+  },
+  {
+   "key": "A walled city of bells and white stone, crowned by the Cathedral of the Lamp.",
+   "note": "description of the city Santa Lucerna"
+  },
+  {
+   "key": "Parish Priest",
+   "note": "title of a townsperson"
+  },
+  {
+   "key": "Father Anselm",
+   "note": "name of a townsperson (translate the title word, keep the name)"
+  },
+  {
+   "key": "Hospitaller",
+   "note": "title of a townsperson"
+  },
+  {
+   "key": "Sister Imelda",
+   "note": "name of a townsperson (translate the title word, keep the name)"
+  },
+  {
+   "key": "Colonnades and libraries on a cold sea. The scholars here argue in whispers.",
+   "note": "description of the city Porticus"
+  },
+  {
+   "key": "Scholarch",
+   "note": "title of a townsperson"
+  },
+  {
+   "key": "Master Theon",
+   "note": "name of a townsperson (translate the title word, keep the name)"
+  },
+  {
+   "key": "A town grown rather than built, among standing stones and oaks older than kings.",
+   "note": "description of the city Elderholt"
+  },
+  {
+   "key": "Grove Keeper",
+   "note": "title of a townsperson"
+  },
+  {
+   "key": "Mother Rowan",
+   "note": "name of a townsperson (translate the title word, keep the name)"
+  },
+  {
+   "key": "Lanterns, wine and masks. Every night is a feast, and every feast has a price.",
+   "note": "description of the city Vinemere"
+  },
+  {
+   "key": "Mistress of Revels",
+   "note": "title of a townsperson"
+  },
+  {
+   "key": "Lady Ysolde",
+   "note": "name of a townsperson (translate the title word, keep the name)"
+  },
+  {
+   "key": "A smoke-black town on the edge of the Pit. Its truce is old, and thin.",
+   "note": "description of the city Ashenmouth"
+  },
+  {
+   "key": "Broker of Debts",
+   "note": "title of a townsperson"
+  },
+  {
+   "key": "The Grey Factor",
+   "note": "name of a townsperson (translate the title word, keep the name)"
+  },
+  {
+   "key": "The Runaway Forge",
+   "note": "name of a lair (dungeon)"
+  },
+  {
+   "key": "The Iron Foreman",
+   "note": "name of a lair boss"
+  },
+  {
+   "key": "Den of the Antlered Beast",
+   "note": "name of a lair (dungeon)"
+  },
+  {
+   "key": "The Antlered One",
+   "note": "name of a lair boss"
+  },
+  {
+   "key": "The Endless Banquet",
+   "note": "name of a lair (dungeon)"
+  },
+  {
+   "key": "Duke Carnevale",
+   "note": "name of a lair boss"
+  },
+  {
+   "key": "Observatory of the Silent Sage",
+   "note": "name of a lair (dungeon)"
+  },
+  {
+   "key": "The Silent Sage",
+   "note": "name of a lair boss"
+  },
+  {
+   "key": "Chapel of the Last Templar",
+   "note": "name of a lair (dungeon)"
+  },
+  {
+   "key": "Ser Gaudenz, Last Templar",
+   "note": "name of a lair boss"
+  },
+  {
+   "key": "Crypt of the Nameless Lich",
+   "note": "name of a lair (dungeon)"
+  },
+  {
+   "key": "The Nameless Lich",
+   "note": "name of a lair boss"
+  },
+  {
+   "key": "The Ninth Pit",
+   "note": "name of a lair (dungeon)"
+  },
+  {
+   "key": "Belzareth's Herald",
+   "note": "name of a lair boss"
+  },
+  {
+   "key": "Proof of Skill",
+   "note": "mission title"
+  },
+  {
+   "key": "The guild only trades with duelists who can hold their own. Win two duels anywhere.",
+   "note": "mission description"
+  },
+  {
+   "key": "Letter to the Cathedral",
+   "note": "mission title"
+  },
+  {
+   "key": "Carry the guild's accounts north to Santa Lucerna.",
+   "note": "mission description"
+  },
+  {
+   "key": "Shadows on the Pilgrim Road",
+   "note": "mission title"
+  },
+  {
+   "key": "Covenant cultists prey on pilgrims. Defeat three of them.",
+   "note": "mission description"
+  },
+  {
+   "key": "A lich has made a crypt of a ruined abbey in the south. Cleanse it.",
+   "note": "mission description"
+  },
+  {
+   "key": "Medicine for the Hospice",
+   "note": "mission title"
+  },
+  {
+   "key": "The grove-keepers of Elderholt grow herbs we need. Visit them.",
+   "note": "mission description"
+  },
+  {
+   "key": "Field Study",
+   "note": "mission title"
+  },
+  {
+   "key": "Observe the excesses of Vinemere, and return unchanged.",
+   "note": "mission description"
+  },
+  {
+   "key": "Our old master has stopped speaking and started duelling. Bring him back to reason.",
+   "note": "mission description"
+  },
+  {
+   "key": "Iron in the Roots",
+   "note": "mission title"
+  },
+  {
+   "key": "Constructs are cutting the old woods. Stop three of them.",
+   "note": "mission description"
+  },
+  {
+   "key": "The great beast has gone mad. Prove yourself against it.",
+   "note": "mission description"
+  },
+  {
+   "key": "Spoil the Sermon",
+   "note": "mission title"
+  },
+  {
+   "key": "The Church's preachers are bad for business. Win three duels against them.",
+   "note": "mission description"
+  },
+  {
+   "key": "Duke Carnevale's feast has lasted a year. Somebody must win the final toast.",
+   "note": "mission description"
+  },
+  {
+   "key": "Collect a Debt",
+   "note": "mission title"
+  },
+  {
+   "key": "Some scholars owe the Covenant. Defeat three of them.",
+   "note": "mission description"
+  }
+ ],
+ "music": [
+  {
+   "key": "Lumen Ecclesiae",
+   "note": "title of a anthem piece of music (sanctum)"
+  },
+  {
+   "key": "Matins at Santa Lucerna",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "The Pilgrim Road",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "Cloister Garden",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "Vespers",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "The Lamp Unfailing",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "Deus Vult",
+   "note": "title of a combat piece of music (sanctum)"
+  },
+  {
+   "key": "Shield of the Faithful",
+   "note": "title of a combat piece of music (sanctum)"
+  },
+  {
+   "key": "The Exorcism",
+   "note": "title of a combat piece of music (sanctum)"
+  },
+  {
+   "key": "Last Stand of the Templar",
+   "note": "title of a combat piece of music (sanctum)"
+  },
+  {
+   "key": "Anthem of the Ninth Pit",
+   "note": "title of a anthem piece of music (abyss)"
+  },
+  {
+   "key": "Ashenmouth at Dusk",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "The Grey Factor's Ledger",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "Embers Below",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "Litany of Debts",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "Smoke over the Pit",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "Blood Oath",
+   "note": "title of a combat piece of music (abyss)"
+  },
+  {
+   "key": "The Damned March",
+   "note": "title of a combat piece of music (abyss)"
+  },
+  {
+   "key": "Herald of Belzareth",
+   "note": "title of a combat piece of music (abyss)"
+  },
+  {
+   "key": "Song of the Old Ways",
+   "note": "title of a anthem piece of music (wild)"
+  },
+  {
+   "key": "Elderholt Hearth",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Standing Stones",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Oak and Antler",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Moonlit Grove",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Harvest Fire",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "The Wild Hunt",
+   "note": "title of a combat piece of music (wild)"
+  },
+  {
+   "key": "Antlered Fury",
+   "note": "title of a combat piece of music (wild)"
+  },
+  {
+   "key": "Den of the Beast",
+   "note": "title of a combat piece of music (wild)"
+  },
+  {
+   "key": "Thorn and Fang",
+   "note": "title of a combat piece of music (wild)"
+  },
+  {
+   "key": "Carnival of Vinemere",
+   "note": "title of a anthem piece of music (revel)"
+  },
+  {
+   "key": "Lanterns of Vinemere",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "Masquerade",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "The Wine Cellar",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "Silk and Daggers",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "The Morning After",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "Duel at the Feast",
+   "note": "title of a combat piece of music (revel)"
+  },
+  {
+   "key": "Firebreather's Dance",
+   "note": "title of a combat piece of music (revel)"
+  },
+  {
+   "key": "Last Toast",
+   "note": "title of a combat piece of music (revel)"
+  },
+  {
+   "key": "Hymn of the Stoa",
+   "note": "title of a anthem piece of music (lyceum)"
+  },
+  {
+   "key": "Colonnades of Porticus",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "The Star-Reader",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "The Quiet Archive",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "Seaward Meditation",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "Phalanx",
+   "note": "title of a combat piece of music (lyceum)"
+  },
+  {
+   "key": "Dialectic of Steel",
+   "note": "title of a combat piece of music (lyceum)"
+  },
+  {
+   "key": "Logos Unbroken",
+   "note": "title of a combat piece of music (lyceum)"
+  },
+  {
+   "key": "March of the Technocracy",
+   "note": "title of a anthem piece of music (machine)"
+  },
+  {
+   "key": "Cogspire Morning",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "Gears at Rest",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "The Guild Hall",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "Rail and Rivet",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "Clocktower Night",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "Iron Advance",
+   "note": "title of a combat piece of music (machine)"
+  },
+  {
+   "key": "Overclock",
+   "note": "title of a combat piece of music (machine)"
+  }
+ ],
+ "generated": [
+  {
+   "key": "Creature",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Spell",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Relic",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Land",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Common",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Uncommon",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Rare",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Mythic",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Basic",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Token",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "All",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "common",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "uncommon",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "rare",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "mythic",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Damage",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Heal",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Drain",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Draw",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Discard Enemy",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Buff",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Destroy",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Bounce",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Tap",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Summon",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Add Mana",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Lose Life",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Reanimate",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Anthem",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Menu",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Combat",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Main phase",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Main phase 2",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Duel over",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Starter deck",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Foil",
+   "note": "word shown in the interface (capitalised data value)"
+  },
+  {
+   "key": "Tap: add one %s mana.",
+   "note": "word shown in the interface (capitalised data value)"
+  }
+ ]
+}

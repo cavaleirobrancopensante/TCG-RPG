@@ -58,8 +58,8 @@ func progress() -> float:
 
 func label() -> String:
 	if current < stages.size():
-		return stages[current][0]
-	return "Ready"
+		return I18n.t(stages[current][0])
+	return I18n.t("Ready")
 
 
 func stage(i: int) -> void:
@@ -127,7 +127,7 @@ class _View extends Control:
 			Tapestry.ink_circle(self, pos, 22, fill, 2.0)
 			UIKit.draw_sigil(self, f, pos, 14, sig, 2.0)
 		if ls.splash_only:
-			var t := "Opening the book…"
+			var t := I18n.t("Opening the book…")
 			var w := book.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x
 			draw_string(book, Vector2(c.x - w * 0.5, bar.end.y + 4), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Tapestry.INK)
 			return
