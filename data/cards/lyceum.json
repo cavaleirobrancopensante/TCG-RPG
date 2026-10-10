@@ -36,10 +36,10 @@
     "power": 2,
     "toughness": 1,
     "keywords": [
-      "steadfast"
+      "unmoved"
     ],
     "effects": [],
-    "text": "Steadfast (prevent 1 of the damage dealt to it by each source).",
+    "text": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
     "flavor": "At eighteen he swore the oath: never to shame his arms, never to desert the man beside him.",
     "art": "res://art/cards/lyceum_c_002.webp"
   },
@@ -263,10 +263,10 @@
     "power": 3,
     "toughness": 5,
     "keywords": [
-      "steadfast"
+      "unmoved"
     ],
     "effects": [],
-    "text": "Steadfast (prevent 1 of the damage dealt to it by each source).",
+    "text": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
     "flavor": "\"It is difficulties that show what men are.\" (Epictetus)",
     "art": "res://art/cards/lyceum_c_011.webp"
   },
@@ -581,12 +581,12 @@
       },
       {
         "static": "keyword",
-        "keyword": "steadfast",
+        "keyword": "unmoved",
         "scope": "self",
         "condition": "composure"
       }
     ],
-    "text": "As long as you have four or more cards in hand, this gets +1/+1 and has steadfast.",
+    "text": "As long as you have four or more cards in hand, this gets +1/+1 and has unmoved.",
     "flavor": "\"Had there been no Chrysippus, there would have been no Stoa.\" (Diogenes Laertius)",
     "art": "res://art/cards/lyceum_u_003.webp"
   },
@@ -602,13 +602,13 @@
       "generic": 2
     },
     "power": 1,
-    "toughness": 5,
+    "toughness": 6,
     "keywords": [
       "defender",
-      "steadfast"
+      "unmoved"
     ],
     "effects": [],
-    "text": "Defender. Steadfast.",
+    "text": "Defender. Unmoved.",
     "flavor": "\"What is in my power is to hold this ground. I hold it.\"",
     "art": "res://art/cards/lyceum_u_004.webp"
   },
@@ -901,21 +901,21 @@
       "U": 2,
       "generic": 1
     },
-    "power": 2,
+    "power": 3,
     "toughness": 3,
     "keywords": [
-      "steadfast"
+      "unmoved"
     ],
     "effects": [],
     "statics": [
       {
         "static": "keyword",
-        "keyword": "steadfast",
+        "keyword": "unmoved",
         "scope": "other_own_creatures",
         "condition": "composure"
       }
     ],
-    "text": "Steadfast. As long as you have four or more cards in hand, other creatures you control have steadfast.",
+    "text": "Unmoved. As long as you have four or more cards in hand, other creatures you control have unmoved.",
     "flavor": "\"You will break it,\" he said, as his master twisted his leg. When it broke: \"Did I not tell you?\"",
     "art": "res://art/cards/lyceum_r_002.webp"
   },
@@ -1148,7 +1148,7 @@
     "toughness": 6,
     "keywords": [
       "vigilance",
-      "steadfast"
+      "unmoved"
     ],
     "effects": [
       {
@@ -1157,7 +1157,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "Vigilance, steadfast. Whenever this attacks, freeze target enemy creature.",
+    "text": "Vigilance, unmoved. Whenever this attacks, freeze target enemy creature.",
     "flavor": "\"Waste no more time arguing what a good man should be. Be one.\"",
     "art": "res://art/cards/lyceum_m_002.webp"
   },

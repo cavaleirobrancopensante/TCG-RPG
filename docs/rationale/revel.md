@@ -128,7 +128,7 @@ A symmetrical sweeper that also burns the enemy player, at the price of 1 of you
 **Lanterns of the Pleasure Garden** · Rare · Relic (Relic) · 2R · Creatures you control have haste.
 A three-mana relic that gives every creature you control haste. It is a rare build-around because it changes how the whole deck plays, and it creates the sharpest Idle tension in the set: every creature can attack at once, so every lounger is a choice. The pleasure garden is the Revel's own land, lit for a party that never ends.
 
-**Vessaria, Mistress of the Undying Feast** · Mythic · Creature (Human Noble) · 3RR · 0/5 · Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.
+**Vessar, Master of the Undying Feast** · Mythic · Creature (Human Noble) · 3RR · 0/5 · Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.
 The Idle mythic: a 0/5 hostess who sweeps every x/1 and burns the enemy each turn she lounges. She has no power because she never fights; her guests and her wine do the killing. She is answerable by any 5 damage or a determined attack. As a noblewoman and hostess she fits the tone rules, and the poisoned cup is the faith's evil side made plain.
 
 **Brandimarte, Prince of Fire-Eaters** · Mythic · Creature (Human Duelist) · 3RR · 5/4 · Haste, first strike. Whenever this attacks, creatures you control get +1/+0 until end of turn.

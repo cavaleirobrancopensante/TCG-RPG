@@ -12,10 +12,10 @@
     "power": 1,
     "toughness": 2,
     "keywords": [
-      "guardian"
+      "martyr"
     ],
     "effects": [],
-    "text": "Guardian (blocks as if it had +0/+2).",
+    "text": "Martyr (when this dies, another creature you control gets +1/+1).",
     "flavor": "He carries the light so that others may walk without stumbling.",
     "art": "res://art/cards/sanctum_c_001.webp"
   },
@@ -45,7 +45,7 @@
     "faction": "sanctum",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Human Nun",
+    "subtype": "Human Monk",
     "cost": {
       "W": 1,
       "generic": 1
@@ -62,7 +62,7 @@
       }
     ],
     "text": "When this enters, gain 2 life.",
-    "flavor": "Her voice was the first thing the dark ever feared.",
+    "flavor": "His voice was the first thing the dark ever feared.",
     "art": "res://art/cards/sanctum_c_003.webp"
   },
   {
@@ -79,10 +79,10 @@
     "power": 2,
     "toughness": 2,
     "keywords": [
-      "guardian"
+      "martyr"
     ],
     "effects": [],
-    "text": "Guardian (blocks as if it had +0/+2).",
+    "text": "Martyr (when this dies, another creature you control gets +1/+1).",
     "flavor": "No one passes the cloister gate unless the bell has rung for him.",
     "art": "res://art/cards/sanctum_c_004.webp"
   },
@@ -224,10 +224,10 @@
     "power": 3,
     "toughness": 4,
     "keywords": [
-      "guardian"
+      "martyr"
     ],
     "effects": [],
-    "text": "Guardian (blocks as if it had +0/+2).",
+    "text": "Martyr (when this dies, another creature you control gets +1/+1).",
     "flavor": "Behind his shield sleep the orphans of three burned villages.",
     "art": "res://art/cards/sanctum_c_010.webp"
   },
@@ -491,11 +491,11 @@
   },
   {
     "id": "sanctum_u_001",
-    "name": "Sister of Mercy",
+    "name": "Brother of Mercy",
     "faction": "sanctum",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Nun",
+    "subtype": "Human Monk",
     "cost": {
       "W": 1,
       "generic": 2
@@ -514,7 +514,7 @@
       }
     ],
     "text": "Lifelink. When this enters, gain 2 life.",
-    "flavor": "She tends the wounded of both armies, and asks no one his banner.",
+    "flavor": "He tends the wounded of both armies, and asks no one his banner.",
     "art": "res://art/cards/sanctum_u_001.webp"
   },
   {
@@ -645,10 +645,10 @@
     "toughness": 4,
     "keywords": [
       "flying",
-      "guardian"
+      "martyr"
     ],
     "effects": [],
-    "text": "Flying, guardian.",
+    "text": "Flying, martyr.",
     "flavor": "Angel of God, my guardian dear, to whom God's love commits me here.",
     "art": "res://art/cards/sanctum_u_006.webp"
   },
@@ -847,11 +847,11 @@
   },
   {
     "id": "sanctum_r_001",
-    "name": "Abbess of the Silent Order",
+    "name": "Abbot of the Silent Order",
     "faction": "sanctum",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Human Nun",
+    "subtype": "Human Monk",
     "cost": {
       "W": 2,
       "generic": 2
@@ -876,7 +876,7 @@
       }
     ],
     "text": "When this enters, gain 3 life. When this dies, other creatures you control get +1/+1 permanently.",
-    "flavor": "Forty years without a word; at her death, her sisters heard everything.",
+    "flavor": "Forty years without a word; at his death, his brothers heard everything.",
     "art": "res://art/cards/sanctum_r_001.webp"
   },
   {
@@ -946,18 +946,18 @@
       "W": 1,
       "generic": 3
     },
-    "power": 3,
+    "power": 2,
     "toughness": 3,
     "keywords": [],
     "effects": [],
     "statics": [
       {
         "static": "keyword",
-        "keyword": "guardian",
+        "keyword": "martyr",
         "scope": "other_own_creatures"
       }
     ],
-    "text": "Other creatures you control have guardian.",
+    "text": "Other creatures you control have martyr.",
     "flavor": "Two thousand men held the Krak for a hundred years, because each man held the one beside him.",
     "art": "res://art/cards/sanctum_r_004.webp"
   },
@@ -975,11 +975,11 @@
     "power": 4,
     "toughness": 5,
     "keywords": [
-      "guardian",
+      "martyr",
       "lifelink"
     ],
     "effects": [],
-    "text": "Guardian, lifelink.",
+    "text": "Martyr, lifelink.",
     "flavor": "Our lords the sick, the Rule calls them, and he guards his lords as a knight should.",
     "art": "res://art/cards/sanctum_r_005.webp"
   },

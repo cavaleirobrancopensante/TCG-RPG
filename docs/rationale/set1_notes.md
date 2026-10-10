@@ -235,7 +235,7 @@ A hasty 5/4 for 4 is well above par, taxed by an upkeep drain. Like the Covenant
 **Grand Conflagration** · Rare · Spell (Revelry) · 2RR · Deal 5 damage to any enemy creature or the enemy player.
 Big flexible burn: kills almost anything or finishes a player. Fair at 4 mana and rare. The unplanned encore after the fireworks is the faith's comic ruin.
 
-**Vessaria, Mistress of the Undying Feast** · Mythic · Creature (Human Noble) · 3RR · 5/5 · Haste. Whenever this attacks, deal 2 damage to any enemy creature or the enemy player. At the beginning of your upkeep, you lose 1 life.
+**Vessar, Master of the Undying Feast** · Mythic · Creature (Human Noble) · 3RR · 5/5 · Haste. Whenever this attacks, deal 2 damage to any enemy creature or the enemy player. At the beginning of your upkeep, you lose 1 life.
 The mythic: a hasty 5/5 that deals 7 on the turn it lands. Very strong, with the upkeep drain as the only check. It is fair because the Revel's own life total is the limit. She is a hostess whose guests "do not rise again", the faith's "slightly evil" side made explicit. She is a noblewoman, not a warrior, as the tone rules require.
 
 ---

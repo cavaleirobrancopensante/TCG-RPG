@@ -35,11 +35,11 @@ creatures through its own mechanics, and its basic land.
 
 | Faith (mana) | Owns | Never has |
 |---|---|---|
-| **Holy Church** (W) | `flying` (angels, heralds, doves), `guardian`, `lifelink`, `sanctified`; life gain (`heal`); martyrdom (`death` triggers that help you); **Grace** condition; permanent anthems (`static` anthem); removal only against the guilty: `destroy` with `tapped: true`, and `pacify`; token soldiers are NOT allowed (tokens belong to the Old Ways) | burn, discard, sacrifice, drain, card draw, tap/bounce, haste, trample |
+| **Holy Church** (W) | `flying` (angels, heralds, doves), `martyr`, `lifelink`, `sanctified`; life gain (`heal`); martyrdom (`death` triggers that help you); **Grace** condition; permanent anthems (`static` anthem); removal only against the guilty: `destroy` with `tapped: true`, and `pacify`; token soldiers are NOT allowed (tokens belong to the Old Ways) | burn, discard, sacrifice, drain, card draw, tap/bounce, haste, trample |
 | **Black Covenant** (B) | `deathtouch`, `dread`; paying life (`lose_life` on enter/cast, `life` in costs); **sacrifice** (`sacrifice` in costs); unconditional `destroy`; shrink (`buff` with negative numbers on enemies); `discard_enemy`; `reanimate`; `drain`; drawing cards for life (`draw` paired with `lose_life` only) | flying, life gain other than drain, tokens other than the dead it raises (allowed: "Restless Dead" 1/1 or 2/2 Zombie tokens only from death or sacrifice), haste |
 | **Old Ways** (G) | `trample`, `reach`, `regenerate`; mana creatures and rituals (`add_mana` with G); tokens (beasts, wolves, oaklings, saplings); +X/+X pumps on its own creatures (`buff` own_creature); `fight`; destroying fliers (`destroy` with `flying: true`); destroying relics (`destroy_relic`); **Rooted** condition | flying, card draw, life gain, burn, tapping |
 | **Revel** (R) | `haste`, `first_strike`; `damage` (burn, the only faith that hits players directly); temporary team attack bonuses (`buff` all_own_creatures with duration turn, power only); **Carouse** condition; **Idle** trigger (laziness: rewards creatures that stay untapped and did not attack); `rummage` (discard then draw); paying its own life for excess | flying, life gain, destroy, card draw without discarding first |
-| **Stoa** (U) | `vigilance`, `defender`, `steadfast`; plain card draw (`draw`); `foresight`; `tap`; `freeze`; `bounce`; `tax`; **Composure** condition | flying (no birds that fly), damage, destroy, life gain, haste |
+| **Stoa** (U) | `vigilance`, `defender`, `unmoved`; plain card draw (`draw`); `foresight`; `tap`; `freeze`; `bounce`; `tax`; **Composure** condition | flying (no birds that fly), damage, destroy, life gain, haste |
 | **Technocracy** (C) | colourless costs (`generic`, and `C` from the Foundry for committed cards); **Overclock** (`overclock` kicker); **Assembly** (`static` assembly); upkeep costs (`upkeep_cost`); cost reducers for Technocracy cards only (`static` cost_reduce); `snare` relics; Construct and Servo subtypes (Servo tokens allowed only for Technocracy) | flying, life gain, burn to players, destroy, card draw |
 
 ## Card fields
@@ -54,7 +54,7 @@ creatures through its own mechanics, and its basic land.
   "subtype": "Human Cleric",
   "cost": {"W": 1, "generic": 1},
   "power": 1, "toughness": 3,
-  "keywords": ["guardian"],
+  "keywords": ["martyr"],
   "effects": [],
   "abilities": [],
   "statics": [],
@@ -78,7 +78,7 @@ creatures through its own mechanics, and its basic land.
 | keyword | meaning | owner |
 |---|---|---|
 | `flying` | can only be blocked by flying or reach | Church |
-| `guardian` | gets +0/+2 while blocking | Church |
+| `martyr` | when it dies, another creature you control gets +1/+1 (the player chooses) | Church |
 | `lifelink` | damage it deals also gains you that much life | Church |
 | `sanctified` | protection from the Covenant: Covenant cards can't target it, Covenant creatures can't block it, damage from Covenant sources is prevented | Church |
 | `deathtouch` | any damage it deals to a creature destroys it | Covenant |
@@ -90,7 +90,7 @@ creatures through its own mechanics, and its basic land.
 | `first_strike` | deals combat damage before creatures without it | Revel |
 | `vigilance` | does not tap to attack | Stoa |
 | `defender` | can't attack | Stoa |
-| `steadfast` | prevent 1 of the damage dealt to it by each source | Stoa |
+| `unmoved` | enemy spells and abilities can't tap, bounce, pacify, snare or shrink it | Stoa |
 
 ## Effects
 

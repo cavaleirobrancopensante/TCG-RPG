@@ -213,6 +213,32 @@ Hospice) are open to most heroes.
   hostile. Only the hostile give chase. Tap a neutral traveller to challenge him; talk to
   a friend for advice, a card from his satchel, or a favour that pays.
 
+
+## Your own hero, a clock, and the second book of music (1.21)
+
+- New game is one screen: faith, name, looks (skin, hair, beard, clothes, headgear),
+  difficulty (Pilgrim, Knight, Crusader) and six stats, all rolled at random and all
+  changeable. Devotion: +2 life a point. Reason: keep 5 + Reason cards. Wildcraft: walk
+  faster and see further through the fog (3+: no slowing in forest and marsh). Charm:
+  better prices, cheaper tolls and inns. Industry: 1 + Industry copies of a card in your
+  decks. Dread: better chances of gold and of a card after a won duel.
+- Everyone has 10 life and keeps 5 cards; at the end of your turn you choose what to
+  discard. Your life carries from duel to duel, heals an hour at a time on the road, and
+  fully at an inn. The world holds still while you do: time, wanderers and respawns move
+  only while you travel. The HUD shows your life and the time of day.
+- Fog of war: the map is hidden until you explore it (towns are known from the start).
+- Guardian and Steadfast are replaced: Church creatures have Martyr (when one dies,
+  another of your creatures gets +1/+1, you choose which), Stoa creatures have Unmoved
+  (enemy effects can't tap, bounce, pacify, snare or shrink them). Affected cards were
+  re-costed.
+- All Church creatures are men; the Revel's Vessaria is now Vessar, and three Old Ways
+  druids are men too.
+- Cards are coloured by their faith (two-faith cards split down the middle).
+- 60 new pieces of music (seven menu and three combat pieces per faith). On the road you
+  hear your own faith's music; in a duel, the music of the faith you fight.
+- Pinch or scroll to zoom into a card in the viewer; a phone held upright is asked to
+  turn sideways.
+
 ## Portraits and arrows (1.16)
 
 - Each side of a duel shows its hero's portrait: your chosen hero, and the face of the

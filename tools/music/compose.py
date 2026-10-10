@@ -184,6 +184,37 @@ TITLES = {
                 "Clocktower Night", "Iron Advance", "Overclock", "The Runaway Forge", "The Prime Engine"],
 }
 
+# The second book of the soundtrack: seven more menu pieces and three more combat pieces
+# per faith (ids _10.._16 menu, _17.._19 combat), developed from the same leitmotifs.
+EXTRA_TITLES = {
+    "sanctum": ["Ave Maris Stella", "Compline", "The Bells of Santa Lucerna", "Psalm of the Pilgrims", "The Hermit's Spring",
+                "Benedictus", "Lauds at Dawn", "Non Nobis Domine", "The Siege of the Krak", "Michael, Defend Us"],
+    "abyss": ["The Ledger Opens", "Candles of Black Wax", "The Fen at Night", "Whispers in the Crypt", "A Debt Unpaid",
+              "The Bone Chapel", "Ashes on the Wind", "The Pact Called In", "Grave Rising", "Hellfire Procession"],
+    "wild": ["Mistletoe and Frost", "The Hidden Spring", "Beneath the Elder Oak", "Fox and Hare", "Barrow Mist",
+             "Wassail", "Song of the Fens", "Boar of the Weald", "The Hunt Rides Out", "Stag at Bay"],
+    "revel": ["Vintage Morning", "The Idle Hour", "Candlelit Gallery", "Pleasure Garden", "The Cellar Door",
+              "A Masked Guest", "Lute under the Balcony", "Rapiers at Midnight", "The Brawl at the Inn", "Fire and Wine"],
+    "lyceum": ["The Painted Porch", "Olive Grove Walk", "Tablets of Bronze", "The Lighthouse Lamp", "On Endurance",
+               "Evening Star", "The Long Walls", "Shield to Shield", "The Sophist Confounded", "Thermopylae"],
+    "machine": ["The Escapement", "Blueprints by Lamplight", "Steam and Brass", "The Patent Office", "The Waterwheel",
+                "Cog and Pinion", "The Observatory Dome", "Rivetwall", "Pressure Rising", "The Iron Leviathan"],
+}
+
+
+def plan_for(faction, index, kind):
+    """(mode, tonic shift, meter, bpm) for any piece; the second book varies the first."""
+    if index <= 9:
+        return MENU_PLAN[faction][index - 1] if kind == "menu" else COMBAT_PLAN[faction][index - 6]
+    if kind == "menu":
+        k = index - 10
+        mode, shift, meter, bpm = MENU_PLAN[faction][k % 5]
+        return mode, shift + (2, -3, 5, -1, 4, -4, 1)[k], meter, max(48, bpm + (-6, 8, -10, 4, -4, 10, -8)[k])
+    k = index - 17
+    mode, shift, meter, bpm = COMBAT_PLAN[faction][(k + 1) % 4]
+    return mode, shift + (3, -1, 1)[k], meter, bpm + (8, -6, 12)[k]
+
+
 # Per-piece variations: (mode, tonic shift in semitones, meter, bpm, lead index / style)
 MENU_PLAN = {
     "sanctum": [("dorian", 0, 4, 66), ("mixolydian", -2, 3, 84), ("ionian", 3, 4, 72), ("dorian", -5, 3, 58), ("aeolian", 0, 4, 64)],
@@ -453,15 +484,14 @@ def compose(faction, index, kind, title, seed):
         form = [("intro", 1), ("A", 1), ("A", 2), ("B", 2), ("A", 3), ("outro", 1)]
         perc = prof["perc_menu"]
     else:
-        plan = MENU_PLAN[faction][index - 1] if kind == "menu" else COMBAT_PLAN[faction][index - 6]
-        mode, shift, meter, bpm = plan
+        mode, shift, meter, bpm = plan_for(faction, index, kind)
         tonic = an["tonic"] + shift
         style = "lively" if (kind == "combat" or bpm >= 100) else "calm"
         if kind == "menu":
-            lead = prof["menu_lead"][index - 1]
+            lead = prof["menu_lead"][(index - 1) % len(prof["menu_lead"])]
             perc = prof["perc_menu"]
         else:
-            lead = prof["combat_lead"] if index in (6, 9) else (prof["menu_lead"][0] if faction != "machine" else "regal")
+            lead = prof["combat_lead"] if index in (6, 9, 17, 19) else (prof["menu_lead"][0] if faction != "machine" else "regal")
             perc = prof["perc_combat"]
         A = develop_theme(rng, motif, meter, style)
         B = develop_theme(rng, gen_bars(rng, meter, style, 4, 2, 2, cadence=False), meter, style, contrast=False)
@@ -539,15 +569,33 @@ def write_ogg(path, L, R):
     subprocess.run(cmd, input=pcm.tobytes(), check=True)
 
 
-def main(factions):
+def pieces(faction, extra_only=False):
+    out = [] if extra_only else [(i, t) for i, t in enumerate(TITLES[faction])]
+    out += [(10 + k, t) for k, t in enumerate(EXTRA_TITLES[faction])]
+    return out
+
+
+def kind_of(i):
+    if i == 0:
+        return "anthem"
+    if i <= 5 or 10 <= i <= 16:
+        return "menu"
+    return "combat"
+
+
+def main(factions, extra_only=False):
     os.makedirs(OUT_DIR, exist_ok=True)
     catalogue_path = os.path.join(ROOT, "data", "music.json")
     catalogue = []
     if os.path.exists(catalogue_path):
-        catalogue = [t for t in json.load(open(catalogue_path)) if t["faction"] not in factions]
+        old = json.load(open(catalogue_path))
+        keep = [t for t in old if t["faction"] not in factions]
+        if extra_only:
+            keep += [t for t in old if t["faction"] in factions and int(t["id"][-2:]) < 10]
+        catalogue = keep
     for fi, faction in enumerate(factions):
-        for i, title in enumerate(TITLES[faction]):
-            kind = "anthem" if i == 0 else ("menu" if i <= 5 else "combat")
+        for i, title in pieces(faction, extra_only):
+            kind = kind_of(i)
             tid = f"{faction}_{i:02d}"
             seed = 1000 * (list(PROFILE).index(faction) + 1) + i * 17
             sc = compose(faction, i, kind, title, seed)
@@ -565,4 +613,5 @@ def main(factions):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:] or list(PROFILE))
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    main(args or list(PROFILE), "--extra" in sys.argv)

@@ -25,7 +25,8 @@ func _ready() -> void:
 	slots._back()
 	await _frames(2)
 	print("menu screens ok")
-	assert(Music.tracks.size() == 60, "60 tracks in catalogue")
+	assert(Music.tracks.size() == 120, "120 tracks in catalogue")
+	Music.set_auto(true)
 	for t in Music.tracks:
 		assert(ResourceLoader.exists(t["file"]) or FileAccess.file_exists(t["file"]), "missing " + t["file"])
 	assert(Music.current.get("kind", "") == "anthem", "menu plays an anthem")
@@ -83,7 +84,7 @@ func _ready() -> void:
 	main._on_city_entered("cogspire")
 	await _frames(3)
 	var c: CityScreen = main.screen
-	assert(Music.current["id"] == "machine_00", "city opens with its anthem")
+	assert(Music.current["faction"] == GameState.hero and Music.current["kind"] != "combat", "towns play the hero's own faith's music")
 	# The player strip: picker, manual choice, transport, back to auto.
 	Music._bar._toggle_picker()
 	await _frames(2)
@@ -104,7 +105,7 @@ func _ready() -> void:
 	Music.next()
 	assert(Music.current["id"] == "lyceum_04", "next follows the list when not random")
 	Music.set_shuffle(true)
-	assert(Music.playlist[Music.index] == "lyceum_04" and Music.playlist.size() == 10, "random keeps the piece and the faith")
+	assert(Music.playlist[Music.index] == "lyceum_04" and Music.playlist.size() == 20, "random keeps the piece and the faith")
 	Music.prev()
 	Music.toggle_pause()
 	assert(Music.paused, "paused")
@@ -132,6 +133,13 @@ func _ready() -> void:
 	assert(viewer.index == 2, "viewer next")
 	viewer.prev()
 	assert(viewer.index == 1, "viewer prev")
+	viewer._set_zoom(2.5, viewer.card_view.position + Vector2(80, 60))
+	assert(is_equal_approx(viewer._zoom, 2.5) and viewer.card_view.scale.x > 2.4, "viewer zooms in")
+	viewer._set_zoom(9.0, Vector2(400, 300))
+	assert(viewer._zoom <= viewer.ZOOM_MAX, "zoom is capped")
+	viewer.next()
+	viewer.prev()
+	assert(viewer._zoom == 1.0 and viewer.card_view.scale == Vector2.ONE, "a new card starts unzoomed")
 	var owned_before := GameState.owned_count(shop_ids[1])
 	GameState.add_gold(1000)
 	for a in viewer.actions.call(viewer.entry(), viewer.index):

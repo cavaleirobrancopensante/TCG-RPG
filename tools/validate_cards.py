@@ -10,11 +10,11 @@ import sys
 FAITHS = ["sanctum", "abyss", "wild", "revel", "lyceum", "machine"]
 MANA = {"sanctum": "W", "abyss": "B", "wild": "G", "revel": "R", "lyceum": "U", "machine": "C"}
 KEYWORD_OWNER = {
-    "flying": "sanctum", "guardian": "sanctum", "lifelink": "sanctum", "sanctified": "sanctum",
+    "flying": "sanctum", "martyr": "sanctum", "lifelink": "sanctum", "sanctified": "sanctum",
     "deathtouch": "abyss", "dread": "abyss",
     "trample": "wild", "reach": "wild", "regenerate": "wild",
     "haste": "revel", "first_strike": "revel",
-    "vigilance": "lyceum", "defender": "lyceum", "steadfast": "lyceum",
+    "vigilance": "lyceum", "defender": "lyceum", "unmoved": "lyceum",
 }
 ACTION_OWNERS = {
     "heal": ["sanctum"], "pacify": ["sanctum"],

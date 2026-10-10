@@ -4,7 +4,7 @@ extends RefCounted
 ## plays back `events` as animations. Sides are 0 (player) and 1 (enemy).
 ## The card format it understands is documented in docs/CARD_SPEC.md.
 
-const START_HAND := 7
+const START_HAND := 5           # everyone keeps five cards; Reason lets the hero keep more
 const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
 const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature"]
 
@@ -84,6 +84,8 @@ class BattleSide:
 	var cast_count := 0            # non-land cards played this turn
 	var interactive := false       # a person decides this side's choices (discards, foresight)
 	var owed_discards := 0         # interactive: cards still to discard (rummage)
+	var max_hand := 5              # opening hand and the most cards kept at the end of a turn
+	var martyr_owed := 0           # interactive: martyrs whose blessing the player still has to give
 	var foresight_cards: Array = []  # interactive: cards lifted off the top, waiting for a decision
 
 
@@ -110,7 +112,7 @@ var side_faction := ["machine", "machine"]
 # ============================================================ setup & turn flow
 
 ## with_mulligan: stop in phase "mulligan" so each side can redraw (London style) before turn 1.
-func setup(deck0: Array, deck1: Array, names: Array, lives: Array, first: int = -1, seed_value: int = 0, with_mulligan: bool = false) -> void:
+func setup(deck0: Array, deck1: Array, names: Array, lives: Array, first: int = -1, seed_value: int = 0, with_mulligan: bool = false, hands: Array = []) -> void:
 	if seed_value != 0:
 		rng.seed = seed_value
 	else:
@@ -124,13 +126,14 @@ func setup(deck0: Array, deck1: Array, names: Array, lives: Array, first: int = 
 		s.deck = (deck0 if i == 0 else deck1).duplicate()
 		_shuffle(s.deck)
 		s.is_ai = i == 1
+		s.max_hand = int(hands[i]) if i < hands.size() else START_HAND
 		sides.append(s)
 	first_player = first if first >= 0 else rng.randi_range(0, 1)
 	active = first_player
 	mulligans = [0, 0]
 	kept = [false, false]
 	for i in 2:
-		for n in START_HAND:
+		for n in sides[i].max_hand:
 			draw_card(i)
 	if with_mulligan:
 		phase = "mulligan"
@@ -148,7 +151,7 @@ func can_mulligan(i: int) -> bool:
 
 ## Cards that must go to the bottom when this side keeps.
 func to_bottom(i: int) -> int:
-	return mini(int(mulligans[i]), START_HAND - 1)
+	return mini(int(mulligans[i]), side(i).max_hand - 1)
 
 
 func mulligan(i: int) -> void:
@@ -159,7 +162,7 @@ func mulligan(i: int) -> void:
 	s.hand.clear()
 	_shuffle(s.deck)
 	mulligans[i] = int(mulligans[i]) + 1
-	for n in START_HAND:
+	for n in side(i).max_hand:
 		var id: String = s.deck.pop_back()
 		s.hand.append(id)
 	emit({"type": "mulligan", "side": i, "count": mulligans[i]})
@@ -256,7 +259,7 @@ func _turn_draw() -> void:
 
 ## Interactive choices still open for side i (the screen asks for them before going on).
 func has_owed(i: int) -> bool:
-	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty()
+	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty() or side(i).martyr_owed > 0
 
 
 ## The player discards hand card `idx` for a rummage.
@@ -295,6 +298,16 @@ func resolve_foresight(i: int, top: Array) -> void:
 func end_turn() -> void:
 	if phase == "over":
 		return
+	# hand limit: the computer lets go of what it needs least (the player chose already)
+	var me := side(active)
+	while me.hand.size() > me.max_hand:
+		var idx := BattleAI.worst_card(self, active)
+		if idx < 0:
+			break
+		var gone: String = me.hand[idx]
+		me.hand.remove_at(idx)
+		me.graveyard.append(gone)
+		emit({"type": "discard", "side": active, "id": gone})
 	# Idle (Revel): rewards creatures that stayed untapped and did not attack.
 	var s := side(active)
 	for p in s.creatures.duplicate():
@@ -648,13 +661,15 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 		"any_enemy":
 			out.append({"kind": "player", "side": 1 - i})
 			for p in enemy.creatures:
-				if not _protected_from_current(p) and _passes_filters(p, e):
+				if not _protected_from_current(p) and _passes_filters(p, e) and not _unmoved(p, i, e):
 					out.append({"kind": "creature", "uid": p.uid})
 		"enemy_creature":
 			for p in enemy.creatures:
 				if _protected_from_current(p) or not _passes_filters(p, e):
 					continue
 				if e.get("action") in ["tap", "freeze"] and p.tapped:
+					continue
+				if _unmoved(p, i, e):
 					continue
 				if e.get("action") == "pacify" and p.pacified:
 					continue
@@ -978,6 +993,9 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				var p: Perm = find_perm(int(ref.get("uid", -1))) if ref.get("kind") == "creature" else null
 				if p == null or (e.has("subtype") and not p.subtype_has(String(e["subtype"]))):
 					continue
+				if _unmoved(p, i, e):
+					emit({"type": "prevented", "uid": p.uid})
+					continue
 				if e.get("duration", "turn") == "permanent":
 					p.bonus_p += int(e.get("power", 0))
 					p.bonus_t += int(e.get("toughness", 0))
@@ -998,7 +1016,9 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 		"bounce":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p := find_perm(ref.get("uid", -1))
-				if p:
+				if p and _unmoved(p, i, e):
+					emit({"type": "prevented", "uid": p.uid})
+				elif p:
 					_remove_perm(p)
 					if not p.is_token:
 						side(p.owner).hand.append(p.card_id)
@@ -1006,7 +1026,9 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 		"tap", "freeze":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p := find_perm(ref.get("uid", -1))
-				if p:
+				if p and _unmoved(p, i, e):
+					emit({"type": "prevented", "uid": p.uid})
+				elif p:
 					p.tapped = true
 					if e.get("action") == "freeze":
 						p.frozen = true
@@ -1014,13 +1036,17 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 		"pacify":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p := find_perm(ref.get("uid", -1))
-				if p:
+				if p and _unmoved(p, i, e):
+					emit({"type": "prevented", "uid": p.uid})
+				elif p:
 					p.pacified = true
 					emit({"type": "pacify", "uid": p.uid})
 		"snare":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p := find_perm(ref.get("uid", -1))
-				if p and source:
+				if p and _unmoved(p, i, e):
+					emit({"type": "prevented", "uid": p.uid})
+				elif p and source:
 					p.snared_by = source.uid
 					emit({"type": "snare", "uid": p.uid, "by": source.uid})
 		"fight":
@@ -1184,11 +1210,6 @@ func deal_damage(source: Perm, src_side: int, ref: Dictionary, amount: int) -> v
 		if p.has_kw("sanctified") and abyssal:
 			emit({"type": "prevented", "uid": p.uid})
 			return
-		if p.has_kw("steadfast"):
-			amount -= 1
-			if amount <= 0:
-				emit({"type": "prevented", "uid": p.uid})
-				return
 		p.damage += amount
 		if source and source.has_kw("deathtouch"):
 			p.deathtouched = true
@@ -1231,6 +1252,39 @@ func destroy_perm(p: Perm, sacrifice: bool = false) -> void:
 		if e.get("trigger") == "death":
 			_with_source(p.card)
 			resolve_effect(p.owner, e, null, null)
+	if p.is_creature() and p.has_kw("martyr") and not side(p.owner).creatures.is_empty():
+		var s := side(p.owner)
+		if s.interactive:
+			s.martyr_owed += 1          # the player chooses who receives the martyr's grace
+		else:
+			var best: Perm = null
+			for c in s.creatures:
+				if best == null or c.value() > best.value():
+					best = c
+			martyr_bless(p.owner, best.uid)
+
+
+## Martyr: the chosen creature gets +1/+1 for good.
+func martyr_bless(i: int, uid: int) -> void:
+	var s := side(i)
+	var c := find_perm(uid)
+	if s.martyr_owed > 0:
+		s.martyr_owed -= 1
+	if c == null or c.owner != i:
+		return
+	c.bonus_p += 1
+	c.bonus_t += 1
+	emit({"type": "buff", "uid": c.uid, "p": 1, "t": 1})
+
+
+## Unmoved (Stoa): the enemy's spells and abilities cannot tap, bounce, pacify, snare or shrink it.
+func _unmoved(p: Perm, caster: int, e: Dictionary) -> bool:
+	if p == null or p.owner == caster or not p.has_kw("unmoved"):
+		return false
+	var act: String = e.get("action", "")
+	if act in ["tap", "freeze", "bounce", "pacify", "snare"]:
+		return true
+	return act == "buff" and (int(e.get("power", 0)) < 0 or int(e.get("toughness", 0)) < 0)
 
 
 func _remove_perm(p: Perm) -> void:
@@ -1356,8 +1410,6 @@ func declare_blocks(blocks_in: Dictionary) -> void:
 			continue
 		blocks[ap.uid] = bp.uid
 		used[bp.uid] = true
-		if bp.has_kw("guardian"):
-			bp.temp_t += 2
 		emit({"type": "block", "uid": bp.uid, "attacker": ap.uid})
 	_resolve_combat()
 	if phase != "over":
@@ -1377,7 +1429,7 @@ func _resolve_combat() -> void:
 			if ap != null and ap.has_kw("first_strike") == step:
 				if bp != null:
 					var dmg := ap.power()
-					var lethal := maxi(0, bp.toughness() - bp.damage + (1 if bp.has_kw("steadfast") else 0))
+					var lethal := maxi(0, bp.toughness() - bp.damage)
 					if ap.has_kw("deathtouch"):
 						lethal = mini(lethal, 1)
 					if ap.has_kw("trample") and dmg > lethal:
@@ -1415,7 +1467,7 @@ func auto_target(i: int, e: Dictionary):
 			if ref["kind"] != "creature":
 				continue
 			var p := find_perm(ref["uid"])
-			var eff := amount - (1 if p.has_kw("steadfast") else 0)
+			var eff := amount
 			if p.toughness() - p.damage <= eff and p.value() > best_v:
 				best_v = p.value()
 				best = ref

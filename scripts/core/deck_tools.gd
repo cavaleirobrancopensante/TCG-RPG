@@ -3,7 +3,13 @@ extends RefCounted
 ## Deck validation, auto-building (player starter + enemies) and helpers.
 
 const MIN_DECK := 40
-const MAX_COPIES := 4
+const MAX_COPIES := 4            # enemies at the highest level; the hero has 1 + Industry
+const DRAFT_COPIES := 99         # a draft deck may use every card drafted
+
+
+## How many copies of a card the hero's decks may hold.
+static func hero_copies() -> int:
+	return GameState.max_copies()
 const TARGET_SPELLS := 23
 const TARGET_LANDS := 17
 
@@ -24,15 +30,16 @@ static func land_count(deck: Dictionary) -> int:
 
 
 ## Returns "" if legal, otherwise a human-readable problem.
-static func validate(deck: Dictionary, owned: Dictionary) -> String:
+static func validate(deck: Dictionary, owned: Dictionary, copies: int = -1) -> String:
+	var limit := copies if copies > 0 else hero_copies()
 	var n := count(deck)
 	if n < MIN_DECK:
 		return I18n.t("Deck needs at least %d cards (has %d).") % [MIN_DECK, n]
 	for id in deck:
 		if CardDB.is_basic_land(id):
 			continue
-		if int(deck[id]) > MAX_COPIES:
-			return I18n.t("Max %d copies of %s.") % [MAX_COPIES, CardDB.get_card(id).get("name", id)]
+		if int(deck[id]) > limit:
+			return I18n.t("Max %d copies of %s.") % [limit, CardDB.get_card(id).get("name", id)]
 		if int(deck[id]) > int(owned.get(id, 0)):
 			return I18n.t("You don't own enough copies of %s.") % CardDB.get_card(id).get("name", id)
 	return ""
@@ -89,7 +96,8 @@ static func starter_factions(owned: Dictionary, hero_faith: String) -> Array:
 
 
 ## Build a 40-card deck out of `owned` ({id: count}), focusing on `factions` (+ machine).
-static func auto_build(owned: Dictionary, factions: Array = []) -> Dictionary:
+static func auto_build(owned: Dictionary, factions: Array = [], copies: int = -1) -> Dictionary:
+	var limit := copies if copies > 0 else hero_copies()
 	if factions.is_empty():
 		factions = best_factions(owned, 2)
 	var allowed := factions.duplicate()
@@ -101,7 +109,7 @@ static func auto_build(owned: Dictionary, factions: Array = []) -> Dictionary:
 			continue
 		if c.get("faction2", "") != "" and not allowed.has(c["faction2"]):
 			continue
-		for i in mini(int(owned[id]), MAX_COPIES):
+		for i in mini(int(owned[id]), limit):
 			candidates.append(id)
 	# Prefer good cards, and keep the curve sane by penalising very expensive ones.
 	candidates.sort_custom(func(a, b):
@@ -122,17 +130,17 @@ static func auto_build(owned: Dictionary, factions: Array = []) -> Dictionary:
 			var c := CardDB.get_card(id)
 			if c.is_empty() or c["type"] == "land":
 				continue
-			while picked < TARGET_SPELLS and int(deck.get(id, 0)) < mini(int(owned[id]), MAX_COPIES):
+			while picked < TARGET_SPELLS and int(deck.get(id, 0)) < mini(int(owned[id]), limit):
 				deck[id] = int(deck.get(id, 0)) + 1
 				picked += 1
-	var duals := add_dual_lands(deck, owned)
+	var duals := add_dual_lands(deck, owned, limit)
 	add_lands(deck, TARGET_LANDS + (TARGET_SPELLS - picked) - duals)
 	return deck
 
 
 ## Put owned dual lands that match the deck's colours into it (up to 4 copies each, 6 in
 ## all). Returns how many were added.
-static func add_dual_lands(deck: Dictionary, owned: Dictionary) -> int:
+static func add_dual_lands(deck: Dictionary, owned: Dictionary, limit: int = MAX_COPIES) -> int:
 	var used := {}
 	for id in deck:
 		for k in CardDB.get_card(id).get("cost", {}):
@@ -144,7 +152,7 @@ static func add_dual_lands(deck: Dictionary, owned: Dictionary) -> int:
 		var fits := cols.size() == 2 and used.has(cols[0]) and used.has(cols[1])
 		if not fits:
 			continue
-		var n := mini(mini(int(owned.get(id, 0)), MAX_COPIES), 6 - added)
+		var n := mini(mini(int(owned.get(id, 0)), limit), 6 - added)
 		if n > 0:
 			deck[id] = int(deck.get(id, 0)) + n
 			added += n
@@ -225,7 +233,7 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 		var f: String = factions[rng.randi_range(0, factions.size() - 1)]
 		var r := Booster.weighted_rarity(rng, weights)
 		var id := CardDB.random_of_rarity(r, rng, [f])
-		if id == "" or int(owned.get(id, 0)) >= MAX_COPIES or CardDB.is_land(id):
+		if id == "" or int(owned.get(id, 0)) >= clampi(1 + level / 2, 1, MAX_COPIES) or CardDB.is_land(id):
 			continue
 		var cd := CardDB.get_card(id)
 		var c2: String = cd.get("faction2", "")

@@ -30,6 +30,8 @@ const ROAD := 3
 const BRIDGE := 4
 const LANDING := 5
 const SPEED_BY_CODE := {OPEN: 1.0, SLOW: 0.6, ROAD: 1.3, BRIDGE: 1.1, LANDING: 1.0}
+const HOURS_PER_SECOND := 1.0 / 20.0     # twenty seconds on the road make an hour
+const FOG_ALPHA := 0.9
 
 var world_size := Vector2(6000, 4000)
 var player_pos := Vector2.ZERO
@@ -249,6 +251,74 @@ func _build_terrain(ls: LoadingScreen = null) -> void:
 			await _tick(ls, 0.6 + 0.4 * float(y) / grid_size.y)
 	player_pos = nearest_walkable(player_pos)
 	move_target = player_pos
+	_build_fog()
+
+
+# ------------------------------------------------------------------ fog of war
+
+var _fog_img: Image
+var _fog_tex: ImageTexture
+var _last_reveal := Vector2i(-99, -99)
+
+
+## Unexplored land lies under the parchment. Towns are known by name and place.
+func _build_fog() -> void:
+	var n := grid_size.x * grid_size.y
+	if GameState.explored.size() != n:
+		GameState.explored = PackedByteArray()
+		GameState.explored.resize(n)
+		for c in cities:
+			_reveal_at(Vector2(c["x"], c["y"]), 260.0, false)
+	_fog_img = Image.create(grid_size.x, grid_size.y, false, Image.FORMAT_RGBA8)
+	var fog := Color(Tapestry.PARCHMENT_DARK.darkened(0.15), FOG_ALPHA)
+	for y in grid_size.y:
+		for x in grid_size.x:
+			_fog_img.set_pixel(x, y, Color(fog, 0.0) if GameState.explored[y * grid_size.x + x] else fog)
+	_fog_tex = ImageTexture.create_from_image(_fog_img)
+	var spr := Sprite2D.new()
+	spr.texture = _fog_tex
+	spr.centered = false
+	spr.scale = Vector2(cell, cell)
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	spr.z_index = -2
+	add_child(spr)
+	_last_reveal = Vector2i(-99, -99)
+	_reveal()
+
+
+func sight() -> float:
+	return 520.0 + 130.0 * GameState.stat("wildcraft")
+
+
+func seen(p: Vector2) -> bool:
+	if GameState.explored.is_empty():
+		return true
+	var c := cell_of(p)
+	return GameState.explored[c.y * grid_size.x + c.x] != 0
+
+
+func _reveal() -> void:
+	var c := cell_of(player_pos)
+	if c == _last_reveal or _fog_img == null:
+		return
+	_last_reveal = c
+	if _reveal_at(player_pos, sight(), true):
+		_fog_tex.update(_fog_img)
+
+
+func _reveal_at(p: Vector2, radius: float, paint: bool) -> bool:
+	var changed := false
+	var c := cell_of(p)
+	var r := int(radius / cell) + 1
+	for y in range(maxi(0, c.y - r), mini(grid_size.y, c.y + r + 1)):
+		for x in range(maxi(0, c.x - r), mini(grid_size.x, c.x + r + 1)):
+			var i := y * grid_size.x + x
+			if GameState.explored[i] == 0 and Vector2(x - c.x, y - c.y).length() * cell <= radius:
+				GameState.explored[i] = 1
+				changed = true
+				if paint and _fog_img:
+					_fog_img.set_pixel(x, y, Color(0, 0, 0, 0))
+	return changed
 
 
 ## The grid cell of a world position, and what kind of ground it is.
@@ -473,22 +543,29 @@ func _process(delta: float) -> void:
 		queue_redraw()
 	if not active:
 		return
-	grace = maxf(0.0, grace - delta)
-	# respawns
-	for i in range(respawn_queue.size() - 1, -1, -1):
-		respawn_queue[i] -= delta
-		if respawn_queue[i] <= 0:
-			respawn_queue.remove_at(i)
-			_spawn_enemy()
 	_move_player(delta)
-	_move_enemies(delta)
+	# the world holds still while you do: time, wanderers and respawns run only as you travel
+	if moving:
+		grace = maxf(0.0, grace - delta)
+		GameState.advance_clock(delta * HOURS_PER_SECOND)
+		for i in range(respawn_queue.size() - 1, -1, -1):
+			respawn_queue[i] -= delta
+			if respawn_queue[i] <= 0:
+				respawn_queue.remove_at(i)
+				_spawn_enemy()
+		_move_enemies(delta)
+		_reveal()
 	camera.position = player_pos
 	GameState.player_pos = player_pos
 	_check_places()
 
 
 func _move_player(delta: float) -> void:
-	var speed := PLAYER_SPEED * float(SPEED_BY_CODE.get(ground_at(player_pos), 1.0))
+	var ground := ground_at(player_pos)
+	var terrain := float(SPEED_BY_CODE.get(ground, 1.0))
+	if ground == SLOW and GameState.stat("wildcraft") >= 3:
+		terrain = 1.0                  # a woodsman walks the thickets like a road
+	var speed := PLAYER_SPEED * terrain * (1.0 + 0.08 * GameState.stat("wildcraft"))
 	var kb := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	if kb != Vector2.ZERO:
 		# keys: walk straight, sliding along shores and cliffs
@@ -710,7 +787,7 @@ func _sync_walkers() -> void:
 			continue
 		var ep: Vector2 = e["pos"]
 		w.position = ep
-		w.visible = view.has_point(ep)
+		w.visible = view.has_point(ep) and seen(ep)
 		if w.visible:
 			w.set_state(-1.0 if player_pos.x < ep.x else 1.0, e["chasing"], I18n.t("Lv%d") % int(e["level"]) + ("  !" if e["chasing"] else ""))
 	if _player == null:

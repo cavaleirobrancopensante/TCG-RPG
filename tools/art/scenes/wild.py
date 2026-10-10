@@ -85,7 +85,7 @@ def wild_c_001(p):
 
 
 def wild_c_002(p):
-    """Hedgerow Druid: she coaxes green shoots out of a spring furrow beside the hawthorn hedge."""
+    """Hedgerow Druid: he coaxes green shoots out of a spring furrow beside the hawthorn hedge."""
     sky(p, 'day')
     bg.clouds(p, 120, 3, xs=[230, 520, 790])
     fields(p, 300, rows=2)
@@ -99,7 +99,7 @@ def wild_c_002(p):
         xx = -400 + k * 110
         p.line([(500 + (xx - 500) * 0.25, 410), (xx, H + 10)], C.hex('3a2818').alpha(0.6), 4, smooth=False)
         p.line([(504 + (xx - 500) * 0.25, 410), (xx + 30, H + 10)], C.hex('9a7a54').alpha(0.4), 2, smooth=False)
-    # shoots rising under her hand, brighter near it
+    # shoots rising under his hand, brighter near it
     r = p.rng
     for k in range(26):
         x = r.uniform(520, 940)
@@ -115,9 +115,9 @@ def wild_c_002(p):
         q = (r.uniform(560, 720), r.uniform(330, 460))
         p.glow(q, 9, C.hex('e8ffa0'), 0.6)
     PR_basket = basket_held('b', kind='seed')
-    Druid(pose='spread', garb='gown', main=DRUID_GREEN, second=DRUID_GREEN.dark(0.2), head='hood', hood_col=C.hex('6a5a3a'),
-          kneel=True, eyes='down', belt='cord', wreath='rowan', trim=None, sleeves='fitted').draw(p, 440, 600, 470)
-    # a rush basket of seed on the ground beside her
+    Druid(pose='spread', garb='robe', main=DRUID_GREEN, second=DRUID_GREEN.dark(0.2), head='hood', hood_col=C.hex('6a5a3a'), beard='short', hair_col=C.hex('6a4a2a'),
+          kneel=True, eyes='down', belt='leather', wreath='rowan', trim=None, sleeves='fitted').draw(p, 440, 600, 470)
+    # a rush basket of seed on the ground beside him
     p.push(250, 600, 4.2)
     PR_basket(p, {'hand_b': (0, -9)})
     p.pop()
@@ -192,7 +192,7 @@ def wild_c_004(p):
 
 
 def wild_c_005(p):
-    """Acorn Gatherer: under the old oak she lets an acorn fall, and a sapling is already waking."""
+    """Acorn Gatherer: under the old oak he lets an acorn fall, and a sapling is already waking."""
     sky(p, 'autumn')
     treeline(p, 360, C.hex('b0905a'), 70, mist=C.hex('f2dcb0'))
     ground(p, 440, C.hex('8a8a3a'), tufts=30, leaves=(AUTUMN, 80))
@@ -205,10 +205,10 @@ def wild_c_005(p):
         q = (r.uniform(420, 820), r.uniform(560, 610))
         p.blob(q, 4, 5, C.hex('a8742e'), width=0.9, shade=0.6)
         p.blob((q[0], q[1] - 4), 4.4, 2.2, C.hex('6a5030'), width=0.8)
-    Druid(pose='wi_drop', garb='gown', main=C.hex('8a5a2a'), second=C.hex('6a4020'), head='hood', hood_col=C.hex('5a6a3a'),
-          belt='cord', wreath='oak', trim=None, sleeves='fitted', eyes='down',
+    Druid(pose='wi_drop', garb='robe', main=C.hex('8a5a2a'), second=C.hex('6a4020'), head='hood', hood_col=C.hex('5a6a3a'), beard='short', hair_col=C.hex('8a5a2a'),
+          belt='leather', wreath='oak', trim=None, sleeves='fitted', eyes='down',
           props_front=[basket_held('b', kind='acorn')]).draw(p, 400, 600, 450)
-    # an acorn falling from her fingers towards the waking sapling
+    # an acorn falling from his fingers towards the waking sapling
     for q, s in (((536, 352), 1.0), ((538, 440), 0.9)):
         p.blob(q, 5 * s, 6 * s, C.hex('a8742e'), width=1.0, shade=0.6)
         p.blob((q[0], q[1] - 5 * s), 5.2 * s, 2.6 * s, C.hex('6a5030'), width=0.8)
@@ -905,7 +905,7 @@ def wild_u_004(p):
 
 
 def wild_u_005(p):
-    """Elder of the Oak Circle: she plants acorns as she walks; by evening they walk beside her."""
+    """Elder of the Oak Circle: he plants acorns as he walks; by evening they walk beside her."""
     sky(p, 'gold')
     p.glow((760, 400), 360, C.hex('ffd890'), 0.5)
     treeline(p, 400, C.hex('9a7a5a'), 60, mist=C.hex('f8dca8'))
@@ -913,7 +913,7 @@ def wild_u_005(p):
     for x, y, hh in ((80, 470, 380), (250, 430, 260), (470, 420, 230), (700, 425, 240), (900, 470, 360)):
         tree(p, x, y, hh, 'oak', 'gold' if x % 2 else 'autumn', w=hh * 0.08)
     ground(p, 460, C.hex('8a8a3a'), tufts=30, leaves=(AUTUMN_GOLD, 50))
-    # a track of little shoots behind her where acorns fell
+    # a track of little shoots behind his where acorns fell
     r = p.rng
     for k, x in enumerate((90, 150, 210)):
         y = 560 + k * 10
@@ -922,8 +922,8 @@ def wild_u_005(p):
     falling_leaves(p, (150, 150, 520, 420), 8, (AUTUMN_GOLD, AUTUMN))
     oakling(p, 230, 592, 2.6, 'summer', step=0.4)
     oakling(p, 330, 606, 3.1, 'summer', step=-0.4)
-    Druid(pose='staff', garb='robe', main=C.hex('7a6a4a'), second=C.hex('5a4a34'), head='hood', hood_col=C.hex('4f5f34'),
-          age='old', eyes='open', belt='cord', wreath='oak', sleeves='bell',
+    Druid(pose='staff', garb='robe', main=C.hex('7a6a4a'), second=C.hex('5a4a34'), head='hood', hood_col=C.hex('4f5f34'), beard='long', hair_col=C.hex('e6e0d4'),
+          age='old', eyes='open', belt='leather', wreath='oak', sleeves='bell',
           props_back=[leaf_staff('f', 106)], props_front=[basket_held('b', kind='acorn'), grip('f')]).draw(p, 590, 606, 450)
     falling_leaves(p, (700, 150, 900, 420), 6, (AUTUMN_GOLD, AUTUMN))
     for k in range(3):
@@ -1201,7 +1201,7 @@ def wild_u_011(p):
     WFigure(pose='offer', garb='tunic', main=C.hex('7a3a2a'), second=C.hex('5a3a2a'), hair='short', hair_col=UMBER, beard='short',
            head='cap', belt='leather', fur=C.hex('d8c8a8'), props_front=[PR.loaf('f')]).draw(p, 330, 610, 330)
     wife = WFigure(pose='wi_wassail', garb='gown', main=C.hex('3a5a7a'), second=C.hex('2a4a6a'), head='veil', hood_col=LEAD_WHITE,
-                   trim=None, belt='cord')
+                   trim=None, belt='leather')
     wife.draw(p, 700, 612, 320, flip=True)
     # the wassail bowl held high in her hand, steaming
     hf = wife.joints()['hand_f']
@@ -1338,7 +1338,7 @@ def wild_r_001(p):
     for a, b in (((263, 446), (282, 512)), ((337, 446), (318, 512)), ((300, 456), (300, 518))):
         p.fold_band([a, v_lerp(a, b, 0.5), b], 0.3, 2.2, STONE.alpha(0.45))
     for x, fl in ((190, False), (410, True)):
-        WFigure(pose='offer', garb='robe', main=DRUID_WHITE.dark(0.08), head='hood', eyes='up', belt='cord').draw(p, x, 600, 220, flip=fl)
+        WFigure(pose='offer', garb='robe', main=DRUID_WHITE.dark(0.08), head='hood', eyes='up', belt='leather').draw(p, x, 600, 220, flip=fl)
     Druid(pose='raise', garb='robe', main=DRUID_WHITE, second=C.hex('d8d0b8'), hair='white', beard='long', age='old', head=None,
           wreath='mistletoe', belt='gold', cloak='mantle', cloak_col=C.hex('d8d2c0'), lining=GOLD_LIGHT, eyes='up',
           props_front=[sickle('f')], props_back=[leaf_staff('b', 92, glow=C.hex('e8ffd0'))]).draw(p, 560, 606, 440)
@@ -1572,7 +1572,7 @@ def wild_r_008(p):
         p.cx.arc(520, 150, 40 + k * 34, math.pi * 1.15, math.pi * 1.85)
         p.stroke(C.hex('e8ffb0').alpha(0.5 - k * 0.1), 3)
     Druid(pose='spread', garb='robe', main=C.hex('3e5a34'), second=C.hex('2e4a28'), head='hood', hood_col=C.hex('5a4a34'),
-          beard='long', hair='white', age='old', mouth='open', eyes='up', wreath='oak', belt='cord',
+          beard='long', hair='white', age='old', mouth='open', eyes='up', wreath='oak', belt='leather',
           cloak='mantle', cloak_col=C.hex('5a4a30'), lining=C.hex('8a7a50')).draw(p, 490, 606, 440)
 
 

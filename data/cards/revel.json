@@ -614,7 +614,7 @@
   },
   {
     "id": "revel_u_004",
-    "name": "Hostess of the Lantern Garden",
+    "name": "Host of the Lantern Garden",
     "faction": "revel",
     "rarity": "uncommon",
     "type": "creature",
@@ -637,7 +637,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+0 counter on target creature you control.",
-    "flavor": "She never leaves her couch, yet no guest ever leaves her table hungry.",
+    "flavor": "He never leaves his couch, yet no guest ever leaves his table hungry.",
     "art": "res://art/cards/revel_u_004.webp"
   },
   {
@@ -1167,7 +1167,7 @@
   },
   {
     "id": "revel_m_001",
-    "name": "Vessaria, Mistress of the Undying Feast",
+    "name": "Vessar, Master of the Undying Feast",
     "faction": "revel",
     "rarity": "mythic",
     "type": "creature",
@@ -1194,7 +1194,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.",
-    "flavor": "She raises a cup to every guest; the guests who drink do not rise again.",
+    "flavor": "He raises a cup to every guest; the guests who drink do not rise again.",
     "art": "res://art/cards/revel_m_001.webp"
   },
   {

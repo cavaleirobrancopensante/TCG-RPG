@@ -66,7 +66,8 @@ func start(p_info: Dictionary) -> void:
 	var edeck := DeckTools.to_list(info.get("deck", {}))
 	var main_f := DeckTools.best_factions(GameState.deck, 1)
 	st.side_faction = [main_f[0] if not main_f.is_empty() else "sanctum", info.get("faction", "abyss")]
-	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [int(info.get("player_life", 20)), int(info.get("life", 20))], -1, 0, true)
+	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [int(info.get("player_life", 20)), int(info.get("life", 20))], -1, 0, true,
+		[int(info.get("player_hand", BattleState.START_HAND)), BattleState.START_HAND])
 	st.side(0).interactive = not auto_play       # you make your own choices (discards, foresight)
 	_log(I18n.t("A duel against %s begins!") % I18n.t(info.get("name", "a stranger")))
 	BattleAI.resolve_mulligan(st, 1)
@@ -744,6 +745,16 @@ func _resolve_owed() -> void:
 		st.discard_owed(0, int(idx))
 	elif me.owed_discards > 0:
 		me.owed_discards = 0
+	elif me.martyr_owed > 0:
+		if me.creatures.is_empty():
+			me.martyr_owed = 0
+		else:
+			var ids: Array = []
+			for c in me.creatures:
+				ids.append(c.card_id)
+			var pick = await _pick_cards(I18n.t("Martyr"), I18n.t("Choose the creature that receives the martyr's grace (+1/+1)."), ids)
+			var k := clampi(int(pick), 0, me.creatures.size() - 1)
+			st.martyr_bless(0, me.creatures[k].uid)
 	elif not me.foresight_cards.is_empty():
 		var ids: Array = me.foresight_cards.duplicate()
 		var keep_ids = await _pick_cards(I18n.t("Foresight"), I18n.t("These are the top cards of your library, the first one on top. Tap the cards to send to the bottom, then confirm."), ids, "foresight")
@@ -1415,6 +1426,13 @@ func _player_attack(uids: Array) -> void:
 func _player_end_turn() -> void:
 	if st.phase == "main1":
 		st.declare_attackers([])
+	# more cards than you may keep: you choose which to let go
+	var me := st.side(0)
+	while me.interactive and me.hand.size() > me.max_hand and st.phase != "over":
+		me.owed_discards = 1
+		var idx = await _pick_cards(I18n.t("Too many cards"), I18n.t("You may keep %d cards. Choose one to discard.") % me.max_hand, me.hand.duplicate())
+		st.discard_owed(0, int(idx))
+		await play_events()
 	st.end_turn()
 	await play_events()
 	if st.active == 1 and st.phase != "over":

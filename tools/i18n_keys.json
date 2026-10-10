@@ -293,6 +293,14 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Martyr",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the creature that receives the martyr's grace (+1/+1).",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Foresight",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -501,6 +509,14 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Too many cards",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You may keep %d cards. Choose one to discard.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "You are attacked! Tap your creature, then the attacker it blocks.",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -645,8 +661,220 @@
    "note": "scripts/core/factions.gd"
   },
   {
+   "key": "Devotion",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "+2 life for every point.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Reason",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "+1 card you may keep in hand for every point (5 + Reason).",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Wildcraft",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Walk faster and see further through the fog. At 3 or more, forest and marsh no longer slow you.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Charm",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Better prices when buying and selling, cheaper tolls and inns.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Industry",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Your deck may hold 1 + Industry copies of a card (basic lands are free).",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Dread",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Better spoils: a higher chance of gold and of a card from the beaten foe's deck.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Pilgrim",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Gentler foes, richer rewards, cheaper defeats.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
    "key": "Knight",
-   "note": "scripts/main.gd"
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "The game as it is meant to be played.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Crusader",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Tougher foes, leaner purses, costly defeats.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Aldric",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Benedict",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Cuthbert",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Dunstan",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Edmund",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Fulk",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Gregory",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Hugh",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Ivo",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Jocelyn",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Lambert",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Martin",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Odo",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Piers",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Ranulf",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Simon",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Theobald",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Walter",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Anselm",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Bernard",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Godfrey",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Roland",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Tancred",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Osric",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "of the Marches",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "of Elderholt",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "the Wanderer",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "of the Pilgrim Road",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "of Cogspire",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "the Bold",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "of the Fens",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "the Quiet",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "of Porticus",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "the Grey",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "of Vinemere",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Longstride",
+   "note": "scripts/core/hero.gd"
   },
   {
    "key": "Human Cleric",
@@ -837,7 +1065,7 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Welcome, Wanderer",
+   "key": "Welcome, %s",
    "note": "scripts/main.gd"
   },
   {
@@ -877,7 +1105,11 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "◉ %d gold   ✦ %d cards",
+   "key": "♥ %d/%d   ◉ %d gold   ✦ %d cards",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s Day %d, %02d:%02d",
    "note": "scripts/main.gd"
   },
   {
@@ -962,6 +1194,10 @@
   },
   {
    "key": "%s, taken from the loser's deck",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "nothing but the road ahead",
    "note": "scripts/main.gd"
   },
   {
@@ -1109,7 +1345,7 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Guardian: gets +0/+2 while blocking.",
+   "key": "Martyr: when this dies, another creature you control gets +1/+1 for good.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -1129,7 +1365,7 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Steadfast: prevent 1 of the damage dealt to it by each source.",
+   "key": "Unmoved: enemy spells and abilities can't tap it, return it to its owner's hand or shrink it.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -1377,11 +1613,11 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
-   "key": "A night's sleep: the day passes, prices settle, and you start your next duel with %d extra life.",
+   "key": "A night's sleep heals you fully (life %d of %d). The day passes and prices settle.",
    "note": "scripts/ui/city_screen.gd"
   },
   {
-   "key": "Rested: you start your next duel with %d extra life.",
+   "key": "You are rested and whole (life %d of %d).",
    "note": "scripts/ui/city_screen.gd"
   },
   {
@@ -1458,10 +1694,6 @@
   },
   {
    "key": "Deathtouch",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Dread",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -1673,31 +1905,107 @@
    "note": "scripts/ui/figure_painter.gd"
   },
   {
-   "key": "Protects, heals and endures. Angels, guardians and martyrs.",
+   "key": "Skin",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Pays in blood for power. Sacrifice, curses and the risen dead.",
+   "key": "SKINS",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Grows huge and many. Beasts, growth and trampling giants.",
+   "key": "Hair",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Fast and reckless. Haste, fire and the endless feast.",
+   "key": "HAIRS",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Patient and in control. Knowledge, walls and clever tempo.",
+   "key": "Hair colour",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Tireless machines, upgrades and engines that fit any deck.",
+   "key": "Beard",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Choose your Hero",
+   "key": "BEARDS",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Clothes",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "CLOTHES",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Trim",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Headgear",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "HEADS",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Short",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Long",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Curly",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Tonsure",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Bald",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "None",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Hood",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Cap",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Pilgrim's hat",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Helm",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Plumed hat",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Crested helm",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Your Hero",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Roll again",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
@@ -1709,7 +2017,23 @@
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Your hero's faith gives you a fourth booster with only that faith's cards.",
+   "key": "Faith",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Appearance",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Stats",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Everyone has 10 life and keeps 5 cards in hand.",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "%d points left",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
@@ -1739,6 +2063,14 @@
   {
    "key": "Volume",
    "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Turn your device sideways",
+   "note": "scripts/ui/rotate_overlay.gd"
+  },
+  {
+   "key": "The game is made to be played in landscape.",
+   "note": "scripts/ui/rotate_overlay.gd"
   },
   {
    "key": "Normal",
@@ -2151,7 +2483,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Guardian (blocks as if it had +0/+2).",
+   "key": "Martyr (when this dies, another creature you control gets +1/+1).",
    "note": "rules text of Lantern-Bearer Acolyte"
   },
   {
@@ -2179,7 +2511,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Human Nun",
+   "key": "Human Monk",
    "note": "card subtype"
   },
   {
@@ -2187,16 +2519,12 @@
    "note": "rules text of Novice of the Choir"
   },
   {
-   "key": "Her voice was the first thing the dark ever feared.",
+   "key": "His voice was the first thing the dark ever feared.",
    "note": "flavour text of Novice of the Choir"
   },
   {
    "key": "Cloister Gatewarden",
    "note": "card name (sanctum, creature)"
-  },
-  {
-   "key": "Human Monk",
-   "note": "card subtype"
   },
   {
    "key": "No one passes the cloister gate unless the bell has rung for him.",
@@ -2411,16 +2739,16 @@
    "note": "flavour text of Processional Cross"
   },
   {
-   "key": "Sister of Mercy",
+   "key": "Brother of Mercy",
    "note": "card name (sanctum, creature)"
   },
   {
    "key": "Lifelink. When this enters, gain 2 life.",
-   "note": "rules text of Sister of Mercy"
+   "note": "rules text of Brother of Mercy"
   },
   {
-   "key": "She tends the wounded of both armies, and asks no one his banner.",
-   "note": "flavour text of Sister of Mercy"
+   "key": "He tends the wounded of both armies, and asks no one his banner.",
+   "note": "flavour text of Brother of Mercy"
   },
   {
    "key": "Martyr of the Far Mission",
@@ -2479,7 +2807,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Flying, guardian.",
+   "key": "Flying, martyr.",
    "note": "rules text of Guardian Angel of the Parish"
   },
   {
@@ -2575,16 +2903,16 @@
    "note": "flavour text of Monstrance of the Blessed Sacrament"
   },
   {
-   "key": "Abbess of the Silent Order",
+   "key": "Abbot of the Silent Order",
    "note": "card name (sanctum, creature)"
   },
   {
    "key": "When this enters, gain 3 life. When this dies, other creatures you control get +1/+1 permanently.",
-   "note": "rules text of Abbess of the Silent Order"
+   "note": "rules text of Abbot of the Silent Order"
   },
   {
-   "key": "Forty years without a word; at her death, her sisters heard everything.",
-   "note": "flavour text of Abbess of the Silent Order"
+   "key": "Forty years without a word; at his death, his brothers heard everything.",
+   "note": "flavour text of Abbot of the Silent Order"
   },
   {
    "key": "Seraph of the Dawn Watch",
@@ -2615,7 +2943,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Other creatures you control have guardian.",
+   "key": "Other creatures you control have martyr.",
    "note": "rules text of Castellan of the Krak"
   },
   {
@@ -2627,7 +2955,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Guardian, lifelink.",
+   "key": "Martyr, lifelink.",
    "note": "rules text of Grand Prior of the Hospital"
   },
   {
@@ -3327,7 +3655,7 @@
    "note": "rules text of Hedgerow Druid"
   },
   {
-   "key": "She coaxes the green out of the soil the way one coaxes a shy child.",
+   "key": "He coaxes the green out of the soil the way one coaxes a shy child.",
    "note": "flavour text of Hedgerow Druid"
   },
   {
@@ -3367,7 +3695,7 @@
    "note": "rules text of Acorn Gatherer"
   },
   {
-   "key": "Every acorn she lets fall is a gift to someone two hundred years from now.",
+   "key": "Every acorn he lets fall is a gift to someone two hundred years from now.",
    "note": "flavour text of Acorn Gatherer"
   },
   {
@@ -3607,7 +3935,7 @@
    "note": "rules text of Elder of the Oak Circle"
   },
   {
-   "key": "She plants acorns as she walks; by evening they walk beside her.",
+   "key": "He plants acorns as he walks; by evening they walk beside him.",
    "note": "flavour text of Elder of the Oak Circle"
   },
   {
@@ -4171,16 +4499,16 @@
    "note": "flavour text of Jester of the Lazy Court"
   },
   {
-   "key": "Hostess of the Lantern Garden",
+   "key": "Host of the Lantern Garden",
    "note": "card name (revel, creature)"
   },
   {
    "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+0 counter on target creature you control.",
-   "note": "rules text of Hostess of the Lantern Garden"
+   "note": "rules text of Host of the Lantern Garden"
   },
   {
-   "key": "She never leaves her couch, yet no guest ever leaves her table hungry.",
-   "note": "flavour text of Hostess of the Lantern Garden"
+   "key": "He never leaves his couch, yet no guest ever leaves his table hungry.",
+   "note": "flavour text of Host of the Lantern Garden"
   },
   {
    "key": "Fencing Master of the Masque",
@@ -4403,16 +4731,16 @@
    "note": "flavour text of Lanterns of the Pleasure Garden"
   },
   {
-   "key": "Vessaria, Mistress of the Undying Feast",
+   "key": "Vessar, Master of the Undying Feast",
    "note": "card name (revel, creature)"
   },
   {
    "key": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.",
-   "note": "rules text of Vessaria, Mistress of the Undying Feast"
+   "note": "rules text of Vessar, Master of the Undying Feast"
   },
   {
-   "key": "She raises a cup to every guest; the guests who drink do not rise again.",
-   "note": "flavour text of Vessaria, Mistress of the Undying Feast"
+   "key": "He raises a cup to every guest; the guests who drink do not rise again.",
+   "note": "flavour text of Vessar, Master of the Undying Feast"
   },
   {
    "key": "Brandimarte, Prince of Fire-Eaters",
@@ -4459,7 +4787,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Steadfast (prevent 1 of the damage dealt to it by each source).",
+   "key": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
    "note": "rules text of Ephebe of the Phalanx"
   },
   {
@@ -4731,7 +5059,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "As long as you have four or more cards in hand, this gets +1/+1 and has steadfast.",
+   "key": "As long as you have four or more cards in hand, this gets +1/+1 and has unmoved.",
    "note": "rules text of Disciple of Chrysippus"
   },
   {
@@ -4743,7 +5071,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Defender. Steadfast.",
+   "key": "Defender. Unmoved.",
    "note": "rules text of Unbroken Shieldwall"
   },
   {
@@ -4883,7 +5211,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Steadfast. As long as you have four or more cards in hand, other creatures you control have steadfast.",
+   "key": "Unmoved. As long as you have four or more cards in hand, other creatures you control have unmoved.",
    "note": "rules text of Epictetus, the Unbroken"
   },
   {
@@ -4995,7 +5323,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Vigilance, steadfast. Whenever this attacks, freeze target enemy creature.",
+   "key": "Vigilance, unmoved. Whenever this attacks, freeze target enemy creature.",
    "note": "rules text of Marcus Aurelius"
   },
   {
@@ -5599,7 +5927,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Steadfast (prevent 1 of the damage dealt to it by each source). As long as you have more life than you started with, other creatures you control have steadfast. When this dies, draw two cards and gain 3 life.",
+   "key": "Unmoved. As long as you have more life than you started with, other creatures you control have unmoved. When this dies, draw two cards and gain 3 life.",
    "note": "rules text of Boethius in the Tower"
   },
   {
@@ -6323,6 +6651,46 @@
    "note": "title of a combat piece of music (sanctum)"
   },
   {
+   "key": "Ave Maris Stella",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "Compline",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "The Bells of Santa Lucerna",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "Psalm of the Pilgrims",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "The Hermit's Spring",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "Benedictus",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "Lauds at Dawn",
+   "note": "title of a menu piece of music (sanctum)"
+  },
+  {
+   "key": "Non Nobis Domine",
+   "note": "title of a combat piece of music (sanctum)"
+  },
+  {
+   "key": "The Siege of the Krak",
+   "note": "title of a combat piece of music (sanctum)"
+  },
+  {
+   "key": "Michael, Defend Us",
+   "note": "title of a combat piece of music (sanctum)"
+  },
+  {
    "key": "Anthem of the Ninth Pit",
    "note": "title of a anthem piece of music (abyss)"
   },
@@ -6356,6 +6724,46 @@
   },
   {
    "key": "Herald of Belzareth",
+   "note": "title of a combat piece of music (abyss)"
+  },
+  {
+   "key": "The Ledger Opens",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "Candles of Black Wax",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "The Fen at Night",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "Whispers in the Crypt",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "A Debt Unpaid",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "The Bone Chapel",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "Ashes on the Wind",
+   "note": "title of a menu piece of music (abyss)"
+  },
+  {
+   "key": "The Pact Called In",
+   "note": "title of a combat piece of music (abyss)"
+  },
+  {
+   "key": "Grave Rising",
+   "note": "title of a combat piece of music (abyss)"
+  },
+  {
+   "key": "Hellfire Procession",
    "note": "title of a combat piece of music (abyss)"
   },
   {
@@ -6399,6 +6807,46 @@
    "note": "title of a combat piece of music (wild)"
   },
   {
+   "key": "Mistletoe and Frost",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "The Hidden Spring",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Beneath the Elder Oak",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Fox and Hare",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Barrow Mist",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Wassail",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Song of the Fens",
+   "note": "title of a menu piece of music (wild)"
+  },
+  {
+   "key": "Boar of the Weald",
+   "note": "title of a combat piece of music (wild)"
+  },
+  {
+   "key": "The Hunt Rides Out",
+   "note": "title of a combat piece of music (wild)"
+  },
+  {
+   "key": "Stag at Bay",
+   "note": "title of a combat piece of music (wild)"
+  },
+  {
    "key": "Carnival of Vinemere",
    "note": "title of a anthem piece of music (revel)"
   },
@@ -6435,6 +6883,42 @@
    "note": "title of a combat piece of music (revel)"
   },
   {
+   "key": "Vintage Morning",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "The Idle Hour",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "Candlelit Gallery",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "The Cellar Door",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "A Masked Guest",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "Lute under the Balcony",
+   "note": "title of a menu piece of music (revel)"
+  },
+  {
+   "key": "Rapiers at Midnight",
+   "note": "title of a combat piece of music (revel)"
+  },
+  {
+   "key": "The Brawl at the Inn",
+   "note": "title of a combat piece of music (revel)"
+  },
+  {
+   "key": "Fire and Wine",
+   "note": "title of a combat piece of music (revel)"
+  },
+  {
    "key": "Hymn of the Stoa",
    "note": "title of a anthem piece of music (lyceum)"
   },
@@ -6467,6 +6951,42 @@
    "note": "title of a combat piece of music (lyceum)"
   },
   {
+   "key": "Olive Grove Walk",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "Tablets of Bronze",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "The Lighthouse Lamp",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "On Endurance",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "Evening Star",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "The Long Walls",
+   "note": "title of a menu piece of music (lyceum)"
+  },
+  {
+   "key": "Shield to Shield",
+   "note": "title of a combat piece of music (lyceum)"
+  },
+  {
+   "key": "The Sophist Confounded",
+   "note": "title of a combat piece of music (lyceum)"
+  },
+  {
+   "key": "Thermopylae",
+   "note": "title of a combat piece of music (lyceum)"
+  },
+  {
    "key": "March of the Technocracy",
    "note": "title of a anthem piece of music (machine)"
   },
@@ -6492,6 +7012,42 @@
   },
   {
    "key": "Iron Advance",
+   "note": "title of a combat piece of music (machine)"
+  },
+  {
+   "key": "The Escapement",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "Blueprints by Lamplight",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "Steam and Brass",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "The Patent Office",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "The Waterwheel",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "Cog and Pinion",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "The Observatory Dome",
+   "note": "title of a menu piece of music (machine)"
+  },
+  {
+   "key": "Rivetwall",
+   "note": "title of a combat piece of music (machine)"
+  },
+  {
+   "key": "Pressure Rising",
    "note": "title of a combat piece of music (machine)"
   }
  ],

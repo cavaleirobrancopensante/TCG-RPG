@@ -85,6 +85,7 @@ func _ready() -> void:
 	ui_layer.layer = 5
 	add_child(ui_layer)
 	GameState.gold_changed.connect(func(_g): _update_hud())
+	add_child(RotateOverlay.new())     # phones held upright are asked to turn sideways
 	await _boot()
 	is_booted = true
 	booted.emit()
@@ -133,6 +134,7 @@ func _process(delta: float) -> void:
 	_music_timer -= delta
 	if _music_timer <= 0.0 and world and world.active and screen == null:
 		_music_timer = 1.0
+		_update_hud()
 		var region: String = world.faction_at(world.player_pos)
 		Music.set_context("world", region)
 		_region_toll(region)
@@ -230,7 +232,7 @@ func _region_toll(region: String) -> void:
 	GameState.last_region = region
 	if first or region == GameState.hero:
 		return
-	var toll := mini(Economy.REGION_TOLL, GameState.gold)
+	var toll := mini(Economy.toll(Economy.REGION_TOLL), GameState.gold)
 	if toll > 0:
 		GameState.add_gold(-toll)
 		_update_hud()
@@ -336,7 +338,7 @@ func _open_new_game() -> void:
 	var sc := SlotScreen.create("new")
 	sc.chosen.connect(func(n):
 		var hs := HeroScreen.new()
-		hs.chosen.connect(func(f): _new_game(n, f))
+		hs.created.connect(func(sh: Dictionary): _new_game(n, sh["faith"], sh))
 		hs.closed.connect(_open_new_game)
 		ui_layer.add_child(hs))
 	ui_layer.add_child(sc)
@@ -362,10 +364,10 @@ func open_save_slots() -> void:
 	ui_layer.add_child(sc)
 
 
-func _new_game(n: int = 1, hero_faith: String = "sanctum") -> void:
-	GameState.new_game(n, hero_faith)
+func _new_game(n: int = 1, hero_faith: String = "sanctum", sheet: Dictionary = {}) -> void:
+	GameState.new_game(n, hero_faith, sheet)
 	await start_world()
-	show_dialog("Welcome, Wanderer",
+	show_dialog(I18n.t("Welcome, %s") % GameState.player_name,
 		I18n.t("Six faiths contend for the land: the Holy Church, the Black Covenant, the Old Ways, the Revel, the Stoa and the Technocracy.")
 		+ "\n\n" + I18n.t("You carry four sealed booster packs: three of every faith and one of %s alone. Open them, and your first deck will be built from the faiths that answer you.") % Factions.info(hero_faith)["name"],
 		[["Open my boosters", func(): open_boosters(true)]])
@@ -442,7 +444,11 @@ func _build_hud() -> void:
 func _update_hud() -> void:
 	if hud == null or not is_instance_valid(hud):
 		return
-	hud_gold.text = I18n.t("◉ %d gold   ✦ %d cards") % [GameState.gold, _owned_total()]
+	var h := int(GameState.clock)
+	var m := int((GameState.clock - h) * 60.0) / 15 * 15
+	var sky := "☾" if GameState.is_night() else "☀"
+	hud_gold.text = I18n.t("♥ %d/%d   ◉ %d gold   ✦ %d cards") % [GameState.life, GameState.max_life(), GameState.gold, _owned_total()] \
+		+ "\n" + I18n.t("%s Day %d, %02d:%02d") % [sky, GameState.day + 1, h, m]
 	hud_boosters.text = I18n.t("Boosters (%d)") % GameState.pending_boosters
 	hud_boosters.disabled = GameState.pending_boosters <= 0
 
@@ -539,7 +545,7 @@ func _on_city_entered(city_id: String) -> void:
 	GameState.record_visit(city_id)
 	var toll := 0
 	if GameState.city(city_id).get("faction", "") != GameState.hero:
-		toll = mini(Economy.CITY_TOLL, GameState.gold)    # the broke are waved through
+		toll = mini(Economy.toll(Economy.CITY_TOLL), GameState.gold)    # the broke are waved through
 		GameState.add_gold(-toll)
 	GameState.save_game()
 	_open_city(city_id)
@@ -594,14 +600,15 @@ func _start_lair(lair_id: String) -> void:
 	var deck := DeckTools.enemy_deck(l["faction"], int(l["level"]), GameState.rng)
 	var boss_look := {"sanctum": "Human Knight", "abyss": "Lich", "wild": "Beast Spirit", "revel": "Human Noble",
 		"lyceum": "Human Philosopher", "machine": "Construct"}
-	start_battle({"name": l["boss"], "faction": l["faction"], "level": int(l["level"]), "life": int(l["life"]),
+	var boss_life := maxi(8, int(round(int(l["life"]) * 0.5)) + int(GameState.diff("enemy_life")))
+	start_battle({"name": l["boss"], "faction": l["faction"], "level": int(l["level"]), "life": boss_life,
 		"deck": deck, "lair": lair_id, "look": {"faction": l["faction"], "subtype": boss_look.get(l["faction"], "Human"), "name": l["boss"]}})
 
 
 func _on_enemy_engaged(e: Dictionary) -> void:
 	var deck := DeckTools.enemy_deck(e["faction"], int(e["level"]), GameState.rng)
 	start_battle({"name": e["name"], "faction": e["faction"], "level": int(e["level"]),
-		"life": 16 + int(e["level"]) * 2, "deck": deck, "enemy_id": e["id"], "look": e.get("look", ""),
+		"life": maxi(6, 8 + int(e["level"]) * 2 + int(GameState.diff("enemy_life"))), "deck": deck, "enemy_id": e["id"], "look": e.get("look", ""),
 		"disposition": e.get("disposition", "hostile")})
 
 
@@ -614,12 +621,12 @@ func start_battle(info: Dictionary) -> void:
 	var b := BattleScene.new()
 	b.auto_play = debug_auto_battles
 	_set_screen(b)
-	# a night at the inn sends you into the next duel with more life
-	if GameState.rested and not info.get("tournament", false):
-		info["player_life"] = 20 + Economy.RESTED_LIFE
-		GameState.rested = false
+	# you fight with the life you have; a tournament bout starts fresh
+	info["player_life"] = GameState.max_life() if info.get("tournament", false) else maxi(1, GameState.life)
+	info["player_hand"] = GameState.hand_size()
 	b.finished.connect(func(won: bool):
 		info["fled"] = b.fled
+		info["life_left"] = b.st.side(0).life if b.st else GameState.life
 		_on_battle_finished(won, info))
 	b.start(info)
 
@@ -633,6 +640,8 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 	world.grace = 3.0
 	GameState.day += 1
 	var lvl := int(info.get("level", 1))
+	# wounds carry over: you leave the duel with the life you had left
+	GameState.life = clampi(int(info.get("life_left", GameState.life)), 1, GameState.max_life())
 	if won:
 		var lair_id: String = info.get("lair", "")
 		var first_clear := lair_id != "" and not GameState.cleared_lairs.has(lair_id)
@@ -658,18 +667,24 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 				var cid := CardDB.random_of_rarity(r["card_rarity"], GameState.rng, fs)
 				GameState.add_card(cid)
 				cards.append(cid)
-		else:
-			var g := 8 + lvl * 6 if lair_id == "" else 25 * lvl
+		elif lair_id != "":
+			var g := Economy.income(25 * lvl)
+			GameState.add_gold(g)
+			parts.append(I18n.t("%d gold") % g)
+		elif GameState.rng.randf() < Economy.spoils_gold_chance():
+			# spoils of the road: maybe a purse, maybe a card, more often with Dread
+			var g := Economy.income(8 + lvl * 6 + GameState.rng.randi_range(0, 6))
 			GameState.add_gold(g)
 			parts.append(I18n.t("%d gold") % g)
 		for cid in cards:
 			parts.append(I18n.t(CardDB.get_card(cid).get("name", cid)))
-		# spoils of war: one card taken at random from the beaten opponent's deck
-		var spoil := _spoils(info)
+		var spoil := _spoils(info) if (lair_id != "" or GameState.rng.randf() < Economy.spoils_card_chance()) else ""
 		if spoil != "":
 			GameState.add_card(spoil)
 			cards.append(spoil)
 			parts.append(I18n.t("%s, taken from the loser's deck") % I18n.t(CardDB.get_card(spoil).get("name", spoil)))
+		if parts.is_empty():
+			parts.append(I18n.t("nothing but the road ahead"))
 		GameState.save_game()
 		show_dialog("Victory", I18n.t("You gain: %s") % ", ".join(parts), [["Onward", Callable()]], cards)
 	else:
@@ -684,6 +699,7 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		else:
 			var city_id := _nearest_visited_city()
 			world.respawn_at_city(city_id)
+			GameState.life = maxi(1, GameState.max_life() / 2)
 			GameState.save_game()
 			show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")], [["Get up", Callable()]])
 	_update_hud()
@@ -725,7 +741,7 @@ func _draft_finished() -> void:
 		GameState.add_card(e["id"], e.get("foil", false))      # the drafted cards are yours to keep
 	var pool := d.pool(0)
 	var deck_name := GameState.unique_deck_name(I18n.t("Draft: %s") % GameState.city(d.city).get("name", ""))
-	var cards := DeckTools.auto_build(pool, DeckTools.best_factions(pool, 2))
+	var cards := DeckTools.auto_build(pool, DeckTools.best_factions(pool, 2), DeckTools.DRAFT_COPIES)
 	_tour_deck = GameState.new_deck(deck_name, cards)
 	if _tour_deck < 0:      # all deck slots used: the draft deck still gets one
 		GameState.decks.append({"name": deck_name, "cards": cards})

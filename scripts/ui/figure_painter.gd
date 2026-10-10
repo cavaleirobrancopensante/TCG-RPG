@@ -28,6 +28,19 @@ static func paint(ci: CanvasItem, card: Dictionary, xf: Transform2D, h: float, f
 	_a = alpha
 	_fac = card.get("faction", "machine")
 	var spec := archetype(card)
+	var lk: Dictionary = card.get("look", {})
+	if not lk.is_empty() and spec.get("kind", "human") == "human":
+		spec = spec.duplicate()
+		# a hero's own appearance, chosen at creation
+		for k in ["main", "second", "skin"]:
+			if lk.has(k):
+				spec[k] = lk[k]
+		spec["hair"] = lk.get("hair", "short")
+		spec["hair_col"] = lk.get("hair_col", Color(0.4, 0.27, 0.15))
+		spec["beard"] = "custom" if String(lk.get("beard", "")) != "" else ""
+		spec["beard_len"] = lk.get("beard", "")
+		if lk.has("head"):
+			spec["helm"] = lk["head"]
 	var size_mult: float = spec.get("scale", 1.0)
 	var s := h / 100.0 * size_mult
 	_w = clampf(h / 46.0, 1.0, 3.0) / s
@@ -390,7 +403,26 @@ static func _head(o: Dictionary, head: Vector2) -> void:
 			_ci.draw_circle(face_c + Vector2(3, -1), 1.3, Color(1, 0.8, 0.2, _a))
 	if o.get("mask", false):
 		_poly(_pv([face_c + Vector2(-6, -3.5), face_c + Vector2(7, -3.5), face_c + Vector2(7, 0.5), face_c + Vector2(-6, 0.5)]), Color(0.12, 0.08, 0.1))
+	# hair under any headgear
+	var hc: Color = o.get("hair_col", Color(0.4, 0.27, 0.15))
+	if helm in ["", "cap", "plume", "pilgrim", "crested", "crown", "coronet", "vines", "laurel"]:
+		match o.get("hair", ""):
+			"short":
+				_poly(_pv([head + Vector2(-8, 2), head + Vector2(-8.5, -4), head + Vector2(-4, -9), head + Vector2(3, -9.5), head + Vector2(8.5, -5),
+					head + Vector2(7, -4), head + Vector2(2, -6), head + Vector2(-3, -4), head + Vector2(-5, 2)]), hc)
+			"long":
+				_poly(_pv([head + Vector2(-9, 12), head + Vector2(-9, -4), head + Vector2(-4, -9.5), head + Vector2(3, -9.5), head + Vector2(8.5, -5),
+					head + Vector2(7, -4), head + Vector2(1, -6), head + Vector2(-4, -3), head + Vector2(-5, 12)]), hc)
+			"curly":
+				for k in 7:
+					var a := PI * 0.95 + k * 0.2 * PI
+					_circle(head + Vector2(cos(a) * 8.0, sin(a) * 8.0 - 1.0), 2.8, hc)
+			"tonsure":
+				_ci.draw_arc(head + Vector2(1, 0), 8.2, PI * 0.95, PI * 2.05, 14, Color(hc, _a), _w * 1.6, true)
 	match o.get("beard", ""):
+		"custom":
+			var long := String(o.get("beard_len", "short")) == "long"
+			_poly(_pv([face_c + Vector2(-6, 1), face_c + Vector2(7, 1), face_c + Vector2(4, 9 if not long else 12), face_c + Vector2(0, 11 if not long else 17), face_c + Vector2(-4, 8)]), hc)
 		"white", "brown":
 			var bc := WHITE if o["beard"] == "white" else Color(0.45, 0.30, 0.18)
 			_poly(_pv([face_c + Vector2(-6, 1), face_c + Vector2(7, 1), face_c + Vector2(4, 11), face_c + Vector2(0, 14), face_c + Vector2(-4, 9)]), bc)

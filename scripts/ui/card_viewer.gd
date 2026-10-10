@@ -19,12 +19,12 @@ const KEYWORDS := {
 	"vigilance": "Vigilance: does not tap when it attacks.",
 	"trample": "Trample: damage beyond what kills its blocker hits the player.",
 	"defender": "Defender: cannot attack.",
-	"guardian": "Guardian: gets +0/+2 while blocking.",
+	"martyr": "Martyr: when this dies, another creature you control gets +1/+1 for good.",
 	"sanctified": "Sanctified: Covenant cards can't target it, Covenant creatures can't block it, and damage from the Covenant is prevented.",
 	"dread": "Dread: can only be blocked by Covenant creatures and Constructs.",
 	"regenerate": "Regenerate: the first time each turn it would be destroyed, it is tapped and healed instead.",
 	"first_strike": "First strike: deals combat damage before creatures without it.",
-	"steadfast": "Steadfast: prevent 1 of the damage dealt to it by each source.",
+	"unmoved": "Unmoved: enemy spells and abilities can't tap it, return it to its owner's hand or shrink it.",
 }
 ## Mechanics named in rules text, explained under the card.
 const MECHANICS := {
@@ -61,6 +61,14 @@ var _home := Vector2.ZERO
 var _swiping := false
 var _slide: Tween
 var _info_dirty := false
+# zoom: pinch with two fingers, the mouse wheel, or a trackpad pinch
+const ZOOM_MAX := 4.0
+var _zoom := 1.0
+var _touches := {}               # finger index -> position
+var _pinch_d0 := 0.0
+var _pinch_z0 := 1.0
+var _pinch_mid := Vector2.ZERO
+var _pinching := false
 
 
 static func open(parent: Node, p_entries: Array, p_index: int, p_actions: Callable = Callable()) -> CardViewer:
@@ -168,6 +176,7 @@ func _show(dir: int) -> void:
 	if e.is_empty():
 		return
 	card_view.set_card(e["id"], e.get("foil", false), e.get("data", {}))
+	_set_zoom(1.0, Vector2.ZERO)
 	if dir != 0:
 		var home := _home
 		if _slide != null and _slide.is_valid():
@@ -252,6 +261,9 @@ func _fill_info(e: Dictionary) -> void:
 func _input(event: InputEvent) -> void:
 	if not is_visible_in_tree() or not _is_top():
 		return
+	if _zoom_input(event):
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			_pressing = true
@@ -268,6 +280,10 @@ func _input(event: InputEvent) -> void:
 					prev()
 				elif d.x < -SWIPE and index < entries.size() - 1:
 					next()
+	elif event is InputEventMouseMotion and _pressing and _zoom > 1.01:
+		# zoomed in: the finger moves the picture around
+		card_view.position += event.relative
+		_clamp_pan()
 	elif event is InputEventMouseMotion and _pressing:
 		var d: Vector2 = event.position - _press_pos
 		if not _swiping and absf(d.x) > 18.0 and absf(d.x) > absf(d.y) * 1.3:
@@ -275,6 +291,78 @@ func _input(event: InputEvent) -> void:
 		if _swiping:
 			card_view.position = _home + Vector2(d.x * 0.5, 0)
 			card_view.modulate.a = clampf(1.0 - absf(d.x) / 600.0, 0.5, 1.0)
+
+
+## Zoom gestures. Returns true when the event was a zoom (so it is not a swipe or a tap).
+func _zoom_input(event: InputEvent) -> bool:
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			_touches[event.index] = event.position
+		else:
+			_touches.erase(event.index)
+		if _touches.size() == 2:
+			var p: Array = _touches.values()
+			_pinch_d0 = maxf(10.0, (p[0] as Vector2).distance_to(p[1]))
+			_pinch_z0 = _zoom
+			_pinch_mid = ((p[0] as Vector2) + (p[1] as Vector2)) * 0.5
+			_pinching = true
+			_pressing = false
+			_swiping = false
+			return true
+		if _touches.size() < 2 and _pinching:
+			_pinching = false
+			_pressing = false
+			return true
+		return false
+	if event is InputEventScreenDrag:
+		_touches[event.index] = event.position
+		if _pinching and _touches.size() >= 2:
+			var p: Array = _touches.values()
+			var d := (p[0] as Vector2).distance_to(p[1])
+			var mid := ((p[0] as Vector2) + (p[1] as Vector2)) * 0.5
+			card_view.position += mid - _pinch_mid      # two fingers also pan
+			_pinch_mid = mid
+			_set_zoom(_pinch_z0 * d / _pinch_d0, mid)
+			return true
+		return _pinching
+	if event is InputEventMagnifyGesture:
+		_set_zoom(_zoom * event.factor, event.position)
+		return true
+	if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+		_set_zoom(_zoom * (1.12 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.12), event.position)
+		return true
+	if event is InputEventMouseButton and event.double_click and event.button_index == MOUSE_BUTTON_LEFT and _zoom > 1.01:
+		_set_zoom(1.0, Vector2.ZERO)
+		return true
+	return _pinching
+
+
+## Zoom the card about a screen point, keeping that point under the finger.
+func _set_zoom(z: float, at: Vector2) -> void:
+	z = clampf(z, 1.0, ZOOM_MAX)
+	if z <= 1.001:
+		_zoom = 1.0
+		card_view.scale = Vector2.ONE
+		card_view.position = _home
+		return
+	if _slide != null and _slide.is_valid():
+		_slide.kill()
+	card_view.modulate.a = 1.0
+	var k := z / _zoom
+	card_view.position = at - (at - card_view.position) * k
+	_zoom = z
+	card_view.scale = Vector2(z, z)
+	_clamp_pan()
+
+
+## Never let the zoomed card slide off the screen.
+func _clamp_pan() -> void:
+	var vp := get_viewport_rect().size
+	var sz := card_view.size * _zoom
+	var p := card_view.position
+	p.x = clampf(p.x, minf(vp.x - sz.x, _home.x) - 40.0, maxf(0.0, _home.x) + 40.0)
+	p.y = clampf(p.y, minf(vp.y - sz.y, _home.y) - 40.0, maxf(0.0, _home.y) + 40.0)
+	card_view.position = p
 
 
 func _is_top() -> bool:

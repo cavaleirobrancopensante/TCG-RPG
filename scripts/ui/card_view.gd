@@ -116,21 +116,20 @@ func _draw() -> void:
 	Tapestry.draw_parchment(self, r)
 	Tapestry.draw_band(self, r, 9 * k, Tapestry.band_for(f))
 	var f2: String = card.get("faction2", "")
-	if f2 != "":
-		# dual faith: the second faith's colours run down the right edge and along the foot
-		var c2: Color = Tapestry.colors(f2)[0] if f2 != "sanctum" else Tapestry.WHITE
-		var right := Rect2(r.end.x - 9 * k, r.position.y + r.size.y * 0.5, 9 * k, r.size.y * 0.5)
-		var foot := Rect2(r.position.x + r.size.x * 0.5, r.end.y - 9 * k, r.size.x * 0.5, 9 * k)
-		draw_rect(right, c2)
-		draw_rect(foot, c2)
-		draw_rect(right, INK, false, lw * 0.6)
-		draw_rect(foot, INK, false, lw * 0.6)
-		var sc2: Color = Tapestry.colors(f2)[1] if f2 != "sanctum" else Tapestry.VERMILION
-		UIKit.draw_sigil(self, f2, Vector2(r.end.x - 4.5 * k, r.end.y - 4.5 * k), 6 * k, sc2, maxf(1.0, k))
 	var inner := r.grow(-9 * k)
+	# the body of the card in its faith's colour; a two-faith card is split down the middle
+	_body = [body_color(f), body_color(f2 if f2 != "" else f)]
+	_split_x = inner.get_center().x
+	if f2 == "":
+		draw_rect(inner, _body[0])
+	else:
+		draw_rect(Rect2(inner.position, Vector2(inner.size.x * 0.5, inner.size.y)), _body[0])
+		draw_rect(Rect2(Vector2(_split_x, inner.position.y), Vector2(inner.size.x * 0.5, inner.size.y)), _body[1])
+	draw_rect(inner, Color(INK, 0.7), false, lw * 0.7)
 
 	# name plate
 	var name_r := Rect2(inner.position + Vector2(3, 3) * k, Vector2(inner.size.x - 6 * k, 24 * k))
+	Tapestry.ink_rect(self, name_r, Tapestry.PARCHMENT_LIGHT, lw * 0.7)
 	var cost_w := _draw_cost(Vector2(name_r.end.x - 2 * k, name_r.get_center().y), k)
 	var name_size := int(15 * k)
 	var nm: String = I18n.t(card.get("name", "?"))
@@ -138,7 +137,7 @@ func _draw() -> void:
 	while name_size > 8 and black.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, name_size).x > max_name_w:
 		name_size -= 1
 	draw_string(black, name_r.position + Vector2(3 * k, name_r.size.y * 0.72), nm, HORIZONTAL_ALIGNMENT_LEFT, max_name_w, name_size, INK)
-	draw_line(Vector2(name_r.position.x, name_r.end.y), Vector2(name_r.end.x, name_r.end.y), Color(INK, 0.6), lw * 0.6)
+
 
 	# miniature under a romanesque arch
 	var art_r := Rect2(inner.position.x + 8 * k, name_r.end.y + 4 * k, inner.size.x - 16 * k, 104 * k)
@@ -146,6 +145,7 @@ func _draw() -> void:
 
 	# type line (rubricated)
 	var type_y := art_r.end.y + 14 * k
+	Tapestry.ink_rect(self, Rect2(inner.position.x + 3 * k, art_r.end.y + 3 * k, inner.size.x - 6 * k, 15 * k), Tapestry.PARCHMENT_LIGHT, lw * 0.6)
 	var type_txt := I18n.type_line(card)
 	draw_string(book, Vector2(inner.position.x + 6 * k, type_y), type_txt, HORIZONTAL_ALIGNMENT_LEFT, inner.size.x - 28 * k, int(11 * k), Tapestry.RUBRIC)
 	var rar: String = card.get("rarity", "common")
@@ -156,8 +156,8 @@ func _draw() -> void:
 
 	# rules text with a red drop capital
 	var text_r := Rect2(inner.position.x + 6 * k, type_y + 4 * k, inner.size.x - 12 * k, inner.end.y - type_y - 8 * k)
-	draw_rect(text_r, Color(Tapestry.PARCHMENT_LIGHT, 0.55))
-	draw_rect(text_r, Color(INK, 0.5), false, lw * 0.6)
+	draw_rect(text_r, Tapestry.PARCHMENT_LIGHT)
+	draw_rect(text_r, Color(INK, 0.6), false, lw * 0.6)
 	var body: String = I18n.t(card.get("text", ""))
 	var fs := int(10.5 * k)
 	if body.length() > 100:
@@ -269,6 +269,16 @@ func _draw_miniature(art_r: Rect2, f: String, k: float, is_land: bool) -> void:
 
 
 static var _art_cache := {}
+var _body: Array = [Tapestry.PARCHMENT, Tapestry.PARCHMENT]
+var _split_x := 0.0
+
+
+## The colour of a card's body for a faith: its banner colour, softened toward the vellum.
+static func body_color(faith: String) -> Color:
+	var c: Color = Factions.DATA.get(faith, Factions.DATA["machine"])["primary"]
+	if faith == "abyss":
+		return Color(0.30, 0.26, 0.32)
+	return c.lerp(Tapestry.PARCHMENT, 0.22)
 
 
 ## The painted miniature for a card, loaded once and kept.
@@ -295,9 +305,10 @@ func _mask_outside(arch: PackedVector2Array, art_r: Rect2, _n: int, _cell: float
 			pts.append(Vector2(art_r.end.x + 1, top_y))
 			for i in range(20, 9, -1):
 				pts.append(arch[2 + i])
-		draw_colored_polygon(pts, Tapestry.PARCHMENT)
+		draw_colored_polygon(pts, _body[0] if side < 0 else _body[1])
 	# lattice overspill below the arch box
-	draw_rect(Rect2(art_r.position.x - 2, art_r.end.y, art_r.size.x + 4, 3), Tapestry.PARCHMENT)
+	draw_rect(Rect2(art_r.position.x - 2, art_r.end.y, art_r.size.x * 0.5 + 2, 3), _body[0])
+	draw_rect(Rect2(art_r.get_center().x, art_r.end.y, art_r.size.x * 0.5 + 2, 3), _body[1])
 
 
 func _draw_land_scene(art_r: Rect2, ground: Rect2, f: String, k: float) -> void:
