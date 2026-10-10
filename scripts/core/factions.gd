@@ -46,7 +46,7 @@ const RARITY_COLOR := {
 	"rare": Color(1.0, 0.82, 0.30), "mythic": Color(1.0, 0.45, 0.15),
 }
 ## Target number of cards per faith per rarity in the full set.
-const SET_TARGET := {"common": 20, "uncommon": 13, "rare": 9, "mythic": 3}
+const SET_TARGET := {"common": 27, "uncommon": 18, "rare": 11, "mythic": 4}
 
 # prices live in Economy (scripts/core/economy.gd)
 
