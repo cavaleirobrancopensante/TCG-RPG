@@ -30,7 +30,7 @@ func _ready() -> void:
 	UIKit.full_rect(bg)
 	add_child(bg)
 	var root := VBoxContainer.new()
-	UIKit.full_rect(root)
+	UIKit.full_rect(root, UIKit.TOP)
 	root.add_theme_constant_override("separation", 6)
 	add_child(root)
 

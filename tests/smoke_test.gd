@@ -11,6 +11,11 @@ func _ready() -> void:
 	add_child(main)
 	await _frames(5)
 	print("menu ok")
+	assert(Music.tracks.size() == 60, "60 tracks in catalogue")
+	for t in Music.tracks:
+		assert(ResourceLoader.exists(t["file"]) or FileAccess.file_exists(t["file"]), "missing " + t["file"])
+	assert(Music.current.get("kind", "") == "anthem", "menu plays an anthem")
+	print("music ok: menu → ", Music.current["title"])
 
 	main._new_game()
 	await _frames(5)
@@ -40,6 +45,7 @@ func _ready() -> void:
 		main._on_enemy_engaged(e)
 		await _frames(2)
 		var b: BattleScene = main.screen
+		assert(Music.current["faction"] == e["faction"] and Music.current["kind"] == "combat", "battle music follows the enemy")
 		var t := 0.0
 		while is_instance_valid(b) and b.st.phase != "over" and t < 400.0:
 			await _wait(1.0)
@@ -61,6 +67,22 @@ func _ready() -> void:
 	main._on_city_entered("cogspire")
 	await _frames(3)
 	var c: CityScreen = main.screen
+	assert(Music.current["id"] == "machine_00", "city opens with its anthem")
+	# The player strip: picker, manual choice, transport, back to auto.
+	Music._bar._toggle_picker()
+	await _frames(2)
+	Music.choose("lyceum_03")
+	assert(not Music.auto and Music.current["id"] == "lyceum_03", "manual choice")
+	Music.next()
+	assert(Music.current["id"] == "lyceum_04", "next")
+	Music.prev()
+	Music.toggle_pause()
+	assert(Music.paused, "paused")
+	Music.toggle_pause()
+	Music.set_auto(true)
+	assert(Music.current["faction"] == "machine", "auto resumes the city music")
+	Music._bar._toggle_picker()
+	print("music player ok")
 	for t in ["shop", "sell", "town", "inn"]:
 		c._on_tab(t)
 		await _frames(2)

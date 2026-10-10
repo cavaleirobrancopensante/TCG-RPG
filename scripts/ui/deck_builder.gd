@@ -25,7 +25,7 @@ func _ready() -> void:
 	add_child(bg)
 
 	var root := HBoxContainer.new()
-	UIKit.full_rect(root)
+	UIKit.full_rect(root, UIKit.TOP)
 	root.add_theme_constant_override("separation", 10)
 	add_child(root)
 

@@ -5,7 +5,7 @@ Magic: the Gathering–style rules (lands → mana → spells), Yu-Gi-Oh!-anime 
 (cast a creature and it materialises on the field), inside an open world with roaming
 enemies, lairs, safe cities, missions and a card economy.
 
-Version **0.1a**. Full design: [DESIGN.md](DESIGN.md).
+Version **1.1**. Full design: [DESIGN.md](DESIGN.md).
 
 ## The six faiths
 
@@ -31,6 +31,31 @@ Version **0.1a**. Full design: [DESIGN.md](DESIGN.md).
   townsfolk missions (defeat / clear a lair / visit a city), deck builder, inn (save).
 - **Rewards**: gold and card drops from duels, lair rewards, mission rewards; losing costs
   10% of your gold and sends you back to the nearest city.
+
+## Soundtrack (1.1)
+
+60 original pieces, ~104 minutes: for each faith **1 anthem, 5 menu pieces and 4 combat pieces**.
+Each anthem has hand-written themes that act as the faith's leitmotif; the other nine pieces
+develop that motif in other modes, metres and tempos. Medieval modal writing throughout —
+drones, parallel organum, harp/lute arpeggios — on synthesized period instruments (choir,
+organ, recorder, shawm, hurdy-gurdy, lute, harp, dulcimer, bells, frame drums, timpani).
+
+| Faith | Anthem | Character |
+|---|---|---|
+| Holy Church | *Lumen Ecclesiae* (D Dorian hymn) | choir, organ, bells; cathedral reverb |
+| Black Covenant | *Anthem of the Ninth Pit* (A Phrygian dirge) | low choir, tolling bells, war drums, the tritone |
+| Old Ways | *Song of the Old Ways* (G Dorian jig) | recorder, hurdy-gurdy, harp, frame drum |
+| Revel | *Carnival of Vinemere* (G Mixolydian dance) | shawm, lute, tambourine, tarantellas |
+| Stoa | *Hymn of the Stoa* (F Lydian) | harp, recorder, soft choir, steady phalanx drums |
+| Technocracy | *March of the Technocracy* (C major march) | dulcimer, glass chimes, regal, clock ticks, anvils |
+
+**Music player**: the strip across the top shows the current piece with previous /
+pause / next; tap the title or ☰ to browse all 60 by faith, pick one, set the volume, or
+switch **Auto** back on. In Auto the music follows the game: anthems on the title screen,
+the region's faith while you walk, the city's anthem then its town pieces in cities, the
+enemy's combat music in duels and the boss piece in lairs.
+
+Regenerate with `python3 tools/music/compose.py [faith ...]` (numpy, scipy, ffmpeg).
 
 ## Card set status
 
