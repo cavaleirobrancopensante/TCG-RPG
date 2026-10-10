@@ -1,0 +1,389 @@
+[
+  {
+    "id": "machine_c_001",
+    "name": "Brass Scuttler",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [],
+    "text": "",
+    "flavor": "It skitters through the foundry vents, tightening bolts no one else can reach."
+  },
+  {
+    "id": "machine_c_002",
+    "name": "Clockwork Hound",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [],
+    "text": "",
+    "flavor": "Loyal to whoever holds the key, which is the most honest loyalty there is."
+  },
+  {
+    "id": "machine_c_003",
+    "name": "Rivetwall Sentry",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "generic": 2
+    },
+    "power": 0,
+    "toughness": 4,
+    "keywords": [
+      "defender"
+    ],
+    "effects": [],
+    "text": "Defender (can't attack).",
+    "flavor": "Built to stand in a doorway until the end of the world, and slightly beyond."
+  },
+  {
+    "id": "machine_c_004",
+    "name": "Tinkerer's Apprentice",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "When this enters, create a 1/1 Servo token.",
+    "flavor": "Her first construct was a mouse. Her second was a better mouse."
+  },
+  {
+    "id": "machine_c_005",
+    "name": "Gyrocopter Scout",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 1,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [],
+    "text": "Flying.",
+    "flavor": "Its rotors hum a single note, tuned to the frequency of the Foundry bells."
+  },
+  {
+    "id": "machine_c_006",
+    "name": "Piston Laborer",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [],
+    "text": "",
+    "flavor": "It neither tires, nor complains, nor stops for lunch."
+  },
+  {
+    "id": "machine_c_007",
+    "name": "Foundry Golem",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "generic": 4
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [],
+    "text": "",
+    "flavor": "Cast in a single pour, quenched in river-water, animated by arithmetic."
+  },
+  {
+    "id": "machine_c_008",
+    "name": "Brass Dynamo",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "add_mana",
+        "color": "C",
+        "amount": 1
+      }
+    ],
+    "text": "At the beginning of your upkeep, add C to your mana pool this turn.",
+    "flavor": "Wind it once and it turns forever. Probably."
+  },
+  {
+    "id": "machine_c_009",
+    "name": "Calibrated Discharge",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Device",
+    "cost": {
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_creature",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 2 damage to target enemy creature.",
+    "flavor": "Measured to the volt. Aimed to the inch."
+  },
+  {
+    "id": "machine_u_001",
+    "name": "Arc-Welder Construct",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "generic": 4
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 2
+      }
+    ],
+    "text": "When this enters, deal 2 damage to any enemy creature or the enemy player.",
+    "flavor": "It joins steel to steel, and enemies to the floor."
+  },
+  {
+    "id": "machine_u_002",
+    "name": "Bronze Phalanx Automaton",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "generic": 5
+    },
+    "power": 4,
+    "toughness": 5,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Vigilance.",
+    "flavor": "The Stoa taught discipline; the Technocracy simply built it."
+  },
+  {
+    "id": "machine_u_003",
+    "name": "Siege Automaton",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 4
+    },
+    "power": 5,
+    "toughness": 4,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "text": "Trample.",
+    "flavor": "The wall was rated for catapults. No one had rated it for patience."
+  },
+  {
+    "id": "machine_u_004",
+    "name": "Galvanic Coil",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "generic": 3
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1
+      }
+    ],
+    "text": "At the beginning of your upkeep, deal 1 damage to any enemy creature or the enemy player.",
+    "flavor": "It crackles once each dawn, and something nearby flinches."
+  },
+  {
+    "id": "machine_u_005",
+    "name": "Self-Mending Forge",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "generic": 4
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "At the beginning of your upkeep, create a 1/1 Servo token.",
+    "flavor": "No smith tends it. It has long since learned to tend itself."
+  },
+  {
+    "id": "machine_r_001",
+    "name": "Quicksilver Lancer",
+    "faction": "machine",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [
+      "haste",
+      "vigilance"
+    ],
+    "effects": [],
+    "text": "Haste, vigilance.",
+    "flavor": "Its joints run with liquid metal, and it moves before the eye can follow."
+  },
+  {
+    "id": "machine_r_002",
+    "name": "Perpetual Engine",
+    "faction": "machine",
+    "rarity": "rare",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "generic": 4
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "add_mana",
+        "color": "C",
+        "amount": 2
+      }
+    ],
+    "text": "At the beginning of your upkeep, add CC to your mana pool this turn.",
+    "flavor": "The engineers who designed it are still arguing over why it works."
+  },
+  {
+    "id": "machine_r_003",
+    "name": "Grand Foundry Colossus",
+    "faction": "machine",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 5
+    },
+    "power": 6,
+    "toughness": 6,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "text": "Trample.",
+    "flavor": "Its footfalls are measured in tremors, its stride in city blocks."
+  },
+  {
+    "id": "machine_m_001",
+    "name": "The Prime Engine",
+    "faction": "machine",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 6
+    },
+    "power": 7,
+    "toughness": 7,
+    "keywords": [
+      "vigilance",
+      "trample"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "keywords": []
+        },
+        "count": 3
+      }
+    ],
+    "text": "Vigilance, trample. When this enters, create three 1/1 Servo tokens.",
+    "flavor": "The heart of the Foundry, beating in iron time; every other machine is its echo."
+  }
+]

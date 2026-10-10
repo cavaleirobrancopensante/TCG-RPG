@@ -1,0 +1,450 @@
+[
+  {
+    "id": "revel_c_001",
+    "name": "Tavern Brawler",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Warrior",
+    "cost": {
+      "R": 1
+    },
+    "power": 2,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [],
+    "text": "",
+    "flavor": "He starts every fight with a toast and ends it with a stool."
+  },
+  {
+    "id": "revel_c_002",
+    "name": "Vine-Crowned Bacchant",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Bacchant",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 1,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [],
+    "text": "Haste.",
+    "flavor": "She dances straight from the wine-press into the battle line."
+  },
+  {
+    "id": "revel_c_003",
+    "name": "Masquerade Duelist",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Duelist",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn"
+      }
+    ],
+    "text": "Whenever this attacks, it gets +1/+0 until end of turn.",
+    "flavor": "Behind the gilded mask, a smile; behind the smile, a blade."
+  },
+  {
+    "id": "revel_c_004",
+    "name": "Fire-Eater of the Feast",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1
+      }
+    ],
+    "text": "When this enters, deal 1 damage to any enemy creature or the enemy player.",
+    "flavor": "The guests applaud. The guest nearest the stage stops applauding."
+  },
+  {
+    "id": "revel_c_005",
+    "name": "Gluttonous Baron",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 4,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "lose_life",
+        "amount": 2
+      }
+    ],
+    "text": "When this enters, you lose 2 life.",
+    "flavor": "Seven courses, nine vintages, and still he rises hungry for more."
+  },
+  {
+    "id": "revel_c_006",
+    "name": "Carousing Lancer",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 4,
+    "toughness": 3,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [],
+    "text": "Haste.",
+    "flavor": "He charged the enemy line still holding his goblet, and never spilled a drop."
+  },
+  {
+    "id": "revel_c_007",
+    "name": "Toast of Fire",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 2 damage to any enemy creature or the enemy player.",
+    "flavor": "\"To your health!\" she cried, and lit the brandy."
+  },
+  {
+    "id": "revel_c_008",
+    "name": "Liquid Courage",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "own_creature",
+        "power": 3,
+        "toughness": 1,
+        "duration": "turn",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Target creature you control gets +3/+1 until end of turn.",
+    "flavor": "One cup for luck, two for nerve, three for glory."
+  },
+  {
+    "id": "revel_c_009",
+    "name": "Banquet Flambé",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_creature",
+        "amount": 4,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 4 damage to target enemy creature.",
+    "flavor": "The chef insists it is meant to burn that brightly."
+  },
+  {
+    "id": "revel_u_001",
+    "name": "Duelist of the Velvet Court",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Duelist",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "turn"
+      }
+    ],
+    "text": "Haste. Whenever this attacks, it gets +1/+1 until end of turn.",
+    "flavor": "She has never lost a duel, a wager, or an argument about wine."
+  },
+  {
+    "id": "revel_u_002",
+    "name": "Masked Firebreather",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1
+      }
+    ],
+    "text": "Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
+    "flavor": "Every performance ends with a bow and a scorched front row."
+  },
+  {
+    "id": "revel_u_003",
+    "name": "Hierophant of the Bacchanal",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Bacchant",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "power": 2,
+        "toughness": 0,
+        "duration": "turn"
+      }
+    ],
+    "text": "Haste. When this enters, creatures you control get +2/+0 until end of turn.",
+    "flavor": "\"Tonight there is no tomorrow. Drink, and charge!\""
+  },
+  {
+    "id": "revel_u_004",
+    "name": "Bottomless Wine Cask",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "draw",
+        "amount": 1
+      },
+      {
+        "trigger": "upkeep",
+        "action": "lose_life",
+        "amount": 1
+      }
+    ],
+    "text": "At the beginning of your upkeep, draw a card and you lose 1 life.",
+    "flavor": "Pleasure that never ends is its own slow wound."
+  },
+  {
+    "id": "revel_u_005",
+    "name": "Pyre-Dancer's Whirl",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "all_enemy_creatures",
+        "amount": 2,
+        "trigger": "cast"
+      },
+      {
+        "action": "lose_life",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 2 damage to each enemy creature. You lose 2 life.",
+    "flavor": "The dancers spin closer to the bonfire with every verse."
+  },
+  {
+    "id": "revel_r_001",
+    "name": "Salamander Juggler",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Performer",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 1
+      }
+    ],
+    "text": "Haste. Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
+    "flavor": "Three living flames in the air, and not one of them is happy about it."
+  },
+  {
+    "id": "revel_r_002",
+    "name": "Archduke of the Endless Feast",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 2,
+      "generic": 2
+    },
+    "power": 5,
+    "toughness": 4,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "lose_life",
+        "amount": 1
+      }
+    ],
+    "text": "Haste. At the beginning of your upkeep, you lose 1 life.",
+    "flavor": "His banquet has lasted eleven years. His liver has filed several complaints."
+  },
+  {
+    "id": "revel_r_003",
+    "name": "Grand Conflagration",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 2,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 5,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 5 damage to any enemy creature or the enemy player.",
+    "flavor": "The fireworks were the finale. Nobody had planned for the encore."
+  },
+  {
+    "id": "revel_m_001",
+    "name": "Vessaria, Mistress of the Undying Feast",
+    "faction": "revel",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Noble",
+    "cost": {
+      "R": 2,
+      "generic": 3
+    },
+    "power": 5,
+    "toughness": 5,
+    "keywords": [
+      "haste"
+    ],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 2
+      },
+      {
+        "trigger": "upkeep",
+        "action": "lose_life",
+        "amount": 1
+      }
+    ],
+    "text": "Haste. Whenever this attacks, deal 2 damage to any enemy creature or the enemy player. At the beginning of your upkeep, you lose 1 life.",
+    "flavor": "She has tasted every pleasure in the world, and is bored of all but one: winning."
+  }
+]
