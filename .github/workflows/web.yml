@@ -1,0 +1,97 @@
+# Builds the browser version on every push to main and publishes it to GitHub Pages:
+#   https://cavaleirobrancopensante.github.io/TCG-RPG/
+# Each build lives in its own folder (b/<commit>/) so browsers never mix files from two
+# builds; the root page just forwards to the newest one.
+name: Web build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.7"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and web export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}-web-nothreads-v1
+
+      - name: Download Godot and web templates
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -e
+          mkdir -p ~/godot ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          base=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable
+          curl -sSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip -d ~/godot && mv ~/godot/Godot_v* ~/godot/godot && chmod +x ~/godot/godot
+          curl -sSL -o tpl.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q -j tpl.tpz "templates/web_nothreads_release.zip" "templates/web_nothreads_debug.zip" "templates/version.txt" \
+            -d ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable/
+          rm -f godot.zip tpl.tpz
+
+      - name: Stamp build info
+        run: |
+          echo "{\"commit\": \"${GITHUB_SHA::7}\", \"date\": \"$(date -u '+%-d %b %Y %H:%M') UTC\"}" > build_info.json
+          cat build_info.json
+
+      - name: Import project
+        run: timeout 600 ~/godot/godot --headless --import || true
+
+      - name: Run rule and data tests
+        run: |
+          set -o pipefail
+          timeout 600 ~/godot/godot --headless --path . res://tests/test_runner.tscn 2>&1 | tail -25
+
+      - name: Export for the web
+        run: |
+          set -e
+          sha=${GITHUB_SHA::7}
+          mkdir -p build/site/b/$sha
+          timeout 900 ~/godot/godot --headless --path . --export-release "Web" build/site/b/$sha/index.html
+          test -f build/site/b/$sha/index.pck
+          # Root page: parchment-coloured, forwards to the newest build.
+          cat > build/site/index.html <<HTML
+          <!doctype html><html><head><meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta http-equiv="cache-control" content="no-cache">
+          <title>TCG · RPG</title>
+          <style>html,body{margin:0;height:100%;background:#edddb3;color:#9e2117;font:24px serif;display:grid;place-items:center}</style>
+          <script>location.replace("b/$sha/" + location.search);</script>
+          </head><body>Opening the book…</body></html>
+          HTML
+          touch build/site/.nojekyll
+          ls -la build/site build/site/b/$sha
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

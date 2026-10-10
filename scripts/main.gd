@@ -158,16 +158,34 @@ func show_menu() -> void:
 	var title := UIKit.title("TCG · RPG", 72)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(title)
-	var sub := UIKit.label("Six faiths. One deck.  ·  Version " + str(ProjectSettings.get_setting("application/config/version", "")), 20, UIKit.DIM)
+	var sub := UIKit.label("Six faiths. One deck.", 20, UIKit.DIM)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(sub)
 	if GameState.has_save():
 		v.add_child(UIKit.button("Continue", _continue_game, 320))
 	v.add_child(UIKit.button("New game", _confirm_new_game, 320))
+	var ver := UIKit.label(version_text(), 17, UIKit.DIM)
+	ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ver.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	ver.offset_top = -46
+	ver.offset_bottom = -20
+	m.add_child(ver)
 	_set_screen(m)
 	await get_tree().process_frame
 	if is_instance_valid(v):
 		v.position = Vector2((m.size.x - v.size.x) * 0.5, m.size.y * 0.40 + UIKit.TOP + 46)
+
+
+## "Version 1.6 · build 3f2a9c1 · 10 Oct 2026" — build details are stamped by the web deploy.
+static func version_text() -> String:
+	var t := "Version " + str(ProjectSettings.get_setting("application/config/version", "?"))
+	var info = JSON.parse_string(FileAccess.get_file_as_string("res://build_info.json")) if FileAccess.file_exists("res://build_info.json") else null
+	if typeof(info) == TYPE_DICTIONARY:
+		if info.has("commit"):
+			t += "  ·  build " + String(info["commit"])
+		if info.has("date"):
+			t += "  ·  " + String(info["date"])
+	return t
 
 
 func _confirm_new_game() -> void:
