@@ -263,11 +263,17 @@ func load_game(n: int = 0) -> bool:
 	visited_cities = data.get("visited_cities", [])
 	defeated = _int_dict(data.get("defeated", {}))
 	missions = data.get("missions", {})
-	for m in missions:
+	for m in missions.keys():
+		if mission_def(m).is_empty():
+			missions.erase(m)       # missions retired in a later version
+			continue
 		missions[m]["progress"] = int(missions[m].get("progress", 0))
 	pending_boosters = int(data.get("pending_boosters", 0))
 	faction_packs = Array(data.get("faction_packs", [])).filter(func(x): return Factions.DATA.has(x))
 	hero = String(data.get("hero", ""))
+	if hero == "":      # saves from before heroes: the faith the player plays most
+		var bf := DeckTools.best_factions(owned_all(), 1)
+		hero = bf[0] if not bf.is_empty() else "sanctum"
 	stats = data.get("stats", stats)
 	_extra_load(data)
 	# Drop cards that no longer exist in the database (set revisions).
@@ -458,6 +464,18 @@ func lair(id: String) -> Dictionary:
 
 func mission_def(id: String) -> Dictionary:
 	return world_data.get("missions", {}).get(id, {})
+
+
+## Is this mission offered to the current hero? (his faith, and the previous step done)
+func mission_for_hero(id: String) -> bool:
+	var m := mission_def(id)
+	if m.is_empty():
+		return false
+	var heroes: Array = m.get("heroes", [])
+	if not heroes.is_empty() and not heroes.has(hero):
+		return false
+	var after: String = m.get("after", "")
+	return after == "" or mission_state(after) == "claimed"
 
 
 # ---------------------------------------------------------------- missions

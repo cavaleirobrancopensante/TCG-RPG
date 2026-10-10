@@ -1,72 +1,662 @@
 {
-	"size": [6000, 4000],
-	"start": {"x": 3000, "y": 2250},
+	"size": [
+		6000,
+		4000
+	],
+	"start": {
+		"x": 3000,
+		"y": 2250
+	},
 	"cities": [
 		{
-			"id": "cogspire", "name": "Cogspire", "faction": "machine", "x": 3000, "y": 2000,
+			"id": "cogspire",
+			"name": "Cogspire",
+			"faction": "machine",
+			"x": 3000,
+			"y": 2000,
 			"description": "A neutral city of brass towers and ticking bridges. Every faith trades here.",
 			"npcs": [
-				{"name": "Overseer Brask", "title": "Guild Clerk", "missions": ["m_tech_1", "m_tech_2"]}
+				{
+					"name": "Overseer Brask",
+					"title": "Guild Clerk",
+					"missions": [
+						"m_tech_1",
+						"tc_1",
+						"tc_2",
+						"tc_3",
+						"tc_4"
+					]
+				}
 			]
 		},
 		{
-			"id": "santa_lucerna", "name": "Santa Lucerna", "faction": "sanctum", "x": 3000, "y": 650,
+			"id": "santa_lucerna",
+			"name": "Santa Lucerna",
+			"faction": "sanctum",
+			"x": 3000,
+			"y": 650,
 			"description": "A walled city of bells and white stone, crowned by the Cathedral of the Lamp.",
 			"npcs": [
-				{"name": "Father Anselm", "title": "Parish Priest", "missions": ["m_church_1", "m_church_2"]},
-				{"name": "Sister Imelda", "title": "Hospitaller", "missions": ["m_church_3"]}
+				{
+					"name": "Father Anselm",
+					"title": "Parish Priest",
+					"missions": [
+						"hc_1",
+						"hc_2",
+						"hc_4",
+						"hc_5"
+					]
+				},
+				{
+					"name": "Sister Imelda",
+					"title": "Hospitaller",
+					"missions": [
+						"m_church_3",
+						"hc_3"
+					]
+				}
 			]
 		},
 		{
-			"id": "porticus", "name": "Porticus", "faction": "lyceum", "x": 5100, "y": 1150,
+			"id": "porticus",
+			"name": "Porticus",
+			"faction": "lyceum",
+			"x": 5100,
+			"y": 1150,
 			"description": "Colonnades and libraries on a cold sea. The scholars here argue in whispers.",
 			"npcs": [
-				{"name": "Master Theon", "title": "Scholarch", "missions": ["m_stoa_1", "m_stoa_2"]}
+				{
+					"name": "Master Theon",
+					"title": "Scholarch",
+					"missions": [
+						"st_1",
+						"st_2",
+						"st_3",
+						"st_4"
+					]
+				}
 			]
 		},
 		{
-			"id": "elderholt", "name": "Elderholt", "faction": "wild", "x": 900, "y": 1800,
+			"id": "elderholt",
+			"name": "Elderholt",
+			"faction": "wild",
+			"x": 900,
+			"y": 1800,
 			"description": "A town grown rather than built, among standing stones and oaks older than kings.",
 			"npcs": [
-				{"name": "Mother Rowan", "title": "Grove Keeper", "missions": ["m_grove_1", "m_grove_2"]}
+				{
+					"name": "Mother Rowan",
+					"title": "Grove Keeper",
+					"missions": [
+						"ow_1",
+						"ow_2",
+						"ow_3",
+						"ow_4"
+					]
+				}
 			]
 		},
 		{
-			"id": "vinemere", "name": "Vinemere", "faction": "revel", "x": 5100, "y": 3050,
+			"id": "vinemere",
+			"name": "Vinemere",
+			"faction": "revel",
+			"x": 5100,
+			"y": 3050,
 			"description": "Lanterns, wine and masks. Every night is a feast, and every feast has a price.",
 			"npcs": [
-				{"name": "Lady Ysolde", "title": "Mistress of Revels", "missions": ["m_revel_1", "m_revel_2"]}
+				{
+					"name": "Lady Ysolde",
+					"title": "Mistress of Revels",
+					"missions": [
+						"rv_1",
+						"rv_2",
+						"rv_3",
+						"rv_4"
+					]
+				}
 			]
 		},
 		{
-			"id": "ashenmouth", "name": "Ashenmouth", "faction": "abyss", "x": 1300, "y": 3400,
+			"id": "ashenmouth",
+			"name": "Ashenmouth",
+			"faction": "abyss",
+			"x": 1300,
+			"y": 3400,
 			"description": "A smoke-black town on the edge of the Pit. Its truce is old, and thin.",
 			"npcs": [
-				{"name": "The Grey Factor", "title": "Broker of Debts", "missions": ["m_abyss_1"]}
+				{
+					"name": "The Grey Factor",
+					"title": "Broker of Debts",
+					"missions": [
+						"bc_1",
+						"bc_2",
+						"bc_3",
+						"bc_4"
+					]
+				}
 			]
 		}
 	],
 	"lairs": [
-		{"id": "lair_forge", "name": "The Runaway Forge", "faction": "machine", "x": 3700, "y": 2600, "level": 2, "boss": "The Iron Foreman", "life": 24, "reward": {"gold": 150, "boosters": 1}},
-		{"id": "lair_beast", "name": "Den of the Antlered Beast", "faction": "wild", "x": 450, "y": 900, "level": 3, "boss": "The Antlered One", "life": 26, "reward": {"gold": 200, "boosters": 1, "card_rarity": "rare", "faction": "wild"}},
-		{"id": "lair_banquet", "name": "The Endless Banquet", "faction": "revel", "x": 5600, "y": 3650, "level": 3, "boss": "Duke Carnevale", "life": 26, "reward": {"gold": 250, "boosters": 1, "card_rarity": "rare", "faction": "revel"}},
-		{"id": "lair_observatory", "name": "Observatory of the Silent Sage", "faction": "lyceum", "x": 5650, "y": 450, "level": 3, "boss": "The Silent Sage", "life": 26, "reward": {"gold": 200, "boosters": 1, "card_rarity": "rare", "faction": "lyceum"}},
-		{"id": "lair_templar", "name": "Chapel of the Last Templar", "faction": "sanctum", "x": 1900, "y": 300, "level": 4, "boss": "Ser Gaudenz, Last Templar", "life": 28, "reward": {"gold": 300, "boosters": 2, "card_rarity": "rare", "faction": "sanctum"}},
-		{"id": "lair_crypt", "name": "Crypt of the Nameless Lich", "faction": "abyss", "x": 2500, "y": 3550, "level": 4, "boss": "The Nameless Lich", "life": 28, "reward": {"gold": 300, "boosters": 2, "card_rarity": "rare", "faction": "abyss"}},
-		{"id": "lair_pit", "name": "The Ninth Pit", "faction": "abyss", "x": 350, "y": 3750, "level": 6, "boss": "Belzareth's Herald", "life": 32, "reward": {"gold": 600, "boosters": 3, "card_rarity": "mythic"}}
+		{
+			"id": "lair_forge",
+			"name": "The Runaway Forge",
+			"faction": "machine",
+			"x": 3700,
+			"y": 2600,
+			"level": 2,
+			"boss": "The Iron Foreman",
+			"life": 24,
+			"reward": {
+				"gold": 150,
+				"boosters": 1
+			}
+		},
+		{
+			"id": "lair_beast",
+			"name": "Den of the Antlered Beast",
+			"faction": "wild",
+			"x": 450,
+			"y": 900,
+			"level": 3,
+			"boss": "The Antlered One",
+			"life": 26,
+			"reward": {
+				"gold": 200,
+				"boosters": 1,
+				"card_rarity": "rare",
+				"faction": "wild"
+			}
+		},
+		{
+			"id": "lair_banquet",
+			"name": "The Endless Banquet",
+			"faction": "revel",
+			"x": 5600,
+			"y": 3650,
+			"level": 3,
+			"boss": "Duke Carnevale",
+			"life": 26,
+			"reward": {
+				"gold": 250,
+				"boosters": 1,
+				"card_rarity": "rare",
+				"faction": "revel"
+			}
+		},
+		{
+			"id": "lair_observatory",
+			"name": "Observatory of the Silent Sage",
+			"faction": "lyceum",
+			"x": 5650,
+			"y": 450,
+			"level": 3,
+			"boss": "The Silent Sage",
+			"life": 26,
+			"reward": {
+				"gold": 200,
+				"boosters": 1,
+				"card_rarity": "rare",
+				"faction": "lyceum"
+			}
+		},
+		{
+			"id": "lair_templar",
+			"name": "Chapel of the Last Templar",
+			"faction": "sanctum",
+			"x": 1900,
+			"y": 300,
+			"level": 4,
+			"boss": "Ser Gaudenz, Last Templar",
+			"life": 28,
+			"reward": {
+				"gold": 300,
+				"boosters": 2,
+				"card_rarity": "rare",
+				"faction": "sanctum"
+			}
+		},
+		{
+			"id": "lair_crypt",
+			"name": "Crypt of the Nameless Lich",
+			"faction": "abyss",
+			"x": 2500,
+			"y": 3550,
+			"level": 4,
+			"boss": "The Nameless Lich",
+			"life": 28,
+			"reward": {
+				"gold": 300,
+				"boosters": 2,
+				"card_rarity": "rare",
+				"faction": "abyss"
+			}
+		},
+		{
+			"id": "lair_pit",
+			"name": "The Ninth Pit",
+			"faction": "abyss",
+			"x": 350,
+			"y": 3750,
+			"level": 6,
+			"boss": "Belzareth's Herald",
+			"life": 32,
+			"reward": {
+				"gold": 600,
+				"boosters": 3,
+				"card_rarity": "mythic"
+			}
+		}
 	],
 	"missions": {
-		"m_tech_1": {"title": "Proof of Skill", "type": "defeat", "faction": "any", "count": 2, "text": "The guild only trades with duelists who can hold their own. Win two duels anywhere.", "reward": {"gold": 100, "boosters": 1}},
-		"m_tech_2": {"title": "Letter to the Cathedral", "type": "visit", "city": "santa_lucerna", "text": "Carry the guild's accounts north to Santa Lucerna.", "reward": {"gold": 120}},
-		"m_church_1": {"title": "Shadows on the Pilgrim Road", "type": "defeat", "faction": "abyss", "count": 3, "text": "Covenant cultists prey on pilgrims. Defeat three of them.", "reward": {"gold": 150, "boosters": 1}},
-		"m_church_2": {"title": "The Nameless Lich", "type": "lair", "lair": "lair_crypt", "text": "A lich has made a crypt of a ruined abbey in the south. Cleanse it.", "reward": {"gold": 300, "card_rarity": "rare", "faction": "sanctum"}},
-		"m_church_3": {"title": "Medicine for the Hospice", "type": "visit", "city": "elderholt", "text": "The grove-keepers of Elderholt grow herbs we need. Visit them.", "reward": {"gold": 100, "card_rarity": "uncommon", "faction": "sanctum"}},
-		"m_stoa_1": {"title": "Field Study", "type": "visit", "city": "vinemere", "text": "Observe the excesses of Vinemere, and return unchanged.", "reward": {"gold": 100}},
-		"m_stoa_2": {"title": "The Silent Sage", "type": "lair", "lair": "lair_observatory", "text": "Our old master has stopped speaking and started duelling. Bring him back to reason.", "reward": {"gold": 200, "boosters": 1, "card_rarity": "rare", "faction": "lyceum"}},
-		"m_grove_1": {"title": "Iron in the Roots", "type": "defeat", "faction": "machine", "count": 3, "text": "Constructs are cutting the old woods. Stop three of them.", "reward": {"gold": 120, "card_rarity": "uncommon", "faction": "wild"}},
-		"m_grove_2": {"title": "The Antlered One", "type": "lair", "lair": "lair_beast", "text": "The great beast has gone mad. Prove yourself against it.", "reward": {"gold": 150, "boosters": 1}},
-		"m_revel_1": {"title": "Spoil the Sermon", "type": "defeat", "faction": "sanctum", "count": 3, "text": "The Church's preachers are bad for business. Win three duels against them.", "reward": {"gold": 220}},
-		"m_revel_2": {"title": "The Endless Banquet", "type": "lair", "lair": "lair_banquet", "text": "Duke Carnevale's feast has lasted a year. Somebody must win the final toast.", "reward": {"gold": 400, "boosters": 1}},
-		"m_abyss_1": {"title": "Collect a Debt", "type": "defeat", "faction": "lyceum", "count": 3, "text": "Some scholars owe the Covenant. Defeat three of them.", "reward": {"gold": 200, "card_rarity": "rare", "faction": "abyss"}}
+		"m_tech_1": {
+			"title": "Proof of Skill",
+			"type": "defeat",
+			"text": "The guild only trades with duelists who can hold their own. Win two duels anywhere.",
+			"reward": {
+				"gold": 100,
+				"boosters": 1
+			},
+			"faction": "any",
+			"count": 2
+		},
+		"m_church_3": {
+			"title": "Medicine for the Hospice",
+			"type": "visit",
+			"text": "The grove-keepers of Elderholt grow herbs the sick need. Carry a letter asking for them.",
+			"reward": {
+				"gold": 100,
+				"card_rarity": "uncommon",
+				"faction": "sanctum"
+			},
+			"city": "elderholt",
+			"heroes": [
+				"sanctum",
+				"wild",
+				"lyceum",
+				"machine",
+				"revel"
+			]
+		},
+		"hc_1": {
+			"title": "Shadows on the Pilgrim Road",
+			"type": "defeat",
+			"text": "Covenant cultists prey on pilgrims bound for the Cathedral of the Lamp. Defeat three of them.",
+			"reward": {
+				"gold": 150,
+				"boosters": 1
+			},
+			"faction": "abyss",
+			"count": 3,
+			"heroes": [
+				"sanctum"
+			]
+		},
+		"hc_2": {
+			"title": "Escort to Porticus",
+			"type": "visit",
+			"text": "A party of pilgrims carries relics to the chapel of the scholars' city. See them safely to Porticus.",
+			"reward": {
+				"gold": 120,
+				"card_rarity": "uncommon",
+				"faction": "sanctum"
+			},
+			"city": "porticus",
+			"heroes": [
+				"sanctum"
+			],
+			"after": "hc_1"
+		},
+		"hc_3": {
+			"title": "The Last Templar",
+			"type": "lair",
+			"text": "Ser Gaudenz, last of the Templars, has shut himself in his chapel and duels all who come. Overcome him and bring him to confession.",
+			"reward": {
+				"gold": 250,
+				"card_rarity": "rare",
+				"faction": "sanctum"
+			},
+			"lair": "lair_templar",
+			"heroes": [
+				"sanctum"
+			],
+			"after": "hc_2"
+		},
+		"hc_4": {
+			"title": "The Nameless Lich",
+			"type": "lair",
+			"text": "A lich has made his crypt in a ruined abbey to the south. Cleanse the holy ground.",
+			"reward": {
+				"gold": 300,
+				"boosters": 1,
+				"card_rarity": "rare",
+				"faction": "sanctum"
+			},
+			"lair": "lair_crypt",
+			"heroes": [
+				"sanctum"
+			],
+			"after": "hc_3"
+		},
+		"hc_5": {
+			"title": "Close the Ninth Pit",
+			"type": "lair",
+			"text": "The herald of Belzareth stirs in the deepest pit. Go down with the Lamp and drive him back.",
+			"reward": {
+				"gold": 600,
+				"boosters": 2,
+				"card_rarity": "mythic",
+				"faction": "sanctum"
+			},
+			"lair": "lair_pit",
+			"heroes": [
+				"sanctum"
+			],
+			"after": "hc_4"
+		},
+		"bc_1": {
+			"title": "Collect a Debt",
+			"type": "defeat",
+			"text": "Some scholars borrowed against their souls and now hide behind their books. Defeat three of them.",
+			"reward": {
+				"gold": 200,
+				"card_rarity": "uncommon",
+				"faction": "abyss"
+			},
+			"faction": "lyceum",
+			"count": 3,
+			"heroes": [
+				"abyss"
+			]
+		},
+		"bc_2": {
+			"title": "Break the Pilgrims",
+			"type": "defeat",
+			"text": "The Church's knights guard the roads too well. Defeat three servants of the Church.",
+			"reward": {
+				"gold": 220,
+				"boosters": 1
+			},
+			"faction": "sanctum",
+			"count": 3,
+			"heroes": [
+				"abyss"
+			],
+			"after": "bc_1"
+		},
+		"bc_3": {
+			"title": "Audience with the Lich",
+			"type": "lair",
+			"text": "The Nameless Lich grants nothing to the weak. Defeat him in his crypt and he will name his price.",
+			"reward": {
+				"gold": 300,
+				"card_rarity": "rare",
+				"faction": "abyss"
+			},
+			"lair": "lair_crypt",
+			"heroes": [
+				"abyss"
+			],
+			"after": "bc_2"
+		},
+		"bc_4": {
+			"title": "The Ninth Pit",
+			"type": "lair",
+			"text": "The herald of the pit tests every new servant. Survive the test.",
+			"reward": {
+				"gold": 600,
+				"boosters": 2,
+				"card_rarity": "mythic",
+				"faction": "abyss"
+			},
+			"lair": "lair_pit",
+			"heroes": [
+				"abyss"
+			],
+			"after": "bc_3"
+		},
+		"ow_1": {
+			"title": "Iron in the Roots",
+			"type": "defeat",
+			"text": "Constructs are cutting the old woods for the furnaces of Cogspire. Stop three of them.",
+			"reward": {
+				"gold": 120,
+				"card_rarity": "uncommon",
+				"faction": "wild"
+			},
+			"faction": "machine",
+			"count": 3,
+			"heroes": [
+				"wild"
+			]
+		},
+		"ow_2": {
+			"title": "The Antlered One",
+			"type": "lair",
+			"text": "The great beast of the north wood has gone mad. Calm it the old way: by besting it.",
+			"reward": {
+				"gold": 180,
+				"boosters": 1
+			},
+			"lair": "lair_beast",
+			"heroes": [
+				"wild"
+			],
+			"after": "ow_1"
+		},
+		"ow_3": {
+			"title": "The Runaway Forge",
+			"type": "lair",
+			"text": "A foundry has broken loose and burns everything around it. Put out its fires.",
+			"reward": {
+				"gold": 220,
+				"card_rarity": "rare",
+				"faction": "wild"
+			},
+			"lair": "lair_forge",
+			"heroes": [
+				"wild"
+			],
+			"after": "ow_2"
+		},
+		"ow_4": {
+			"title": "Blight from the South",
+			"type": "defeat",
+			"text": "Ash from the Pit is poisoning the fields. Defeat three Covenant blighters.",
+			"reward": {
+				"gold": 250,
+				"boosters": 1,
+				"card_rarity": "rare",
+				"faction": "wild"
+			},
+			"faction": "abyss",
+			"count": 3,
+			"heroes": [
+				"wild"
+			],
+			"after": "ow_3"
+		},
+		"rv_1": {
+			"title": "Hecklers at the Feast",
+			"type": "defeat",
+			"text": "Sour philosophers keep lecturing the guests about moderation. Beat three of them at cards.",
+			"reward": {
+				"gold": 180,
+				"card_rarity": "uncommon",
+				"faction": "revel"
+			},
+			"faction": "lyceum",
+			"count": 3,
+			"heroes": [
+				"revel"
+			]
+		},
+		"rv_2": {
+			"title": "A Song for Cogspire",
+			"type": "visit",
+			"text": "The guildsmen of Cogspire have never heard a good song. Take the show there.",
+			"reward": {
+				"gold": 150,
+				"boosters": 1
+			},
+			"city": "cogspire",
+			"heroes": [
+				"revel"
+			],
+			"after": "rv_1"
+		},
+		"rv_3": {
+			"title": "The Endless Banquet",
+			"type": "lair",
+			"text": "Duke Carnevale's feast has lasted a year. Somebody must win the final toast.",
+			"reward": {
+				"gold": 400,
+				"boosters": 1,
+				"card_rarity": "rare",
+				"faction": "revel"
+			},
+			"lair": "lair_banquet",
+			"heroes": [
+				"revel"
+			],
+			"after": "rv_2"
+		},
+		"rv_4": {
+			"title": "Masks and Gears",
+			"type": "defeat",
+			"text": "The guild says the carnival is a waste of good brass. Prove them wrong against three of their machines.",
+			"reward": {
+				"gold": 250,
+				"card_rarity": "rare",
+				"faction": "revel"
+			},
+			"faction": "machine",
+			"count": 3,
+			"heroes": [
+				"revel"
+			],
+			"after": "rv_3"
+		},
+		"st_1": {
+			"title": "Field Study",
+			"type": "visit",
+			"text": "Observe the excesses of Vinemere, and return unchanged.",
+			"reward": {
+				"gold": 100,
+				"card_rarity": "uncommon",
+				"faction": "lyceum"
+			},
+			"city": "vinemere",
+			"heroes": [
+				"lyceum"
+			]
+		},
+		"st_2": {
+			"title": "Arguments in Vinemere",
+			"type": "defeat",
+			"text": "The revellers mock the Porch. Answer three of them in the only language they respect.",
+			"reward": {
+				"gold": 180,
+				"boosters": 1
+			},
+			"faction": "revel",
+			"count": 3,
+			"heroes": [
+				"lyceum"
+			],
+			"after": "st_1"
+		},
+		"st_3": {
+			"title": "The Silent Sage",
+			"type": "lair",
+			"text": "Our old master has stopped speaking and started duelling. Bring him back to reason.",
+			"reward": {
+				"gold": 220,
+				"boosters": 1,
+				"card_rarity": "rare",
+				"faction": "lyceum"
+			},
+			"lair": "lair_observatory",
+			"heroes": [
+				"lyceum"
+			],
+			"after": "st_2"
+		},
+		"st_4": {
+			"title": "Letters to the Cathedral",
+			"type": "visit",
+			"text": "The Scholarch wishes to correspond with the Church about the soul. Carry his letters to Santa Lucerna.",
+			"reward": {
+				"gold": 200,
+				"card_rarity": "rare",
+				"faction": "lyceum"
+			},
+			"city": "santa_lucerna",
+			"heroes": [
+				"lyceum"
+			],
+			"after": "st_3"
+		},
+		"tc_1": {
+			"title": "Letter to the Cathedral",
+			"type": "visit",
+			"text": "Carry the guild's accounts north to Santa Lucerna.",
+			"reward": {
+				"gold": 120,
+				"card_rarity": "uncommon",
+				"faction": "machine"
+			},
+			"city": "santa_lucerna",
+			"heroes": [
+				"machine"
+			]
+		},
+		"tc_2": {
+			"title": "Clearing the Woods",
+			"type": "defeat",
+			"text": "The druids keep sabotaging the timber carts. Defeat three of them.",
+			"reward": {
+				"gold": 180,
+				"boosters": 1
+			},
+			"faction": "wild",
+			"count": 3,
+			"heroes": [
+				"machine"
+			],
+			"after": "tc_1"
+		},
+		"tc_3": {
+			"title": "The Runaway Forge",
+			"type": "lair",
+			"text": "Our best foundry has broken its governors. Shut it down before it melts the district.",
+			"reward": {
+				"gold": 250,
+				"card_rarity": "rare",
+				"faction": "machine"
+			},
+			"lair": "lair_forge",
+			"heroes": [
+				"machine"
+			],
+			"after": "tc_2"
+		},
+		"tc_4": {
+			"title": "Audit of the Observatory",
+			"type": "lair",
+			"text": "The Silent Sage owes the guild for an orrery. Collect, by duel if necessary.",
+			"reward": {
+				"gold": 300,
+				"boosters": 1,
+				"card_rarity": "rare",
+				"faction": "machine"
+			},
+			"lair": "lair_observatory",
+			"heroes": [
+				"machine"
+			],
+			"after": "tc_3"
+		}
 	}
 }
