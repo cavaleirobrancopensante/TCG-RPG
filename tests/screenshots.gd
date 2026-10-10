@@ -70,6 +70,13 @@ func _ready() -> void:
 	c._on_tab("shop")
 	await _wait(0.4)
 	await _shot("11_city_shop")
+	c._view_shop(CardDB.faction_ids("sanctum"), 12)
+	await _wait(0.5)
+	await _shot("11b_card_viewer")
+	for node in c.get_children():
+		if node is CardViewer:
+			node.close()
+	await _wait(0.3)
 	c._on_tab("deck")
 	await _wait(0.4)
 	await _shot("12_deck_builder")

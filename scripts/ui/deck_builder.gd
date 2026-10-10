@@ -141,6 +141,7 @@ func _refresh_now() -> void:
 		cv.dimmed = cv.count_badge <= 0 or in_deck >= DeckTools.MAX_COPIES
 		var cid: String = id
 		cv.tapped.connect(func(_v): _change(cid, 1))
+		cv.long_pressed.connect(func(_v): _view(cid))
 		grid.add_child(cv)
 
 	UIKit.clear(deck_list)
@@ -164,7 +165,7 @@ func _refresh_now() -> void:
 	var n := DeckTools.count(deck)
 	count_label.text = "Deck: %d cards (%d lands)" % [n, DeckTools.land_count(deck)]
 	var problem := DeckTools.validate(deck, owned)
-	warn_label.text = problem if problem != "" else "Tap collection cards to add, deck rows to remove."
+	warn_label.text = problem if problem != "" else "Tap a card to add it, hold to read it. Tap deck rows to remove."
 	warn_label.add_theme_color_override("font_color", UIKit.RED if problem != "" else UIKit.DIM)
 
 
@@ -180,3 +181,19 @@ func _done() -> void:
 		closed.emit()
 	else:
 		warn_label.text = "Fix the deck first: " + DeckTools.validate(deck, GameState.owned_all())
+
+
+## Long-press a card: read it and leaf through the cards currently shown.
+func _view(start_id: String) -> void:
+	var listing := []
+	for c in grid.get_children():
+		if c is CardView:
+			listing.append(c.card_id)
+	var v := CardViewer.open(self, listing, maxi(0, listing.find(start_id)), func(e, _i):
+		var id: String = e["id"]
+		var n := int(deck.get(id, 0))
+		return [
+			["Add (%d in deck)" % n, func(): _change(id, 1), n < mini(DeckTools.MAX_COPIES, GameState.owned_count(id)), false],
+			["Remove", func(): _change(id, -1), n > 0, false],
+		])
+	v.closed.connect(_refresh)

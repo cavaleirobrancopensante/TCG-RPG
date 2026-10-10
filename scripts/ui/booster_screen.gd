@@ -108,18 +108,17 @@ func _on_button() -> void:
 		_next_pack()
 
 
+## Read the revealed cards of this pack, leafing with the arrows.
 func _zoom(cv: CardView) -> void:
-	var overlay := ColorRect.new()
-	overlay.color = Color(0, 0, 0, 0.7)
-	UIKit.full_rect(overlay)
-	add_child(overlay)
-	var big := CardView.create(cv.card_id, 2.2, cv.foil)
-	big.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	overlay.add_child(big)
-	big.position = (get_viewport_rect().size - big.size) * 0.5
-	overlay.gui_input.connect(func(ev):
-		if ev is InputEventMouseButton and ev.pressed:
-			overlay.queue_free())
+	var entries := []
+	var start := 0
+	for v in views:
+		if v.face_down:
+			continue
+		if v == cv:
+			start = entries.size()
+		entries.append({"id": v.card_id, "foil": v.foil})
+	CardViewer.open(self, entries, start)
 
 
 func _burst(pos: Vector2, col: Color) -> void:

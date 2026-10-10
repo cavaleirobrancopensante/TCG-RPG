@@ -4,6 +4,7 @@ extends Control
 ## Base size 200x280; set `scale_factor` to resize. Emits `tapped`. Foils shimmer with gold.
 
 signal tapped(view: CardView)
+signal long_pressed(view: CardView)
 
 const BASE := Vector2(200, 280)
 const INK := Tapestry.INK
@@ -24,6 +25,10 @@ var scale_factor := 1.0:
 		queue_redraw()
 
 var _t := 0.0
+var _holding := false
+var _long_fired := false
+var _press_t := 0.0
+var _press_pos := Vector2.ZERO
 
 
 static func create(id: String, s: float = 1.0, is_foil: bool = false) -> CardView:
@@ -46,15 +51,33 @@ func set_card(id: String, is_foil: bool = false, data: Dictionary = {}) -> void:
 
 
 func _process(delta: float) -> void:
+	if _holding:
+		_press_t += delta
+		if _press_t >= 0.45 and not _long_fired:
+			_long_fired = true
+			_holding = false
+			long_pressed.emit(self)
 	if foil or highlight or selected:
 		_t += delta
 		queue_redraw()
 
 
+## Tap = press and release without moving. Hold ~0.45 s = long press (e.g. read the card).
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		accept_event()
-		tapped.emit(self)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_press_t = 0.0
+			_press_pos = event.position
+			_holding = true
+			_long_fired = false
+			set_process(true)
+		elif _holding:
+			_holding = false
+			if not _long_fired and event.position.distance_to(_press_pos) < 14.0:
+				accept_event()
+				tapped.emit(self)
+	elif event is InputEventMouseMotion and _holding and event.position.distance_to(_press_pos) > 14.0:
+		_holding = false     # it's a scroll / drag, not a tap
 
 
 func _draw() -> void:
