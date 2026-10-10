@@ -101,6 +101,7 @@ func _add_basic_land(f: String) -> void:
 		"keywords": [], "effects": [], "produces": info["mana"], "mana_value": 0,
 		"text": "Tap: add one %s mana." % DATA_SHORT[f],
 		"flavor": "",
+		"art": "res://art/cards/%s.webp" % id,
 	}
 
 
