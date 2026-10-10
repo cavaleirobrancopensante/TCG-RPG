@@ -95,10 +95,10 @@ no image files — so it stays crisp on any screen and new cards are illustrated
 ## Browser version and updates
 
 Every push to `main` is built by GitHub Actions (`.github/workflows/web.yml`): it imports
-the project, runs the rule tests, exports the web build and publishes it to GitHub Pages.
+the project, runs the rule tests, exports the web build and publishes it to the `gh-pages` branch.
 The bottom of the main menu shows the version, build and date. Each build lives in its own
 folder, so players get the new one on their next visit (GitHub may cache up to ~10 minutes).
-One-time setup: repo **Settings → Pages → Source: GitHub Actions**.
+One-time setup: repo **Settings → Pages → Source: Deploy from a branch → `gh-pages` / root**.
 
 ## Menus and saving (1.7)
 
