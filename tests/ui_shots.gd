@@ -6,6 +6,7 @@ extends Node
 
 var main
 var out := ""
+var _hours: Array = []          # UI_HOURS=6,19,23: extra map shots at those hours
 
 
 func _shot(name: String, frames: int = 6) -> void:
@@ -13,6 +14,20 @@ func _shot(name: String, frames: int = 6) -> void:
 		await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(out + "/" + name + ".png")
 	print("shot ", name)
+
+
+## The same view with the music player open (and, with list, its list of pieces too).
+func _music_shot(name: String, list: bool = false) -> void:
+	var mb: MusicBar = Music._bar
+	mb.open_picker()
+	if list:
+		mb._toggle_list()
+	await get_tree().create_timer(MusicBar.SLIDE + 0.2).timeout
+	await _shot(name)
+	if list:
+		mb._toggle_list()
+	mb.close_picker()
+	await get_tree().process_frame
 
 
 func _clear_dialogs() -> void:
@@ -27,12 +42,20 @@ func _ready() -> void:
 	out = args[0] if not args.is_empty() else OS.get_user_data_dir() + "/shots/ui"
 	var faiths: Array = args.slice(1) if args.size() > 1 else ["sanctum", "abyss"]
 	DirAccess.make_dir_recursive_absolute(out)
-	get_window().size = Vector2i(1280, 720)
+	var wsz := Vector2i(1280, 720)
+	var wp := OS.get_environment("UI_WINDOW").split("x")
+	if wp.size() == 2:
+		wsz = Vector2i(int(wp[0]), int(wp[1]))
+	get_window().size = wsz
+	var hours := OS.get_environment("UI_HOURS")
+	if hours != "":
+		_hours = Array(hours.split(",")).map(func(x): return float(x))
 	main = load("res://scenes/main.tscn").instantiate()
 	add_child(main)
 	if not main.is_booted:
 		await main.booted
 	await _shot("menu_before")
+	await _music_shot("menu_music")
 	for f in faiths:
 		await _faith(String(f))
 	main.show_menu()
@@ -66,6 +89,14 @@ func _faith(f: String) -> void:
 		k += 1
 	main._update_hud()
 	await _shot(f + "_1_map", 10)
+	await _music_shot(f + "_1b_map_music")
+	await _music_shot(f + "_1c_map_list", true)
+	for h in _hours:
+		GameState.clock = h
+		main._update_hud()
+		await _shot(f + "_1_map_%02d" % int(h), 10)
+	GameState.clock = 11.0
+	main._update_hud()
 	w.active = false
 	# an encounter
 	var e: Dictionary = w.enemies[0]
@@ -88,6 +119,7 @@ func _faith(f: String) -> void:
 	# the capital
 	main._open_city(main._capital_of(f))
 	await _shot(f + "_3_city")
+	await _music_shot(f + "_3b_city_music")
 	main.screen.closed.emit()
 	await get_tree().process_frame
 	# the nearest village
@@ -113,6 +145,7 @@ func _faith(f: String) -> void:
 	# the deck builder (a plain screen: the faith border) and the boosters
 	main.open_deck_builder()
 	await _shot(f + "_8_deck")
+	await _music_shot(f + "_8b_deck_music")
 	main._set_screen(null)
 	await get_tree().process_frame
 	GameState.pending_boosters = 1
@@ -136,5 +169,6 @@ func _faith(f: String) -> void:
 	b._mulligan_done.emit()
 	await get_tree().create_timer(2.5).timeout
 	await _shot(f + "_7_battle")
+	await _music_shot(f + "_7b_battle_music")
 	main._set_screen(null)
 	await get_tree().process_frame

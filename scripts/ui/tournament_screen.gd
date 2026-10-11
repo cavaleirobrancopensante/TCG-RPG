@@ -22,6 +22,7 @@ func _ready() -> void:
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", UIKit.GAP)
 	v.add_child(head)
+	head.add_child(UIKit.corner_space(22, UIKit.GAP))
 	var t := UIKit.title(I18n.t("Tournament of %s") % GameState.city(draft.city).get("name", ""), UIKit.FS_HEADING + 2 if compact else UIKit.FS_TITLE - 2)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	t.size_flags_vertical = Control.SIZE_SHRINK_CENTER

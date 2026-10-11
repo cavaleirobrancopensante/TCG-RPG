@@ -29,6 +29,7 @@ func _ready() -> void:
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", UIKit.GAP)
 	v.add_child(head)
+	head.add_child(UIKit.corner_space(22, UIKit.GAP))
 	var t := UIKit.title({"new": "Begin a New Game", "load": "Load Game", "save": "Save Game"}[mode], UIKit.FS_TITLE)
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL

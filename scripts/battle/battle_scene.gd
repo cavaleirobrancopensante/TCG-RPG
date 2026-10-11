@@ -110,6 +110,7 @@ func _build_ui() -> void:
 	ebar.add_theme_constant_override("separation", 8)
 	root.add_child(ebar)
 	_enemy_bar = ebar
+	ebar.add_child(UIKit.corner_space(0, 8))      # the music button, top left
 	var flee := _btn("Flee", _ask_flee, 104)
 	flee.name = "Flee"
 	ebar.add_child(flee)
@@ -1751,7 +1752,7 @@ func _on_figure_long(fig: SummonFigure) -> void:
 
 
 const HOLD_TIME := 0.45           # seconds held for a long press
-const HOLD_SLOP := 14.0           # px a finger may wander and still tap
+const HOLD_SLOP := 14.0           # (kept for reference; the live value is UIKit.tap_slop())
 var _hold_id := 0
 var _hold_node: Control = null
 var _hold_pos := Vector2.ZERO
@@ -1777,9 +1778,9 @@ func _hold_event(ev: InputEvent, c: Control, on_tap: Callable, on_long: Callable
 		elif _hold_node == c:
 			_hold_node = null
 			_hold_id += 1
-			if ev.global_position.distance_to(_hold_pos) < HOLD_SLOP:
+			if ev.global_position.distance_to(_hold_pos) < UIKit.tap_slop():
 				on_tap.call()
-	elif ev is InputEventMouseMotion and _hold_node == c and ev.global_position.distance_to(_hold_pos) > HOLD_SLOP:
+	elif ev is InputEventMouseMotion and _hold_node == c and ev.global_position.distance_to(_hold_pos) > UIKit.tap_slop():
 		_hold_node = null
 		_hold_id += 1
 

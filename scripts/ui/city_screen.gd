@@ -53,7 +53,7 @@ func _ready() -> void:
 
 	var head_panel := PanelContainer.new()
 	head_panel.self_modulate = Color(1, 1, 1, 0.94)
-	root.add_child(head_panel)
+	root.add_child(UIKit.past_corner(head_panel))
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", UIKit.GAP)
 	head_panel.add_child(head)

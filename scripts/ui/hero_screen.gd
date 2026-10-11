@@ -41,6 +41,7 @@ func _ready() -> void:
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", UIKit.SP_1)
 	root.add_child(head)
+	head.add_child(UIKit.corner_space(22, UIKit.SP_1))
 	var t := UIKit.title("Your Hero", UIKit.FS_TITLE)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	t.clip_text = true

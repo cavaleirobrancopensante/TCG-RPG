@@ -31,6 +31,8 @@ func _ready() -> void:
 
 ## True on a phone or small touch tablet (the automatic choice then is the phone base).
 func is_phone() -> bool:
+	if OS.get_environment("UI_PHONE") == "1":
+		return true          # tests: behave as a phone (wide tap allowance, phone layout)
 	if OS.has_feature("web_android") or OS.has_feature("web_ios") or OS.has_feature("mobile"):
 		return true
 	if not DisplayServer.is_touchscreen_available():

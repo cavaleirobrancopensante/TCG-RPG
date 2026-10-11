@@ -26,6 +26,7 @@ func _ready() -> void:
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", UIKit.GAP)
 	root.add_child(head)
+	head.add_child(UIKit.corner_space(22, UIKit.GAP))
 	var t := UIKit.title("Your Road", UIKit.FS_TITLE)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)

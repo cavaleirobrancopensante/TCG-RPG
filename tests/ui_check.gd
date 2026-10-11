@@ -85,10 +85,15 @@ func _menu_screens(lang: String) -> void:
 		await _settle()
 		await _check("music_bar", lang, Music._bar)
 	if _wants("music_picker"):
-		Music._bar._toggle_picker()
+		Music._bar.open_picker()
+		await get_tree().create_timer(MusicBar.SLIDE + 0.15).timeout
 		await _settle()
-		await _check("music_picker", lang, Music._bar.picker)
-		Music._bar.picker.visible = false
+		await _check("music_picker", lang, Music._bar)
+		Music._bar._toggle_list()
+		await _settle()
+		await _check("music_list", lang, Music._bar)
+		Music._bar._toggle_list()
+		Music._bar.close_picker()
 	if _wants("menu"):
 		main.show_menu()
 		await _settle()
