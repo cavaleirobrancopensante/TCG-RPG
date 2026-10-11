@@ -23,6 +23,7 @@ ACTION_OWNERS = {
     "rummage": ["revel"],
     "bounce": ["lyceum"], "tap": ["lyceum"], "freeze": ["lyceum"], "foresight": ["lyceum"], "tax": ["lyceum"],
     "snare": ["machine"], "upkeep_cost": ["machine"],
+    "attach": ["wild", "machine"],
     "damage": ["revel", "machine"],
     "destroy": ["sanctum", "abyss", "wild"],
     "add_mana": ["wild", "machine"],
@@ -35,7 +36,7 @@ TRIGGERS = ["enter", "death", "upkeep", "attack", "cast", "idle", "ally_enter"]
 TARGETS = ["", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self_player", "enemy_player", "self",
            "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
 STATICS = {"anthem": None, "keyword": None, "assembly": "machine", "cost_reduce": None, "kinship": None}
-COUNTS = {"common": 27, "uncommon": 18, "rare": 11, "mythic": 4}
+COUNTS = {"common": 29, "uncommon": 20, "rare": 12, "mythic": 4}
 DASHES = re.compile("[‒–—―−]")
 WOMEN = [" she ", " her ", " hers ", "woman", "maiden", "lady", "queen", "sister", "mother", "wife", "daughter"]
 FIGHTERS = ["Soldier", "Knight", "Paladin", "Warrior", "Duelist", "Assassin", "Hoplite", "Guard", "Sentinel", "Lancer", "Berserker", "Champion"]
@@ -119,8 +120,26 @@ def check_card(c, owners_override=None):
     for k in c.get("keywords", []):
         if k not in KEYWORD_OWNER:
             bad(cid, "unknown keyword %s" % k)
-        elif KEYWORD_OWNER[k] not in owners:
+        elif KEYWORD_OWNER[k] not in owners and not (k == "flying" and "lyceum" in owners and "Bird" in c.get("subtype", "")):
             bad(cid, "keyword %s belongs to %s" % (k, KEYWORD_OWNER[k]))
+    if "flying" in c.get("keywords", []) and "sanctum" not in owners and "lyceum" in owners and c.get("power", 0) > 2:
+        bad(cid, "Stoa birds fly small (power 2 at most)")
+    att = c.get("attach")
+    if att:
+        if c.get("type") != "relic":
+            bad(cid, "only relics attach")
+        if att == "aura" and "wild" not in owners:
+            bad(cid, "auras are Old Ways")
+        if att == "equipment" and "machine" not in owners:
+            bad(cid, "equipment is Technocracy")
+        if att == "aura" and not any(e.get("action") == "attach" and e.get("trigger") == "enter" for e in c.get("effects", [])):
+            bad(cid, "an aura needs an enter attach effect on own_creature")
+        if att == "equipment" and not c.get("equip"):
+            bad(cid, "equipment needs an equip cost")
+        for k in c.get("grants", {}).get("keywords", []):
+            ok = KEYWORD_OWNER.get(k) in owners or (att == "equipment" and k in ["first_strike", "trample", "vigilance", "reach"])
+            if not ok:
+                bad(cid, "granted keyword %s not allowed" % k)
     for e in c.get("effects", []):
         check_effect(cid, faith, e, "effect", owners)
         if c.get("type") == "spell" and e.get("trigger") != "cast":
@@ -204,6 +223,10 @@ def main():
             faith = c.get("faction")
             check_card(c)
         print("%s: %d cards %s %s" % (path, len(cards), counts, types))
+        if faith == "lyceum":
+            fliers = [c["id"] for c in cards if "flying" in c.get("keywords", [])]
+            if len(fliers) > 2:
+                problems.append("%s: the Stoa may have at most 2 fliers, found %s" % (path, fliers))
         if "gold" not in path and "lands" not in path:
             for r, n in COUNTS.items():
                 if counts.get(r, 0) != n:

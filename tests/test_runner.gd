@@ -206,6 +206,11 @@ func _lib() -> void:
 		"Squire": {"faction": "sanctum", "type": "creature", "subtype": "Human Knight", "cost": {"W": 1, "generic": 2}, "power": 2, "toughness": 2},
 		"Symposium": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "draw", "amount": 1, "amount_per": "Philosopher"}]},
 		"Sage": {"faction": "lyceum", "type": "creature", "subtype": "Human Philosopher", "cost": {"U": 1}, "power": 1, "toughness": 1},
+		"Oakhide": {"faction": "wild", "type": "relic", "subtype": "Aura", "attach": "aura", "cost": {"G": 1}, "grants": {"power": 2, "toughness": 2, "keywords": ["trample"]},
+			"effects": [{"trigger": "enter", "action": "attach", "target": "own_creature"}]},
+		"Blade": {"faction": "machine", "type": "relic", "subtype": "Equipment", "attach": "equipment", "cost": {"generic": 1}, "equip": {"generic": 1}, "grants": {"power": 2}},
+		"Tinker": {"faction": "machine", "type": "creature", "subtype": "Human Artificer", "cost": {"C": 1}, "power": 1, "toughness": 1,
+			"statics": [{"static": "kinship", "subtype": "Relic", "power": 1, "toughness": 0}]},
 		"Druid": {"faction": "wild", "type": "creature", "cost": {"G": 1}, "power": 1, "toughness": 1, "abilities": [{"cost": {"tap": true}, "effects": [{"action": "add_mana", "color": "G", "amount": 1}], "text": "Tap: add G."}]},
 		"Altar": {"faction": "abyss", "type": "relic", "cost": {"B": 1}, "abilities": [{"cost": {"sacrifice": "other"}, "effects": [{"action": "drain", "amount": 1}], "text": "Sacrifice a creature: drain 1."}]},
 		"Manacles": {"faction": "machine", "type": "relic", "cost": {"generic": 2}, "effects": [{"trigger": "enter", "action": "snare", "target": "enemy_creature"}]},
@@ -305,7 +310,32 @@ func _named(st: BattleState, i: int, name: String) -> int:
 	return n
 
 
+func _test_attachments() -> void:
+	var st := _duel()
+	var bear := _put(st, 0, "Bear")
+	_hand(st, 0, ["Oakhide"])
+	st.play(0, st.side(0).hand.size() - 1)
+	check(bear.power() == 4 and bear.toughness() == 4 and bear.has_kw("trample"), "an aura gives its creature +2/+2 and trample")
+	st.destroy_perm(bear)
+	check(st.side(0).relics.is_empty() and st.side(0).graveyard.has(_id("Oakhide")), "the aura falls when its creature dies")
+	st = _duel()
+	_hand(st, 0, ["Oakhide"])
+	st.play(0, st.side(0).hand.size() - 1)
+	check(st.side(0).relics.is_empty(), "an aura with no creature to enchant falls away")
+	st = _duel()
+	var tinker := _put(st, 0, "Tinker")
+	var blade := _put(st, 0, "Blade")
+	check(tinker.power() == 2, "kinship with Relic counts relics")
+	var idx := st.abilities_of(blade).size() - 1
+	check(st.can_activate(0, blade.uid, idx), "equip is available in your main phase")
+	st.activate(0, blade.uid, idx, [{"kind": "creature", "uid": tinker.uid}])
+	check(blade.attached_to == tinker.uid and tinker.power() == 4, "equipment gives its bonus once equipped")
+	st.destroy_perm(tinker)
+	check(st.side(0).relics.has(blade) and blade.attached_to == -1, "equipment stays when its creature dies")
+
+
 func _test_tribes() -> void:
+	_test_attachments()
 	var st := _duel()
 	var w1 := _put(st, 0, "Packwolf")
 	check(w1.power() == 2, "kinship alone: no bonus")

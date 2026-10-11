@@ -635,6 +635,10 @@ func _refresh_relics(i: int) -> void:
 		if has_ab:
 			b.text = "✦ " + I18n.t(r.name)
 			b.add_theme_color_override("font_color", UIKit.GREEN)
+		if r.attached_to >= 0:
+			var host = st.find_perm(r.attached_to)
+			if host:
+				b.text += " → " + I18n.t(host.name)
 		box.add_child(b)
 
 
