@@ -899,7 +899,7 @@
       "generic": 3
     },
     "power": 2,
-    "toughness": 3,
+    "toughness": 4,
     "keywords": [],
     "effects": [
       {
@@ -912,10 +912,11 @@
           "subtype": "Treefolk",
           "keywords": []
         },
-        "count": 2
+        "count": 1,
+        "count_per": "Druid"
       }
     ],
-    "text": "When this enters, create two 1/1 Sapling tokens.",
+    "text": "When this enters, create a 1/1 Sapling token for each Druid you control (at most five).",
     "flavor": "We are not the masters of the wood. We are its weeds, and ought to apologise for it. (Elder of the Oak Circle)",
     "art": "res://art/cards/wild_u_005.webp"
   },
@@ -1388,7 +1389,7 @@
       "G": 1,
       "generic": 2
     },
-    "power": 2,
+    "power": 1,
     "toughness": 2,
     "keywords": [],
     "statics": [
@@ -1396,9 +1397,16 @@
         "static": "cost_reduce",
         "amount": 1,
         "subtype": "Aura"
+      },
+      {
+        "static": "anthem",
+        "scope": "self",
+        "power": 1,
+        "toughness": 1,
+        "condition": "control:Aura"
       }
     ],
-    "text": "Your Aura cards cost 1 less.",
+    "text": "Your Aura cards cost 1 less. As long as you control an Aura, this gets +1/+1.",
     "flavor": "He keeps the pelts, crowns and bark-cloths of the circle in an oak chest, and lends them out more freely than he ought.",
     "art": "res://art/cards/wild_u_020.webp"
   },

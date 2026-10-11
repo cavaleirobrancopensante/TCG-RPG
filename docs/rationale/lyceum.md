@@ -41,8 +41,8 @@ Plain bounce, now at one mana as the set 1 notes asked. It saves a turn against 
 **Binding Argument** · Common · Spell (Discourse) · 1U · Tap target enemy creature. Draw a card.
 A cantrip that removes a blocker for a turn. It moved up to two mana because a free tap plus a card at one mana outclassed the rest of the commons. Reason halting force for a moment is the Stoa in one image.
 
-**Grip of the Cold Sea** · Common · Spell (Discourse) · U · Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).
-The cheapest freeze. Cast it on your turn and the target can neither block now nor attack on the enemy's turn, which makes it both offence and defence for a single mana. The cold silver sea is part of the faith's palette.
+**Grip of the Cold Sea** · Common · Spell (Discourse) · 1U · Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). If you control a Sailor, draw a card.
+A freeze for the fleet (revised in 1.27 with the tribe condition). Cast it on your turn and the target can neither block now nor attack on the enemy's turn; with a Sailor in play it also replaces itself. It went up a mana for the card, so outside the tribe it is a little worse than before and inside it a match for Binding Argument. The cold silver sea is part of the faith's palette.
 
 **Reading by Lamplight** · Common · Spell (Meditation) · U · Draw a card, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).
 Card selection for one mana: draw, then set the next three cards in order. It replaces itself, so it never costs Composure. Seneca's second letter warns against skimming many books instead of reading a few well, which is what foresight does with your library.
@@ -156,8 +156,8 @@ A fair three-drop Philosopher with a small sting, so the tribe has a common body
 **Farmer Called to the Muster** · Common · Creature (Human Hoplite) · 1U · 2/2 · Vigilance (doesn't tap to attack).
 The cheap Hoplite: a vigilant 2/2 that fills the line early and feeds kinship and lords. A point over vanilla, which the Stoa's slow clock allows at two mana. The hoplite was a citizen farmer who bought his own panoply, and the bronze cost him dear.
 
-**Lock Shields** · Common · Spell (Discipline) · 1U · Hoplite creatures you control get +0/+3 until end of turn.
-The tribe's combat trick: cast in the enemy's attack, it turns a row of blocks into a row of walls. Toughness only, so it stays a defensive Stoa card and does not trespass on the Revel's temporary attack bonuses. Thucydides notes that each man sheltered under the shield of the man on his right.
+**Lock Shields** · Common · Spell (Discipline) · 1U · Hoplite creatures you control get +0/+2 and gain unmoved until end of turn (enemy spells and abilities can't tap them, return them to hand or shrink them).
+The tribe's combat trick: cast in the enemy's attack, it turns a row of blocks into a row of walls, and since 1.27 it also answers a tapper, a bounce or a shrink on the stack by granting unmoved until end of turn. A point of toughness paid for the keyword. Toughness only, so it stays a defensive Stoa card and does not trespass on the Revel's temporary attack bonuses. Thucydides notes that each man sheltered under the shield of the man on his right.
 
 **Morning Lecture** · Common · Spell (Meditation) · U · Foresight 2 for each Philosopher you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom), then draw a card.
 A cantrip that grows with the school: weak alone, a deep look at the library with three Philosophers. One mana keeps it a filler, not a payoff. The Porch was a public place, and the lectures began early.

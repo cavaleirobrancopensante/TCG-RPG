@@ -22,6 +22,7 @@ class Perm:
 	var bonus_t := 0
 	var temp_p := 0            # until end of turn
 	var temp_t := 0
+	var temp_kw: Array = []    # keywords granted until end of turn
 	var damage := 0
 	var tapped := false
 	var sick := true
@@ -49,7 +50,7 @@ class Perm:
 		return base_t + bonus_t + temp_t + (s.static_bonus(self).y if s else 0)
 
 	func has_kw(k: String) -> bool:
-		if keywords.has(k):
+		if keywords.has(k) or temp_kw.has(k):
 			return true
 		var s := _state()
 		return s != null and s.granted_keyword(self, k)
@@ -134,6 +135,7 @@ var _next_sid := 1
 var _resolving_cast_side := -1    # carouse: the card now resolving counts itself
 const MAX_WINDOW_ACTIONS := 4     # no side acts more than this in one window
 const SETTLE_GUARD := 400
+const MAX_COUNT_PER := 5          # summon with count_per makes at most this many tokens
 
 
 static func is_instant(c: Dictionary) -> bool:
@@ -464,6 +466,7 @@ func end_turn() -> void:
 			p.damage = 0
 			p.temp_p = 0
 			p.temp_t = 0
+			p.temp_kw.clear()
 			p.deathtouched = false
 		sd.pool.clear()
 	active = 1 - active
@@ -750,6 +753,9 @@ func cond_ok(i: int, cond: String, source = null) -> bool:
 			elif source == null and _resolving_cast_side == i:
 				need = 2            # a spell resolving: it was counted when cast
 			return active == i and s.cast_count >= need
+	if cond.begins_with("control:"):
+		# you control at least one other permanent of that kind (the source does not count)
+		return count_kin(i, cond.substr(8), source if source is Perm else null) > 0
 	return false
 
 
@@ -1130,7 +1136,8 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 			var cap := int(e.get("max_mv", 99))
 			for gid in me.graveyard:
 				var gc := CardDB.get_card(gid)
-				if gc.get("type") == "creature" and int(gc.get("mana_value", 0)) <= cap:
+				if gc.get("type") == "creature" and int(gc.get("mana_value", 0)) <= cap \
+						and (not e.has("subtype") or String(gc.get("subtype", "")).contains(String(e["subtype"]))):
 					var ref := {"kind": "grave", "id": gid}
 					if not out.has(ref):
 						out.append(ref)
@@ -1313,13 +1320,10 @@ func can_activate(i: int, uid: int, idx: int) -> bool:
 		return false
 	if int(cost.get("discard", 0)) > side(i).hand.size():
 		return false
-	match String(cost.get("sacrifice", "")):
-		"other":
-			if _sacrifice_choice(i, p, "other") == null:
-				return false
-		"servo":
-			if _sacrifice_choice(i, p, "servo") == null:
-				return false
+	var sac_kind := String(cost.get("sacrifice", ""))
+	if sac_kind in ["other", "servo"] or sac_kind.begins_with("tribe:"):
+		if _sacrifice_choice(i, p, sac_kind) == null:
+			return false
 	if cost.has("mana") and not can_pay(i, cost["mana"]):
 		return false
 	# an ability whose only targets are missing is useless
@@ -1351,7 +1355,20 @@ func sacrifice_spec(p: Perm, idx: int) -> Dictionary:
 		return {"action": "sacrifice", "target": "own_creature", "not_uid": p.uid}
 	if kind == "servo":
 		return {"action": "sacrifice", "target": "own_creature", "not_uid": p.uid, "subtype": "Servo"}
+	if kind.begins_with("tribe:"):
+		return {"action": "sacrifice", "target": "own_creature", "not_uid": p.uid, "subtype": kind.substr(6)}
 	return {}
+
+
+## May `victim` pay a sacrifice cost of this kind ("other", "servo", "tribe:Zombie") for `source`?
+static func sacrifice_fits(kind: String, source: Perm, victim: Perm) -> bool:
+	if victim == null or victim == source or not victim.is_creature():
+		return false
+	if kind == "servo":
+		return victim.subtype_has("Servo")
+	if kind.begins_with("tribe:"):
+		return victim.subtype_has(kind.substr(6))
+	return kind == "other"
 
 
 ## The creature a sacrifice cost takes: the least valuable eligible one.
@@ -1359,9 +1376,7 @@ func _sacrifice_choice(i: int, source: Perm, kind: String):
 	var best = null
 	var best_v := 1e9
 	for p in side(i).creatures:
-		if p == source:
-			continue
-		if kind == "servo" and not p.subtype_has("Servo"):
+		if not sacrifice_fits(kind, source, p):
 			continue
 		var v: float = p.value() + (0.0 if p.is_token else 2.0)
 		if v < best_v:
@@ -1403,10 +1418,10 @@ func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1
 		"id": p.card_id, "targets": _event_targets(item) if not mana_ab else []})
 	if sac == "self":
 		destroy_perm(p, true)
-	elif sac == "other" or sac == "servo":
+	elif sac == "other" or sac == "servo" or sac.begins_with("tribe:"):
 		var victim = _sacrifice_choice(i, p, sac)
 		var picked := find_perm(sac_uid) if sac_uid >= 0 else null
-		if picked and picked.owner == i and picked != p and (sac == "other" or picked.subtype_has("Servo")):
+		if picked and picked.owner == i and sacrifice_fits(sac, p, picked):
 			victim = picked
 		if victim:
 			destroy_perm(victim, true)
@@ -1509,6 +1524,31 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 					p.temp_p += int(e.get("power", 0))
 					p.temp_t += int(e.get("toughness", 0))
 				emit({"type": "buff", "uid": p.uid, "p": int(e.get("power", 0)), "t": int(e.get("toughness", 0))})
+		"grant":
+			# a keyword until end of turn (or for good)
+			var kw := String(e.get("keyword", ""))
+			for ref in _expand_targets(i, t, chosen, source):
+				var p: Perm = find_perm(int(ref.get("uid", -1))) if ref.get("kind") == "creature" else null
+				if p == null or kw == "" or (e.has("subtype") and not p.subtype_has(String(e["subtype"]))):
+					continue
+				var forever: bool = e.get("duration", "turn") == "permanent"
+				if forever:
+					if not p.keywords.has(kw):
+						p.keywords.append(kw)
+				elif not p.temp_kw.has(kw):
+					p.temp_kw.append(kw)
+				emit({"type": "grant", "uid": p.uid, "keyword": kw, "permanent": forever})
+				# optional +P/+T that comes with it ("gets +0/+2 and gains sanctified")
+				var gp := int(e.get("power", 0))
+				var gt := int(e.get("toughness", 0))
+				if gp != 0 or gt != 0:
+					if forever:
+						p.bonus_p += gp
+						p.bonus_t += gt
+					else:
+						p.temp_p += gp
+						p.temp_t += gt
+					emit({"type": "buff", "uid": p.uid, "p": gp, "t": gt})
 		"destroy":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p := find_perm(ref.get("uid", -1))
@@ -1571,7 +1611,11 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				deal_damage(foe, 1 - i, {"kind": "creature", "uid": mine.uid}, fp)
 		"summon":
 			var tok: Dictionary = e.get("token", {})
-			for n in int(e.get("count", 1)):
+			var n_tokens := int(e.get("count", 1))
+			if e.has("count_per"):
+				# one token (times count) for each permanent of that kind you control, at most 5
+				n_tokens = mini(MAX_COUNT_PER, n_tokens * count_kin(i, String(e["count_per"])))
+			for n in n_tokens:
 				var c := {
 					"id": "token", "name": tok.get("name", "Token"), "type": "creature",
 					"faction": (source.card.get("faction", "machine") if source else (cur_faction if cur_faction != "" else _faction_of_side(i))),
@@ -1608,6 +1652,15 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				me.creatures.append(rp)
 				emit({"type": "summon", "side": i, "uid": rp.uid, "id": best, "reanimated": true})
 				_entered(rp)
+		"regrow":
+			# the chosen creature card goes from your graveyard to your hand
+			var gid := ""
+			if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") == "grave" and me.graveyard.has(chosen.get("id", "")):
+				gid = chosen["id"]
+			if gid != "":
+				me.graveyard.erase(gid)
+				me.hand.append(gid)
+				emit({"type": "regrow", "side": i, "id": gid})
 		"foresight":
 			_foresight(i, amount)
 		"attach":
@@ -1766,6 +1819,10 @@ func destroy_perm(p: Perm, sacrifice: bool = false) -> void:
 		if e.get("trigger") == "death":
 			_with_source(p.card)
 			resolve_effect(p.owner, e, null, null)
+	if p.is_creature():
+		_ally_died(p)
+		if phase == "over":
+			return
 	if p.is_creature() and p.has_kw("martyr") and not side(p.owner).creatures.is_empty():
 		var s := side(p.owner)
 		if s.interactive:
@@ -1776,6 +1833,19 @@ func destroy_perm(p: Perm, sacrifice: bool = false) -> void:
 				if best == null or c.value() > best.value():
 					best = c
 			martyr_bless(p.owner, best.uid)
+
+
+## A creature has just died: tell its kin ("whenever another Zombie you control dies").
+func _ally_died(p: Perm) -> void:
+	for src in (side(p.owner).creatures + side(p.owner).relics).duplicate():
+		if src == p or find_perm(src.uid) == null:
+			continue
+		for e in src.card.get("effects", []):
+			if e.get("trigger") == "ally_dies" and p.subtype_has(String(e.get("ally_subtype", ""))):
+				_with_source(src.card)
+				resolve_effect(src.owner, e, src, null)
+				if phase == "over":
+					return
 
 
 ## Martyr: the chosen creature gets +1/+1 for good.
@@ -2035,6 +2105,22 @@ func auto_target(i: int, e: Dictionary):
 		return _highest(opts)
 	if action == "attach":
 		return _highest(opts)
+	if action == "grant":
+		# a creature that lacks the keyword (haste: one that could not attack yet)
+		var kw := String(e.get("keyword", ""))
+		var best = null
+		var best_v := -999.0
+		for ref in opts:
+			var p := find_perm(ref["uid"])
+			var v := p.value() - (20.0 if p.has_kw(kw) else 0.0)
+			if kw == "haste":
+				v += 5.0 if p.sick and not p.tapped else -5.0
+			elif attackers.has(p.uid) or can_attack(p):
+				v += 2.0
+			if v > best_v:
+				best_v = v
+				best = ref
+		return best
 	if action == "buff":
 		var shrink := int(e.get("power", 0)) < 0 or int(e.get("toughness", 0)) < 0
 		var best = null

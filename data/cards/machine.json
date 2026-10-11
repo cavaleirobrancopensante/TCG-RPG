@@ -268,11 +268,20 @@
       "generic": 3
     },
     "power": 3,
-    "toughness": 4,
+    "toughness": 3,
     "keywords": [],
-    "text": "(No abilities.)",
+    "text": "As long as you control an Equipment, this gets +1/+1.",
     "flavor": "The Stoa taught discipline. The Technocracy simply built it.",
-    "art": "res://art/cards/machine_c_010.webp"
+    "art": "res://art/cards/machine_c_010.webp",
+    "statics": [
+      {
+        "static": "anthem",
+        "scope": "self",
+        "power": 1,
+        "toughness": 1,
+        "condition": "control:Equipment"
+      }
+    ]
   },
   {
     "id": "machine_c_011",
@@ -1119,7 +1128,7 @@
     "subtype": "Order",
     "cost": {
       "C": 1,
-      "generic": 3
+      "generic": 2
     },
     "keywords": [],
     "effects": [
@@ -1133,10 +1142,23 @@
           "subtype": "Servo Construct",
           "keywords": []
         },
-        "count": 3
+        "count": 1
+      },
+      {
+        "trigger": "cast",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Servo Construct",
+          "keywords": []
+        },
+        "count": 1,
+        "count_per": "Artificer"
       }
     ],
-    "text": "Create three 1/1 Servo Construct tokens.",
+    "text": "Create a 1/1 Servo Construct token, then a 1/1 Servo Construct token for each Artificer you control (at most five).",
     "flavor": "\"It is the greatest happiness of the greatest number that is the measure of right and wrong.\" (Jeremy Bentham, A Fragment on Government)",
     "art": "res://art/cards/machine_u_009.webp"
   },

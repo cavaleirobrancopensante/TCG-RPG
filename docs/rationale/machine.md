@@ -38,9 +38,9 @@ The common payoff for spare Servos: it eats them to grow, turning a board of chu
 
 An Overclock card whose extra payment buys bodies instead of counters. As a generic card it is modest: a 2/3 for three, or three small bodies for five. Other faiths can play it, but Servos give them nothing they lack, while a Technocracy deck turns the tokens into Assembly and sacrifice fuel.
 
-**Bronze Phalanx Automaton** · Common · Creature (Construct) · 3C · 3/4 · (No abilities.)
+**Bronze Phalanx Automaton** · Common · Creature (Construct) · 3C · 3/3 · As long as you control an Equipment, this gets +1/+1.
 
-A plain 3/4 for four, a point under rate as the faith's sturdy filler, with vigilance removed because vigilance belongs to the Stoa. It holds the ground while the engine assembles. The flavour keeps its pointed contrast between virtue and mechanism.
+The faith's sturdy filler with an equipment twist (1.27, the tribe condition with "Equipment"): a 3/3 for four, a 4/4 once any Equipment hangs in the workshop, attached or not. Without one it is a point weaker than the old 3/4, with one a point stronger, which rewards the relic deck. It holds the ground while the engine assembles. The flavour keeps its pointed contrast between virtue and mechanism.
 
 **Foundry Golem** · Common · Creature (Construct) · 4 · 3/4 · Overclock 2 (you may pay 2 more as you play this). If overclocked, it enters with two +1/+1 counters.
 
@@ -114,9 +114,9 @@ A one-time upgrade for a wide board, permanent counters rather than a static ant
 
 The C symbol makes this a card for committed decks. It adds a body and two counters for two mana, four points of stats at rate, and the counters can land on the fresh Servo or on a better Construct. The fee that buys speed is the guild's commerce in a sentence.
 
-**Bulk Order** · Uncommon · Spell (Order) · 3C · Create three 1/1 Servo Construct tokens.
+**Bulk Order** · Uncommon · Spell (Order) · 2C · Create a 1/1 Servo Construct token, then a 1/1 Servo Construct token for each Artificer you control (at most five).
 
-Three bodies for four mana, a wide board in one card. It sets up Assembly, Mass Retooling and the sacrifice outlets, and it rebuilds after a sweeper. The flavour turns economies of scale into something quietly chilling.
+An Artificer payoff since 1.27 (summon scaling, capped at five): one Servo always, then one per Artificer, so two or three bodies for three mana in an ordinary deck and a wide board in one card in the guild deck. It went down a mana because it no longer promises three. It sets up Assembly, Mass Retooling and the sacrifice outlets, and it rebuilds after a sweeper. The flavour turns economies of scale into something quietly chilling.
 
 **Galvanic Coil** · Uncommon · Relic (Engine) · 2C · At the beginning of your upkeep, deal 1 damage to target enemy creature.
 

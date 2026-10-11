@@ -706,10 +706,11 @@
     "effects": [
       {
         "trigger": "cast",
-        "action": "buff",
+        "action": "grant",
         "target": "own_creature",
+        "keyword": "sanctified",
         "power": 0,
-        "toughness": 3,
+        "toughness": 2,
         "duration": "turn"
       },
       {
@@ -721,7 +722,7 @@
       }
     ],
     "speed": "instant",
-    "text": "Target creature you control gets +0/+3 until end of turn. Gain 1 life for each Priest you control.",
+    "text": "Target creature you control gets +0/+2 and gains sanctified until end of turn (protection from the Pact). Gain 1 life for each Priest you control.",
     "flavor": "Ego te absolvo. The men rose from their knees lighter than they had knelt, and the line held.",
     "art": "res://art/cards/sanctum_c_029.webp"
   },
@@ -1386,9 +1387,22 @@
       "generic": 3
     },
     "power": 2,
-    "toughness": 3,
+    "toughness": 2,
     "keywords": [],
-    "effects": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Knight of the Krak",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Human Knight",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
     "statics": [
       {
         "static": "keyword",
@@ -1396,7 +1410,7 @@
         "scope": "other_own_creatures"
       }
     ],
-    "text": "Other creatures you control have martyr.",
+    "text": "Other creatures you control have martyr. When this enters, create a 1/1 Human Knight token.",
     "flavor": "Two thousand men held the Krak for a hundred years, because each man held the one beside him.",
     "art": "res://art/cards/sanctum_r_004.webp"
   },

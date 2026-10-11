@@ -35,9 +35,9 @@ creatures through its own mechanics, and its basic land.
 
 | Faith (mana) | Owns | Never has |
 |---|---|---|
-| **Holy Church** (W) | `flying` (angels, heralds, doves), `martyr`, `lifelink`, `sanctified`; life gain (`heal`); martyrdom (`death` triggers that help you); **Grace** condition; permanent anthems (`static` anthem); removal only against the guilty: `destroy` with `tapped: true`, and `pacify`; token soldiers are NOT allowed (tokens belong to the Old Ways) | burn, discard, sacrifice, drain, card draw, tap/bounce, haste, trample |
-| **Black Pact** (B) | `deathtouch`, `dread`; paying life (`lose_life` on enter/cast, `life` in costs); **sacrifice** (`sacrifice` in costs); unconditional `destroy`; shrink (`buff` with negative numbers on enemies); `discard_enemy`; `reanimate`; `drain`; drawing cards for life (`draw` paired with `lose_life` only) | flying, life gain other than drain, tokens other than the dead it raises (allowed: "Restless Dead" 1/1 or 2/2 Zombie tokens only from death or sacrifice), haste |
-| **Old Ways** (G) | `trample`, `reach`, `regenerate`; mana creatures and rituals (`add_mana` with G); tokens (beasts, wolves, oaklings, saplings); +X/+X pumps on its own creatures (`buff` own_creature); `fight`; destroying fliers (`destroy` with `flying: true`); destroying relics (`destroy_relic`); **Rooted** condition | flying, card draw, life gain, burn, tapping |
+| **Holy Church** (W) | `flying` (angels, heralds, doves), `martyr`, `lifelink`, `sanctified`; life gain (`heal`); martyrdom (`death` triggers that help you); **Grace** condition; permanent anthems (`static` anthem); removal only against the guilty: `destroy` with `tapped: true`, and `pacify`; tokens only as small Angel or Knight tokens (subtype with Angel or Knight, power 1 or less, e.g. "a 1/1 Human Knight token" from a rare), never armies of soldiers (tokens belong to the Old Ways) | burn, discard, sacrifice, drain, card draw, tap/bounce, haste, trample |
+| **Black Pact** (B) | `deathtouch`, `dread`; paying life (`lose_life` on enter/cast, `life` in costs); **sacrifice** (`sacrifice` in costs); unconditional `destroy`; shrink (`buff` with negative numbers on enemies); `discard_enemy`; `reanimate` and `regrow`; tribe sacrifice (`"sacrifice": "tribe:Zombie"`); `drain`; drawing cards for life (`draw` paired with `lose_life` only) | flying, life gain other than drain, tokens other than the dead it raises (allowed: "Restless Dead" 1/1 or 2/2 Zombie tokens only from death or sacrifice), haste |
+| **Old Ways** (G) | `trample`, `reach`, `regenerate`; mana creatures and rituals (`add_mana` with G); tokens (beasts, wolves, oaklings, saplings); +X/+X pumps on its own creatures (`buff` own_creature); `fight`; `regrow` (graveyard to hand); destroying fliers (`destroy` with `flying: true`); destroying relics (`destroy_relic`); **Rooted** condition | flying, card draw, life gain, burn, tapping |
 | **Revel** (R) | `haste`, `first_strike`; `damage` (burn, the only faith that hits players directly); temporary team attack bonuses (`buff` all_own_creatures with duration turn, power only); **Carouse** condition; **Idle** trigger (laziness: rewards creatures that stay untapped and did not attack); `rummage` (discard then draw); paying its own life for excess | flying, life gain, destroy, card draw without discarding first |
 | **Stoa** (U) | `vigilance`, `defender`, `unmoved`; plain card draw (`draw`); `foresight`; `tap`; `freeze`; `bounce`; `tax`; **Composure** condition | flying (no birds that fly), damage, destroy, life gain, haste |
 | **Technocracy** (C) | colourless costs (`generic`, and `C` from the Foundry for committed cards); **Overclock** (`overclock` kicker); **Assembly** (`static` assembly); upkeep costs (`upkeep_cost`); cost reducers for Technocracy cards only (`static` cost_reduce); `snare` relics; Construct and Servo subtypes (Servo tokens allowed only for Technocracy) | flying, life gain, burn to players, destroy, card draw |
@@ -101,12 +101,14 @@ trigger is always `cast`; inside `abilities` and `overclock` the trigger is omit
 **Triggers**: `enter` (comes into play), `death` (put into the graveyard from play),
 `upkeep` (start of your turn), `attack` (whenever it attacks), `cast` (spells),
 `idle` (Revel only: at the end of your turn, if this creature is untapped and did not
-attack this turn).
+attack this turn), `ally_enter` (see Tribes), `ally_dies` with `ally_subtype` (whenever
+**another** creature of that tribe you control dies, tokens included; any faith, with its own
+tribes; targets are chosen automatically).
 
 **Targets** (`target`):
 - chosen by the player: `any_enemy` (enemy player or enemy creature),
   `enemy_creature`, `own_creature`, `enemy_relic`, `own_grave_creature` (a creature card in
-  your graveyard, with optional `max_mv`)
+  your graveyard, with optional `max_mv` and `subtype`)
 - automatic: `self_player`, `enemy_player`, `self` (this creature), `all_enemy_creatures`,
   `all_own_creatures`, `other_own_creatures`, `all_creatures`
 
@@ -121,6 +123,11 @@ if it holds when it would happen.
 - `rooted`: you control six or more lands (Old Ways)
 - `carouse`: you already played another non-land card this turn (Revel)
 - `bloodied`: you have 10 or less life (Pact)
+- `control:<kind>` (any faith, with its own tribes): you control at least one **other**
+  permanent of that kind; the source itself never counts. The kind is a tribe word
+  (`control:Priest`, `control:Sailor`), `Relic` (any relic), `Aura` (Old Ways) or `Equipment`
+  (Technocracy). Works on effects and statics, e.g.
+  `{"static": "anthem", "scope": "self", "power": 1, "toughness": 1, "condition": "control:Aura"}`.
 
 **Actions** (`action`):
 
@@ -138,7 +145,9 @@ if it holds when it would happen.
 | `bounce` | target | return to owner's hand (tokens vanish) (Stoa) |
 | `tap` | target | tap it (Stoa) |
 | `freeze` | target | tap it; it doesn't untap during its controller's next untap (Stoa) |
-| `summon` | token {name, power, toughness, subtype, keywords}, count | create tokens |
+| `summon` | token {name, power, toughness, subtype, keywords}, count, optional `count_per` | create tokens; with `count_per` (a tribe word, `Relic`, `Aura` or `Equipment`) it makes `count` tokens for each such permanent you control (the source counts), at most 5 |
+| `grant` | keyword, duration `turn` or `permanent`, target `own_creature`, `all_own_creatures`, `other_own_creatures` (optional `subtype` filter) or `self`; optional positive `power`/`toughness` | the creature gains the keyword (and +P/+T) until end of turn, cleared in the cleanup like temporary buffs, or for good. A faith may only grant keywords it owns |
+| `regrow` | target own_grave_creature, optional max_mv, optional subtype | return the chosen creature card from your graveyard to your hand (Pact, Old Ways) |
 | `add_mana` | color, amount | add mana until end of turn (Old Ways G, Technocracy C) |
 | `reanimate` | target own_grave_creature, max_mv (optional) | return the chosen creature card from your graveyard to play (Pact) |
 | `fight` | target enemy_creature | a creature you choose and the target deal damage equal to their power to each other (Old Ways) |
@@ -168,8 +177,9 @@ controller's turn began (or haste).
 
 Cost fields: `mana` (cost dictionary), `tap` (true: tap this creature or relic; creatures
 need to have been in play since your turn began unless they have haste), `life` (pay N
-life), `sacrifice`: `"self"` or `"other"` (sacrifice another creature you control, chosen by
-the player), `discard` (discard N cards, the worst are chosen),
+life), `sacrifice`: `"self"`, `"other"` (sacrifice another creature you control, chosen by
+the player) or `"tribe:Zombie"` (sacrifice another creature of that tribe you control, chosen
+by the player; Pact only), `discard` (discard N cards, the worst are chosen),
 `once_per_turn` (true). Sacrifice costs are Pact only (and Technocracy may sacrifice
 Servos with `"sacrifice": "servo"`).
 
@@ -273,7 +283,7 @@ in your own main phase, with an empty stack.
 - Creature and relic spells put the permanent into play when they resolve; then their
   `enter` triggers run.
 - Simplification: triggered effects (`enter`, `death`, `attack`, `upkeep`, `idle`,
-  `ally_enter`) do not use the stack; they resolve the moment they trigger, as before.
+  `ally_enter`, `ally_dies`) do not use the stack; they resolve the moment they trigger, as before.
 - Priority windows in each turn: upkeep (after the upkeep triggers), draw, main 1, beginning
   of combat, after attackers are declared, after blockers are declared, after combat damage,
   main 2 and the end step (after Idle triggers, before the hand limit). A window closes when
@@ -312,3 +322,17 @@ Plus 15 dual-faith (gold) cards and 15 dual gain-lands made separately. Total 30
 Every choice belongs to the player: which card to discard, which creature to return, which
 creature fights, what to sacrifice, which cards foresight keeps. Card text never says "your
 best" or "your worst" card or "your strongest" creature.
+
+## Rules additions (1.27)
+
+- **Temporary keywords**: `grant` (see Actions). Instants that grant protection answer the
+  enemy on the stack: a Pact spell whose target gained `sanctified` (or an enemy tap, bounce
+  or shrink whose target gained `unmoved`) loses that target when it resolves.
+- **Tribe present**: `condition: "control:<kind>"`, true with at least one other permanent of
+  that kind (never the source).
+- **Ally death**: trigger `ally_dies` with `ally_subtype`.
+- **Regrowth**: `regrow` returns a creature card from the graveyard to the hand (Pact, Old Ways).
+- **Tribe sacrifice**: ability cost `"sacrifice": "tribe:Zombie"` (Pact only).
+- **Summon scaling**: `count_per` on `summon`, at most 5 tokens.
+- **Church tokens**: `summon` is allowed for the Church only for Angel or Knight tokens with
+  power 1 or less.

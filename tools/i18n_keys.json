@@ -221,6 +221,10 @@
    "note": "scripts/autoload/music.gd"
   },
   {
+   "key": "tribe:",
+   "note": "scripts/battle/battle_ai.gd"
+  },
+  {
    "key": "Foe",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -590,6 +594,10 @@
   },
   {
    "key": "once per turn",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "control:",
    "note": "scripts/battle/battle_state.gd"
   },
   {
@@ -2749,7 +2757,27 @@
    "note": "scripts/ui/draft_screen.gd"
   },
   {
+   "key": "bone-walker",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "bone-lord",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "barrow-king",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
    "key": "prime engine",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "bone mill",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "green man",
    "note": "scripts/ui/figure_painter.gd"
   },
   {
@@ -2757,11 +2785,87 @@
    "note": "scripts/ui/figure_painter.gd"
   },
   {
+   "key": "marsh-light",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "saint michael",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "saint raphael",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "grand master",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "grand prior",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "socrates at delium",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
    "key": "man-at-arms",
    "note": "scripts/ui/figure_painter.gd"
   },
   {
+   "key": "brother of mercy",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "far mission",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "bone-priest",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "marcus aurelius",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "water-carrier",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "keeper of the stacks",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "line-master",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "mantle-keeper",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "grey elder",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "count of the velvet",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
    "key": "fire-eater",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "king of",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "master of the revels",
+   "note": "scripts/ui/figure_painter.gd"
+  },
+  {
+   "key": "lord of the last pew",
    "note": "scripts/ui/figure_painter.gd"
   },
   {
@@ -3907,7 +4011,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Target creature you control gets +0/+3 until end of turn. Gain 1 life for each Priest you control.",
+   "key": "Target creature you control gets +0/+2 and gains sanctified until end of turn (protection from the Pact). Gain 1 life for each Priest you control.",
    "note": "rules text of Absolution Before Battle"
   },
   {
@@ -4203,12 +4307,16 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Other creatures you control have martyr.",
+   "key": "Other creatures you control have martyr. When this enters, create a 1/1 Human Knight token.",
    "note": "rules text of Castellan of the Krak"
   },
   {
    "key": "Two thousand men held the Krak for a hundred years, because each man held the one beside him.",
    "note": "flavour text of Castellan of the Krak"
+  },
+  {
+   "key": "Knight of the Krak",
+   "note": "token creature name"
   },
   {
    "key": "Grand Prior of the Hospital",
@@ -4455,7 +4563,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Sacrifice another creature: this gets +2/+2 until end of turn.",
+   "key": "Sacrifice another Zombie: this gets +3/+3 until end of turn.",
    "note": "rules text of Charnel Glutton"
   },
   {
@@ -4703,7 +4811,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this enters, return target creature card with mana value 2 or less from your graveyard to play.",
+   "key": "When this enters, return target creature card from your graveyard to your hand.",
    "note": "rules text of Gravepit Ghoul"
   },
   {
@@ -4931,7 +5039,7 @@
    "note": "card name (abyss, relic)"
   },
   {
-   "key": "Whenever another Zombie enters under your control, the enemy player loses 1 life and you gain 1 life.",
+   "key": "Whenever a Zombie you control dies, the enemy player loses 1 life and you gain 1 life.",
    "note": "rules text of Corpse-Bell of the Barrow"
   },
   {
@@ -5567,7 +5675,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "When this enters, create two 1/1 Sapling tokens.",
+   "key": "When this enters, create a 1/1 Sapling token for each Druid you control (at most five).",
    "note": "rules text of Elder of the Oak Circle"
   },
   {
@@ -5751,7 +5859,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Your Aura cards cost 1 less.",
+   "key": "Your Aura cards cost 1 less. As long as you control an Aura, this gets +1/+1.",
    "note": "rules text of Mantle-Keeper of the Circle"
   },
   {
@@ -6259,6 +6367,10 @@
    "note": "card name (revel, creature)"
   },
   {
+   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): if you control another Noble, deal 1 damage to the enemy player.",
+   "note": "rules text of Perfumed Lordling"
+  },
+  {
    "key": "Odi profanum vulgus et arceo: I hate the uninitiated crowd and keep it far from me. (Horace, Odes 3.1)",
    "note": "flavour text of Perfumed Lordling"
   },
@@ -6307,7 +6419,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Whenever this attacks, other Satyrs you control get +1/+0 until end of turn.",
+   "key": "When this enters, Satyrs you control gain haste until end of turn (they can attack this turn).",
    "note": "rules text of Satyr Piper of the Pines"
   },
   {
@@ -6947,7 +7059,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+   "key": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). If you control a Sailor, draw a card.",
    "note": "rules text of Grip of the Cold Sea"
   },
   {
@@ -7091,7 +7203,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Hoplite creatures you control get +0/+3 until end of turn.",
+   "key": "Hoplite creatures you control get +0/+2 and gain unmoved until end of turn (enemy spells and abilities can't tap them, return them to hand or shrink them).",
    "note": "rules text of Lock Shields"
   },
   {
@@ -7703,6 +7815,10 @@
    "note": "card name (machine, creature)"
   },
   {
+   "key": "As long as you control an Equipment, this gets +1/+1.",
+   "note": "rules text of Bronze Phalanx Automaton"
+  },
+  {
    "key": "The Stoa taught discipline. The Technocracy simply built it.",
    "note": "flavour text of Bronze Phalanx Automaton"
   },
@@ -8035,7 +8151,7 @@
    "note": "card name (machine, spell)"
   },
   {
-   "key": "Create three 1/1 Servo Construct tokens.",
+   "key": "Create a 1/1 Servo Construct token, then a 1/1 Servo Construct token for each Artificer you control (at most five).",
    "note": "rules text of Bulk Order"
   },
   {

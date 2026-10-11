@@ -329,7 +329,8 @@
     "type": "spell",
     "subtype": "Discourse",
     "cost": {
-      "U": 1
+      "U": 1,
+      "generic": 1
     },
     "keywords": [],
     "effects": [
@@ -337,9 +338,15 @@
         "trigger": "cast",
         "action": "freeze",
         "target": "enemy_creature"
+      },
+      {
+        "trigger": "cast",
+        "action": "draw",
+        "amount": 1,
+        "condition": "control:Sailor"
       }
     ],
-    "text": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+    "text": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). If you control a Sailor, draw a card.",
     "flavor": "The northern sea does not hurry, and it does not let go.",
     "art": "res://art/cards/lyceum_c_014.webp",
     "speed": "instant"
@@ -641,15 +648,16 @@
     "effects": [
       {
         "trigger": "cast",
-        "action": "buff",
+        "action": "grant",
         "target": "all_own_creatures",
         "subtype": "Hoplite",
+        "keyword": "unmoved",
         "power": 0,
-        "toughness": 3,
+        "toughness": 2,
         "duration": "turn"
       }
     ],
-    "text": "Hoplite creatures you control get +0/+3 until end of turn.",
+    "text": "Hoplite creatures you control get +0/+2 and gain unmoved until end of turn (enemy spells and abilities can't tap them, return them to hand or shrink them).",
     "flavor": "Each man's shield covers his own left side and the right side of the man beside him.",
     "art": "res://art/cards/lyceum_c_026.webp"
   },
