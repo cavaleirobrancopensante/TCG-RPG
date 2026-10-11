@@ -89,7 +89,7 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and _press:
 		var d := _axis(event.position) - _axis(_press_pos)
 		var starting := false
-		if not dragged and absf(d) > DRAG_START:
+		if not dragged and absf(d) > maxf(DRAG_START, UIKit.tap_slop()):
 			dragged = true
 			starting = true
 			_cancel_holds(scroll)

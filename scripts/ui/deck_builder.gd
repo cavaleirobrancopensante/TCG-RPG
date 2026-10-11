@@ -99,6 +99,7 @@ func _ready() -> void:
 	var faith_row := HBoxContainer.new()
 	faith_row.add_theme_constant_override("separation", 4)
 	left.add_child(faith_row)
+	faith_row.add_child(UIKit.corner_space(22, 4))
 	for f in Factions.ORDER:
 		var b := Button.new()
 		b.toggle_mode = true
@@ -356,10 +357,10 @@ func _build_drawer() -> void:
 func _open_filters() -> void:
 	var panel: Control = drawer.get_node("Panel")
 	var vp := get_viewport_rect().size
-	var w := minf(vp.x - 44.0, 640.0)
+	var w := minf(vp.x - UIKit.CORNER - 22.0, 640.0)
 	panel.custom_minimum_size = Vector2(w, 0)
 	panel.size = Vector2(w, 0)
-	panel.position = Vector2(22, UIKit.TOP + 8)
+	panel.position = Vector2(UIKit.CORNER, UIKit.TOP + 8)      # beside the music button
 	drawer.visible = true
 	drawer.move_to_front()
 	panel.reset_size.call_deferred()

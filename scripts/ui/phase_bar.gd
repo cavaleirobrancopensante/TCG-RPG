@@ -342,9 +342,9 @@ class _Seg extends Control:
 			elif _down:
 				_down = false
 				_hold_id += 1
-				if ev.global_position.distance_to(_press_pos) < PhaseBar.HOLD_SLOP:
+				if ev.global_position.distance_to(_press_pos) < UIKit.tap_slop():
 					bar._on_seg_tap(self)
-		elif ev is InputEventMouseMotion and _down and ev.global_position.distance_to(_press_pos) > PhaseBar.HOLD_SLOP:
+		elif ev is InputEventMouseMotion and _down and ev.global_position.distance_to(_press_pos) > UIKit.tap_slop():
 			_down = false
 			_hold_id += 1
 

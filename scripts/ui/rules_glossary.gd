@@ -33,7 +33,7 @@ func _ready() -> void:
 	add_child(dim)
 
 	var vp := get_viewport_rect().size
-	var w := minf(920.0, vp.x - 40.0)
+	var w := minf(920.0, vp.x - 2.0 * UIKit.CORNER)      # centred, clear of the music button
 	var h := vp.y - UIKit.TOP - 24.0
 	panel = PanelContainer.new()
 	panel.name = "GlossaryPanel"

@@ -17,6 +17,7 @@ func _ready() -> void:
 	add_child(v)
 	var head := HBoxContainer.new()
 	v.add_child(head)
+	head.add_child(UIKit.corner_space(22, UIKit.GAP))
 	var t := UIKit.title("Settings", UIKit.FS_TITLE)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)

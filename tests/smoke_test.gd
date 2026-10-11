@@ -101,10 +101,15 @@ func _ready() -> void:
 	var mix: Array = Music.playlist
 	var own := mix.filter(func(id): return String(id).begins_with(GameState.hero)).size()
 	assert(own >= 1 and own * 3 <= mix.size(), "about one song in four is the hero's own")
-	# The player strip: picker, manual choice, transport, back to auto.
-	Music._bar._toggle_picker()
+	# The music player: the corner button opens it, manual choice, transport, back to auto.
+	var mb: MusicBar = Music._bar
+	assert(mb.button.visible and mb.button.get_global_rect().size.y >= UIKit.TARGET, "the music button sits in its corner")
+	mb.button.pressed.emit()
 	await _frames(2)
-	assert(Music._bar.picker.visible, "picker opens on first tap")
+	assert(mb.picker.visible and mb.is_open(), "the player opens on the first tap")
+	mb._toggle_list()
+	await _frames(2)
+	assert(mb.list_panel.visible and mb.list_box.get_child_count() > 1, "the list of pieces opens")
 	# Two quick changes (the world, then a duel) must leave the duel music playing.
 	Music.set_auto(true)
 	Music.context = ""
@@ -128,7 +133,18 @@ func _ready() -> void:
 	Music.toggle_pause()
 	Music.set_auto(true)
 	assert(Music.current["faction"] in ["machine", GameState.hero], "auto resumes the town's music")
-	Music._bar._toggle_picker()
+	assert(mb.play_btn.text == "⏸" and mb.title_label.text.contains(I18n.t(Music.current["title"])), "the player shows the piece now playing")
+	mb.button.pressed.emit()
+	await _frames(2)
+	assert(not mb.picker.visible, "the button closes the player again")
+	mb.open_picker()
+	await _frames(2)
+	var tap := InputEventMouseButton.new()
+	tap.button_index = MOUSE_BUTTON_LEFT
+	tap.pressed = true
+	mb._shade.gui_input.emit(tap)
+	assert(not mb.picker.visible, "a tap outside closes the player")
+	mb._toggle_list()
 	print("music player ok")
 	for t in ["shop", "sell", "town", "inn"]:
 		c._on_tab(t)

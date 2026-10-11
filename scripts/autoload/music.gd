@@ -44,11 +44,11 @@ func _ready() -> void:
 	_load_settings()
 
 
-## Redraw the strip (e.g. after the language changes).
+## Redraw the player (e.g. after the language changes).
 func refresh_bar() -> void:
 	if _bar:
 		_bar._refresh()
-		if _bar.picker and _bar.picker.visible:
+		if _bar.picker and _bar.picker.visible and _bar.list_panel.visible:
 			_bar._fill_list()
 
 

@@ -5,7 +5,7 @@ extends Control
 
 signal done
 
-## Where the candle and cross are drawn: below the music strip, ART_H tall.
+## Where the candle and cross are drawn: below the top margin, ART_H tall.
 const ART_TOP := UIKit.TOP + 16
 const ART_H := 150
 

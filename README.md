@@ -214,6 +214,18 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Taps that work on phones, and a quieter top of the screen (1.36)
+
+- Tapping cards works on phones again: a fingertip wobbles 2 to 3 mm during a tap, which the
+  game took for a scroll. Touch screens now allow about 3 mm before a press becomes a drag,
+  everywhere (cards, lists, the phase bar, duel figures).
+- The music player is a small round button in the top-left corner; tap it for the player
+  (track, previous, pause, next, random, the list of pieces). The strip across the top is gone,
+  so every screen starts nearer the top.
+- The sky dial is now a slim bar at the very top of the map: the sun crosses it from dawn to
+  dusk and the moon by night, with the hour, the date and the feast underneath. The feast's
+  liturgical colour shows as a small dot.
+
 ## Made for phones (1.35)
 
 - An interface scale: on phones the game draws everything a third larger, and Settings has

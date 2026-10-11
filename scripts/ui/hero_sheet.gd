@@ -29,7 +29,7 @@ func _ready() -> void:
 func refresh() -> void:
 	UIKit.clear(_body)
 	var room := size if size.x > 0 else get_viewport_rect().size
-	var w := minf(room.x - 32.0, 900.0)
+	var w := minf(room.x - 2.0 * UIKit.CORNER, 900.0)      # centred, clear of the music button
 	_panel.custom_minimum_size.x = w
 	var two := w >= 700.0          # the stats in two columns when there is room
 	var head := HBoxContainer.new()
@@ -107,7 +107,7 @@ func _center() -> void:
 	if is_instance_valid(_panel):
 		_panel.reset_size()
 		var room := size if size.x > 0 else get_viewport_rect().size
-		# clear of the music strip (the same top margin as the other screens) and of the bottom
+		# the same top margin as the other screens, clear of the bottom
 		var top := float(UIKit.TOP + 8)
 		var avail := Vector2(room.x - 16, room.y - top - 8)
 		# laid out to fit; shrinking is only a last resort (it would make the targets small)

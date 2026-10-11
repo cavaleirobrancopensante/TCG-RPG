@@ -711,10 +711,10 @@ func _build_hud() -> void:
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.theme = ui_theme
 	hud_layer.add_child(hud)
-	# the status panel, top left: level, life, gold and cards as separate pieces
+	# the status panel, top left beside the music button: level, life, gold and cards
 	hud_status_panel = PanelContainer.new()
 	hud_status_panel.name = "StatusPanel"
-	hud_status_panel.position = Vector2(10, UIKit.TOP + 8)
+	hud_status_panel.position = Vector2(UIKit.CORNER, HUD_TOP)
 	hud_status_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(hud_status_panel)
 	hud_status = GridContainer.new()
@@ -748,7 +748,7 @@ func _build_hud() -> void:
 	hud_col.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	hud_col.offset_left = -HUD_COL_W - 10
 	hud_col.offset_right = -10
-	hud_col.offset_top = UIKit.TOP + 8
+	hud_col.offset_top = HUD_TOP
 	hud_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(hud_col)
 	hud_hero = _hud_button("Hero", open_hero_sheet)
@@ -757,9 +757,9 @@ func _build_hud() -> void:
 	hud_menu = _hud_button("Menu", toggle_world_menu)
 	hud_camp = _hud_button("Camp", make_camp)
 	hud_boosters = _hud_button("Boosters", func(): open_boosters(false))
+	# the sky bar, at the very top centre (placed and sized by _layout_status)
 	var dial := SkyDial.new()
-	dial.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	dial.position = Vector2(-SkyDial.W * 0.5, UIKit.TOP + 10)     # the gilt rim stands a little above the dial
+	dial.name = "SkyDial"
 	hud.add_child(dial)
 	hud_dial = dial
 	var zoom := HBoxContainer.new()
@@ -783,6 +783,9 @@ func _build_hud() -> void:
 
 
 const HUD_COL_W := 190
+const HUD_TOP := 8            # the status panel and the button column start here
+const DIAL_TOP := 4           # the sky bar hangs from the very top
+const DIAL_MAX := 420.0
 
 
 func _hud_button(text: String, cb: Callable) -> Button:
@@ -814,19 +817,32 @@ func _update_hud() -> void:
 	_layout_status()
 
 
-## Four pieces in a row when there is room left of the sky dial, else two rows of two.
+## The top row of the map: the status panel (four pieces in a row when the sky bar keeps a
+## comfortable width beside it, else two rows of two), the sky bar centred in what the panel
+## and the button column leave, and the "Saved" mark beside the panel or under it.
 func _layout_status() -> void:
 	if hud_status == null or not is_instance_valid(hud_status) or hud == null:
 		return
-	var room := (hud.size.x - SkyDial.W) * 0.5 - 10.0 - 14.0
+	var gap := 12.0
+	var cx := hud.size.x * 0.5
+	var right := hud.size.x - HUD_COL_W - 10.0 - gap
+	var dial_w := func(panel_w: float) -> float:
+		return 2.0 * minf(cx - (UIKit.CORNER + panel_w + gap), right - cx)
 	hud_status.columns = 4
 	var w4 := hud_status_panel.get_combined_minimum_size().x
-	hud_status.columns = 4 if w4 <= room else 2
+	var dw: float = dial_w.call(w4)
+	if dw < 340.0:
+		hud_status.columns = 2
+		dw = dial_w.call(hud_status_panel.get_combined_minimum_size().x)
 	hud_status_panel.reset_size()
+	dw = clampf(dw, SkyDial.W_MIN, DIAL_MAX)
+	if hud_dial and is_instance_valid(hud_dial):
+		hud_dial.set_width(dw)
+		hud_dial.position = Vector2(roundf(cx - hud_dial.width * 0.5), DIAL_TOP)
 	var pr := Rect2(hud_status_panel.position, hud_status_panel.get_combined_minimum_size())
 	var mark := hud_saved.get_combined_minimum_size()
-	if pr.end.x + 12.0 + mark.x <= 10.0 + room:
-		hud_saved.position = Vector2(pr.end.x + 12.0, pr.position.y + (pr.size.y - mark.y) * 0.5)
+	if pr.end.x + gap + mark.x <= cx - dw * 0.5 - gap:
+		hud_saved.position = Vector2(pr.end.x + gap, pr.position.y + (pr.size.y - mark.y) * 0.5)
 	else:
 		hud_saved.position = Vector2(pr.position.x + 8.0, pr.end.y + 4.0)
 
@@ -898,10 +914,10 @@ func toggle_world_menu() -> void:
 	# beside the column, its top level with the Menu button (kept on screen)
 	var vs := ov.get_viewport_rect().size
 	var ps := panel.get_combined_minimum_size()
-	var y := UIKit.TOP + 8.0
+	var y := float(HUD_TOP)
 	if hud_menu and is_instance_valid(hud_menu):
 		y = hud_menu.global_position.y
-	y = clampf(y, UIKit.TOP + 8.0, maxf(UIKit.TOP + 8.0, vs.y - ps.y - 10.0))
+	y = clampf(y, HUD_TOP, maxf(HUD_TOP, vs.y - ps.y - 10.0))
 	panel.position = Vector2(vs.x - HUD_COL_W - 10.0 - UIKit.GAP - ps.x, y)
 
 

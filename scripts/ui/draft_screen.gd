@@ -43,6 +43,7 @@ func _ready() -> void:
 	var top := HBoxContainer.new()
 	top.add_theme_constant_override("separation", UIKit.GAP)
 	left.add_child(top)
+	top.add_child(UIKit.corner_space(22, UIKit.GAP))
 	var heads := VBoxContainer.new()
 	heads.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	heads.add_theme_constant_override("separation", 0)

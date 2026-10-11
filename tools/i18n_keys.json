@@ -3305,6 +3305,14 @@
    "note": "scripts/ui/loading_screen.gd"
   },
   {
+   "key": "Shade",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Music",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
    "key": "Random",
    "note": "scripts/ui/music_bar.gd"
   },
@@ -3314,6 +3322,30 @@
   },
   {
    "key": "Play the pieces in random order, or follow the list",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "All the pieces",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Title",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Sub",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Prev",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "Shuffle",
+   "note": "scripts/ui/music_bar.gd"
+  },
+  {
+   "key": "List",
    "note": "scripts/ui/music_bar.gd"
   },
   {

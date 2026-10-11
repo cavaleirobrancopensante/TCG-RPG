@@ -82,10 +82,10 @@ func _gui_input(event: InputEvent) -> void:
 			set_process(true)
 		elif _holding:
 			_holding = false
-			if not _long_fired and event.position.distance_to(_press_pos) < 14.0:
+			if not _long_fired and event.position.distance_to(_press_pos) < UIKit.tap_slop():
 				accept_event()
 				tapped.emit(self)
-	elif event is InputEventMouseMotion and _holding and event.position.distance_to(_press_pos) > 14.0:
+	elif event is InputEventMouseMotion and _holding and event.position.distance_to(_press_pos) > UIKit.tap_slop():
 		_holding = false     # it's a scroll / drag, not a tap
 
 

@@ -13,9 +13,12 @@ const RED := Color(0.72, 0.17, 0.12)
 const GREEN := Color(0.12, 0.36, 0.10)     # "can use" ink: 5.9:1 on parchment
 const BLUE := Color(0.13, 0.33, 0.66)
 const LIGHT := Color(0.98, 0.95, 0.86)      # text on dark/blue fields
-## Height reserved at the top of every screen for the music strip (MusicBar.HEIGHT 48,
-## plus the reach of its buttons' touch areas just below it).
-const TOP := 56
+## The top margin of every screen (just inside the ornamental border).
+const TOP := 12
+## The music button's place: the top-left corner of every screen (see MusicBar).
+const MUSIC_RECT := Rect2(6, 6, 64, 64)
+## Screens keep x < CORNER clear in their first row, where the music button sits.
+const CORNER := 78
 
 ## Design tokens (canvas px). On phones the canvas base is 960x540 (see UIScale), so these
 ## stay comfortable under a finger: no text under FS_MIN, no tappable control under TARGET.
@@ -277,6 +280,15 @@ static func _box(bg: Color, border: Color, radius: int = 8) -> StyleBoxFlat:
 	return b
 
 
+## How far a press may wander and still count as a tap (canvas px). A fingertip moves 2 to 3 mm
+## during a tap; at the phone interface scale that is 20 to 30 canvas px, so touch screens get a
+## wide allowance (about 3 mm), a mouse a narrow one.
+static func tap_slop() -> float:
+	if DisplayServer.is_touchscreen_available() or UIScale.is_phone():
+		return 26.0
+	return 12.0
+
+
 static func button(text: String, cb: Callable, min_w: int = 120) -> Button:
 	var b := Button.new()
 	b.text = text
@@ -355,7 +367,28 @@ static func clear(n: Node) -> void:
 		c.queue_free()
 
 
-## Inside a Backdrop: clear of the music strip and the ornamental border.
+## Room at the start of a screen's first row for the music button in the top-left corner.
+## left: where the row begins on screen (content_rect: 22); sep: the row's separation.
+static func corner_space(left: float = 22.0, sep: float = 0.0) -> Control:
+	var c := Control.new()
+	c.name = "MusicCorner"
+	c.custom_minimum_size = Vector2(maxf(0.0, CORNER - left - sep), 0)
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return c
+
+
+## A screen's first row with room for the music button on its left (for rows that are not
+## an HBox of their own, such as a framed panel).
+static func past_corner(row: Control, left: float = 22.0) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 0)
+	h.add_child(corner_space(left))
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(row)
+	return h
+
+
+## Inside a Backdrop: clear of the ornamental border.
 static func content_rect(c: Control) -> void:
 	full_rect(c, TOP + 8)
 	c.offset_left = 22
