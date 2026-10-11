@@ -24,7 +24,7 @@ var cards: Array = []             # card ids shown between the two figures
 var _stage: Control
 var _panel: PanelContainer
 var _line_label: Label
-var _row: HBoxContainer
+var _row: HFlowContainer
 var _cards_box: HBoxContainer
 var _built := false
 
@@ -101,12 +101,14 @@ func _ready() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	_panel.add_child(v)
-	_line_label = UIKit.label("", 21, UIKit.TEXT, true)
+	_line_label = UIKit.label("", UIKit.FS_BODY + 1, UIKit.TEXT, true)
 	_line_label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED   # lines arrive translated
 	v.add_child(_line_label)
-	_row = HBoxContainer.new()
-	_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	_row.add_theme_constant_override("separation", 14)
+	_row = HFlowContainer.new()       # the choices wrap onto a second line when they are many
+	_row.alignment = FlowContainer.ALIGNMENT_CENTER
+	_row.add_theme_constant_override("h_separation", UIKit.SP_2)
+	_row.add_theme_constant_override("v_separation", UIKit.SP_1)
+	_row.minimum_size_changed.connect(func(): _place_panel.call_deferred())
 	v.add_child(_row)
 	_built = true
 	resized.connect(_layout)
@@ -184,12 +186,21 @@ func _layout() -> void:
 		return
 	var w := minf(size.x - 40.0, 980.0)
 	_line_label.custom_minimum_size.x = w - 40.0
-	_panel.size = Vector2(w, 0)
-	_panel.reset_size()
-	_panel.size.x = w
-	_panel.position = Vector2((size.x - w) * 0.5, size.y - _panel.size.y - 16.0)
+	_panel.custom_minimum_size.x = w
+	_place_panel()
 	_cards_box.reset_size()
 	_cards_box.position = Vector2(size.x * 0.44 - _cards_box.size.x * 0.5, UIKit.TOP + 40.0)
+	_stage.queue_redraw()
+
+
+## The talk panel at the foot of the screen, as tall as its words and choices (the choices
+## wrap, so its height is known only once they are laid out at the panel's width).
+func _place_panel() -> void:
+	if not is_instance_valid(_panel):
+		return
+	var w := _panel.custom_minimum_size.x
+	_panel.size = Vector2(w, _panel.get_combined_minimum_size().y)
+	_panel.position = Vector2((size.x - w) * 0.5, size.y - _panel.size.y - 16.0)
 	_stage.queue_redraw()
 
 
@@ -220,14 +231,15 @@ class Stage extends Control:
 			Tapestry.draw_parchment(self, r)
 		var feet_y := s.ground_y()
 		var h := size.y
+		# the stranger no taller than the room between the strip (with his name ribbon) and the panel
+		var npc_h := clampf(feet_y - UIKit.TOP - 70.0, h * 0.25, h * 0.5)
 		# the hero, smaller and nearer the edge, facing the stranger
 		var hero_x := size.x * 0.2
 		_shadow(Vector2(hero_x, feet_y + 6), 46.0)
-		FigurePainter.paint(self, s.hero, Transform2D(0, Vector2(hero_x, feet_y + 6)), h * 0.34, 1.0, 1.0)
+		FigurePainter.paint(self, s.hero, Transform2D(0, Vector2(hero_x, feet_y + 6)), minf(h * 0.34, npc_h * 0.7), 1.0, 1.0)
 		draw_set_transform_matrix(Transform2D.IDENTITY)
 		# the one we meet, large, facing the hero
 		var npc_x := size.x * 0.66
-		var npc_h := h * 0.5
 		_shadow(Vector2(npc_x, feet_y), 70.0)
 		FigurePainter.paint(self, s.npc, Transform2D(0, Vector2(npc_x, feet_y)), npc_h, -1.0, 1.0)
 		draw_set_transform_matrix(Transform2D.IDENTITY)

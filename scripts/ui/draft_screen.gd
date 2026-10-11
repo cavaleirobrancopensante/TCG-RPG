@@ -7,7 +7,8 @@ extends Control
 signal finished
 signal picked             # after every pick (the event is saved, so quitting loses nothing)
 
-const SCALE := 0.56
+const SCALE := 0.56               # desktop thumbnails; 150 px wide on a phone
+const PHONE_SCALE := 0.75
 
 var draft: Draft
 var grid: GridContainer
@@ -17,37 +18,51 @@ var picks_box: VBoxContainer
 var take_btn: Button
 var chosen := -1
 var drag: DragScroll              # drag over the pack (finger or mouse) to scroll it
+var card_scale := SCALE
 
 
 func _ready() -> void:
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
 	add_child(Backdrop.create("rings"))
+	var vp := get_viewport_rect().size
+	var compact := vp.y < 600.0
+	card_scale = PHONE_SCALE if compact else SCALE
 	var root := HBoxContainer.new()
 	UIKit.content_rect(root)
-	root.add_theme_constant_override("separation", 14)
+	root.add_theme_constant_override("separation", UIKit.GAP)
 	add_child(root)
 
+	# the pack takes whole columns of thumbnails, the picks list the rest (at least 240 px)
+	var cw := CardView.BASE.x * card_scale
+	var cols := clampi(int((vp.x - 44.0 - UIKit.GAP - 240.0 - 16.0 + 10.0) / (cw + 10.0)), 2, 8)
 	var left := VBoxContainer.new()
-	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.size_flags_stretch_ratio = 2.6
-	left.add_theme_constant_override("separation", 8)
+	left.custom_minimum_size.x = cols * cw + (cols - 1) * 10.0 + 16.0
+	left.add_theme_constant_override("separation", UIKit.SP_1)
 	root.add_child(left)
 	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", UIKit.GAP)
 	left.add_child(top)
-	head = UIKit.title("", 34)
-	head.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	top.add_child(head)
-	take_btn = UIKit.button("Take", _take, 170)
+	var heads := VBoxContainer.new()
+	heads.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heads.add_theme_constant_override("separation", 0)
+	top.add_child(heads)
+	head = UIKit.title("", UIKit.FS_HEADING if compact else UIKit.FS_HEADING + 6)
+	head.clip_text = true
+	head.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	heads.add_child(head)
+	take_btn = UIKit.primary_button("Take", _take, 170)
+	take_btn.name = "Take"
+	take_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	top.add_child(take_btn)
-	sub = UIKit.label("", 17, UIKit.DIM, true)
-	left.add_child(sub)
+	sub = UIKit.label("", UIKit.FS_SECONDARY, UIKit.DIM, true)
+	heads.add_child(sub)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	left.add_child(scroll)
 	grid = GridContainer.new()
-	grid.columns = 6
+	grid.columns = cols
 	grid.add_theme_constant_override("h_separation", 10)
 	grid.add_theme_constant_override("v_separation", 10)
 	scroll.add_child(grid)
@@ -59,7 +74,7 @@ func _ready() -> void:
 	var rv := VBoxContainer.new()
 	rv.add_theme_constant_override("separation", 6)
 	right.add_child(rv)
-	rv.add_child(UIKit.title("Your picks", 26))
+	rv.add_child(UIKit.title("Your picks", UIKit.FS_HEADING - 2))
 	var ps := ScrollContainer.new()
 	ps.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	ps.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -84,7 +99,7 @@ func _refresh() -> void:
 		to, I18n.t("left" if draft.direction() > 0 else "right")]
 	for i in pack.size():
 		var e: Dictionary = pack[i]
-		var cv := CardView.create(e["id"], SCALE, e.get("foil", false))
+		var cv := CardView.create(e["id"], card_scale, e.get("foil", false))
 		var idx := i
 		cv.tapped.connect(func(_c):
 			if not drag.dragged:
@@ -143,10 +158,10 @@ func _fill_picks() -> void:
 				n += 1
 		if n > 0:
 			line += "%s %d   " % [Factions.info(f)["short"], n]
-	picks_box.add_child(UIKit.label(line if line != "" else I18n.t("Nothing yet."), 16, UIKit.TEXT, true))
+	picks_box.add_child(UIKit.label(line if line != "" else I18n.t("Nothing yet."), UIKit.FS_SECONDARY, UIKit.TEXT, true))
 	var list: Array = draft.picks[0].duplicate()
 	list.reverse()
 	for e in list:
 		var c := CardDB.get_card(e["id"])
-		var l := UIKit.label("%s  (%s)" % [I18n.t(c.get("name", "")), UIKit.cost_text(c.get("cost", {}))], 15, UIKit.faction_ink(c.get("faction", "machine")))
+		var l := UIKit.label("%s  (%s)" % [I18n.t(c.get("name", "")), UIKit.cost_text(c.get("cost", {}))], UIKit.FS_SECONDARY, UIKit.faction_ink(c.get("faction", "machine")), true)
 		picks_box.add_child(l)

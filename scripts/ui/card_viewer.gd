@@ -56,6 +56,9 @@ var actions: Callable
 var close_label := "Close"
 var card_view: CardView
 var info_box: VBoxContainer
+var head_box: HBoxContainer       # the name and the "?" button, always in view
+var info_scroll: ScrollContainer   # the card's text, scrolling when it is taller than the screen
+var actions_box: VBoxContainer     # the action buttons, always in view under the text
 var left_btn: Button
 var right_btn: Button
 var _press_pos := Vector2.ZERO
@@ -65,6 +68,7 @@ var _home := Vector2.ZERO
 var _swiping := false
 var _slide: Tween
 var _info_dirty := false
+var _plate_top := 0.0
 # zoom: pinch with two fingers, the mouse wheel, or a trackpad pinch
 const ZOOM_MAX := 4.0
 var _zoom := 1.0
@@ -108,12 +112,27 @@ func _ready() -> void:
 	plate.clip_contents = true
 	add_child(plate)
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 10)
+	col.add_theme_constant_override("separation", UIKit.GAP)
 	col.custom_minimum_size.x = 340
 	plate.add_child(col)
+	head_box = HBoxContainer.new()
+	head_box.add_theme_constant_override("separation", 8)
+	col.add_child(head_box)
+	info_scroll = ScrollContainer.new()
+	info_scroll.name = "InfoScroll"
+	info_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	col.add_child(info_scroll)
 	info_box = VBoxContainer.new()
+	info_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	info_box.add_theme_constant_override("separation", 6)
-	col.add_child(info_box)
+	info_scroll.add_child(info_box)
+	actions_box = VBoxContainer.new()
+	actions_box.add_theme_constant_override("separation", 6)
+	col.add_child(actions_box)
+	# wrapped text settles its height a frame after it gets its width: fit the plate again then
+	info_box.minimum_size_changed.connect(func(): _fit_plate.call_deferred())
+	actions_box.minimum_size_changed.connect(func(): _fit_plate.call_deferred())
+	head_box.minimum_size_changed.connect(func(): _fit_plate.call_deferred())
 	# arrows last, so nothing can ever cover them
 	left_btn = _arrow("‹", prev)
 	right_btn = _arrow("›", next)
@@ -136,7 +155,7 @@ func _layout() -> void:
 	var vp := get_viewport_rect().size
 	var plate: Control = get_node("Plate")
 	var lane := Vector2(8 + 72 + 12, vp.x - 8 - 72 - 12)     # x range between the arrows
-	var plate_w := 360.0
+	var plate_w := 380.0
 	var cs := CardView.BASE * _card_scale
 	if cs.x + 20 + plate_w > lane.y - lane.x:
 		_card_scale = maxf(0.8, (lane.y - lane.x - 20 - plate_w) / CardView.BASE.x)
@@ -148,6 +167,7 @@ func _layout() -> void:
 	card_view.position = Vector2(x0, top)
 	_home = card_view.position
 	plate.position = Vector2(x0 + cs.x + 20, top)
+	_plate_top = top
 	plate.custom_minimum_size = Vector2(plate_w, 0)
 	plate.size = Vector2(minf(plate_w, lane.y - plate.position.x), plate.size.y)
 	left_btn.position = Vector2(8, vp.y * 0.5 - 60 + UIKit.TOP * 0.5)
@@ -211,53 +231,54 @@ func refresh() -> void:
 
 func _fill_info(e: Dictionary) -> void:
 	UIKit.clear(info_box)
+	UIKit.clear(actions_box)
+	UIKit.clear(head_box)
 	var c: Dictionary = e.get("data", {}) if e.has("data") else CardDB.get_card(e["id"])
 	var f: String = c.get("faction", "machine")
-	var head := HBoxContainer.new()
-	head.add_theme_constant_override("separation", 8)
-	info_box.add_child(head)
-	var tl := UIKit.title(I18n.t(c.get("name", "")), 30)
+	var head := head_box
+	var tl := UIKit.title(I18n.t(c.get("name", "")), UIKit.FS_HEADING + 2)
 	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	tl.custom_minimum_size.x = 240
 	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(tl)
-	var help := UIKit.button("?", open_glossary, 52)
+	var help := UIKit.button("?", open_glossary, UIKit.TARGET_W)
 	help.name = "GlossaryButton"
-	help.custom_minimum_size = Vector2(52, 52)
+	help.custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
+	help.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
 	help.tooltip_text = I18n.t("Rules glossary")
 	help.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	head.add_child(help)
 	var line := "%s · %s" % [Factions.info(f)["name"], I18n.t(String(c.get("rarity", "")).capitalize())]
 	if e.get("foil", false):
 		line += " · " + I18n.t("Foil")
-	info_box.add_child(UIKit.label(line, 18, UIKit.faction_ink(f), true))
+	info_box.add_child(UIKit.label(line, UIKit.FS_SECONDARY + 1, UIKit.faction_ink(f), true))
 	# type line, cost (as pips) and power/toughness
 	var type_line := CardView.type_line(c)
 	if c.get("type") != "land" and c.get("rarity") != "token":
 		type_line += "   ·   " + I18n.t("Cost %s") % CardView.cost_tokens(c.get("cost", {}))
 	if c.get("type") == "creature":
 		type_line += "   ·   %d/%d" % [c.get("power", 0), c.get("toughness", 0)]
-	var tline := CardView.RulesText.new(type_line, 17, UIKit.TEXT)
+	var tline := CardView.RulesText.new(type_line, UIKit.FS_SECONDARY, UIKit.TEXT)
 	tline.name = "TypeLine"
 	tline.custom_minimum_size.x = 300
 	info_box.add_child(tline)
 	if c.get("text", "") != "":
-		var rules := CardView.RulesText.new(I18n.t(c["text"]), 19, UIKit.TEXT)
+		var rules := CardView.RulesText.new(I18n.t(c["text"]), UIKit.FS_BODY, UIKit.TEXT)
 		rules.name = "RulesText"
 		rules.custom_minimum_size.x = 300
 		info_box.add_child(rules)
 	for kw in c.get("keywords", []):
 		if KEYWORDS.has(kw):
-			info_box.add_child(UIKit.label(I18n.t(KEYWORDS[kw]), 15, UIKit.DIM, true))
+			info_box.add_child(UIKit.label(I18n.t(KEYWORDS[kw]), UIKit.FS_SECONDARY, UIKit.DIM, true))
 	var shown := {}
 	for word in MECHANICS:
 		var line2: String = MECHANICS[word]
 		if String(c.get("text", "")).contains(word) and not shown.has(line2):
 			shown[line2] = true
-			info_box.add_child(UIKit.label(I18n.t(line2), 15, UIKit.DIM, true))
+			info_box.add_child(UIKit.label(I18n.t(line2), UIKit.FS_SECONDARY, UIKit.DIM, true))
 	if c.get("rarity") != "token" and c.get("type") != "land":
-		info_box.add_child(UIKit.label(I18n.t("You own %d") % GameState.owned_count(e["id"]), 16, UIKit.DIM))
-	info_box.add_child(UIKit.label("%d / %d" % [index + 1, entries.size()], 17, UIKit.DIM))
+		info_box.add_child(UIKit.label(I18n.t("You own %d") % GameState.owned_count(e["id"]), UIKit.FS_SECONDARY, UIKit.DIM))
+	info_box.add_child(UIKit.label("%d / %d" % [index + 1, entries.size()], UIKit.FS_SECONDARY, UIKit.DIM))
 	var row := HFlowContainer.new()
 	row.name = "Actions"
 	row.add_theme_constant_override("h_separation", 10)
@@ -274,18 +295,42 @@ func _fill_info(e: Dictionary) -> void:
 				elif is_instance_valid(self):
 					refresh.call_deferred(), 150)
 			b.disabled = not a[2]
+			b.add_theme_font_size_override("font_size", UIKit.FS_BODY)
 			row.add_child(b)
 			if b.disabled and a.size() > 4 and String(a[4]) != "":
 				reasons.append(String(a[4]))
 	var cl := UIKit.button(close_label, close, 120)
 	cl.name = "CloseButton"
 	row.add_child(cl)
-	info_box.add_child(row)
+	actions_box.add_child(row)
 	for why in reasons:
-		var wl := UIKit.label(why, 16, UIKit.RED, true)
+		var wl := UIKit.label(why, UIKit.FS_SECONDARY, UIKit.RED, true)
 		wl.name = "WhyNot"
 		wl.custom_minimum_size.x = 300
-		info_box.add_child(wl)
+		actions_box.add_child(wl)
+	_fit_plate.call_deferred()
+
+
+## The text plate is as tall as its text, up to the bottom of the screen; beyond that the text
+## scrolls and the actions stay in view below it.
+func _fit_plate() -> void:
+	if not is_inside_tree():
+		return
+	var plate: Control = get_node("Plate")
+	var vp := get_viewport_rect().size
+	plate.position.y = _plate_top
+	var room := vp.y - plate.position.y - 10.0
+	var sb := plate.get_theme_stylebox("panel")
+	var chrome := (sb.get_minimum_size().y if sb else 24.0) + UIKit.GAP
+	var want := info_box.get_combined_minimum_size().y
+	var h := minf(want, room - chrome - UIKit.GAP - head_box.get_combined_minimum_size().y - actions_box.get_combined_minimum_size().y)
+	info_scroll.custom_minimum_size.y = maxf(80.0, h)
+	plate.size.y = 0
+	plate.reset_size()
+	# a plate taller than the space below the card's top rises until it fits
+	var over := plate.position.y + plate.size.y - (vp.y - 6.0)
+	if over > 0:
+		plate.position.y = maxf(UIKit.TOP + 4.0, plate.position.y - over)
 
 
 ## The rules glossary over the viewer: card types, keywords, conditions, the stack.

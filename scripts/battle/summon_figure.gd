@@ -22,9 +22,10 @@ var sick := false
 var enemy := false            # enemy figures face down the screen
 var mark := ""                # "", "attack", "block", "target", "select"
 var block_link := Vector2.ZERO
-var in_back := false
+var in_back := false          # behind another figure in a stack: no name scroll
 var status: Array = []        # "pacified", "snared", "frozen"
-var kw_now: Array = []        # keywords it has right now (printed and granted)          # behind another figure in a stack: no name scroll
+var kw_now: Array = []        # keywords it has right now (printed and granted)
+var zoom := 1.0               # the duel screen shrinks the figures to fit short screens
 
 var summon_t := 1.0           # 0 → 1 during the summon animation
 var fade := 1.0               # death dissolve
@@ -42,6 +43,17 @@ func _init() -> void:
 	size = SIZE
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	pivot_offset = SIZE * 0.5
+
+
+## Draw at `z` times the full size (the art scales; the numbers and words stay readable).
+func set_zoom(z: float) -> void:
+	if is_equal_approx(z, zoom):
+		return
+	zoom = z
+	custom_minimum_size = SIZE * z
+	size = SIZE * z
+	pivot_offset = size * 0.5
+	queue_redraw()
 
 
 func setup(p_uid: int, p_card: Dictionary, is_enemy: bool) -> void:
@@ -120,7 +132,7 @@ func play_hit(col: Color = Color(1, 0.3, 0.2)) -> void:
 
 
 func play_lunge(toward: Vector2) -> void:
-	var dir := (toward - global_position - SIZE * 0.5)
+	var dir := (toward - global_position - size * 0.5) / zoom
 	var off := dir.normalized() * minf(dir.length() * 0.45, 140.0)
 	var tw := create_tween()
 	tw.tween_property(self, "lunge", off, 0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
@@ -142,6 +154,8 @@ func play_buff() -> void:
 
 func _draw() -> void:
 	var a := fade
+	var zx := Transform2D(0.0, Vector2(zoom, zoom), 0.0, Vector2.ZERO)
+	draw_set_transform_matrix(zx)
 	var base_y := SIZE.y - 30.0
 	var center_x := SIZE.x * 0.5
 	var feet := Vector2(center_x, base_y)
@@ -174,11 +188,12 @@ func _draw() -> void:
 		if _texture:
 			var tsz := _texture.get_size()
 			var sc := h / tsz.y
-			draw_set_transform_matrix(xf)
+			draw_set_transform_matrix(zx * xf)
 			draw_texture_rect(_texture, Rect2(Vector2(-tsz.x * sc * 0.5, -h), tsz * sc), false, Color(1, 1, 1, alpha))
-			draw_set_transform_matrix(Transform2D.IDENTITY)
+			draw_set_transform_matrix(zx)
 		else:
-			FigurePainter.paint(self, card, xf, h, -1.0 if enemy else 1.0, alpha)
+			FigurePainter.paint(self, card, zx * xf, h, -1.0 if enemy else 1.0, alpha)
+			draw_set_transform_matrix(zx)
 		if flash > 0.0:
 			draw_circle(feet + lunge + Vector2(0, -h * 0.5), 38.0, Color(flash_color, 0.5 * flash * a))
 
@@ -196,41 +211,59 @@ func _draw() -> void:
 		draw_rect(fr, Color(mark_col, pulse), false, 3.5)
 		draw_rect(fr.grow(-4), Color(Tapestry.INK, 0.5 * pulse), false, 1.0)
 
-	# --- name scroll (front of a stack only) ---
+	# --- words and numbers: drawn at full size so they stay readable on a small figure ---
+	draw_set_transform_matrix(Transform2D.IDENTITY)
+	var z := zoom
+	var fmin := _fs(15)
+	var book := Tapestry.font("book")
+	# name scroll (front of a stack only), cut to the figure's width
 	if not in_back:
 		var nm: String = I18n.t(card.get("name", ""))
-		if nm.length() > 18:
-			nm = nm.substr(0, 17) + "…"
-		Tapestry.draw_scroll_label(self, Vector2(center_x, SIZE.y - 9), nm, 11, Color(Tapestry.INK, a))
+		var room := size.x - fmin * 1.2 - 6.0
+		if book.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, fmin).x > room:
+			while nm.length() > 3 and book.get_string_size(nm + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, fmin).x > room:
+				nm = nm.substr(0, nm.length() - 1)
+			nm = nm.strip_edges() + "…"
+		if nm.length() > 3:
+			Tapestry.draw_scroll_label(self, Vector2(center_x * z, size.y - fmin * 0.62), nm, fmin, Color(Tapestry.INK, a))
 
-	# --- power/toughness on a heater shield ---
-	var sc_pos := Vector2(SIZE.x - 22, 18)
-	var shield := PackedVector2Array([sc_pos + Vector2(-18, -13), sc_pos + Vector2(18, -13), sc_pos + Vector2(17, 2),
-		sc_pos + Vector2(0, 15), sc_pos + Vector2(-17, 2)])
+	# power/toughness on a heater shield
+	var pfs := maxi(16, fmin)
+	var sw := pfs * 1.15           # half the shield's width
+	var sc_pos := Vector2(size.x - sw - 4, sw * 0.8 + 2)
+	var shield := PackedVector2Array([sc_pos + Vector2(-sw, -sw * 0.72), sc_pos + Vector2(sw, -sw * 0.72), sc_pos + Vector2(sw * 0.95, sw * 0.12),
+		sc_pos + Vector2(0, sw * 0.85), sc_pos + Vector2(-sw * 0.95, sw * 0.12)])
 	var hurt := damage > 0
 	var buffed := power > int(card.get("power", 0)) or toughness > int(card.get("toughness", 0))
 	Tapestry.ink_poly(self, shield, Color(Tapestry.PARCHMENT_LIGHT, a), 1.8)
 	var pt_col := Tapestry.VERMILION if hurt else (UIKit.GREEN if buffed else Tapestry.INK)
-	draw_string(Tapestry.font("book"), sc_pos + Vector2(-18, 5), "%d/%d" % [power, toughness - damage],
-		HORIZONTAL_ALIGNMENT_CENTER, 36, 16, Color(pt_col, a))
+	draw_string(book, sc_pos + Vector2(-sw, pfs * 0.32), "%d/%d" % [power, toughness - damage],
+		HORIZONTAL_ALIGNMENT_CENTER, sw * 2.0, pfs, Color(pt_col, a))
 	# keywords on a small plaque
 	var kws: Array = kw_now
 	if not kws.is_empty():
 		var txt := ""
 		for kw in kws:
 			txt += KW_ICONS.get(kw, "?")
-		var pr := Rect2(4, 5, 12 + 13 * kws.size(), 20)
+		var tw := book.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fmin).x
+		var pr := Rect2(4, 5, tw + 10, fmin + 6)
 		Tapestry.ink_rect(self, pr, Color(Tapestry.PARCHMENT_LIGHT, 0.95 * a), 1.4)
-		draw_string(Tapestry.font("book"), pr.position + Vector2(5, 15), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(Tapestry.RUBRIC, a))
+		draw_string(book, pr.position + Vector2(5, fmin + 1), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fmin, Color(Tapestry.RUBRIC, a))
 	# status: pacified (dove), snared (chain), frozen (snowflake)
-	var sy := 70.0
+	var rad := fmin * 0.75
+	var sy := 5.0 + fmin + 6 + rad + 6
 	for stt in status:
 		var glyph: String = {"pacified": "☮", "snared": "⛓", "frozen": "❄"}.get(stt, "?")
-		Tapestry.ink_circle(self, Vector2(14, sy), 11, Color(Tapestry.PARCHMENT_LIGHT, 0.95 * a), 1.4)
-		draw_string(Tapestry.font("book"), Vector2(6, sy + 6), glyph, HORIZONTAL_ALIGNMENT_CENTER, 16, 15, Color(Tapestry.ULTRAMARINE, a))
-		sy += 24
+		Tapestry.ink_circle(self, Vector2(4 + rad, sy), rad, Color(Tapestry.PARCHMENT_LIGHT, 0.95 * a), 1.4)
+		draw_string(book, Vector2(4, sy + fmin * 0.38), glyph, HORIZONTAL_ALIGNMENT_CENTER, rad * 2.0, fmin, Color(Tapestry.ULTRAMARINE, a))
+		sy += rad * 2.0 + 3
 	if sick and not is_tapped and rise_done():
-		draw_string(Tapestry.font("italic"), Vector2(6, 46), "zz", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(Tapestry.WHITE, 0.85 * a))
+		draw_string(Tapestry.font("italic"), Vector2(size.x * 0.5 - 8, sy + 4), "zz", HORIZONTAL_ALIGNMENT_LEFT, -1, maxi(16, fmin), Color(Tapestry.WHITE, 0.85 * a))
+
+
+## A font size in canvas px, never under the smallest readable size.
+static func _fs(min_size: int) -> int:
+	return maxi(min_size, int(UIKit.FS_MIN))
 
 
 func rise_done() -> bool:

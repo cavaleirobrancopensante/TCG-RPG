@@ -7,14 +7,29 @@ signal tapped(strip: LandStrip)
 
 const MINI := Vector2(38, 54)
 const COL_W := 54.0
+const BASE_H := 150.0
 
 var lands: Array = []          # BattleState land dicts {"id", "color", "tapped"}
 var enemy := false
+var zoom := 1.0                # the duel shrinks the strip on short screens; counts stay readable
 
 
 func _init() -> void:
-	custom_minimum_size = Vector2(COL_W * 2 + 8, 150)
+	custom_minimum_size = Vector2(COL_W * 2 + 8, BASE_H)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+
+
+func set_zoom(z: float) -> void:
+	if is_equal_approx(z, zoom):
+		return
+	zoom = z
+	_fit()
+	queue_redraw()
+
+
+func _fit() -> void:
+	var groups := _groups().size()
+	custom_minimum_size = Vector2(maxf(COL_W * 2, COL_W * groups) + 8, BASE_H) * zoom
 
 
 func set_lands(p_lands: Array) -> void:
@@ -24,8 +39,7 @@ func set_lands(p_lands: Array) -> void:
 	if copy == lands:
 		return
 	lands = copy
-	var groups := _groups().size()
-	custom_minimum_size.x = maxf(COL_W * 2, COL_W * groups) + 8
+	_fit()
 	queue_redraw()
 
 
@@ -59,11 +73,14 @@ func _gui_input(event: InputEvent) -> void:
 
 func _draw() -> void:
 	var groups := _groups()
+	var fs := int(UIKit.FS_MIN)
 	if groups.is_empty():
 		var t := I18n.t("No lands")
-		draw_string(Tapestry.font("italic"), Vector2(6, size.y * 0.5), t, HORIZONTAL_ALIGNMENT_LEFT, size.x - 8, 14, Color(Tapestry.PARCHMENT_LIGHT, 0.8))
+		var fnt := Tapestry.font("italic")
+		draw_multiline_string(fnt, Vector2(4, size.y * 0.5 - fs * 0.4), t, HORIZONTAL_ALIGNMENT_LEFT, size.x - 6, fs, 2, Color(Tapestry.PARCHMENT_LIGHT, 0.9))
 		return
-	var col_w := minf(COL_W, (size.x - 8) / float(groups.size()))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(zoom, zoom))
+	var col_w := minf(COL_W, (size.x / zoom - 8) / float(groups.size()))
 	var font := Tapestry.font("bold")
 	for gi in groups.size():
 		var m: String = groups[gi][0]
@@ -114,8 +131,13 @@ func _mini(r: Rect2, f: String, sideways: bool, f2: String = "") -> void:
 	UIKit.draw_sigil(self, f, inner.get_center(), minf(inner.size.x, inner.size.y) * 0.32, ink, 1.6)
 
 
+## A count in a small medal: placed in the strip's own (zoomed) units, drawn at a readable size.
 func _count(pos: Vector2, n: int, font: Font, fill: Color) -> void:
-	Tapestry.ink_circle(self, pos, 10, fill, 1.5)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var fs := int(UIKit.FS_MIN)
+	var at := pos * zoom
+	Tapestry.ink_circle(self, at, fs * 0.72, fill, 1.5)
 	var s := str(n)
-	var w := font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x
-	draw_string(font, pos + Vector2(-w * 0.5, 5), s, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Tapestry.INK)
+	var w := font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+	draw_string(font, at + Vector2(-w * 0.5, fs * 0.36), s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Tapestry.INK)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(zoom, zoom))

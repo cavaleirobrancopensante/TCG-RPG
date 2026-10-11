@@ -4,7 +4,8 @@ extends Control
 
 signal closed
 
-const SCALE := 0.62
+const SCALE := 0.62               # the largest thumbnails; smaller when a pack would not fit
+const SEP := 8
 
 var grid: GridContainer
 var title: Label
@@ -15,6 +16,8 @@ var pack: Array = []
 var revealed := 0
 var _fx: Control
 var drag: DragScroll              # drag the cards to scroll when a pack overflows the screen
+var scroll: ScrollContainer
+var card_scale := SCALE
 
 
 func _ready() -> void:
@@ -25,16 +28,25 @@ func _ready() -> void:
 	UIKit.content_rect(v)
 	v.add_theme_constant_override("separation", 8)
 	add_child(v)
+	var compact := get_viewport_rect().size.y < 600.0
 	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", UIKit.GAP)
 	v.add_child(top)
-	title = UIKit.title("", 34)
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	top.add_child(title)
-	info = UIKit.label("Tap the cards to reveal them.", 18, UIKit.DIM)
-	top.add_child(info)
-	btn = UIKit.button("Reveal all", _on_button, 200)
+	var heads := VBoxContainer.new()
+	heads.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heads.add_theme_constant_override("separation", 0)
+	top.add_child(heads)
+	title = UIKit.title("", UIKit.FS_HEADING if compact else UIKit.FS_HEADING + 6)
+	title.clip_text = true
+	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	heads.add_child(title)
+	info = UIKit.label("Tap the cards to reveal them.", UIKit.FS_SECONDARY, UIKit.DIM)
+	heads.add_child(info)
+	btn = UIKit.primary_button("Reveal all", _on_button, 220)
+	btn.name = "RevealAll"
+	btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	top.add_child(btn)
-	var scroll := ScrollContainer.new()
+	scroll = ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	v.add_child(scroll)
@@ -43,8 +55,8 @@ func _ready() -> void:
 	scroll.add_child(center)
 	grid = GridContainer.new()
 	grid.columns = 8
-	grid.add_theme_constant_override("h_separation", 8)
-	grid.add_theme_constant_override("v_separation", 8)
+	grid.add_theme_constant_override("h_separation", SEP)
+	grid.add_theme_constant_override("v_separation", SEP)
 	center.add_child(grid)
 	drag = DragScroll.attach(self, scroll)
 	_fx = Control.new()
@@ -65,16 +77,32 @@ func _next_pack() -> void:
 	var remaining := GameState.pending_boosters
 	var faith := GameState.next_pack_faith()
 	pack = GameState.open_booster()
+	_fit(pack.size())
 	var head := I18n.t("%s booster") % Factions.info(faith)["name"] if faith != "" else I18n.t("Booster pack")
 	title.text = head + ("  " + I18n.t("(%d more after this one)") % (remaining - 1) if remaining > 1 else "")
 	for entry in pack:
-		var cv := CardView.create(entry["id"], SCALE, entry["foil"])
+		var cv := CardView.create(entry["id"], card_scale, entry["foil"])
 		cv.face_down = true
 		cv.pivot_offset = cv.size * 0.5
 		cv.tapped.connect(_on_card_tapped)
 		grid.add_child(cv)
 		views.append(cv)
 	btn.text = "Reveal all"
+
+
+## The column count and thumbnail size that show the whole pack at its largest.
+func _fit(n: int) -> void:
+	var vp := get_viewport_rect().size
+	var room := Vector2(vp.x - 44.0 - 16.0, vp.y - UIKit.TOP - 8.0 - 20.0 - UIKit.TARGET - 8.0 - 16.0 - 8.0)
+	var best := Vector2(0.0, 8.0)                        # (scale, columns)
+	for cols in range(3, 11):
+		var rows := ceili(float(n) / cols)
+		var k := minf((room.x - (cols - 1) * SEP) / cols / CardView.BASE.x,
+			(room.y - (rows - 1) * SEP) / rows / CardView.BASE.y)
+		if k > best.x:
+			best = Vector2(k, cols)
+	card_scale = clampf(best.x, 0.42, SCALE if vp.y >= 600.0 else 0.75)
+	grid.columns = int(best.y)
 
 
 func _on_card_tapped(cv: CardView) -> void:

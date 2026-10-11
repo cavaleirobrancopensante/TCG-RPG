@@ -14,24 +14,35 @@ func _ready() -> void:
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
 	add_child(Backdrop.create("rings"))
+	var compact := get_viewport_rect().size.y < 600.0
 	var v := VBoxContainer.new()
 	UIKit.content_rect(v)
-	v.add_theme_constant_override("separation", 10)
+	v.add_theme_constant_override("separation", UIKit.SP_1 if compact else UIKit.GAP)
 	add_child(v)
 	var head := HBoxContainer.new()
-	head.add_theme_constant_override("separation", 10)
+	head.add_theme_constant_override("separation", UIKit.GAP)
 	v.add_child(head)
-	var t := UIKit.title(I18n.t("Tournament of %s") % GameState.city(draft.city).get("name", ""), 38)
+	var t := UIKit.title(I18n.t("Tournament of %s") % GameState.city(draft.city).get("name", ""), UIKit.FS_HEADING + 2 if compact else UIKit.FS_TITLE - 2)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	t.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	t.clip_text = true
+	t.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	head.add_child(t)
 	var opp := draft.player_opponent()
 	if opp >= 0:
-		head.add_child(UIKit.button("Deck", func(): edit_deck.emit(), 130))
-		head.add_child(UIKit.button(I18n.t("Play %s") % draft.names[opp], func(): play_match.emit(opp), 300))
+		var deck := UIKit.button("Deck", func(): edit_deck.emit(), 120)
+		deck.name = "Deck"
+		deck.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		head.add_child(deck)
+		var play := UIKit.primary_button(I18n.t("Play %s") % draft.names[opp], func(): play_match.emit(opp), 240)
+		play.name = "PlayMatch"
+		head.add_child(play)
 	else:
-		head.add_child(UIKit.button("Collect prize", func(): done.emit(), 240))
+		var prize := UIKit.primary_button("Collect prize", func(): done.emit(), 240)
+		prize.name = "CollectPrize"
+		head.add_child(prize)
 	var stage_names := ["Quarter-finals", "Semi-finals", "Final", "Finished"]
-	v.add_child(UIKit.label(I18n.t(stage_names[draft.stage]) + "   ·   " + _status(), 20, UIKit.TEXT, true))
+	v.add_child(UIKit.label(I18n.t(stage_names[draft.stage]) + "   ·   " + _status(), UIKit.FS_BODY, UIKit.TEXT, true))
 	var b := _Bracket.new()
 	b.draft = draft
 	b.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -84,7 +95,8 @@ class _Bracket extends Control:
 			for k in list.size():
 				var seat: int = list[k]
 				var y := slot_h * (k + 0.5)
-				var r := Rect2(ri * col_w + 10, y - 18, col_w - 30, 36)
+				var bh := clampf(slot_h - 6.0, 30.0, 44.0)
+				var r := Rect2(ri * col_w + 10, y - bh * 0.5, col_w - 30, bh)
 				var lost := false
 				if ri < draft.results.size():
 					for pr in draft.results[ri]:
@@ -95,8 +107,9 @@ class _Bracket extends Control:
 					fill = Tapestry.GILT if not lost else Color(Tapestry.GILT, 0.5)
 				Tapestry.ink_rect(self, r, fill, 1.6)
 				var f := draft.main_faith(seat)
-				UIKit.draw_sigil(self, f, r.position + Vector2(18, 18), 11, UIKit.faction_ink(f), 1.6)
-				draw_string(bold if seat == 0 else font, r.position + Vector2(34, 24), draft.names[seat], HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 40, 17, Tapestry.INK if not lost else Color(Tapestry.INK, 0.5))
+				UIKit.draw_sigil(self, f, r.position + Vector2(18, bh * 0.5), 11, UIKit.faction_ink(f), 1.6)
+				var fs := UIKit.FS_SECONDARY
+				draw_string(bold if seat == 0 else font, r.position + Vector2(34, bh * 0.5 + fs * 0.36), draft.names[seat], HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 40, fs, Tapestry.INK if not lost else Color(Tapestry.INK, 0.5))
 				if ri + 1 < cols:
 					var nx := (ri + 1) * col_w + 10
 					var ny := size.y / maxf(1.0, list.size() / 2.0) * (k / 2 + 0.5)

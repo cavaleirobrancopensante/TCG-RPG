@@ -24,17 +24,21 @@ func _ready() -> void:
 	add_child(Backdrop.create("rings"))
 	var v := VBoxContainer.new()
 	UIKit.content_rect(v)
-	v.add_theme_constant_override("separation", 12)
+	v.add_theme_constant_override("separation", UIKit.SP_1)
 	add_child(v)
 	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", UIKit.GAP)
 	v.add_child(head)
-	var t := UIKit.title({"new": "Begin a New Game", "load": "Load Game", "save": "Save Game"}[mode], 42)
+	var t := UIKit.title({"new": "Begin a New Game", "load": "Load Game", "save": "Save Game"}[mode], UIKit.FS_TITLE)
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)
-	head.add_child(UIKit.button("Back", _back, 140))
+	var back := UIKit.button("Back", _back, 140)
+	back.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(back)
 	var hint: String = {"new": "Choose a slot for your new journey.", "load": "Choose a journey to continue.",
 		"save": "Choose a slot. You keep playing in the slot you save to; the game auto-saves there."}[mode]
-	v.add_child(UIKit.label(hint, 19, UIKit.DIM))
+	v.add_child(UIKit.label(hint, UIKit.FS_SECONDARY + 1, UIKit.DIM, true))
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -42,9 +46,10 @@ func _ready() -> void:
 	grid = GridContainer.new()
 	grid.columns = 2
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	grid.add_theme_constant_override("h_separation", 16)
-	grid.add_theme_constant_override("v_separation", 14)
+	grid.add_theme_constant_override("h_separation", UIKit.SP_2)
+	grid.add_theme_constant_override("v_separation", UIKit.GAP)
 	scroll.add_child(grid)
+	DragScroll.attach(self, scroll)
 	_fill()
 
 
@@ -64,10 +69,10 @@ func _plate(n: int) -> Control:
 	var plate := PanelContainer.new()
 	plate.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 14)
+	row.add_theme_constant_override("separation", UIKit.GAP)
 	plate.add_child(row)
-	var num := UIKit.label(_roman(n), 40, UIKit.GOLD)
-	num.custom_minimum_size.x = 64
+	var num := UIKit.label(_roman(n), 36, UIKit.GOLD)
+	num.custom_minimum_size.x = 56
 	num.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	row.add_child(num)
 	var col := VBoxContainer.new()
@@ -75,9 +80,9 @@ func _plate(n: int) -> Control:
 	row.add_child(col)
 	var current := n == GameState.slot and mode == "save"
 	if info.is_empty():
-		col.add_child(UIKit.label("Empty slot", 22, UIKit.DIM))
+		col.add_child(UIKit.label("Empty slot", UIKit.FS_BODY, UIKit.DIM))
 	elif info.get("broken", false):
-		col.add_child(UIKit.label("Damaged save", 22, UIKit.RED))
+		col.add_child(UIKit.label("Damaged save", UIKit.FS_BODY, UIKit.RED))
 	else:
 		var faiths := []
 		for fa in info.get("faiths", []):
@@ -86,36 +91,35 @@ func _plate(n: int) -> Control:
 		if info.get("city", "") != "":
 			place = I18n.t("Near %s" if info.get("near", true) else "In %s") % info["city"]
 		var title_line := "%s%s" % [place, ("   " + I18n.t("(current)")) if current else ""]
-		col.add_child(UIKit.label(title_line, 22, UIKit.TEXT))
+		col.add_child(UIKit.label(title_line, UIKit.FS_BODY, UIKit.TEXT, true))
 		col.add_child(UIKit.label(I18n.t("%d gold · %d cards · %d wins · %d lairs%s") % [
 			int(info.get("gold", 0)), int(info.get("cards", 0)), int(info.get("wins", 0)), int(info.get("lairs", 0)),
-			("  ·  " + " & ".join(faiths)) if not faiths.is_empty() else ""], 17, UIKit.DIM))
-		col.add_child(UIKit.label(I18n.t("Saved %s  ·  played %s") % [info.get("saved_at", "?"), _hms(float(info.get("play_time", 0)))], 16, UIKit.DIM))
+			("  ·  " + " & ".join(faiths)) if not faiths.is_empty() else ""], UIKit.FS_MIN + 1, UIKit.DIM, true))
+		col.add_child(UIKit.label(I18n.t("Saved %s  ·  played %s") % [info.get("saved_at", "?"), _hms(float(info.get("play_time", 0)))], UIKit.FS_MIN, UIKit.DIM, true))
 	var btns := VBoxContainer.new()
 	btns.alignment = BoxContainer.ALIGNMENT_CENTER
+	btns.add_theme_constant_override("separation", UIKit.SP_1)
 	row.add_child(btns)
 	var filled := not info.is_empty()
 	match mode:
 		"load":
-			var b := UIKit.button("Load", func(): _pick(n), 120)
+			var b := UIKit.button("Load", func(): _pick(n), 130)
 			b.disabled = not filled or info.get("broken", false)
 			btns.add_child(b)
 			if filled:
-				var d := UIKit.button("Delete", func(): _confirm_delete(n), 120)
-				d.custom_minimum_size.y = 44
-				btns.add_child(d)
+				btns.add_child(UIKit.button("Delete", func(): _confirm_delete(n), 130))
 		"new":
 			btns.add_child(UIKit.button("Begin here", func():
 				if filled:
 					UIKit.confirm(self, I18n.t("Overwrite slot %s?") % _roman(n), "The journey saved here will be lost.", "Overwrite", func(): _pick(n))
 				else:
-					_pick(n), 150))
+					_pick(n), 140))
 		"save":
 			btns.add_child(UIKit.button("Save here", func():
 				if filled and not current:
 					UIKit.confirm(self, I18n.t("Overwrite slot %s?") % _roman(n), "The journey saved here will be replaced by this one.", "Overwrite", func(): _pick(n))
 				else:
-					_pick(n), 150))
+					_pick(n), 140))
 	return plate
 
 

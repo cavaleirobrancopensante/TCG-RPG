@@ -368,10 +368,10 @@
         "trigger": "enter",
         "action": "summon",
         "token": {
-          "name": "Goat",
+          "name": "Satyr",
           "power": 1,
           "toughness": 1,
-          "subtype": "Goat Beast",
+          "subtype": "Satyr",
           "keywords": [
             "haste"
           ]
@@ -390,7 +390,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Trample. When this enters, create two 1/1 Goat Beast tokens with haste. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
+    "text": "Trample. When this enters, create two 1/1 Satyr tokens with haste. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
     "flavor": "By the end of the vintage the grapes were trampled, the wine was drunk, and the vineyard was gone.",
     "art": "res://art/cards/gold_wild_revel.webp"
   },

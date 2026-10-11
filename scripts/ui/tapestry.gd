@@ -59,9 +59,58 @@ static func symbol_fonts() -> Array:
 	if _symbols.is_empty():
 		for path in ["res://art/fonts/NotoSansSymbols2-Regular.ttf", "res://art/fonts/NotoSansSymbols.ttf"]:
 			if ResourceLoader.exists(path):
-				_symbols.append(load(path))
+				_symbols.append(_short_lines(load(path)))
 		_symbols.append(ThemeDB.fallback_font)
 	return _symbols
+
+
+## A copy of a fallback font with the line height of a book face (ascent 1.0, descent 0.3
+## em). Godot gives every line the tallest line height among a font's fallbacks, and the
+## Noto symbol fonts are cut very tall (up to 2.05 em): without this, 20 px text stood in
+## a 42 px line and titles in an 83 px one, which cost a phone screen a third of its height.
+## Only the vertical metrics change (hhea and OS/2); the glyphs are untouched.
+static func _short_lines(src: FontFile) -> Font:
+	if src == null:
+		return src
+	var d: PackedByteArray = src.data
+	if d.size() < 12:
+		return src
+	var upem := 0
+	var tables := {}
+	var n := (d[4] << 8) | d[5]
+	for i in n:
+		var rec := 12 + i * 16
+		var tag := d.slice(rec, rec + 4).get_string_from_ascii()
+		tables[tag] = (d[rec + 8] << 24) | (d[rec + 9] << 16) | (d[rec + 10] << 8) | d[rec + 11]
+	if not (tables.has("head") and tables.has("hhea") and tables.has("OS/2")):
+		return src
+	upem = (d[tables["head"] + 18] << 8) | d[tables["head"] + 19]
+	var asc := int(upem * 1.0)
+	var desc := int(upem * 0.3)
+	var put := func(at: int, v: int) -> void:
+		var u := v & 0xFFFF
+		d[at] = (u >> 8) & 0xFF
+		d[at + 1] = u & 0xFF
+	var hh: int = tables["hhea"]
+	put.call(hh + 4, asc)          # ascender
+	put.call(hh + 6, -desc)        # descender
+	put.call(hh + 8, 0)            # line gap
+	var os2: int = tables["OS/2"]
+	put.call(os2 + 68, asc)        # sTypoAscender
+	put.call(os2 + 70, -desc)      # sTypoDescender
+	put.call(os2 + 72, 0)          # sTypoLineGap
+	put.call(os2 + 74, asc)        # usWinAscent
+	put.call(os2 + 76, desc)       # usWinDescent
+	var f := FontFile.new()
+	f.data = d
+	f.antialiasing = src.antialiasing
+	f.hinting = src.hinting
+	f.subpixel_positioning = src.subpixel_positioning
+	f.generate_mipmaps = src.generate_mipmaps
+	f.multichannel_signed_distance_field = src.multichannel_signed_distance_field
+	f.force_autohinter = src.force_autohinter
+	f.oversampling = src.oversampling
+	return f
 
 
 ## Titles: Grenze Gotisch (a readable gothic). Text: Alegreya (a calligraphic book face).

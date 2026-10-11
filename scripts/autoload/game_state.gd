@@ -7,6 +7,7 @@ signal gold_changed(value: int)
 signal collection_changed
 signal mission_updated(mission_id: String)
 signal leveled_up(new_level: int, points_gained: int)
+signal saved                           # after every save (the HUD shows a short "Saved" mark)
 
 const LEGACY_SAVE := "user://save.json"
 const SLOTS := 6
@@ -266,6 +267,8 @@ func save_game(n: int = 0) -> void:
 	var f := FileAccess.open(slot_path(slot), FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(data, "\t"))
+		f.close()
+		saved.emit()
 
 
 func _meta() -> Dictionary:

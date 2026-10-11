@@ -7,6 +7,7 @@ import bg
 import props as PR
 from figure import Figure, STOCK
 from gold_lib import *
+import revel_lib as RL
 
 FRANCISCAN = C.hex('7d6247')
 SACKCLOTH = C.hex('8f7a5c')
@@ -708,7 +709,7 @@ def gold_abyss_machine(p):
 
 def gold_wild_revel(p):
     """Satyr-King of the Vintage: horned and vine-crowned, in a leopard skin, he
-    raises the cup among trampled grapes while his goats leap and the revellers
+    raises the cup among trampled grapes while two young satyrs caper and the revellers
     dance down the terraced vineyard at sunset."""
     bg.sky(p, C.hex('3a2a6a'), C.hex('c86a6a'), C.hex('f8c87a'), 0.62)
     p.glow((760, 360), 300, C.hex('ffd27a'), 0.5)
@@ -748,8 +749,14 @@ def gold_wild_revel(p):
     p.pop()
     for c in ((830, 614), (800, 600), (860, 620)):
         grapes(p, c, 1.6)
-    goat(p, 270, 470, 1.8, flip=False, leap=True, wreath=True)
-    goat(p, 820, 520, 1.6, flip=True, col=C.hex('6a5040'), dark=C.hex('3a2a1e'))
+    # two young satyrs of his train capering down the terraces: beardless, with budding
+    # horns, goat legs (reverse hocks, cloven hooves) and bare arms flung up
+    RL.SatyrFig(pose='re_both_up', stance='prance', main=C.hex('3f6a32'), sleeves='none', hair='curly',
+                hair_col=C.hex('2e1c10'), belt='leather', mouth='open', blush=0.9, goat_col=C.hex('b08a5a'),
+                head=RL.goat_horns(big=0.7, wreath=LEAF)).draw(p, 270, 560, 260)
+    RL.SatyrFig(pose='re_dance', stance='dance', main=C.hex('9a4a2a'), sleeves='none', hair='curly',
+                hair_col=C.hex('4a2a14'), belt='leather', mouth='open', blush=0.9, goat_col=C.hex('8a6a4a'),
+                head=RL.goat_horns(big=0.65)).draw(p, 800, 590, 250)
     # the satyr-king
     def thyrsus(p_, j):
         h = j['hand_b']

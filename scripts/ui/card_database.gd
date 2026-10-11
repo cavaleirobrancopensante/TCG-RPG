@@ -27,6 +27,7 @@ var all_ids: Array = []           # every card, already in display order
 var shown: Array = []             # ids passing the filters, in order
 var views := {}                   # id -> CardView (made on demand, then reused)
 var scale_k := 0.6
+var compact := false              # phone-sized canvas: one row of controls, larger thumbnails
 
 var grid: GridContainer
 var scroll: ScrollContainer
@@ -46,30 +47,33 @@ func _ready() -> void:
 	theme = UIKit.make_theme()
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(Backdrop.create("rings"))
+	var vp := get_viewport_rect().size
+	compact = vp.y < 600.0
 	var v := VBoxContainer.new()
 	UIKit.content_rect(v)
-	v.add_theme_constant_override("separation", 8)
+	v.add_theme_constant_override("separation", UIKit.SP_1)
 	add_child(v)
 
-	# --- heading: title, count, back
+	# --- heading: title, count, back (on a phone the filters share this row, see below)
 	var head := HBoxContainer.new()
-	head.add_theme_constant_override("separation", 12)
+	head.add_theme_constant_override("separation", UIKit.SP_1 if compact else UIKit.GAP)
 	v.add_child(head)
-	head.add_child(UIKit.title("Card Database", 38))
-	count_label = UIKit.label("", 18, UIKit.DIM)
+	var tl := UIKit.title("Card Database", UIKit.FS_HEADING if compact else UIKit.FS_TITLE - 2)
+	tl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(tl)
+	count_label = UIKit.label("", UIKit.FS_SECONDARY, UIKit.DIM)
 	count_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	count_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	count_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	count_label.visible = not compact
 	head.add_child(count_label)
-	var back := UIKit.button("Back", _back, 140)
-	back.custom_minimum_size.y = 50
-	head.add_child(back)
+	var back := UIKit.button("Back", _back, 110 if compact else 140)
+	back.add_theme_font_size_override("font_size", UIKit.FS_BODY)
 
 	# --- faith groups: All, the six faiths, Gold, Lands
 	var frow := HBoxContainer.new()
 	frow.add_theme_constant_override("separation", 4)
-	v.add_child(frow)
 	var bg := ButtonGroup.new()
 	for g in GROUPS:
 		var b := Button.new()
@@ -77,9 +81,13 @@ func _ready() -> void:
 		b.button_group = bg
 		b.text = _group_name(g)
 		b.clip_text = true
-		b.custom_minimum_size = Vector2(0, 48)
+		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		b.custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", 16)
+		b.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY)
+		var looks := {"normal": "button", "hover": "hover", "pressed": "pressed", "focus": "hover"}
+		for st in looks:
+			b.add_theme_stylebox_override(st, Tapestry.stylebox(looks[st], 4))     # narrow margins: room for the name
 		if Factions.DATA.has(g):
 			b.add_theme_color_override("font_color", UIKit.faction_ink(g))
 			b.add_theme_color_override("font_pressed_color", UIKit.faction_ink(g))
@@ -95,29 +103,36 @@ func _ready() -> void:
 		group_btns[g] = b
 		frow.add_child(b)
 
-	# --- rarity, type, search, clear
-	var srow := HBoxContainer.new()
-	srow.add_theme_constant_override("separation", 6)
-	v.add_child(srow)
+	# --- rarity, type, search, clear: their own row, or the title's row on a phone
+	var srow := head
+	if not compact:
+		head.add_child(back)
+		srow = HBoxContainer.new()
+		srow.add_theme_constant_override("separation", UIKit.SP_1)
 	rarity_opt = _option(srow, RARITIES, func(i): f_rarity = i)
 	type_opt = _option(srow, TYPES, func(i): f_type = i)
 	search = LineEdit.new()
-	search.placeholder_text = "Search name, subtype or text"
+	search.placeholder_text = "Search" if compact else "Search name, subtype or text"
+	search.tooltip_text = I18n.t("Search name, subtype or text")
 	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	search.size_flags_stretch_ratio = 1.6
-	search.custom_minimum_size.y = 48
+	search.custom_minimum_size = Vector2(120, UIKit.TARGET)
 	search.clear_button_enabled = true
-	search.add_theme_font_size_override("font_size", 17)
+	search.add_theme_font_size_override("font_size", UIKit.FS_BODY)
 	search.text_changed.connect(func(t):
 		f_text = t.strip_edges().to_lower()
 		_refilter())
 	srow.add_child(search)
-	var clr := Button.new()
-	clr.text = "Clear filters"
-	clr.custom_minimum_size = Vector2(0, 48)
-	clr.add_theme_font_size_override("font_size", 16)
-	clr.pressed.connect(_clear_filters)
+	var clr := UIKit.button("Clear" if compact else "Clear filters", _clear_filters, UIKit.TARGET_W)
+	clr.name = "ClearFilters"
+	clr.tooltip_text = I18n.t("Clear filters")
+	clr.add_theme_font_size_override("font_size", UIKit.FS_BODY)
 	srow.add_child(clr)
+	if compact:
+		head.add_child(back)
+	v.add_child(frow)
+	if not compact:
+		v.add_child(srow)
 
 	# --- the cards
 	scroll = ScrollContainer.new()
@@ -133,8 +148,8 @@ func _ready() -> void:
 	scroll.resized.connect(_fit_columns)
 	drag = DragScroll.attach(self, scroll, _popup_open)
 
-	var vp := get_viewport_rect().size
-	scale_k = clampf((vp.y - 300.0) / (CardView.BASE.y * 2.5), 0.5, 0.8)
+	# about 150 px wide on a phone; on a desktop two and a half rows fit the screen
+	scale_k = 0.75 if compact else clampf((vp.y - 300.0) / (CardView.BASE.y * 2.5), 0.5, 0.8)
 	_collect()
 	_fit_columns()
 	_refilter()
@@ -144,10 +159,10 @@ func _option(parent: Control, items: Array, cb: Callable) -> OptionButton:
 	var o := OptionButton.new()
 	for it in items:
 		o.add_item(it)
-	o.custom_minimum_size = Vector2(170, 48)
+	o.custom_minimum_size = Vector2(130 if compact else 170, UIKit.TARGET)
 	o.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	o.clip_text = true
-	o.add_theme_font_size_override("font_size", 16)
+	o.add_theme_font_size_override("font_size", UIKit.FS_BODY)
 	o.item_selected.connect(func(i):
 		cb.call(i)
 		_refilter())

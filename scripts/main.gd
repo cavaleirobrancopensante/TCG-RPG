@@ -5,10 +5,22 @@ var world: Overworld
 var hud_layer: CanvasLayer
 var ui_layer: CanvasLayer
 var hud: Control
-var hud_gold: Label
+var hud_gold: Label            # the gold piece of the status panel
+var hud_level: Label
+var hud_life: Label
+var hud_cards: Label
+var hud_status: GridContainer
+var hud_status_panel: PanelContainer
+var hud_saved: Label           # "Saved", shown for a moment after each save
+var hud_col: VBoxContainer
 var hud_dial: SkyDial
 var hud_boosters: Button
 var hud_hero: Button
+var hud_camp: Button
+var hud_menu: Button
+var world_menu: Control        # the small panel the Menu button opens
+var _save_seen := 0
+var _saved_tween: Tween
 var screen: Control          # current full-screen UI (menu, city, battle, ...)
 var ui_theme: Theme
 var debug_auto_battles := false   # tests: AI plays the player's side
@@ -28,6 +40,9 @@ class MenuBg extends Control:
 	]
 
 	var _acc := 0.0
+	var panel_h := -1.0        # the miniature's height (-1: 30% of the page); short pages shrink it
+	var side_room := 0.0       # kept clear on each side (the language flags, top right)
+	var top_clear := 0.0       # the foot of the language flags: the roundels start below it
 
 	func _process(delta: float) -> void:
 		t += delta
@@ -41,8 +56,8 @@ class MenuBg extends Control:
 		Tapestry.draw_parchment(self, r)
 		Tapestry.draw_band(self, r, 16, "rings")
 		# the miniature
-		var pw := minf(size.x * 0.5, 640.0)
-		var panel := Rect2(Vector2((size.x - pw) * 0.5, UIKit.TOP + 26), Vector2(pw, size.y * 0.30))
+		var pw := maxf(300.0, minf(minf(size.x * 0.5, 640.0), size.x - 2.0 * side_room))
+		var panel := Rect2(Vector2((size.x - pw) * 0.5, UIKit.TOP + 26), Vector2(pw, panel_h if panel_h > 0.0 else size.y * 0.30))
 		Tapestry.draw_diaper(self, panel, Tapestry.ULTRAMARINE, Color(Tapestry.GILT, 0.5), 26)
 		var ground := Rect2(panel.position.x, panel.end.y - 36, panel.size.x, 36)
 		Tapestry.draw_ground(self, ground)
@@ -62,7 +77,7 @@ class MenuBg extends Control:
 			var f: String = Factions.ORDER[i]
 			var left := i < 3
 			var row := i % 3
-			var p := Vector2(90 if left else size.x - 90, size.y * 0.30 + row * size.y * 0.2)
+			var p := Vector2(90 if left else size.x - 90, maxf(size.y * 0.30, top_clear + 48.0) + row * size.y * 0.2)
 			var bob := sin(t * 1.2 + i) * 2.0
 			Tapestry.ink_circle(self, p + Vector2(0, bob), 40, Tapestry.colors(f)[0] if f != "sanctum" else Tapestry.WHITE, 2.5)
 			Tapestry.ink_circle(self, p + Vector2(0, bob), 33, Color(0, 0, 0, 0), 1.2)
@@ -88,6 +103,14 @@ func _ready() -> void:
 	add_child(ui_layer)
 	GameState.gold_changed.connect(func(_g): _update_hud())
 	GameState.leveled_up.connect(_on_level_up)
+	if GameState.has_signal("saved"):
+		GameState.connect("saved", _on_saved)
+	# a new interface size (Settings): the HUD is rebuilt at once, the title page on return
+	UIScale.changed.connect(func():
+		if world != null and hud != null:
+			_build_hud()
+		else:
+			_ui_dirty = true)
 	add_child(RotateOverlay.new())     # phones held upright are asked to turn sideways
 	await _boot()
 	is_booted = true
@@ -133,6 +156,11 @@ var _music_timer := 0.0
 
 
 func _process(delta: float) -> void:
+	if hud and is_instance_valid(hud) and not GameState.has_signal("saved"):
+		var st := _save_stamp()
+		if st != _save_seen:
+			_save_seen = st
+			_on_saved()
 	if hud_dial and world and world.active:
 		hud_dial.set_time(GameState.clock, GameState.day)
 	# In the open world the music follows the faith of the region you walk through.
@@ -444,6 +472,9 @@ func _set_screen(c: Control) -> void:
 
 func show_menu() -> void:
 	Music.set_context("menu")
+	if world_menu and is_instance_valid(world_menu):
+		world_menu.queue_free()
+	world_menu = null
 	if world:
 		world.queue_free()
 		world = null
@@ -465,33 +496,56 @@ func show_menu() -> void:
 	title.add_theme_constant_override("line_spacing", -14)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(title)
-	var sub := UIKit.label("Six faiths. One deck.", 18, UIKit.DIM)
+	var sub := UIKit.label("Six faiths. One deck.", UIKit.FS_SECONDARY, UIKit.DIM)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(sub)
+	# Continue (the most recent save) leads; the rest sit two by two so the page fits a phone
+	var latest := GameState.latest_slot() if GameState.has_save() else 0
+	if latest > 0:
+		var cont := UIKit.primary_button(I18n.t("Continue"), func(): _continue_game(latest), 2 * 320 + UIKit.GAP)
+		cont.name = "Continue"
+		cont.custom_minimum_size.y = maxf(cont.custom_minimum_size.y, UIKit.TARGET)
+		v.add_child(cont)
+		var info := GameState.slot_info(latest)
+		if not info.get("broken", false):
+			var il := UIKit.label(I18n.t("%s, level %d  ·  saved %s") % [String(info.get("player_name", "?")), int(info.get("level", 1)), String(info.get("saved_at", "?"))],
+				UIKit.FS_SECONDARY, UIKit.DIM)
+			il.name = "ContinueInfo"
+			il.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			v.add_child(il)
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", UIKit.GAP)
+	grid.add_theme_constant_override("v_separation", UIKit.GAP)
+	v.add_child(grid)
 	var items := [["New game", _open_new_game], ["Load game", _open_load_game], ["Settings", _open_settings]]
 	if not OS.has_feature("web"):      # a browser tab is closed by the browser, not the game
 		items.append(["Quit game", func(): get_tree().quit()])
 	for it in items:
 		var b := UIKit.button(it[0], it[1], 320)
-		b.custom_minimum_size.y = 46
-		b.add_theme_font_size_override("font_size", 20)
+		b.name = String(it[0]).capitalize().replace(" ", "")
+		b.custom_minimum_size.y = UIKit.TARGET
+		b.add_theme_font_size_override("font_size", UIKit.FS_BODY)
 		b.add_theme_stylebox_override("normal", Tapestry.stylebox("button", 8))
 		b.add_theme_stylebox_override("hover", Tapestry.stylebox("hover", 8))
 		b.add_theme_stylebox_override("pressed", Tapestry.stylebox("pressed", 8))
 		b.add_theme_stylebox_override("disabled", Tapestry.stylebox("disabled", 8))
 		if it[0] == "Load game":
 			b.disabled = not GameState.has_save()
-		v.add_child(b)
+		grid.add_child(b)
 	# the language flags, top right: the first thing anyone who needs them sees
 	var flags := UIKit.flag_row(set_language)
 	flags.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	flags.offset_left = -240
+	var fs := flags.get_combined_minimum_size()
 	flags.offset_right = -24
+	flags.offset_left = -24 - fs.x
 	flags.offset_top = UIKit.TOP + 10
-	flags.offset_bottom = UIKit.TOP + 60
+	flags.offset_bottom = UIKit.TOP + 10 + fs.y
+	bg.side_room = fs.x + 24.0 + 16.0
+	bg.top_clear = flags.offset_bottom
 	flags.alignment = BoxContainer.ALIGNMENT_END
 	m.add_child(flags)
-	var ver := UIKit.label(version_text(), 17, UIKit.DIM)
+	var ver := UIKit.label(version_text(), UIKit.FS_SECONDARY, UIKit.DIM)
 	ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ver.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	ver.offset_top = -46
@@ -500,9 +554,18 @@ func show_menu() -> void:
 	_set_screen(m)
 	await get_tree().process_frame
 	if is_instance_valid(v):
-		v.position = Vector2((m.size.x - v.size.x) * 0.5, m.size.y * 0.30 + UIKit.TOP + 34)
-		# never run into the version line at the bottom
+		# the miniature gives up height on a short page, so the buttons never cover it
+		# nor run into the version line at the bottom
 		var bottom_room := m.size.y - 52.0
+		var mini_top := UIKit.TOP + 26.0
+		var room := bottom_room - 12.0 - v.size.y - 22.0 - mini_top
+		if room < 90.0:      # a phone held sideways: the motto makes way
+			sub.visible = false
+			v.reset_size()
+			room = bottom_room - 12.0 - v.get_combined_minimum_size().y - 22.0 - mini_top
+		bg.panel_h = clampf(room, 70.0, m.size.y * 0.30)
+		bg.queue_redraw()
+		v.position = Vector2((m.size.x - v.size.x) * 0.5, mini_top + bg.panel_h + 22.0)
 		if v.position.y + v.size.y > bottom_room:
 			v.position.y = maxf(UIKit.TOP + 10, bottom_room - v.size.y)
 
@@ -524,6 +587,11 @@ func set_language(code: String) -> void:
 	I18n.setup(code)
 	GameState.set_setting("lang", code)
 	Music.refresh_bar()
+	if world:          # from the settings in the world: keep playing, in the new language
+		_build_hud()
+		_pause_world(true)
+		_hook_world_settings.call_deferred()
+		return
 	show_menu()
 
 
@@ -551,7 +619,16 @@ func _open_load_game() -> void:
 
 
 func _open_settings() -> void:
-	ui_layer.add_child(SettingsScreen.new())
+	var ss := SettingsScreen.new()
+	# the title page is laid out for one interface size: rebuild it if the size changed
+	ss.closed.connect(_after_title_settings)
+	ui_layer.add_child(ss)
+
+
+func _after_title_settings() -> void:
+	if _ui_dirty and world == null:
+		_ui_dirty = false
+		show_menu()
 
 
 ## In the world: save into any slot.
@@ -629,58 +706,242 @@ func _build_hud() -> void:
 	if hud:
 		hud.queue_free()
 	hud = Control.new()
+	hud.name = "Hud"
 	UIKit.full_rect(hud)
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.theme = ui_theme
 	hud_layer.add_child(hud)
-	var top := PanelContainer.new()
-	top.position = Vector2(10, UIKit.TOP + 8)
-	hud.add_child(top)
-	hud_gold = UIKit.label("", 22, UIKit.GOLD)
-	top.add_child(hud_gold)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 8)
-	col.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	col.position = Vector2(-200, UIKit.TOP + 8)
-	col.custom_minimum_size.x = 190
-	hud.add_child(col)
-	hud_boosters = UIKit.button("Boosters", func(): open_boosters(false), 190)
-	col.add_child(hud_boosters)
-	hud_hero = UIKit.button("Hero", open_hero_sheet, 190)
-	col.add_child(hud_hero)
-	col.add_child(UIKit.button("Camp", make_camp, 190))
-	col.add_child(UIKit.button("Deck", open_deck_builder, 190))
-	col.add_child(UIKit.button("Journal", show_journal, 190))
-	col.add_child(UIKit.button("Save", open_save_slots, 190))
-	col.add_child(UIKit.button("Menu", func():
-		GameState.save_game()
-		show_menu(), 190))
+	# the status panel, top left: level, life, gold and cards as separate pieces
+	hud_status_panel = PanelContainer.new()
+	hud_status_panel.name = "StatusPanel"
+	hud_status_panel.position = Vector2(10, UIKit.TOP + 8)
+	hud_status_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(hud_status_panel)
+	hud_status = GridContainer.new()
+	hud_status.columns = 4
+	hud_status.add_theme_constant_override("h_separation", 18)
+	hud_status.add_theme_constant_override("v_separation", 2)
+	hud_status_panel.add_child(hud_status)
+	hud_level = UIKit.label("", UIKit.FS_BODY, UIKit.TEXT)
+	hud_level.name = "Level"
+	hud_life = UIKit.label("", UIKit.FS_BODY, UIKit.RED)
+	hud_life.name = "Life"
+	hud_gold = UIKit.label("", UIKit.FS_BODY, UIKit.GOLD)
+	hud_gold.name = "Gold"
+	hud_cards = UIKit.label("", UIKit.FS_BODY, UIKit.TEXT)
+	hud_cards.name = "Cards"
+	for l in [hud_level, hud_life, hud_gold, hud_cards]:
+		hud_status.add_child(l)
+	# a short "Saved" beside the status panel after every save
+	hud_saved = UIKit.label(I18n.t("Saved"), UIKit.FS_SECONDARY, UIKit.DIM)
+	hud_saved.name = "SavedMark"
+	hud_saved.add_theme_color_override("font_outline_color", Tapestry.PARCHMENT_LIGHT)
+	hud_saved.add_theme_constant_override("outline_size", 6)
+	hud_saved.modulate.a = 0.0
+	hud_saved.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(hud_saved)
+	_save_seen = _save_stamp()
+	# the right column: the four steady buttons, then Camp and Boosters when they apply
+	hud_col = VBoxContainer.new()
+	hud_col.name = "HudColumn"
+	hud_col.add_theme_constant_override("separation", UIKit.GAP)
+	hud_col.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	hud_col.offset_left = -HUD_COL_W - 10
+	hud_col.offset_right = -10
+	hud_col.offset_top = UIKit.TOP + 8
+	hud_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(hud_col)
+	hud_hero = _hud_button("Hero", open_hero_sheet)
+	_hud_button("Deck", open_deck_builder)
+	_hud_button("Journal", show_journal)
+	hud_menu = _hud_button("Menu", toggle_world_menu)
+	hud_camp = _hud_button("Camp", make_camp)
+	hud_boosters = _hud_button("Boosters", func(): open_boosters(false))
 	var dial := SkyDial.new()
 	dial.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	dial.position = Vector2(-SkyDial.W * 0.5, UIKit.TOP + 10)     # the gilt rim stands a little above the dial
 	hud.add_child(dial)
 	hud_dial = dial
 	var zoom := HBoxContainer.new()
-	zoom.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	zoom.position = Vector2(10, -70)
+	zoom.name = "Zoom"
+	zoom.add_theme_constant_override("separation", UIKit.GAP)
+	zoom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	zoom.offset_left = 10
+	zoom.offset_right = 10 + UIKit.TARGET * 2 + UIKit.GAP
+	zoom.offset_top = -UIKit.TARGET - 10
+	zoom.offset_bottom = -10
 	hud.add_child(zoom)
-	zoom.add_child(UIKit.button("−", func(): world.zoom_by(1.0 / 1.2), 60))
-	zoom.add_child(UIKit.button("+", func(): world.zoom_by(1.2), 60))
+	for z in [["−", 1.0 / 1.2], ["+", 1.2]]:
+		var k: float = z[1]
+		var zb := UIKit.button(z[0], func(): world.zoom_by(k), UIKit.TARGET)
+		zb.custom_minimum_size = Vector2(UIKit.TARGET, UIKit.TARGET)
+		zb.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
+		zoom.add_child(zb)
+	if not hud.resized.is_connected(_layout_status):
+		hud.resized.connect(_layout_status)
 	_update_hud()
+
+
+const HUD_COL_W := 190
+
+
+func _hud_button(text: String, cb: Callable) -> Button:
+	var b := UIKit.button(text, cb, HUD_COL_W)
+	b.name = text.replace(" ", "")
+	b.custom_minimum_size = Vector2(HUD_COL_W, UIKit.TARGET)
+	b.add_theme_font_size_override("font_size", UIKit.FS_BODY)
+	hud_col.add_child(b)
+	return b
 
 
 func _update_hud() -> void:
 	if hud == null or not is_instance_valid(hud):
 		return
-	hud_gold.text = I18n.t("Lv%d") % GameState.level + "   " + I18n.t("♥ %d/%d   ◉ %d gold   ✦ %d cards") % [GameState.life, GameState.max_life(), GameState.gold, _owned_total()]
+	hud_level.text = I18n.t("Lv %d") % GameState.level
+	hud_life.text = "♥ %d/%d" % [GameState.life, GameState.max_life()]
+	hud_life.add_theme_color_override("font_color", UIKit.RED if GameState.life * 3 <= GameState.max_life() else UIKit.TEXT)
+	hud_gold.text = I18n.t("◉ %d gold") % GameState.gold
+	hud_cards.text = I18n.t("✦ %d cards") % _owned_total()
 	if hud_dial:
 		hud_dial.set_time(GameState.clock, GameState.day)
 		if world and world.built:
 			hud_dial.set_region(world.faction_at(world.player_pos))
 	hud_boosters.text = I18n.t("Boosters (%d)") % GameState.pending_boosters
-	hud_boosters.disabled = GameState.pending_boosters <= 0
+	hud_boosters.visible = GameState.pending_boosters > 0
+	hud_camp.visible = world != null and world.built and world.can_camp()
 	if hud_hero:
 		hud_hero.text = I18n.t("Hero (+%d)") % GameState.stat_points if GameState.stat_points > 0 else I18n.t("Hero")
+	_layout_status()
+
+
+## Four pieces in a row when there is room left of the sky dial, else two rows of two.
+func _layout_status() -> void:
+	if hud_status == null or not is_instance_valid(hud_status) or hud == null:
+		return
+	var room := (hud.size.x - SkyDial.W) * 0.5 - 10.0 - 14.0
+	hud_status.columns = 4
+	var w4 := hud_status_panel.get_combined_minimum_size().x
+	hud_status.columns = 4 if w4 <= room else 2
+	hud_status_panel.reset_size()
+	var pr := Rect2(hud_status_panel.position, hud_status_panel.get_combined_minimum_size())
+	var mark := hud_saved.get_combined_minimum_size()
+	if pr.end.x + 12.0 + mark.x <= 10.0 + room:
+		hud_saved.position = Vector2(pr.end.x + 12.0, pr.position.y + (pr.size.y - mark.y) * 0.5)
+	else:
+		hud_saved.position = Vector2(pr.position.x + 8.0, pr.end.y + 4.0)
+
+
+## A token that changes whenever the game is saved (GameState.saved if it exists, else the
+## session clock that save_game restarts).
+func _save_stamp() -> int:
+	return int(GameState.get("_session_start"))
+
+
+func _on_saved() -> void:
+	if hud_saved == null or not is_instance_valid(hud_saved):
+		return
+	_layout_status()
+	if _saved_tween and _saved_tween.is_valid():
+		_saved_tween.kill()
+	hud_saved.modulate.a = 1.0
+	_saved_tween = hud_saved.create_tween()
+	_saved_tween.tween_interval(1.6)
+	_saved_tween.tween_property(hud_saved, "modulate:a", 0.0, 0.5)
+
+
+# ------------------------------------------------------------------ the world menu
+
+## The Menu button: a small panel with Save, Save to another slot, Settings, the card database
+## and the way back to the title page. A tap outside closes it.
+func toggle_world_menu() -> void:
+	if world_menu and is_instance_valid(world_menu):
+		_close_world_menu()
+		return
+	if world == null or screen != null:
+		return
+	world.active = false
+	var ov := ColorRect.new()
+	ov.color = Color(0, 0, 0, 0.25)
+	ov.name = "WorldMenu"
+	UIKit.full_rect(ov)
+	ov.theme = ui_theme
+	ov.mouse_filter = Control.MOUSE_FILTER_STOP
+	ov.gui_input.connect(func(ev: InputEvent):
+		if (ev is InputEventMouseButton and ev.pressed) or (ev is InputEventScreenTouch and ev.pressed):
+			_close_world_menu())
+	hud_layer.add_child(ov)
+	world_menu = ov
+	var panel := PanelContainer.new()
+	panel.name = "MenuPanel"
+	ov.add_child(panel)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", UIKit.GAP)
+	panel.add_child(v)
+	var entries := [
+		[I18n.t("Save (slot %d)") % GameState.slot, "Save", save_now],
+		[I18n.t("Save to another slot"), "SaveAs", func():
+			_close_world_menu()
+			open_save_slots()],
+		[I18n.t("Settings"), "Settings", _open_world_settings],
+		[I18n.t("Card database"), "CardDatabase", _open_world_card_db],
+		[I18n.t("Main menu"), "MainMenu", func():
+			_close_world_menu()
+			GameState.save_game()
+			show_menu()],
+	]
+	for e in entries:
+		var b := UIKit.button(e[0], e[2], 300)
+		b.name = e[1]
+		b.custom_minimum_size = Vector2(300, UIKit.TARGET)
+		b.add_theme_font_size_override("font_size", UIKit.FS_BODY)
+		v.add_child(b)
+	# beside the column, its top level with the Menu button (kept on screen)
+	var vs := ov.get_viewport_rect().size
+	var ps := panel.get_combined_minimum_size()
+	var y := UIKit.TOP + 8.0
+	if hud_menu and is_instance_valid(hud_menu):
+		y = hud_menu.global_position.y
+	y = clampf(y, UIKit.TOP + 8.0, maxf(UIKit.TOP + 8.0, vs.y - ps.y - 10.0))
+	panel.position = Vector2(vs.x - HUD_COL_W - 10.0 - UIKit.GAP - ps.x, y)
+
+
+func _close_world_menu() -> void:
+	if world_menu and is_instance_valid(world_menu):
+		world_menu.queue_free()
+	world_menu = null
+	if world and screen == null and (hud == null or hud.visible):
+		world.active = true
+
+
+## Save into the slot being played, at once.
+func save_now() -> void:
+	_close_world_menu()
+	GameState.save_game()
+	_toast(I18n.t("Saved in slot %d.") % GameState.slot)
+
+
+func _open_world_settings() -> void:
+	_close_world_menu()
+	_pause_world(true)
+	var s := SettingsScreen.new()
+	s.closed.connect(func(): _pause_world(false))
+	ui_layer.add_child(s)
+
+
+func _open_world_card_db() -> void:
+	_close_world_menu()
+	_pause_world(true)
+	var db := CardDatabase.new()
+	db.closed.connect(func(): _pause_world(false))
+	ui_layer.add_child(db)
+
+
+## A language switch from the settings in the world rebuilds that screen: its Back must still
+## wake the world.
+func _hook_world_settings() -> void:
+	for c in ui_layer.get_children():
+		if c is SettingsScreen and not c.closed.is_connected(_pause_world):
+			c.closed.connect(_pause_world.bind(false))
 
 
 ## The hero sheet: level, experience and the stats, with the points earned by levels to spend.
@@ -751,6 +1012,8 @@ func _owned_total() -> int:
 
 
 func _pause_world(paused: bool) -> void:
+	if paused and world_menu:
+		_close_world_menu()
 	if world:
 		world.active = not paused
 		world.visible = not paused
@@ -820,11 +1083,92 @@ func show_journal() -> void:
 	if el != "":
 		lines.append(el)
 	if lines.is_empty():
-		lines.append(I18n.t("No active missions. Talk to townsfolk in the cities."))
+		var goals := next_goals()
+		if goals.is_empty():
+			lines.append(I18n.t("No active missions. Talk to townsfolk in the cities."))
+		else:
+			lines.append(I18n.t("No active missions. What to do next:"))
+			for g in goals:
+				lines.append("• " + g)
 	lines.append("\n" + I18n.t("Today: %s. %s.") % [LiturgicalCalendar.date_text(GameState.day), LiturgicalCalendar.label(LiturgicalCalendar.of_day(GameState.day))])
 	lines.append(I18n.t("\nLairs cleared: %d / %d") % [GameState.cleared_lairs.size(), GameState.world_data.get("lairs", []).size()])
 	lines.append(_villages_journal_line())
 	show_dialog("Journal", "\n".join(lines), [["Close", Callable()]])
+
+
+## When no mission is in hand: up to three useful things to do next, nearest first.
+func next_goals() -> Array:
+	var out: Array = []
+	var here: Vector2 = world.player_pos if world else GameState.player_pos
+	if not GameState.tour_save.is_empty() or tournament != null:
+		var tc: String = tournament.city if tournament else String(GameState.tour_save.get("draft", {}).get("city", ""))
+		out.append(I18n.t("Finish the tournament at %s.") % GameState.city(tc).get("name", tc))
+	if GameState.pending_boosters > 0:
+		out.append(I18n.t("Open your %d booster(s) (the Boosters button).") % GameState.pending_boosters)
+	if GameState.stat_points > 0:
+		out.append(I18n.t("Spend your stat point on the hero sheet."))
+	# work offered in a city already known
+	var best_m := ""
+	var best_md := INF
+	for c in GameState.world_data.get("cities", []):
+		if not GameState.visited_cities.has(c["id"]):
+			continue
+		for npc in c.get("npcs", []):
+			for mid in npc.get("missions", []):
+				if GameState.mission_state(mid) == "available" and GameState.mission_for_hero(mid):
+					var d := here.distance_to(Vector2(c["x"], c["y"]))
+					if d < best_md:
+						best_md = d
+						best_m = I18n.t("%s in %s has work for you.") % [I18n.t(npc["name"]), c["name"]]
+	if best_m != "":
+		out.append(best_m)
+	# a feast coming: the nearest known city that asks for goods
+	if GameState.errand.is_empty():
+		var best_f := ""
+		var best_fd := INF
+		for c in GameState.world_data.get("cities", []):
+			if not GameState.visited_cities.has(c["id"]):
+				continue
+			var offer := GameState.feast_errand_offer(c["id"])
+			if offer.is_empty():
+				continue
+			var d := here.distance_to(Vector2(c["x"], c["y"]))
+			if d < best_fd:
+				best_fd = d
+				best_f = I18n.t("%s prepares the feast of %s (%s): ask there for an errand.") % [c["name"], _errand_feast_name(offer), LiturgicalCalendar.short_date_text(int(offer["feast_day"]))]
+		if best_f != "":
+			out.append(best_f)
+	# the nearest place not yet visited
+	var best_p := {}
+	var best_pd := INF
+	for c in GameState.world_data.get("cities", []):
+		if not GameState.visited_cities.has(c["id"]):
+			var d := here.distance_to(Vector2(c["x"], c["y"]))
+			if d < best_pd:
+				best_pd = d
+				best_p = {"name": c["name"], "x": c["x"], "y": c["y"], "city": true}
+	for v in GameState.world_data.get("villages", []):
+		if not GameState.visited_villages.has(v["id"]):
+			var d := here.distance_to(Vector2(v["x"], v["y"]))
+			if d < best_pd:
+				best_pd = d
+				best_p = {"name": v["name"], "x": v["x"], "y": v["y"], "city": false}
+	if not best_p.is_empty():
+		var dir := VillageScreen.direction(here, Vector2(best_p["x"], best_p["y"]))
+		out.append((I18n.t("Visit the city of %s, to the %s.") if best_p["city"] else I18n.t("Visit the village of %s, to the %s.")) % [best_p["name"], dir])
+	# the nearest lair not yet cleared
+	var best_l := {}
+	var best_ld := INF
+	for l in GameState.world_data.get("lairs", []):
+		if GameState.cleared_lairs.has(l["id"]):
+			continue
+		var d := here.distance_to(Vector2(l["x"], l["y"]))
+		if d < best_ld:
+			best_ld = d
+			best_l = l
+	if not best_l.is_empty():
+		out.append(I18n.t("%s (level %d) lies to the %s.") % [I18n.t(best_l["name"]), int(best_l["level"]), VillageScreen.direction(here, Vector2(best_l["x"], best_l["y"]))])
+	return out.slice(0, 3)
 
 
 ## The villages walked into, by name.
@@ -1146,7 +1490,8 @@ func _capital_of(faith: String) -> String:
 	return "cogspire"
 
 
-var _tour_intro := false      # the free introductory tournament a drafting hero begins with
+var _tour_intro := false
+var _ui_dirty := false        # the interface size changed while the title page was built      # the free introductory tournament a drafting hero begins with
 
 
 func open_tournament(city_id: String, intro: bool = false, sealed: bool = false) -> void:
@@ -1363,9 +1708,11 @@ func show_dialog(title: String, body: String, buttons: Array, card_ids: Array = 
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 14)
 	panel.add_child(v)
-	v.add_child(UIKit.title(I18n.t(title), 36))
-	var l := UIKit.label(I18n.t(body), 19, UIKit.TEXT, true)
-	l.custom_minimum_size.x = 640
+	v.add_child(UIKit.title(I18n.t(title), UIKit.FS_HEADING + 4))
+	var vs := get_viewport().get_visible_rect().size
+	var bw := minf(640.0, vs.x - 120.0)
+	var l := UIKit.label(I18n.t(body), UIKit.FS_BODY, UIKit.TEXT, true)
+	l.custom_minimum_size.x = bw
 	v.add_child(l)
 	if not card_ids.is_empty():
 		var h := HBoxContainer.new()
@@ -1379,15 +1726,35 @@ func show_dialog(title: String, body: String, buttons: Array, card_ids: Array = 
 	v.add_child(row)
 	for b in buttons:
 		var cb: Callable = b[1]
-		row.add_child(UIKit.button(b[0], func():
+		var btn := UIKit.button(b[0], func():
 			overlay.queue_free()
 			if world and screen == null:
 				world.active = true
 			if cb.is_valid():
-				cb.call(), 200))
+				cb.call(), 200)
+		btn.custom_minimum_size.y = maxf(btn.custom_minimum_size.y, UIKit.TARGET)
+		row.add_child(btn)
 	await get_tree().process_frame
-	if is_instance_valid(panel):
-		panel.position = (overlay.size - panel.size) * 0.5
+	if not is_instance_valid(panel):
+		return
+	# a long text scrolls (drag or wheel) instead of running off a short screen
+	var excess := panel.size.y - (overlay.size.y - 24.0)
+	if excess > 0.0:
+		var idx := l.get_index()
+		var sc := ScrollContainer.new()
+		sc.name = "DialogScroll"
+		sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		sc.custom_minimum_size = Vector2(bw + 16.0, maxf(120.0, l.size.y - excess))
+		v.remove_child(l)
+		sc.add_child(l)
+		v.add_child(sc)
+		v.move_child(sc, idx)
+		DragScroll.attach(overlay, sc)
+		panel.reset_size()
+		await get_tree().process_frame
+		if not is_instance_valid(panel):
+			return
+	panel.position = (overlay.size - panel.size) * 0.5
 
 
 ## A short gold-coloured message at the foot of the screen, above whatever is open.
