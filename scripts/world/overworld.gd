@@ -130,6 +130,7 @@ func _ready() -> void:
 	camera.limit_bottom = int(world_size.y)
 	add_child(camera)
 	camera.make_current()
+	_build_night()
 	player_pos = GameState.player_pos
 	move_target = player_pos
 	camera.position = player_pos
@@ -469,7 +470,7 @@ func _near_road(p: Vector2, r: float) -> bool:
 
 # ------------------------------------------------------------------ enemies
 
-func _spawn_enemy() -> void:
+func _spawn_enemy(force_night: bool = false) -> void:
 	var start := Vector2(GameState.world_data.get("start", {}).get("x", 3000), GameState.world_data.get("start", {}).get("y", 2200))
 	for attempt in 40:
 		var p := Vector2(_rng.randf_range(150, world_size.x - 150), _rng.randf_range(150, world_size.y - 150))
@@ -490,6 +491,14 @@ func _spawn_enemy() -> void:
 				f = others[_rng.randi_range(0, others.size() - 1)]
 		elif _rng.randf() < 0.25:
 			disposition = "neutral"
+		# the dark belongs to the Black Pact: at night its people walk every road,
+		# though less often on the Church's hallowed ground
+		var night_walker := false
+		var dark := 1.0 - SkyDial.daylight(GameState.clock)
+		if force_night or (dark > 0.0 and f != "abyss" and _rng.randf() < dark * (0.2 if region == "sanctum" else 0.4)):
+			f = "abyss"
+			night_walker = true
+			disposition = "neutral" if GameState.hero == "abyss" else "hostile"
 		var lvl := clampi(1 + int(p.distance_to(start) / 800.0), 1, 5)
 		var pool: Array = []
 		for r in ["common", "uncommon"]:
@@ -500,7 +509,7 @@ func _spawn_enemy() -> void:
 		var e := {
 			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": look,
 			"name": WorldEntities.enemy_name(f, _rng), "wander": p, "chasing": false,
-			"region": region, "disposition": disposition,
+			"region": region, "disposition": disposition, "night": night_walker, "extra": force_night,
 		}
 		enemies.append(e)
 		var w := Walker.new()
@@ -513,6 +522,28 @@ func _spawn_enemy() -> void:
 		_walkers[e["id"]] = w
 		_next_enemy_id += 1
 		return
+
+
+## At full day the night's walkers slip back into the shadows (and others come in their place).
+var _nightfall_day := -1
+
+
+func _dawn_check() -> void:
+	var light := SkyDial.daylight(GameState.clock)
+	if light < 0.3 and GameState.clock >= 19.0 and _nightfall_day != GameState.day:
+		# nightfall: more of the Pact come out
+		_nightfall_day = GameState.day
+		for i in 4:
+			_spawn_enemy(true)
+	if light < 0.9:
+		return
+	for e in enemies.duplicate():
+		if e.get("night", false) and not e.get("chasing", false):
+			remove_enemy(int(e["id"]))
+			if e.get("extra", false):
+				respawn_queue.pop_back()     # the nightfall extras are not replaced
+			else:
+				respawn_queue[respawn_queue.size() - 1] = _rng.randf_range(2.0, 8.0)
 
 
 func _in_safe_zone(p: Vector2) -> bool:
@@ -535,8 +566,74 @@ func remove_enemy(id: int) -> void:
 
 # ------------------------------------------------------------------ loop
 
+## Night: the whole map is tinted by the hour, and at dark the hero's lantern, the lit
+## windows of the towns and the unholy fires of the lairs glow through it.
+var _tint: CanvasModulate
+var _lamp: PointLight2D
+var _place_lights: Array = []
+
+
+static func _light_tex(size: int) -> GradientTexture2D:
+	var g := Gradient.new()
+	g.set_color(0, Color(1, 1, 1, 1))
+	g.set_color(1, Color(1, 1, 1, 0))
+	g.add_point(0.45, Color(1, 1, 1, 0.55))
+	var t := GradientTexture2D.new()
+	t.gradient = g
+	t.fill = GradientTexture2D.FILL_RADIAL
+	t.fill_from = Vector2(0.5, 0.5)
+	t.fill_to = Vector2(1.0, 0.5)
+	t.width = size
+	t.height = size
+	return t
+
+
+func _build_night() -> void:
+	_tint = CanvasModulate.new()
+	add_child(_tint)
+	var tex := _light_tex(256)
+	_lamp = PointLight2D.new()
+	_lamp.texture = tex
+	_lamp.texture_scale = 2.6
+	_lamp.color = Color(1.0, 0.78, 0.45)
+	add_child(_lamp)
+	for c in cities:
+		var l := PointLight2D.new()
+		l.texture = tex
+		l.texture_scale = 4.0
+		l.color = Color(1.0, 0.74, 0.40)
+		l.position = Vector2(c["x"], c["y"]) + Vector2(0, 20)
+		add_child(l)
+		_place_lights.append([l, 0.9])
+	for lr in lairs:
+		var l := PointLight2D.new()
+		l.texture = tex
+		l.texture_scale = 2.4
+		l.color = UIKit.faction_ink(lr["faction"]).lerp(Color(1.0, 0.3, 0.2), 0.4)
+		l.position = Vector2(lr["x"], lr["y"])
+		add_child(l)
+		_place_lights.append([l, 0.7])
+	_update_night()
+
+
+func _update_night() -> void:
+	if _tint == null:
+		return
+	var h := GameState.clock
+	_tint.color = SkyDial.world_tint(h)
+	var dark := 1.0 - SkyDial.daylight(h)
+	_lamp.position = player_pos + Vector2(0, -20)
+	_lamp.energy = dark * (0.75 + 0.05 * sin(_t * 9.0))
+	_lamp.visible = dark > 0.02
+	for e in _place_lights:
+		var l: PointLight2D = e[0]
+		l.energy = dark * float(e[1])
+		l.visible = dark > 0.02
+
+
 func _process(delta: float) -> void:
 	_t += delta
+	_update_night()
 	_sync_walkers()
 	if moving or _marker_shown:
 		_marker_shown = moving
@@ -554,6 +651,7 @@ func _process(delta: float) -> void:
 				respawn_queue.remove_at(i)
 				_spawn_enemy()
 		_move_enemies(delta)
+		_dawn_check()
 		_reveal()
 	camera.position = player_pos
 	GameState.player_pos = player_pos
@@ -565,7 +663,7 @@ func _move_player(delta: float) -> void:
 	var terrain := float(SPEED_BY_CODE.get(ground, 1.0))
 	if ground == SLOW and GameState.stat("wildcraft") >= 3:
 		terrain = 1.0                  # a woodsman walks the thickets like a road
-	var speed := PLAYER_SPEED * terrain * (1.0 + 0.08 * GameState.stat("wildcraft"))
+	var speed := PLAYER_SPEED * terrain * (1.0 + 0.08 * GameState.stat("wildcraft")) * night_pace()
 	var kb := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	if kb != Vector2.ZERO:
 		# keys: walk straight, sliding along shores and cliffs
@@ -636,6 +734,47 @@ func ferry_across(index: int, from_a: bool) -> void:
 	_ferry_lock = index
 	camera.position = player_pos
 	camera.reset_smoothing()
+
+
+## Travel slows in the dark: two thirds of the day's pace at full night, a little better
+## for those at home in the wild (Wildcraft).
+static func night_pace() -> float:
+	var full_night := minf(1.0, 0.65 + 0.05 * GameState.stat("wildcraft"))
+	return lerpf(full_night, 1.0, SkyDial.daylight(GameState.clock))
+
+
+## Can the hero pitch a camp here? Not in a town, and not with a foe on his heels.
+func can_camp() -> bool:
+	if inside_city != "" or _in_safe_zone(player_pos):
+		return false
+	for e in enemies:
+		if e.get("chasing", false) or ((e["pos"] as Vector2).distance_to(player_pos) < 260.0 and e.get("disposition", "hostile") == "hostile"):
+			return false
+	return true
+
+
+## A hostile wanderer near enough to stumble on a camp in his own lands, or {}.
+func camp_prowler() -> Dictionary:
+	var best := {}
+	var bd := 900.0
+	var here := faction_at(player_pos)
+	for e in enemies:
+		if e.get("disposition", "hostile") != "hostile" or e.get("region", e["faction"]) != here:
+			continue
+		var d := (e["pos"] as Vector2).distance_to(player_pos)
+		if d < bd:
+			bd = d
+			best = e
+	return best
+
+
+## The prowler finds the camp: he is at the fire when the hero wakes.
+func ambush(e: Dictionary) -> void:
+	e["pos"] = player_pos + Vector2(60, 0)
+	active = false
+	moving = false
+	move_target = player_pos
+	enemy_engaged.emit(e)
 
 
 func _move_enemies(delta: float) -> void:

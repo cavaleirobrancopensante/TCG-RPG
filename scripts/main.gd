@@ -6,6 +6,7 @@ var hud_layer: CanvasLayer
 var ui_layer: CanvasLayer
 var hud: Control
 var hud_gold: Label
+var hud_dial: SkyDial
 var hud_boosters: Button
 var screen: Control          # current full-screen UI (menu, city, battle, ...)
 var ui_theme: Theme
@@ -130,6 +131,8 @@ var _music_timer := 0.0
 
 
 func _process(delta: float) -> void:
+	if hud_dial and world and world.active:
+		hud_dial.set_time(GameState.clock, GameState.day)
 	# In the open world the music follows the faith of the region you walk through.
 	_music_timer -= delta
 	if _music_timer <= 0.0 and world and world.active and screen == null:
@@ -491,12 +494,18 @@ func _build_hud() -> void:
 	hud.add_child(col)
 	hud_boosters = UIKit.button("Boosters", func(): open_boosters(false), 190)
 	col.add_child(hud_boosters)
+	col.add_child(UIKit.button("Camp", make_camp, 190))
 	col.add_child(UIKit.button("Deck", open_deck_builder, 190))
 	col.add_child(UIKit.button("Journal", show_journal, 190))
 	col.add_child(UIKit.button("Save", open_save_slots, 190))
 	col.add_child(UIKit.button("Menu", func():
 		GameState.save_game()
 		show_menu(), 190))
+	var dial := SkyDial.new()
+	dial.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	dial.position = Vector2(-SkyDial.W * 0.5, UIKit.TOP + 6)
+	hud.add_child(dial)
+	hud_dial = dial
 	var zoom := HBoxContainer.new()
 	zoom.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	zoom.position = Vector2(10, -70)
@@ -509,13 +518,37 @@ func _build_hud() -> void:
 func _update_hud() -> void:
 	if hud == null or not is_instance_valid(hud):
 		return
-	var h := int(GameState.clock)
-	var m := int((GameState.clock - h) * 60.0) / 15 * 15
-	var sky := "☾" if GameState.is_night() else "☀"
-	hud_gold.text = I18n.t("♥ %d/%d   ◉ %d gold   ✦ %d cards") % [GameState.life, GameState.max_life(), GameState.gold, _owned_total()] \
-		+ "\n" + I18n.t("%s Day %d, %02d:%02d") % [sky, GameState.day + 1, h, m]
+	hud_gold.text = I18n.t("♥ %d/%d   ◉ %d gold   ✦ %d cards") % [GameState.life, GameState.max_life(), GameState.gold, _owned_total()]
+	if hud_dial:
+		hud_dial.set_time(GameState.clock, GameState.day)
 	hud_boosters.text = I18n.t("Boosters (%d)") % GameState.pending_boosters
 	hud_boosters.disabled = GameState.pending_boosters <= 0
+
+
+## Pitch a camp in the wild: free, slow to heal, and a foe in his own lands may find you.
+func make_camp() -> void:
+	if world == null or not world.active:
+		return
+	if not world.can_camp():
+		_toast(I18n.t("You can't make camp here."))
+		return
+	var lf := GameState.life
+	var foreign: bool = world.faction_at(world.player_pos) != GameState.hero
+	var prowler: Dictionary = world.camp_prowler() if foreign else {}
+	var found := not prowler.is_empty() and GameState.rng.randf() < (0.4 if GameState.is_night() else 0.25)
+	var hours := GameState.make_camp()
+	if found:
+		# he comes in the small hours: you wake with the fire low and a stranger at it
+		GameState.clock = fmod(GameState.clock + 24.0 - hours * 0.5, 24.0)
+	GameState.save_game()
+	_update_hud()
+	var body := I18n.t("You light a small fire, roll out your blanket and sleep under the open sky.") + "\n\n" \
+		+ I18n.t("You wake with %d life (%+d).") % [GameState.life, GameState.life - lf]
+	if found:
+		body += "\n\n" + I18n.t("A sound in the dark: someone has found your camp.")
+		show_dialog("Camp", body, [["To arms", func(): world.ambush(prowler)]])
+	else:
+		show_dialog("Camp", body, [["Break camp", Callable()]])
 
 
 func _owned_total() -> int:

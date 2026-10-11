@@ -2311,5 +2311,13 @@
  "Saint Michael the Archangel": "San Miguel Arcángel",
  "Flying, sanctified (protection from the Pact). Other Angels and Knights you control get +1/+1.": "Vuelo, santificado (protección contra el Pacto). Los otros Ángeles y Caballeros que controlas obtienen +1/+1.",
  "Quis ut Deus? Who is like unto God?": "Quis ut Deus? ¿Quién como Dios?",
- "once per turn": "una vez por turno"
+ "once per turn": "una vez por turno",
+ "Camp": "Acampar",
+ "You can't make camp here.": "No puedes acampar aquí.",
+ "You light a small fire, roll out your blanket and sleep under the open sky.": "Enciendes una pequeña hoguera, extiendes la manta y duermes al raso.",
+ "You wake with %d life (%+d).": "Despiertas con %d de vida (%+d).",
+ "A sound in the dark: someone has found your camp.": "Un ruido en la oscuridad: alguien ha encontrado tu campamento.",
+ "To arms": "A las armas",
+ "Break camp": "Levantar el campamento",
+ "Day %d, %02d:%02d": "Día %d, %02d:%02d"
 }
