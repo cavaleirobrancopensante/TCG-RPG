@@ -574,3 +574,9 @@ under *Export → Resources → Filters to export non-resource files*.
 - When one of your regenerators is about to die (a block it would lose, a spell aimed at it), the
   duel stops and tells you, so you can tap it and pay, or let it go. The AI pays only when its
   creature would otherwise die.
+
+## Take random (1.41)
+
+- The button at the top of the draft is now Take random: it asks "Are you sure you want a random
+  card from this pack?" and, if you say yes, takes one blind. To choose a card yourself, tap it and
+  use Take in the viewer.

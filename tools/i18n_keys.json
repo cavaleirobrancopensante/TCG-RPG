@@ -3569,7 +3569,7 @@
    "note": "scripts/ui/draft_screen.gd"
   },
   {
-   "key": "Take",
+   "key": "Take random",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
@@ -3590,6 +3590,18 @@
   },
   {
    "key": "Take one card and pass the rest to %s (%s). The other drafters are choosing at the same time.",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Take",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Are you sure you want a random card from this pack?",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "You won't see which card it is until it lands in your picks.",
    "note": "scripts/ui/draft_screen.gd"
   },
   {

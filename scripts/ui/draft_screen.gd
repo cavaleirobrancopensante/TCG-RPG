@@ -1,8 +1,8 @@
 class_name DraftScreen
 extends Control
 ## The draft table: take one card from the booster in hand, pass the rest on.
-## Tap a card to read it up close, with Take (leaf through the pack there); the card last
-## looked at stays chosen, so Take at the top takes it too.
+## Tap a card to read it up close, with Take (leaf through the pack there). Take random at the
+## top takes a card at random from the pack, after asking.
 ## The picks panel holds two piles: the Deck (top), which becomes the first list in the deck
 ## builder when the draft ends, and the Sideboard (bottom). New picks go to the Deck. The Deck
 ## pile shows counts by type and by faith (with sigils) and a mana curve; each pile lists its
@@ -70,8 +70,8 @@ func _ready() -> void:
 	head.clip_text = true
 	head.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	heads.add_child(head)
-	take_btn = UIKit.primary_button("Take", _take, 170)
-	take_btn.name = "Take"
+	take_btn = UIKit.button("Take random", _ask_random, 190)
+	take_btn.name = "TakeRandom"
 	take_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	top.add_child(take_btn)
 	sub = UIKit.label("", UIKit.FS_SECONDARY, UIKit.DIM, true)
@@ -146,7 +146,6 @@ func _ready() -> void:
 
 func _refresh() -> void:
 	chosen = -1
-	take_btn.disabled = true
 	UIKit.clear(grid)
 	if not draft.is_drafting():
 		return
@@ -171,11 +170,6 @@ func _refresh() -> void:
 
 func _choose(i: int) -> void:
 	chosen = i
-	for k in grid.get_child_count():
-		var cv: CardView = grid.get_child(k)
-		cv.selected = k == i
-		cv.queue_redraw()
-	take_btn.disabled = false
 
 
 func _read(i: int) -> CardViewer:
@@ -183,16 +177,19 @@ func _read(i: int) -> CardViewer:
 	var pack: Array = draft.holding[0]
 	var v := CardViewer.open(self, pack.duplicate(), i, func(_e, idx):
 		return [["Take", func(): _take_index(idx), true, true]])
-	# leafing to another card makes that the chosen one
-	v.closed.connect(func():
-		if is_instance_valid(v) and chosen >= 0 and v.index < grid.get_child_count() and draft.is_drafting():
-			_choose(v.index))
 	return v
 
 
-func _take() -> void:
-	if chosen >= 0:
-		_take_index(chosen)
+## Take random: a card picked blindly from the pack, once you say so.
+func _ask_random() -> void:
+	if not draft.is_drafting():
+		return
+	UIKit.confirm(self, "Take random", I18n.t("Are you sure you want a random card from this pack?"), "Take random", func():
+		if draft.is_drafting():
+			var n: int = draft.holding[0].size()
+			if n > 0:
+				_take_index(randi() % n),
+		"You won't see which card it is until it lands in your picks.")
 
 
 func _take_index(i: int) -> void:
