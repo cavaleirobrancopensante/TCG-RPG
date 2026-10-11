@@ -221,6 +221,34 @@ Tribal tools (any faith, always with its own tribes):
   `"subtype": "Angel"`.
 - `summon` tokens with the tribe in their subtype count as members.
 
+## Third tribes (1.25)
+
+Each faith also has a smaller third tribe with a few synergies (about five cards, plus
+retagged older cards): Church **Priest**, Black Pact **Zombie** (the Pact's main tribes are now
+**Skeleton** and Demon; "Undead" is no longer a tribe word), Old Ways **Druid** (with auras),
+Revel **Satyr**, Stoa **Sailor**, Technocracy **relics and equipment** (artifact synergy).
+
+## Auras and equipment
+
+Both are relics that sit on a creature and give it `grants`
+(`{"power": 1, "toughness": 1, "keywords": ["trample"]}`); the bonus counts as a static.
+- **Aura** (Old Ways only): `"attach": "aura"`, subtype "Aura", and an enter effect
+  `{"trigger": "enter", "action": "attach", "target": "own_creature"}`. It goes to the
+  graveyard when its creature leaves play, or if there is no creature to enchant.
+- **Equipment** (Technocracy only, usually colourless generic cost): `"attach": "equipment"`,
+  subtype "Equipment", and `"equip": {"generic": 2}`. It enters unattached; "Equip N" is a
+  built-in ability (sorcery speed) that moves it onto a creature of yours. It stays in play
+  when the creature dies. Equipment may grant first strike, trample, vigilance or reach.
+- Relic synergy: tribe word **"Relic"** counts every relic you control (`kinship`,
+  `amount_per`), `ally_enter` with `"ally_subtype": "Relic"` fires when a relic enters, and
+  `cost_reduce` with `"subtype": "Relic"` makes your relics cheaper. "Aura" and "Equipment"
+  work the same way for those relics.
+
+## Stoa birds
+
+The Stoa may have at most two fliers, only Birds (Athena's owls, gulls of the sea lanes) and
+at most power 2; flying stays the Church's.
+
 ## Instants
 
 A spell with `"speed": "instant"` may be cast whenever you have priority: in either
@@ -275,7 +303,7 @@ two +1/+1 counters."
 
 ## Per faith counts (Set 2)
 
-60 cards per faith: **27 common, 18 uncommon, 11 rare, 4 mythic** (the last 15 of each faith, added in 1.23, are tribal). Roughly 26 creatures,
+65 cards per faith: **29 common, 20 uncommon, 12 rare, 4 mythic** (15 tribal cards added in 1.23, 5 third-tribe cards in 1.25). Roughly 26 creatures,
 12 spells and 7 relics, with a smooth curve (about 6 one- and two-drops among the commons).
 Plus 15 dual-faith (gold) cards and 15 dual gain-lands made separately. Total 300.
 

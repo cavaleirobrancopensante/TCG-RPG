@@ -35,6 +35,7 @@ class Perm:
 	var attacked := false      # attacked this turn
 	var entered_turn := 0
 	var uses := {}             # ability index -> uses this turn
+	var attached_to := -1      # auras and equipment: the uid of the creature they are on
 
 	func _state() -> BattleState:
 		return st.get_ref() if st else null
@@ -658,6 +659,13 @@ func _resolve_card(it: Dictionary) -> void:
 			s.relics.append(r)
 			emit({"type": "relic", "side": i, "uid": r.uid, "id": id, "from_stack": true})
 			_run_effects(i, c, "enter", r, targets, true)
+			if find_perm(r.uid):
+				_entered(r)
+			if c.get("attach", "") == "aura" and r.attached_to < 0 and find_perm(r.uid):
+				# an aura with no creature to enchant falls away
+				s.relics.erase(r)
+				s.graveyard.append(id)
+				emit({"type": "die", "uid": r.uid, "side": i, "sacrifice": false})
 			if overclock and phase != "over":
 				emit({"type": "overclock", "side": i, "uid": r.uid})
 				_run_list(i, c.get("overclock", {}).get("effects", []), r, oc_targets, true)
@@ -765,6 +773,9 @@ func static_bonus(p: Perm) -> Vector2i:
 	var out := Vector2i.ZERO
 	if not p.is_creature():
 		return out
+	for a in attachments_of(p):
+		var g: Dictionary = a.card.get("grants", {})
+		out += Vector2i(int(g.get("power", 0)), int(g.get("toughness", 0)))
 	for sd in sides:
 		for src in sd.creatures + sd.relics:
 			for stc in src.card.get("statics", []):
@@ -787,10 +798,16 @@ func static_bonus(p: Perm) -> Vector2i:
 
 
 ## How many creatures of a tribe a side controls (not counting `except`).
+## "Relic" counts every relic; "Aura"/"Equipment" count relics of that subtype too.
 func count_kin(i: int, subtype: String, except: Perm = null) -> int:
 	var n := 0
-	for c in side(i).creatures:
-		if c != except and (subtype == "" or c.subtype_has(subtype)):
+	if subtype == "Relic":
+		for r in side(i).relics:
+			if r != except:
+				n += 1
+		return n
+	for c in side(i).creatures + side(i).relics:
+		if c != except and (subtype == "" or c.subtype_has(subtype)) and (c.is_creature() or subtype != ""):
 			n += 1
 	return n
 
@@ -801,13 +818,27 @@ func _entered(p: Perm) -> void:
 		if src == p or find_perm(src.uid) == null:
 			continue
 		for e in src.card.get("effects", []):
-			if e.get("trigger") == "ally_enter" and p.subtype_has(String(e.get("ally_subtype", ""))):
+			var want := String(e.get("ally_subtype", ""))
+			if e.get("trigger") == "ally_enter" and ((want == "Relic" and not p.is_creature()) or p.subtype_has(want)):
 				resolve_effect(src.owner, e, src, null)
 				if phase == "over":
 					return
 
 
+## Auras and equipment on a creature.
+func attachments_of(p: Perm) -> Array:
+	var out := []
+	for sd in sides:
+		for r in sd.relics:
+			if r.attached_to == p.uid:
+				out.append(r)
+	return out
+
+
 func granted_keyword(p: Perm, k: String) -> bool:
+	for a in attachments_of(p):
+		if a.card.get("grants", {}).get("keywords", []).has(k):
+			return true
 	for sd in sides:
 		for src in sd.creatures + sd.relics:
 			for stc in src.card.get("statics", []):
@@ -880,7 +911,9 @@ func effective_cost(i: int, c: Dictionary, extra: Dictionary = {}) -> Dictionary
 			var sub := String(stc.get("subtype", ""))
 			if sub != "":
 				# tribal: your creature cards of that tribe cost less
-				if c.get("type") == "creature" and String(c.get("subtype", "")).contains(sub):
+				var is_kin: bool = (sub == "Relic" and c.get("type") == "relic") \
+					or (c.get("type") in ["creature", "relic"] and String(c.get("subtype", "")).contains(sub))
+				if is_kin:
 					gen -= int(stc.get("amount", 1))
 			elif is_machine:
 				gen -= int(stc.get("amount", 1))
@@ -1242,7 +1275,16 @@ func find_perm(uid: int) -> Perm:
 # ============================================================ activated abilities
 
 func abilities_of(p: Perm) -> Array:
-	return p.card.get("abilities", [])
+	var list: Array = p.card.get("abilities", [])
+	if p.card.has("equip"):
+		# Equip N: move this equipment onto a creature of yours (sorcery speed)
+		var cost: Dictionary = p.card["equip"]
+		var n := 0
+		for k in cost:
+			n += int(cost[k])
+		list = list + [{"cost": {"mana": cost}, "sorcery": true, "equip": true,
+			"effects": [{"action": "attach", "target": "own_creature"}], "text": I18n.t("Equip %d") % n}]
+	return list
 
 
 ## Can side i use ability `idx` of permanent `uid` now? (whenever it has priority)
@@ -1259,6 +1301,8 @@ func can_activate(i: int, uid: int, idx: int) -> bool:
 	var cost: Dictionary = ab.get("cost", {})
 	var once: bool = ab.get("once_per_turn", false) or cost.get("once_per_turn", false)
 	if once and int(p.uses.get(idx, 0)) > 0:
+		return false
+	if ab.get("sorcery", false) and not sorcery_time(i):
 		return false
 	if cost.get("tap", false):
 		if p.tapped:
@@ -1566,6 +1610,12 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				_entered(rp)
 		"foresight":
 			_foresight(i, amount)
+		"attach":
+			if source and find_perm(source.uid) and typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") == "creature":
+				var host := find_perm(int(chosen.get("uid", -1)))
+				if host and host.owner == source.owner:
+					source.attached_to = host.uid
+					emit({"type": "attach", "uid": source.uid, "host": host.uid, "side": i})
 		"tax":
 			enemy.tax += amount
 			emit({"type": "tax", "side": 1 - i, "amount": enemy.tax})
@@ -1755,6 +1805,15 @@ func _remove_perm(p: Perm) -> void:
 	var s := side(p.owner)
 	s.creatures.erase(p)
 	s.relics.erase(p)
+	if p.is_creature():
+		for a in attachments_of(p):
+			a.attached_to = -1
+			if a.card.get("attach", "") == "aura":
+				# an aura has nothing left to hold on to
+				side(a.owner).relics.erase(a)
+				if not a.is_token:
+					side(a.owner).graveyard.append(a.card_id)
+				emit({"type": "die", "uid": a.uid, "side": a.owner, "sacrifice": false})
 	attackers.erase(p.uid)
 	blocks.erase(p.uid)
 	for a in blocks.keys():
@@ -1973,6 +2032,8 @@ func auto_target(i: int, e: Dictionary):
 			return best
 		if e.get("target") == "any_enemy":
 			return {"kind": "player", "side": 1 - i}
+		return _highest(opts)
+	if action == "attach":
 		return _highest(opts)
 	if action == "buff":
 		var shrink := int(e.get("power", 0)) < 0 or int(e.get("toughness", 0)) < 0

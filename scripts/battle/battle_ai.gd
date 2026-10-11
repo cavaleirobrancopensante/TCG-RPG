@@ -200,6 +200,13 @@ static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
 		match a:
 			"add_mana":
 				return 0.0          # mana abilities are used by the payment step only when needed
+			"attach":
+				# equip: worth it when it moves onto a creature that can use it
+				var host_ref = st.auto_target(i, e)
+				if host_ref == null or int(host_ref.get("uid", -1)) == p.attached_to:
+					return 0.0
+				var g: Dictionary = p.card.get("grants", {})
+				v += 1.0 + int(g.get("power", 0)) + int(g.get("toughness", 0)) * 0.5 + g.get("keywords", []).size() * 0.7
 			"draw":
 				v += 1.4 * int(e.get("amount", 1))
 			"summon":
@@ -515,12 +522,17 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 		if BattleState.TARGET_CHOICE_TYPES.has(t):
 			var opts := st.valid_targets(i, e)
 			if opts.is_empty():
-				if is_spell:
+				if is_spell or a == "attach":
 					return [0.0, []]
 				targets.append(null)
 				continue
 			chosen = st.auto_target(i, e)
 		match a:
+			"attach":
+				var g: Dictionary = c.get("grants", {})
+				v += 1.0 + int(g.get("power", 0)) + int(g.get("toughness", 0)) * 0.5 + g.get("keywords", []).size() * 0.7
+				targets.append(chosen)
+				continue
 			"damage":
 				if t == "all_enemy_creatures":
 					var kills := 0
