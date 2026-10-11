@@ -60,6 +60,21 @@ func start(p_city: String, player_name: String, seed_value: int = 0) -> void:
 	_open_packs()
 
 
+## Sealed: every seat opens its own boosters; there is no drafting.
+var sealed := false
+
+
+func start_sealed(p_city: String, player_name: String, packs: int, seed_value: int = 0) -> void:
+	start(p_city, player_name, seed_value)
+	sealed = true
+	for s in SEATS:
+		picks[s] = []
+		for k in packs:
+			picks[s].append_array(Booster.open(rng))
+	holding = []
+	round_no = ROUNDS
+
+
 func _open_packs() -> void:
 	holding = []
 	pick_no = 0

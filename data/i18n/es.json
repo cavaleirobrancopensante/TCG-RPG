@@ -3254,5 +3254,20 @@
  "Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.": "Tu camino empieza en el torneo de iniciación de %s. Elige tus primeras cartas de los sobres que pasan por la mesa, arma un mazo y lucha en combates que no pueden matarte. Las cartas elegidas son tuyas, y la fe recompensa a quien llega lejos con sobres propios.",
  "To the tournament": "Al torneo",
  "For your showing, %s gives you %d booster(s) of its own cards.": "Por tu actuación, %s te da %d sobre(s) de sus propias cartas.",
- "Your draft deck is now your deck. The road is open.": "Tu mazo del draft es ahora tu mazo. El camino está abierto."
+ "Your draft deck is now your deck. The road is open.": "Tu mazo del draft es ahora tu mazo. El camino está abierto.",
+ "Your Road": "Tu Camino",
+ "Difficulty": "Dificultad",
+ "How your road begins": "Cómo empieza tu camino",
+ "(recommended)": "(recomendado)",
+ "You start with %d boosters.": "Empiezas con %d sobres.",
+ "Prize in boosters of your faith: champion %d, finalist %d, semi-final %d, first round %d.": "Premio en sobres de tu fe: campeón %d, finalista %d, semifinal %d, primera ronda %d.",
+ "Sealed tournament": "Torneo sellado",
+ "Boosters only": "Solo sobres",
+ "The introductory tournament of your capital: pick your first cards from packs passed around the table, build a deck, and fight bouts that cannot kill you.": "El torneo de iniciación de tu capital: elige tus primeras cartas de los sobres que pasan por la mesa, arma un mazo y lucha en combates que no pueden matarte.",
+ "The introductory tournament, sealed: open four boosters, build a deck from what you find, and fight bouts that cannot kill you.": "El torneo de iniciación, sellado: abre cuatro sobres, arma un mazo con lo que encuentres y lucha en combates que no pueden matarte.",
+ "No tournament: open your boosters, take the deck they make, and set out at once.": "Sin torneo: abre tus sobres, quédate con el mazo que forman y parte de inmediato.",
+ "Next": "Siguiente",
+ "Your sealed pool": "Tu reserva sellada",
+ "You opened %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.": "Abriste %d cartas; ahora están en tu colección. Arma tu mazo con ellas (al menos 40 cartas, las tierras básicas son gratis) y entonces empieza el torneo.",
+ "Your road begins at the sealed tournament of %s. Open four boosters, build a deck from what you find, and fight bouts that cannot kill you. The cards are yours to keep, and the faith rewards those who go far with boosters of its own.": "Tu camino empieza en el torneo sellado de %s. Abre cuatro sobres, arma un mazo con lo que encuentres y lucha en combates que no pueden matarte. Las cartas son tuyas, y la fe recompensa a quien llega lejos con sobres propios."
 }
