@@ -214,6 +214,19 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## New rules text and a faith-tinted look (1.31)
+
+- New card abilities: keywords until end of turn ("gains sanctified until end of turn"),
+  "if you control a Priest" style conditions, "whenever another Zombie dies", returning a
+  creature from your graveyard to your hand, "sacrifice a Zombie", tokens counted per tribe
+  member, and small Knight and Angel tokens for the Church. 13 cards use them, e.g.
+  Absolution Before Battle, Lock Shields, Charnel Glutton, Elder of the Oak Circle, Bulk Order.
+- The menus and HUD take your hero's faith colours and motif (cross, thorn, leaf, mask, Greek
+  key, rivet) once a game is under way.
+- Map and encounter figures redrawn: better proportions and faces, each faith's garb (habits,
+  surcoats, hoods, bones and rags, antlers, doublets and masks, goat legs, chiton and aspis,
+  aprons and goggles, brass plates), weapons held properly.
+
 ## Villages, themed wanderers, and smoother hands (1.30)
 
 - 27 named villages you can enter, 4 or 5 in each faith's lands (San Benedetto, Gallows Cross,

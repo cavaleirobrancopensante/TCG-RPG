@@ -28,11 +28,19 @@ ACTION_OWNERS = {
     "destroy": ["sanctum", "abyss", "wild"],
     "add_mana": ["wild", "machine"],
     "draw": ["lyceum", "abyss"],
-    "summon": ["wild", "abyss", "machine"],
-    "buff": FAITHS, "lose_life": FAITHS,
+    "summon": ["wild", "abyss", "machine", "sanctum"],   # the Church: small Angel or Knight tokens only
+    "regrow": ["abyss", "wild"],
+    "buff": FAITHS, "lose_life": FAITHS, "grant": FAITHS,
 }
+TRIBES = {
+    "sanctum": ["Knight", "Angel", "Priest"], "abyss": ["Skeleton", "Demon", "Zombie"],
+    "wild": ["Wolf", "Treefolk", "Druid", "Beast"], "revel": ["Noble", "Performer", "Satyr"],
+    "lyceum": ["Hoplite", "Philosopher", "Sailor"], "machine": ["Construct", "Artificer", "Servo"],
+}
+KIND_OWNER = {"Aura": "wild", "Equipment": "machine"}
+GRANT_TARGETS = ["own_creature", "all_own_creatures", "other_own_creatures", "self"]
 CONDITION_OWNER = {"grace": "sanctum", "composure": "lyceum", "rooted": "wild", "carouse": "revel", "bloodied": "abyss"}
-TRIGGERS = ["enter", "death", "upkeep", "attack", "cast", "idle", "ally_enter"]
+TRIGGERS = ["enter", "death", "upkeep", "attack", "cast", "idle", "ally_enter", "ally_dies"]
 TARGETS = ["", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self_player", "enemy_player", "self",
            "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
 STATICS = {"anthem": None, "keyword": None, "assembly": "machine", "cost_reduce": None, "kinship": None}
@@ -46,6 +54,25 @@ problems = []
 
 def bad(cid, msg):
     problems.append("%s: %s" % (cid, msg))
+
+
+def tribe_ok(word, owners):
+    """A tribe word (or Relic/Aura/Equipment) the card's faiths may count."""
+    if word == "Relic":
+        return True
+    if word in KIND_OWNER:
+        return KIND_OWNER[word] in owners
+    return any(word in TRIBES[f] for f in owners)
+
+
+def check_condition(cid, c, owners):
+    if not c:
+        return
+    if c.startswith("control:"):
+        if not tribe_ok(c[8:], owners):
+            bad(cid, "condition %s: not a tribe or relic kind of its faith" % c)
+    elif CONDITION_OWNER.get(c) not in owners:
+        bad(cid, "condition %s not owned" % c)
 
 
 def check_effect(cid, faith, e, where, owners):
@@ -62,9 +89,26 @@ def check_effect(cid, faith, e, where, owners):
         bad(cid, "idle is Revel only")
     if e.get("target", "") not in TARGETS:
         bad(cid, "%s bad target %r" % (where, e.get("target")))
-    c = e.get("condition")
-    if c and CONDITION_OWNER.get(c) not in owners:
-        bad(cid, "condition %s not owned" % c)
+    check_condition(cid, e.get("condition"), owners)
+    if e.get("trigger") in ["ally_enter", "ally_dies"] and not e.get("ally_subtype"):
+        bad(cid, "%s needs ally_subtype" % e.get("trigger"))
+    if a == "grant":
+        k = e.get("keyword")
+        if k not in KEYWORD_OWNER:
+            bad(cid, "grant: unknown keyword %r" % k)
+        elif KEYWORD_OWNER[k] not in owners:
+            bad(cid, "grant: keyword %s belongs to %s" % (k, KEYWORD_OWNER[k]))
+        if e.get("duration", "turn") not in ["turn", "permanent"]:
+            bad(cid, "grant: duration must be turn or permanent")
+        if e.get("target") not in GRANT_TARGETS:
+            bad(cid, "grant: target must be one of %s" % GRANT_TARGETS)
+        if e.get("power", 0) < 0 or e.get("toughness", 0) < 0:
+            bad(cid, "grant: only positive +P/+T may come with a keyword")
+        if e.get("target") == "own_creature" and e.get("power", 0) > 0 and e.get("trigger") == "cast" \
+                and e.get("duration", "turn") == "turn" and "wild" not in owners:
+            bad(cid, "single-creature pump spells belong to the Old Ways")
+    if a in ["regrow", "reanimate"] and e.get("target") != "own_grave_creature":
+        bad(cid, "%s needs target own_grave_creature" % a)
     if a == "buff":
         if e.get("power", 0) < 0 or e.get("toughness", 0) < 0:
             if "abyss" not in owners:
@@ -85,6 +129,14 @@ def check_effect(cid, faith, e, where, owners):
         for k in tok.get("keywords", []):
             if KEYWORD_OWNER.get(k) not in owners:
                 bad(cid, "token keyword %s not owned" % k)
+        others = [f for f in owners if f != "sanctum" and f in ACTION_OWNERS["summon"]]
+        if "sanctum" in owners and not others:
+            st = tok.get("subtype", "")
+            if not ("Angel" in st or "Knight" in st) or tok.get("power", 1) > 1:
+                bad(cid, "Church tokens: only Angel or Knight tokens with power 1 or less")
+        if e.get("count_per") is not None:
+            if not tribe_ok(e["count_per"], owners):
+                bad(cid, "count_per %s: not a tribe or relic kind of its faith" % e["count_per"])
 
 
 def check_card(c, owners_override=None):
@@ -148,13 +200,18 @@ def check_card(c, owners_override=None):
         bad(cid, "speed must be 'instant' or absent")
     if c.get("speed") and c.get("type") != "spell":
         bad(cid, "only spells can be instants")
-    for e in c.get("effects", []):
-        if e.get("trigger") == "ally_enter" and not e.get("ally_subtype"):
-            bad(cid, "ally_enter needs ally_subtype")
     for ab in c.get("abilities", []):
         cost = ab.get("cost", {})
-        if cost.get("sacrifice") in ["other", "self"] and "abyss" not in owners and not (cost.get("sacrifice") == "self" and "machine" in owners):
+        sac = str(cost.get("sacrifice", ""))
+        if sac in ["other", "self"] and "abyss" not in owners and not (sac == "self" and "machine" in owners):
             bad(cid, "sacrifice costs are Pact only")
+        if sac.startswith("tribe:"):
+            if "abyss" not in owners:
+                bad(cid, "tribe sacrifice costs are Pact only")
+            if not tribe_ok(sac[6:], owners):
+                bad(cid, "sacrifice %s: not a tribe of its faith" % sac)
+        if sac and sac not in ["other", "self", "servo"] and not sac.startswith("tribe:"):
+            bad(cid, "unknown sacrifice cost %r" % sac)
         if not ab.get("text"):
             bad(cid, "ability needs text")
         for e in ab.get("effects", []):
@@ -175,9 +232,7 @@ def check_card(c, owners_override=None):
             bad(cid, "team-wide anthems are Church only (other faiths: self scope or a subtype filter)")
         if kind == "anthem" and s.get("scope") == "enemy_creatures" and "abyss" not in owners:
             bad(cid, "enemy shrink anthem is Pact only")
-        cnd = s.get("condition")
-        if cnd and CONDITION_OWNER.get(cnd) not in owners:
-            bad(cid, "condition %s not owned" % cnd)
+        check_condition(cid, s.get("condition"), owners)
     if c.get("overclock") and "machine" not in owners:
         bad(cid, "overclock is Technocracy only")
     for e in c.get("overclock", {}).get("effects", []):

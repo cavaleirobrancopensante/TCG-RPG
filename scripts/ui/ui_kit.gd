@@ -17,45 +17,101 @@ const LIGHT := Color(0.98, 0.95, 0.86)      # text on dark/blue fields
 const TOP := 38
 
 static var _theme: Theme
+static var _applied := "?"         # the faith the shared theme now wears ("" = neutral)
+static var _hooked := false
+static var _world: WeakRef = null  # the open world while a game is under way
+
+## Title / accent ink for each faith (readable on parchment).
+const FAITH_TITLE := {
+	"sanctum": Color(0.50, 0.34, 0.04), "abyss": Color(0.50, 0.04, 0.07), "wild": Color(0.16, 0.36, 0.10),
+	"revel": Color(0.58, 0.06, 0.20), "lyceum": Color(0.10, 0.25, 0.55), "machine": Color(0.40, 0.27, 0.08),
+}
 
 
-static func make_theme() -> Theme:
-	if _theme:
-		return _theme
-	var t := Theme.new()
+## The shared theme. Every screen gets the same Theme object, and it changes in place: it
+## wears the hero's faith (frames, titles, hover ink) while a game is under way and the
+## neutral manuscript look before one (title menu, new game). `faith` forces one ("" = follow
+## the game).
+static func make_theme(faith: String = "") -> Theme:
+	if not _hooked:
+		_hooked = true
+		var tree := Engine.get_main_loop() as SceneTree
+		if tree:
+			tree.node_added.connect(_on_node_added)
+	if _theme == null:
+		_theme = Theme.new()
+	_apply(faith if faith != "" else game_faith())
+	return _theme
+
+
+## The hero's faith while a game is under way (the open world exists), else "".
+static func game_faith() -> String:
+	if _world == null:
+		return ""
+	var w = _world.get_ref()
+	if w == null or not is_instance_valid(w) or w.is_queued_for_deletion() or not w.is_inside_tree():
+		return ""
+	return String(GameState.hero) if Factions.ORDER.has(String(GameState.hero)) else ""
+
+
+## Ink for titles and accents: the hero's faith colour in a game, rubric red otherwise.
+static func accent() -> Color:
+	_sync()
+	return FAITH_TITLE.get(_applied, GOLD)
+
+
+static func _sync() -> void:
+	if _theme != null and _applied != game_faith():
+		_apply(game_faith())
+
+
+static func _on_node_added(n: Node) -> void:
+	if n is Overworld:
+		_world = weakref(n)
+		n.tree_exiting.connect(func(): UIKit._sync.call_deferred(), CONNECT_ONE_SHOT)
+		_apply(game_faith())
+
+
+static func _apply(faith: String) -> void:
+	if _theme == null or faith == _applied:
+		return
+	_applied = faith
+	Tapestry.ui_faith = faith
+	var t := _theme
+	t.set_block_signals(true)
+	var rule: Color = Tapestry.ui_rules(faith)[0] if faith != "" else RED
 	t.default_font = Tapestry.font("book")
 	t.default_font_size = 21
 	var states := {"normal": "button", "hover": "hover", "pressed": "pressed", "disabled": "disabled", "focus": "hover"}
 	for st in states:
 		t.set_stylebox(st, "Button", Tapestry.stylebox(states[st]))
 	t.set_color("font_color", "Button", TEXT)
-	t.set_color("font_hover_color", "Button", RED)
+	t.set_color("font_hover_color", "Button", rule.darkened(0.1) if faith != "" else RED)
 	t.set_color("font_pressed_color", "Button", TEXT)
 	t.set_color("font_focus_color", "Button", TEXT)
 	t.set_color("font_disabled_color", "Button", Color(0.45, 0.40, 0.35))
 	t.set_color("font_color", "Label", TEXT)
 	t.set_color("font_color", "CheckButton", TEXT)
-	t.set_color("font_hover_color", "CheckButton", RED)
+	t.set_color("font_hover_color", "CheckButton", rule)
 	t.set_color("default_color", "RichTextLabel", TEXT)
 	t.set_stylebox("normal", "LineEdit", Tapestry.stylebox("button"))
 	t.set_stylebox("focus", "LineEdit", Tapestry.stylebox("hover"))
 	t.set_color("font_color", "LineEdit", TEXT)
-	t.set_color("caret_color", "LineEdit", RED)
+	t.set_color("caret_color", "LineEdit", rule)
 	t.set_stylebox("panel", "PopupMenu", Tapestry.stylebox("panel", 10))
-	t.set_stylebox("hover", "PopupMenu", _box(Color(0.72, 0.17, 0.12, 0.18), Color(0, 0, 0, 0), 4))
+	t.set_stylebox("hover", "PopupMenu", _box(Color(rule, 0.18), Color(0, 0, 0, 0), 4))
 	t.set_color("font_color", "PopupMenu", TEXT)
-	t.set_color("font_hover_color", "PopupMenu", RED)
+	t.set_color("font_hover_color", "PopupMenu", rule)
 	t.set_font_size("font_size", "PopupMenu", 18)
 	t.set_constant("v_separation", "PopupMenu", 10)
 	t.set_color("font_color", "OptionButton", TEXT)
-	t.set_color("font_hover_color", "OptionButton", RED)
-	t.set_color("font_color", "LineEdit", TEXT)
+	t.set_color("font_hover_color", "OptionButton", rule)
 	t.set_color("font_placeholder_color", "LineEdit", DIM)
 	t.set_stylebox("panel", "PanelContainer", Tapestry.stylebox("panel", 16))
 	t.set_stylebox("panel", "Panel", Tapestry.stylebox("panel", 16))
 	var clear := StyleBoxEmpty.new()
 	t.set_stylebox("panel", "ScrollContainer", clear)
-	var grab := _box(RED.darkened(0.1), TEXT, 6)
+	var grab := _box(rule.darkened(0.1), TEXT, 6)
 	for sb in ["VScrollBar", "HScrollBar"]:
 		t.set_stylebox("grabber", sb, grab)
 		t.set_stylebox("grabber_highlight", sb, grab)
@@ -70,8 +126,8 @@ static func make_theme() -> Theme:
 	slider.content_margin_top = 4
 	slider.content_margin_bottom = 4
 	t.set_stylebox("slider", "HSlider", slider)
-	_theme = t
-	return t
+	t.set_block_signals(false)
+	t.emit_changed()
 
 
 ## Modal parchment question over `parent`. ok_cb runs when confirmed.
@@ -141,7 +197,7 @@ static func prompt(parent: Node, heading: String, initial: String, ok_label: Str
 
 ## Blackletter heading in rubric red.
 static func title(text: String, size: int = 40, color: Color = GOLD) -> Label:
-	var l := label(text, size, color)
+	var l := label(text, size, color)     # GOLD becomes the faith's accent (see label)
 	l.add_theme_font_override("font", Tapestry.font("black"))
 	return l
 
@@ -171,7 +227,7 @@ static func label(text: String, size: int = 20, color: Color = TEXT, wrap: bool 
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_size_override("font_size", size)
-	l.add_theme_color_override("font_color", color)
+	l.add_theme_color_override("font_color", accent() if color == GOLD else color)
 	if wrap:
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l

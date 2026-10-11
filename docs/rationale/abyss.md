@@ -23,8 +23,8 @@ The common dread creature, a 2/2 for three with evasion priced like a flier. It 
 **Grave Chanter** · Common · Creature (Human Cultist) · 2B · 2/3 · When this enters, the enemy player loses 1 life and you gain 1 life.
 A 2/3 for three with a one point drain on arrival. The body is a little under rate and the drain makes it up, so it is a steady common that tips races and blocks small attackers. Singing hymns backwards is the traditional inversion of sacred worship and marks the cultist as plainly diabolic.
 
-**Charnel Glutton** · Common · Creature (Zombie) · 2B · 2/2 · Sacrifice another creature: this gets +2/+2 until end of turn.
-The common sacrifice outlet. A plain 2/2 for three that can eat a doomed blocker or a Restless Dead token to win a combat or push damage through. It teaches the faith's habit of spending its own creatures without being a combo engine, because the bonus only lasts the turn.
+**Charnel Glutton** · Common · Creature (Zombie) · 2B · 2/2 · Sacrifice another Zombie: this gets +3/+3 until end of turn.
+The Zombie sacrifice outlet (re-aimed in 1.27 with the new tribe sacrifice cost). A plain 2/2 for three that can eat a Restless Dead token or a doomed shambler to win a combat or push damage through. It only eats its own kind now, so the bonus grew from +2/+2 to +3/+3 to keep the card where it was. It teaches the faith's habit of spending its own creatures without being a combo engine, because the bonus only lasts the turn.
 
 **Blight-Sower Cultist** · Common · Creature (Human Cultist) · 3B · 2/2 · When this enters, target enemy creature gets -2/-2 until end of turn.
 The common shrink creature: a 2/2 for four that kills an x/2 or wins a combat when it arrives. The body is under rate because the effect is a real two for one against small creatures. A cultist scattering ash and calling it a blessing is a mockery of the farmer's prayer, which shows the faith for what it is.
@@ -174,8 +174,8 @@ An on-rate 3/3 that grows permanently with every Skeleton that arrives, reanimat
 **Brimstone Exhalation** · Uncommon · Spell (Curse) · 2BB · All enemy creatures get -1/-1 until end of turn for each Demon you control.
 A one-sided sweeper that only works for a player committed to Demons: with one it clears tokens, with two or three it clears a board. Four mana and the need for a board in play keep it from being a plain wrath. Sulphur and choking fumes are the smell of hell in every medieval vision of it.
 
-**Corpse-Bell of the Barrow** · Uncommon · Relic (Relic) · 2B · Whenever another Zombie enters under your control, the enemy player loses 1 life and you gain 1 life.
-The Zombie drain engine (re-aimed in 1.25; the hands answering it are now rotting ones). Restless Dead tokens from death and sacrifice, grave returns and cheap shamblers each tip the race by two, so the relic is strong only in a deck built for it. A bell cast to ring the dead to rest and recast to wake them is a plain profanation, and the flavour says so.
+**Corpse-Bell of the Barrow** · Uncommon · Relic (Relic) · 2B · Whenever a Zombie you control dies, the enemy player loses 1 life and you gain 1 life.
+The Zombie drain engine (re-aimed in 1.25, and in 1.27 turned into a death knell with the new ally death trigger). Every Zombie that falls in a trade, to the Glutton's hunger or as a Restless Dead token tips the race by two, about as often as the old "enters" version did, so the relic is strong only in a deck built for it. A bell cast to ring the dead to rest and recast to wake them is a plain profanation, and the flavour says so.
 
 **Barrow-King of the Hollow Hills** · Rare · Creature (Skeleton Lord) · 3BB · 4/4 · Other Skeletons you control have dread (they can only be blocked by Pact creatures and Constructs).
 The Skeleton build-around (redrawn in 1.25 as the crowned skeleton of the old king, his host all bones): the whole host becomes evasive, which turns a wide board into lethal damage against most faiths. He gives nothing to himself and is a 4/4 for five, a point under rate, so removing him ends the threat. The old king riding out of the hollow hill with his dead host is English and Northern barrow lore.
@@ -193,8 +193,8 @@ The Pact's third tribe is the Zombies: the shrouded dead of the plague pits and 
 **Plague-Pit Shambler** · Common · Creature (Zombie) · 1B · 2/1 · When this dies, the enemy player loses 1 life and you gain 1 life.
 The Zombie two-drop and the tribe's fodder: an on-rate 2/1 that drains on the way out, so it is happy to trade, chump or go onto the Black Altar. It is the Pact Initiate one size up. A dead man climbing out of the lime of a plague pit is the dread of every town that lived through the pestilence.
 
-**Gravepit Ghoul** · Common · Creature (Zombie) · 3B · 2/2 · When this enters, return target creature card with mana value 2 or less from your graveyard to play.
-The grave return at common: a 2/2 for four, two points under rate, that brings back a cheap creature, usually a Shambler, a Glutton or a Thrall that died for the cause. The mana value limit keeps it from fetching anything large, and it is a two for one in the style of the classic gravedigger creatures of the era. A ghoul hauling a dead man up out of his broken coffin is the necromancy of the Pact at its lowest.
+**Gravepit Ghoul** · Common · Creature (Zombie) · 3B · 2/2 · When this enters, return target creature card from your graveyard to your hand.
+The grave return at common, since 1.27 a true gravedigger: a 2/2 for four, two points under rate, that puts any creature card of your choice back in your hand. It no longer puts the creature straight into play, which pays for lifting the mana value limit; the card is still a plain two for one in the style of the era. A ghoul hauling a dead man up out of his broken coffin is the necromancy of the Pact at its lowest.
 
 **Plague-Cart Drover** · Uncommon · Creature (Zombie) · 2B · 2/2 · When this dies, create two 1/1 Restless Dead Zombie tokens.
 An on-rate 2/2 that becomes two Zombie tokens when it dies, so it is three bodies for sacrifice and three triggers of the Corpse-Bell over its life. The tokens only appear from death, as the Pact's rule requires. The dead-cart and its cry to bring out your dead are the plague years remembered; here the carter is one of his own load.

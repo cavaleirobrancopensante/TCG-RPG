@@ -210,7 +210,20 @@ static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
 			"draw":
 				v += 1.4 * int(e.get("amount", 1))
 			"summon":
-				v += 1.6 * int(e.get("count", 1))
+				var n := summon_count(st, i, e)
+				if n <= 0:
+					return 0.0
+				v += 1.6 * n
+			"grant":
+				var gn := grant_value(st, i, e, p)
+				if gn <= 0.0:
+					return 0.0
+				v += gn
+				helps_attack = e.get("duration", "turn") != "permanent"
+			"regrow":
+				if st.valid_targets_for(i, p, e).is_empty():
+					return 0.0
+				v += 1.4
 			"damage":
 				var ref = st.auto_target(i, e)
 				if ref != null:
@@ -260,14 +273,15 @@ static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
 		if me.life <= life + 5:
 			return 0.0
 		v -= 0.4 * life
-	match String(cost.get("sacrifice", "")):
-		"other", "servo":
-			var victim = st._sacrifice_choice(i, p, String(cost["sacrifice"]))
-			if victim == null:
-				return 0.0
-			v -= victim.value() * (0.4 if victim.is_token else 0.9)
-		"self":
-			v -= p.value() * 0.8
+	var sac_kind := String(cost.get("sacrifice", ""))
+	if sac_kind in ["other", "servo"] or sac_kind.begins_with("tribe:"):
+		var victim = st._sacrifice_choice(i, p, sac_kind)
+		if victim == null:
+			return 0.0
+		v -= victim.value() * (0.4 if victim.is_token else 0.9)
+		v += ally_death_bonus(st, i, victim)
+	elif sac_kind == "self":
+		v -= p.value() * 0.8
 	if cost.get("tap", false) and p.is_creature():
 		if st.phase == "main1" and st.can_attack(p) and not helps_attack:
 			return 0.0      # attack first, use it after combat
@@ -511,6 +525,10 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 		if e.get("trigger") == "upkeep" and e.get("action") == "lose_life" and me.life <= 4:
 			return [0.0, []]
 	for e in c.get("effects", []):
+		if e.get("trigger") == "ally_dies":
+			# a small bonus for each ally of that tribe that may die later
+			v += 0.25 * mini(4, st.count_kin(i, String(e.get("ally_subtype", ""))))
+	for e in c.get("effects", []):
 		if e.get("trigger") != trig:
 			continue
 		var t: String = e.get("target", "")
@@ -653,6 +671,23 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 						return [0.0, []]
 				else:
 					v += mini(amount, foe.hand.size()) * 1.5
+			"grant":
+				var gn := grant_value(st, i, e, null)
+				if gn <= 0.0 and is_spell:
+					return [0.0, []]
+				v += gn
+			"regrow":
+				if chosen == null:
+					if is_spell:
+						return [0.0, []]
+				else:
+					v += 1.2 + 0.1 * float(CardDB.get_card(chosen["id"]).get("mana_value", 0))
+			"summon":
+				if e.has("count_per"):
+					var n := summon_count(st, i, e)
+					if n <= 0 and is_spell:
+						return [0.0, []]
+					v += 0.9 * n
 			"reanimate":
 				var any := false
 				for gid in me.graveyard:
@@ -837,6 +872,8 @@ static func choose_blocks(st: BattleState, i: int) -> Dictionary:
 			for e in b.card.get("effects", []):
 				if e.get("trigger") == "death" and score > -100.0:
 					score += 0.5
+			if score > -100.0:
+				score += ally_death_bonus(st, i, b)
 			if score > best_score:
 				best_score = score
 				best = b
@@ -897,7 +934,7 @@ static func respond(st: BattleState, i: int) -> bool:
 			if BattleState.is_mana_ability(ab):
 				continue
 			var sac := String(ab.get("cost", {}).get("sacrifice", ""))
-			if sac == "other" or sac == "servo":
+			if sac == "other" or sac == "servo" or sac.begins_with("tribe:"):
 				continue
 			if not st.can_activate(i, p.uid, idx):
 				continue
@@ -940,7 +977,7 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 		var t: String = e.get("target", "")
 		var amount := int(e.get("amount", 1))
 		var chosen = null
-		if a == "fight" or t == "own_grave_creature":
+		if a == "fight" or (t == "own_grave_creature" and a != "regrow"):
 			return [0.0, []]
 		if e.has("condition") and not st.cond_ok(i, String(e["condition"]), source):
 			return [0.0, []]
@@ -948,7 +985,9 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 		if e.has("amount_per"):
 			per = st.count_kin(i, String(e["amount_per"]))
 			if per <= 0:
-				return [0.0, []]
+				if BattleState.TARGET_CHOICE_TYPES.has(t):
+					return [0.0, []]
+				continue        # does nothing now; the rest of the card may still help
 			amount *= per
 		match a:
 			"buff":
@@ -1061,10 +1100,42 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 						chosen = ref
 				v += best_g
 			"summon":
+				var n := summon_count(st, i, e)
 				if not mine_turn and st.step == "attackers":
-					v += 2.2 * int(e.get("count", 1))          # surprise blockers
+					v += 2.2 * n          # surprise blockers
 				elif their_end:
-					v += 1.5 * int(e.get("count", 1))
+					v += 1.5 * n
+			"grant":
+				var kw := String(e.get("keyword", ""))
+				if t == "own_creature" or t == "self":
+					var cands: Array = []
+					if t == "self":
+						if source != null and source.is_creature():
+							cands.append(source)
+					else:
+						for ref in st.valid_targets(i, e):
+							cands.append(st.find_perm(ref["uid"]))
+					var best_g := 0.0
+					for x in cands:
+						var g := _grant_gain(st, i, x, kw, top) + _pump_gain(st, i, x, int(e.get("power", 0)), int(e.get("toughness", 0)), top)
+						if g > best_g:
+							best_g = g
+							chosen = {"kind": "creature", "uid": x.uid}
+					v += best_g
+					if t == "self":
+						chosen = null
+				elif t in ["all_own_creatures", "other_own_creatures"]:
+					for x in me.creatures:
+						if t == "other_own_creatures" and source != null and x == source:
+							continue
+						if e.has("subtype") and not x.subtype_has(String(e["subtype"])):
+							continue
+						v += _grant_gain(st, i, x, kw, top) + _pump_gain(st, i, x, int(e.get("power", 0)), int(e.get("toughness", 0)), top)
+			"regrow":
+				if not their_end:
+					return [0.0, []]
+				chosen = st.auto_target(i, e)
+				v += 1.2 if chosen != null else 0.0
 			"draw":
 				v += 1.3 * amount if their_end else 0.0
 			"drain":
@@ -1233,3 +1304,109 @@ static func _shrink_combat_gain(st: BattleState, i: int, z, bp: int, bt: int) ->
 	if not before[1] and after[1]:
 		g += z.value()
 	return g
+
+
+# ============================================================ granted keywords, regrowth, token counts
+
+## Tokens a summon effect makes now (count_per: one per member of the tribe, at most 5).
+static func summon_count(st: BattleState, i: int, e: Dictionary) -> int:
+	var n := int(e.get("count", 1))
+	if e.has("count_per"):
+		n = mini(BattleState.MAX_COUNT_PER, n * st.count_kin(i, String(e["count_per"])))
+	return n
+
+
+## Our creatures a grant effect would reach (own_creature: the one auto-targeting picks).
+static func _grant_reach(st: BattleState, i: int, e: Dictionary, source) -> Array:
+	var out: Array = []
+	var kw := String(e.get("keyword", ""))
+	match String(e.get("target", "")):
+		"self":
+			if source != null and source.is_creature():
+				out.append(source)
+		"own_creature":
+			var ref = st.auto_target(i, e)
+			if ref != null:
+				out.append(st.find_perm(int(ref.get("uid", -1))))
+		"all_own_creatures", "other_own_creatures":
+			for x in st.side(i).creatures:
+				if e.get("target") == "other_own_creatures" and source != null and x == source:
+					continue
+				if e.has("subtype") and not x.subtype_has(String(e["subtype"])):
+					continue
+				out.append(x)
+	return out.filter(func(x): return x != null and not x.has_kw(kw))
+
+
+## What a main-phase grant is worth: about a point of buff per creature that can use it.
+static func grant_value(st: BattleState, i: int, e: Dictionary, source) -> float:
+	var kw := String(e.get("keyword", ""))
+	var reach := _grant_reach(st, i, e, source)
+	var stats := int(e.get("power", 0)) + int(e.get("toughness", 0))
+	if e.get("duration", "turn") == "permanent":
+		return (0.9 + 0.6 * stats) * reach.size()
+	if st.phase != "main1" or st.active != i:
+		return 0.0
+	var n := 0
+	for x in reach:
+		if kw == "haste":
+			if x.sick and not x.tapped and not x.has_kw("defender") and x.power() > 0 and not x.pacified:
+				n += 1
+		elif st.can_attack(x):
+			n += 1
+	return (0.8 + 0.3 * stats) * n
+
+
+## Instant speed: what keyword kw on our creature x is worth right now (saving it from a Pact
+## spell with sanctified, or turning its fight in combat).
+static func _grant_gain(st: BattleState, i: int, x, kw: String, top: Dictionary) -> float:
+	if x == null or x.has_kw(kw):
+		return 0.0
+	var g := 0.0
+	if kw in ["sanctified", "unmoved"] and not top.is_empty() and int(top["side"]) != i:
+		# protection in answer to the enemy's spell or ability aimed at it
+		var c: Dictionary = top.get("card", {})
+		var pact: bool = c.get("faction", "") == "abyss" or c.get("faction2", "") == "abyss"
+		for pr in st.item_effect_targets(top):
+			var ref = pr[1]
+			var eff: Dictionary = pr[0]
+			var aimed: bool = typeof(ref) == TYPE_DICTIONARY and int(ref.get("uid", -1)) == x.uid
+			var act := String(eff.get("action", ""))
+			var shrink: bool = act == "buff" and int(eff.get("toughness", 0)) < 0
+			var stops := false
+			if kw == "sanctified":
+				stops = pact and aimed and (act in ["destroy", "damage", "bounce", "tap", "freeze", "pacify", "snare"] or shrink)
+			else:
+				stops = aimed and (act in ["bounce", "tap", "freeze", "pacify", "snare"] or shrink)
+			if stops:
+				g = maxf(g, x.value() + 1.0)
+	if st.phase == "combat" and st.step == "blockers":
+		var foe_c = null
+		if st.attackers.has(x.uid):
+			foe_c = st.find_perm(int(st.blocks.get(x.uid, -1)))
+		else:
+			for a in st.blocks:
+				if int(st.blocks[a]) == x.uid:
+					foe_c = st.find_perm(int(a))
+		if foe_c != null:
+			var before := _fight_outcome(x, foe_c)
+			x.temp_kw.append(kw)
+			var after := _fight_outcome(x, foe_c)
+			x.temp_kw.erase(kw)
+			if before[0] and not after[0]:
+				g += x.value()
+			if not before[1] and after[1]:
+				g += foe_c.value()
+	return g
+
+
+## A creature of ours dying feeds "whenever another X dies" triggers: a little less loss.
+static func ally_death_bonus(st: BattleState, i: int, dying) -> float:
+	var b := 0.0
+	for src in st.side(i).creatures + st.side(i).relics:
+		if src == dying:
+			continue
+		for e in src.card.get("effects", []):
+			if e.get("trigger") == "ally_dies" and dying.subtype_has(String(e.get("ally_subtype", ""))):
+				b += 0.6
+	return b

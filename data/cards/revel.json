@@ -614,13 +614,14 @@
     "keywords": [],
     "effects": [
       {
+        "trigger": "idle",
         "action": "damage",
         "target": "enemy_player",
         "amount": 1,
-        "trigger": "idle"
+        "condition": "control:Noble"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): if you control another Noble, deal 1 damage to the enemy player.",
     "flavor": "Odi profanum vulgus et arceo: I hate the uninitiated crowd and keep it far from me. (Horace, Odes 3.1)",
     "art": "res://art/cards/revel_c_024.webp"
   },
@@ -722,16 +723,15 @@
     "keywords": [],
     "effects": [
       {
-        "action": "buff",
-        "target": "other_own_creatures",
+        "trigger": "enter",
+        "action": "grant",
+        "target": "all_own_creatures",
         "subtype": "Satyr",
-        "power": 1,
-        "toughness": 0,
-        "duration": "turn",
-        "trigger": "attack"
+        "keyword": "haste",
+        "duration": "turn"
       }
     ],
-    "text": "Whenever this attacks, other Satyrs you control get +1/+0 until end of turn.",
+    "text": "When this enters, Satyrs you control gain haste until end of turn (they can attack this turn).",
     "flavor": "His tune has no words, but every goat-footed rascal on the hill knows it means \"charge\".",
     "art": "res://art/cards/revel_c_028.webp"
   },

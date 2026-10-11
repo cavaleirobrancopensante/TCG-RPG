@@ -176,21 +176,21 @@
     "abilities": [
       {
         "cost": {
-          "sacrifice": "other"
+          "sacrifice": "tribe:Zombie"
         },
         "effects": [
           {
             "action": "buff",
             "target": "self",
-            "power": 2,
-            "toughness": 2,
+            "power": 3,
+            "toughness": 3,
             "duration": "turn"
           }
         ],
-        "text": "Sacrifice another creature: this gets +2/+2 until end of turn."
+        "text": "Sacrifice another Zombie: this gets +3/+3 until end of turn."
       }
     ],
-    "text": "Sacrifice another creature: this gets +2/+2 until end of turn.",
+    "text": "Sacrifice another Zombie: this gets +3/+3 until end of turn.",
     "flavor": "\"Enough is a word invented by men who already have too much.\" (a Pact preacher)",
     "art": "res://art/cards/abyss_c_008.webp"
   },
@@ -742,12 +742,11 @@
     "effects": [
       {
         "trigger": "enter",
-        "action": "reanimate",
-        "max_mv": 2,
+        "action": "regrow",
         "target": "own_grave_creature"
       }
     ],
-    "text": "When this enters, return target creature card with mana value 2 or less from your graveyard to play.",
+    "text": "When this enters, return target creature card from your graveyard to your hand.",
     "flavor": "It digs all night in the churchyard, and what it digs up follows it home.",
     "art": "res://art/cards/abyss_c_029.webp"
   },
@@ -1250,13 +1249,13 @@
     "keywords": [],
     "effects": [
       {
-        "trigger": "ally_enter",
+        "trigger": "ally_dies",
         "ally_subtype": "Zombie",
         "action": "drain",
         "amount": 1
       }
     ],
-    "text": "Whenever another Zombie enters under your control, the enemy player loses 1 life and you gain 1 life.",
+    "text": "Whenever a Zombie you control dies, the enemy player loses 1 life and you gain 1 life.",
     "flavor": "It was cast to ring the dead to rest. The Pact recast it to ring them up again.",
     "art": "res://art/cards/abyss_u_018.webp"
   },

@@ -74,8 +74,8 @@ A stubborn defender that blocks fliers and keeps coming back. A 2/3 for four is 
 **Spearman of the Greenwood** · Uncommon · Creature (Human Hunter) · 3G · 3/3 · When this enters, target creature you control fights target enemy creature.
 Removal on a body, the uncommon form of fight. On an empty board the Spearman fights alone as a 3/3, but next to a large beast he lets that beast do the work. The flavour has him calling the creatures of the wood to settle the matter together, which is how the faith fights.
 
-**Elder of the Oak Circle** · Uncommon · Creature (Human Druid) · 3G · 2/3 · When this enters, create two 1/1 Sapling tokens.
-Three bodies for four mana. The power is spread thin, so it shines with team pumps and Wassail. An old druid whose acorns walk beside him by evening is the sort of folk magic that makes the faith charming.
+**Elder of the Oak Circle** · Uncommon · Creature (Human Druid) · 3G · 2/4 · When this enters, create a 1/1 Sapling token for each Druid you control (at most five).
+A Druid payoff since 1.27 (summon scaling): it counts itself, so it always plants one Sapling, two or three in a circle of Druids, never more than five. The tougher 2/4 body makes up for the lone Sapling outside the tribe. The power is spread thin, so it shines with team pumps and Wassail. An old druid whose acorns walk beside him by evening is the sort of folk magic that makes the faith charming.
 
 **Green Man of the Hedgerow** · Uncommon · Creature (Treefolk Spirit) · 3G · 2/4 · Tap: target creature you control gets +2/+2 until end of turn.
 A repeatable pump on a body that holds the ground well. It must tap to use its ability, so it gives up attacking to make another creature bigger. The Green Man, the leafy face carved in old buildings all over England, is a perfect gentle emblem of growth.
@@ -199,8 +199,8 @@ The Druid two-drop, a 1/2 that grows with every Aura you play, on the model of O
 **Wolf-Pelt Mantle** · Uncommon · Relic (Aura) · 2G · When this enters, attach it to target creature you control and create a 2/2 Wolf token. That creature gets +1/+1 and has trample.
 The uncommon twist ties the Druids to the Wolves: an Aura and a Wolf in one card, so it triggers both Aura and Wolf payoffs. Three mana for a 2/2 and a small trample bonus is fair, and if the enchanted creature dies the wolf remains. Wolf skins worn as hoods appear in the old northern tales of wolf-coated men; here the wolves simply follow, and never say why.
 
-**Mantle-Keeper of the Circle** · Uncommon · Creature (Human Druid) · 2G · 2/2 · Your Aura cards cost 1 less.
-The tribal cost cut, like Acorn of the Elder Oak for the Treefolk: Bark-Skin costs G, the Mantle and the Gift cost 1G. It only reduces generic mana, so it never makes an Aura free, and a 2/2 body for three is under rate to pay for the static. The keeper of the circle's regalia, lending them more freely than he ought, is a gentle comic figure.
+**Mantle-Keeper of the Circle** · Uncommon · Creature (Human Druid) · 2G · 1/2 · Your Aura cards cost 1 less. As long as you control an Aura, this gets +1/+1.
+The tribal cost cut, like Acorn of the Elder Oak for the Treefolk: Bark-Skin costs G, the Mantle and the Gift cost 1G. It only reduces generic mana, so it never makes an Aura free. Since 1.27 it checks for an Aura in play: a 1/2 alone, a 2/3 once the circle wears its regalia, so the Druid deck that wanted it gets a better body and others a worse one. The keeper of the circle's regalia, lending them more freely than he ought, is a gentle comic figure.
 
 **Grey Elder of the Henge** · Rare · Creature (Human Druid) · 2GG · 2/3 · This gets +1/+1 for each other Druid you control. Whenever an Aura enters under your control, create a 1/1 Sapling token.
 The Druid build-around: a 2/3 for four that grows with the circle (kinship) and turns every Aura into a Sapling, which is also a Treefolk for that tribe's lords. Alone he is under rate and dies to ordinary removal, so he rewards building the tribe rather than winning by himself. The stone ring at dawn with a small church on the far hill shows the Old Ways as old and patient, but no longer the only voice in the valley.
