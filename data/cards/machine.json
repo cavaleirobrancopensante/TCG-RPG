@@ -182,7 +182,7 @@
     "power": 3,
     "toughness": 3,
     "keywords": [],
-    "text": "(No abilities.)",
+    "text": "No abilities.",
     "flavor": "\"A man must be fed, rested and forgiven. A piston asks only for oil.\" (from the Charter of Cogspire)",
     "art": "res://art/cards/machine_c_007.webp"
   },
@@ -359,7 +359,7 @@
     "power": 5,
     "toughness": 6,
     "keywords": [],
-    "text": "(No abilities.)",
+    "text": "No abilities.",
     "flavor": "Nobody remembers commissioning it. The invoice, however, is on file.",
     "art": "res://art/cards/machine_c_013.webp"
   },
@@ -839,10 +839,10 @@
         "static": "kinship",
         "subtype": "Relic",
         "power": 1,
-        "toughness": 0
+        "toughness": 1
       }
     ],
-    "text": "This gets +1/+0 for each relic you control.",
+    "text": "This gets +1/+1 for each relic you control.",
     "flavor": "It carries the workshop on its back and swings whatever hangs nearest.",
     "art": "res://art/cards/machine_c_029.webp"
   },
@@ -1252,15 +1252,11 @@
       {
         "trigger": "enter",
         "action": "snare",
-        "target": "enemy_creature"
-      },
-      {
-        "trigger": "upkeep",
-        "action": "upkeep_cost",
-        "amount": 1
+        "target": "enemy_creature",
+        "max_power": 2
       }
     ],
-    "text": "When this enters, choose target enemy creature. It can't attack or block while this stays in play. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+    "text": "When this enters, choose target enemy creature with power 2 or less. It can't attack or block while this stays in play.",
     "flavor": "The cell is free. The gaoler's wages are not.",
     "art": "res://art/cards/machine_u_013.webp"
   },

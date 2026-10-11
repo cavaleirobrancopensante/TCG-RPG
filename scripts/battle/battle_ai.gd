@@ -540,7 +540,8 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 		if BattleState.TARGET_CHOICE_TYPES.has(t):
 			var opts := st.valid_targets(i, e)
 			if opts.is_empty():
-				if is_spell or a == "attach":
+				# a spell, an aura or a relic whose point is its target (a snare, a trap) waits for one
+				if is_spell or a == "attach" or c.get("type") == "relic":
 					return [0.0, []]
 				targets.append(null)
 				continue

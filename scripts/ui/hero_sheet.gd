@@ -21,7 +21,7 @@ func _ready() -> void:
 	_panel = PanelContainer.new()
 	add_child(_panel)
 	_body = VBoxContainer.new()
-	_body.add_theme_constant_override("separation", 4)
+	_body.add_theme_constant_override("separation", 2)
 	_panel.add_child(_body)
 	refresh()
 
@@ -31,20 +31,27 @@ func refresh() -> void:
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 12)
 	_body.add_child(head)
-	var t := UIKit.title(GameState.player_name, 34)
+	var t := UIKit.title(GameState.player_name, 30)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)
 	var cb := UIKit.button("Close", close, 140)
-	cb.custom_minimum_size.y = 44
+	cb.custom_minimum_size.y = 40
 	head.add_child(cb)
+	# level and experience on one line, the bar beneath
+	var lvrow := HBoxContainer.new()
+	lvrow.add_theme_constant_override("separation", 16)
+	_body.add_child(lvrow)
 	var lv := UIKit.label(I18n.t("Level %d") % GameState.level, 22, UIKit.TEXT)
-	_body.add_child(lv)
-	var bar := XpBar.new()
-	bar.custom_minimum_size = Vector2(620, 22)
-	_body.add_child(bar)
+	lvrow.add_child(lv)
 	var need := Hero.xp_to_next(GameState.level)
 	var xt := I18n.t("Highest level reached.") if GameState.level >= Hero.LEVEL_CAP else I18n.t("%d / %d experience") % [GameState.xp, need]
-	_body.add_child(UIKit.label(xt, 16, UIKit.DIM))
+	var xl := UIKit.label(xt, 16, UIKit.DIM)
+	xl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	xl.size_flags_vertical = Control.SIZE_FILL
+	lvrow.add_child(xl)
+	var bar := XpBar.new()
+	bar.custom_minimum_size = Vector2(680, 20)
+	_body.add_child(bar)
 	var pts := GameState.stat_points
 	var pl := UIKit.label(I18n.t("Stat points to spend: %d") % pts if pts > 0 else I18n.t("A stat point comes with every even level."), 18,
 		UIKit.GOLD if pts > 0 else UIKit.DIM)
@@ -61,7 +68,7 @@ func refresh() -> void:
 		row.add_child(col)
 		col.add_child(UIKit.label("%s  (%s)" % [I18n.t(info[1]), Factions.info(info[0])["short"]], 18, UIKit.faction_ink(info[0])))
 		var dl := UIKit.label(I18n.t(info[2]), 13, UIKit.DIM, true)
-		dl.custom_minimum_size.x = 480
+		dl.custom_minimum_size.x = 580
 		col.add_child(dl)
 		var val := UIKit.label(str(GameState.stat(key)), 22, UIKit.GOLD)
 		val.custom_minimum_size.x = 30
@@ -80,8 +87,14 @@ func _center() -> void:
 	if is_instance_valid(_panel):
 		_panel.reset_size()
 		var room := size if size.x > 0 else get_viewport_rect().size
-		_panel.position = (room - _panel.size) * 0.5
-		_panel.position.y = maxf(_panel.position.y, UIKit.TOP + 4)      # clear of the music strip
+		# clear of the music strip (the same top margin as the other screens) and of the bottom
+		var top := float(UIKit.TOP + 8)
+		var avail := Vector2(room.x - 16, room.y - top - 8)
+		var k := minf(1.0, minf(avail.x / _panel.size.x, avail.y / _panel.size.y))
+		_panel.scale = Vector2(k, k)
+		var shown := _panel.size * k
+		_panel.position = ((room - shown) * 0.5).floor()
+		_panel.position.y = maxf(_panel.position.y, top)
 
 
 func _raise(key: String) -> void:

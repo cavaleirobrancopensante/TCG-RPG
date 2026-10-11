@@ -745,7 +745,8 @@ func cond_ok(i: int, cond: String, source = null) -> bool:
 		"rooted":
 			return s.lands.size() >= 6
 		"bloodied":
-			return s.life <= 10
+			# 5 or less life (half of the usual 10 a duel starts with)
+			return s.life <= 5
 		"carouse":
 			var need := 1
 			if source != null and source.entered_turn == turn and active == i:

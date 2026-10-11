@@ -3484,5 +3484,13 @@
  "barrow-king": "barrow-king",
  "master of the revels": "master of the revels",
  "bone-walker": "bone-walker",
- "control:": "control:"
+ "control:": "control:",
+ "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 1 life for each Angel you control.": "Voo (só pode ser bloqueada por criaturas com voo ou alcance). Quando entrar, ganhe 1 de vida para cada Anjo que você controla.",
+ "Return target creature card from your graveyard to play. You lose 2 life.": "Devolva ao jogo a carta de criatura alvo do seu cemitério. Você perde 2 de vida.",
+ "When this enters, choose target enemy creature with power 2 or less. It can't attack or block while this stays in play.": "Quando entrar, escolha a criatura inimiga alvo com poder 2 ou menos. Ela não pode atacar nem bloquear enquanto esta relíquia permanecer em jogo.",
+ "When this enters, gain 2 life. When this dies, other creatures you control get +1/+1 permanently.": "Quando entrar, ganhe 2 de vida. Quando morrer, as outras criaturas que você controla recebem +1/+1 permanentemente.",
+ "This gets +1/+1 for each relic you control.": "Esta criatura recebe +1/+1 para cada relíquia que você controla.",
+ "As long as you have 5 or less life (Bloodied), this gets +1/+1.": "Enquanto você tiver 5 ou menos de vida (Ensanguentado), esta criatura recebe +1/+1.",
+ "If you have 5 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.": "Se você tiver 5 ou menos de vida (Ensanguentado), o jogador inimigo perde 2 de vida e você ganha 2 de vida. Depois o jogador inimigo perde 2 de vida e você ganha 2 de vida.",
+ "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.": "Enquanto você tiver 5 ou menos de vida (Ensanguentado), esta criatura recebe +2/+2 e tem pavor e toque mortal."
 }

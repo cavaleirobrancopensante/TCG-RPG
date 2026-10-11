@@ -1304,7 +1304,7 @@
         "trigger": "enter",
         "action": "heal",
         "target": "self_player",
-        "amount": 3
+        "amount": 2
       },
       {
         "trigger": "death",
@@ -1315,7 +1315,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "When this enters, gain 3 life. When this dies, other creatures you control get +1/+1 permanently.",
+    "text": "When this enters, gain 2 life. When this dies, other creatures you control get +1/+1 permanently.",
     "flavor": "Forty years without a word; at his death, his brothers heard everything.",
     "art": "res://art/cards/sanctum_r_001.webp"
   },
@@ -1331,7 +1331,7 @@
       "generic": 2
     },
     "power": 3,
-    "toughness": 4,
+    "toughness": 3,
     "keywords": [
       "flying",
       "sanctified"
@@ -1598,11 +1598,11 @@
         "trigger": "enter",
         "action": "heal",
         "target": "self_player",
-        "amount": 2,
+        "amount": 1,
         "amount_per": "Angel"
       }
     ],
-    "text": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 2 life for each Angel you control.",
+    "text": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 1 life for each Angel you control.",
     "flavor": "I am the angel Raphael, one of the seven who stand before the Lord.",
     "art": "res://art/cards/sanctum_r_011.webp"
   },

@@ -37,6 +37,7 @@ static func attach(p_host: Control, sc: ScrollContainer, p_blocked: Callable = C
 	d.host = p_host
 	d.scroll = sc
 	d.blocked = p_blocked
+	sc.set_meta("drag_scroll", d)        # the global attacher (TouchScroll) leaves this list alone
 	p_host.add_child(d)
 	return d
 

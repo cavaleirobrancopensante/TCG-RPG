@@ -4271,7 +4271,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "When this enters, gain 3 life. When this dies, other creatures you control get +1/+1 permanently.",
+   "key": "When this enters, gain 2 life. When this dies, other creatures you control get +1/+1 permanently.",
    "note": "rules text of Abbot of the Silent Order"
   },
   {
@@ -4395,7 +4395,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 2 life for each Angel you control.",
+   "key": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 1 life for each Angel you control.",
    "note": "rules text of Saint Raphael, Medicine of God"
   },
   {
@@ -4527,7 +4527,7 @@
    "note": "card subtype"
   },
   {
-   "key": "As long as you have 10 or less life (Bloodied), this gets +1/+1.",
+   "key": "As long as you have 5 or less life (Bloodied), this gets +1/+1.",
    "note": "rules text of Famished Ghoul"
   },
   {
@@ -4943,7 +4943,7 @@
    "note": "card name (abyss, spell)"
   },
   {
-   "key": "If you have 10 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
+   "key": "If you have 5 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
    "note": "rules text of The Debt Comes Due"
   },
   {
@@ -5075,7 +5075,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
+   "key": "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
    "note": "rules text of Oathbreaker Knight"
   },
   {
@@ -5139,7 +5139,7 @@
    "note": "card name (abyss, spell)"
   },
   {
-   "key": "Return target creature card from your graveyard to play. You lose 4 life.",
+   "key": "Return target creature card from your graveyard to play. You lose 2 life.",
    "note": "rules text of Profane Resurrection"
   },
   {
@@ -7779,10 +7779,6 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "(No abilities.)",
-   "note": "rules text of Piston Laborer"
-  },
-  {
    "key": "\"A man must be fed, rested and forgiven. A piston asks only for oil.\" (from the Charter of Cogspire)",
    "note": "flavour text of Piston Laborer"
   },
@@ -8047,7 +8043,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "This gets +1/+0 for each relic you control.",
+   "key": "This gets +1/+1 for each relic you control.",
    "note": "rules text of Tool-Rack Automaton"
   },
   {
@@ -8203,7 +8199,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "When this enters, choose target enemy creature. It can't attack or block while this stays in play. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+   "key": "When this enters, choose target enemy creature with power 2 or less. It can't attack or block while this stays in play.",
    "note": "rules text of Clockwork Gaol"
   },
   {
