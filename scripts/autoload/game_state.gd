@@ -6,6 +6,7 @@ extends Node
 signal gold_changed(value: int)
 signal collection_changed
 signal mission_updated(mission_id: String)
+signal leveled_up(new_level: int, points_gained: int)
 
 const LEGACY_SAVE := "user://save.json"
 const SLOTS := 6
@@ -65,6 +66,9 @@ var last_region := ""             # the faith of the lands you are in (for tolls
 ## The one errand in hand: a favour asked by a friend on the road ({giver, need, done, reward}),
 ## or a feast errand from a city ({kind: "feast", city, feast, feast_day, goods, source, state, ...}).
 var errand: Dictionary = {}
+var level := 1                    # the hero's level (see Hero.xp_to_next)
+var xp := 0                       # experience towards the next level
+var stat_points := 0              # earned at every even level, waiting to be spent
 var feast_log: Array = []         # feast errands delivered, as "city@day", so none is offered twice
 var slot := 1                     # the slot this run auto-saves into
 var play_time := 0.0              # seconds played in this run
@@ -123,6 +127,9 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Diction
 	last_region = ""
 	errand = {}
 	feast_log = []
+	level = 1
+	xp = 0
+	stat_points = 0
 	# the boosters a hero sets out with depend on the difficulty
 	var packs: Array = Hero.START_PACKS.get(difficulty, [2, 1])
 	pending_boosters = int(packs[0]) + int(packs[1])
@@ -233,7 +240,7 @@ func save_game(n: int = 0) -> void:
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
 		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand, "feast_log": feast_log,
-		"attrs": attrs, "difficulty": difficulty, "look": Hero.look_to_save(look), "life": life, "clock": clock,
+		"attrs": attrs, "level": level, "xp": xp, "stat_points": stat_points, "difficulty": difficulty, "look": Hero.look_to_save(look), "life": life, "clock": clock,
 		"explored": Marshalls.raw_to_base64(explored),
 		"meta": _meta(),
 	}
@@ -261,7 +268,7 @@ func _meta() -> Dictionary:
 	var t := Time.get_datetime_dict_from_system()
 	var months := ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 	return {
-		"player_name": player_name, "gold": gold, "cards": owned, "wins": int(stats.get("wins", 0)),
+		"player_name": player_name, "level": level, "gold": gold, "cards": owned, "wins": int(stats.get("wins", 0)),
 		"lairs": cleared_lairs.size(), "place": place, "city": city_name, "near": near, "play_time": play_time,
 		"faiths": DeckTools.best_factions(deck, 2),
 		"saved_at": "%d %s %d, %02d:%02d" % [t["day"], months[t["month"] - 1], t["year"], t["hour"], t["minute"]],
@@ -336,6 +343,9 @@ func load_game(n: int = 0) -> bool:
 		attrs = Hero.random_stats(r, hero if hero != "" else "sanctum")
 	for k in Hero.STAT_ORDER:
 		attrs[k] = int(attrs.get(k, 0))
+	level = clampi(int(data.get("level", 1)), 1, Hero.LEVEL_CAP)      # older saves: level 1
+	xp = maxi(0, int(data.get("xp", 0)))
+	stat_points = maxi(0, int(data.get("stat_points", 0)))
 	difficulty = String(data.get("difficulty", "knight"))
 	look = Hero.look_from_save(data.get("look", {}))
 	life = clampi(int(data.get("life", max_life())), 1, max_life())
@@ -567,7 +577,9 @@ func feast_deliver(city_id: String) -> Dictionary:
 		add_card(cid)
 	feast_log.append("%s@%d" % [city_id, int(errand.get("feast_day", 0))])
 	errand = {}
-	return {"gold": g, "card": cid, "on_time": on_time}
+	var gained := Hero.ERRAND_XP if on_time else Hero.ERRAND_XP / 2
+	gain_xp(gained)
+	return {"gold": g, "card": cid, "on_time": on_time, "xp": gained}
 
 
 ## A week after the feast nobody waits for the goods any more. True when it lapses now.
@@ -585,7 +597,7 @@ func stat(name: String) -> int:
 
 
 func max_life() -> int:
-	return Hero.BASE_LIFE + 2 * stat("devotion")
+	return Hero.BASE_LIFE + Hero.LIFE_PER_DEVOTION * stat("devotion")
 
 
 func hand_size() -> int:
@@ -594,6 +606,83 @@ func hand_size() -> int:
 
 func max_copies() -> int:
 	return 1 + stat("industry")
+
+
+## Experience: every level needs 100 x the current level more (100 for level 2, 200 for
+## level 3, ...). Every even level gives one stat point. Returns the levels gained.
+func gain_xp(n: int) -> int:
+	if n <= 0 or level >= Hero.LEVEL_CAP:
+		return 0
+	xp += n
+	var gained := 0
+	var points := 0
+	while level < Hero.LEVEL_CAP and xp >= Hero.xp_to_next(level):
+		xp -= Hero.xp_to_next(level)
+		level += 1
+		gained += 1
+		if level % 2 == 0:
+			stat_points += 1
+			points += 1
+	if level >= Hero.LEVEL_CAP:
+		xp = 0
+	if gained > 0:
+		leveled_up.emit(level, points)
+	return gained
+
+
+## Can a waiting stat point go into this stat? (levels raise a stat up to Hero.LEVEL_STAT_MAX)
+func can_raise(key: String) -> bool:
+	return stat_points > 0 and attrs.has(key) and stat(key) < Hero.LEVEL_STAT_MAX
+
+
+## Spend a stat point. It works at once: a point of Devotion also heals the life it adds.
+func raise_stat(key: String) -> bool:
+	if not can_raise(key):
+		return false
+	stat_points -= 1
+	attrs[key] = stat(key) + 1
+	if key == "devotion":
+		life = mini(max_life(), life + Hero.LIFE_PER_DEVOTION)
+	return true
+
+
+## Running from a duel: half the purse (rounded down) and five random cards of the deck, taken
+## from the collection (basic lands are free and never taken). Returns {gold, cards}.
+func flee_penalty() -> Dictionary:
+	var lost_gold := gold / 2
+	add_gold(-lost_gold)
+	var bag: Array = []
+	for id in deck:
+		if CardDB.is_basic_land(id):
+			continue
+		for k in mini(int(deck[id]), owned_count(id)):
+			bag.append(id)
+	var lost: Array = []
+	for i in mini(Hero.FLEE_CARDS, bag.size()):
+		var j := rng.randi_range(0, bag.size() - 1)
+		var id: String = bag[j]
+		bag.remove_at(j)
+		lost.append(id)
+		var d := collection if int(collection.get(id, 0)) > 0 else foils
+		d[id] = int(d.get(id, 0)) - 1
+		if int(d[id]) <= 0:
+			d.erase(id)
+		deck[id] = int(deck.get(id, 0)) - 1
+		if int(deck[id]) <= 0:
+			deck.erase(id)
+	if not lost.is_empty():
+		collection_changed.emit()
+	return {"gold": lost_gold, "cards": lost}
+
+
+## Death: the run is over and its slot is gone for good (no reloading a lost life).
+## Returns the summary shown on the Game Over screen.
+func die() -> Dictionary:
+	stats["losses"] = int(stats.get("losses", 0)) + 1
+	var summary := {"name": player_name, "level": level, "days": day, "wins": int(stats.get("wins", 0)),
+		"lairs": cleared_lairs.size(), "hero": hero}
+	delete_slot(slot)
+	return summary
 
 
 func diff(key: String):
@@ -791,6 +880,8 @@ func claim_mission(id: String) -> String:
 		var cid := CardDB.random_of_rarity(reward["card_rarity"], rng, fs)
 		add_card(cid)
 		parts.append(I18n.t(CardDB.get_card(cid).get("name", cid)))
+	parts.append(I18n.t("%d experience") % Hero.MISSION_XP)
 	missions[id]["state"] = "claimed"
+	gain_xp(Hero.MISSION_XP)
 	mission_updated.emit(id)
 	return ", ".join(parts)

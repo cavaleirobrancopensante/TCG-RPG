@@ -23,6 +23,8 @@ func _ready() -> void:
 	test_translations()
 	test_calendar()
 	test_feast_errands()
+	test_levels()
+	test_npc_clashes()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -1073,10 +1075,6 @@ func test_save_slots() -> void:
 	for r in ["common", "uncommon", "rare"]:
 		best += int(Economy.SELL[r] * Economy.FOREIGN_SELL * {"common": 10, "uncommon": 3, "rare": 1}[r])
 	check(best + Economy.SELL["mythic"] / 4 < Economy.BOOSTER_PRICE, "no profit in selling boosters (%d)" % best)
-	GameState.gold = 100
-	check(Economy.defeat_cost(false) == 20 and Economy.defeat_cost(true) == 10, "defeat costs a fifth, fleeing a tenth")
-	GameState.gold = 5
-	check(Economy.defeat_cost(false) == 5, "never more than you have")
 	GameState.gold = 50
 	GameState.life = 3
 	var d0 := GameState.day
@@ -1386,3 +1384,145 @@ func test_feast_errands() -> void:
 	f.close()
 	check(GameState.load_game(6) and GameState.feast_log.is_empty() and not GameState.is_feast_errand() and GameState.errand["giver"] == "Old Friend", "old saves load with defaults")
 	GameState.delete_slot(6)
+
+
+func test_levels() -> void:
+	print("-- levels, death and flight")
+	GameState.new_game(6, "sanctum", Hero.classic_sheet("sanctum"))
+	check(GameState.level == 1 and GameState.xp == 0 and GameState.stat_points == 0, "a hero starts at level 1")
+	check(Hero.xp_to_next(1) == 100 and Hero.xp_to_next(5) == 500, "the curve: 100 x level")
+	check(Hero.duel_xp(3, true) == 2 * Hero.duel_xp(3) and Hero.duel_xp(2) > Hero.duel_xp(1), "stronger foes and lairs give more")
+	# balance: a level every 3 to 5 duels early on (foes of the hero's level or so)
+	for lv in [1, 2, 3]:
+		var duels := ceili(float(Hero.xp_to_next(lv)) / float(Hero.duel_xp(lv)))
+		check(duels >= 3 and duels <= 5, "level %d to %d takes %d duels" % [lv, lv + 1, duels])
+	check(GameState.gain_xp(99) == 0 and GameState.level == 1, "99 experience is not yet a level")
+	check(GameState.gain_xp(1) == 1 and GameState.level == 2 and GameState.xp == 0, "100 makes level 2")
+	check(GameState.stat_points == 1, "a stat point at level 2")
+	GameState.gain_xp(Hero.xp_to_next(2))
+	check(GameState.level == 3 and GameState.stat_points == 1, "no point at an odd level")
+	GameState.gain_xp(Hero.xp_to_next(3) + Hero.xp_to_next(4) + 10)
+	check(GameState.level == 5 and GameState.stat_points == 2 and GameState.xp == 10, "two levels at once, a point at level 4 (%d, %d)" % [GameState.level, GameState.stat_points])
+	GameState.gain_xp(1000000)
+	check(GameState.level == Hero.LEVEL_CAP and GameState.xp == 0 and GameState.stat_points == Hero.LEVEL_CAP / 2, "level cap 20, ten points in all")
+	check(GameState.gain_xp(500) == 0 and GameState.level == Hero.LEVEL_CAP, "nothing past the cap")
+	# spending: at once, and up to 8
+	GameState.life = 5
+	var ml := GameState.max_life()
+	check(GameState.raise_stat("devotion") and GameState.max_life() == ml + 2 and GameState.life == 7, "Devotion raises max and current life at once")
+	var hs := GameState.hand_size()
+	GameState.raise_stat("reason")
+	check(GameState.hand_size() == hs + 1, "Reason works at once")
+	GameState.attrs["charm"] = 7
+	check(GameState.raise_stat("charm") and GameState.stat("charm") == 8, "a level point may raise a stat to 8")
+	check(not GameState.can_raise("charm") and not GameState.raise_stat("charm"), "but not past 8")
+	GameState.stat_points = 0
+	check(not GameState.raise_stat("dread"), "no point, no raise")
+	# missions and errands give some experience
+	GameState.new_game(6, "machine")
+	GameState.accept_mission("m_tech_1")
+	GameState.record_victory("abyss")
+	GameState.record_victory("wild")
+	GameState.claim_mission("m_tech_1")
+	check(GameState.xp == Hero.MISSION_XP, "a mission claimed gives experience")
+	# save and load the new state; old saves default to level 1
+	GameState.level = 7
+	GameState.xp = 123
+	GameState.stat_points = 2
+	GameState.save_game()
+	GameState.level = 1
+	GameState.xp = 0
+	GameState.stat_points = 0
+	check(GameState.load_game(6) and GameState.level == 7 and GameState.xp == 123 and GameState.stat_points == 2, "level, experience and points survive save/load")
+	check(int(GameState.slot_info(6).get("level", 0)) == 7, "the slot summary knows the level")
+	var f := FileAccess.open(GameState.slot_path(6), FileAccess.WRITE)
+	f.store_string(JSON.stringify({"version": 3, "gold": 5}))
+	f.close()
+	check(GameState.load_game(6) and GameState.level == 1 and GameState.xp == 0 and GameState.stat_points == 0, "old saves start at level 1")
+	# fleeing: half the purse and five cards of the deck, basic lands never
+	GameState.new_game(6, "wild")
+	for i in 3:
+		GameState.pending_boosters = 1
+		GameState.open_booster()
+	GameState.deck = DeckTools.auto_build(GameState.owned_all())
+	GameState.gold = 77
+	var owned0 := 0
+	for k in GameState.owned_all():
+		owned0 += int(GameState.owned_all()[k])
+	var deck0 := DeckTools.count(GameState.deck)
+	var pen := GameState.flee_penalty()
+	var owned1 := 0
+	for k in GameState.owned_all():
+		owned1 += int(GameState.owned_all()[k])
+	check(GameState.gold == 39 and int(pen["gold"]) == 38, "fleeing costs half the gold, rounded down")
+	check(pen["cards"].size() == 5 and owned1 == owned0 - 5 and DeckTools.count(GameState.deck) == deck0 - 5, "five cards lost from deck and collection")
+	for cid in pen["cards"]:
+		check(not CardDB.is_basic_land(cid), "a basic land is never lost (%s)" % cid)
+	# a thin deck gives what it has
+	var one := ""
+	for k in GameState.collection:
+		if not CardDB.is_land(k):
+			one = k
+			break
+	GameState.collection[one] = 2
+	GameState.deck = {"land_wild": 30, one: 2}
+	var pen2 := GameState.flee_penalty()
+	check(pen2["cards"] == [one, one] and not GameState.collection.has(one) and GameState.deck == {"land_wild": 30}, "fewer than five: all there is")
+	# death deletes the slot for good
+	GameState.save_game()
+	check(GameState.slot_exists(6), "saved before the fatal duel")
+	var sm := GameState.die()
+	check(not GameState.slot_exists(6) and not GameState.load_game(6), "death deletes the slot: it cannot be reloaded")
+	check(sm["name"] == GameState.player_name and sm.has("level") and sm.has("days") and sm.has("wins") and sm.has("lairs"), "the Game Over summary")
+
+
+func test_npc_clashes() -> void:
+	print("-- wanderers at war")
+	check(Overworld.faiths_hostile("abyss", "machine") and Overworld.faiths_hostile("lyceum", "abyss"), "the Pact fights everyone")
+	check(Overworld.faiths_hostile("sanctum", "revel") and Overworld.faiths_hostile("machine", "wild"), "old feuds")
+	check(not Overworld.faiths_hostile("sanctum", "sanctum") and not Overworld.faiths_hostile("abyss", "abyss"), "no one fights his own faith")
+	check(not Overworld.faiths_hostile("sanctum", "lyceum") and not Overworld.faiths_hostile("revel", "machine"), "friends pass in peace")
+	var a := {"id": 1, "faction": "abyss", "level": 3, "xp": 0, "pos": Vector2.ZERO}
+	var b := {"id": 2, "faction": "revel", "level": 1, "xp": 0, "pos": Vector2(10, 0)}
+	check(Overworld.would_clash(a, b), "a Pact raider and a reveller come to blows")
+	b["chasing"] = true
+	check(not Overworld.would_clash(a, b), "not while one chases the hero")
+	b.erase("chasing")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
+	var wins := 0
+	for i in 2000:
+		if Overworld.clash_outcome(a, b, rng)[0] == a:
+			wins += 1
+	check(wins > 1350 and wins < 1650, "the roll is weighted by level: level 3 beats level 1 about 3 in 4 (%d / 2000)" % wins)
+	# the winner grows
+	var w := {"level": 1, "xp": 0}
+	check(Overworld.npc_gain_xp(w, Overworld.npc_kill_xp(1)) and int(w["level"]) == 2, "a first kill raises a level-1 wanderer")
+	var top := {"level": Overworld.NPC_LEVEL_CAP - 1, "xp": 0}
+	Overworld.npc_gain_xp(top, 100000)
+	check(int(top["level"]) == Overworld.NPC_LEVEL_CAP, "wanderers stop at level 10")
+	# in a real world: the loser is gone, the winner levels
+	var ow := Overworld.new()
+	add_child(ow)
+	ow.player_pos = Vector2(-5000, -5000)      # far away: nothing to show
+	var e1 := {"id": 100, "faction": "abyss", "level": 9, "xp": 0, "pos": Vector2(1000, 1000), "home": Vector2(1000, 1000), "look": "", "name": "Pact Cultist",
+		"disposition": "hostile", "chasing": false}
+	var e2 := {"id": 101, "faction": "sanctum", "level": 1, "xp": 0, "pos": Vector2(1030, 1000), "home": Vector2(1030, 1000), "look": "", "name": "Stern Abbot",
+		"disposition": "hostile", "chasing": false}
+	ow._add_enemy(e1)
+	ow._add_enemy(e2)
+	var seen_clash := []
+	ow.npc_clash.connect(func(wi, lo, up, vis): seen_clash.append([wi, lo, up, vis]))
+	var res := ow.resolve_clash(e1, e2)
+	var winner: Dictionary = res[0]
+	var loser: Dictionary = res[1]
+	check(ow.enemies.size() == 1 and ow.enemies[0] == winner and not ow._walkers.has(int(loser["id"])), "the loser falls from the road")
+	check(ow.respawn_queue.size() == 1, "and someone takes his place later")
+	check(int(winner["xp"]) > 0 or bool(res[2]), "the winner gains experience")
+	check(seen_clash.size() == 1 and not seen_clash[0][3], "out of sight: no toast")
+	ow._add_enemy(e2.duplicate())
+	ow.enemies[0]["faction"] = "abyss"
+	ow.enemies[1]["faction"] = "abyss"
+	ow._npc_clashes()
+	check(ow.enemies.size() == 2, "two of the same faith do not fight")
+	ow.queue_free()

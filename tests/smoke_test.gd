@@ -32,23 +32,8 @@ func _ready() -> void:
 	assert(Music.current.get("kind", "") == "anthem", "menu plays an anthem")
 	print("music ok: menu → ", Music.current["title"])
 
-	await main._new_game(2, "lyceum")
-	assert(GameState.slot == 2, "new game in slot 2")
-	await _frames(5)
-	main.open_boosters(true)
-	await _frames(3)
-	var bs: BoosterScreen = main.screen
-	for p in GameState.pending_boosters + 1:      # the hero's starting boosters (difficulty decides how many)
-		if not is_instance_valid(bs) or main.screen != bs:
-			break
-		bs._on_button()           # reveal all
-		await _wait(1.5)
-		bs._on_button()           # next pack / done
-		await _frames(3)
-	assert(GameState.pending_boosters == 0, "boosters left")
-	assert(DeckTools.validate(GameState.deck, GameState.owned_all()) == "", "deck invalid")
-	print("boosters ok, deck: ", DeckTools.count(GameState.deck), " cards")
-	_close_dialogs()
+	await _begin_run()
+	await _hero_sheet()
 
 	# Walk around the world a bit.
 	main.world.move_target = main.world.player_pos + Vector2(300, 0)
@@ -60,7 +45,7 @@ func _ready() -> void:
 	var results := []
 	main.debug_auto_battles = true
 	for g in 3:
-		var e: Dictionary = main.world.enemies[g]
+		var e: Dictionary = main.world.enemies[0]
 		main._on_enemy_engaged(e)
 		await _frames(2)
 		# every meeting opens with a word first; the test chooses to fight
@@ -78,8 +63,16 @@ func _ready() -> void:
 		assert(b.st.phase == "over", "battle did not finish")
 		results.append("won" if b.st.winner == 0 else "lost")
 		await _wait(1.0)
-		b.finished.emit(b.st.winner == 0)
+		var xp0 := GameState.xp + GameState.level * 100000
+		var won_it: bool = b.st.winner == 0
+		b.finished.emit(won_it)
 		await _frames(3)
+		if won_it:
+			assert(GameState.xp + GameState.level * 100000 > xp0, "a won duel gives experience")
+		else:
+			# a lost duel on the road is death: the Game Over page, the slot gone, back to the title
+			await _check_death()
+			await _begin_run()
 		_close_dialogs()
 	main.debug_auto_battles = false
 	# a bribe sends the foe on his way
@@ -235,6 +228,16 @@ func _ready() -> void:
 	await _frames(3)
 	_close_dialogs()
 	print("tournament ok")
+	# Death: lose a duel on the road
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	GameState.save_game()
+	main.start_battle({"name": "Grim Foe", "faction": "abyss", "level": 2, "life": 20, "deck": {"land_abyss": 20, "abyss_c_001": 20}})
+	await _wait(1.0)
+	(main.screen as BattleScene).finished.emit(false)
+	await _frames(3)
+	await _check_death()
 	print("SMOKE TEST PASSED")
 	get_tree().quit(0)
 
@@ -307,6 +310,73 @@ func _feast_errand() -> void:
 	main._set_screen(null)
 	main._pause_world(false)
 	print("feast errand ok")
+
+
+## New game in slot 2, the starting boosters opened, the first deck built.
+func _begin_run() -> void:
+	await main._new_game(2, "lyceum")
+	assert(GameState.slot == 2, "new game in slot 2")
+	assert(GameState.level == 1 and GameState.xp == 0, "a new hero is level 1")
+	await _frames(5)
+	main.open_boosters(true)
+	await _frames(3)
+	var bs: BoosterScreen = main.screen
+	for p in GameState.pending_boosters + 1:      # the hero's starting boosters (difficulty decides how many)
+		if not is_instance_valid(bs) or main.screen != bs:
+			break
+		bs._on_button()           # reveal all
+		await _wait(1.5)
+		bs._on_button()           # next pack / done
+		await _frames(3)
+	assert(GameState.pending_boosters == 0, "boosters left")
+	assert(DeckTools.validate(GameState.deck, GameState.owned_all()) == "", "deck invalid")
+	print("boosters ok, deck: ", DeckTools.count(GameState.deck), " cards")
+	_close_dialogs()
+
+
+## The Game Over page after a death; its slot is gone; its button leads to the title page.
+func _check_death() -> void:
+	await _frames(3)
+	assert(main.screen is GameOverScreen, "death shows the Game Over page")
+	assert(not GameState.slot_exists(2) and main.world == null, "the dead hero's slot is deleted")
+	var done: Button = main.screen.find_child("Done", true, false)
+	done.pressed.emit()
+	await _frames(5)
+	assert(main.world == null and not (main.screen is GameOverScreen), "back to the title page")
+	print("death ok")
+
+
+## Level up, open the hero sheet from the HUD, spend the point on Devotion.
+func _hero_sheet() -> void:
+	GameState.gain_xp(Hero.xp_to_next(1))
+	await _frames(2)
+	assert(GameState.level == 2 and GameState.stat_points == 1, "level 2 brings a stat point")
+	assert(main.hud_hero.text != I18n.t("Hero"), "the Hero button shows the waiting point")
+	main.hud_hero.pressed.emit()
+	await _frames(3)
+	var sheet: HeroSheet = null
+	for n in main.ui_layer.get_children():
+		if n is HeroSheet:
+			sheet = n
+	assert(sheet != null and not main.world.active, "the hero sheet opens and the world holds still")
+	var ml := GameState.max_life()
+	var lf := GameState.life
+	(sheet.find_child("Plus_devotion", true, false) as Button).pressed.emit()
+	await _frames(2)
+	assert(GameState.max_life() == ml + 2 and GameState.life == mini(ml + 2, lf + 2) and GameState.stat_points == 0, "Devotion raised at once")
+	assert(sheet.find_child("Plus_devotion", true, false) == null, "no + once the points are spent")
+	sheet.close()
+	await _frames(2)
+	assert(main.world.active, "the world moves again")
+	print("hero sheet ok")
+
+
+func _owned() -> int:
+	var n := 0
+	var o := GameState.owned_all()
+	for k in o:
+		n += int(o[k])
+	return n
 
 
 func _close_dialogs() -> void:
@@ -429,10 +499,20 @@ func _interactive_battle() -> void:
 		b._on_main()
 		await _settle(b)
 		print("interactive: attacked with %d creature(s), enemy life %d" % [n, st.side(1).life])
+	GameState.gold = 91
+	var owned0 := _owned()
 	b._on_flee()
 	await _settle(b)
+	assert(b.fled, "the flee button flees")
 	b.finished.emit(false)
 	await _frames(3)
+	assert(GameState.gold == 46 and _owned() == owned0 - 5, "fleeing: half the gold and five cards (%d gold, %d -> %d cards)" % [GameState.gold, owned0, _owned()])
+	assert(GameState.slot_exists(GameState.slot) and main.world != null, "a flight is not death")
+	var shown := 0
+	for n in main.ui_layer.get_children():
+		if n is ColorRect:
+			shown += n.find_children("*", "CardView", true, false).size()
+	assert(shown == 5, "the lost cards are shown (%d)" % shown)
 	_close_dialogs()
 	GameState.deck = DeckTools.auto_build(GameState.owned_all())
 	print("interactive battle ok")

@@ -209,6 +209,10 @@
    "note": "scripts/autoload/game_state.gd"
   },
   {
+   "key": "%d experience",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
    "key": "menu:",
    "note": "scripts/autoload/music.gd"
   },
@@ -561,11 +565,19 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "%s is defeated.",
+   "key": "You are driven back to safety.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "You are driven back to safety.",
+   "key": "You flee the field.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You have fallen.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is defeated.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -1189,7 +1201,7 @@
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "Gentler foes, richer rewards, cheaper defeats.",
+   "key": "Gentler foes, richer rewards.",
    "note": "scripts/core/hero.gd"
   },
   {
@@ -1205,7 +1217,7 @@
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "Tougher foes, leaner purses, costly defeats.",
+   "key": "Tougher foes, leaner purses.",
    "note": "scripts/core/hero.gd"
   },
   {
@@ -1469,7 +1481,7 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Fleeing a duel costs less than losing it, and you keep your place on the road.",
+   "key": "A lost duel on the road is death. Fleeing costs half your purse and five cards of your deck, but you live.",
    "note": "scripts/main.gd"
   },
   {
@@ -1529,7 +1541,7 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Favour done: %s pays you %d gold.",
+   "key": "Favour done: %s pays you %d gold (+%d experience).",
    "note": "scripts/main.gd"
   },
   {
@@ -1594,6 +1606,10 @@
   },
   {
    "key": "The feast is past, but they take the %s gladly. You are paid %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You gain %d experience.",
    "note": "scripts/main.gd"
   },
   {
@@ -1713,6 +1729,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Hero",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Camp",
    "note": "scripts/main.gd"
   },
@@ -1725,11 +1745,35 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Lv%d",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "♥ %d/%d   ◉ %d gold   ✦ %d cards",
    "note": "scripts/main.gd"
   },
   {
    "key": "Boosters (%d)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Hero (+%d)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s has slain %s and rises to Lv %d.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s (Lv %d) has slain %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You reach level %d!",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "A stat point waits on the hero sheet.",
    "note": "scripts/main.gd"
   },
   {
@@ -1877,27 +1921,19 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "You fled",
-   "note": "scripts/main.gd"
-  },
-  {
    "key": "You drop %d gold as you run.",
    "note": "scripts/main.gd"
   },
   {
-   "key": "Defeat",
+   "key": "%d cards of your deck are lost in the flight:",
    "note": "scripts/main.gd"
   },
   {
-   "key": "You lose %d gold and wake up near %s.",
+   "key": "Mend your deck before the next duel.",
    "note": "scripts/main.gd"
   },
   {
-   "key": "a city",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Get up",
+   "key": "You fled",
    "note": "scripts/main.gd"
   },
   {
@@ -1971,6 +2007,42 @@
   {
    "key": "Done",
    "note": "scripts/ui/booster_screen.gd"
+  },
+  {
+   "key": "Any type",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Any rarity",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Card Database",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Back",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Search name, subtype or text",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Clear filters",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Gold",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Lands",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Showing %d of %d cards",
+   "note": "scripts/ui/card_database.gd"
   },
   {
    "key": "Aurea",
@@ -2409,14 +2481,6 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Any type",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Any rarity",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
    "key": "Any ability",
    "note": "scripts/ui/deck_builder.gd"
   },
@@ -2522,10 +2586,6 @@
   },
   {
    "key": "In this deck",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Clear filters",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -2649,6 +2709,30 @@
    "note": "scripts/ui/figure_painter.gd"
   },
   {
+   "key": "Requiescat in pace",
+   "note": "scripts/ui/game_over_screen.gd"
+  },
+  {
+   "key": "Here fell %s.",
+   "note": "scripts/ui/game_over_screen.gd"
+  },
+  {
+   "key": "Level %d",
+   "note": "scripts/ui/game_over_screen.gd"
+  },
+  {
+   "key": "Days on the road: %d   ·   Duels won: %d   ·   Lairs cleared: %d",
+   "note": "scripts/ui/game_over_screen.gd"
+  },
+  {
+   "key": "Your journey is ended, and its record is closed. May the road rise to meet the next pilgrim.",
+   "note": "scripts/ui/game_over_screen.gd"
+  },
+  {
+   "key": "Return to the title page",
+   "note": "scripts/ui/game_over_screen.gd"
+  },
+  {
    "key": "Skin",
    "note": "scripts/ui/hero_screen.gd"
   },
@@ -2753,10 +2837,6 @@
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Back",
-   "note": "scripts/ui/hero_screen.gd"
-  },
-  {
    "key": "Begin",
    "note": "scripts/ui/hero_screen.gd"
   },
@@ -2783,6 +2863,26 @@
   {
    "key": "%d points left",
    "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Highest level reached.",
+   "note": "scripts/ui/hero_sheet.gd"
+  },
+  {
+   "key": "%d / %d experience",
+   "note": "scripts/ui/hero_sheet.gd"
+  },
+  {
+   "key": "Stat points to spend: %d",
+   "note": "scripts/ui/hero_sheet.gd"
+  },
+  {
+   "key": "A stat point comes with every even level.",
+   "note": "scripts/ui/hero_sheet.gd"
+  },
+  {
+   "key": "Plus_",
+   "note": "scripts/ui/hero_sheet.gd"
   },
   {
    "key": "Ready",
@@ -2854,6 +2954,10 @@
   },
   {
    "key": "Very fast",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Card database",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -3114,10 +3218,6 @@
   },
   {
    "key": "Rousing the wanderers",
-   "note": "scripts/world/overworld.gd"
-  },
-  {
-   "key": "Lv%d",
    "note": "scripts/world/overworld.gd"
   },
   {

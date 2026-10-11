@@ -27,9 +27,6 @@ const MARKET_MAX := 1.8
 const INN_PRICE := 20            # a bed for the night: you wake healed
 const CITY_TOLL := 8             # the gate of a city not of your faith
 const REGION_TOLL := 12          # bridges and ferries into another faith's lands
-const LOSS_SHARE := 0.2          # lose a duel: a fifth of your purse
-const FLEE_SHARE := 0.1          # flee one: a tenth
-const MIN_LOSS := 10
 
 
 static func card_faith(id: String) -> String:
@@ -89,12 +86,6 @@ static func trend(city_id: String, id: String) -> String:
 	if m < 0.96:
 		return "▼"
 	return ""
-
-
-## What a duel lost or fled costs.
-static func defeat_cost(fled: bool) -> int:
-	var share: float = (FLEE_SHARE if fled else LOSS_SHARE) * float(GameState.diff("defeat"))
-	return mini(GameState.gold, maxi(MIN_LOSS, int(GameState.gold * share)))
 
 
 ## Charm opens purses and doors.

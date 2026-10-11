@@ -1277,7 +1277,8 @@ func _player_mulligan() -> void:
 					picking[0] = true
 					redraw_ref[0].call(), 200))
 		await get_tree().process_frame
-		panel.position = (get_viewport_rect().size - panel.size) * 0.5
+		if is_instance_valid(panel):      # the choice may already be made (and the panel gone)
+			panel.position = (get_viewport_rect().size - panel.size) * 0.5
 	redraw_ref[0] = redraw
 	redraw.call()
 	await _mulligan_done
@@ -1886,7 +1887,12 @@ func _show_result() -> void:
 	var title := UIKit.title("Victoria" if won else "Clades", 64, UIKit.GOLD if won else UIKit.TEXT)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(title)
-	var sub := UIKit.label((I18n.t("%s is defeated.") % st.side(1).name) if won else I18n.t("You are driven back to safety."), 22)
+	var lost_line := "You are driven back to safety."      # a tournament bout: no one dies
+	if fled:
+		lost_line = "You flee the field."
+	elif not info.get("tournament", false):
+		lost_line = "You have fallen."
+	var sub := UIKit.label((I18n.t("%s is defeated.") % st.side(1).name) if won else I18n.t(lost_line), 22)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(sub)
 	v.add_child(UIKit.button("Continue", func(): finished.emit(won), 240))

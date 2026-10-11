@@ -8,6 +8,7 @@ var hud: Control
 var hud_gold: Label
 var hud_dial: SkyDial
 var hud_boosters: Button
+var hud_hero: Button
 var screen: Control          # current full-screen UI (menu, city, battle, ...)
 var ui_theme: Theme
 var debug_auto_battles := false   # tests: AI plays the player's side
@@ -86,6 +87,7 @@ func _ready() -> void:
 	ui_layer.layer = 5
 	add_child(ui_layer)
 	GameState.gold_changed.connect(func(_g): _update_hud())
+	GameState.leveled_up.connect(_on_level_up)
 	add_child(RotateOverlay.new())     # phones held upright are asked to turn sideways
 	await _boot()
 	is_booted = true
@@ -142,6 +144,10 @@ func _process(delta: float) -> void:
 		Music.set_context("world", region)
 		_region_toll(region)
 		_feast_tick()
+	# the Hero button glows while stat points wait to be spent
+	if hud_hero and is_instance_valid(hud_hero):
+		hud_hero.modulate = Color(1, 1, 1).lerp(Color(1.0, 0.82, 0.45), 0.5 + 0.5 * sin(Time.get_ticks_msec() / 250.0)) \
+			if GameState.stat_points > 0 else Color(1, 1, 1)
 
 
 ## Someone who is not hostile: a friend greets you, a neutral traveller may accept a duel.
@@ -205,7 +211,7 @@ const ADVICE := [
 	"Every copy you buy in a city raises its price there. Buy one, travel, buy another.",
 	"A night at the inn sends you into your next duel stronger.",
 	"Raiders cross the border now and then. They wear red on their banners.",
-	"Fleeing a duel costs less than losing it, and you keep your place on the road.",
+	"A lost duel on the road is death. Fleeing costs half your purse and five cards of your deck, but you live.",
 	"The lairs hold the strongest foes, and the richest rewards the first time.",
 	"Those who keep to themselves will take up a challenge if you ask them.",
 	"The tournament is costly to enter, but you keep every card you draft.",
@@ -263,8 +269,9 @@ func _errand_progress() -> void:
 	if int(GameState.errand["done"]) >= int(GameState.errand.get("need", 2)):
 		var reward := int(GameState.errand.get("reward", 40))
 		GameState.add_gold(reward)
-		_toast(I18n.t("Favour done: %s pays you %d gold.") % [I18n.t(GameState.errand.get("giver", "")), reward])
+		_toast(I18n.t("Favour done: %s pays you %d gold (+%d experience).") % [I18n.t(GameState.errand.get("giver", "")), reward, Hero.ERRAND_XP])
 		GameState.errand = {}
+		GameState.gain_xp(Hero.ERRAND_XP)
 
 
 # ================================================================== feast errands
@@ -360,6 +367,7 @@ func _feast_at_city(city_id: String) -> void:
 		body += I18n.t("In good time. You are paid %d gold.") % int(res["gold"])
 	else:
 		body += I18n.t("The feast is past, but they take the %s gladly. You are paid %d gold.") % [I18n.t(er["goods"]), int(res["gold"])]
+	body += "\n" + I18n.t("You gain %d experience.") % int(res.get("xp", 0))
 	var cards: Array = []
 	if String(res.get("card", "")) != "":
 		cards.append(res["card"])
@@ -593,6 +601,7 @@ func start_world() -> void:
 	world.enemy_engaged.connect(_on_enemy_engaged)
 	world.ferry_reached.connect(_on_ferry)
 	world.stranger_met.connect(_on_stranger)
+	world.npc_clash.connect(_on_npc_clash)
 	await world.build(ls, 0)
 	_build_hud()
 	await ls.close()
@@ -619,6 +628,8 @@ func _build_hud() -> void:
 	hud.add_child(col)
 	hud_boosters = UIKit.button("Boosters", func(): open_boosters(false), 190)
 	col.add_child(hud_boosters)
+	hud_hero = UIKit.button("Hero", open_hero_sheet, 190)
+	col.add_child(hud_hero)
 	col.add_child(UIKit.button("Camp", make_camp, 190))
 	col.add_child(UIKit.button("Deck", open_deck_builder, 190))
 	col.add_child(UIKit.button("Journal", show_journal, 190))
@@ -643,13 +654,48 @@ func _build_hud() -> void:
 func _update_hud() -> void:
 	if hud == null or not is_instance_valid(hud):
 		return
-	hud_gold.text = I18n.t("♥ %d/%d   ◉ %d gold   ✦ %d cards") % [GameState.life, GameState.max_life(), GameState.gold, _owned_total()]
+	hud_gold.text = I18n.t("Lv%d") % GameState.level + "   " + I18n.t("♥ %d/%d   ◉ %d gold   ✦ %d cards") % [GameState.life, GameState.max_life(), GameState.gold, _owned_total()]
 	if hud_dial:
 		hud_dial.set_time(GameState.clock, GameState.day)
 		if world and world.built:
 			hud_dial.set_region(world.faction_at(world.player_pos))
 	hud_boosters.text = I18n.t("Boosters (%d)") % GameState.pending_boosters
 	hud_boosters.disabled = GameState.pending_boosters <= 0
+	if hud_hero:
+		hud_hero.text = I18n.t("Hero (+%d)") % GameState.stat_points if GameState.stat_points > 0 else I18n.t("Hero")
+
+
+## The hero sheet: level, experience and the stats, with the points earned by levels to spend.
+func open_hero_sheet() -> void:
+	if world == null or screen != null:
+		return
+	world.active = false
+	var hs := HeroSheet.new()
+	hs.changed.connect(_update_hud)
+	hs.closed.connect(func():
+		_update_hud()
+		if world and screen == null:
+			world.active = true)
+	ui_layer.add_child(hs)
+
+
+## Two wanderers fought within the hero's sight: say who won.
+func _on_npc_clash(winner: Dictionary, loser: Dictionary, leveled: bool, in_sight: bool) -> void:
+	if not in_sight:
+		return
+	if leveled:
+		_toast(I18n.t("%s has slain %s and rises to Lv %d.") % [I18n.t(winner["name"]), I18n.t(loser["name"]), int(winner["level"])])
+	else:
+		_toast(I18n.t("%s (Lv %d) has slain %s.") % [I18n.t(winner["name"]), int(winner["level"]), I18n.t(loser["name"])])
+
+
+## A new level: a word at the foot of the screen (and a point to spend at every even level).
+func _on_level_up(new_level: int, points: int) -> void:
+	var t := I18n.t("You reach level %d!") % new_level
+	if points > 0:
+		t += " " + I18n.t("A stat point waits on the hero sheet.")
+	_toast(t)
+	_update_hud()
 
 
 ## Pitch a camp in the wild: free, slow to heal, and a foe in his own lands may find you.
@@ -966,33 +1012,56 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		if parts.is_empty():
 			parts.append(I18n.t("nothing but the road ahead"))
 		var vtext := I18n.t("You gain: %s") % ", ".join(parts)
+		var gained := Hero.duel_xp(lvl, lair_id != "")
+		var lv0 := GameState.level
+		GameState.gain_xp(gained)
+		vtext += "\n" + I18n.t("You gain %d experience.") % gained
+		if GameState.level > lv0:
+			vtext += " " + I18n.t("You reach level %d!") % GameState.level
 		if info.get("thief", false) and GameState.is_feast_errand() and GameState.errand.get("state", "") == "carry":
 			vtext += "\n\n" + I18n.t("You keep the %s safe in your pack.") % I18n.t(GameState.errand["goods"])
 		GameState.save_game()
 		show_dialog("Victory", vtext, [["Onward", Callable()]], cards)
+	elif not info.get("fled", false):
+		# life at nought, or the deck run dry: on the road a lost duel is death
+		_game_over()
+		return
 	else:
+		# running costs half the purse and five cards of the deck, but you keep your life and your place
 		GameState.stats["losses"] = int(GameState.stats.get("losses", 0)) + 1
-		var fled: bool = info.get("fled", false)
-		var lost := Economy.defeat_cost(fled)
-		GameState.add_gold(-lost)
+		var pen := GameState.flee_penalty()
 		var robbed := ""
 		if info.get("thief", false) and GameState.is_feast_errand() and GameState.errand.get("state", "") == "carry":
-			# lose the duel, lose the goods: the thief makes off with them
+			# run from the thief, lose the goods: he makes off with them
 			robbed = "\n\n" + I18n.t("%s makes off with the %s.") % [I18n.t(info["name"]), I18n.t(GameState.errand["goods"])]
 			GameState.feast_goods_lost()
 			if info.has("enemy_id"):
 				world.remove_enemy(info["enemy_id"])
-		if fled:
-			# fleeing costs less, and you keep your place on the road
-			GameState.save_game()
-			show_dialog("You fled", I18n.t("You drop %d gold as you run.") % lost + robbed, [["Onward", Callable()]])
-		else:
-			var city_id := _nearest_visited_city()
-			world.respawn_at_city(city_id)
-			GameState.life = maxi(1, GameState.max_life() / 2)
-			GameState.save_game()
-			show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")] + robbed, [["Get up", Callable()]])
+		var lost_cards: Array = pen["cards"]
+		var body := I18n.t("You drop %d gold as you run.") % int(pen["gold"])
+		if not lost_cards.is_empty():
+			body += "\n" + I18n.t("%d cards of your deck are lost in the flight:") % lost_cards.size()
+		if DeckTools.validate(GameState.deck, GameState.owned_all()) != "":
+			body += "\n" + I18n.t("Mend your deck before the next duel.")
+		GameState.save_game()
+		show_dialog("You fled", body + robbed, [["Onward", Callable()]], lost_cards)
 	_update_hud()
+
+
+## Death: the save is deleted, a last page is shown, then the title page.
+func _game_over() -> void:
+	var summary := GameState.die()
+	Music.set_context("menu")
+	if world:
+		world.queue_free()
+		world = null
+	if hud:
+		hud.queue_free()
+		hud = null
+	hud_hero = null
+	var go := GameOverScreen.create(summary)
+	go.done.connect(show_menu)
+	_set_screen(go)
 
 
 ## A random card from the opponent's deck (each copy is one chance; basic lands never).
@@ -1143,7 +1212,7 @@ func show_dialog(title: String, body: String, buttons: Array, card_ids: Array = 
 		var h := HBoxContainer.new()
 		h.alignment = BoxContainer.ALIGNMENT_CENTER
 		for cid in card_ids:
-			h.add_child(CardView.create(cid, 0.8))
+			h.add_child(CardView.create(cid, 0.8 if card_ids.size() <= 4 else 0.65))
 		v.add_child(h)
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER

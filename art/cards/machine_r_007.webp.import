@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vqdnhj7k47wp"
-valid=false
+uid="uid://cb3pdnb1wvm1d"
+path="res://.godot/imported/machine_r_007.webp-a1ec6db87981cda346e045dfc9105847.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://art/cards/machine_r_007.webp"
+dest_files=["res://.godot/imported/machine_r_007.webp-a1ec6db87981cda346e045dfc9105847.ctex"]
 
 [params]
 

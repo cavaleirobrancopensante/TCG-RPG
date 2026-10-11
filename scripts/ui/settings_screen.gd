@@ -20,6 +20,7 @@ func _ready() -> void:
 	var t := UIKit.title("Settings", 42)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)
+	head.add_child(UIKit.button("Card database", open_card_database, 220))
 	head.add_child(UIKit.button("Back", _back, 140))
 
 	var plate := PanelContainer.new()
@@ -115,6 +116,13 @@ func _name(t: String) -> Label:
 	var l := UIKit.label(t, 22, UIKit.TEXT)
 	l.custom_minimum_size.x = 300
 	return l
+
+
+## Every card in the game, to browse; it lies over this screen and Back returns here.
+func open_card_database() -> CardDatabase:
+	var db := CardDatabase.new()
+	add_child(db)
+	return db
 
 
 func _back() -> void:
