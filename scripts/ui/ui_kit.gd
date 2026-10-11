@@ -10,11 +10,29 @@ const GILT := Color(0.93, 0.74, 0.28)       # gold leaf
 const TEXT := Color(0.16, 0.10, 0.06)       # iron-gall ink
 const DIM := Color(0.42, 0.31, 0.20)
 const RED := Color(0.72, 0.17, 0.12)
-const GREEN := Color(0.20, 0.48, 0.16)
+const GREEN := Color(0.12, 0.36, 0.10)     # "can use" ink: 5.9:1 on parchment
 const BLUE := Color(0.13, 0.33, 0.66)
 const LIGHT := Color(0.98, 0.95, 0.86)      # text on dark/blue fields
-## Height reserved at the top of every screen for the music strip.
-const TOP := 38
+## Height reserved at the top of every screen for the music strip (MusicBar.HEIGHT 48,
+## plus the reach of its buttons' touch areas just below it).
+const TOP := 56
+
+## Design tokens (canvas px). On phones the canvas base is 960x540 (see UIScale), so these
+## stay comfortable under a finger: no text under FS_MIN, no tappable control under TARGET.
+const FS_TITLE := 40
+const FS_HEADING := 28
+const FS_BODY := 20
+const FS_SECONDARY := 17
+const FS_MIN := 15
+const TARGET := 64          # minimum button height
+const TARGET_W := 64        # minimum tap width
+const GAP := 12
+const SP_1 := 8
+const SP_2 := 16
+const SP_3 := 24
+const SP_4 := 32
+## Disabled button text: still readable (5.8:1 on the disabled plate).
+const DISABLED_TEXT := Color(0.30, 0.26, 0.22)
 
 static var _theme: Theme
 static var _applied := "?"         # the faith the shared theme now wears ("" = neutral)
@@ -81,15 +99,20 @@ static func _apply(faith: String) -> void:
 	t.set_block_signals(true)
 	var rule: Color = Tapestry.ui_rules(faith)[0] if faith != "" else RED
 	t.default_font = Tapestry.font("book")
-	t.default_font_size = 21
+	t.default_font_size = FS_BODY
 	var states := {"normal": "button", "hover": "hover", "pressed": "pressed", "disabled": "disabled", "focus": "hover"}
 	for st in states:
 		t.set_stylebox(st, "Button", Tapestry.stylebox(states[st]))
+		t.set_stylebox(st, "MenuButton", Tapestry.stylebox(states[st]))
+	for k in ["font_color", "font_pressed_color", "font_focus_color"]:
+		t.set_color(k, "MenuButton", TEXT)
+	t.set_color("font_hover_color", "MenuButton", rule.darkened(0.1) if faith != "" else RED)
+	t.set_color("font_disabled_color", "MenuButton", DISABLED_TEXT)
 	t.set_color("font_color", "Button", TEXT)
 	t.set_color("font_hover_color", "Button", rule.darkened(0.1) if faith != "" else RED)
 	t.set_color("font_pressed_color", "Button", TEXT)
 	t.set_color("font_focus_color", "Button", TEXT)
-	t.set_color("font_disabled_color", "Button", Color(0.45, 0.40, 0.35))
+	t.set_color("font_disabled_color", "Button", DISABLED_TEXT)
 	t.set_color("font_color", "Label", TEXT)
 	t.set_color("font_color", "CheckButton", TEXT)
 	t.set_color("font_hover_color", "CheckButton", rule)
@@ -102,10 +125,15 @@ static func _apply(faith: String) -> void:
 	t.set_stylebox("hover", "PopupMenu", _box(Color(rule, 0.18), Color(0, 0, 0, 0), 4))
 	t.set_color("font_color", "PopupMenu", TEXT)
 	t.set_color("font_hover_color", "PopupMenu", rule)
-	t.set_font_size("font_size", "PopupMenu", 18)
-	t.set_constant("v_separation", "PopupMenu", 10)
+	t.set_font_size("font_size", "PopupMenu", FS_BODY)
+	t.set_constant("v_separation", "PopupMenu", TARGET - 28)     # rows TARGET tall (28 px line)
 	t.set_color("font_color", "OptionButton", TEXT)
 	t.set_color("font_hover_color", "OptionButton", rule)
+	t.set_color("font_disabled_color", "OptionButton", DISABLED_TEXT)
+	t.set_color("font_disabled_color", "CheckButton", DISABLED_TEXT)
+	t.set_color("font_disabled_color", "CheckBox", DISABLED_TEXT)
+	t.set_color("font_color", "CheckBox", TEXT)
+	t.set_color("font_uneditable_color", "LineEdit", DISABLED_TEXT)
 	t.set_color("font_placeholder_color", "LineEdit", DIM)
 	t.set_stylebox("panel", "PanelContainer", Tapestry.stylebox("panel", 16))
 	t.set_stylebox("panel", "Panel", Tapestry.stylebox("panel", 16))
@@ -130,58 +158,57 @@ static func _apply(faith: String) -> void:
 	t.emit_changed()
 
 
-## Modal parchment question over `parent`. ok_cb runs when confirmed.
-static func confirm(parent: Node, heading: String, text: String, ok_label: String, ok_cb: Callable) -> void:
-	var overlay := ColorRect.new()
-	overlay.color = Color(0.08, 0.05, 0.03, 0.6)
-	full_rect(overlay)
-	parent.add_child(overlay)
-	var center := CenterContainer.new()
-	full_rect(center)
-	overlay.add_child(center)
-	var plate := PanelContainer.new()
-	center.add_child(plate)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 14)
-	plate.add_child(v)
-	v.add_child(title(I18n.t(heading), 32))
-	var l := label(I18n.t(text), 20, TEXT, true)
-	l.custom_minimum_size.x = 460
-	v.add_child(l)
+## Modal parchment question over `parent`: a heading, what will happen (`text`) and, in
+## rubric red, what cannot be undone (`consequence`; "" for none). The safe Cancel sits on
+## the left, the action on the right, both full-size targets. ok_cb runs when confirmed.
+## Returns the overlay (tests press its buttons: "Cancel" and "Ok").
+static func confirm(parent: Node, heading: String, text: String, ok_label: String, ok_cb: Callable,
+		consequence: String = "This cannot be undone.") -> Control:
+	var overlay := _modal(parent)
+	var v: VBoxContainer = overlay.get_meta("body")
+	v.add_child(title(I18n.t(heading), FS_HEADING + 4))
+	var w := _modal_width(parent)
+	if text != "":
+		var l := label(I18n.t(text), FS_BODY, TEXT, true)
+		l.custom_minimum_size.x = w
+		v.add_child(l)
+	if consequence != "":
+		var c := label(I18n.t(consequence), FS_SECONDARY, RED.darkened(0.1), true)
+		c.add_theme_font_override("font", Tapestry.font("italic"))
+		c.custom_minimum_size.x = w
+		v.add_child(c)
 	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 16)
+	row.add_theme_constant_override("separation", SP_3)
 	v.add_child(row)
-	row.add_child(button(ok_label, func():
+	var cancel := button("Cancel", overlay.queue_free, 180)
+	cancel.name = "Cancel"
+	cancel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(cancel)
+	var ok := button(ok_label, func():
 		overlay.queue_free()
-		ok_cb.call(), 180))
-	row.add_child(button("Cancel", overlay.queue_free, 180))
+		ok_cb.call(), 180)
+	ok.name = "Ok"
+	ok.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	ok.add_theme_color_override("font_color", RED.darkened(0.1))
+	ok.add_theme_color_override("font_hover_color", RED.darkened(0.25))
+	row.add_child(ok)
+	cancel.grab_focus.call_deferred()
+	return overlay
 
 
 ## Modal parchment text prompt. ok_cb receives the entered (non-empty) text.
-static func prompt(parent: Node, heading: String, initial: String, ok_label: String, ok_cb: Callable) -> void:
-	var overlay := ColorRect.new()
-	overlay.color = Color(0.08, 0.05, 0.03, 0.6)
-	full_rect(overlay)
-	parent.add_child(overlay)
-	var center := CenterContainer.new()
-	full_rect(center)
-	overlay.add_child(center)
-	var plate := PanelContainer.new()
-	center.add_child(plate)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 14)
-	plate.add_child(v)
-	v.add_child(title(I18n.t(heading), 32))
+static func prompt(parent: Node, heading: String, initial: String, ok_label: String, ok_cb: Callable) -> Control:
+	var overlay := _modal(parent)
+	var v: VBoxContainer = overlay.get_meta("body")
+	v.add_child(title(I18n.t(heading), FS_HEADING + 4))
 	var edit := LineEdit.new()
 	edit.text = initial
 	edit.max_length = 28
-	edit.custom_minimum_size = Vector2(420, 48)
+	edit.custom_minimum_size = Vector2(_modal_width(parent), TARGET)
 	edit.select_all_on_focus = true
 	v.add_child(edit)
 	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 16)
+	row.add_theme_constant_override("separation", SP_3)
 	v.add_child(row)
 	var accept := func():
 		var t := edit.text.strip_edges()
@@ -190,9 +217,44 @@ static func prompt(parent: Node, heading: String, initial: String, ok_label: Str
 		overlay.queue_free()
 		ok_cb.call(t)
 	edit.text_submitted.connect(func(_t): accept.call())
-	row.add_child(button(ok_label, accept, 180))
-	row.add_child(button("Cancel", overlay.queue_free, 180))
+	var cancel := button("Cancel", overlay.queue_free, 180)
+	cancel.name = "Cancel"
+	cancel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(cancel)
+	var ok := primary_button(ok_label, accept, 180)
+	ok.name = "Ok"
+	ok.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(ok)
 	edit.grab_focus.call_deferred()
+	return overlay
+
+
+## The dimmed overlay with a centred parchment plate; its VBox is in meta "body".
+static func _modal(parent: Node) -> ColorRect:
+	var overlay := ColorRect.new()
+	overlay.theme = make_theme()
+	overlay.color = Color(0.08, 0.05, 0.03, 0.6)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	full_rect(overlay)
+	parent.add_child(overlay)
+	var center := CenterContainer.new()
+	full_rect(center, TOP)
+	overlay.add_child(center)
+	var plate := PanelContainer.new()
+	plate.add_theme_stylebox_override("panel", Tapestry.stylebox("panel", 24))
+	center.add_child(plate)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", SP_2)
+	plate.add_child(v)
+	overlay.set_meta("body", v)
+	return overlay
+
+
+static func _modal_width(parent: Node) -> float:
+	var vp := Vector2(1280, 720)
+	if parent is CanvasItem and (parent as CanvasItem).is_inside_tree():
+		vp = (parent as CanvasItem).get_viewport_rect().size
+	return clampf(vp.x - 140.0, 360.0, 560.0)
 
 
 ## Blackletter heading in rubric red.
@@ -218,15 +280,64 @@ static func _box(bg: Color, border: Color, radius: int = 8) -> StyleBoxFlat:
 static func button(text: String, cb: Callable, min_w: int = 120) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(min_w, 56)
+	b.custom_minimum_size = Vector2(maxi(min_w, TARGET_W), TARGET)
 	b.pressed.connect(cb)
 	return b
 
 
+## The one main action of a screen (Begin, End turn, Done, Accept, Play, Take): larger,
+## filled with the faith's colour (rubric red before a game), light lettering.
+static func primary_button(text: String, cb: Callable, min_w: int = 200) -> Button:
+	var b := button(text, cb, min_w)
+	b.custom_minimum_size.y = TARGET + 8
+	b.add_theme_font_size_override("font_size", FS_BODY + 4)
+	b.add_theme_font_override("font", Tapestry.font("black"))
+	var ink := accent()
+	var states := {"normal": ink, "hover": ink.lerp(Color.WHITE, 0.06), "focus": ink.lerp(Color.WHITE, 0.06),
+		"pressed": ink.darkened(0.2)}
+	for st in states:
+		var sb := _box(states[st], Tapestry.GILT, 8)
+		sb.set_border_width_all(3)
+		sb.content_margin_left = 22
+		sb.content_margin_right = 22
+		sb.shadow_color = Color(0, 0, 0, 0.25)
+		sb.shadow_size = 3
+		sb.shadow_offset = Vector2(0, 2)
+		b.add_theme_stylebox_override(st, sb)
+	var off := _box(Color(0.82, 0.78, 0.70), Color(0.45, 0.40, 0.35), 8)
+	off.set_border_width_all(3)
+	b.add_theme_stylebox_override("disabled", off)
+	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
+		b.add_theme_color_override(c, LIGHT)
+	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
+	b.set_meta("primary", true)
+	return b
+
+
+## The one look for "this is the chosen one" (toggle buttons, picked options, tabs):
+## a lighter plate with a thick rule in the faith's accent and accent lettering.
+static func set_selected(b: Button, on: bool) -> void:
+	if not on:
+		for st in ["normal", "hover", "pressed", "focus"]:
+			b.remove_theme_stylebox_override(st)
+		b.remove_theme_color_override("font_color")
+		b.remove_theme_color_override("font_pressed_color")
+		b.remove_theme_color_override("font_hover_pressed_color")
+		return
+	var ink := accent()
+	var sb := _box(Tapestry.PARCHMENT_LIGHT, ink, 8)
+	sb.set_border_width_all(4)
+	for st in ["normal", "hover", "pressed", "focus"]:
+		b.add_theme_stylebox_override(st, sb)
+	for c in ["font_color", "font_pressed_color", "font_hover_pressed_color"]:
+		b.add_theme_color_override(c, ink)
+
+
+## Text no smaller than FS_MIN.
 static func label(text: String, size: int = 20, color: Color = TEXT, wrap: bool = false) -> Label:
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", maxi(size, FS_MIN))
 	l.add_theme_color_override("font_color", accent() if color == GOLD else color)
 	if wrap:
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -451,7 +562,7 @@ class Flag extends Button:
 
 
 ## A row of the three language flags; on_pick(lang) is called when one is chosen.
-static func flag_row(on_pick: Callable, flag_size: Vector2 = Vector2(70, 50)) -> HBoxContainer:
+static func flag_row(on_pick: Callable, flag_size: Vector2 = Vector2(84, TARGET)) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 	for code in I18n.LANGS:

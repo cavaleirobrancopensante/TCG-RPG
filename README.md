@@ -214,6 +214,24 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Made for phones (1.35)
+
+- An interface scale: on phones the game draws everything a third larger, and Settings has
+  Interface size (Small, Normal, Large). Buttons are at least 64 px (about 8 mm on a phone),
+  text at least 15 px, and a test checks all 22 screens in English, Portuguese and Spanish at
+  phone and desktop sizes.
+- The map keeps four buttons (Hero, Deck, Journal, Menu); Boosters and Camp appear only when
+  they apply; Save, another slot, Settings, the card database and the title page live in
+  Menu. A "Saved" mark shows after every autosave. The title page has Continue.
+- The journal suggests your next goals when no mission is active.
+- Duels: a bigger End turn, a phase bar that folds on phones (long press a step to set a stop),
+  readable counts, a fading log banner, and a gentle "End turn with mana unused?" prompt.
+- The deck builder has a Filters drawer, a Deck menu, one row of land pips, Undo, and
+  remembers your filters; thumbnails are larger on phones.
+- Cities: Leave sits apart from the tabs, a Rest button appears when you are hurt, missions
+  read as rows with Accept beside them, and the last card you bought can be returned.
+- Satyr-King of the Vintage now brings two Satyrs (tested: Satyr decks stay at 52%).
+
 ## Playtest fixes (1.34)
 
 - Tap a card to see it, everywhere: in a duel a tapped hand card rises to full size with

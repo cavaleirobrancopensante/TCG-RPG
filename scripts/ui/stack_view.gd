@@ -5,8 +5,10 @@ extends VBoxContainer
 
 signal plate_pressed(entry: Dictionary)
 
-const PLATE := Vector2(236, 44)
+const PLATE := Vector2(280, 64)    # a plate is tapped to read its card: a full touch target
 const MAX_PLATES := 3          # the top three; the rest are counted in the heading
+
+var max_plates := MAX_PLATES   # the duel screen lowers this when the board is short
 
 var entries: Array = []        # bottom first: {"sid", "side", "id", "name", "text", "ability", "targets", "token"}
 var plates := {}               # sid -> Button
@@ -26,11 +28,11 @@ func set_entries(list: Array) -> void:
 	visible = not entries.is_empty()
 	if entries.is_empty():
 		return
-	var shown := mini(entries.size(), MAX_PLATES)
+	var shown := mini(entries.size(), maxi(1, max_plates))
 	var head_text := I18n.t("Stack")
 	if entries.size() > shown:
 		head_text += " " + I18n.t("(%d more below)") % (entries.size() - shown)
-	var head := UIKit.label(head_text, 14, Tapestry.WHITE)
+	var head := UIKit.label(head_text, UIKit.FS_MIN, Tapestry.WHITE)
 	head.add_theme_color_override("font_outline_color", Tapestry.INK)
 	head.add_theme_constant_override("outline_size", 5)
 	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -59,7 +61,7 @@ class _Plate extends Button:
 	var is_top := false
 
 	func _init() -> void:
-		custom_minimum_size = StackView.PLATE
+		custom_minimum_size = Vector2(StackView.PLATE.x, maxf(StackView.PLATE.y, UIKit.TARGET))
 		flat = true
 		focus_mode = Control.FOCUS_NONE
 		clip_contents = true
@@ -75,11 +77,13 @@ class _Plate extends Button:
 		var sub := ""
 		if entry.get("ability", false):
 			sub = I18n.t("Ability") + ": " + I18n.t(String(entry.get("text", "")))
-		var fs := 16
-		while fs > 11 and f.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > r.size.x - 22:
+		var fmin := int(UIKit.FS_MIN)
+		var fs := int(UIKit.FS_BODY)
+		while fs > fmin and f.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > r.size.x - 22:
 			fs -= 1
 		if sub == "":
 			draw_string(f, Vector2(16, r.size.y * 0.5 + fs * 0.38), title, HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 20, fs, Tapestry.INK)
 		else:
-			draw_string(f, Vector2(16, 18), title, HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 20, mini(fs, 15), Tapestry.INK)
-			draw_string(f, Vector2(16, 36), sub, HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 20, 12, Tapestry.INK.lightened(0.2))
+			var tfs := mini(fs, int(UIKit.FS_SECONDARY))
+			draw_string(f, Vector2(16, r.size.y * 0.5 - 4), title, HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 20, tfs, Tapestry.INK)
+			draw_string(f, Vector2(16, r.size.y * 0.5 + fmin + 2), sub, HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 20, fmin, Tapestry.INK.lightened(0.2))

@@ -1,7 +1,9 @@
 extends Node
-## Drag scrolling in the deck builder (finger and mouse, taps still add/remove cards, the wheel
-## still scrolls) and the "Respond to every spell" setting (whether the duel waits for you when
-## the enemy casts in its main phase). Prints PASS/FAIL lines; screenshots in user://shots/.
+## Drag scrolling in the deck builder (finger and mouse; a tap on a card opens it, a tap on its
+## "+" adds it, a tap on a deck row removes one; the wheel still scrolls), the land pips (tap
+## adds, hold removes), Undo, the Filters drawer, and the "Respond to every spell" setting
+## (whether the duel waits for you when the enemy casts in its main phase). Prints PASS/FAIL
+## lines; screenshots in user://shots/.
 ##   xvfb-run -a godot --path . res://tests/scroll_test.tscn
 
 const SLOT := 6
@@ -74,9 +76,12 @@ func _ready() -> void:
 # ------------------------------------------------------------------ deck builder
 
 func _deck_builder_tests() -> void:
+	var saved_filters = GameState.settings.get(DeckBuilder.SETTING, null)
 	var d := DeckBuilder.new()
 	main.ui_layer.add_child(d)
 	await _frames(6)
+	d._clear_filters()                    # filters remembered from an earlier visit
+	await _frames(4)
 	var sc := d.grid_scroll
 	var n0 := DeckTools.count(d._deck())
 	_check(sc.get_v_scroll_bar().max_value > sc.size.y + 50, "the collection overflows its list (%d cards)" % d.grid.get_child_count())
@@ -119,29 +124,96 @@ func _deck_builder_tests() -> void:
 		await _frames(2)
 	_check(sc.scroll_vertical > before, "the wheel scrolls the grid (%d -> %d)" % [before, sc.scroll_vertical])
 
-	# a tap (mouse) adds a card
+	# a tap (mouse) on a card opens it and adds nothing (from the top, so a whole row is in view
+	# even with the phone's large thumbnails)
 	await _frames(40)
+	await _show_addable(d)
 	var cv := _addable_card(d)
 	_check(cv != null, "an addable card is on screen")
 	if cv:
 		var id := cv.card_id
 		var had := int(d._deck().get(id, 0))
-		_mouse_button(cv.get_global_rect().get_center(), true)
+		var at := cv.get_global_rect().get_center() + Vector2(0, -30)
+		_mouse_button(at, true)
 		await _frames(2)
-		_mouse_button(cv.get_global_rect().get_center() + Vector2(3, 2), false)
+		_mouse_button(at + Vector2(3, 2), false)
 		await _frames(4)
-		_check(int(d._deck().get(id, 0)) == had + 1, "a mouse tap adds the card")
-	# a finger tap adds one too
-	await _frames(4)
+		_check(_viewer_open(d) and int(d._deck().get(id, 0)) == had, "a mouse tap opens the card")
+		await _close_viewer(d)
+		# a finger tap opens it too
+		_touch(at, true)
+		await _frames(2)
+		_touch(at, false)
+		await _frames(4)
+		_check(_viewer_open(d) and int(d._deck().get(id, 0)) == had, "a finger tap opens the card")
+		await _close_viewer(d)
+		# the "+" adds one at once, by mouse and by finger (the grid was rebuilt on closing)
+		cv = _card_by_id(d, id)
+		var plus: Control = cv.find_child("QuickAdd", false, false)
+		_check(plus.size.x >= UIKit.TARGET_W and plus.size.y >= UIKit.TARGET, "the + is a full touch target (%s)" % plus.size)
+		var pc := plus.get_global_rect().get_center()
+		_mouse_button(pc, true)
+		await _frames(2)
+		_mouse_button(pc, false)
+		await _frames(4)
+		_check(int(d._deck().get(id, 0)) == had + 1 and not _viewer_open(d), "a mouse tap on + adds the card")
+	await _show_addable(d)
 	cv = _addable_card(d)
 	if cv:
 		var id2 := cv.card_id
 		var had2 := int(d._deck().get(id2, 0))
-		_touch(cv.get_global_rect().get_center(), true)
+		var pc2: Vector2 = (cv.find_child("QuickAdd", false, false) as Control).get_global_rect().get_center()
+		_touch(pc2, true)
 		await _frames(2)
-		_touch(cv.get_global_rect().get_center(), false)
+		_touch(pc2, false)
 		await _frames(4)
-		_check(int(d._deck().get(id2, 0)) == had2 + 1, "a finger tap adds the card")
+		_check(int(d._deck().get(id2, 0)) == had2 + 1 and not _viewer_open(d), "a finger tap on + adds the card")
+		# Undo takes the last add back
+		_check(d.can_undo() and not d.undo_btn.disabled, "Undo is offered after a change")
+		d.undo_btn.pressed.emit()
+		await _frames(3)
+		_check(int(d._deck().get(id2, 0)) == had2, "Undo takes back the last card added")
+
+	# the land pips: a tap adds one, a hold takes one away, Undo brings it back
+	var pip: Button = d.land_pips["sanctum"]
+	var lid := Factions.land_id("sanctum")
+	var l0 := int(d._deck().get(lid, 0))
+	var lp := pip.get_global_rect().get_center()
+	_mouse_button(lp, true)
+	await _frames(2)
+	_mouse_button(lp, false)
+	await _frames(4)
+	_check(int(d._deck().get(lid, 0)) == l0 + 1, "a tap on a land pip adds a land")
+	_touch(lp, true)
+	await get_tree().create_timer(0.7).timeout
+	_touch(lp, false)
+	await _frames(4)
+	_check(int(d._deck().get(lid, 0)) == l0, "holding a land pip takes one away (and the release adds none)")
+	d.undo()
+	await _frames(3)
+	_check(int(d._deck().get(lid, 0)) == l0 + 1, "Undo brings the land back")
+	d.undo()
+	await _frames(3)
+
+	# the Filters drawer: counts its filters, covers the grid (a drag there does not scroll it)
+	d.filters_btn.pressed.emit()
+	await _frames(3)
+	_check(d.filters_open(), "the Filters button opens the drawer")
+	d.filter_opts[0].select(1)
+	d.filter_opts[0].item_selected.emit(1)
+	await _frames(3)
+	_check(d.active_filter_count() == 1 and d.filters_btn.text.contains("1"), "the Filters button shows one active filter (%s)" % d.filters_btn.text)
+	_check(d.grid.get_children().all(func(c): return CardView.kind(c.card) == "creature"), "the type filter applies")
+	_check(GameState.settings.get(DeckBuilder.SETTING, {}).get("type", 0) == 1, "the filters are remembered")
+	var panel: Control = d.drawer.get_node("Panel")
+	var under := Vector2(panel.get_global_rect().get_center().x, panel.get_global_rect().end.y - 30)
+	var sb4 := sc.scroll_vertical
+	await _mouse_drag(under, Vector2(0, -120))
+	_check(sc.scroll_vertical == sb4, "a drag on the drawer does not scroll the grid")
+	await _shot("filters")
+	d._clear_filters()
+	d._close_filters()
+	await _frames(4)
 
 	# the deck list: drag scrolls it without removing a card, a tap removes one
 	await _frames(6)
@@ -177,7 +249,25 @@ func _deck_builder_tests() -> void:
 	else:
 		_check(false, "a deck row is on screen")
 	d.queue_free()
+	if saved_filters == null:
+		GameState.settings.erase(DeckBuilder.SETTING)
+	else:
+		GameState.settings[DeckBuilder.SETTING] = saved_filters
 	await _frames(2)
+
+
+func _card_by_id(d: DeckBuilder, id: String) -> CardView:
+	for c in d.grid.get_children():
+		if c is CardView and c.card_id == id:
+			return c
+	return null
+
+
+func _close_viewer(d: Node) -> void:
+	for c in d.get_children():
+		if c is CardViewer:
+			c.close()
+	await _frames(4)
 
 
 func _viewer_open(d: Node) -> bool:
@@ -185,11 +275,23 @@ func _viewer_open(d: Node) -> bool:
 
 
 func _addable_card(d: DeckBuilder) -> CardView:
-	var r := d.grid_scroll.get_global_rect().grow(-20)
+	var r := d.grid_scroll.get_global_rect().grow(1)
 	for c in d.grid.get_children():
-		if c is CardView and not c.dimmed and r.encloses(c.get_global_rect()):
+		var q := c.find_child("QuickAdd", false, false) as Control
+		if c is CardView and not c.dimmed and q != null and q.visible and r.encloses(c.get_global_rect()):
 			return c
 	return null
+
+
+## Scroll the grid so that a card that can still be added is wholly in view.
+func _show_addable(d: DeckBuilder) -> void:
+	d.grid_drag.stop()
+	for c in d.grid.get_children():
+		var q := c.find_child("QuickAdd", false, false) as Control
+		if c is CardView and not c.dimmed and q != null and q.visible:
+			d.grid_scroll.scroll_vertical = int(c.position.y)
+			break
+	await _frames(4)
 
 
 func _visible_row(d: DeckBuilder) -> Button:

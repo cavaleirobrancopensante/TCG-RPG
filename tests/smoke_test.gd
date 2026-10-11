@@ -12,6 +12,7 @@ func _ready() -> void:
 	if not main.is_booted:
 		await main.booted
 	await _frames(5)
+	_check_title()
 	print("menu ok")
 	# Settings and slot screens open and close from the title page.
 	main._open_settings()
@@ -34,6 +35,7 @@ func _ready() -> void:
 
 	await _begin_run()
 	await _hero_sheet()
+	await _map_hud()
 
 	# Walk around the world a bit.
 	main.world.move_target = main.world.player_pos + Vector2(300, 0)
@@ -452,6 +454,7 @@ func _check_death() -> void:
 	done.pressed.emit()
 	await _frames(5)
 	assert(main.world == null and not (main.screen is GameOverScreen), "back to the title page")
+	_check_title()
 	print("death ok")
 
 
@@ -717,3 +720,78 @@ func _press_first_dialog_button() -> void:
 			if b.visible and not b.disabled and b.text != "":
 				b.pressed.emit()
 				return
+
+
+## The title page: Continue leads when (and only when) a save exists.
+func _check_title() -> void:
+	var cont: Button = main.screen.find_child("Continue", true, false)
+	assert((cont != null) == GameState.has_save(), "Continue shown only when a save exists")
+	assert(main.screen.find_child("NewGame", true, false) != null, "New game on the title page")
+
+
+## The lighter map HUD: steady buttons, Boosters and Camp only when they apply, the Menu panel
+## with Save, the "Saved" mark, and the journal's next goals.
+func _map_hud() -> void:
+	_close_dialogs()
+	var col: VBoxContainer = main.hud_col
+	for n in ["Hero", "Deck", "Journal", "Menu"]:
+		var b: Button = col.find_child(n, false, false)
+		assert(b != null and b.visible, "HUD has %s" % n)
+		assert(b.size.y >= UIKit.TARGET - 0.5, "HUD %s is a full tap target" % n)
+	assert(col.find_child("Save", false, false) == null, "Save moved into the Menu")
+	GameState.pending_boosters = 0
+	main._update_hud()
+	assert(not main.hud_boosters.visible, "no Boosters button without boosters")
+	GameState.pending_boosters = 1
+	main._update_hud()
+	assert(main.hud_boosters.visible and main.hud_boosters.text.contains("1"), "Boosters shows with the count")
+	GameState.pending_boosters = 0
+	main._update_hud()
+	assert(main.hud_camp.visible == main.world.can_camp(), "Camp shows only where a camp can be made")
+	assert(main.hud_level.text != "" and main.hud_life.text.contains("/") and main.hud_gold.text != "" and main.hud_cards.text != "", "status in pieces")
+	# the Menu panel: Save writes the current slot at once and the mark appears
+	main.toggle_world_menu()
+	await _frames(2)
+	assert(main.world_menu != null and not main.world.active, "the Menu panel opens and the world holds")
+	for n in ["Save", "SaveAs", "Settings", "CardDatabase", "MainMenu"]:
+		assert(main.world_menu.find_child(n, true, false) != null, "Menu has %s" % n)
+	var before := float(GameState.slot_info(GameState.slot).get("saved_unix", 0.0))
+	await _wait(1.2)
+	(main.world_menu.find_child("Save", true, false) as Button).pressed.emit()
+	await _frames(3)
+	assert(main.world_menu == null and main.world.active, "Save closes the panel")
+	assert(float(GameState.slot_info(GameState.slot).get("saved_unix", 0.0)) > float(before), "Save wrote the current slot")
+	assert(main.hud_saved.modulate.a > 0.5, "the Saved mark shows")
+	await _wait(3.0)
+	assert(main.hud_saved.modulate.a < 0.05, "the Saved mark fades")
+	# Settings from the Menu, and back to the road
+	main.toggle_world_menu()
+	await _frames(2)
+	(main.world_menu.find_child("Settings", true, false) as Button).pressed.emit()
+	await _frames(3)
+	var ss: SettingsScreen = null
+	for n in main.ui_layer.get_children():
+		if n is SettingsScreen:
+			ss = n
+	assert(ss != null and not main.world.active, "Settings open over the world")
+	ss._back()
+	await _frames(2)
+	assert(main.world.active and main.hud.visible, "back on the road after Settings")
+	# a tap beside the panel closes it
+	main.toggle_world_menu()
+	await _frames(2)
+	main.toggle_world_menu()
+	await _frames(2)
+	assert(main.world_menu == null and main.world.active, "the Menu button closes the panel again")
+	# the journal: no missions, a next goal instead
+	var keep: Dictionary = GameState.missions.duplicate(true)
+	var keep_er: Dictionary = GameState.errand.duplicate(true)
+	GameState.missions = {}
+	GameState.errand = {}
+	assert(not main.next_goals().is_empty(), "the journal has a next goal")
+	main.show_journal()
+	await _frames(2)
+	_close_dialogs()
+	GameState.missions = keep
+	GameState.errand = keep_er
+	print("map hud ok")

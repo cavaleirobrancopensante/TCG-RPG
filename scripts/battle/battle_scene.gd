@@ -43,7 +43,7 @@ var player_life: Button
 var enemy_info: RichTextLabel
 var player_info: RichTextLabel
 var enemy_relics: HBoxContainer
-var player_relics: HBoxContainer
+var player_relics: BoxContainer
 var hand_box: HBoxContainer
 var phase_bar: PhaseBar
 var stack_view: StackView
@@ -100,81 +100,102 @@ func start(p_info: Dictionary) -> void:
 func _build_ui() -> void:
 	var root := VBoxContainer.new()
 	UIKit.full_rect(root, UIKit.TOP)
-	root.add_theme_constant_override("separation", 4)
+	root.add_theme_constant_override("separation", ROW_SEP)
 	add_child(root)
 	root.resized.connect(queue_redraw)
 
-	# Enemy bar
+	# Enemy bar. Flee sits at the far left, well away from End turn.
 	var ebar := HBoxContainer.new()
-	ebar.custom_minimum_size.y = 58
+	ebar.custom_minimum_size.y = UIKit.TARGET
+	ebar.add_theme_constant_override("separation", 8)
 	root.add_child(ebar)
+	_enemy_bar = ebar
+	var flee := _btn("Flee", _ask_flee, 104)
+	flee.name = "Flee"
+	ebar.add_child(flee)
 	enemy_life = _life_button(true)
 	enemy_portrait = _Portrait.new()
 	enemy_portrait.look = _enemy_look()
 	enemy_portrait.pressed.connect(func(): _on_player_target(1))
 	ebar.add_child(enemy_portrait)
 	ebar.add_child(enemy_life)
-	enemy_info = _rich()
+	enemy_info = _rich(UIKit.FS_SECONDARY)
 	enemy_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	ebar.add_child(enemy_info)
 	enemy_relics = HBoxContainer.new()
 	ebar.add_child(enemy_relics)
-	var flee := UIKit.button("Flee", _ask_flee, 90)
-	flee.custom_minimum_size.y = 44
-	ebar.add_child(flee)
 
 	enemy_field = _field()
 	enemy_lands = _land_strip(1)
-	root.add_child(_field_row(enemy_lands, enemy_field))
+	_enemy_row = _field_row(enemy_lands, enemy_field)
+	root.add_child(_enemy_row)
 	_strips.append(ebar)
 	_grounds.append(enemy_field)
 
-	# Middle bar: phase, log, buttons
+	# Middle bar: phase, the last event, buttons
 	var mid := HBoxContainer.new()
-	mid.custom_minimum_size.y = 60
+	mid.custom_minimum_size.y = UIKit.TARGET + 4
 	mid.add_theme_constant_override("separation", 10)
 	root.add_child(mid)
 	_mid_bar = mid
 	phase_bar = PhaseBar.new()
+	phase_bar.popup_host = self
 	mid.add_child(phase_bar)
-	log_label = UIKit.label("", 16, UIKit.DIM, true)
-	log_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	log_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	mid.add_child(log_label)
-	btn_alt = UIKit.button("", _on_alt, 150)
+	_log_band = _LogBand.new()
+	_log_band.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	mid.add_child(_log_band)
+	log_label = _log_band.label
+	btn_alt = _btn("", _on_alt, 150)
 	mid.add_child(btn_alt)
-	btn_main = UIKit.button("", _on_main, 190)
+	btn_main = UIKit.primary_button("", _on_main, 190)
+	btn_main.custom_minimum_size.y = maxf(btn_main.custom_minimum_size.y, UIKit.TARGET)
 	mid.add_child(btn_main)
 
 	player_field = _field()
 	player_lands = _land_strip(0)
-	root.add_child(_field_row(player_lands, player_field))
+	_player_row = _field_row(player_lands, player_field)
+	player_relics = VBoxContainer.new()
+	player_relics.alignment = BoxContainer.ALIGNMENT_END
+	player_relics.add_theme_constant_override("separation", 4)
+	_player_row.add_child(player_relics)
+	root.add_child(_player_row)
 	_strips.append(mid)
 	_grounds.append(player_field)
 
-	var pbar := HBoxContainer.new()
-	pbar.custom_minimum_size.y = 58
-	root.add_child(pbar)
+	# Bottom: who you are (portrait, life, hand, deck, graveyard, mana) beside the hand
+	var bottom := HBoxContainer.new()
+	bottom.add_theme_constant_override("separation", 8)
+	root.add_child(bottom)
+	_bottom = bottom
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 2)
+	col.alignment = BoxContainer.ALIGNMENT_CENTER
+	var col_pad := MarginContainer.new()
+	col_pad.add_theme_constant_override("margin_left", 8)
+	col_pad.add_child(col)
+	bottom.add_child(col_pad)
+	_player_col = col
+	var prow := HBoxContainer.new()
+	prow.add_theme_constant_override("separation", 6)
+	col.add_child(prow)
 	player_life = _life_button(false)
 	player_portrait = _Portrait.new()
 	var hl: Dictionary = GameState.hero_look()
 	player_portrait.look = hl if not hl.is_empty() else {"faction": "sanctum", "subtype": "Human Pilgrim", "name": "Wanderer"}
 	player_portrait.pressed.connect(func(): _on_player_target(0))
-	pbar.add_child(player_portrait)
-	pbar.add_child(player_life)
-	player_info = _rich()
+	prow.add_child(player_portrait)
+	prow.add_child(player_life)
+	player_info = _rich(UIKit.FS_BODY)
+	player_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	player_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	pbar.add_child(player_info)
-	player_relics = HBoxContainer.new()
-	pbar.add_child(player_relics)
+	col.add_child(player_info)
 
-	var hand_scroll := ScrollContainer.new()
+	hand_scroll = ScrollContainer.new()
 	hand_scroll.custom_minimum_size.y = CardView.BASE.y * HAND_SCALE + 8
 	hand_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	hand_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root.add_child(hand_scroll)
-	_strips.append(pbar)
-	_strips.append(hand_scroll)
+	hand_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bottom.add_child(hand_scroll)
+	_strips.append(bottom)
 	hand_box = HBoxContainer.new()
 	hand_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hand_box.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -196,18 +217,159 @@ func _build_ui() -> void:
 	UIKit.full_rect(fx)
 	fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fx)
+	resized.connect(func(): _relayout(true))
+	_relayout(false)
+
+
+# =================================================================== layout
+
+const ROW_SEP := 4
+const HAND_MIN := 0.44           # the smallest hand card scale (a tap shows it full size)
+const FIG_MIN := 0.5
+const LOG_MIN_W := 220.0         # the log keeps at least this much of the middle bar
+var fig_zoom := 1.0              # battlefield figures, fitted to the screen's height
+var hand_scale := HAND_SCALE
+var hand_scroll: ScrollContainer
+var _enemy_bar: HBoxContainer
+var _enemy_row: HBoxContainer
+var _player_row: HBoxContainer
+var _player_col: VBoxContainer
+var _bottom: HBoxContainer
+var _log_band: _LogBand
+var _last_vp := Vector2.ZERO
+
+
+## Is this a phone (agent UIScale's call when it is there)?
+func _is_phone() -> bool:
+	var us = get_tree().root.get_node_or_null("UIScale") if is_inside_tree() else null
+	return us != null and us.has_method("is_phone") and bool(us.is_phone())
+
+
+## Fit the duel to the screen: the two bars and the hand keep their size, the figures and
+## lands share what is left of the height; the phase bar folds up when it can't fit.
+func _relayout(rebuild: bool) -> void:
+	if _mid_bar == null:
+		return
+	var vp := get_viewport_rect().size
+	var avail := vp.y - UIKit.TOP - ROW_SEP * 4
+	var bar_h := float(UIKit.TARGET)
+	var mid_h := float(UIKit.TARGET + 4)
+	hand_scale = clampf((avail * 0.28 - 14.0) / CardView.BASE.y, HAND_MIN, HAND_SCALE)
+	var hand_h := CardView.BASE.y * hand_scale + 14.0
+	var field_h := floorf((avail - bar_h - mid_h - hand_h) / 2.0)
+	fig_zoom = clampf(field_h / SummonFigure.SIZE.y, FIG_MIN, 1.0)
+	var land_zoom := clampf(field_h / LandStrip.BASE_H, FIG_MIN, 1.0)
+	hand_scroll.custom_minimum_size.y = hand_h
+	_player_col.custom_minimum_size.x = clampf(vp.x * 0.24, 230.0, 320.0)
+	for row in [_enemy_row, _player_row]:
+		row.custom_minimum_size.y = minf(field_h, SummonFigure.SIZE.y * fig_zoom + 8.0)
+		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	for f in [enemy_field, player_field]:
+		f.custom_minimum_size.y = SummonFigure.SIZE.y * fig_zoom
+	for ls in [enemy_lands, player_lands]:
+		ls.set_zoom(land_zoom)
+	for uid in figures:
+		figures[uid].set_zoom(fig_zoom)
+	# phones, or a strip that would squeeze the log out: chip and current step only
+	var buttons := btn_main.get_combined_minimum_size().x + (btn_alt.get_combined_minimum_size().x if btn_alt.visible else 0.0)
+	phase_bar.set_compact(_is_phone() or phase_bar.full_width() + buttons + LOG_MIN_W + 40.0 > vp.x)
+	if rebuild and vp != _last_vp and st != null:
+		_last_vp = vp
+		for i in 2:
+			_restack(i)
+		_rebuild_hand()
+		_refresh_stack_view()
+		queue_redraw()
+	_last_vp = vp
+
+
+## A full-size figure's measurements at the current zoom.
+func _fsz() -> Vector2:
+	return SummonFigure.SIZE * fig_zoom
+
+
+## A parchment panel kept in the middle of `over` (it stays centred if the screen changes).
+func _centered_panel(over: Control) -> PanelContainer:
+	var center := CenterContainer.new()
+	UIKit.full_rect(center)
+	over.add_child(center)
+	var panel := PanelContainer.new()
+	center.add_child(panel)
+	return panel
+
+
+## A button at least a full touch target tall.
+func _btn(text: String, cb: Callable, min_w: int = 120) -> Button:
+	var b := UIKit.button(text, cb, min_w)
+	b.custom_minimum_size.y = maxf(b.custom_minimum_size.y, UIKit.TARGET)
+	return b
+
+
+## The middle bar's last event: the newest line lights up gold and fades, so it is noticed.
+class _LogBand extends Control:
+	var label: Label
+	var glow := 0.0:
+		set(v):
+			glow = v
+			queue_redraw()
+	var _tw: Tween
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		clip_contents = true
+		label = UIKit.label("", UIKit.FS_SECONDARY, UIKit.TEXT, true)
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.max_lines_visible = 2
+		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		UIKit.full_rect(label)
+		label.offset_left = 8
+		label.offset_right = -8
+		add_child(label)
+
+	func flash() -> void:
+		if _tw:
+			_tw.kill()
+		glow = 1.0
+		label.modulate = Color(1, 1, 1, 0.35)
+		_tw = create_tween().set_parallel(true)
+		_tw.tween_property(label, "modulate:a", 1.0, 0.15)
+		_tw.tween_property(self, "glow", 0.0, 1.8).set_delay(0.6).set_ease(Tween.EASE_IN)
+
+	func _draw() -> void:
+		var r := Rect2(Vector2.ZERO, size).grow_individual(0, -6, 0, -6)
+		draw_rect(r, Color(Tapestry.PARCHMENT_LIGHT, 0.55))
+		if glow > 0.0:
+			draw_rect(r, Color(Tapestry.GILT, 0.75 * glow))
+			draw_rect(r, Color(Tapestry.RUBRIC, glow), false, 2.0)
+		draw_rect(r, Color(Tapestry.INK, 0.35), false, 1.0)
 
 
 ## The stack sits at the right, just above the middle bar (clear of its buttons).
 func _place_stack_view() -> void:
 	if stack_view == null or _mid_bar == null:
 		return
+	var room := _stack_room()
+	if stack_view.max_plates != room and not view_stack.is_empty():
+		stack_view.max_plates = room
+		stack_view.set_entries(view_stack)
 	var sz := stack_view.get_combined_minimum_size()
 	stack_view.size = sz
 	stack_view.position = Vector2(size.x - sz.x - 10, _mid_bar.global_position.y - global_position.y - sz.y - 6)
 
 
+## How many plates fit between the enemy bar and the middle bar.
+func _stack_room() -> int:
+	if _enemy_bar == null:
+		return StackView.MAX_PLATES
+	var space := _mid_bar.global_position.y - (_enemy_bar.global_position.y + _enemy_bar.size.y) - 12.0
+	var plate_h := maxf(StackView.PLATE.y, UIKit.TARGET) + 2.0
+	return clampi(int((space - UIKit.FS_MIN - 8.0) / plate_h), 1, StackView.MAX_PLATES)
+
+
 func _refresh_stack_view() -> void:
+	stack_view.max_plates = _stack_room()
 	stack_view.set_entries(view_stack)
 	_place_stack_view()
 	if arrows:
@@ -245,7 +407,7 @@ func _show_stack_card(e: Dictionary) -> void:
 
 func _field() -> HBoxContainer:
 	var f := HBoxContainer.new()
-	f.custom_minimum_size.y = SummonFigure.SIZE.y
+	f.custom_minimum_size.y = SummonFigure.SIZE.y * fig_zoom
 	f.alignment = BoxContainer.ALIGNMENT_CENTER
 	f.add_theme_constant_override("separation", 6)
 	return f
@@ -301,7 +463,7 @@ class _Portrait extends Button:
 	var glow := false
 
 	func _init() -> void:
-		custom_minimum_size = Vector2(66, 56)
+		custom_minimum_size = Vector2(72, UIKit.TARGET)
 		flat = true
 		focus_mode = Control.FOCUS_NONE
 		clip_contents = true
@@ -421,25 +583,26 @@ func _relic_pos(uid: int) -> Vector2:
 
 
 func _fig_center(f: SummonFigure) -> Vector2:
-	return f.global_position + Vector2(SummonFigure.SIZE.x * 0.5, SummonFigure.SIZE.y * 0.42)
+	return f.global_position + Vector2(f.size.x * 0.5, f.size.y * 0.42)
 
 
 func _life_button(is_enemy: bool) -> Button:
 	var b := Button.new()
-	b.custom_minimum_size = Vector2(150, 44)
-	b.add_theme_font_size_override("font_size", 24)
+	b.custom_minimum_size = Vector2(112, UIKit.TARGET)
+	b.add_theme_font_size_override("font_size", UIKit.FS_HEADING - 2)
 	b.flat = false
 	b.pressed.connect(func(): _on_player_target(1 if is_enemy else 0))
 	return b
 
 
-func _rich() -> RichTextLabel:
+func _rich(fs: int) -> RichTextLabel:
 	var r := RichTextLabel.new()
 	r.bbcode_enabled = true
 	r.fit_content = true
 	r.scroll_active = false
 	r.autowrap_mode = TextServer.AUTOWRAP_OFF
-	r.add_theme_font_size_override("normal_font_size", 17)
+	r.add_theme_font_size_override("normal_font_size", fs)
+	r.add_theme_font_size_override("bold_font_size", fs)
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	r.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	return r
@@ -481,6 +644,7 @@ func _local(c: Control) -> Rect2:
 func refresh() -> void:
 	if st == null:
 		return
+	_relayout(false)
 	for i in 2:
 		var s := st.side(i)
 		var alive := {}
@@ -552,7 +716,7 @@ func _restack(i: int) -> void:
 			continue
 		var uids: Array = groups[k][1]
 		var tok: bool = st.find_perm(uids[0]).is_token
-		slots[k].arrange(uids.map(func(u): return figures[u]), TOKEN_STEP if tok else STACK_STEP)
+		slots[k].arrange(uids.map(func(u): return figures[u]), (TOKEN_STEP if tok else STACK_STEP) * fig_zoom, fig_zoom)
 	_fit_field(field)
 
 
@@ -560,13 +724,15 @@ class _Stack extends Control:
 	## One pile of identical figures. Front figure bottom-left, the rest stepping up-right.
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		size_flags_vertical = Control.SIZE_SHRINK_END      # figures stand on the ground line
 
-	func arrange(figs: Array, step: Vector2) -> void:
+	func arrange(figs: Array, step: Vector2, zoom: float = 1.0) -> void:
 		var n := figs.size()
-		custom_minimum_size = SummonFigure.SIZE + Vector2(step.x * (n - 1), 0)
+		custom_minimum_size = SummonFigure.SIZE * zoom + Vector2(step.x * (n - 1), 0)
 		# back figures first so the front one is drawn (and clicked) on top
 		for k in range(n - 1, -1, -1):
 			var f: SummonFigure = figs[k]
+			f.set_zoom(zoom)
 			if f.get_parent() != self:
 				if f.get_parent():
 					f.reparent(self, false)
@@ -592,6 +758,8 @@ func _fit_field(field: HBoxContainer) -> void:
 		total += w
 	var strip: LandStrip = player_lands if field == player_field else enemy_lands
 	var avail := get_viewport_rect().size.x - maxf(strip.size.x, strip.custom_minimum_size.x) - 12.0
+	if field == player_field and player_relics.get_child_count() > 0:
+		avail -= player_relics.get_combined_minimum_size().x + 4.0
 	var sep := 6.0
 	if n > 1 and total + sep * (n - 1) > avail:
 		sep = floorf((avail - total) / float(n - 1))
@@ -601,6 +769,7 @@ func _fit_field(field: HBoxContainer) -> void:
 func _spawn_figure(p, animate: bool) -> SummonFigure:
 	var fig := SummonFigure.new()
 	fig.setup(p.uid, p.card, p.owner == 1)
+	fig.set_zoom(fig_zoom)
 	fig.sync(p)
 	# tap on release, long press to read the card (in every mode); see _watch_hold
 	_watch_hold(fig, func(): _on_figure_tapped(fig), func(): _on_figure_long(fig))
@@ -615,12 +784,21 @@ func _spawn_figure(p, animate: bool) -> SummonFigure:
 func _refresh_relics(i: int) -> void:
 	var box := player_relics if i == 0 else enemy_relics
 	UIKit.clear(box)
-	for r in st.side(i).relics:
+	var list: Array = st.side(i).relics
+	# ours stand in a column at the end of our rank: as tall as a touch target when they fit
+	var bh := float(UIKit.TARGET)
+	if i == 0 and not list.is_empty():
+		bh = clampf((SummonFigure.SIZE.y * fig_zoom + 8.0) / list.size() - 4.0, 44.0, UIKit.TARGET)
+	for r in list:
 		var b := Button.new()
 		b.set_meta("uid", r.uid)
 		b.text = "✧ " + I18n.t(r.name)
-		b.custom_minimum_size = Vector2(0, 40)
-		b.add_theme_font_size_override("font_size", 14)
+		b.custom_minimum_size = Vector2(150 if i == 0 else 0, bh)
+		b.add_theme_font_size_override("font_size", UIKit.FS_MIN)
+		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		b.clip_text = true
+		if i == 1:
+			b.custom_minimum_size.x = minf(200.0, 40.0 + Tapestry.font("book").get_string_size(b.text, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.FS_MIN).x)
 		var ruid: int = r.uid
 		var rside := i
 		_watch_hold(b, func():
@@ -652,7 +830,8 @@ func _refresh_bars() -> void:
 		lb.text = "♥ %d" % s.life
 		lb.add_theme_color_override("font_color", UIKit.RED if s.life <= 5 else UIKit.TEXT)
 		lb.add_theme_color_override("font_hover_color", UIKit.RED)
-		var t := "[b]%s[/b]   ✋%d  📚%d  ⚰%d   " % [s.name, s.hand.size(), s.deck.size(), s.graveyard.size()]
+		var t := ("✋%d  📚%d  ⚰%d\n" % [s.hand.size(), s.deck.size(), s.graveyard.size()]) if i == 0 \
+			else "[b]%s[/b]   ✋%d  📚%d  ⚰%d   " % [s.name, s.hand.size(), s.deck.size(), s.graveyard.size()]
 		# Lands: untapped/total per colour.
 		var tot := {}
 		var free := {}
@@ -676,15 +855,15 @@ func _refresh_bars() -> void:
 func _rebuild_hand() -> void:
 	UIKit.clear(hand_box)
 	var hand: Array = st.side(0).hand
-	var w := CardView.BASE.x * HAND_SCALE
-	var avail := get_viewport_rect().size.x - 20.0
+	var w := CardView.BASE.x * hand_scale
+	var avail := get_viewport_rect().size.x - _player_col.custom_minimum_size.x - 28.0
 	var sep := 6.0
 	if hand.size() > 1 and hand.size() * (w + 6) > avail:
 		sep = (avail - w) / float(hand.size() - 1) - w
 	hand_box.add_theme_constant_override("separation", int(sep))
 	hand_box.custom_minimum_size.x = avail
 	for idx in hand.size():
-		var cv := CardView.create(hand[idx], HAND_SCALE)
+		var cv := CardView.create(hand[idx], hand_scale)
 		cv.highlight = st.can_play(0, idx) and mode == "idle" and not busy
 		var i2 := idx
 		cv.tapped.connect(func(_v): _on_hand_tapped(i2))
@@ -806,8 +985,7 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 	dim.color = Color(0, 0, 0, 0.55)
 	UIKit.full_rect(dim)
 	add_child(dim)
-	var panel := PanelContainer.new()
-	dim.add_child(panel)
+	var panel := _centered_panel(dim)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	panel.add_child(v)
@@ -815,7 +993,7 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
 	var note := UIKit.label(note_text, 18, UIKit.TEXT, true)
-	note.custom_minimum_size.x = 640
+	note.custom_minimum_size.x = minf(640.0, get_viewport_rect().size.x - 80.0)
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(note)
 	var row := HBoxContainer.new()
@@ -844,15 +1022,13 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 		row.add_child(cv)
 		views.append(cv)
 	if mode == "foresight":
-		v.add_child(UIKit.button("Confirm", func():
+		v.add_child(_btn("Confirm", func():
 			var keep_ids: Array = []
 			for j in ids.size():
 				if not bottom.has(j):
 					keep_ids.append(ids[j])
 			dim.queue_free()
 			_picked.emit(keep_ids), 200))
-	await get_tree().process_frame
-	panel.position = (get_viewport_rect().size - panel.size) * 0.5
 	return await _picked
 
 
@@ -923,7 +1099,7 @@ func _animate(e: Dictionary) -> void:
 			var fig: SummonFigure = figures[p.uid] if figures.has(p.uid) else _spawn_figure(p, true)
 			fig.summon_t = 0.0
 			await get_tree().process_frame
-			_burst(fig.global_position + Vector2(SummonFigure.SIZE.x * 0.5, SummonFigure.SIZE.y - 30), Factions.color(fig.faction).lightened(0.3), 30)
+			_burst(fig.global_position + Vector2(_fsz().x * 0.5, _fsz().y - 30 * fig_zoom), Factions.color(fig.faction).lightened(0.3), 30)
 			await fig.play_summon()
 		"relic":
 			if not e.get("from_stack", false):
@@ -998,7 +1174,7 @@ func _animate(e: Dictionary) -> void:
 		"die":
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
-				_burst(f.global_position + SummonFigure.SIZE * 0.5, Factions.color(f.faction), 24)
+				_burst(f.global_position + _fsz() * 0.5, Factions.color(f.faction), 24)
 				figures.erase(e["uid"])
 				await f.play_death()
 				f.queue_free()
@@ -1015,7 +1191,7 @@ func _animate(e: Dictionary) -> void:
 				var p = st.find_perm(e["uid"])
 				if p:
 					f.sync(p)
-				_float_text("+%d/+%d" % [e["p"], e["t"]], f.global_position + SummonFigure.SIZE * 0.5, UIKit.GREEN)
+				_float_text("+%d/+%d" % [e["p"], e["t"]], f.global_position + _fsz() * 0.5, UIKit.GREEN)
 				await f.play_buff()
 		"tap":
 			var p = st.find_perm(e["uid"])
@@ -1046,30 +1222,30 @@ func _animate(e: Dictionary) -> void:
 				var p = st.find_perm(e["uid"])
 				if p:
 					f.sync(p)
-				_float_text(I18n.t("Regenerates"), f.global_position + SummonFigure.SIZE * 0.5, UIKit.GREEN)
+				_float_text(I18n.t("Regenerates"), f.global_position + _fsz() * 0.5, UIKit.GREEN)
 				await f.play_buff()
 		"pacify", "snare":
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
-				_float_text(I18n.t("Pacified") if e["type"] == "pacify" else I18n.t("Snared"), f.global_position + SummonFigure.SIZE * 0.5, Tapestry.GILT)
+				_float_text(I18n.t("Pacified") if e["type"] == "pacify" else I18n.t("Snared"), f.global_position + _fsz() * 0.5, Tapestry.GILT)
 				var p = st.find_perm(e["uid"])
 				if p:
 					f.sync(p)
 				await _wait(0.3)
 		"prevented":
 			if figures.has(e["uid"]):
-				_float_text(I18n.t("Prevented"), figures[e["uid"]].global_position + SummonFigure.SIZE * 0.5, UIKit.DIM)
+				_float_text(I18n.t("Prevented"), figures[e["uid"]].global_position + _fsz() * 0.5, UIKit.DIM)
 				await _wait(0.15)
 		"idle":
 			if figures.has(e["uid"]):
-				_float_text(I18n.t("Idle"), figures[e["uid"]].global_position + Vector2(SummonFigure.SIZE.x * 0.5, 20), Tapestry.GILT)
+				_float_text(I18n.t("Idle"), figures[e["uid"]].global_position + Vector2(_fsz().x * 0.5, 20), Tapestry.GILT)
 				await _wait(0.25)
 		"fight":
 			var fp = st.find_perm(e["uid"])
 			_log(I18n.t("%s fights!") % (I18n.t(fp.name) if fp else ""))
 		"overclock":
 			if figures.has(e["uid"]):
-				_burst(figures[e["uid"]].global_position + SummonFigure.SIZE * 0.5, Tapestry.GILT, 30)
+				_burst(figures[e["uid"]].global_position + _fsz() * 0.5, Tapestry.GILT, 30)
 			_log(I18n.t("Overclocked!"))
 		"ability":
 			_log(I18n.t("%s uses: %s") % [st.side(e["side"]).name, I18n.t(String(e.get("text", "")))])
@@ -1096,7 +1272,7 @@ func _animate(e: Dictionary) -> void:
 func _ref_pos(ref: Dictionary) -> Vector2:
 	if ref.get("kind") == "creature" and figures.has(ref["uid"]):
 		var f: SummonFigure = figures[ref["uid"]]
-		return f.global_position + Vector2(SummonFigure.SIZE.x * 0.5, SummonFigure.SIZE.y * 0.45)
+		return f.global_position + Vector2(f.size.x * 0.5, f.size.y * 0.45)
 	return portrait_pos(int(ref.get("side", 0)))
 
 
@@ -1107,8 +1283,10 @@ func _wait(t: float) -> void:
 
 
 func _log(t: String) -> void:
-	t = CardView.plain_text(t)
-	log_label.text = t
+	t = CardView.plain_text(I18n.t(t))
+	if log_label.text != t:
+		log_label.text = t
+		_log_band.flash()
 
 
 func _banner(text: String) -> void:
@@ -1209,8 +1387,7 @@ func _player_mulligan() -> void:
 	dim.color = Color(0, 0, 0, 0.55)
 	UIKit.full_rect(dim)
 	add_child(dim)
-	var panel := PanelContainer.new()
-	dim.add_child(panel)
+	var panel := _centered_panel(dim)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	panel.add_child(v)
@@ -1219,7 +1396,7 @@ func _player_mulligan() -> void:
 	v.add_child(head)
 	var note := UIKit.label("", 19, UIKit.TEXT, true)
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	note.custom_minimum_size.x = 700
+	note.custom_minimum_size.x = minf(700.0, get_viewport_rect().size.x - 80.0)
 	v.add_child(note)
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -1257,7 +1434,7 @@ func _player_mulligan() -> void:
 			row.add_child(cv)
 		if picking[0]:
 			note.text = I18n.t("Choose %d card(s) to put on the bottom of your library. (%d/%d)") % [need, chosen.size(), need] + "\n" + I18n.t("Hold a card to read it.")
-			var ok := UIKit.button("Confirm", func():
+			var ok := _btn("Confirm", func():
 				st.keep(0, chosen.duplicate())
 				_mulligan_done.emit(), 200)
 			ok.disabled = chosen.size() != need
@@ -1266,23 +1443,20 @@ func _player_mulligan() -> void:
 			var taken: int = st.mulligans[0]
 			note.text = (I18n.t("Keep these seven cards, or shuffle them away and draw seven new ones.") if taken == 0 \
 				else I18n.t("Mulligans taken: %d. If you keep, %d card(s) go to the bottom.") % [taken, need]) + "\n" + I18n.t("Tap a card to read it.")
-			var mb := UIKit.button(I18n.t("Mulligan"), func():
+			var mb := _btn(I18n.t("Mulligan"), func():
 				st.mulligan(0)
 				st.take_events()
 				chosen.clear()
 				redraw_ref[0].call(), 200)
 			mb.disabled = not st.can_mulligan(0)
 			btns.add_child(mb)
-			btns.add_child(UIKit.button("Keep", func():
+			btns.add_child(_btn("Keep", func():
 				if st.to_bottom(0) == 0:
 					st.keep(0)
 					_mulligan_done.emit()
 				else:
 					picking[0] = true
 					redraw_ref[0].call(), 200))
-		await get_tree().process_frame
-		if is_instance_valid(panel):      # the choice may already be made (and the panel gone)
-			panel.position = (get_viewport_rect().size - panel.size) * 0.5
 	redraw_ref[0] = redraw
 	redraw.call()
 	await _mulligan_done
@@ -1421,8 +1595,7 @@ func _ask(head: String, body: String, yes_label: String, no_label: String, cb: C
 	dim.color = Color(0, 0, 0, 0.5)
 	UIKit.full_rect(dim)
 	add_child(dim)
-	var panel := PanelContainer.new()
-	dim.add_child(panel)
+	var panel := _centered_panel(dim)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	panel.add_child(v)
@@ -1433,14 +1606,12 @@ func _ask(head: String, body: String, yes_label: String, no_label: String, cb: C
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
 	v.add_child(row)
-	row.add_child(UIKit.button(yes_label, func():
+	row.add_child(_btn(yes_label, func():
 		dim.queue_free()
 		cb.call(true), 180))
-	row.add_child(UIKit.button(no_label, func():
+	row.add_child(_btn(no_label, func():
 		dim.queue_free()
 		cb.call(false), 180))
-	await get_tree().process_frame
-	panel.position = (get_viewport_rect().size - panel.size) * 0.5
 
 
 ## Ask for the next target, or play the card once all are chosen.
@@ -1660,7 +1831,102 @@ func _on_main() -> void:
 				st.pass_priority(0)
 				_priority_action.emit()
 			elif idle_main and st.active == 0 and st.phase != "over":
+				var unused := unspent_check()
+				if not unused.is_empty():
+					_ask_unspent(unused)
+					return
 				await _player_end_turn()
+
+
+# =================================================================== mana left unused
+
+## Setting: ask before ending the turn with mana and a castable card left (or, in the first
+## few duels, with creatures that could have attacked). "Don't ask again" turns it off.
+const ASK_UNSPENT_KEY := "ask_unspent_mana"
+const FEW_DUELS := 5
+var _unspent_turn := -1          # the turn the question was asked (asked once a turn)
+var _unspent_dlg: Control = null
+
+
+static func ask_unspent_enabled() -> bool:
+	return bool(GameState.settings.get(ASK_UNSPENT_KEY, true))
+
+
+## Is there a reason to ask before ending this turn? {"kind": "mana"|"attack", "n": mana}
+## or {} when the turn can just end. Instants don't count: holding one up is a plan.
+func unspent_check() -> Dictionary:
+	if auto_play or not ask_unspent_enabled() or _unspent_turn == st.turn or mode != "idle":
+		return {}
+	var me := st.side(0)
+	var n := 0
+	for l in me.lands:
+		if not l["tapped"]:
+			n += 1
+	for k in me.pool:
+		n += int(me.pool[k])
+	if n > 0:
+		for idx in me.hand.size():
+			var c := CardDB.get_card(me.hand[idx])
+			if c.get("type") != "land" and not BattleState.is_instant(c) and st.can_play(0, idx) and st.has_useful_targets(0, c):
+				return {"kind": "mana", "n": n}
+	var duels := int(GameState.stats.get("wins", 0)) + int(GameState.stats.get("losses", 0))
+	if duels < FEW_DUELS and st.phase == "main1" and not st.attack_candidates(0).is_empty():
+		return {"kind": "attack", "n": n}
+	return {}
+
+
+## "End turn with N mana unused?": Keep playing (safe, left) or End turn (right), with
+## "Don't ask again".
+func _ask_unspent(why: Dictionary) -> void:
+	_unspent_turn = st.turn
+	_close_unspent()
+	var dim := ColorRect.new()
+	dim.color = Color(0.08, 0.05, 0.03, 0.55)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	_unspent_dlg = dim
+	var center := CenterContainer.new()
+	UIKit.full_rect(center)
+	dim.add_child(center)
+	var panel := PanelContainer.new()
+	center.add_child(panel)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
+	panel.add_child(v)
+	var head := I18n.t("End turn with %d mana unused?") % int(why["n"]) if why["kind"] == "mana" else I18n.t("End turn without attacking?")
+	v.add_child(UIKit.title(head, UIKit.FS_HEADING))
+	var body := I18n.t("You can still cast a card from your hand.") if why["kind"] == "mana" \
+		else I18n.t("Your creatures can still attack this turn. Press Attack to choose them.")
+	var l := UIKit.label(body, UIKit.FS_BODY, UIKit.TEXT, true)
+	l.custom_minimum_size.x = minf(460.0, get_viewport_rect().size.x - 80.0)
+	v.add_child(l)
+	var never := CheckBox.new()
+	never.text = I18n.t("Don't ask again")
+	never.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY)
+	never.custom_minimum_size.y = UIKit.TARGET
+	v.add_child(never)
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 24)
+	v.add_child(row)
+	var remember := func():
+		if never.button_pressed and GameState.has_method("set_setting"):
+			GameState.set_setting(ASK_UNSPENT_KEY, false)
+	row.add_child(_btn("Keep playing", func():
+		remember.call()
+		_close_unspent(), 190))
+	var end := _btn("End turn", func():
+		remember.call()
+		_close_unspent()
+		if not busy and idle_main and st.active == 0 and st.phase != "over" and mode == "idle":
+			await _player_end_turn(), 190)
+	row.add_child(end)
+
+
+func _close_unspent() -> void:
+	if _unspent_dlg and is_instance_valid(_unspent_dlg):
+		_unspent_dlg.queue_free()
+	_unspent_dlg = null
 
 
 # =================================================================== priority windows
@@ -1881,6 +2147,7 @@ func _player_blocks() -> void:
 
 
 func _player_end_turn() -> void:
+	_close_unspent()
 	idle_main = false
 	mode = "idle"
 	busy = true
@@ -2009,7 +2276,9 @@ func _show_result() -> void:
 	var sub := UIKit.label((I18n.t("%s is defeated.") % st.side(1).name) if won else I18n.t(lost_line), 22)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(sub)
-	v.add_child(UIKit.button("Continue", func(): finished.emit(won), 240))
+	var cont := UIKit.primary_button("Continue", func(): finished.emit(won), 240)
+	cont.custom_minimum_size.y = maxf(cont.custom_minimum_size.y, UIKit.TARGET)
+	v.add_child(cont)
 	panel.custom_minimum_size = Vector2(520, 260)
 	await get_tree().process_frame
 	panel.position = (get_viewport_rect().size - panel.size) * 0.5

@@ -11,7 +11,7 @@ var sheet: Dictionary = {}
 var _rng := RandomNumberGenerator.new()
 var _preview: _Preview
 var _name_edit: LineEdit
-var _faith_box: HBoxContainer
+var _faith_box: HFlowContainer
 var _looks_box: VBoxContainer
 var _stats_box: VBoxContainer
 var _points_label: Label
@@ -35,87 +35,106 @@ func _ready() -> void:
 	add_child(Backdrop.create("rings"))
 	var root := VBoxContainer.new()
 	UIKit.content_rect(root)
-	root.add_theme_constant_override("separation", 8)
+	root.add_theme_constant_override("separation", UIKit.SP_1)
 	add_child(root)
 
 	var head := HBoxContainer.new()
-	head.add_theme_constant_override("separation", 10)
+	head.add_theme_constant_override("separation", UIKit.SP_1)
 	root.add_child(head)
-	var t := UIKit.title("Your Hero", 40)
+	var t := UIKit.title("Your Hero", UIKit.FS_TITLE)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	t.clip_text = true
+	t.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	t.custom_minimum_size.x = 120
 	head.add_child(t)
-	head.add_child(UIKit.button("Roll again", _reroll, 170))
+	# the classic heroes, for those who want them, behind one button beside the faiths
+	var classic := MenuButton.new()
+	classic.name = "Classic"
+	classic.text = "Classic heroes"
+	classic.flat = false
+	classic.custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
+	var pm := classic.get_popup()
+	pm.add_theme_constant_override("v_separation", UIKit.TARGET - 28)
+	for i in Factions.ORDER.size():
+		var fx: String = Factions.ORDER[i]
+		pm.add_item("%s  (%s)" % [Hero.CLASSIC[fx]["name"], Factions.info(fx)["short"]], i)
+	pm.id_pressed.connect(func(id: int): _classic(Factions.ORDER[id]))
+	head.add_child(UIKit.button("Roll again", _reroll, 120))
 	head.add_child(UIKit.button("Back", func():
 		closed.emit()
-		queue_free(), 120))
-	head.add_child(UIKit.button("Next", _begin, 160))
+		queue_free(), 100))
+	head.add_child(UIKit.primary_button("Next", _begin, 130))
 
 	var cols := HBoxContainer.new()
-	cols.add_theme_constant_override("separation", 16)
+	cols.add_theme_constant_override("separation", UIKit.SP_2)
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(cols)
 
-	# left: the hero himself
+	# left: the hero himself (the picture takes what height there is)
+	var narrow := get_viewport_rect().size.x < 900.0
+	var lw := 200.0 if narrow else 250.0
 	var left := VBoxContainer.new()
-	left.custom_minimum_size.x = 300
-	left.add_theme_constant_override("separation", 8)
+	left.custom_minimum_size.x = lw
+	left.add_theme_constant_override("separation", UIKit.SP_1)
 	cols.add_child(left)
 	_preview = _Preview.new()
-	_preview.custom_minimum_size = Vector2(300, 330)
+	_preview.custom_minimum_size = Vector2(lw, 120)
+	_preview.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	left.add_child(_preview)
 	_name_edit = LineEdit.new()
 	_name_edit.max_length = 28
-	_name_edit.add_theme_font_size_override("font_size", 22)
+	_name_edit.custom_minimum_size.y = UIKit.TARGET
+	_name_edit.add_theme_font_size_override("font_size", UIKit.FS_BODY + 2)
 	_name_edit.text_changed.connect(func(tx): sheet["name"] = tx)
 	left.add_child(_name_edit)
-	_faith_label = UIKit.label("", 15, UIKit.DIM, true)
+	_faith_label = UIKit.label("", UIKit.FS_MIN, UIKit.DIM, true)
+	_faith_label.custom_minimum_size.x = lw
 	left.add_child(_faith_label)
 
 	# middle: faith and looks
 	var mid := VBoxContainer.new()
 	mid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	mid.add_theme_constant_override("separation", 6)
+	mid.add_theme_constant_override("separation", UIKit.SP_1)
 	cols.add_child(_scroller(mid))
-	mid.add_child(UIKit.title("Faith", 24))
-	_faith_box = HBoxContainer.new()
-	_faith_box.add_theme_constant_override("separation", 6)
+	var fh := HBoxContainer.new()
+	fh.add_theme_constant_override("separation", UIKit.SP_1)
+	mid.add_child(fh)
+	var ft := UIKit.title("Faith", UIKit.FS_HEADING - 4)
+	ft.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	fh.add_child(ft)
+	fh.add_child(classic)
+	_faith_box = HFlowContainer.new()
+	_faith_box.add_theme_constant_override("h_separation", UIKit.SP_1)
+	_faith_box.add_theme_constant_override("v_separation", UIKit.SP_1)
 	mid.add_child(_faith_box)
-	mid.add_child(UIKit.title("Appearance", 24))
+	mid.add_child(UIKit.title("Appearance", UIKit.FS_HEADING - 4))
 	_looks_box = VBoxContainer.new()
-	_looks_box.add_theme_constant_override("separation", 4)
+	_looks_box.add_theme_constant_override("separation", UIKit.SP_1)
 	mid.add_child(_looks_box)
-
 
 	# right: stats
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	right.add_theme_constant_override("separation", 6)
+	right.add_theme_constant_override("separation", UIKit.SP_1)
 	cols.add_child(_scroller(right))
 	var sh := HBoxContainer.new()
 	right.add_child(sh)
-	var st := UIKit.title("Stats", 24)
+	var st := UIKit.title("Stats", UIKit.FS_HEADING - 4)
 	st.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sh.add_child(st)
-	_points_label = UIKit.label("", 18, UIKit.GOLD)
+	_points_label = UIKit.label("", UIKit.FS_SECONDARY + 1, UIKit.GOLD)
 	sh.add_child(_points_label)
-	right.add_child(UIKit.label("Everyone has 10 life and keeps 5 cards in hand.", 15, UIKit.DIM, true))
+	right.add_child(UIKit.label("Everyone has 10 life and keeps 5 cards in hand.", UIKit.FS_MIN, UIKit.DIM, true))
 	_stats_box = VBoxContainer.new()
-	_stats_box.add_theme_constant_override("separation", 4)
+	_stats_box.add_theme_constant_override("separation", UIKit.SP_1)
 	right.add_child(_stats_box)
-	# the classic heroes, for those who want them, at the foot of the page
-	var classic := HBoxContainer.new()
-	classic.add_theme_constant_override("separation", 6)
-	root.add_child(classic)
-	classic.add_child(UIKit.label("Or a classic hero:", 17, UIKit.DIM))
-	for faith in Factions.ORDER:
-		var fx: String = faith
-		var cb := UIKit.button(Hero.CLASSIC[fx]["name"], func():
-			var d: String = sheet.get("difficulty", "knight")
-			sheet = Hero.classic_sheet(fx)
-			sheet["difficulty"] = d
-			_refresh(), 150)
-		cb.custom_minimum_size.y = 44
-		classic.add_child(cb)
+	_refresh()
+
+
+func _classic(fx: String) -> void:
+	var d: String = sheet.get("difficulty", "knight")
+	sheet = Hero.classic_sheet(fx)
+	sheet["difficulty"] = d
 	_refresh()
 
 
@@ -152,9 +171,10 @@ func _refresh() -> void:
 	for faith in Factions.ORDER:
 		var fx: String = faith
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(62, 62)
+		b.custom_minimum_size = Vector2(UIKit.TARGET, UIKit.TARGET)
 		b.toggle_mode = true
 		b.button_pressed = fx == f
+		UIKit.set_selected(b, fx == f)
 		b.tooltip_text = Factions.info(fx)["name"]
 		b.pressed.connect(func():
 			sheet["faith"] = fx
@@ -171,27 +191,33 @@ func _refresh() -> void:
 		var key: String = row[1]
 		var options: Array = {"SKINS": Hero.SKINS, "HAIRS": Hero.HAIRS, "HAIR_COLS": Hero.HAIR_COLS, "BEARDS": Hero.BEARDS,
 			"CLOTHES": Hero.CLOTHES, "HEADS": Hero.HEADS}[row[2]]
+		# ‹ [what: value] ›, the name above the value so the row stays narrow
 		var line := HBoxContainer.new()
-		line.add_theme_constant_override("separation", 6)
-		var l := UIKit.label(row[0], 17, UIKit.TEXT)
-		l.custom_minimum_size.x = 130
-		line.add_child(l)
-		var lb := UIKit.button("‹", func(): _cycle(key, options, -1), 44)
-		lb.custom_minimum_size.y = 40
+		line.add_theme_constant_override("separation", UIKit.SP_1)
+		var lb := UIKit.button("‹", func(): _cycle(key, options, -1), UIKit.TARGET_W)
+		lb.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
 		line.add_child(lb)
+		var mid := VBoxContainer.new()
+		mid.custom_minimum_size.x = 120
+		mid.alignment = BoxContainer.ALIGNMENT_CENTER
+		mid.add_theme_constant_override("separation", 0)
+		line.add_child(mid)
+		var l := UIKit.label(row[0], UIKit.FS_MIN, UIKit.DIM)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		mid.add_child(l)
 		var val = sheet["look"].get(key, options[0])
 		if val is Color:
 			var sw := ColorRect.new()
 			sw.color = val
-			sw.custom_minimum_size = Vector2(110, 30)
-			line.add_child(sw)
+			sw.custom_minimum_size = Vector2(90, 24)
+			sw.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			mid.add_child(sw)
 		else:
-			var vl := UIKit.label(I18n.t(VALUE_NAMES.get(val, String(val))), 17, UIKit.TEXT)
-			vl.custom_minimum_size.x = 110
+			var vl := UIKit.label(I18n.t(VALUE_NAMES.get(val, String(val))), UIKit.FS_SECONDARY + 1, UIKit.TEXT)
 			vl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			line.add_child(vl)
-		var rb := UIKit.button("›", func(): _cycle(key, options, 1), 44)
-		rb.custom_minimum_size.y = 40
+			mid.add_child(vl)
+		var rb := UIKit.button("›", func(): _cycle(key, options, 1), UIKit.TARGET_W)
+		rb.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
 		line.add_child(rb)
 		_looks_box.add_child(line)
 	# stats
@@ -206,25 +232,26 @@ func _refresh() -> void:
 		var v := VBoxContainer.new()
 		panel.add_child(v)
 		var line := HBoxContainer.new()
-		line.add_theme_constant_override("separation", 6)
+		line.add_theme_constant_override("separation", UIKit.SP_1)
 		v.add_child(line)
-		var nm := UIKit.label("%s  (%s)" % [I18n.t(info[1]), Factions.info(info[0])["short"]], 18, UIKit.faction_ink(info[0]))
+		var nm := UIKit.label("%s  (%s)" % [I18n.t(info[1]), Factions.info(info[0])["short"]], UIKit.FS_SECONDARY + 1, UIKit.faction_ink(info[0]), true)
 		nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nm.custom_minimum_size.x = 80
 		line.add_child(nm)
-		var minus := UIKit.button("−", func(): _stat(key, -1), 44)
-		minus.custom_minimum_size.y = 38
+		var minus := UIKit.button("−", func(): _stat(key, -1), UIKit.TARGET_W)
+		minus.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
 		minus.disabled = int(sheet["stats"][key]) <= 0
 		line.add_child(minus)
-		var val := UIKit.label(str(sheet["stats"][key]), 20, UIKit.GOLD)
-		val.custom_minimum_size.x = 26
+		var val := UIKit.label(str(sheet["stats"][key]), UIKit.FS_BODY + 2, UIKit.GOLD)
+		val.custom_minimum_size.x = 28
 		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		line.add_child(val)
-		var plus := UIKit.button("+", func(): _stat(key, 1), 44)
-		plus.custom_minimum_size.y = 38
+		var plus := UIKit.button("+", func(): _stat(key, 1), UIKit.TARGET_W)
+		plus.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
 		plus.disabled = left <= 0 or int(sheet["stats"][key]) >= Hero.STAT_MAX
 		line.add_child(plus)
-		var dl := UIKit.label(I18n.t(info[2]), 14, UIKit.DIM, true)
-		dl.add_theme_constant_override("line_spacing", -4)
+		var dl := UIKit.label(I18n.t(info[2]), UIKit.FS_MIN, UIKit.DIM, true)
+		dl.add_theme_constant_override("line_spacing", -2)
 		v.add_child(dl)
 
 

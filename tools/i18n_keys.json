@@ -53,6 +53,10 @@
    "note": "scripts/autoload/card_db.gd"
   },
   {
+   "key": "Saved",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
    "key": "Wanderer",
    "note": "scripts/autoload/game_state.gd"
   },
@@ -221,6 +225,18 @@
    "note": "scripts/autoload/music.gd"
   },
   {
+   "key": "Small",
+   "note": "scripts/autoload/ui_scale.gd"
+  },
+  {
+   "key": "Normal",
+   "note": "scripts/autoload/ui_scale.gd"
+  },
+  {
+   "key": "Large",
+   "note": "scripts/autoload/ui_scale.gd"
+  },
+  {
    "key": "tribe:",
    "note": "scripts/battle/battle_ai.gd"
   },
@@ -242,6 +258,14 @@
   },
   {
    "key": "Human Pilgrim",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "UIScale",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "modulate:a",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -405,10 +429,6 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "modulate:a",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
    "key": "color:a",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -566,6 +586,30 @@
   },
   {
    "key": "Cancelled.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "End turn with %d mana unused?",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "End turn without attacking?",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You can still cast a card from your hand.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Your creatures can still attack this turn. Press Attack to choose them.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Don't ask again",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Keep playing",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -1753,6 +1797,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "%s, level %d  ·  saved %s",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "New game",
    "note": "scripts/main.gd"
   },
@@ -1821,7 +1869,23 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Boosters",
+   "key": "Hud",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Level",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Life",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Gold",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Cards",
    "note": "scripts/main.gd"
   },
   {
@@ -1829,23 +1893,31 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Camp",
-   "note": "scripts/main.gd"
-  },
-  {
    "key": "Journal",
    "note": "scripts/main.gd"
   },
   {
-   "key": "Save",
+   "key": "Camp",
    "note": "scripts/main.gd"
   },
   {
-   "key": "Lv%d",
+   "key": "Boosters",
    "note": "scripts/main.gd"
   },
   {
-   "key": "♥ %d/%d   ◉ %d gold   ✦ %d cards",
+   "key": "Zoom",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Lv %d",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "◉ %d gold",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "✦ %d cards",
    "note": "scripts/main.gd"
   },
   {
@@ -1854,6 +1926,30 @@
   },
   {
    "key": "Hero (+%d)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Save (slot %d)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Save",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Save to another slot",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Card database",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Main menu",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Saved in slot %d.",
    "note": "scripts/main.gd"
   },
   {
@@ -1921,6 +2017,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "No active missions. What to do next:",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Today: %s. %s.",
    "note": "scripts/main.gd"
   },
@@ -1930,6 +2030,38 @@
   },
   {
    "key": "Close",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Finish the tournament at %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Open your %d booster(s) (the Boosters button).",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Spend your stat point on the hero sheet.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s in %s has work for you.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s prepares the feast of %s (%s): ask there for an errand.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Visit the city of %s, to the %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Visit the village of %s, to the %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s (level %d) lies to the %s.",
    "note": "scripts/main.gd"
   },
   {
@@ -2149,15 +2281,19 @@
    "note": "scripts/ui/card_database.gd"
   },
   {
+   "key": "Search",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
    "key": "Search name, subtype or text",
    "note": "scripts/ui/card_database.gd"
   },
   {
-   "key": "Clear filters",
+   "key": "Clear",
    "note": "scripts/ui/card_database.gd"
   },
   {
-   "key": "Gold",
+   "key": "Clear filters",
    "note": "scripts/ui/card_database.gd"
   },
   {
@@ -2377,6 +2513,14 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
+   "key": "Return (+%d)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Returned %s.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
    "key": "Eight duelists sit at the table, each with three sealed boosters. Open a pack, keep one card and pass the rest; the packs go around until every card is taken. Then build a deck of at least 40 cards from what you drafted (basic lands are free) and play a knockout tournament: quarter-final, semi-final and final.",
    "note": "scripts/ui/city_screen.gd"
   },
@@ -2390,10 +2534,6 @@
   },
   {
    "key": "You need %d gold to enter.",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
-   "key": "[%s] %s\n%s\nReward: %s",
    "note": "scripts/ui/city_screen.gd"
   },
   {
@@ -2545,6 +2685,22 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
+   "key": "Save (slot %s)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Game saved.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Save to another slot…",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Duels won: %d   lost: %d   boosters opened: %d   cards owned: %d",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
    "key": "Sleep here (%d gold)",
    "note": "scripts/ui/city_screen.gd"
   },
@@ -2566,22 +2722,6 @@
   },
   {
    "key": "For the feast of %s the bed is given for charity.",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
-   "key": "Save (slot %s)",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
-   "key": "Game saved.",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
-   "key": "Save to another slot…",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
-   "key": "Duels won: %d   lost: %d   boosters opened: %d   cards owned: %d",
    "note": "scripts/ui/city_screen.gd"
   },
   {
@@ -2713,39 +2853,55 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Search name or text…",
+   "key": "New deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Copy deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Rename deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Delete deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Auto build",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Search name or text",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Filters",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Draft deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Undo",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "%s: tap to add one, hold to take one away",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Panel",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Show cards",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
    "key": "In this deck",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Use in duels",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Copy",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Rename",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Delete",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Draft deck: only the cards you drafted, plus basic lands.",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Auto",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "New deck",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -2761,7 +2917,7 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Rename deck",
+   "key": "Rename",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -2777,6 +2933,10 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "Delete",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
    "key": "The deck used in duels (\"%s\") isn't ready: %s",
    "note": "scripts/ui/deck_builder.gd"
   },
@@ -2785,11 +2945,23 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "Use in duels",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
    "key": "Showing %d of the %d different cards you own",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "Tap to remove one",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
    "key": "%d cards · %d lands",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Draft deck: only the cards you drafted, plus basic lands.",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3069,6 +3241,14 @@
    "note": "scripts/ui/hero_screen.gd"
   },
   {
+   "key": "Classic",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
+   "key": "Classic heroes",
+   "note": "scripts/ui/hero_screen.gd"
+  },
+  {
    "key": "Roll again",
    "note": "scripts/ui/hero_screen.gd"
   },
@@ -3090,10 +3270,6 @@
   },
   {
    "key": "Everyone has 10 life and keeps 5 cards in hand.",
-   "note": "scripts/ui/hero_screen.gd"
-  },
-  {
-   "key": "Or a classic hero:",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
@@ -3169,6 +3345,50 @@
    "note": "scripts/ui/phase_bar.gd"
   },
   {
+   "key": "The turn begins. Upkeep costs are paid and \"at the beginning of your upkeep\" effects happen.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "The player whose turn it is draws a card.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "Play a land, cast creatures, relics and spells.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "Attackers are declared and tapped. Instants and abilities can answer.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "The defender chooses blockers. Instants and abilities can answer.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "Combat damage is dealt.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "A second main phase after combat: play what you held back.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "The turn ends. Extra cards in hand are discarded.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "Tap a step to read it. Hold a step to set or clear its stop.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "The game stops here for you.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
+   "key": "No stop: the game moves on unless you can answer.",
+   "note": "scripts/ui/phase_bar.gd"
+  },
+  {
    "key": "Enemy turn",
    "note": "scripts/ui/phase_bar.gd"
   },
@@ -3233,10 +3453,6 @@
    "note": "scripts/ui/rules_glossary.gd"
   },
   {
-   "key": "Normal",
-   "note": "scripts/ui/settings_screen.gd"
-  },
-  {
    "key": "Fast",
    "note": "scripts/ui/settings_screen.gd"
   },
@@ -3245,15 +3461,23 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
-   "key": "Card database",
-   "note": "scripts/ui/settings_screen.gd"
-  },
-  {
    "key": "Language",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
    "key": "Main",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Interface size",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Size_",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Normal picks the size for your device: larger on a phone.",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -3465,6 +3689,10 @@
    "note": "scripts/ui/start_screen.gd"
   },
   {
+   "key": "OS/2",
+   "note": "scripts/ui/tapestry.gd"
+  },
+  {
    "key": "Tournament of %s",
    "note": "scripts/ui/tournament_screen.gd"
   },
@@ -3505,15 +3733,15 @@
    "note": "scripts/ui/tournament_screen.gd"
   },
   {
+   "key": "can use",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
    "key": "Button",
    "note": "scripts/ui/ui_kit.gd"
   },
   {
    "key": "Label",
-   "note": "scripts/ui/ui_kit.gd"
-  },
-  {
-   "key": "Panel",
    "note": "scripts/ui/ui_kit.gd"
   },
   {
@@ -3526,6 +3754,14 @@
   },
   {
    "key": "HSlider",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "This cannot be undone.",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "Ok",
    "note": "scripts/ui/ui_kit.gd"
   },
   {
@@ -3650,6 +3886,10 @@
   },
   {
    "key": "Rousing the wanderers",
+   "note": "scripts/world/overworld.gd"
+  },
+  {
+   "key": "Lv%d",
    "note": "scripts/world/overworld.gd"
   },
   {
@@ -8735,20 +8975,12 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Trample. When this enters, create two 1/1 Goat Beast tokens with haste. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
+   "key": "Trample. When this enters, create two 1/1 Satyr tokens with haste. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
    "note": "rules text of Satyr-King of the Vintage"
   },
   {
    "key": "By the end of the vintage the grapes were trampled, the wine was drunk, and the vineyard was gone.",
    "note": "flavour text of Satyr-King of the Vintage"
-  },
-  {
-   "key": "Goat",
-   "note": "token creature name"
-  },
-  {
-   "key": "Goat Beast",
-   "note": "token subtype"
   },
   {
    "key": "Planter of Slow Oaks",

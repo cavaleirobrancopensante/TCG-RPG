@@ -21,42 +21,55 @@ func _ready() -> void:
 		sheet["difficulty"] = "knight"
 	var root := VBoxContainer.new()
 	UIKit.content_rect(root)
-	root.add_theme_constant_override("separation", 10)
+	root.add_theme_constant_override("separation", UIKit.SP_1)
 	add_child(root)
 	var head := HBoxContainer.new()
-	head.add_theme_constant_override("separation", 10)
+	head.add_theme_constant_override("separation", UIKit.GAP)
 	root.add_child(head)
-	var t := UIKit.title("Your Road", 40)
+	var t := UIKit.title("Your Road", UIKit.FS_TITLE)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)
 	head.add_child(UIKit.button("Back", func():
 		back.emit()
 		queue_free(), 120))
-	head.add_child(UIKit.button("Begin", func():
+	var begin := UIKit.primary_button("Begin", func():
 		chosen.emit(sheet)
-		queue_free(), 160))
+		queue_free(), 160)
+	begin.name = "Begin"
+	head.add_child(begin)
 	var cols := HBoxContainer.new()
-	cols.add_theme_constant_override("separation", 24)
+	cols.add_theme_constant_override("separation", UIKit.SP_3)
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(cols)
+	# each column scrolls when the screen is too short for its choices
 	var left := VBoxContainer.new()
-	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.size_flags_stretch_ratio = 0.8
-	left.add_theme_constant_override("separation", 8)
-	cols.add_child(left)
-	left.add_child(UIKit.title("Difficulty", 28))
+	left.add_theme_constant_override("separation", UIKit.SP_1)
+	var lsc := _scroller(left)
+	lsc.size_flags_stretch_ratio = 0.8
+	cols.add_child(lsc)
+	left.add_child(UIKit.title("Difficulty", UIKit.FS_HEADING - 2))
 	_diff_box = VBoxContainer.new()
-	_diff_box.add_theme_constant_override("separation", 8)
+	_diff_box.add_theme_constant_override("separation", UIKit.SP_1)
 	left.add_child(_diff_box)
 	var right := VBoxContainer.new()
-	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	right.add_theme_constant_override("separation", 8)
-	cols.add_child(right)
-	right.add_child(UIKit.title("How your road begins", 28))
+	right.add_theme_constant_override("separation", UIKit.SP_1)
+	cols.add_child(_scroller(right))
+	right.add_child(UIKit.title("How your road begins", UIKit.FS_HEADING - 2))
 	_start_box = VBoxContainer.new()
-	_start_box.add_theme_constant_override("separation", 8)
+	_start_box.add_theme_constant_override("separation", UIKit.SP_1)
 	right.add_child(_start_box)
 	_refresh()
+
+
+func _scroller(inner: Control) -> ScrollContainer:
+	var sc := ScrollContainer.new()
+	sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.add_child(inner)
+	DragScroll.attach(self, sc)
+	return sc
 
 
 func _refresh() -> void:
@@ -74,7 +87,7 @@ func _refresh() -> void:
 			nm += "  " + I18n.t("(recommended)")
 		_start_box.add_child(_option(nm, I18n.t(Hero.START[s]["text"]) + "\n" + _reward_text(s), sheet["start"] == s, func():
 			sheet["start"] = sx
-			_refresh(), 162.0))
+			_refresh()))
 
 
 ## What each start gives, for the chosen difficulty.
@@ -88,25 +101,49 @@ func _reward_text(s: String) -> String:
 		int(prize[3]) + bonus, int(prize[2]) + bonus, int(prize[1]) + bonus, int(prize[0]) + bonus]
 
 
-func _option(title: String, body: String, on: bool, cb: Callable, h: float = 92.0) -> Control:
-	var b := Button.new()
-	b.toggle_mode = true
-	b.button_pressed = on
-	b.custom_minimum_size = Vector2(0, h)
-	b.pressed.connect(cb)
+## A choice plate: it grows to fit its text (so nothing is cut in any language) and the
+## whole plate answers a tap. The chosen one wears UIKit's selected look.
+func _option(title: String, body: String, on: bool, cb: Callable) -> Control:
+	var wrap := MarginContainer.new()      # the plate and, over all of it, the button
+	wrap.custom_minimum_size.y = UIKit.TARGET
+	for side in ["left", "right", "top", "bottom"]:
+		wrap.add_theme_constant_override("margin_" + side, 0)
+	var plate := PanelContainer.new()
+	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(plate)
 	var v := VBoxContainer.new()
-	v.set_anchors_preset(Control.PRESET_FULL_RECT)
-	v.offset_left = 14
-	v.offset_right = -14
-	v.offset_top = 8
-	v.offset_bottom = -8
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_theme_constant_override("separation", 2)
-	b.add_child(v)
-	var tl := UIKit.label(("✦ " if on else "") + title, 21, UIKit.GOLD if on else UIKit.TEXT)
+	plate.add_child(v)
+	var tl := UIKit.label(("✦ " if on else "") + title, UIKit.FS_BODY, UIKit.GOLD if on else UIKit.TEXT, true)
 	tl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(tl)
-	var bl := UIKit.label(body, 15, UIKit.DIM, true)
+	var bl := UIKit.label(body, UIKit.FS_MIN, UIKit.DIM, true)
 	bl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(bl)
-	return b
+	var b := Button.new()
+	b.flat = true
+	b.toggle_mode = true
+	b.button_pressed = on
+	b.focus_mode = Control.FOCUS_NONE
+	b.pressed.connect(cb)
+	wrap.add_child(b)
+	var looks := func(hover: bool):
+		var sb: StyleBox
+		if on:
+			sb = StyleBoxFlat.new()
+			sb.bg_color = Tapestry.PARCHMENT_LIGHT
+			sb.border_color = UIKit.accent()
+			sb.set_border_width_all(4)
+			sb.set_corner_radius_all(8)
+		else:
+			sb = Tapestry.stylebox("hover" if hover else "button")
+		sb.content_margin_left = 16
+		sb.content_margin_right = 16
+		sb.content_margin_top = 10
+		sb.content_margin_bottom = 10
+		plate.add_theme_stylebox_override("panel", sb)
+	looks.call(false)
+	b.mouse_entered.connect(func(): looks.call(true))
+	b.mouse_exited.connect(func(): looks.call(false))
+	return wrap

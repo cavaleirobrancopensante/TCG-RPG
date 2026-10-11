@@ -27,6 +27,7 @@ func _ready() -> void:
 	test_npc_clashes()
 	test_villages()
 	test_card_ui()
+	test_journal_goals()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -1785,3 +1786,37 @@ func test_card_ui() -> void:
 	for t in RulesGlossary.TYPES + [RulesGlossary.GENERIC, RulesGlossary.STACK]:
 		check(not t.contains("\u2014") and not t.contains("\u2013"), "dash in glossary: %s" % t)
 
+
+
+## The journal's "what to do next" when no mission is in hand (main.gd, without a world).
+func test_journal_goals() -> void:
+	print("-- journal goals")
+	GameState.new_game(6, "sanctum", {})
+	var m = load("res://scripts/main.gd").new()
+	GameState.missions = {}
+	GameState.errand = {}
+	GameState.pending_boosters = 2
+	GameState.stat_points = 0
+	GameState.tour_save = {}
+	var g: Array = m.next_goals()
+	check(g.size() >= 1 and g.size() <= 3, "one to three goals (%d)" % g.size())
+	check(String(g[0]).contains("2"), "the waiting boosters come first: %s" % g[0])
+	GameState.pending_boosters = 0
+	GameState.visited_cities = []
+	GameState.visited_villages = []
+	GameState.cleared_lairs = []
+	g = m.next_goals()
+	var visit := I18n.t("Visit the city of %s, to the %s.").split("%s")[0]
+	check(g.any(func(x): return String(x).begins_with(visit) or String(x).begins_with(I18n.t("Visit the village of %s, to the %s.").split("%s")[0])), "an unvisited place is suggested: %s" % [g])
+	# everything seen and cleared: nothing to visit, no lair to name
+	for c in GameState.world_data.get("cities", []):
+		GameState.visited_cities.append(c["id"])
+	for v in GameState.world_data.get("villages", []):
+		GameState.visited_villages.append(v["id"])
+	for l in GameState.world_data.get("lairs", []):
+		GameState.cleared_lairs.append(l["id"])
+	g = m.next_goals()
+	check(not g.any(func(x): return String(x).begins_with(visit)), "no visit once every place is seen")
+	for x in g:
+		check(not String(x).contains("\u2014") and not String(x).contains("\u2013"), "no dashes in a goal")
+	m.free()

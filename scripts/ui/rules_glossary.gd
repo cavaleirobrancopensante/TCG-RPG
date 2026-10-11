@@ -33,20 +33,20 @@ func _ready() -> void:
 	add_child(dim)
 
 	var vp := get_viewport_rect().size
-	var w := minf(920.0, vp.x - 60.0)
-	var h := vp.y - UIKit.TOP - 30.0
+	var w := minf(920.0, vp.x - 40.0)
+	var h := vp.y - UIKit.TOP - 24.0
 	panel = PanelContainer.new()
 	panel.name = "GlossaryPanel"
 	panel.custom_minimum_size = Vector2(w, h)
 	panel.size = Vector2(w, h)
-	panel.position = Vector2((vp.x - w) * 0.5, UIKit.TOP + 15.0)
+	panel.position = Vector2((vp.x - w) * 0.5, UIKit.TOP + 12.0)
 	add_child(panel)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 8)
 	panel.add_child(col)
 	var head := HBoxContainer.new()
 	col.add_child(head)
-	var t := UIKit.title("Rules glossary", 32)
+	var t := UIKit.title("Rules glossary", UIKit.FS_HEADING + 4)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)
 	var close_btn := UIKit.button("Close", close, 130)
@@ -58,7 +58,7 @@ func _ready() -> void:
 	col.add_child(scroll)
 	list = VBoxContainer.new()
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	list.add_theme_constant_override("separation", 5)
+	list.add_theme_constant_override("separation", UIKit.SP_1)
 	scroll.add_child(list)
 	_fill(w - 70.0)
 
@@ -89,12 +89,12 @@ func _fill(text_w: float) -> void:
 
 
 func _heading(t: String) -> void:
-	var l := UIKit.title(t, 24)
+	var l := UIKit.title(t, UIKit.FS_HEADING - 4)
 	list.add_child(l)
 
 
 func _line(t: String, w: float) -> CardView.RulesText:
-	var r := CardView.RulesText.new(t, 17, UIKit.TEXT)
+	var r := CardView.RulesText.new(t, UIKit.FS_BODY, UIKit.TEXT)
 	r.custom_minimum_size.x = w
 	list.add_child(r)
 	return r

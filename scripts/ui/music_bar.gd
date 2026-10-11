@@ -3,7 +3,10 @@ extends Control
 ## The strip across the top of the screen: current piece, prev / play-pause / next,
 ## and a picker with all 60 pieces grouped by faith.
 
-const HEIGHT := 38
+const HEIGHT := 48
+## Every control on the strip answers taps over a full UIKit.TARGET height: the strip
+## stays slim and the touch area reaches a little below it (UIKit.TOP keeps screens clear).
+const TOUCH_H := UIKit.TARGET
 const SIGIL_W := 34          # room for the round sigil left of the title
 const TITLE_PAD := 8         # gap between the sigil and the first letter of the title
 
@@ -27,6 +30,7 @@ var _band: Control
 var _row: HBoxContainer
 var _sig_space: Control
 var _info: Button
+var _list_scroll: ScrollContainer
 
 
 func _ready() -> void:
@@ -53,13 +57,13 @@ func _ready() -> void:
 	_sig_space.custom_minimum_size = Vector2(SIGIL_W, HEIGHT)
 	_sig_space.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_row.add_child(_sig_space)
-	_info = Button.new()
+	_info = TapButton.new()
 	_info.flat = true
 	_info.clip_contents = true
 	_info.custom_minimum_size = Vector2(360, HEIGHT - 4)
 	_info.pressed.connect(_toggle_picker)
 	_row.add_child(_info)
-	title_label = UIKit.label("", 18, Tapestry.GILT)
+	title_label = UIKit.label("", UIKit.FS_SECONDARY + 1, Tapestry.GILT)
 	title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	title_label.clip_text = true
 	title_label.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -75,7 +79,7 @@ func _ready() -> void:
 	_row.add_child(_small("⏭", func(): Music.next()))
 	shuffle_btn = _small("", func(): Music.set_shuffle(not Music.shuffle))
 	shuffle_btn.custom_minimum_size.x = 104
-	shuffle_btn.add_theme_font_size_override("font_size", 14)
+	shuffle_btn.add_theme_font_size_override("font_size", UIKit.FS_MIN)
 	_row.add_child(shuffle_btn)
 	_row.add_child(_small("☰", _toggle_picker))
 	resized.connect(_relayout)
@@ -102,17 +106,17 @@ func _relayout() -> void:
 		if c != _info:
 			others += c.get_combined_minimum_size().x
 	others += 6 * (_row.get_child_count() - 1) + 40      # separations and the plaque's margins
-	var w := clampf(size.x * 0.34, 360.0, 520.0)
+	var w := clampf(size.x * 0.34, 300.0, 520.0)
 	w = minf(w, size.x - others)
 	_info.custom_minimum_size.x = maxf(120.0, w)
 	_band.queue_redraw()
 
 
 func _small(t: String, cb: Callable) -> Button:
-	var b := Button.new()
+	var b := TapButton.new()
 	b.text = t
-	b.custom_minimum_size = Vector2(46, HEIGHT - 6)
-	b.add_theme_font_size_override("font_size", 16)
+	b.custom_minimum_size = Vector2(UIKit.TARGET_W, HEIGHT - 6)
+	b.add_theme_font_size_override("font_size", 20)
 	b.pressed.connect(cb)
 	return b
 
@@ -180,25 +184,44 @@ func _toggle_picker() -> void:
 		if not Music.current.is_empty():
 			shown_faction = Music.current["faction"]
 		_fill_list()
+		_place_picker()
 		await get_tree().process_frame
-		picker.position = Vector2((size.x - picker.size.x) * 0.5, HEIGHT + 4)
+		_place_picker()
+
+
+## The picker hangs under the strip, as wide and tall as the screen allows; its list scrolls.
+func _place_picker() -> void:
+	if picker == null:
+		return
+	var vp := get_viewport_rect().size
+	picker.custom_minimum_size.x = minf(660.0, vp.x - 16.0)
+	_list_scroll.custom_minimum_size.y = 0
+	var room := vp.y - HEIGHT - 12.0
+	var extra := picker.get_combined_minimum_size().y      # everything but the list
+	_list_scroll.custom_minimum_size.y = maxf(UIKit.TARGET, minf(list_box.get_combined_minimum_size().y, room - extra))
+	picker.reset_size()
+	picker.position = Vector2(roundf((size.x - picker.size.x) * 0.5), HEIGHT + 4)
 
 
 func _build_picker() -> void:
 	picker = PanelContainer.new()
 	picker.visible = false
 	picker.custom_minimum_size = Vector2(620, 0)
+	picker.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(picker)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	picker.add_child(v)
 	var tabs := HBoxContainer.new()
+	tabs.add_theme_constant_override("separation", 4)
 	v.add_child(tabs)
 	for f in Factions.ORDER:
 		var b := Button.new()
 		b.text = Factions.info(f)["short"]
-		b.custom_minimum_size = Vector2(0, 40)
-		b.add_theme_font_size_override("font_size", 14)
+		b.custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		b.add_theme_font_size_override("font_size", UIKit.FS_MIN)
 		var ff: String = f
 		b.pressed.connect(func():
 			shown_faction = ff
@@ -209,7 +232,8 @@ func _build_picker() -> void:
 	v.add_child(ctl)
 	auto_btn = CheckButton.new()
 	auto_btn.text = "Auto (follow the game)"
-	auto_btn.add_theme_font_size_override("font_size", 15)
+	auto_btn.add_theme_font_size_override("font_size", UIKit.FS_MIN + 1)
+	auto_btn.custom_minimum_size.y = UIKit.TARGET
 	auto_btn.toggled.connect(func(on): Music.set_auto(on))
 	ctl.add_child(auto_btn)
 	ctl.add_child(UIKit.label("Volume", 15, UIKit.DIM))
@@ -217,15 +241,20 @@ func _build_picker() -> void:
 	vol.min_value = 0
 	vol.max_value = 1
 	vol.step = 0.05
-	vol.custom_minimum_size = Vector2(180, 32)
+	vol.custom_minimum_size = Vector2(150, UIKit.TARGET)
+	vol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vol.value_changed.connect(func(x): Music.set_volume(x))
 	ctl.add_child(vol)
-	var close := UIKit.button("Close", func(): picker.visible = false, 90)
-	close.custom_minimum_size.y = 40
+	var close := UIKit.button("Close", func(): picker.visible = false, 110)
 	ctl.add_child(close)
+	_list_scroll = ScrollContainer.new()
+	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	v.add_child(_list_scroll)
 	list_box = VBoxContainer.new()
+	list_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list_box.add_theme_constant_override("separation", 2)
-	v.add_child(list_box)
+	_list_scroll.add_child(list_box)
+	DragScroll.attach(picker, _list_scroll)
 
 
 func _fill_list() -> void:
@@ -244,10 +273,24 @@ func _fill_list() -> void:
 		var playing: bool = Music.current.get("id", "") == id
 		b.text = "%s  %s   (%s · %d:%02d)" % ["▶" if playing else "  ", I18n.t(t["title"]), I18n.t(Music.KIND_LABEL[t["kind"]]), int(t["seconds"]) / 60, int(t["seconds"]) % 60]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size.y = 38
-		b.add_theme_font_size_override("font_size", 15)
+		b.custom_minimum_size.y = UIKit.TARGET
+		b.clip_text = true
+		b.add_theme_font_size_override("font_size", UIKit.FS_MIN + 2)
 		if playing:
 			b.add_theme_color_override("font_color", UIKit.RED)
 		var tid: String = id
 		b.pressed.connect(func(): Music.choose.call_deferred(tid))
 		list_box.add_child(b)
+	if picker.visible:
+		_place_picker.call_deferred()
+
+
+## A strip button whose touch area is a full TOUCH_H tall from the top of the strip,
+## though it is drawn slimmer. touch_size() tells the UI check what a finger gets.
+class TapButton extends Button:
+	func _has_point(p: Vector2) -> bool:
+		var top := -position.y
+		return Rect2(0, top, size.x, MusicBar.TOUCH_H).has_point(p)
+
+	func touch_size() -> Vector2:
+		return Vector2(size.x, MusicBar.TOUCH_H)

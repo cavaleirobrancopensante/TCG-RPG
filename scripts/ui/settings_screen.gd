@@ -17,11 +17,12 @@ func _ready() -> void:
 	add_child(v)
 	var head := HBoxContainer.new()
 	v.add_child(head)
-	var t := UIKit.title("Settings", 42)
+	var t := UIKit.title("Settings", UIKit.FS_TITLE)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)
-	head.add_child(UIKit.button("Card database", open_card_database, 220))
-	head.add_child(UIKit.button("Back", _back, 140))
+	head.add_theme_constant_override("separation", UIKit.GAP)
+	head.add_child(UIKit.button("Card database", open_card_database, 200))
+	head.add_child(UIKit.button("Back", _back, 130))
 
 	# the options scroll (drag or wheel) when the screen is too short for them all
 	var sc := ScrollContainer.new()
@@ -37,8 +38,8 @@ func _ready() -> void:
 	body.add_child(plate)
 	var g := GridContainer.new()
 	g.columns = 2
-	g.add_theme_constant_override("h_separation", 30)
-	g.add_theme_constant_override("v_separation", 18)
+	g.add_theme_constant_override("h_separation", UIKit.SP_3)
+	g.add_theme_constant_override("v_separation", UIKit.SP_2)
 	plate.add_child(g)
 
 	# --- language
@@ -50,9 +51,27 @@ func _ready() -> void:
 		else:
 			I18n.setup(code)
 			GameState.set_setting("lang", code)
-		var again := SettingsScreen.new()
-		get_parent().add_child(again)
-		queue_free(), Vector2(66, 46)))
+		_rebuild()))
+
+	# --- interface size: Normal follows the device (larger on phones)
+	g.add_child(_name("Interface size"))
+	var sz := VBoxContainer.new()
+	sz.add_theme_constant_override("separation", 4)
+	g.add_child(sz)
+	var szr := HBoxContainer.new()
+	szr.add_theme_constant_override("separation", UIKit.SP_1)
+	sz.add_child(szr)
+	var sz_group := ButtonGroup.new()
+	for c in UIScale.SIZES:
+		var cc: String = c
+		var b := _toggle(UIScale.SIZE_NAMES[c], sz_group, UIScale.choice() == c)
+		b.name = "Size_" + c
+		b.pressed.connect(func():
+			if UIScale.choice() != cc:
+				UIScale.set_choice(cc)
+				_rebuild())
+		szr.add_child(b)
+	sz.add_child(UIKit.label("Normal picks the size for your device: larger on a phone.", UIKit.FS_MIN, UIKit.DIM, true))
 
 	# --- music volume
 	g.add_child(_name("Music volume"))
@@ -61,13 +80,14 @@ func _ready() -> void:
 	vol.max_value = 1
 	vol.step = 0.05
 	vol.value = Music.volume
-	vol.custom_minimum_size = Vector2(380, 40)
+	vol.custom_minimum_size = Vector2(320, UIKit.TARGET)
+	vol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vol.value_changed.connect(func(x): Music.set_volume(x))
 	g.add_child(vol)
 
 	# --- music follows the game
 	g.add_child(_name("Music follows the game"))
-	var auto := CheckButton.new()
+	var auto := _check()
 	auto.button_pressed = Music.auto
 	auto.text = "Change pieces by place and duel"
 	auto.toggled.connect(func(on): Music.set_auto(on))
@@ -75,7 +95,7 @@ func _ready() -> void:
 
 	# --- random or in order
 	g.add_child(_name("Music order"))
-	var sh := CheckButton.new()
+	var sh := _check()
 	sh.button_pressed = Music.shuffle
 	sh.text = "Random (off: follow the list)"
 	sh.toggled.connect(func(on): Music.set_shuffle(on))
@@ -84,23 +104,18 @@ func _ready() -> void:
 	# --- duel speed
 	g.add_child(_name("Duel animation speed"))
 	var sp := HBoxContainer.new()
-	sp.add_theme_constant_override("separation", 8)
+	sp.add_theme_constant_override("separation", UIKit.SP_1)
 	g.add_child(sp)
 	var group := ButtonGroup.new()
 	for k in SPEEDS:
-		var b := Button.new()
-		b.text = k
-		b.toggle_mode = true
-		b.button_group = group
-		b.custom_minimum_size = Vector2(130, 48)
-		b.button_pressed = is_equal_approx(GameState.settings.get("duel_speed", 1.0), SPEEDS[k])
+		var b := _toggle(k, group, is_equal_approx(GameState.settings.get("duel_speed", 1.0), SPEEDS[k]))
 		var val: float = SPEEDS[k]
 		b.pressed.connect(func(): GameState.set_setting("duel_speed", val))
 		sp.add_child(b)
 
 	# --- stop for every spell the enemy casts, or only at the phase bar's stops
 	g.add_child(_name("Respond to every spell"))
-	var ra := CheckButton.new()
+	var ra := _check()
 	ra.button_pressed = BattleScene.respond_to_every_spell()
 	ra.text = "Off: only at your stops and in combat"
 	ra.tooltip_text = "On: the duel stops whenever the enemy casts something you could answer."
@@ -109,7 +124,7 @@ func _ready() -> void:
 
 	# --- fullscreen
 	g.add_child(_name("Full screen"))
-	var fs := CheckButton.new()
+	var fs := _check()
 	fs.button_pressed = GameState.settings.get("fullscreen", false)
 	fs.text = "Fill the whole screen"
 	fs.toggled.connect(func(on):
@@ -122,19 +137,52 @@ func _ready() -> void:
 	var nm := LineEdit.new()
 	nm.text = GameState.player_name
 	nm.max_length = 20
-	nm.custom_minimum_size = Vector2(380, 48)
+	nm.custom_minimum_size = Vector2(320, UIKit.TARGET)
 	nm.text_changed.connect(func(tx):
 		GameState.player_name = tx if tx.strip_edges() != "" else "Wanderer"
 		GameState.set_setting("player_name", GameState.player_name))
 	g.add_child(nm)
 
-	body.add_child(UIKit.label("Settings apply to every save slot.", 17, UIKit.DIM))
+	body.add_child(UIKit.label("Settings apply to every save slot.", UIKit.FS_SECONDARY, UIKit.DIM))
 
 
 func _name(t: String) -> Label:
-	var l := UIKit.label(t, 22, UIKit.TEXT)
-	l.custom_minimum_size.x = 300
+	var l := UIKit.label(t, UIKit.FS_BODY + 1, UIKit.TEXT, true)
+	l.custom_minimum_size.x = 250
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	return l
+
+
+## An on/off switch whose label wraps rather than running off the screen.
+func _check() -> CheckButton:
+	var c := CheckButton.new()
+	c.custom_minimum_size.y = UIKit.TARGET
+	c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	c.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	c.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY + 1)
+	return c
+
+
+## One of a row of choices; the chosen one wears UIKit's selected look.
+func _toggle(text: String, group: ButtonGroup, on: bool) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.toggle_mode = true
+	b.button_group = group
+	b.custom_minimum_size = Vector2(120, UIKit.TARGET)
+	b.button_pressed = on
+	UIKit.set_selected(b, on)
+	b.toggled.connect(func(p): UIKit.set_selected(b, p))
+	return b
+
+
+## Build the screen afresh (after the language or the interface size changes).
+func _rebuild() -> void:
+	var again := SettingsScreen.new()
+	for c in closed.get_connections():
+		again.closed.connect(c["callable"])
+	get_parent().add_child(again)
+	queue_free()
 
 
 ## Every card in the game, to browse; it lies over this screen and Back returns here.
