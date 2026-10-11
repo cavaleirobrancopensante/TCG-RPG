@@ -75,6 +75,52 @@ func start_sealed(p_city: String, player_name: String, packs: int, seed_value: i
 	round_no = ROUNDS
 
 
+## The whole event as plain data, so a tournament in progress survives saving and quitting.
+func to_dict() -> Dictionary:
+	return {"seed": rng.seed, "rng": rng.state, "city": city, "names": names, "faiths": faiths,
+		"picks": picks, "holding": holding, "round_no": round_no, "pick_no": pick_no, "decks": decks,
+		"bracket": bracket, "stage": stage, "results": results, "player_out": player_out,
+		"player_stage": player_stage, "sealed": sealed}
+
+
+static func from_dict(d: Dictionary) -> Draft:
+	var t := Draft.new()
+	t.rng.seed = int(d.get("seed", 0))
+	t.rng.state = int(d.get("rng", 0))
+	t.city = String(d.get("city", ""))
+	t.names = Array(d.get("names", []))
+	t.faiths = Array(d.get("faiths", []))
+	t.picks = _entries_2d(d.get("picks", []))
+	t.holding = _entries_2d(d.get("holding", []))
+	t.round_no = int(d.get("round_no", ROUNDS))
+	t.pick_no = int(d.get("pick_no", 0))
+	t.decks = []
+	for dk in d.get("decks", []):
+		var deck := {}
+		for k in dk:
+			deck[String(k)] = int(dk[k])
+		t.decks.append(deck)
+	t.bracket = Array(d.get("bracket", [])).map(func(x): return int(x))
+	t.stage = int(d.get("stage", 0))
+	t.results = []
+	for r in d.get("results", []):
+		t.results.append(Array(r).map(func(pair): return Array(pair).map(func(x): return int(x))))
+	t.player_out = bool(d.get("player_out", false))
+	t.player_stage = int(d.get("player_stage", 0))
+	t.sealed = bool(d.get("sealed", false))
+	return t
+
+
+static func _entries_2d(a) -> Array:
+	var out := []
+	for seat in a:
+		var row := []
+		for e in seat:
+			row.append({"id": String(e.get("id", "")), "foil": bool(e.get("foil", false))})
+		out.append(row)
+	return out
+
+
 func _open_packs() -> void:
 	holding = []
 	pick_no = 0

@@ -17,7 +17,7 @@
   "names": ["Wolf Pack Leader", "Wolfskin Hunter", "Howling Huntsman", "Wolf Tracker"]},
  "wild_treefolk": {"faith": "wild", "tribe": "Treefolk", "kin": [], "splash": "",
   "names": ["Grove Warden", "Elder of the Oaks", "Barkskin Shepherd", "Woodwose of the Deep Wood"]},
- "wild_druids": {"faith": "wild", "tribe": "Druid", "kin": ["Aura"], "splash": "",
+ "wild_druids": {"faith": "wild", "tribe": "Druid", "kin": ["Relic"], "splash": "",
   "names": ["Moot Druid", "Antler Druid", "Stone Circle Warden", "Mistletoe Gatherer"]},
 
  "revel_nobles": {"faith": "revel", "tribe": "Noble", "kin": [], "splash": "",

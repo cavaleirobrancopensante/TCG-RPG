@@ -42,6 +42,7 @@ var pedlars: Dictionary = {}       # village id -> {"day": day, "sold": [card id
 var defeated: Dictionary = {}     # faction -> wins counted while missions are active
 var missions: Dictionary = {}     # mission_id -> {"state": "active"/"done"/"claimed", "progress": int}
 var pending_boosters: int = 0     # boosters earned but not opened yet
+var tour_save: Dictionary = {}     # a tournament in progress (Draft.to_dict plus where the player is in it)
 var start_mode := "boosters"       # how this hero began: "draft" (introductory tournament) or "boosters"
 var faction_packs: Array = []     # faiths of special boosters among the pending ones (opened first)
 var hero := ""                    # the faith of the hero chosen at New game
@@ -103,6 +104,7 @@ func _ready() -> void:
 
 func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Dictionary = {}) -> void:
 	slot = into_slot
+	tour_save = {}
 	hero = hero_faith if HEROES.has(hero_faith) else "sanctum"
 	player_name = settings.get("player_name", "Wanderer")
 	if sheet.is_empty():
@@ -252,7 +254,7 @@ func save_game(n: int = 0) -> void:
 		"player_name": player_name, "player_pos": [player_pos.x, player_pos.y],
 		"cleared_lairs": cleared_lairs, "visited_cities": visited_cities,
 		"visited_villages": visited_villages, "village_wells": village_wells, "pedlars": pedlars,
-		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters, "start_mode": start_mode,
+		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters, "start_mode": start_mode, "tour": tour_save,
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
 		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand, "feast_log": feast_log,
@@ -356,6 +358,7 @@ func load_game(n: int = 0) -> bool:
 		missions[m]["progress"] = int(missions[m].get("progress", 0))
 	pending_boosters = int(data.get("pending_boosters", 0))
 	start_mode = String(data.get("start_mode", "boosters"))
+	tour_save = Dictionary(data.get("tour", {}))
 	faction_packs = Array(data.get("faction_packs", [])).filter(func(x): return Factions.DATA.has(x))
 	hero = String(data.get("hero", ""))
 	if hero == "":      # saves from before heroes: the faith the player plays most

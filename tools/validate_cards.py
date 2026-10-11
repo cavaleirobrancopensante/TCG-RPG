@@ -180,8 +180,8 @@ def check_card(c, owners_override=None):
     if att:
         if c.get("type") != "relic":
             bad(cid, "only relics attach")
-        if att == "aura" and "wild" not in owners:
-            bad(cid, "auras are Old Ways")
+        if att == "aura":
+            bad(cid, "auras were retired in 1.33: make it a Charm relic with a permanent effect")
         if att == "equipment" and "machine" not in owners:
             bad(cid, "equipment is Technocracy")
         if att == "aura" and not any(e.get("action") == "attach" and e.get("trigger") == "enter" for e in c.get("effects", [])):

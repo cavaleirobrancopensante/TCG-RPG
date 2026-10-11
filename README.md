@@ -214,6 +214,15 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Tournaments that survive quitting, and charms instead of auras (1.33)
+
+- A tournament in progress (draft, sealed or the city tournaments) is saved after every pick,
+  when you build your deck, and after every match. Quit at any point and loading the game
+  brings you back to the same pick, the deck builder, or the bracket.
+- The Old Ways' auras became Charm relics whose blessing lands for good when they enter
+  (Bark-Skin, Gift of the Greenwood, Wolf-Pelt Mantle), and the Druids now reward any relic
+  entering. Equipment stays the Technocracy's own.
+
 ## Balance and swiping (1.32)
 
 - A balance pass over the whole set after the new rules (16,800 AI games): 20 cards retuned,
