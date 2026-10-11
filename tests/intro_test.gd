@@ -11,18 +11,22 @@ func _ready() -> void:
 	var sheet := Hero.random_sheet(rng)
 	sheet["faith"] = "revel"
 	sheet["difficulty"] = "knight"
+	var sealed := OS.get_environment("SEALED") == "1"
+	sheet["start"] = "sealed" if sealed else "draft"
 	await main._new_game(6, "revel", sheet)
 	var ok := true
-	if GameState.pending_boosters != 0 or GameState.start_mode != "draft":
+	if GameState.pending_boosters != 0 or GameState.start_mode != sheet["start"]:
 		print("FAIL boosters ", GameState.pending_boosters); ok = false
 	var cap: String = main._capital_of("revel")
-	main.open_tournament(cap, true)
+	main.open_tournament(cap, true, OS.get_environment("SEALED") == "1")
 	var d: Draft = main.tournament
 	if d == null or GameState.gold < 50:
 		print("FAIL tournament not opened or fee charged"); ok = false
-	while d.is_drafting():
-		d.player_pick(0)
-	main._draft_finished()
+	if not sealed:
+		while d.is_drafting():
+			d.player_pick(0)
+		main._draft_finished()
+	print("pool size ", d.picks[0].size(), " sealed ", d.sealed)
 	var deck: Dictionary = GameState.decks[main._tour_deck]["cards"]
 	main._tournament_match_done(true)    # wins the quarter-final
 	main._tournament_match_done(false)   # loses the semi-final

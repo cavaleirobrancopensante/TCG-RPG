@@ -3254,5 +3254,20 @@
  "Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.": "Sua estrada começa no torneio de iniciação de %s. Escolha suas primeiras cartas dos pacotes que passam pela mesa, monte um deck e lute em partidas que não podem matá-lo. As cartas escolhidas são suas, e a fé recompensa quem vai longe com boosters próprios.",
  "To the tournament": "Ao torneio",
  "For your showing, %s gives you %d booster(s) of its own cards.": "Pelo seu desempenho, %s lhe dá %d booster(s) das suas próprias cartas.",
- "Your draft deck is now your deck. The road is open.": "Seu deck do draft agora é o seu deck. A estrada está aberta."
+ "Your draft deck is now your deck. The road is open.": "Seu deck do draft agora é o seu deck. A estrada está aberta.",
+ "Your Road": "Sua Estrada",
+ "Difficulty": "Dificuldade",
+ "How your road begins": "Como sua estrada começa",
+ "(recommended)": "(recomendado)",
+ "You start with %d boosters.": "Você começa com %d boosters.",
+ "Prize in boosters of your faith: champion %d, finalist %d, semi-final %d, first round %d.": "Prêmio em boosters da sua fé: campeão %d, finalista %d, semifinal %d, primeira rodada %d.",
+ "Sealed tournament": "Torneio selado",
+ "Boosters only": "Só boosters",
+ "The introductory tournament of your capital: pick your first cards from packs passed around the table, build a deck, and fight bouts that cannot kill you.": "O torneio de iniciação da sua capital: escolha suas primeiras cartas dos pacotes que passam pela mesa, monte um deck e lute em partidas que não podem matá-lo.",
+ "The introductory tournament, sealed: open four boosters, build a deck from what you find, and fight bouts that cannot kill you.": "O torneio de iniciação, selado: abra quatro boosters, monte um deck com o que encontrar e lute em partidas que não podem matá-lo.",
+ "No tournament: open your boosters, take the deck they make, and set out at once.": "Sem torneio: abra seus boosters, fique com o deck que eles formam e parta de imediato.",
+ "Next": "Avançar",
+ "Your sealed pool": "Seu conjunto selado",
+ "You opened %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.": "Você abriu %d cartas; elas agora estão na sua coleção. Monte seu deck com elas (pelo menos 40 cartas, terrenos básicos são grátis) e então o torneio começa.",
+ "Your road begins at the sealed tournament of %s. Open four boosters, build a deck from what you find, and fight bouts that cannot kill you. The cards are yours to keep, and the faith rewards those who go far with boosters of its own.": "Sua estrada começa no torneio selado de %s. Abra quatro boosters, monte um deck com o que encontrar e lute em partidas que não podem matá-lo. As cartas são suas, e a fé recompensa quem vai longe com boosters próprios."
 }

@@ -1221,19 +1221,27 @@
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "Begin with a draft",
+   "key": "Draft tournament",
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "Enter the introductory tournament of your capital: draft your first cards, build a deck, and fight bouts that cannot kill you.",
+   "key": "The introductory tournament of your capital: pick your first cards from packs passed around the table, build a deck, and fight bouts that cannot kill you.",
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "Begin with boosters",
+   "key": "Sealed tournament",
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "Set out with sealed booster packs and a deck built from them.",
+   "key": "The introductory tournament, sealed: open four boosters, build a deck from what you find, and fight bouts that cannot kill you.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Boosters only",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "No tournament: open your boosters, take the deck they make, and set out at once.",
    "note": "scripts/core/hero.gd"
   },
   {
@@ -1709,15 +1717,19 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Your road begins at the sealed tournament of %s. Open four boosters, build a deck from what you find, and fight bouts that cannot kill you. The cards are yours to keep, and the faith rewards those who go far with boosters of its own.",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Welcome, %s",
    "note": "scripts/main.gd"
   },
   {
    "key": "Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.",
    "note": "scripts/main.gd"
   },
   {
@@ -1973,15 +1985,23 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Your sealed pool",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You opened %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Build my deck",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "The draft is over",
    "note": "scripts/main.gd"
   },
   {
    "key": "You drafted %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Build my deck",
    "note": "scripts/main.gd"
   },
   {
@@ -2274,10 +2294,6 @@
   },
   {
    "key": "◉ %d gold   ✉ %d boosters",
-   "note": "scripts/ui/city_screen.gd"
-  },
-  {
-   "key": "Draft tournament",
    "note": "scripts/ui/city_screen.gd"
   },
   {
@@ -2869,7 +2885,7 @@
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Begin",
+   "key": "Next",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
@@ -3167,6 +3183,34 @@
   {
    "key": "Ability",
    "note": "scripts/ui/stack_view.gd"
+  },
+  {
+   "key": "Your Road",
+   "note": "scripts/ui/start_screen.gd"
+  },
+  {
+   "key": "Begin",
+   "note": "scripts/ui/start_screen.gd"
+  },
+  {
+   "key": "Difficulty",
+   "note": "scripts/ui/start_screen.gd"
+  },
+  {
+   "key": "How your road begins",
+   "note": "scripts/ui/start_screen.gd"
+  },
+  {
+   "key": "(recommended)",
+   "note": "scripts/ui/start_screen.gd"
+  },
+  {
+   "key": "You start with %d boosters.",
+   "note": "scripts/ui/start_screen.gd"
+  },
+  {
+   "key": "Prize in boosters of your faith: champion %d, finalist %d, semi-final %d, first round %d.",
+   "note": "scripts/ui/start_screen.gd"
   },
   {
    "key": "Tournament of %s",

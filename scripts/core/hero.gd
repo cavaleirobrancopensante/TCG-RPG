@@ -137,13 +137,15 @@ static func classic_sheet(faith: String) -> Dictionary:
 ## How a new hero begins: an introductory draft tournament in his capital (free, no death,
 ## the drafted cards are his first collection) or sealed boosters.
 const START := {
-	"draft": {"name": "Begin with a draft", "text": "Enter the introductory tournament of your capital: draft your first cards, build a deck, and fight bouts that cannot kill you."},
-	"boosters": {"name": "Begin with boosters", "text": "Set out with sealed booster packs and a deck built from them."},
+	"draft": {"name": "Draft tournament", "text": "The introductory tournament of your capital: pick your first cards from packs passed around the table, build a deck, and fight bouts that cannot kill you."},
+	"sealed": {"name": "Sealed tournament", "text": "The introductory tournament, sealed: open four boosters, build a deck from what you find, and fight bouts that cannot kill you."},
+	"boosters": {"name": "Boosters only", "text": "No tournament: open your boosters, take the deck they make, and set out at once."},
 }
-const START_ORDER := ["draft", "boosters"]
+const START_ORDER := ["draft", "sealed", "boosters"]
+const SEALED_PACKS := 4
 ## Faith boosters won in the introductory tournament, by matches won (0 = out in the first
 ## round, 1 = semi-final, 2 = final, 3 = champion). Pilgrims get one more at any placing.
-const INTRO_PRIZE := [0, 1, 2, 3]
+const INTRO_PRIZE := {"draft": [0, 1, 2, 3], "sealed": [0, 1, 1, 2]}
 
 
 ## Starting boosters by difficulty: [random boosters, boosters of the hero's faith].

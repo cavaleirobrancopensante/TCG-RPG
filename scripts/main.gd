@@ -531,7 +531,13 @@ func _open_new_game() -> void:
 	var sc := SlotScreen.create("new")
 	sc.chosen.connect(func(n):
 		var hs := HeroScreen.new()
-		hs.created.connect(func(sh: Dictionary): _new_game(n, sh["faith"], sh))
+		hs.created.connect(func(sh: Dictionary):
+			var road := StartScreen.new()
+			road.sheet = sh
+			road.chosen.connect(func(sh2: Dictionary):
+				hs.queue_free()
+				_new_game(n, sh2["faith"], sh2))
+			ui_layer.add_child(road))
 		hs.closed.connect(_open_new_game)
 		ui_layer.add_child(hs))
 	ui_layer.add_child(sc)
@@ -560,12 +566,15 @@ func open_save_slots() -> void:
 func _new_game(n: int = 1, hero_faith: String = "sanctum", sheet: Dictionary = {}) -> void:
 	GameState.new_game(n, hero_faith, sheet)
 	await start_world()
-	if GameState.start_mode == "draft":
+	if GameState.start_mode in ["draft", "sealed"]:
 		var cap := _capital_of(hero_faith)
+		var sealed: bool = GameState.start_mode == "sealed"
+		var how := I18n.t("Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.") if not sealed \
+			else I18n.t("Your road begins at the sealed tournament of %s. Open four boosters, build a deck from what you find, and fight bouts that cannot kill you. The cards are yours to keep, and the faith rewards those who go far with boosters of its own.")
 		show_dialog(I18n.t("Welcome, %s") % GameState.player_name,
 			I18n.t("Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.")
-			+ "\n\n" + I18n.t("Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.") % GameState.city(cap).get("name", ""),
-			[["To the tournament", func(): open_tournament(cap, true)]])
+			+ "\n\n" + how % GameState.city(cap).get("name", ""),
+			[["To the tournament", func(): open_tournament(cap, true, sealed)]])
 		return
 	show_dialog(I18n.t("Welcome, %s") % GameState.player_name,
 		I18n.t("Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.")
@@ -1098,12 +1107,17 @@ func _capital_of(faith: String) -> String:
 var _tour_intro := false      # the free introductory tournament a drafting hero begins with
 
 
-func open_tournament(city_id: String, intro: bool = false) -> void:
+func open_tournament(city_id: String, intro: bool = false, sealed: bool = false) -> void:
 	_tour_intro = intro
 	if not intro and not GameState.spend_gold(Draft.ENTRY_FEE):
 		show_dialog("Tournament", I18n.t("The entry fee is %d gold.") % Draft.ENTRY_FEE, [["OK", Callable()]])
 		return
 	tournament = Draft.new()
+	if sealed:
+		tournament.start_sealed(city_id, GameState.player_name, Hero.SEALED_PACKS)
+		GameState.save_game()
+		_draft_finished()
+		return
 	tournament.start(city_id, GameState.player_name)
 	GameState.save_game()
 	var ds := DraftScreen.new()
@@ -1126,6 +1140,10 @@ func _draft_finished() -> void:
 		_tour_deck = GameState.decks.size() - 1
 	_tour_prev_deck = GameState.active_deck
 	GameState.save_game()
+	if d.sealed:
+		show_dialog("Your sealed pool", I18n.t("You opened %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.") % d.picks[0].size(),
+			[["Build my deck", _tournament_deck]], [])
+		return
 	show_dialog("The draft is over", I18n.t("You drafted %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.") % d.picks[0].size(),
 		[["Build my deck", _tournament_deck]])
 
@@ -1202,7 +1220,8 @@ func _tournament_prize() -> void:
 func _intro_prize() -> void:
 	var d := tournament
 	var wins := d.player_stage
-	var n: int = Hero.INTRO_PRIZE[clampi(wins, 0, Hero.INTRO_PRIZE.size() - 1)]
+	var table: Array = Hero.INTRO_PRIZE.get("sealed" if d.sealed else "draft")
+	var n: int = table[clampi(wins, 0, table.size() - 1)]
 	if GameState.difficulty == "pilgrim":
 		n += 1
 	GameState.pending_boosters += n

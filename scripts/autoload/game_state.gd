@@ -136,9 +136,10 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Diction
 	# the boosters a hero sets out with depend on the difficulty
 	var packs: Array = Hero.START_PACKS.get(difficulty, [2, 1])
 	start_mode = String(sheet.get("start", "boosters"))
-	pending_boosters = 0 if start_mode == "draft" else int(packs[0]) + int(packs[1])
+	var tourney := start_mode in ["draft", "sealed"]
+	pending_boosters = 0 if tourney else int(packs[0]) + int(packs[1])
 	faction_packs = []
-	if start_mode != "draft":
+	if not tourney:
 		for k in int(packs[1]):
 			faction_packs.append(hero)
 	var start: Dictionary = world_data.get("start", {})
