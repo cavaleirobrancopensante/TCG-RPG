@@ -439,6 +439,23 @@ func buy_booster() -> bool:
 
 
 ## A night at the inn: you wake healed at seven the next morning.
+## Sleep rough: until seven in the morning if it is evening or night, otherwise eight hours.
+## A bedroll mends half as fast as the road (one point every two hours), an inn mends all.
+## Returns the hours slept.
+func make_camp() -> float:
+	var hours := 8.0
+	if clock >= 18.0:
+		hours = 24.0 - clock + 7.0
+	elif clock < 5.0:
+		hours = 7.0 - clock
+	var before := _regen
+	var lf := life
+	advance_clock(hours)
+	life = mini(max_life(), lf + int(hours / 2.0))
+	_regen = before
+	return hours
+
+
 func rest_at_inn() -> bool:
 	if not spend_gold(Economy.inn_price()):
 		return false

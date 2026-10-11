@@ -214,6 +214,18 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Day and night (1.24)
+
+- A sun and moon dial at the top of the map: the wheel turns once a day, the sun climbs
+  over the hills at dawn and the moon crosses the night sky. The map dims with the hour,
+  warm at dawn and dusk, dark blue at night, with the hero's lantern, the towns' windows
+  and the lairs' fires glowing through the dark.
+- Travel is slower at night (better with Wildcraft).
+- Camp anywhere in the wild, out of town and away from foes: free, sleeps until morning,
+  heals half as fast as the road. In foreign lands a hostile wanderer may find your camp.
+- The night belongs to the Black Pact: more of its people walk the roads after dark (fewer
+  on the Church's hallowed ground), and they slip back into the shadows at dawn.
+
 ## The stack, instants and tribes (1.23)
 
 - A stack: every spell and ability goes on it and can be answered. Instants (marked on the
