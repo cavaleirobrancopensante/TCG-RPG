@@ -1573,7 +1573,7 @@
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "+1 card you may keep in hand for every point (5 + Reason).",
+   "key": "+1 card you may keep in hand at the end of your turn for every point (7 + Reason). Everyone draws 7.",
    "note": "scripts/core/hero.gd"
   },
   {
@@ -3913,7 +3913,7 @@
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Everyone has 10 life and keeps 5 cards in hand.",
+   "key": "Everyone has 10 life and draws 7 cards.",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
@@ -7127,7 +7127,7 @@
    "note": "rules text of Herne, Lord of the Wild Hunt"
   },
   {
-   "key": "Antlered and silent, he rides out from the old oak at midnight, and the hounds pour after him.",
+   "key": "Antlered and silent, he rides out from the old oak at midnight, and the wolves pour after him.",
    "note": "flavour text of Herne, Lord of the Wild Hunt"
   },
   {

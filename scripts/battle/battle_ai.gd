@@ -126,7 +126,9 @@ static func main_action(st: BattleState, i: int) -> bool:
 	# 2. Ramp spells, only when they unlock a card we could not cast otherwise.
 	if _ramp(st, i):
 		return true
-	# 3. Best play.
+	# 3. Best play. A useful instant in hand keeps its mana untapped unless the play is worth more.
+	var hold := held_instant(st, i)
+	var avail := st.total_available(i)
 	var best := -1
 	var best_v := 0.0
 	var best_targets: Array = []
@@ -139,10 +141,16 @@ static func main_action(st: BattleState, i: int) -> bool:
 			continue
 		var plan := _plan(st, i, c)
 		var v: float = plan[0]
+		var spend := CardDB.mana_value(st.effective_cost(i, c))
 		var oc := false
 		if v > 0.0 and st.can_play(i, hi, true):
-			oc = true
-			v += 1.5 + float(CardDB.mana_value(c["overclock"].get("cost", {}))) * 0.5
+			var oc_spend := spend + CardDB.mana_value(c["overclock"].get("cost", {}))
+			if hold.is_empty() or avail - oc_spend >= int(hold["mana"]) or v >= float(hold["value"]):
+				oc = true
+				spend = oc_spend
+				v += 1.5 + float(CardDB.mana_value(c["overclock"].get("cost", {}))) * 0.5
+		if not hold.is_empty() and avail - spend < int(hold["mana"]) and v < float(hold["value"]):
+			continue
 		if v > best_v:
 			best_v = v
 			best = hi
@@ -151,9 +159,9 @@ static func main_action(st: BattleState, i: int) -> bool:
 	if best >= 0:
 		return st.play(i, best, best_targets, best_oc)
 	# 4. Abilities.
-	var ab := _best_ability(st, i)
+	var ab := _best_ability(st, i, hold)
 	if not ab.is_empty():
-		return st.activate(i, ab[0], ab[1])
+		return st.activate(i, ab[0], ab[1], ab[2], ab[3])
 	return false
 
 
@@ -166,63 +174,83 @@ static func use_abilities(st: BattleState, i: int) -> bool:
 	var guard := 0
 	while guard < 12 and st.phase != "over":
 		guard += 1
-		var ab := _best_ability(st, i)
-		if ab.is_empty() or not st.activate(i, ab[0], ab[1]):
+		var ab := _best_ability(st, i, held_instant(st, i))
+		if ab.is_empty() or not st.activate(i, ab[0], ab[1], ab[2], ab[3]):
 			break
 		did = true
 	return did
 
 
-## [uid, index] of the ability most worth using now, or [].
-static func _best_ability(st: BattleState, i: int) -> Array:
+## [uid, index, targets, sacrifice uid] of the ability most worth using now, or []. Abilities
+## that would spend the mana kept for a held instant (see held_instant()) must beat its value.
+static func _best_ability(st: BattleState, i: int, hold: Dictionary = {}) -> Array:
 	var best: Array = []
 	var best_v := 0.6
+	var avail := st.total_available(i)
 	for p in st.side(i).creatures + st.side(i).relics:
 		var list := st.abilities_of(p)
 		for idx in list.size():
 			if not st.can_activate(i, p.uid, idx):
 				continue
-			var v := _ability_value(st, i, p, list[idx])
+			var r := _ability_choice(st, i, p, list[idx])
+			var v: float = r[0]
+			if not hold.is_empty() and v < float(hold["value"]):
+				var spend := CardDB.mana_value(list[idx].get("cost", {}).get("mana", {}))
+				if spend > 0 and avail - spend < int(hold["mana"]):
+					continue
 			if v > best_v:
 				best_v = v
-				best = [p.uid, idx]
+				best = [p.uid, idx, r[1], r[2]]
 	return best
 
 
 static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
+	return _ability_choice(st, i, p, ab)[0]
+
+
+## [value, targets, sacrifice uid] of using this ability now. Targets are only filled where the
+## AI chooses better than auto-targeting (equipment); the sacrifice is the cheapest fitting creature.
+static func _ability_choice(st: BattleState, i: int, p, ab: Dictionary) -> Array:
 	var me := st.side(i)
 	var cost: Dictionary = ab.get("cost", {})
 	var v := 0.0
 	var helps_attack := false
+	var targets: Array = []
+	var sac_uid := -1
 	for e in ab.get("effects", []):
 		var a: String = e.get("action", "")
 		var t: String = e.get("target", "")
 		match a:
 			"add_mana":
-				return 0.0          # mana abilities are used by the payment step only when needed
+				return [0.0, [], -1]          # mana abilities are used by the payment step only when needed
 			"attach":
-				# equip: worth it when it moves onto a creature that can use it
-				var host_ref = st.auto_target(i, e)
+				# equip: onto the best attacker, again when its holder died, moved only for a clear gain
+				var host_ref = equip_target(st, i, p)
 				if host_ref == null or int(host_ref.get("uid", -1)) == p.attached_to:
-					return 0.0
+					return [0.0, [], -1]
+				var holder = st.find_perm(p.attached_to) if p.attached_to >= 0 else null
+				if holder != null and equip_score(st, i, holder, p) + 1.0 >= equip_score(st, i, st.find_perm(int(host_ref["uid"])), p):
+					return [0.0, [], -1]
 				var g: Dictionary = p.card.get("grants", {})
 				v += 1.0 + int(g.get("power", 0)) + int(g.get("toughness", 0)) * 0.5 + g.get("keywords", []).size() * 0.7
+				targets.append(host_ref)
+				continue
 			"draw":
 				v += 1.4 * int(e.get("amount", 1))
 			"summon":
 				var n := summon_count(st, i, e)
 				if n <= 0:
-					return 0.0
+					return [0.0, [], -1]
 				v += 1.6 * n
 			"grant":
 				var gn := grant_value(st, i, e, p)
 				if gn <= 0.0:
-					return 0.0
+					return [0.0, [], -1]
 				v += gn
 				helps_attack = e.get("duration", "turn") != "permanent"
 			"regrow":
 				if st.valid_targets_for(i, p, e).is_empty():
-					return 0.0
+					return [0.0, [], -1]
 				v += 1.4
 			"damage":
 				var ref = st.auto_target(i, e)
@@ -233,11 +261,11 @@ static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
 				v += 1.4 * int(e.get("amount", 1))
 			"discard_enemy":
 				if st.side(1 - i).hand.is_empty():
-					return 0.0
+					return [0.0, [], -1]
 				v += 1.6
 			"tap", "freeze":
 				if st.valid_targets_for(i, p, e).is_empty():
-					return 0.0
+					return [0.0, [], -1]
 				v += 1.5
 				helps_attack = true
 			"buff":
@@ -246,7 +274,7 @@ static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
 				if pw < 0 or tg < 0:
 					var ref = st.auto_target(i, e)
 					if ref == null:
-						return 0.0
+						return [0.0, [], -1]
 					var victim = st.find_perm(ref.get("uid", -1))
 					v += 1.0 + (victim.value() if victim and victim.toughness() + tg <= victim.damage else 0.0)
 					helps_attack = true
@@ -254,7 +282,7 @@ static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
 					v += 1.5 * (pw + tg) * 0.5 * (1.0 if t != "all_own_creatures" else maxf(1.0, me.creatures.size()))
 				else:
 					if st.phase != "main1" or st.attack_candidates(i).is_empty():
-						return 0.0
+						return [0.0, [], -1]
 					v += 0.9 * (pw + tg) * 0.5
 					helps_attack = true
 			"foresight":
@@ -274,26 +302,41 @@ static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
 	var life := int(cost.get("life", 0))
 	if life > 0:
 		if me.life <= life + 5:
-			return 0.0
+			return [0.0, [], -1]
 		v -= 0.4 * life
 	var sac_kind := String(cost.get("sacrifice", ""))
 	if sac_kind in ["other", "servo"] or sac_kind.begins_with("tribe:"):
-		var victim = st._sacrifice_choice(i, p, sac_kind)
+		var victim = sacrifice_victim(st, i, p, sac_kind, ab)
 		if victim == null:
-			return 0.0
-		v -= victim.value() * (0.4 if victim.is_token else 0.9)
-		v += ally_death_bonus(st, i, victim)
+			return [0.0, [], -1]
+		# never trade a creature for less than it is worth
+		var loss: float = victim.value() * (0.4 if victim.is_token else 0.9) - ally_death_bonus(st, i, victim)
+		if v < loss:
+			return [0.0, [], -1]
+		v -= loss
+		sac_uid = victim.uid
 	elif sac_kind == "self":
+		if v < p.value() * 0.8:
+			return [0.0, [], -1]
 		v -= p.value() * 0.8
 	if cost.get("tap", false) and p.is_creature():
 		if st.phase == "main1" and st.can_attack(p) and not helps_attack:
-			return 0.0      # attack first, use it after combat
+			return [0.0, [], -1]      # attack first, use it after combat
 		v -= 0.3
 	if cost.has("mana"):
 		v -= 0.2 * CardDB.mana_value(cost["mana"])
 	if st.phase == "main1" and not helps_attack:
 		v -= 0.5            # most abilities wait for main phase 2
-	return v
+	if not targets.is_empty():
+		# line the chosen host up with the ability's target slots (others auto-target)
+		var aligned: Array = []
+		for e in ab.get("effects", []):
+			if e.get("action") == "fight":
+				aligned.append(null)
+			if BattleState.TARGET_CHOICE_TYPES.has(e.get("target", "")):
+				aligned.append(targets[0] if e.get("action") == "attach" else null)
+		targets = aligned
+	return [v, targets, sac_uid]
 
 
 # ============================================================ card choices for rummage / foresight / costs
@@ -511,7 +554,7 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 	var foe := st.side(1 - i)
 	var is_spell: bool = c.get("type") == "spell"
 	var trig := "cast" if is_spell else "enter"
-	var v := 1.0 + float(c.get("mana_value", 0)) + DeckTools.card_score(c) * 0.3
+	var v := 1.0 + float(c.get("mana_value", 0)) + DeckTools.card_score(c) * 0.3 + synergy_bonus(st, i, c)
 	var targets: Array = []
 	var attackers_ready := st.phase == "main1" and not _would_attack(st, i).is_empty()
 	var foe_untapped := 0
@@ -553,6 +596,10 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 			"attach":
 				var g: Dictionary = c.get("grants", {})
 				v += 1.0 + int(g.get("power", 0)) + int(g.get("toughness", 0)) * 0.5 + g.get("keywords", []).size() * 0.7
+				if c.get("attach", "") == "equipment":
+					var host = equip_target(st, i, c)
+					if host != null:
+						chosen = host
 				targets.append(chosen)
 				continue
 			"damage":
@@ -791,6 +838,11 @@ static func choose_attackers(st: BattleState, i: int) -> Array:
 			continue
 		if not can_be_blocked or not dies_badly:
 			out.append(p.uid)
+	# A swarm: with more attackers than they have blockers, the blockers stop a few and the
+	# rest connect. Everyone goes when the damage through is worth what the blocks kill.
+	var swarm := _swarm_attack(st, i, cands, blockers)
+	if swarm.size() > out.size():
+		out = swarm
 	# Far ahead on life: race.
 	if me.life >= foe.life + 8:
 		out = all_uids
@@ -816,6 +868,64 @@ static func choose_attackers(st: BattleState, i: int) -> Array:
 	return out
 
 
+## The swarm attack (uids) when it pays: all ready, non-lounging attackers, if the foe's best
+## killing blocks (each blocker on the most valuable attacker it can kill) still let enough
+## damage through. [] when it does not pay.
+static func _swarm_attack(st: BattleState, i: int, cands: Array, blockers: Array) -> Array:
+	var foe := st.side(1 - i)
+	var atk: Array = []
+	for p in cands:
+		var lazy := false
+		for e in p.card.get("effects", []):
+			if e.get("trigger") == "idle":
+				lazy = true
+		if not lazy and _attack_power(p) > 0:
+			atk.append(p)
+	if atk.size() < 2 or atk.size() <= blockers.size():
+		return []
+	var free: Array = atk.duplicate()
+	var lost := 0.0
+	var killed := 0.0
+	var bl: Array = blockers.duplicate()
+	bl.sort_custom(func(a, b): return a.power() > b.power())
+	var idle_blockers: Array = []
+	for b in bl:
+		var pick = null
+		var pick_v := -1.0
+		for a in free:
+			if not st.can_block(b, a):
+				continue
+			var out := _fight_outcome(a, b)
+			if out[0] and a.value() > pick_v:          # b kills a
+				pick_v = a.value()
+				pick = a
+		if pick == null:
+			idle_blockers.append(b)
+			continue
+		free.erase(pick)
+		lost += pick.value()
+		if _fight_outcome(pick, b)[1]:
+			killed += b.value()
+	var through := 0
+	var powers: Array = []
+	for a in free:
+		through += _attack_power(a)
+		powers.append(_attack_power(a))
+	if through >= foe.life:
+		# they chump the biggest with whatever is left
+		powers.sort()
+		powers.reverse()
+		for b in idle_blockers:
+			if not powers.is_empty():
+				through -= int(powers.pop_front())
+	if through <= 0:
+		return []
+	var per_point := 1.0 + (1.5 if foe.life - through <= 3 else 0.0)
+	if through * per_point + killed <= lost * 0.8:
+		return []
+	return atk.map(func(p): return p.uid)
+
+
 ## Damage the enemy could still push through next turn if `guards` block their biggest creatures.
 static func _threat_after_blocks(foe, guards: Array) -> int:
 	var atk: Array = []
@@ -831,6 +941,12 @@ static func _threat_after_blocks(foe, guards: Array) -> int:
 		else:
 			total += p.power()
 	return total
+
+
+## Blocking is urgent when the damage would kill us or leave us at 2 life or less (with 10
+## starting life, one more swing of almost anything finishes the duel).
+static func _block_danger(life: int, incoming: int) -> bool:
+	return incoming > 0 and (incoming >= life or life - incoming <= 2)
 
 
 ## Returns attacker uid -> blocker uid.
@@ -849,7 +965,7 @@ static func choose_blocks(st: BattleState, i: int) -> Dictionary:
 			atks.append(ap)
 			incoming += ap.power()
 	atks.sort_custom(func(a, b): return a.power() > b.power())
-	var in_danger := incoming >= me.life
+	var in_danger := _block_danger(me.life, incoming)
 	for ap in atks:
 		var best = null
 		var best_score := -999.0
@@ -888,7 +1004,7 @@ static func choose_blocks(st: BattleState, i: int) -> Dictionary:
 			if ap.has_kw("trample"):
 				stopped = mini(ap.power(), best.toughness())
 			incoming -= stopped
-			in_danger = incoming >= me.life
+			in_danger = _block_danger(me.life, incoming)
 	return result
 
 
@@ -1421,4 +1537,347 @@ static func ally_death_bonus(st: BattleState, i: int, dying) -> float:
 		for e in src.card.get("effects", []):
 			if e.get("trigger") == "ally_dies" and dying.subtype_has(String(e.get("ally_subtype", ""))):
 				b += 0.6
+	return b
+
+
+# ============================================================ upkeep costs
+
+## Upkeep {N}: pay for permanent p now? Called by the engine for the AI's sides. Pays when
+## keeping p is worth more than what the mana could cast this turn; a permanent that does
+## nothing (snared, a cost reducer with nothing to reduce) is let go.
+static func keep_upkeep(st: BattleState, i: int, p, amount: int) -> bool:
+	var keep_v := upkeep_keep_value(st, i, p)
+	if keep_v <= 0.3:
+		return false
+	var s := st.side(i)
+	# upkeep permanents still to come that are worth more per mana have first call on it
+	var order: Array = s.relics + s.creatures
+	var at := order.find(p)
+	var reserve := 0
+	var ratio := keep_v / maxf(1.0, float(amount))
+	for k in range(at + 1, order.size()):
+		var q = order[k]
+		var qa := upkeep_amount(q)
+		if qa > 0 and upkeep_keep_value(st, i, q) / float(qa) > ratio:
+			reserve += qa
+	var land := 0
+	if not s.land_played:
+		for id in s.hand:
+			if CardDB.get_card(id).get("type") == "land":
+				land = 1
+				break
+	var avail := st.total_available(i) - reserve + land
+	if avail < amount:
+		return false
+	# what the mana casts with p kept (its cost reduction too) against without p and the mana
+	var with_p := _cast_value(st, i, avail - amount)
+	var idx_c: int = s.creatures.find(p)
+	var idx_r: int = s.relics.find(p)
+	if idx_c >= 0:
+		s.creatures.remove_at(idx_c)
+	if idx_r >= 0:
+		s.relics.remove_at(idx_r)
+	var without_p := _cast_value(st, i, avail)
+	if idx_c >= 0:
+		s.creatures.insert(idx_c, p)
+	if idx_r >= 0:
+		s.relics.insert(idx_r, p)
+	var loss := without_p - with_p
+	return keep_v >= loss * 0.75
+
+
+## The generic mana p asks for each upkeep (0 if none).
+static func upkeep_amount(p) -> int:
+	var n := 0
+	for e in p.card.get("effects", []):
+		if e.get("trigger") == "upkeep" and e.get("action") == "upkeep_cost":
+			n += int(e.get("amount", 1))
+	return n
+
+
+## What keeping permanent p is worth, on the scale of _plan() (about one point per mana).
+static func upkeep_keep_value(st: BattleState, i: int, p) -> float:
+	var me := st.side(i)
+	var v := 0.0
+	if p.is_creature():
+		if st._snared(p):
+			v = 0.0                         # can't attack or block: only its text still counts
+		else:
+			v = p.value() * 0.7
+			if p.pacified:
+				v *= 0.5
+		v += p.card.get("statics", []).size() * 0.8
+		for e in p.card.get("effects", []):
+			if e.get("trigger") == "upkeep" and e.get("action") == "buff" and not st._snared(p):
+				v += 1.0                    # it grows each turn
+	for e in p.card.get("effects", []):
+		if e.get("trigger") != "upkeep" or p.is_creature():
+			continue
+		var amt := int(e.get("amount", 1))
+		match String(e.get("action", "")):
+			"upkeep_cost":
+				pass
+			"draw":
+				v += 1.4 * amt
+			"foresight":
+				v += 0.4
+			"heal":
+				v += amt * (0.6 if me.life <= 5 else 0.25)
+			"summon":
+				v += 1.5 * maxi(1, summon_count(st, i, e))
+			"damage":
+				v += 1.2 if not st.side(1 - i).creatures.is_empty() else 0.2
+			_:
+				v += 0.6
+	for stc in p.card.get("statics", []):
+		if p.is_creature():
+			break
+		match String(stc.get("static", "")):
+			"cost_reduce":
+				var n := _reducible_in_hand(st, i, stc, p.card)
+				v += 0.6 * int(stc.get("amount", 1)) * mini(3, n) + (0.3 if n == 0 else 0.0)
+			_:
+				v += 1.0
+	if not p.is_creature():
+		# relics feed "for each relic you control"
+		for q in me.creatures:
+			for stc in q.card.get("statics", []):
+				if stc.get("static", "") == "kinship" and stc.get("subtype", "") == "Relic":
+					v += 0.6 * (int(stc.get("power", 1)) + int(stc.get("toughness", 1)))
+	return v
+
+
+## Hand cards a cost_reduce static would make cheaper.
+static func _reducible_in_hand(st: BattleState, i: int, stc: Dictionary, src_card: Dictionary) -> int:
+	var sub := String(stc.get("subtype", ""))
+	var n := 0
+	for id in st.side(i).hand:
+		var c := CardDB.get_card(id)
+		if c.get("type") == "land" or c == src_card:
+			continue
+		if sub != "":
+			if (sub == "Relic" and c.get("type") == "relic") \
+					or (c.get("type") in ["creature", "relic"] and String(c.get("subtype", "")).contains(sub)):
+				n += 1
+		elif c.get("faction", "") == "machine" or c.get("faction2", "") == "machine":
+			if int(c.get("cost", {}).get("generic", 0)) > 0:
+				n += 1
+	return n
+
+
+## The most our hand could make of `mana` this turn: the best set of castable cards
+## (knapsack on effective costs, colours ignored), on the scale of _plan()'s base value.
+static func _cast_value(st: BattleState, i: int, mana: int) -> float:
+	if mana <= 0:
+		return 0.0
+	var best: Array = []
+	best.resize(mana + 1)
+	best.fill(0.0)
+	for id in st.side(i).hand:
+		var c := CardDB.get_card(id)
+		if c.get("type") == "land":
+			continue
+		var cost := CardDB.mana_value(st.effective_cost(i, c))
+		if cost > mana:
+			continue
+		var val := 1.0 + float(c.get("mana_value", 0)) + DeckTools.card_score(c) * 0.3
+		for m in range(mana, cost - 1, -1):
+			best[m] = maxf(float(best[m]), float(best[m - cost]) + val)
+	return float(best[mana])
+
+
+# ============================================================ sacrifice costs
+
+## The creature a sacrifice cost of `kind` should take for `src`: tokens first, then the
+## cheapest, never a payoff that the sacrifice feeds (null if none fits).
+static func sacrifice_victim(st: BattleState, i: int, src, kind: String, _ab: Dictionary = {}):
+	var best = null
+	var best_v := 1e9
+	for q in st.side(i).creatures:
+		if not BattleState.sacrifice_fits(kind, src, q):
+			continue
+		var v := sacrifice_cost(st, i, q)
+		if v < best_v:
+			best_v = v
+			best = q
+	return best
+
+
+## How much losing q to a sacrifice hurts (for ordering victims).
+static func sacrifice_cost(st: BattleState, i: int, q) -> float:
+	var v: float = q.value() + (0.0 if q.is_token else 2.0)
+	if q.sick and not q.is_token and q.value() < 4.0:
+		v -= 0.5                # it could not attack this turn anyway
+	if _is_payoff(q):
+		v += 6.0
+	v += st.attachments_of(q).size() * 1.0
+	return v
+
+
+## A creature whose text rewards the others (death or enter triggers for allies, lords,
+## kinship, cost reducers): the last thing to sacrifice.
+static func _is_payoff(q) -> bool:
+	for e in q.card.get("effects", []):
+		if e.get("trigger") in ["ally_dies", "ally_enter"]:
+			return true
+	for stc in q.card.get("statics", []):
+		var k := String(stc.get("static", ""))
+		if k in ["kinship", "cost_reduce", "assembly"]:
+			return true
+		if k in ["anthem", "keyword"] and stc.get("scope", "self") != "self":
+			return true
+	return false
+
+
+# ============================================================ holding mana for instants
+
+## The instant in hand most worth keeping mana open for during our own main phase:
+## {"mana": its cost, "value": what a sorcery-speed play must beat to use that mana, "idx"}.
+## Removal counts when the enemy has a real target, a trick when we have attackers, protection
+## when we have a creature worth saving. {} when nothing is worth holding.
+static func held_instant(st: BattleState, i: int) -> Dictionary:
+	if st.active != i or not st.is_main_phase():
+		return {}
+	var me := st.side(i)
+	var foe := st.side(1 - i)
+	var avail := st.total_available(i)
+	var out := {}
+	var best_v := 0.0
+	for hi in me.hand.size():
+		var c := CardDB.get_card(me.hand[hi])
+		if c.get("type") == "land" or not BattleState.is_instant(c):
+			continue
+		var mana := CardDB.mana_value(st.effective_cost(i, c))
+		if mana > avail:
+			continue
+		st._with_source(c)
+		var v := 0.0
+		for e in c.get("effects", []):
+			if e.get("trigger") != "cast":
+				continue
+			var a := String(e.get("action", ""))
+			var t := String(e.get("target", ""))
+			var amount := int(e.get("amount", 1))
+			if t in ["enemy_creature", "any_enemy"] and a in ["destroy", "damage", "buff", "bounce"]:
+				if a == "buff" and int(e.get("toughness", 0)) >= 0:
+					continue
+				var top := 0.0
+				for ref in st.valid_targets(i, e):
+					if ref.get("kind") != "creature":
+						continue
+					var z := st.find_perm(int(ref["uid"]))
+					if z == null:
+						continue
+					var kills := true
+					if a == "damage":
+						kills = amount >= z.toughness() - z.damage
+					elif a == "buff":
+						kills = z.toughness() + int(e.get("toughness", 0)) <= z.damage
+					if kills or a == "bounce":
+						top = maxf(top, z.value() * (0.6 if a == "bounce" else 1.0))
+				if top >= 2.5:
+					v = maxf(v, 1.0 + top * 0.6)
+			elif t in ["own_creature", "all_own_creatures", "other_own_creatures"] and a in ["buff", "grant"]:
+				var kw := String(e.get("keyword", ""))
+				if a == "grant" and kw in ["sanctified", "unmoved"]:
+					var mine := 0.0
+					for q in me.creatures:
+						mine = maxf(mine, q.value())
+					if mine >= 4.0:
+						v = maxf(v, 1.0 + mine * 0.4)
+				elif int(e.get("power", 0)) + int(e.get("toughness", 0)) > 0 or a == "grant":
+					if me.creatures.size() >= 1 and me.lands.size() >= 3:
+						v = maxf(v, 2.0 + 0.3 * mini(3, me.creatures.size() - 1))
+		if v > best_v:
+			best_v = v
+			out = {"mana": mana, "value": v, "idx": hi}
+	return out
+
+
+# ============================================================ equipment and relic synergies
+
+## How well creature q would carry equipment `eq` (a Perm or a card): the best attacker,
+## evasive ones first, not one that can't attack.
+static func equip_score(st: BattleState, i: int, q, eq) -> float:
+	if q == null:
+		return -99.0
+	var card: Dictionary = eq if typeof(eq) == TYPE_DICTIONARY else eq.card
+	var holding: bool = typeof(eq) != TYPE_DICTIONARY and eq.attached_to == q.uid
+	var g: Dictionary = card.get("grants", {})
+	var pw: int = q.power() - (int(g.get("power", 0)) if holding else 0)
+	var tg: int = q.toughness() - (int(g.get("toughness", 0)) if holding else 0)
+	if q.pacified or st._snared(q) or q.has_kw("defender") or pw + int(g.get("power", 0)) <= 0:
+		return 0.1 * tg - 2.0
+	var sc := pw * 1.0 + tg * 0.3
+	if q.has_kw("flying"):
+		sc += 1.5
+	if q.has_kw("trample"):
+		sc += 0.5
+	for kw in g.get("keywords", []):
+		var already: bool = (q.keywords.has(kw) or q.temp_kw.has(kw)) if holding else q.has_kw(kw)
+		if not already:
+			sc += 0.8 + (0.3 * pw if kw == "first_strike" else 0.0)
+	if q.is_token and pw <= 1:
+		sc -= 0.5
+	if q.sick and not q.has_kw("haste") and st.active == i:
+		sc -= 0.3
+	for a in st.attachments_of(q):
+		if typeof(eq) == TYPE_DICTIONARY or a != eq:
+			sc -= 0.5                   # spread the gear out
+	return sc
+
+
+## The creature of ours that should carry equipment `eq` (a Perm or a card), or null.
+static func equip_target(st: BattleState, i: int, eq):
+	var best = null
+	var best_v := -1e9
+	for q in st.side(i).creatures:
+		var v := equip_score(st, i, q, eq)
+		if v > best_v:
+			best_v = v
+			best = q
+	return {"kind": "creature", "uid": best.uid} if best != null else null
+
+
+## Extra value of casting c with what we have in play and in hand: relics and tribe members
+## feeding kinship and "whenever a relic enters", cost reducers ahead of what they reduce.
+static func synergy_bonus(st: BattleState, i: int, c: Dictionary) -> float:
+	var me := st.side(i)
+	var b := 0.0
+	var ctype := String(c.get("type", ""))
+	var sub := String(c.get("subtype", ""))
+	var fits := func(want: String) -> bool:
+		if want == "":
+			return false
+		if want == "Relic":
+			return ctype == "relic"
+		return ctype in ["creature", "relic"] and sub.contains(want)
+	# what is already in play rewards this card
+	for q in me.creatures + me.relics:
+		for stc in q.card.get("statics", []):
+			if stc.get("static", "") == "kinship" and q.is_creature() and fits.call(String(stc.get("subtype", ""))):
+				b += 0.5 * (int(stc.get("power", 1)) + int(stc.get("toughness", 1)))
+		for e in q.card.get("effects", []):
+			var want := String(e.get("ally_subtype", ""))
+			if e.get("trigger") == "ally_enter" and ((want == "Relic" and ctype != "creature") or (want != "Relic" and fits.call(want))):
+				b += 1.0
+	# what this card does with what is in play and in hand
+	for stc in c.get("statics", []):
+		match String(stc.get("static", "")):
+			"kinship":
+				var n := st.count_kin(i, String(stc.get("subtype", "")))
+				b += 0.4 * mini(4, n) * (int(stc.get("power", 1)) + int(stc.get("toughness", 1)))
+			"cost_reduce":
+				b += 0.5 * int(stc.get("amount", 1)) * mini(3, _reducible_in_hand(st, i, stc, c))
+	for e in c.get("effects", []):
+		if e.get("trigger") == "ally_enter":
+			var want := String(e.get("ally_subtype", ""))
+			var n := 0
+			for id in me.hand:
+				var o := CardDB.get_card(id)
+				if o == c or o.get("type") == "land":
+					continue
+				if (want == "Relic" and o.get("type") == "relic") or (want != "Relic" and String(o.get("subtype", "")).contains(want)):
+					n += 1
+			b += 0.4 * mini(3, n)
 	return b

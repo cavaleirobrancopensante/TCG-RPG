@@ -112,7 +112,6 @@
  "Antler-King of the Fens": "Rei-Galhado dos Pântanos",
  "Antlered Barrow-Stag": "Cervo Galhado dos Túmulos",
  "Antlered Fury": "Fúria Galhada",
- "Antlered and silent, he rides out from the old oak at midnight, and the hounds pour after him.": "Galhado e silencioso, sai do velho carvalho à meia-noite, e os cães se derramam atrás dele.",
  "Any ability": "Qualquer habilidade",
  "Any cost": "Qualquer custo",
  "Any rarity": "Qualquer raridade",
@@ -1905,7 +1904,6 @@
  "The Waterwheel": "A Roda d'Água",
  "Long": "Longo",
  "Lute under the Balcony": "Alaúde sob a Sacada",
- "+1 card you may keep in hand for every point (5 + Reason).": "+1 carta que você pode manter na mão por ponto (5 + Razão).",
  "Vintage Morning": "Manhã de Vindima",
  "Ivo": "Ivo",
  "Trim": "Debrum",
@@ -1937,7 +1935,6 @@
  "%d points left": "%d pontos restantes",
  "Fire and Wine": "Fogo e Vinho",
  "Crusader": "Cruzado",
- "Everyone has 10 life and keeps 5 cards in hand.": "Todos têm 10 de vida e mantêm 5 cartas na mão.",
  "Evening Star": "Estrela da Tarde",
  "Longstride": "Passo-Largo",
  "Lauds at Dawn": "Laudes ao Amanhecer",
@@ -4577,5 +4574,8 @@
  "Take random": "Pegar aleatória",
  "Are you sure you want a random card from this pack?": "Tem certeza de que quer uma carta aleatória deste pacote?",
  "You won't see which card it is until it lands in your picks.": "Você só verá qual carta é quando ela entrar nas suas escolhas.",
- "None of this type.": "Nenhuma deste tipo."
+ "None of this type.": "Nenhuma deste tipo.",
+ "Antlered and silent, he rides out from the old oak at midnight, and the wolves pour after him.": "Galhado e silencioso, sai do velho carvalho à meia-noite, e os lobos se derramam atrás dele.",
+ "+1 card you may keep in hand at the end of your turn for every point (7 + Reason). Everyone draws 7.": "+1 carta que você pode manter na mão no fim do seu turno por ponto (7 + Razão). Todos compram 7.",
+ "Everyone has 10 life and draws 7 cards.": "Todos têm 10 de vida e compram 7 cartas."
 }

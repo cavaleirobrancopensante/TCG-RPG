@@ -112,7 +112,6 @@
  "Antler-King of the Fens": "Rey Astado de los Pantanos",
  "Antlered Barrow-Stag": "Ciervo Astado de los Túmulos",
  "Antlered Fury": "Furia astada",
- "Antlered and silent, he rides out from the old oak at midnight, and the hounds pour after him.": "Astado y silencioso, cabalga desde el viejo roble a medianoche, y los sabuesos se derraman tras él.",
  "Any ability": "Cualquier habilidad",
  "Any cost": "Cualquier coste",
  "Any rarity": "Cualquier rareza",
@@ -1905,7 +1904,6 @@
  "The Waterwheel": "La Rueda Hidráulica",
  "Long": "Largo",
  "Lute under the Balcony": "Laúd bajo el Balcón",
- "+1 card you may keep in hand for every point (5 + Reason).": "+1 carta que puedes conservar en la mano por cada punto (5 + Razón).",
  "Vintage Morning": "Mañana de Vendimia",
  "Ivo": "Ivo",
  "Trim": "Ribete",
@@ -1937,7 +1935,6 @@
  "%d points left": "%d puntos restantes",
  "Fire and Wine": "Fuego y Vino",
  "Crusader": "Cruzado",
- "Everyone has 10 life and keeps 5 cards in hand.": "Todos tienen 10 de vida y conservan 5 cartas en la mano.",
  "Evening Star": "Lucero de la Tarde",
  "Longstride": "Zancalarga",
  "Lauds at Dawn": "Laudes al Alba",
@@ -4577,5 +4574,8 @@
  "Take random": "Tomar al azar",
  "Are you sure you want a random card from this pack?": "¿Seguro que quieres una carta al azar de este sobre?",
  "You won't see which card it is until it lands in your picks.": "No verás qué carta es hasta que llegue a tus elecciones.",
- "None of this type.": "Ninguna de este tipo."
+ "None of this type.": "Ninguna de este tipo.",
+ "Antlered and silent, he rides out from the old oak at midnight, and the wolves pour after him.": "Astado y silencioso, cabalga desde el viejo roble a medianoche, y los lobos se derraman tras él.",
+ "+1 card you may keep in hand at the end of your turn for every point (7 + Reason). Everyone draws 7.": "+1 carta que puedes conservar en la mano al final de tu turno por cada punto (7 + Razón). Todos roban 7.",
+ "Everyone has 10 life and draws 7 cards.": "Todos tienen 10 de vida y roban 7 cartas."
 }
