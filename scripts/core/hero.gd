@@ -7,6 +7,25 @@ const POINTS := 6                 # stat points to share out at creation
 const STAT_MAX := 5
 const BASE_LIFE := 10
 const BASE_HAND := 5
+const LIFE_PER_DEVOTION := 2
+
+## Levels: experience from duels (more for stronger foes, double in a lair), missions and errands.
+const LEVEL_CAP := 20
+const LEVEL_STAT_MAX := 8         # stats raised by levels may go this high (creation keeps STAT_MAX)
+const MISSION_XP := 60
+const ERRAND_XP := 40             # a favour on the road or a feast errand delivered in time
+const FLEE_CARDS := 5             # cards lost when running from a duel
+
+
+## Experience needed to go from `lvl` to the next level.
+static func xp_to_next(lvl: int) -> int:
+	return 100 * maxi(1, lvl)
+
+
+## Experience for a duel won against a foe of this level (a lair's master is worth twice).
+static func duel_xp(foe_level: int, lair: bool = false) -> int:
+	var x := 20 + 15 * maxi(1, foe_level)
+	return x * 2 if lair else x
 
 ## stat -> [faith, name, what it does]
 const STATS := {
@@ -20,9 +39,9 @@ const STATS := {
 const STAT_ORDER := ["devotion", "reason", "wildcraft", "charm", "industry", "dread"]
 
 const DIFFICULTY := {
-	"pilgrim": {"name": "Pilgrim", "text": "Gentler foes, richer rewards, cheaper defeats.", "enemy_life": -2, "income": 1.25, "defeat": 0.5},
-	"knight": {"name": "Knight", "text": "The game as it is meant to be played.", "enemy_life": 0, "income": 1.0, "defeat": 1.0},
-	"crusader": {"name": "Crusader", "text": "Tougher foes, leaner purses, costly defeats.", "enemy_life": 3, "income": 0.8, "defeat": 1.5},
+	"pilgrim": {"name": "Pilgrim", "text": "Gentler foes, richer rewards.", "enemy_life": -2, "income": 1.25},
+	"knight": {"name": "Knight", "text": "The game as it is meant to be played.", "enemy_life": 0, "income": 1.0},
+	"crusader": {"name": "Crusader", "text": "Tougher foes, leaner purses.", "enemy_life": 3, "income": 0.8},
 }
 const DIFFICULTY_ORDER := ["pilgrim", "knight", "crusader"]
 

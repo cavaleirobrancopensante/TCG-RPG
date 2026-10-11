@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b5m0jw8mbb0m4"
-valid=false
+uid="uid://d4jmgbwtt16ut"
+path="res://.godot/imported/revel_r_006.webp-fed3f25a7ed8d4d7f1252d95669669b7.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://art/cards/revel_r_006.webp"
+dest_files=["res://.godot/imported/revel_r_006.webp-fed3f25a7ed8d4d7f1252d95669669b7.ctex"]
 
 [params]
 

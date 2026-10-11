@@ -8,6 +8,8 @@ signal lair_reached(lair_id: String)
 signal enemy_engaged(enemy: Dictionary)
 signal stranger_met(enemy: Dictionary)
 signal ferry_reached(index: int, from_a: bool)
+## Two wanderers of hostile faiths met and fought; `in_sight` when the hero could see it.
+signal npc_clash(winner: Dictionary, loser: Dictionary, leveled: bool, in_sight: bool)
 
 const PLAYER_SPEED := 430.0
 const ENEMY_SPEED := 150.0
@@ -21,6 +23,15 @@ const ENEMY_COUNT := 28
 const RESPAWN_TIME := 40.0
 const LEASH := 520.0            # how far a roaming enemy strays from home
 const CHASE_LEASH := 900.0      # and how far it follows you before turning back
+const NPC_LEVEL_CAP := 10
+const CLASH_RADIUS := 70.0      # how close two hostile wanderers come before they fight
+const CLASH_EVERY := 0.25       # seconds of travel between looks for such meetings
+const CLASH_FX_TIME := 1.6
+
+## Which faiths fight each other on the road. The Black Pact fights everyone; the rest
+## keep old quarrels (the Church with the Revel and the Old Ways, the Old Ways with the
+## Technocracy, the Stoa with the Revel). Anyone else passes by in peace.
+const FEUDS := [["sanctum", "revel"], ["sanctum", "wild"], ["wild", "machine"], ["lyceum", "revel"]]
 
 # walking grid codes (see tools/map/make_map.py)
 const BLOCKED := 0
@@ -101,6 +112,40 @@ class Walker extends Node2D:
 					Tapestry.draw_scroll_label(self, Vector2(0, -88), label, 16, Tapestry.INK, Tapestry.WHITE)
 				_:
 					Tapestry.draw_scroll_label(self, Vector2(0, -88), label, 16, Tapestry.WHITE, Tapestry.VERMILION.darkened(0.1))
+
+
+## Crossed swords and sparks over the spot where two wanderers fought; fades and frees itself.
+class ClashFx extends Node2D:
+	var t := 0.0
+	var tint := Color(1, 1, 1)
+
+	func _process(delta: float) -> void:
+		t += delta
+		if t >= Overworld.CLASH_FX_TIME:
+			queue_free()
+			return
+		queue_redraw()
+
+	func _draw() -> void:
+		var k := t / Overworld.CLASH_FX_TIME
+		var a := 1.0 - k * k
+		var c := Vector2(0, -50)
+		var ink := Color(Tapestry.INK, a)
+		var steel := Color(0.88, 0.88, 0.92, a)
+		var sz := 26.0 + 6.0 * sin(minf(1.0, t * 6.0) * PI * 0.5)
+		for s in [-1.0, 1.0]:
+			var p0 := c + Vector2(-sz * s, sz)
+			var p1 := c + Vector2(sz * s, -sz)
+			draw_line(p0, p1, ink, 7.0, true)
+			draw_line(p0, p1, steel, 4.0, true)
+			var g := p0.lerp(p1, 0.22)
+			var n := (p1 - p0).normalized().orthogonal() * 9.0
+			draw_line(g - n, g + n, Color(Tapestry.GILT, a), 4.0, true)
+		for i in 10:
+			var ang := TAU * float(i) / 10.0 + t * 1.3
+			var r0 := 10.0 + 34.0 * k
+			draw_line(c + Vector2.from_angle(ang) * r0, c + Vector2.from_angle(ang) * (r0 + 10.0), Color(1.0, 0.75, 0.25, a), 2.5, true)
+		draw_circle(c, 6.0 * (1.0 - k) + 1.0, Color(tint, a))
 
 
 ## Stages for the loading screen, in the order build() runs them.
@@ -502,7 +547,7 @@ func _spawn_enemy(force_night: bool = false) -> void:
 		var lvl := clampi(1 + int(p.distance_to(start) / 800.0), 1, 5)
 		var e := {
 			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": _look_for(f),
-			"name": WorldEntities.enemy_name(f, _rng), "wander": p, "chasing": false,
+			"name": WorldEntities.enemy_name(f, _rng), "wander": p, "chasing": false, "xp": 0,
 			"region": region, "disposition": disposition, "night": night_walker, "extra": force_night,
 		}
 		_add_enemy(e)
@@ -688,6 +733,10 @@ func _process(delta: float) -> void:
 				respawn_queue.remove_at(i)
 				_spawn_enemy()
 		_move_enemies(delta)
+		_clash_t += delta
+		if _clash_t >= CLASH_EVERY and active:
+			_clash_t = 0.0
+			_npc_clashes()
 		_dawn_check()
 		_reveal()
 	camera.position = player_pos
@@ -849,6 +898,97 @@ func _move_enemies(delta: float) -> void:
 			move_target = player_pos
 			enemy_engaged.emit(e)
 			return
+
+
+# ------------------------------------------------------------------ wanderers at war
+
+var _clash_t := 0.0
+
+
+static func faiths_hostile(a: String, b: String) -> bool:
+	if a == b:
+		return false
+	if a == "abyss" or b == "abyss":
+		return true
+	for f in FEUDS:
+		if (f[0] == a and f[1] == b) or (f[0] == b and f[1] == a):
+			return true
+	return false
+
+
+## Experience a wanderer needs for its next level.
+static func npc_xp_to_next(lvl: int) -> int:
+	return 50 * maxi(1, lvl)
+
+
+## A wanderer's experience for slaying another of this level.
+static func npc_kill_xp(loser_level: int) -> int:
+	return 40 + 15 * maxi(1, loser_level)
+
+
+## Experience for a wanderer; returns true when it rises a level (capped at NPC_LEVEL_CAP).
+static func npc_gain_xp(e: Dictionary, n: int) -> bool:
+	var lvl := int(e.get("level", 1))
+	var x := int(e.get("xp", 0)) + n
+	var up := false
+	while lvl < NPC_LEVEL_CAP and x >= npc_xp_to_next(lvl):
+		x -= npc_xp_to_next(lvl)
+		lvl += 1
+		up = true
+	e["level"] = lvl
+	e["xp"] = 0 if lvl >= NPC_LEVEL_CAP else x
+	return up
+
+
+## Who wins when two wanderers fight: a roll weighted by level (a level 4 beats a level 1
+## four times in five). Returns [winner, loser].
+static func clash_outcome(a: Dictionary, b: Dictionary, rng: RandomNumberGenerator) -> Array:
+	var la := float(maxi(1, int(a.get("level", 1))))
+	var lb := float(maxi(1, int(b.get("level", 1))))
+	return [a, b] if rng.randf() < la / (la + lb) else [b, a]
+
+
+## Can these two come to blows? Not with the hero on their heels, and never a thief (he is
+## waiting for the goods).
+static func would_clash(a: Dictionary, b: Dictionary) -> bool:
+	if a.get("chasing", false) or b.get("chasing", false) or a.get("thief", false) or b.get("thief", false):
+		return false
+	return faiths_hostile(String(a["faction"]), String(b["faction"]))
+
+
+## A few times a second of travel: wanderers of feuding faiths who meet fight it out.
+## The loser falls (and someone takes his place later); the winner grows stronger.
+func _npc_clashes() -> void:
+	var r2 := CLASH_RADIUS * CLASH_RADIUS
+	var n := enemies.size()
+	for i in n:
+		var a: Dictionary = enemies[i]
+		var pa: Vector2 = a["pos"]
+		for j in range(i + 1, n):
+			var b: Dictionary = enemies[j]
+			if pa.distance_squared_to(b["pos"]) > r2 or not would_clash(a, b):
+				continue
+			resolve_clash(a, b)
+			return          # one fight per look keeps the list steady and the cost flat
+
+
+## Fight it out between two wanderers. Returns [winner, loser, leveled].
+func resolve_clash(a: Dictionary, b: Dictionary) -> Array:
+	var res := clash_outcome(a, b, _rng)
+	var winner: Dictionary = res[0]
+	var loser: Dictionary = res[1]
+	var leveled := npc_gain_xp(winner, npc_kill_xp(int(loser.get("level", 1))))
+	var at: Vector2 = ((a["pos"] as Vector2) + (b["pos"] as Vector2)) * 0.5
+	var in_sight := at.distance_to(player_pos) < sight() and seen(at)
+	remove_enemy(int(loser["id"]))
+	if in_sight:
+		var fx := ClashFx.new()
+		fx.position = at
+		fx.z_index = 2
+		fx.tint = UIKit.faction_ink(String(winner["faction"]))
+		add_child(fx)
+	npc_clash.emit(winner, loser, leveled, in_sight)
+	return [winner, loser, leveled]
 
 
 func _city_at(p: Vector2) -> String:

@@ -214,6 +214,19 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Levels, death, and a card database (1.27)
+
+- Your hero gains experience from duels (more for stronger foes, double in a lair),
+  missions, favours and feast errands; the next level needs 100 x your level. Every second
+  level (2, 4, 6 ... 20) gives a stat point to spend on the new Hero sheet (stats can reach 8
+  this way).
+- Death is final: lose a duel on the road or in a lair and your hero dies; the save is gone.
+  Fleeing a duel costs half your gold and 5 random cards from your deck.
+- Wanderers have levels too (shown on the map), and wanderers of feuding faiths fight each
+  other when they meet: the winner grows stronger. The Black Pact fights everyone.
+- Settings has a Card Database with every card in the game, filtered by faith, rarity, type
+  and a search, opening in the card viewer.
+
 ## The Church year, and words of the faiths (1.26)
 
 - The year is 2500 A.D. and the one calendar is the Church's: the Roman calendar of 1962.
