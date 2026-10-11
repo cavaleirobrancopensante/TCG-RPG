@@ -71,11 +71,11 @@ A two drop that punishes whoever kills it: when it dies, an enemy creature can n
 **Templar of the Red Cross** · Uncommon · Creature (Human Knight) · 2W · 3/2 · Sanctified (protection from the Pact). Whenever this attacks, gain 1 life.
 The Church's cheapest sanctified creature, a 3/2 attacker that Pact decks cannot block, target or damage. Each attack also gains a life, so he pushes toward Grace while pressing the opponent. The Latin is the Templars' motto from Psalm 113: not to us, O Lord, but to Thy name give glory.
 
-**Cistercian Abbot** · Uncommon · Creature (Human Monk) · 3W · 2/3 · Other creatures you control get +0/+1. As long as you have more life than you started with, they get +1/+1 instead.
-An anthem on a body, and the uncommon that ties the congregation theme to Grace. Out of Grace he gives a modest +0/+1, but above your starting life the whole team gets +1/+1. His own 2/3 body is weak for four mana, which is the cost of the effect. The Cistercians reformed Benedictine life around prayer and hard labour, and the flavour is the Benedictine motto they lived by.
+**Cistercian Abbot** · Uncommon · Creature (Human Monk Priest) · 3W · 2/3 · Other creatures you control get +0/+1. As long as you have more life than you started with, they get +1/+1 instead.
+An anthem on a body, and the uncommon that ties the congregation theme to Grace. Out of Grace he gives a modest +0/+1, but above your starting life the whole team gets +1/+1. His own 2/3 body is weak for four mana, which is the cost of the effect. The Cistercians reformed Benedictine life around prayer and hard labour, and the flavour is the Benedictine motto they lived by. In 1.25 he joins the Priest tribe: an abbot was ordinarily an ordained priest who sang the conventual Mass for his monks.
 
-**Inquisitor of the Pale Flame** · Uncommon · Creature (Human Inquisitor) · 3W · 3/3 · When this enters, destroy target tapped enemy creature.
-The classic uncommon two for one, rebuilt so that it only answers creatures that attacked. On rate 3/3 stats for four plus removal is strong, but the opponent can play around it by holding back. The flavour treats the inquisitor as a patient seeker of truth, not a caricature, which fits the reverent tone.
+**Inquisitor of the Pale Flame** · Uncommon · Creature (Human Priest Inquisitor) · 3W · 3/3 · When this enters, destroy target tapped enemy creature.
+The classic uncommon two for one, rebuilt so that it only answers creatures that attacked. On rate 3/3 stats for four plus removal is strong, but the opponent can play around it by holding back. The flavour treats the inquisitor as a patient seeker of truth, not a caricature, which fits the reverent tone. In 1.25 he joins the Priest tribe, since the inquisitors of the Church were ordained clergy, most often Dominican friars in holy orders.
 
 **Guardian Angel of the Parish** · Uncommon · Creature (Angel) · 3W · 2/4 · Flying, guardian.
 A defensive flier that blocks as a 2/6 in the air or on the ground. Two keywords on a four mana body leaves him with little power, so he guards more than he kills. The flavour is the opening of the traditional prayer to one's guardian angel, which every Catholic child learns.
@@ -185,3 +185,22 @@ The Angel deck's rare: a 3/4 flier for five that gains at least two life and usu
 
 **Saint Michael the Archangel** · Mythic · Creature (Angel) · 4WW · 4/5 · Flying, sanctified (protection from the Pact). Other Angels and Knights you control get +1/+1.
 The mythic that binds both tribes. A 4/5 flier that the Pact cannot touch, and a lord for Angels and Knights at once, so any tribal Church deck wants him. At six mana and with no immediate effect on the board, he is splashy but answerable by the other five faiths. Michael is the captain of the heavenly host who cast down the rebel angels and the patron of knights; his name, Quis ut Deus, is the cry with which he did it.
+
+### Third tribe (1.25)
+
+The Church's third tribe is the **Priest**: the parish priest, the confessor, the celebrant at the altar and the bishop who ordains them. It is small and gentle, a few synergies rather than a lord-and-payoff package, and it does what the sacraments do: it heals, keeps Grace switched on, blesses creatures with permanent +1/+1 and protects them. Besides the four new Priests it counts three older cards whose men are honestly priests: Cistercian Abbot and Abbot of the Silent Order (abbots were ordained and sang the Mass for their houses) and Inquisitor of the Pale Flame (the inquisitors were clergy in holy orders). The acolyte and the thurifer stay Clerics, since they serve at the altar but are not ordained, and the monks, friars and Saint Benedict stay as they are, since nothing on those cards makes them priests. Seven members in all.
+
+**Parish Priest of the Valley** · Common · Creature (Human Priest) · 1W · 1/1 · When this enters, target creature you control gets +1/+1 permanently.
+The tribe's cheap member: a 1/1 for two that leaves a permanent +1/+1 behind, so it is a Sacrament of Confirmation with a small body instead of the life. Played on an empty board he blesses himself into a 2/2, which is still on rate. A blessing at common keeps the third tribe in the Church's niche of permanent growth. The country priest who blesses the seed at Rogationtide and the harvest in autumn, and knows his flock by name, is the backbone of Catholic life.
+
+**Absolution Before Battle** · Common · Spell (Sacrament) · Instant · 1W · Target creature you control gets +0/+3 until end of turn. Gain 1 life for each Priest you control.
+The tribe's one instant and its counting spell: a protective trick that saves a creature from a block or a burn spell, with a little life for each Priest. It adds only toughness, because temporary power is the Revel's and single creature pumps belong to the Old Ways, and it is a point dearer than a sorcery would be. General absolution given to soldiers before battle is an old practice of the Church, and the flavour opens with the words of absolution.
+
+**Confessor of the Cathedral** · Uncommon · Creature (Human Priest) · 2W · 2/3 · Sanctified (protection from the Pact). When this enters, gain 2 life.
+A sturdy member that the Black Pact cannot touch, with 2 life to push toward Grace. A 2/3 for three is a point under rate, which pays for the keyword and the life. Confession frees the soul from the devil's hold, so sanctified is the honest keyword for a confessor, and the flavour is the seal of the confessional, which a priest keeps even unto death.
+
+**Celebrant of the Dawn Mass** · Uncommon · Creature (Human Priest) · 2W · 1/3 · Whenever another Priest enters under your control, target creature you control gets +1/+1 permanently.
+The tribe's ally_enter payoff: every later Priest brings a blessing with it, so with the Parish Priest he hands out two +1/+1 at once. His own 1/3 body is weak, and alone he does nothing, which is the price. The flavour is the opening of the old Mass, the priest's words at the foot of the altar, and the art shows the elevation of the Host at a dawn Low Mass.
+
+**Bishop of the Mountain See** · Rare · Creature (Human Priest) · 2WW · 2/4 · Other Priests you control get +1/+1. At the beginning of your upkeep, gain 1 life for each Priest you control.
+The modest lord of the third tribe. Other Priests get +1/+1, and every upkeep he gains a life for each Priest, himself included, so he keeps Grace on turn after turn. His own 2/4 body for four is under rate and has no keyword, so he is answerable by any removal. A bishop holds the fullness of the priesthood and alone can ordain priests, which is why the tribe gathers around him.

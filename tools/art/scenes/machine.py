@@ -2506,3 +2506,232 @@ def machine_m_004(p):
               emblem=chain_of_office(), width=1.15, mouth='calm').draw(p, 380, 616, 490)
     for (x, s, col) in ((590, 3.0, BRASS_L), (680, 2.8, COPPER.light(0.15)), (770, 2.6, BRASS)):
         servo(p, x, 600, s, col, step=1.5)
+
+
+# ------------------------------------------------------------------ third tribe (1.25): relics and equipment
+
+def armoury_rack(p, x0, x1, top, base, items=('lance', 'lance', 'shield', 'lance', 'helm', 'lance'), col=OAK_D):
+    """A wall rack of the guild's arms: upright lances, round brass shields, helms on pegs."""
+    p.taper([(x0, top + 20), (x1, top + 20)], 6, 6, col, width=1.6, shade=0.6)
+    p.taper([(x0, base - 30), (x1, base - 30)], 6, 6, col, width=1.6, shade=0.6)
+    n = len(items)
+    for i, it in enumerate(items):
+        x = x0 + (x1 - x0) * (i + 0.5) / n
+        if it == 'lance':
+            p.taper([(x, base), (x + 4, top - 20)], 4.2, 2.6, ('h', VERMILION.dark(0.1), VERMILION.dark(0.45)), width=1.4)
+            p.shape([(x + 1, top - 18), (x + 8, top - 18), (x + 5, top - 58, 0)], metal(STEELC), width=1.3, shade=0.7)
+            p.blob((x + 1, base - 70), 14, 6, metal(STEELC, 'v'), width=1.3, shade=0.7)
+        elif it == 'shield':
+            c = (x, (top + base) / 2)
+            p.blob(c, 34, 34, metal(BRASS, 'v'), width=2, shade=0.9, rim=0.4)
+            gear(p, c, 16, 10, BRASS_L, 0.2, width=1.2, spokes=0)
+            for k in range(10):
+                rivet(p, polar(c, 30, k * TAU / 10), 1.6, BRASS_L)
+        elif it == 'helm':
+            c = (x, top + 70)
+            p.blob((x, top + 20), 2.6, 2.6, OAK_D, width=1.0)
+            p.shape([(x - 18, c[1] + 22, 0), (x - 19, c[1] - 6), (x, c[1] - 22), (x + 19, c[1] - 6), (x + 18, c[1] + 22, 0)], metal(STEELC), width=1.8, shade=0.9, rim=0.4)
+            p.shape([(x - 12, c[1] + 2, 0), (x + 14, c[1] + 2, 0), (x + 14, c[1] + 6, 0), (x - 12, c[1] + 6, 0)], SOOT, width=1, smooth=False)
+            p.line([(x, c[1] - 22), (x, c[1] + 22)], BRASS, 2)
+
+
+def machine_c_028(p):
+    """Spring-Loaded Lance: on the armourer's bench the lance lies in its padded cradles,
+    the coil cocked in its brass housing, the point catching the window light."""
+    bg.fill_all(p, ('v', C.hex('3a2e26'), C.hex('5a4a3c')))
+    stone_wall(p, (0, 0, W, 470), C.hex('8a7c68'), 100, 48)
+    p.cx.new_path()
+    p.cx.rectangle(0, 0, W, 470)
+    p.fill(('h', C(0, 0, 0, 0.05), C(0, 0, 0, 0.35)))
+    arched_window(p, 150, 70, 150, 240, ('v', C.hex('a8c8e0'), C.hex('f4ead0')), 2, C.hex('7a6a58'))
+    armoury_rack(p, 370, 900, 90, 440, ('lance', 'helm', 'lance', 'shield', 'lance', 'lance'))
+    bg.light_shafts(p, (230, 200), 0.6, 3, strength=0.16)
+    p.glow((520, 330), 340, C.hex('ffe6b0'), 0.25)
+    top = workbench(p, -10, 1010, 520, 120, OAK, legs=True)
+    # a sheet with the lance's drawing, and the spare spring
+    blueprint_sheet(p, [(640, 498, 0), (820, 486, 0), (836, 516, 0), (650, 528, 0)], BLUEP, 'none')
+    p.line([(670, 506), (800, 498)], LEAD_WHITE.alpha(0.8), 2)
+    p.blob((690, 504), 8, 4, None, ink=LEAD_WHITE.alpha(0.8), width=1.6)
+    spring(p, (180, 500), (290, 492), 9, 9, STEELC.light(0.1), 2.6)
+    p.blob((860, 494), 16, 13, metal(COPPER, 'v'), width=1.6, shade=0.8)
+    p.taper([(872, 486), (910, 462)], 3, 1.5, COPPER, width=1.2)
+    tool('key')(p, {'hand_f': (360, 506), 'el_f': (340, 506)})
+    for k in range(5):
+        bolt_head(p, (430 + k * 22, 508 + (k % 2) * 6), 5, STEELC)
+    # the cradles, then the lance lying across them
+    a, b = (90, 470), (900, 175)
+    u = v_norm(v_sub(b, a))
+    for t in (0.3, 0.72):
+        q = v_add(a, v_mul(u, v_len(v_sub(b, a)) * t))
+        p.shape([(q[0] - 22, 512, 0), (q[0] - 12, q[1] + 6, 0), (q[0] + 12, q[1] + 6, 0), (q[0] + 22, 512, 0)], ('h', OAK.light(0.1), OAK_D), width=1.8, smooth=False, shade=0.5)
+        p.blob((q[0], q[1] + 8), 20, 9, CRIMSON.dark(0.2), width=1.4, shade=0.6)
+    lance(p, a, b, 1.9, VERMILION, spring_open=0.2, grip=0.2)
+    p.star((878, 186), 14, C(1, 1, 0.95, 0.95))
+    p.star((420, 300), 9, C(1, 1, 0.9, 0.8))
+
+
+def tool_rack(p, j):
+    """Extra-back option for Automaton: a riveted brass rack rising above the shoulders,
+    hung with the workshop's tools."""
+    x0 = j['sh_b'][0] + 8
+    for (a, b) in (((x0 + 8, -80), (j['sh_b'][0] + 8, -80)), ((x0 + 8, -54), (j['sh_b'][0] + 6, -54))):
+        p.taper([a, b], 1.4, 1.4, LEATHER.dark(0.2), width=1.0)
+    for xx in (x0 - 14, x0 + 8):
+        p.taper([(xx, -44), (xx, -128)], 1.8, 1.8, metal(BRASS_D), width=1.2, shade=0.6)
+        p.blob((xx, -129), 2.4, 2.4, metal(BRASS_L, 'v'), width=1.0)
+    for yy in (-124, -96, -66):
+        p.taper([(x0 - 20, yy), (x0 + 14, yy)], 1.6, 1.6, metal(BRASS), width=1.0)
+        for k in range(4):
+            rivet(p, (x0 - 16 + k * 9, yy), 0.7, BRASS_L)
+    p.push(x0 - 18, -124, 0.3)
+    hanging_tools(p, 0, 0, [('saw', 6), ('tongs', 50), ('hammer', 92)])
+    p.pop()
+    p.push(x0 - 18, -96, 0.3)
+    hanging_tools(p, 0, 0, [('wrench', 8), ('calipers', 52), ('coil', 96)])
+    p.pop()
+    gear(p, (x0 - 22, -70), 5, 10, COPPER, 0.3, width=0.9, spokes=0)
+
+
+def machine_c_029(p):
+    """Tool-Rack Automaton: in the morning yard of a tower going up, the automaton plods
+    under its rack of hanging tools and lifts the hammer from it to drive a peg."""
+    sky_smoky(p, 'dawn')
+    cogspire_skyline(p, 380, C.hex('8a8098'), C.hex('6a6078'), smoke=True, seed_shift=3)
+    stone_wall(p, (0, 370, W, 470), C.hex('a89a84'), 80, 34)
+    scaffold(p, 660, 960, 150, 470, OAK)
+    crane(p, 880, 470, 120, -180, OAK_D, hook=(700, 330))
+    cobbles(p, 470, C.hex('8a8276'))
+    # timbers and a crate of relics waiting by the scaffold
+    for k in range(3):
+        p.taper([(640, 560 - k * 12), (930, 548 - k * 12)], 7, 7, ('v', OAK.light(0.15), OAK_D), width=1.6)
+    p.shape([(150, 600, 0), (150, 530, 0), (260, 530, 0), (260, 600, 0)], ('v', OAK.light(0.1), OAK_D), width=2, smooth=False, shade=0.5)
+    p.line([(150, 552), (260, 552)], IRONC, 3, smooth=False)
+    gear(p, (190, 524), 18, 10, BRASS, 0.2, width=1.4, spokes=4)
+    p.taper([(222, 530), (250, 470)], 3, 2, ('h', VERMILION, VERMILION.dark(0.4)), width=1.2)
+    p.shape([(247, 472), (255, 470), (256, 446, 0)], metal(STEELC), width=1.2)
+    # the peg stake it is driving
+    p.shape([(700, 600, 0), (700, 560, 0), (716, 560, 0), (716, 600, 0)], OAK.light(0.1), width=1.6, smooth=False, shade=0.5)
+    Automaton(torso='box', head='bucket', legs='jointed', arm_f='hammer', arm_b='hand', col=COPPER.light(0.1), col2=STEELC, trim=BRASS,
+              pose='ma_bot_hold', eye_col=FURN, width=1.1, extra_back=[tool_rack], stride=3).draw(p, 470, 604, 400)
+    steam(p, (380, 200), (-0.3, -1), 4, 0.6, STEAM, 0.5)
+
+
+def machine_u_019(p):
+    """Riveted Pauldron: at night in the forge the finished pauldron sits on its oak
+    shoulder-form, forty rivets bright, the hammer laid down beside it."""
+    bg.fill_all(p, ('v', C.hex('1e1612'), C.hex('3a2a20')))
+    brick_wall(p, (0, 0, W, 470), C.hex('6a3a2a'), soot=0.6)
+    furnace_mouth(p, 820, 470, 220, 250, 0.75)
+    p.glow((820, 380), 380, FURN, 0.35)
+    hanging_tools(p, 110, 90, [('tongs', 0), ('hammer', 50), ('calipers', 110), ('square', 160)])
+    shelf(p, 320, 620, 170)
+    workbench(p, -10, 1010, 520, 110, OAK.dark(0.15), legs=True)
+    # the armour stand: an oak post and a padded linen bust, the pauldron on its shoulder
+    p.shape([(400, 520, 0), (390, 496, 0), (550, 496, 0), (540, 520, 0)], ('v', OAK.light(0.1), OAK_D), width=2, smooth=False)
+    p.taper([(470, 498), (470, 400)], 14, 12, ('h', OAK.light(0.2), OAK_D), width=1.8)
+    bust = [(360, 300), (380, 270), (430, 254), (470, 252), (512, 254), (562, 270), (582, 300), (574, 360), (548, 408), (470, 420), (392, 408), (366, 360)]
+    p.shape(bust, ('h', C.hex('e8dcc0'), C.hex('c8b898'), C.hex('8a7a5a')), width=2.2, shade=0.7, rim=0.3)
+    for k in range(6):
+        p.line([(392 + k * 32, 262), (396 + k * 30, 412)], C.hex('8a7a5a').alpha(0.5), 1.4)
+    p.taper([(448, 254), (450, 226)], 12, 10, ('h', OAK.light(0.2), OAK_D), width=1.6)
+    p.blob((450, 222), 16, 7, OAK.light(0.1), width=1.6, shade=0.6)
+    pauldron(p, (566, 248), 1.6, STEELC, BRASS, LEATHER)
+    for q in ((520, 248), (640, 300), (590, 420)):
+        p.star(q, 12, C(1, 1, 0.92, 0.9))
+    # rim light from the furnace
+    p.glow((640, 340), 120, FURN_CORE, 0.25)
+    # hammer, rivet tray and punch on the bench
+    p.taper([(160, 508), (330, 488)], 6, 6, ('v', OAK.light(0.2), OAK_D), width=1.6)
+    p.shape([(318, 466, 0), (352, 462, 0), (356, 508, 0), (322, 512, 0)], metal(IRONC), width=1.8, smooth=False, shade=0.8)
+    p.shape([(680, 512, 0), (686, 488, 0), (800, 486, 0), (806, 510, 0)], metal(IRONC.light(0.1)), width=1.6, smooth=False, shade=0.6)
+    for k in range(12):
+        rivet(p, (700 + (k % 6) * 17, 494 + (k // 6) * 9), 3.2, BRASS_L)
+    p.taper([(840, 512), (900, 482)], 3.4, 2.2, metal(STEELC), width=1.2)
+
+
+def machine_u_020(p):
+    """Guild Armourer: in his open-fronted shop the armourer measures a breastplate on
+    the anvil with his calipers, his finished pieces hung on the wall behind."""
+    bg.fill_all(p, ('v', C.hex('3a2c22'), C.hex('5a4632')))
+    stone_wall(p, (0, 0, W, 500), C.hex('9a8a70'), 96, 46)
+    # the open shutter onto the street
+    p.shape([(640, 70, 0), (900, 70, 0), (900, 330, 0), (640, 330, 0)], ('v', C.hex('a8c0d8'), C.hex('efe2c4')), width=2.4, smooth=False)
+    p.clip_shape([(640, 70), (900, 70), (900, 330), (640, 330)], smooth=False)
+    cogspire_skyline(p, 330, C.hex('8a8098'), C.hex('6a6078'), smoke=False, n_far=5, seed_shift=5)
+    p.unclip()
+    p.shape([(630, 330, 0), (910, 330, 0), (910, 346, 0), (630, 346, 0)], OAK, width=1.8, smooth=False)
+    p.shape([(560, 64, 0), (640, 70, 0), (640, 330, 0), (560, 340, 0)], ('h', OAK_D, OAK), width=1.8, smooth=False, shade=0.4)
+    # finished work on the wall: a pauldron, a helm, lances in their rack
+    pauldron(p, (230, 110), 0.85, STEELC, BRASS, LEATHER)
+    armoury_rack(p, 330, 540, 70, 460, ('helm', 'lance', 'lance'))
+    plank_floor(p, 500, OAK.dark(0.25))
+    # the breastplate on its stand, being measured
+    p.taper([(700, 604), (700, 470)], 8, 7, ('h', OAK.light(0.2), OAK_D), width=1.6)
+    p.shape([(650, 604, 0), (660, 590, 0), (740, 590, 0), (750, 604, 0)], OAK_D, width=1.8, smooth=False)
+    bp = [(632, 330), (662, 318), (684, 334), (700, 338), (716, 334), (738, 318), (768, 330), (760, 372), (770, 420), (756, 470), (700, 486), (644, 470), (630, 420), (640, 372)]
+    p.shape(bp, metal(STEELC.light(0.05), 'h'), width=2.4, shade=0.9, rim=0.45)
+    p.taper([(700, 340), (702, 410), (700, 480)], 2.4, 1.4, STEELC.dark(0.3), width=0.8, ink=False)
+    p.line([(696, 342), (697, 478)], C(1, 1, 1, 0.6), 2)
+    p.taper([(636, 470), (700, 484), (764, 470)], 3.4, 3.4, metal_band(BRASS, 'v'), width=1.4)
+    p.taper([(664, 322), (684, 336), (700, 340), (716, 336), (736, 322)], 3, 3, metal_band(BRASS, 'v'), width=1.4)
+    for k in range(7):
+        rivet(p, (648 + k * 17.5, 462 + math.sin(k / 6 * math.pi) * 10), 2.6, BRASS)
+    p.star((668, 380), 10, C(1, 1, 0.95, 0.9))
+    anvil(p, (880, 600), 1.3, IRONC)
+    # a tub of quenching water and a servo bringing rivets
+    servo(p, 360, 604, 2.4, BRASS_L, step=1)
+    Artificer(pose='hold', garb='jerkin', main=C.hex('4a5a3a'), second=C.hex('3a3a2a'), hair='short', hair_col=C.hex('6a4a2a'), beard='short',
+              head='cap', emblem=apron(LEATHER, -33), belt='leather', sleeves='fitted', mouth='stern',
+              props_front=[tool('calipers', 'f')]).draw(p, 520, 606, 450)
+
+
+def machine_r_012(p):
+    """Arsenal Automaton: in the guild armoury at dusk the great construct stands hung
+    with every spare piece of war gear, a pauldron on its shoulder and the spring lance
+    levelled forward, while new servos climb down from the racks."""
+    bg.fill_all(p, ('v', C.hex('2a2230'), C.hex('4a3a3a')))
+    bg.arcade(p, [100, 300, 500, 700, 900], 260, top=40, bottom=500, wall=C.hex('6a5e58'), col_w=40, thick=24)
+    for (x, col) in ((200, C.hex('6a1a1a')), (800, C.hex('1a2a5a'))):
+        banner(p, x, 90, 70, 150, col)
+    armoury_rack(p, 40, 300, 260, 500, ('lance', 'shield', 'lance'))
+    armoury_rack(p, 700, 960, 260, 500, ('lance', 'helm', 'lance', 'shield'))
+    bg.tile_floor(p, 500, C.hex('4a3a34'), C.hex('8a7a64'))
+    p.glow((480, 300), 320, C.hex('ffd090'), 0.3)
+
+    def gear_back(p2, j):
+        # a round shield and a sword hung on the back
+        x0 = j['sh_b'][0] - 6
+        p2.taper([(x0 - 6, -30), (x0 + 2, -110)], 1.0, 0.6, metal(STEELC), width=0.9)
+        p2.taper([(x0 - 10, -98), (x0 + 6, -96)], 1.2, 1.2, metal(BRASS), width=0.9)
+        c = (x0 - 4, -64)
+        p2.blob(c, 15, 15, metal(BRASS.dark(0.15), 'v'), width=1.6, shade=0.9, rim=0.4)
+        gear(p2, c, 7, 10, BRASS_L, 0.2, width=1.0, spokes=0)
+        for k in range(10):
+            rivet(p2, polar(c, 13, k * TAU / 10), 0.7, BRASS_L)
+
+    def worn(p2, j):
+        sh = j['sh_f']
+        pauldron(p2, (sh[0] + 1, sh[1] - 5), 0.14, STEELC, BRASS, LEATHER)
+        # tools hung from the belt
+        p2.taper([(6, -46), (8, -30)], 0.9, 0.9, OAK, width=0.8)
+        p2.shape([(4, -31, 0), (12, -31, 0), (12, -28, 0), (4, -28, 0)], metal(IRONC), width=0.8, smooth=False)
+        gear(p2, (-6, -40), 3.4, 8, COPPER, 0.1, width=0.8, spokes=0)
+
+    def held_lance(p2, h, d, n):
+        u = v_norm((1.0, -0.42))
+        L = 150
+        g = 0.2
+        a = v_sub(h, v_mul(u, L * (g - 0.025)))
+        lance(p2, a, v_add(a, v_mul(u, L)), 0.22, VERMILION, spring_open=1.0, grip=g)
+        # steel claw closed over the grip
+        ang = math.atan2(d[1], d[0])
+        p2.blob(h, 3.6, 3.2, metal(BRASS, 'v'), rot=ang, width=1.4, shade=0.7)
+        for k in (-1.6, 0, 1.6):
+            q = v_add(v_add(h, v_mul(u, k)), v_mul(n, -0.4))
+            p2.taper([q, v_add(q, v_mul(v_perp(u), 3.4))], 1.0, 0.9, STEELC, width=1.0)
+    Automaton(torso='cuirass', head='helm', legs='jointed', arm_f='none', arm_b='hand', col=BRASS, col2=STEELC, trim=VERMILION.dark(0.1),
+              crest=CRIMSON, pose='ma_bot_hold', eye_col=FURN, width=1.25, head_scale=1.15, porthole=False, pauldron=False,
+              extra_back=[gear_back], extra_front=[worn], held=held_lance, stride=3).draw(p, 400, 600, 440)
+    servo(p, 740, 600, 2.8, BRASS_L, step=1, flip=True)
+    servo(p, 820, 600, 2.4, COPPER.light(0.1), step=0, flip=True)
+    servo(p, 150, 600, 2.4, BRASS, step=2)

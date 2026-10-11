@@ -2195,3 +2195,164 @@ def sceptre(length=60, col=OLD_GOLD, gem=BLOOD_LIGHT):
         skull(p, (top[0], top[1] - 4.5), 4.2, BONE_OLD, horns=BONE_OLD.dark(0.2), glow=EMBER_LIGHT)
         p.blob((top[0], top[1] - 13), 1.8, 1.8, gem, width=0.8)
     return fn
+
+
+# ------------------------------------------------------------------ third tribe (1.25): plague dead
+
+LINEN = C.hex('c8c0a4')
+LIME = C.hex('e4e2d2')
+
+
+def shroud_bundle(p, c, w=90, h=30, rot=0.0, col=LINEN):
+    """A corpse sewn into a linen shroud, lying on its side: head, shoulders, binding cords."""
+    p.push(c[0], c[1], 1.0, rot=rot)
+    pts = [(-w / 2, 2), (-w / 2 + 6, -h * 0.45), (-w * 0.15, -h * 0.5), (w * 0.2, -h * 0.42), (w * 0.34, -h * 0.55),
+           (w / 2, -h * 0.35), (w / 2 + 2, 0), (w * 0.34, h * 0.42), (-w * 0.3, h * 0.45), (-w / 2 + 4, h * 0.3)]
+    p.shape(pts, ('v', col.light(0.15), col.dark(0.3)), width=1.8, shade=0.8, rim=0.4)
+    p.clip_shape(pts)
+    p.texture((-w / 2, -h, w / 2, h), strength=1.2)
+    for k in range(4):
+        x = -w * 0.35 + k * w * 0.2
+        p.line([(x, -h * 0.5), (x + 3, h * 0.5)], C.hex('6a5a40'), 1.6)
+    p.fold_band([(-w * 0.4, -h * 0.1), (w * 0.3, -h * 0.05)], 0.5, 2.5, col.dark(0.4).alpha(0.4))
+    p.unclip()
+    p.pop()
+
+
+def cart_wheel(p, c, r, col=C.hex('4a3422'), spokes=10):
+    """A spoked cart wheel with an iron tyre, seen side on."""
+    p.blob(c, r, r, IRON_DARK, width=2.0, shade=0.6)
+    p.blob(c, r - r * 0.12, r - r * 0.12, PITCH.light(0.06), ink=INK.alpha(0.6), width=1.4)
+    p.blob(c, r * 0.8, r * 0.8, None, ink=col.light(0.1), width=r * 0.09)
+    for k in range(spokes):
+        a = k * math.tau / spokes
+        p.taper([polar(c, r * 0.16, a), polar(c, r * 0.8, a)], r * 0.05, r * 0.035, col, width=1.0)
+    p.blob(c, r * 0.18, r * 0.18, col.light(0.1), width=1.4, shade=0.7)
+    p.blob(c, r * 0.07, r * 0.07, IRON, width=1.0)
+
+
+def plague_cart(p, x, y, s=1.0, flip=False, wood=C.hex('5a4028'), load=3, bell=True, shafts=True):
+    """A two-wheeled dead-cart heaped with shrouded bodies, a hand bell on a post at the
+    front. (x, y) is where the wheel meets the ground; the shafts run to the right."""
+    p.push(x, y, s, flip)
+    # far shaft
+    if shafts:
+        p.taper([(30, -96), (230, -112)], 5, 4, wood.dark(0.35), width=1.6)
+    # bodies heaped on the bed
+    for i in range(load):
+        shroud_bundle(p, (-40 + i * 34 + (i % 2) * 8, -150 - (i % 2) * 22 - (i // 2) * 14), 100, 32, (-0.15 if i % 2 else 0.12))
+    # one bony foot and a hand hanging over the side
+    p.taper([(70, -140), (92, -122), (96, -108)], 4.5, 3.0, ROT, width=1.4)
+    claw_hand(p, (96, -106), (0.1, 1), ROT, C.hex('3a2a1a'), 2.4, 0.9, 0.5)
+    # the bed: planked sides
+    bed = [(-120, -160, 0), (90, -160, 0), (100, -96, 0), (-110, -96, 0)]
+    p.shape(bed, ('v', wood.light(0.15), wood.dark(0.3)), width=2.2, smooth=False, shade=0.6)
+    p.clip_shape(bed, smooth=False)
+    for k in range(4):
+        yy = -158 + k * 16
+        p.line([(-122, yy), (102, yy)], wood.dark(0.5), 1.6, smooth=False)
+    p.texture((-120, -160, 100, -96), strength=1.5)
+    p.unclip()
+    for xx in (-108, -10, 86):
+        p.taper([(xx, -168), (xx + 2, -94)], 5, 5, wood.dark(0.2), width=1.4)
+        p.blob((xx + 1, -150), 2.6, 2.6, IRON, width=0.8)
+        p.blob((xx + 1, -110), 2.6, 2.6, IRON, width=0.8)
+    # near shaft
+    if shafts:
+        p.taper([(70, -100), (250, -110)], 6, 5, wood.dark(0.15), width=1.8, shade=0.5)
+    cart_wheel(p, (-20, -64), 64, wood)
+    if bell:
+        p.taper([(92, -160), (96, -230)], 3.5, 3, wood.dark(0.3), width=1.2)
+        p.taper([(96, -228), (122, -232)], 2.5, 2.5, wood.dark(0.3), width=1.0)
+        p.line([(118, -232), (118, -222)], IRON_DARK, 1.6)
+        p.shape([(110, -204, 0), (112, -216), (118, -222), (124, -216), (126, -204, 0)], ('h', C.hex('c0a060'), C.hex('6a5028')), width=1.4, shade=0.6)
+        p.blob((118, -202), 2.2, 2.2, IRON_DARK, width=0.8)
+    p.pop()
+
+
+def lime_pit(p, x0, x1, y, depth=90, bodies=4):
+    """A plague pit: a raw trench in the earth, its floor white with lime and shrouds.
+    Returns the polygon of the near lip so a figure can be drawn standing in it."""
+    far = [(x0, y), (lerp(x0, x1, 0.25), y - 14), (lerp(x0, x1, 0.6), y - 10), (x1, y)]
+    near = [(x1, y), (lerp(x0, x1, 0.7), y + depth * 0.5), (lerp(x0, x1, 0.3), y + depth * 0.55), (x0, y)]
+    hole = far + near[1:-1]
+    p.shape(hole, ('v', C.hex('1a1410'), C.hex('3a3026')), width=2.2)
+    p.clip_shape(hole)
+    p.blob((lerp(x0, x1, 0.5), y + depth * 0.45), (x1 - x0) * 0.42, depth * 0.3, LIME.alpha(0.55), ink=False)
+    for i in range(bodies):
+        cx0 = lerp(x0, x1, 0.18 + i * 0.64 / max(1, bodies - 1))
+        shroud_bundle(p, (cx0, y + depth * 0.3 + (i % 2) * 10), (x1 - x0) * 0.22, 26, (i % 3 - 1) * 0.25, LINEN.dark(0.15))
+    for _ in range(40):
+        q = (p.rng.uniform(x0, x1), p.rng.uniform(y, y + depth * 0.6))
+        p.blob(q, p.rng.uniform(2, 6), p.rng.uniform(1.5, 3), LIME.alpha(0.5), ink=False)
+    p.unclip()
+    # spoil heaps of turned earth either side
+    for cx0, w in ((x0 - 30, 140), (x1 + 30, 150)):
+        p.shape([(cx0 - w / 2, y + 14, 0), (cx0 - w * 0.3, y - 22), (cx0, y - 36), (cx0 + w * 0.3, y - 20), (cx0 + w / 2, y + 14, 0)],
+                ('v', C.hex('5a4630'), C.hex('2a2018')), width=1.8, shade=0.6)
+        for _ in range(10):
+            q = (cx0 + p.rng.uniform(-w * 0.35, w * 0.35), y + p.rng.uniform(-24, 6))
+            p.blob(q, p.rng.uniform(2, 5), p.rng.uniform(1.5, 3), C.hex('2a2018'), ink=False)
+    return near
+
+
+def pit_lip(p, x0, x1, y, depth=90, col=C.hex('3a2e22')):
+    """The near edge of a lime_pit, drawn over a figure standing in the pit."""
+    lip = [(x0 - 20, y + 2), (lerp(x0, x1, 0.3), y + depth * 0.55), (lerp(x0, x1, 0.7), y + depth * 0.5), (x1 + 20, y + 2),
+           (x1 + 60, y + 30), (x1 + 60, H + 20, 0), (x0 - 60, H + 20, 0), (x0 - 60, y + 30)]
+    p.shape(lip, ('v', col.light(0.1), col.dark(0.4)), width=2.2, shade=0.5)
+    p.clip_shape(lip)
+    p.texture((x0 - 60, y, x1 + 60, H), strength=1.8)
+    for _ in range(14):
+        q = (p.rng.uniform(x0, x1), p.rng.uniform(y + depth * 0.5, H))
+        p.blob(q, p.rng.uniform(3, 7), p.rng.uniform(2, 4), col.dark(0.3), ink=False)
+    p.unclip()
+
+
+def spade(length=110, col=C.hex('4a3422'), blade=IRON):
+    """A gravedigger's long spade held upright in the front hand, blade on the ground."""
+    def fn(p, j):
+        h = j['hand_f']
+        top = (h[0] + 1.5, h[1] - 14)
+        foot = (h[0] - 1.0, -12)
+        p.taper([top, foot], 1.3, 1.2, col, width=1.2, shade=0.6)
+        p.taper([(top[0] - 3, top[1]), (top[0] + 3.5, top[1])], 1.0, 1.0, col.dark(0.2), width=1.0)
+        bl = [(foot[0] - 4, foot[1] - 1, 0), (foot[0] + 4, foot[1] - 1, 0), (foot[0] + 4.4, foot[1] + 9), (foot[0], foot[1] + 12, 0), (foot[0] - 4.4, foot[1] + 9)]
+        p.shape(bl, ('h', blade.light(0.25), blade.dark(0.2)), width=1.1, shade=0.5)
+        p.blob((foot[0] + 1, foot[1] + 7), 2.4, 1.6, C.hex('3a2a1a').alpha(0.6), ink=False)
+    return fn
+
+
+def grave_sword(length=60, d=(0.42, -1.0), blade=C.hex('c8d8d8'), hilt=OLD_GOLD):
+    """A long grave-sword held forward and up, the fist over the grip (draw in props_front)."""
+    def fn(p, j):
+        h = j['hand_f']
+        dd = v_norm(d)
+        n = v_perp(dd)
+        pommel = v_sub(h, v_mul(dd, 5))
+        guard = v_add(h, v_mul(dd, 3.5))
+        tip = v_add(guard, v_mul(dd, length))
+        p.glow(v_lerp(guard, tip, 0.5), 18, GHOST_GLOW, 0.35)
+        p.shape([v_add(guard, v_mul(n, 1.8)) + (0,), v_add(v_lerp(guard, tip, 0.85), v_mul(n, 1.3)), tip + (0,), v_sub(v_lerp(guard, tip, 0.85), v_mul(n, 1.3)), v_sub(guard, v_mul(n, 1.8)) + (0,)],
+                ('h', blade.light(0.3), blade.dark(0.35)), width=1.2)
+        p.line([guard, v_lerp(guard, tip, 0.85)], blade.dark(0.45), 0.8)
+        p.taper([v_add(guard, v_mul(n, 7)), v_sub(guard, v_mul(n, 7))], 1.3, 1.3, hilt, width=1.0, shade=0.5)
+        p.taper([pommel, guard], 1.2, 1.2, C.hex('3a2a1a'), width=0.9)
+        p.blob(pommel, 1.8, 1.8, hilt, width=0.9, shade=0.5)
+    return fn
+
+
+def nail_crown(col=C.hex('6a5a4a')):
+    """A crown of rusted coffin nails for a Ghoul head (a props_front closure)."""
+    def fn(p, j):
+        hx, hy = j['head']
+        p.taper([(hx - 6.5, hy - 6.5), (hx - 1, hy - 8.6), (hx + 4.5, hy - 7.6)], 1.4, 1.4, col, width=0.9)
+        for k in range(6):
+            x = hx - 6 + k * 2.1
+            yb = hy - 7.2 - math.sin(k / 5 * math.pi) * 1.4
+            p.taper([(x, yb), (x - 0.4 + k * 0.15, yb - 4.5)], 0.6, 0.2, col.dark(0.2), width=0.6)
+            p.blob((x, yb), 0.9, 0.5, col.light(0.2), width=0.5)
+        for _ in range(5):
+            q = (hx + p.rng.uniform(-6, 4), hy - 7.5 + p.rng.uniform(-1, 1))
+            p.blob(q, 0.8, 0.5, C.hex('8a4a22').alpha(0.7), ink=False)
+    return fn

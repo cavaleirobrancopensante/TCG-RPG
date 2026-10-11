@@ -2322,3 +2322,262 @@ def coronet_high(col=CRIMSON):
     def fn(p, hc):
         inner(p, (hc[0], hc[1] - 3.2))
     return fn
+
+
+# ====================================================================== satyrs (1.25)
+
+GOAT_FUR = C.hex('6b4a32')
+GOAT_FUR_DARK = C.hex('4e3424')
+HOOF = C.hex('2e2420')
+HORN = C.hex('d8c8a0')
+
+# panpipes held level at the lips with both hands: the forearms rise from elbows that
+# hang at the sides; the far hand comes round in front of the body to the near end.
+STOCK.setdefault('sa_pipe', ((13.0, -64.5), (14.8, -82.6), (-3.0, -65), (6.4, -82.0), True))
+# a wineskin lifted to the mouth with the near hand, the far hand on the hip
+STOCK.setdefault('sa_swig', ((14, -64.5), (14.5, -84), (-19, -66), (-10, -56), False))
+# seated: cup lifted in the near hand, the far hand resting on the knee in front
+STOCK.setdefault('sa_seat_cup', ((12.5, -63), (21, -76), (-4, -63), (11, -51), True))
+
+
+def _goat_joints(a, f, lift=False):
+    """Hip a to hoof f: stifle forward, hock back, fetlock forward again."""
+    d = v_sub(f, a)
+    L = v_len(d)
+    if lift:
+        st = v_add(v_lerp(a, f, 0.40), (0.22 * L, -0.06 * L))
+        hk = v_add(v_lerp(a, f, 0.66), (-0.10 * L, 0.02 * L))
+    else:
+        st = v_add(v_lerp(a, f, 0.30), (0.12 * L, 0.0))
+        hk = v_add(v_lerp(a, f, 0.60), (-0.12 * L, 0.0))
+    fl = v_add(v_lerp(a, f, 0.93), (0.02 * L, 0.0))
+    return st, hk, fl
+
+
+def goat_leg(p, a, f, near=True, lift=False, fur=None, joints=None):
+    """A proper reverse-jointed goat leg: shaggy thigh to the stifle, gaskin down and back
+    to the hock, slim cannon forward to the fetlock, cloven hoof."""
+    fur = fur or (GOAT_FUR if near else GOAT_FUR_DARK)
+    st, hk, fl = joints or _goat_joints(a, f, lift)
+    # thigh and gaskin, one tapering ribbon
+    p.taper([a, v_lerp(a, st, 0.55), st, v_lerp(st, hk, 0.5), hk], 7.0, 2.1, fur, width=1.8, shade=0.85, rim=0.35)
+    # the hock point juts backwards
+    p.blob(v_add(hk, (-1.0, 0.0)), 2.0, 1.8, fur.dark(0.05), width=1.4, shade=0.6)
+    # cannon and pastern
+    p.taper([hk, v_lerp(hk, fl, 0.5), fl], 1.9, 1.4, fur.dark(0.08), width=1.5, shade=0.7)
+    # shaggy fringe hanging off the back of the thigh and the gaskin
+    for t in (0.3, 0.55, 0.8):
+        q = v_add(v_lerp(a, st, t), (-6.6 + 2.6 * t, 0.0))
+        p.shape([v_add(q, (2.4, -2.2)), v_add(q, (-1.0, 1.2), ) + (0,), v_add(q, (2.6, 0.8))], fur, width=0.7)
+    q = v_add(v_lerp(st, hk, 0.75), (-2.4, 0.4))
+    p.shape([v_add(q, (1.4, -1.8)), v_add(q, (-1.2, 1.6), ) + (0,), v_add(q, (1.6, 0.6))], fur, width=0.7)
+    # fur strokes
+    for t in (0.2, 0.45, 0.7):
+        q = v_lerp(a, st, t)
+        p.line([v_add(q, (-1.5, -1.2)), v_add(q, (0.5, 2.0))], fur.light(0.3).alpha(0.7), 0.7)
+    # dewclaw tuft at the fetlock
+    p.shape([v_add(fl, (-1.2, -2.6)), v_add(fl, (-3.6, -0.4), ) + (0,), v_add(fl, (-0.6, 0.6))], fur.dark(0.15), width=0.8)
+    # cloven hoof
+    hd = v_norm(v_sub(f, fl)) if v_len(v_sub(f, fl)) > 0.1 else (0, 1)
+    if lift:
+        base = v_add(fl, v_mul(hd, 1.0))
+        p.push(base[0], base[1], 1.0, rot=math.atan2(hd[1], hd[0]) - math.pi / 2)
+        p.shape([(-2.2, 0), (2.4, -0.3), (3.0, 3.4, 0), (-2.4, 3.4, 0)], HOOF, width=1.1, shade=0.6)
+        p.line([(0.4, 0.6), (0.6, 3.3)], LEAD_WHITE.alpha(0.35), 0.6)
+        p.pop()
+        return
+    x, y = f
+    p.shape([(x - 2.6, y - 3.4), (x + 1.8, y - 3.6), (x + 4.4, y + 0.2, 0), (x - 2.8, y + 0.2, 0)], HOOF, width=1.2, shade=0.6)
+    p.line([(x + 1.6, y - 2.4), (x + 2.4, y + 0.1)], LEAD_WHITE.alpha(0.4), 0.6)
+    p.blob((x - 2.2, y - 2.6), 1.3, 1.1, HOOF.light(0.15), width=0.7)
+
+
+def goat_tail(p, base, s=1.0, fur=GOAT_FUR):
+    # a short tuft flicked up and back
+    p.shape([v_add(base, (0.5, 1.5)), v_add(base, (-1.6, -2.4)), v_add(base, (-4.2, -5.6), ) + (0,), v_add(base, (-3.4, -1.0)), v_add(base, (-1.5, 2.0))],
+            fur, width=0.9, shade=0.6)
+
+
+def goat_horns(horn=HORN, big=0.8, ears=True, wreath=None, hair_col=None):
+    """Ridged goat horns rising from the brow and sweeping back, pointed ears."""
+    def fn(p, hc):
+        hx, hy = hc
+        for base, ctrl, tip, s, col in (((hx - 2.8, hy - 6.8), (hx - 6, hy - 14), (hx - 11.5, hy - 15.5), 0.9, horn.dark(0.12)),
+                                        ((hx + 0.8, hy - 7.4), (hx - 1.6, hy - 16.5), (hx - 8.5, hy - 20), 1.0, horn)):
+            ctrl = (lerp(base[0], ctrl[0], big), lerp(base[1], ctrl[1], big))
+            tip = (lerp(base[0], tip[0], big), lerp(base[1], tip[1], big))
+            p.taper([base, ctrl, tip], 2.5 * s * big ** 0.5, 0.45, col, width=1.0, shade=0.75, rim=0.3)
+            for t in (0.2, 0.38, 0.56, 0.74):
+                q = v_lerp(v_lerp(base, ctrl, t), v_lerp(ctrl, tip, t), t)
+                p.line([v_add(q, (-1.4, 1.0)), v_add(q, (1.5, -0.5))], col.dark(0.35), 0.5)
+        if ears:
+            p.shape([(hx - 2.8, hy - 1.4), (hx - 9.4, hy - 3.6, 0), (hx - 3.4, hy + 1.6)], SKIN.dark(0.06), width=0.9, shade=0.4)
+            p.line([(hx - 3.4, hy - 0.6), (hx - 7.4, hy - 2.8)], ROSE.dark(0.2).alpha(0.7), 0.5)
+        if wreath:
+            for i in range(7):
+                q = (hx - 6 + i * 1.9, hy - 6.8 - math.sin(i / 6 * math.pi) * 1.6)
+                p.blob(q, 1.8, 1.1, wreath, rot=0.6 if i % 2 else -0.6, width=0.6, shade=0.5)
+    return fn
+
+
+class SatyrFig(RFig):
+    """A satyr: man above the waist, goat below, with proper reverse-jointed legs.
+    stance: stand, stride, dance (near leg lifted), prance (far leg lifted), seat='chair'."""
+
+    def __init__(self, goat_col=None, tail=True, **kw):
+        kw.setdefault('goat', True)
+        kw.setdefault('garb', 'jerkin')
+        super().__init__(**kw)
+        self.goat_fur = goat_col or GOAT_FUR
+        self.tail = tail
+
+    def _legs(self, j):
+        p = self.p
+        k = j['k']
+        fur = self.goat_fur
+        if self.seat:
+            # thighs forward along the seat, gaskins down and back to the hock, cannons forward
+            for i, dx in enumerate((-3.0, 2.5)):
+                a = (dx + 4, -25)
+                st = (22 + dx, -23.5)
+                hk = (16.5 + dx, -10.5)
+                fl = (20.5 + dx, -3.0)
+                f = (21.5 + dx, 0)
+                goat_leg(p, a, f, near=bool(i), fur=fur if i else fur.dark(0.18), joints=(st, hk, fl))
+            return
+        st = self.stance
+        if st == 'stride':
+            feet = [((-4.5, -32), (-12, 0), False), ((5, -32), (12, 0), False)]
+        elif st == 'dance':
+            feet = [((-4, -32), (-4, 0), False), ((5, -32), (15, -14), True)]
+        elif st == 'prance':
+            feet = [((-4, -32), (-12, -12), True), ((5, -32), (6, 0), False)]
+        elif st == 'wide':
+            feet = [((-5, -32), (-12, 0), False), ((5, -32), (11, 0), False)]
+        else:
+            feet = [((-4.5, -32), (-5.5, 0), False), ((5, -32), (6.0, 0), False)]
+        if self.tail:
+            goat_tail(p, (-8.0, -34), 1.0, fur.dark(0.1))
+        for i, (a, f, lift) in enumerate(feet):
+            goat_leg(p, a, f, near=bool(i), lift=lift, fur=fur if i else fur.dark(0.18))
+
+    def _body(self, j):
+        super()._body(j)
+        # shaggy fringe where the goat haunches meet the hem
+        p = self.p
+        k = j['k']
+        hem = (-28.0 if self.garb in ('surcoat', 'tunic') else -34.0) if not self.seat else -18.0
+        if self.seat:
+            return
+        for i in range(9):
+            x = -11.5 + i * 2.7
+            dy = (2.2, 3.4, 2.6, 3.8, 2.4, 3.2, 2.8, 3.6, 2.4)[i]
+            p.shape([(x, hem - 1.5), (x + 3.2, hem - 1.5), (x + 1.2 + (i % 2) * 0.8, hem + dy, 0)], self.goat_fur.dark(0.05), width=0.7)
+
+
+def panpipes_lips(col=C.hex('c8a860'), cord=CRIMSON):
+    """A raft of reeds held level under the lips, the fists at either end."""
+    def fn(p, j):
+        k = j['k']
+        hx, hy = j['head']
+        top0 = (hx + 3.0, hy + 2.4)
+        top1 = (hx + 14.6, hy + 3.6)
+        n = 7
+        for i in range(n):
+            t = i / (n - 1)
+            q = v_lerp(top0, top1, t)
+            hh = 14.5 - 8.0 * t
+            w = 0.9
+            p.shape([(q[0] - w, q[1], 0), (q[0] + w, q[1], 0), (q[0] + w, q[1] + hh, 0), (q[0] - w, q[1] + hh, 0)],
+                    ('h', col.light(0.2), col.dark(0.2)), width=0.55, smooth=False)
+            p.blob((q[0], q[1] + 0.2), w * 0.8, 0.35, INK.alpha(0.8), ink=False)
+        for dy in (3.0, 6.2):
+            p.line([v_add(top0, (-1, dy)), v_add(top1, (1, dy))], cord, 0.9)
+        # notes drifting from the pipes
+    return fn
+
+
+def wineskin_at(p, c, s=1.0, rot=0.0, col=C.hex('8a5a32')):
+    """A goatskin bottle, plump, with a spout and a cord."""
+    p.push(c[0], c[1], s, rot=rot)
+    p.shape([(0, -2), (-6, 1), (-10, 8), (-9, 16), (-2, 20), (6, 18), (9, 10), (6, 3), (2, -1)], col, width=1.3, shade=0.9, rim=0.4)
+    p.fold_band([(-6, 6), (-5, 13), (0, 17)], 1.2, 0.4, col.light(0.3).alpha(0.6))
+    p.shape([(-1.6, -1.5, 0), (1.8, -1.5, 0), (1.3, -5, 0), (-1.1, -5, 0)], col.dark(0.3), width=0.9, smooth=False)
+    p.taper([(-7, 4), (-12, 12), (-9, 20)], 0.7, 0.7, CRIMSON, width=0.5)
+    p.pop()
+
+
+def notes(p, pts, s=1.0, col=INK_SOFT):
+    for i, (x, y) in enumerate(pts):
+        p.blob((x, y), 4.6 * s, 3.4 * s, col, rot=-0.4, ink=False)
+        p.line([(x + 4 * s, y - 1 * s), (x + 4 * s, y - 20 * s)], col, 1.6 * s)
+        if i % 2 == 0:
+            p.line([(x + 4 * s, y - 20 * s), (x + 11 * s, y - 15 * s)], col, 1.6 * s)
+
+
+def pine(p, x, y, s=1.0, col=C.hex('234a2a')):
+    """An umbrella or stone pine: a tall bare trunk and a flat dark crown."""
+    p.taper([(x, y), (x + 4 * s, y - 80 * s), (x - 2 * s, y - 150 * s)], 9 * s, 4 * s, C.hex('5a3a26'), width=1.4, shade=0.7)
+    p.taper([(x + 1 * s, y - 110 * s), (x + 30 * s, y - 150 * s)], 3.5 * s, 1.5 * s, C.hex('5a3a26'), width=1.0)
+    for dx, dy, r in ((-30, -160, 38), (10, -172, 44), (45, -158, 34), (-5, -150, 40)):
+        p.blob((x + dx * s, y + dy * s), r * s, r * 0.42 * s, col, width=1.4, shade=0.8)
+    for _ in range(14):
+        q = (x + p.rng.uniform(-60, 70) * s, y + p.rng.uniform(-180, -145) * s)
+        p.blob(q, 7 * s, 3 * s, col.light(0.25).alpha(0.7), ink=False)
+
+
+def fir(p, x, y, s=1.0, col=C.hex('1e4028')):
+    pts = [(x, y - 120 * s, 0)]
+    for i in range(5):
+        yy = y - 120 * s + (i + 1) * 22 * s
+        w = (10 + i * 7) * s
+        pts = [(x - w, yy, 0)] + pts + [(x + w, yy, 0)]
+    pts = [(x - 4 * s, y)] + pts + [(x + 4 * s, y)]
+    p.taper([(x, y + 4 * s), (x, y - 20 * s)], 4 * s, 3 * s, C.hex('4a3020'), width=1.0)
+    p.shape(pts, ('h', col.light(0.2), col.dark(0.3)), width=1.3, smooth=False)
+
+
+def heads(*fns):
+    """Several head pieces drawn in turn (horns, then a crown)."""
+    def fn(p, hc):
+        for f in fns:
+            f(p, hc)
+    return fn
+
+
+def wineskin(which='f', rot=-1.2, s=0.62, col=C.hex('8a5a32'), jet=True):
+    """A wineskin squeezed up to the mouth, the spout at the lips."""
+    def fn(p, j):
+        hx, hy = j['head']
+        mouth = (hx + 4.6, hy + 3.6)
+        d = (math.sin(rot), -math.cos(rot))
+        origin = v_sub(mouth, v_mul(d, 5.6 * s))
+        origin = v_add(origin, v_mul(d, -0.6))
+        wineskin_at(p, origin, s, rot, col)
+        if jet:
+            tip = v_add(origin, v_mul(d, 5.2 * s))
+            p.line([tip, v_add(mouth, (-0.2, 0.2))], WINE_LIGHT, 0.9)
+    return fn
+
+
+def leopard_skin(p, j):
+    k = j['k']
+    pts = [(-9, -82 + k), (-4, -83 + k), (10, -60 + k), (12, -52 + k), (6, -50 + k), (-8, -64 + k)]
+    p.shape(pts, C.hex('d8a050'), width=1.4, shade=0.7)
+    for q in ((-4, -76), (1, -70), (5, -63), (8, -56), (-2, -64), (-6, -72), (2, -77), (-1, -58)):
+        p.blob((q[0], q[1] + k), 1.4, 1.1, None, ink=UMBER.dark(0.3), width=0.6)
+        p.blob((q[0], q[1] + k), 0.6, 0.5, UMBER.dark(0.2), ink=False)
+    p.taper([(10, -53 + k), (13, -46 + k), (11, -42 + k)], 1.4, 0.6, C.hex('d8a050'), width=0.8)
+    p.blob((-6, -80 + k), 1.8, 1.8, GOLD, width=0.6)
+
+
+def ivy_crown(leaf=C.hex('2f6a2a'), berry=C.hex('2a2440')):
+    def fn(p, hc):
+        hx, hy = hc
+        for i in range(8):
+            q = (hx - 6.5 + i * 1.8, hy - 6.4 - math.sin(i / 7 * math.pi) * 1.8)
+            p.shape([(q[0], q[1] + 1.2), (q[0] - 1.6, q[1] - 0.6), (q[0], q[1] - 2.0, 0), (q[0] + 1.6, q[1] - 0.6)], leaf.light(0.08 * (i % 2)), width=0.6, shade=0.5)
+        for dx in (-3.5, 1.5):
+            for e in range(3):
+                p.blob((hx + dx + e * 0.9, hy - 8.6 + (e % 2) * 0.8), 0.7, 0.7, berry, width=0.4)
+    return fn

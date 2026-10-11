@@ -2365,3 +2365,196 @@ def acorn(p, c, s=1.0, glow=None):
             p.shape([(q[0] - 4 * s, q[1]), (q[0], q[1] - 4 * s), (q[0] + 4 * s, q[1]), (q[0], q[1] + 4 * s)], C.hex('9a8050').mix(C.hex('5a4424'), row * 0.12), width=0.8, shade=0.5)
     p.unclip()
     p.taper([(x + 2 * s, y - 36 * s), (x + 6 * s, y - 48 * s), (x + 14 * s, y - 54 * s)], 3.2 * s, 2.0 * s, C.hex('6a5030'), width=1.2, shade=0.6)
+
+
+# ================================================================== druids and auras (1.25)
+
+def bark_scale(p, c, w, h, rot, col):
+    """One plate of bark: a ridged, irregular shingle, shaded, with a dark fissure."""
+    r = p.rng
+    pts = []
+    for k in range(7):
+        a = k * math.tau / 7
+        rr = 1.0 + r.uniform(-0.18, 0.12)
+        pts.append((math.cos(a) * w * rr, math.sin(a) * h * rr))
+    ca, sa = math.cos(rot), math.sin(rot)
+    pts = [(c[0] + x * ca - y * sa, c[1] + x * sa + y * ca) for x, y in pts]
+    p.shape(pts, ('v', col.light(0.18), col.dark(0.3)), width=0.9, shade=0.8, rim=0.4)
+    a0 = (c[0] - w * 0.5 * ca, c[1] - w * 0.5 * sa)
+    a1 = (c[0] + w * 0.5 * ca, c[1] + w * 0.5 * sa)
+    p.line([a0, v_add(v_lerp(a0, a1, 0.5), (0, h * 0.2)), a1], col.dark(0.55), 0.6)
+
+
+def _fine_bark(p, outline, col, ang):
+    """Bark furrows at figure scale inside an outline, running along ang."""
+    p.clip_shape(outline)
+    x0, y0, x1, y1 = p.cx.clip_extents()
+    r = p.rng
+    d = (math.cos(ang), math.sin(ang))
+    n = v_perp(d)
+    c = ((x0 + x1) / 2, (y0 + y1) / 2)
+    L = max(x1 - x0, y1 - y0)
+    k = -L
+    while k < L:
+        pts = []
+        t = -L
+        while t < L:
+            q = v_add(c, v_add(v_mul(d, t), v_mul(n, k + r.uniform(-0.35, 0.35))))
+            pts.append(q)
+            t += r.uniform(1.5, 3.0)
+        p.line(pts, col.dark(0.6).alpha(0.75), r.uniform(1.0, 1.8))
+        p.line([v_add(q, v_mul(n, 0.5)) for q in pts], col.light(0.35).alpha(0.3), 0.8)
+        k += r.uniform(1.1, 1.7)
+    p.unclip()
+
+
+def bark_plates(col=BARK, chest=True):
+    """Bark grown over the near arm and the breast: the Bark-Skin aura (props_front)."""
+    def fn(p, j):
+        sh, el, hd = j['sh_f'], j['el_f'], j['hand_f']
+        k = j['k']
+        r = p.rng
+        if chest:
+            pts = [(-6.5, -80 + k), (-3, -82 + k), (3, -82.6 + k), (8, -81 + k), (9.5, -74 + k), (8.6, -66 + k), (8, -60 + k),
+                   (4, -61.5 + k), (1, -59.2 + k), (-2.4, -61.6 + k), (-5.6, -60 + k), (-7, -68 + k)]
+            p.shape(pts, ('h', col.light(0.15), col, col.dark(0.25)), width=1.0, shade=0.8, rim=0.4)
+            _fine_bark(p, pts, col, math.pi / 2)
+            for q in ((-2, -71 + k), (5, -66 + k)):
+                p.blob(q, 1.0, 1.5, col.dark(0.5), width=0.5)
+        # the sleeve of bark on the upper arm and forearm, ragged at the wrist
+        d1 = v_norm(v_sub(el, sh))
+        d2 = v_norm(v_sub(hd, el))
+        wrist = v_sub(hd, v_mul(d2, 2.6))
+        n1, n2 = v_perp(d1), v_perp(d2)
+        arm = [v_add(sh, v_mul(n1, 4.4)), v_add(el, v_mul(n1, 4.0)), v_add(wrist, v_mul(n2, 3.0)),
+               v_add(wrist, v_mul(d2, 0.8)) + (0,), v_sub(wrist, v_mul(n2, 3.0)), v_sub(el, v_mul(n1, 3.6)), v_sub(sh, v_mul(n1, 4.4))]
+        p.shape(arm, ('h', col.light(0.05), col.dark(0.35)), width=1.0, shade=0.8, rim=0.4)
+        _fine_bark(p, arm, col, math.atan2(d1[1], d1[0]))
+        # lichen and moss flecks
+        for _ in range(8):
+            q = v_lerp(sh, wrist, r.uniform(0.1, 0.9))
+            p.blob(v_add(q, (r.uniform(-2, 2), r.uniform(-2, 2))), r.uniform(0.5, 1.0), r.uniform(0.4, 0.8), C.hex('a8b47a').alpha(0.8), ink=False)
+        # a tendril of ivy over the shoulder, as if the tree were still claiming him
+        iv = [v_add(sh, (-5, -1)), v_add(sh, (0, 2)), v_lerp(sh, el, 0.6)]
+        p.line(iv, C.hex('2f5a2a'), 0.8)
+        for t in (0.15, 0.5, 0.85):
+            q = v_lerp(iv[0], iv[2], t)
+            p.blob(v_add(q, (1.2, 0)), 1.7, 1.1, C.hex('3f6a32'), rot=0.6, width=0.5)
+    return fn
+
+
+def wolf_pelt_head(col=C.hex('8c8a84')):
+    """A wolf's head pelt worn as a hood: the mask sits on the brow, ears up, muzzle
+    forward over the face, the eye holes empty."""
+    def fn(p, hc):
+        hx, hy = hc
+        fur_dark = col.dark(0.35)
+        # far ear
+        p.shape([(hx - 6.5, hy - 9), (hx - 6.2, hy - 17.5, 0), (hx - 2.4, hy - 11)], fur_dark, width=1.2, shade=0.6)
+        cap = [(hx - 9.6, hy + 8), (hx - 10.2, hy - 2), (hx - 7.4, hy - 9.6), (hx - 1, hy - 12.4), (hx + 5, hy - 11),
+               (hx + 10, hy - 9.6), (hx + 15.4, hy - 8.4), (hx + 16.2, hy - 6.4, 0), (hx + 13.6, hy - 5.0),
+               (hx + 7.4, hy - 5.4), (hx + 4.4, hy - 6.4), (hx - 0.6, hy - 7.6), (hx - 4.4, hy - 5.6), (hx - 6.4, hy + 0.5), (hx - 6.8, hy + 9)]
+        p.shape(cap, ('v', col.light(0.15), col, col.dark(0.2)), width=1.5, shade=0.8, rim=0.4)
+        p.clip_shape(cap)
+        strokes(p, (hx - 11, hy - 13, hx + 17, hy + 10), math.pi * 0.95, fur_dark, 50, (1.5, 3.5), (0.4, 0.8), (0.2, 0.5), 0.3)
+        p.unclip()
+        # pale muzzle underside and the black nose
+        p.shape([(hx + 7.6, hy - 5.6), (hx + 13.4, hy - 5.2), (hx + 12.4, hy - 3.8), (hx + 8.2, hy - 4.0)], C.hex('d8d2c4'), width=0.8)
+        p.blob((hx + 15.6, hy - 7.4), 1.3, 1.0, C.hex('1e1a18'), width=0.6)
+        # a fang or two showing
+        for q in ((hx + 11.2, hy - 4.2), (hx + 9.0, hy - 4.3)):
+            p.shape([q, (q[0] + 0.5, q[1] + 1.8, 0), (q[0] + 1.0, q[1])], BONE, width=0.5)
+        # the empty eye hole, a brow ridge
+        p.blob((hx + 6.0, hy - 8.6), 1.3, 0.8, C.hex('1a1410'), rot=-0.2, width=0.5)
+        p.line([(hx + 3.4, hy - 10.4), (hx + 8.4, hy - 9.8)], fur_dark, 0.7)
+        # near ear
+        p.shape([(hx - 2.0, hy - 11.6), (hx + 0.6, hy - 19.6, 0), (hx + 3.8, hy - 11.4)], col, width=1.2, shade=0.6)
+        p.shape([(hx - 0.6, hy - 12.2), (hx + 0.7, hy - 17.4, 0), (hx + 2.6, hy - 12.0)], C.hex('a8706a').alpha(0.7), ink=False)
+    return fn
+
+
+def pelt_back(col=C.hex('8c8a84')):
+    """The rest of the wolf skin hanging down the back from the shoulders, the brush low (props_back)."""
+    def fn(p, j):
+        k = j['k']
+        pts = [(-9, -84 + k), (-14, -70 + k), (-17, -46 + k), (-18, -26 + k), (-15, -20 + k), (-10, -24 + k), (-6, -36 + k), (2, -70 + k), (0, -86 + k)]
+        p.shape(pts, ('h', col.dark(0.25), col, col.light(0.1)), width=1.6, shade=0.8, rim=0.5)
+        p.clip_shape(pts)
+        strokes(p, (-20, -90 + k, 4, -18 + k), math.pi * 0.5, col.dark(0.45), 70, (2, 5), (0.5, 1.0), (0.2, 0.45), 0.2)
+        p.unclip()
+        # the brush
+        tail = [(-15, -26 + k), (-18, -14 + k), (-16, -6 + k), (-13, -10 + k), (-12, -22 + k)]
+        p.shape(tail, ('v', col, col.dark(0.4)), width=1.3, shade=0.7)
+        p.blob((-16.2, -7 + k), 1.6, 1.4, C.hex('2a2622'), width=0.6)
+    return fn
+
+
+def pelt_paws(col=C.hex('8c8a84')):
+    """The wolf's forelegs brought over the shoulders and knotted at the breast (props_front)."""
+    def fn(p, j):
+        k = j['k']
+        for a, b in (((-6, -82 + k), (2.5, -70 + k)), ((7, -82 + k), (3.5, -70 + k))):
+            vtaper(p, [a, v_lerp(a, b, 0.5), b], [2.2, 1.8, 1.5], col.dark(0.05), width=1.0, shade=0.7)
+        p.blob((3, -69 + k), 2.4, 2.0, col.dark(0.15), width=0.9, shade=0.6)
+        for dx in (-1.2, 0, 1.2):
+            p.blob((3 + dx, -65.8 + k), 0.7, 1.2, C.hex('2a2622'), width=0.4)
+        p.blob((3, -69 + k), 1.1, 1.1, BONE, width=0.5)   # a bone toggle through the knot
+    return fn
+
+
+def wreath(p, c, rx, ry, kind='flowers', s=1.0):
+    """A plaited garland ring: leaves round an oval with flowers, berries or mistletoe."""
+    r = p.rng
+    n = 22
+    p.cx.new_path()
+    p.cx.save()
+    p.cx.translate(c[0], c[1])
+    p.cx.scale(rx, ry)
+    p.cx.arc(0, 0, 1, 0, math.tau)
+    p.cx.restore()
+    p.stroke(C.hex('6a5a34'), 1.6 * s)
+    for i in range(n):
+        a = i * math.tau / n
+        q = (c[0] + math.cos(a) * rx, c[1] + math.sin(a) * ry)
+        la = a + math.pi / 2
+        lc = OAK_LEAF.mix(SAP, r.random() * 0.4) if kind != 'mistletoe' else C.hex('9ab86a').mix(C.hex('6a8a3a'), r.random())
+        p.blob(v_add(q, (math.cos(la) * 1.4 * s, math.sin(la) * 1.4 * s)), 2.6 * s, 1.1 * s, lc, rot=la + 0.4, width=0.6)
+        if kind == 'flowers' and i % 2 == 0:
+            pc = [LEAD_WHITE, GOLD_LIGHT, ROSE.light(0.2), AZURE.light(0.35)][i % 4 if i % 8 else 0]
+            for k in range(5):
+                p.blob(polar(q, 1.2 * s, k * math.tau / 5), 1.0 * s, 1.0 * s, pc, ink=False)
+            p.blob(q, 0.6 * s, 0.6 * s, GOLD, ink=False)
+        elif kind == 'mistletoe' and i % 2:
+            p.blob(q, 0.9 * s, 0.9 * s, LEAD_WHITE, width=0.4)
+        elif kind == 'rowan' and i % 3 == 0:
+            for k in range(3):
+                p.blob(v_add(q, (k - 1, (k % 2) * 0.8)), 0.8 * s, 0.8 * s, VERMILION, width=0.3)
+
+
+def wreath_held(kind='flowers', rx=8.5, ry=6.5):
+    """A garland held up between both hands of a 'present' pose (props_front, fists close over it)."""
+    def fn(p, j):
+        hf, hb = j['hand_f'], j['hand_b']
+        c = ((hf[0] + hb[0]) / 2, (hf[1] + hb[1]) / 2 - ry + 0.6)
+        wreath(p, c, rx, ry, kind)
+    return fn
+
+
+def oak_chest(p, x, y, w, h, lid_open=True, col=C.hex('7a5634')):
+    """A plank chest bound with iron, lid thrown back (world space, base at y)."""
+    body = [(x - w / 2, y, 0), (x - w / 2, y - h, 0), (x + w / 2, y - h, 0), (x + w / 2, y, 0)]
+    if lid_open:
+        lid = [(x - w / 2, y - h, 0), (x - w / 2 + 6, y - h - h * 0.9, 0), (x + w / 2 + 6, y - h - h * 0.9, 0), (x + w / 2, y - h, 0)]
+        p.shape(lid, ('v', col.dark(0.35), col.dark(0.1)), width=2, smooth=False, shade=0.6)
+        for t in (0.33, 0.66):
+            p.line([v_lerp(lid[0], lid[1], t), v_lerp(lid[3], lid[2], t)], col.dark(0.55), 1.4, smooth=False)
+        p.shape([(x - w / 2 + 4, y - h, 0), (x - w / 2 + 6, y - h - 12, 0), (x + w / 2 + 2, y - h - 12, 0), (x + w / 2 - 4, y - h, 0)], C.hex('1e140c'), width=1.2, smooth=False)
+    p.shape(body, ('h', col.light(0.15), col, col.dark(0.3)), width=2.2, smooth=False, shade=0.7, rim=0.3)
+    for t in (0.33, 0.66):
+        p.line([(x - w / 2, y - h * t), (x + w / 2, y - h * t)], col.dark(0.5), 1.4, smooth=False)
+    for bx in (x - w / 2 + 14, x + w / 2 - 14):
+        p.shape([(bx - 5, y, 0), (bx - 5, y - h, 0), (bx + 5, y - h, 0), (bx + 5, y, 0)], ('h', IRON.light(0.2), IRON.dark(0.2)), width=1.2, smooth=False)
+        for yy in (y - h * 0.2, y - h * 0.5, y - h * 0.8):
+            p.blob((bx, yy), 1.8, 1.8, STEEL.light(0.2), width=0.6)
+    p.shape([(x - 8, y - h, 0), (x + 8, y - h, 0), (x + 6, y - h + 16, 0), (x - 6, y - h + 16, 0)], IRON, width=1.2, smooth=False)
+    p.blob((x, y - h + 10), 2.2, 3, C.hex('1a1410'), ink=False)

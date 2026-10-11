@@ -721,6 +721,66 @@
     "art": "res://art/cards/wild_c_027.webp"
   },
   {
+    "id": "wild_c_028",
+    "name": "Bark-Skin",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Aura",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "attach": "aura",
+    "grants": {
+      "power": 0,
+      "toughness": 2,
+      "keywords": [
+        "regenerate"
+      ]
+    },
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "attach",
+        "target": "own_creature"
+      }
+    ],
+    "text": "When this enters, attach it to target creature you control. That creature gets +0/+2 and has regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+    "flavor": "He binds oak bark to a man's arm and calls it a blessing. It turns a blade well enough.",
+    "art": "res://art/cards/wild_c_028.webp"
+  },
+  {
+    "id": "wild_c_029",
+    "name": "Wreath-Weaver Druid",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Druid",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Aura",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Whenever an Aura enters under your control, this gets +1/+1 permanently.",
+    "flavor": "For every garland he plaits for another man, he weaves one leaf into his own.",
+    "art": "res://art/cards/wild_c_029.webp"
+  },
+  {
     "id": "wild_u_001",
     "name": "Wolfsire of the Fen",
     "faction": "wild",
@@ -961,8 +1021,8 @@
     "name": "Gift of the Greenwood",
     "faction": "wild",
     "rarity": "uncommon",
-    "type": "spell",
-    "subtype": "Rite",
+    "type": "relic",
+    "subtype": "Aura",
     "cost": {
       "G": 1,
       "generic": 2
@@ -970,17 +1030,20 @@
     "keywords": [],
     "effects": [
       {
-        "action": "buff",
-        "target": "own_creature",
-        "power": 2,
-        "toughness": 2,
-        "duration": "permanent",
-        "trigger": "cast"
+        "trigger": "enter",
+        "action": "attach",
+        "target": "own_creature"
       }
     ],
-    "text": "Target creature you control gets +2/+2 permanently.",
+    "text": "When this enters, attach it to target creature you control. That creature gets +2/+2.",
     "flavor": "The oak gives slowly, but it never takes back.",
-    "art": "res://art/cards/wild_u_009.webp"
+    "art": "res://art/cards/wild_u_009.webp",
+    "attach": "aura",
+    "grants": {
+      "power": 2,
+      "toughness": 2,
+      "keywords": []
+    }
   },
   {
     "id": "wild_u_010",
@@ -1270,6 +1333,74 @@
     "text": "Target creature you control gets +1/+0 until end of turn for each Wolf you control. Then target creature you control fights target enemy creature.",
     "flavor": "The stag turned to face one wolf, and the other five did the rest.",
     "art": "res://art/cards/wild_u_018.webp"
+  },
+  {
+    "id": "wild_u_019",
+    "name": "Wolf-Pelt Mantle",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Aura",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "attach": "aura",
+    "grants": {
+      "power": 1,
+      "toughness": 1,
+      "keywords": [
+        "trample"
+      ]
+    },
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "attach",
+        "target": "own_creature"
+      },
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Wolf",
+          "power": 2,
+          "toughness": 2,
+          "subtype": "Wolf Beast",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "When this enters, attach it to target creature you control and create a 2/2 Wolf token. That creature gets +1/+1 and has trample.",
+    "flavor": "The hill folk say the pack follows the man who wears its grey. The wolves have never said why.",
+    "art": "res://art/cards/wild_u_019.webp"
+  },
+  {
+    "id": "wild_u_020",
+    "name": "Mantle-Keeper of the Circle",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Druid",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "cost_reduce",
+        "amount": 1,
+        "subtype": "Aura"
+      }
+    ],
+    "text": "Your Aura cards cost 1 less.",
+    "flavor": "He keeps the pelts, crowns and bark-cloths of the circle in an oak chest, and lends them out more freely than he ought.",
+    "art": "res://art/cards/wild_u_020.webp"
   },
   {
     "id": "wild_r_001",
@@ -1605,6 +1736,47 @@
     "text": "Reach, regenerate. Other Treefolk you control have reach and regenerate.",
     "flavor": "Ironwood, the charcoal burners call him, and they have broken three axes on his kin.",
     "art": "res://art/cards/wild_r_011.webp"
+  },
+  {
+    "id": "wild_r_012",
+    "name": "Grey Elder of the Henge",
+    "faction": "wild",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Druid",
+    "cost": {
+      "G": 2,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Druid",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Aura",
+        "action": "summon",
+        "token": {
+          "name": "Sapling",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Treefolk",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "This gets +1/+1 for each other Druid you control. Whenever an Aura enters under your control, create a 1/1 Sapling token.",
+    "flavor": "His circle has kept its rites since before the first bell rang in the valley. He suspects the bell will outlast them.",
+    "art": "res://art/cards/wild_r_012.webp"
   },
   {
     "id": "wild_m_001",

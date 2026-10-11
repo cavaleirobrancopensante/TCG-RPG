@@ -23,7 +23,7 @@
     "faction": "revel",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Human Bacchant",
+    "subtype": "Satyr Bacchant",
     "cost": {
       "R": 1,
       "generic": 1
@@ -35,7 +35,7 @@
     ],
     "effects": [],
     "text": "Haste (this can attack the turn it comes into play).",
-    "flavor": "He dances straight from the wine-press into the battle line.",
+    "flavor": "He dances straight from the wine-press into the battle line, hooves still purple.",
     "art": "res://art/cards/revel_c_002.webp"
   },
   {
@@ -707,6 +707,59 @@
     "art": "res://art/cards/revel_c_027.webp"
   },
   {
+    "id": "revel_c_028",
+    "name": "Satyr Piper of the Pines",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Satyr",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "other_own_creatures",
+        "subtype": "Satyr",
+        "power": 1,
+        "toughness": 0,
+        "duration": "turn",
+        "trigger": "attack"
+      }
+    ],
+    "text": "Whenever this attacks, other Satyrs you control get +1/+0 until end of turn.",
+    "flavor": "His tune has no words, but every goat-footed rascal on the hill knows it means \"charge\".",
+    "art": "res://art/cards/revel_c_028.webp"
+  },
+  {
+    "id": "revel_c_029",
+    "name": "Wineskin Satyr",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Satyr",
+    "cost": {
+      "R": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "rummage",
+        "amount": 1,
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
+    "flavor": "He drinks to the battle, to the victory, to the fallen, and on wet days to the weather.",
+    "art": "res://art/cards/revel_c_029.webp"
+  },
+  {
     "id": "revel_u_001",
     "name": "Duelist of the Velvet Court",
     "faction": "revel",
@@ -1223,6 +1276,61 @@
     "art": "res://art/cards/revel_u_018.webp"
   },
   {
+    "id": "revel_u_019",
+    "name": "Old Satyr on the Wine-Cask",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Satyr",
+    "cost": {
+      "R": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "buff",
+        "target": "own_creature",
+        "subtype": "Satyr",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent",
+        "trigger": "idle"
+      }
+    ],
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on target Satyr you control.",
+    "flavor": "\"In my day we ran with the vintage,\" he tells the young ones, and does not get up.",
+    "art": "res://art/cards/revel_u_019.webp"
+  },
+  {
+    "id": "revel_u_020",
+    "name": "Panic in the Thicket",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_creature",
+        "amount": 1,
+        "amount_per": "Satyr",
+        "trigger": "cast"
+      }
+    ],
+    "text": "Deal 1 damage to target enemy creature for each Satyr you control.",
+    "flavor": "Out of the dark wood came a skirl of pipes and a clatter of hooves, and the sentries forgot their courage.",
+    "art": "res://art/cards/revel_u_020.webp"
+  },
+  {
     "id": "revel_r_001",
     "name": "Salamander Juggler",
     "faction": "revel",
@@ -1539,6 +1647,41 @@
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on each Noble you control.",
     "flavor": "He gives his vote to whichever prince serves the longest dinner.",
     "art": "res://art/cards/revel_r_011.webp"
+  },
+  {
+    "id": "revel_r_012",
+    "name": "Horned Lord of the Rout",
+    "faction": "revel",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Satyr",
+    "cost": {
+      "R": 2,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_player",
+        "amount": 1,
+        "amount_per": "Satyr",
+        "trigger": "idle"
+      }
+    ],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "haste",
+        "scope": "other_own_creatures",
+        "subtype": "Satyr"
+      }
+    ],
+    "text": "Other Satyrs you control have haste (they can attack the turn they come into play). Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player for each Satyr you control.",
+    "flavor": "He sends the herd down the hill at a gallop and follows at his own pace, which is to say not at all.",
+    "art": "res://art/cards/revel_r_012.webp"
   },
   {
     "id": "revel_m_001",

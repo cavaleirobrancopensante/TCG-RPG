@@ -1298,3 +1298,121 @@ def mountains(p, base_y, col, peaks, snow=True):
         p.shape(pts, ('v', col.light(0.15), col.dark(0.2)), width=1.8, shade=0.7)
         if snow:
             p.shape([(x - hw * 0.22, base_y - h * 0.78), (x - hw * 0.12, base_y - h * 0.9), (x, base_y - h, 0), (x + hw * 0.2, base_y - h * 0.85), (x + hw * 0.26, base_y - h * 0.72), (x + hw * 0.1, base_y - h * 0.78), (x - hw * 0.05, base_y - h * 0.72)], LEAD_WHITE, width=1.2)
+
+
+# ------------------------------------------------------------------ third tribe: Priests (1.25)
+
+CHASUBLE_GREEN = C.hex('2f6a3e')
+VEST_WHITE = C.hex('f4eedc')
+
+
+def chasuble(col=CHASUBLE_GREEN, orphrey=GOLD, stole=None, amice=True):
+    """Emblem fn: a full gothic chasuble over the alb, falling from the shoulders
+    to below the knee, with a gold pillar orphrey and a cross on the breast, the
+    amice at the neck and the stole ends showing beneath the hem."""
+    stole = stole or col
+
+    def fn(p, c):
+        k = c[1] + 64
+        # stole ends below the chasuble
+        for sd in (-1, 1):
+            x0 = 1.0 + sd * 3.4
+            p.shape([(x0 - 1.8, -32, 0), (x0 + 1.8, -32, 0), (x0 + 2.4, -16, 0), (x0 - 2.4, -16, 0)], stole, width=1.0, smooth=False, shade=0.6)
+            p.shape([(x0 - 3.0, -16, 0), (x0 + 3.0, -16, 0), (x0 + 3.0, -12, 0), (x0 - 3.0, -12, 0)], stole, width=0.9, smooth=False)
+            p.line([(x0 - 3.0, -13.4), (x0 + 3.0, -13.4)], orphrey, 0.8, smooth=False)
+            for t in range(4):
+                p.line([(x0 - 2.4 + t * 1.6, -12), (x0 - 2.4 + t * 1.6, -9.8)], orphrey, 0.6, smooth=False)
+        # the bell of the chasuble
+        pts = [(-3.8, -84.5 + k), (-9.6, -82 + k), (-12.6, -74 + k), (-15.5, -58 + k), (-17.5, -42), (-15, -33), (-6, -29.5),
+               (1, -28.6), (8, -29.5), (16, -33), (18.6, -42), (16.4, -58 + k), (13, -74 + k), (9.8, -82 + k), (4.2, -84.5 + k)]
+        p.shape(pts, col, width=2.0, shade=0.9, rim=0.5, light=(-0.8, -0.5))
+        p.clip_shape(pts)
+        p.texture((-20, -90 + k, 20, -26), strength=0.7)
+        for xx, b in ((-11, -1.2), (-6, -0.6), (7, 0.6), (12, 1.3)):
+            pts_f = [(xx * 0.55, -80 + k), (xx * 0.85, -60 + k), (xx + b * 3, -30)]
+            p.fold_band(pts_f, 0.2, 2.2, col.dark(0.5).alpha(0.35))
+            p.line(pts_f, col.dark(0.55).alpha(0.5), 1.1)
+        # damask flowers
+        for xx in (-10, -5, 7, 12):
+            for yy in (-70, -55, -40):
+                p.blob((xx, yy + (k if yy < -50 else 0)), 1.1, 1.1, orphrey.alpha(0.35), ink=False)
+        # pillar orphrey with a cross on the breast
+        p.shape([(-1.9, -84 + k, 0), (3.9, -84 + k, 0), (4.4, -28, 0), (-2.4, -28, 0)], orphrey, width=1.1, smooth=False, shade=0.5)
+        cy = -70 + k
+        p.shape([(-7.6, cy - 2.6, 0), (9.6, cy - 2.6, 0), (9.6, cy + 2.6, 0), (-7.6, cy + 2.6, 0)], orphrey, width=1.1, smooth=False, shade=0.5)
+        for yy in range(int(-80 + k), -30, 5):
+            p.blob((1.0, yy), 0.9, 0.9, VERMILION, ink=False)
+        p.blob((1.0, cy), 1.8, 1.8, VERMILION, width=0.6)
+        p.unclip()
+        if amice:
+            p.taper([(-7.5, -82.5 + k), (0.8, -80.5 + k), (8.6, -82.5 + k)], 2.0, 2.0, VEST_WHITE, width=1.0, shade=0.3)
+            p.line([(-2.4, -82 + k), (3.8, -82 + k)], orphrey, 1.2)
+    return fn
+
+
+def host(p, c, r, glow=True):
+    """The white Host with a fine cross, in world or figure units."""
+    if glow:
+        p.glow(c, r * 6, C.hex('fff6d4'), 0.8)
+        holy_rays(p, c, r * 1.4, r * 7, 20, GOLD_LIGHT, 0.45, 0.07)
+    p.blob(c, r, r, C.hex('fffaf0'), width=max(0.6, r * 0.12), shade=0.2)
+    p.line([(c[0], c[1] - r * 0.6), (c[0], c[1] + r * 0.6)], GOLD_DARK.alpha(0.6), max(0.4, r * 0.08), smooth=False)
+    p.line([(c[0] - r * 0.6, c[1] - r * 0.1), (c[0] + r * 0.6, c[1] - r * 0.1)], GOLD_DARK.alpha(0.6), max(0.4, r * 0.08), smooth=False)
+
+
+def confessional(p, x, y, w=300, h=330, wood=WALNUT, curtain=PURPLE_VEST, open_side=None):
+    """A carved walnut confessional standing on y: the priest's middle stall with
+    a half door under a gabled canopy, and a penitent's bay with a purple curtain
+    on each side."""
+    bw = w * 0.3
+    mx0, mx1 = x - w * 0.2, x + w * 0.2
+    # back and canopy
+    p.shape([(x - w / 2, y, 0), (x - w / 2, y - h * 0.82, 0), (x + w / 2, y - h * 0.82, 0), (x + w / 2, y, 0)], ('h', wood.light(0.15), wood.dark(0.2)), width=2.0, smooth=False)
+    p.shape([(x - w / 2 - 10, y - h * 0.82, 0), (x + w / 2 + 10, y - h * 0.82, 0), (x + w / 2 + 10, y - h * 0.87, 0), (x - w / 2 - 10, y - h * 0.87, 0)], wood.light(0.1), width=1.6, smooth=False, shade=0.6)
+    p.shape([(mx0 - 8, y - h * 0.87, 0), (x, y - h, 0), (mx1 + 8, y - h * 0.87, 0)], wood.light(0.05), width=1.8, smooth=False, shade=0.7)
+    p.blob((x, y - h * 0.93), w * 0.04, w * 0.04, GOLD, width=1.2, shade=0.5)
+    for q in ((x, y - h - 10),):
+        p.taper([(q[0], q[1] + 10), (q[0], q[1] - 16)], 1.6, 1.6, GOLD, width=1.0)
+        p.taper([(q[0] - 7, q[1] - 6), (q[0] + 7, q[1] - 6)], 1.6, 1.6, GOLD, width=1.0)
+    for xx in (x - w / 2, mx0, mx1, x + w / 2):
+        p.shape([(xx - 6, y, 0), (xx - 6, y - h * 0.82, 0), (xx + 6, y - h * 0.82, 0), (xx + 6, y, 0)], ('h', wood.light(0.25), wood.dark(0.1)), width=1.4, smooth=False)
+        p.blob((xx, y - h * 0.82 - 4), 8, 4, wood.light(0.2), width=1.2, shade=0.5)
+    # the middle stall: dark inside, a pointed arch, half door
+    inner = pointed_opening(mx0 + 8, mx1 - 8, y - h * 0.6, y - 4, 0.9, 10)
+    p.shape(inner, ('v', C.hex('1e1410'), C.hex('2e2018')), width=1.6)
+    p.shape([(mx0 + 6, y, 0), (mx0 + 6, y - h * 0.32, 0), (mx1 - 6, y - h * 0.32, 0), (mx1 - 6, y, 0)], ('h', wood.light(0.1), wood.dark(0.15)), width=1.6, smooth=False)
+    for k in range(3):
+        xx = mx0 + 18 + k * (mx1 - mx0 - 36) / 2
+        p.shape(pointed_opening(xx - 10, xx + 10, y - h * 0.24, y - h * 0.06, 0.9, 6), wood.dark(0.25), width=1.0)
+    # the penitents' bays: grilles and curtains
+    for sd in (-1, 1):
+        bx0, bx1 = (x - w / 2 + 6, mx0 - 6) if sd < 0 else (mx1 + 6, x + w / 2 - 6)
+        bay = pointed_opening(bx0, bx1, y - h * 0.55, y - 2, 0.9, 10)
+        p.shape(bay, ('v', C.hex('2a1c18'), C.hex('1a1210')), width=1.4)
+        if open_side == sd:
+            continue
+        p.clip_shape(bay)
+        p.shape([(bx0, y - h, 0), (bx1, y - h, 0), (bx1, y, 0), (bx0, y, 0)], ('h', curtain.light(0.15), curtain, curtain.dark(0.25)), width=1.0, smooth=False)
+        for t in range(1, 6):
+            xx = lerp(bx0, bx1, t / 6.0)
+            p.fold_band([(xx, y - h * 0.8), (xx + 2, y - h * 0.4), (xx - 1, y)], 0.5, 4, curtain.dark(0.4).alpha(0.4))
+            p.line([(xx, y - h * 0.8), (xx + 2, y - h * 0.4), (xx - 1, y)], curtain.dark(0.5).alpha(0.5), 1.2)
+        p.unclip()
+        p.line([(bx0, y - h * 0.62), (bx1, y - h * 0.62)], GOLD_DARK, 2.0, smooth=False)
+
+
+def tent(p, x, y, w=200, h=170, col=LEAD_WHITE, stripe=VERMILION, pennon=None):
+    """A round pavilion of an army camp, standing on y, with stripes and a pennon."""
+    top = (x, y - h)
+    body = [(x - w / 2, y, 0), (x - w * 0.46, y - h * 0.55), (x - w * 0.18, y - h * 0.85), top + (0,), (x + w * 0.18, y - h * 0.85), (x + w * 0.46, y - h * 0.55), (x + w / 2, y, 0)]
+    p.shape(body, ('h', col.light(0.1), col.dark(0.18)), width=1.8, shade=0.6)
+    p.clip_shape(body)
+    for k in range(-3, 4):
+        if k % 2:
+            p.shape([(x + k * w / 7 - w / 28, y + 2, 0), top + (0,), (x + k * w / 7 + w / 28, y + 2, 0)], stripe.alpha(0.85), ink=False, smooth=False)
+    p.unclip()
+    p.shape([(x - w / 2 - 4, y - h * 0.52, 0), (x + w / 2 + 4, y - h * 0.52, 0), (x + w / 2 + 2, y - h * 0.44), (x - w / 2 - 2, y - h * 0.44)], stripe, width=1.2)
+    p.shape([(x - w * 0.12, y, 0), (x, y - h * 0.4), (x + w * 0.12, y, 0)], C.hex('2a1c14'), width=1.4)
+    p.line([(x, y - h), (x, y - h - 40)], OAK, 2.4, smooth=False)
+    if pennon:
+        p.shape([(x, y - h - 40, 0), (x + 40, y - h - 33), (x + 34, y - h - 28, 0), (x, y - h - 26, 0)], pennon, width=1.2)

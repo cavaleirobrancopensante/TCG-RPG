@@ -5,8 +5,8 @@ The Revel plays fast and pays for it. Its creatures arrive with haste and first 
 **Tavern Brawler** · Common · Creature (Human Warrior) · R · 2/1 · No abilities.
 The honest one-drop: a 2/1 for a single mana, exactly on rate. The Revel needs something to put down on the first turn, and a vanilla body keeps the bottom of the curve clean. A brawler in a tavern is the faith at its most ordinary: pleasure that tips over into a fistfight.
 
-**Vine-Crowned Bacchant** · Common · Creature (Human Bacchant) · 1R · 2/1 · Haste (this can attack the turn it comes into play).
-A 2/1 with haste for two, a point of toughness under a vanilla 2/2 to pay for the keyword. It is the faith's basic racing card and the first thing that shows how the Revel plays: hit now, worry later. The bacchant is a follower of Bacchus, the classical god of wine, and the vine crown places him in the faith's pagan, classical roots.
+**Vine-Crowned Bacchant** · Common · Creature (Satyr Bacchant) · 1R · 2/1 · Haste (this can attack the turn it comes into play).
+A 2/1 with haste for two, a point of toughness under a vanilla 2/2 to pay for the keyword. It is the faith's basic racing card and the first thing that shows how the Revel plays: hit now, worry later. The bacchant is a follower of Bacchus, the classical god of wine, and the vine crown places him in the faith's pagan, classical roots. Since 1.25 he is a satyr, the goat-legged follower of the old wine feasts, and counts for the Satyr tribe.
 
 **Masquerade Duelist** · Common · Creature (Human Duelist) · 1R · 2/1 · First strike (this deals combat damage before creatures without first strike).
 The common first striker, a 2/1 for two that wins most early trades and makes x/2 blockers think twice. It is the same price as the Bacchant, so a player picks between speed and swordsmanship. The masked duel of honour at a masquerade is the Revel's courtly face, still pleasure, but pleasure with a rapier in it.
@@ -185,3 +185,22 @@ The Noble build-around: every turn he stays home, every lord at the table grows.
 
 **Ruggiero, Patron of the Players** · Mythic · Creature (Human Noble) · 2RR · 2/5 · Performers you control have first strike. Idle: deal 1 damage to any enemy creature or the enemy player for each Performer you control.
 The mythic that joins the tribes: a Noble patron who never fights, whose players get first strike and whose idle evenings rain fire on the enemy. It is splashy with a full troupe but needs Performers to do anything and dies to 5 damage. The Renaissance prince who kept a company of players is a real figure of the courts, and his name comes from the knights of Italian romance.
+
+### Third tribe (1.25)
+
+The Satyrs are the Revel's small third tribe and the one that sits on its own hinge: half of them want to run and half want to stay at home. Goat-legged, horned, piping and drinking, they are classical revelry played for mischief rather than menace, and a Satyr deck asks the Idle question across the whole herd: the young ones charge with haste while the old ones lounge on the casks and grow the others or ping the enemy. The package is deliberately small, two cheap bodies, an Idle grower, one instant that counts the herd and one rare that joins both halves, plus the old Satyr of the Drowsy Vineyard and the Vine-Crowned Bacchant retagged, six members in all.
+
+**Satyr Piper of the Pines** · Common · Creature (Satyr) · 1R · 1/2 · Whenever this attacks, other Satyrs you control get +1/+0 until end of turn.
+A small body that makes the herd's attacks hurt. Alone it is a weak two-drop; with two other Satyrs beside it, each swing adds two points. It is power only and lasts one turn, as the Revel's team bonuses must, and it has to attack itself to pay out, so it risks its own small frame. The piper leading the charge with a tune that means "charge" is the tribe's whole spirit.
+
+**Wineskin Satyr** · Common · Creature (Satyr) · R · 1/1 · Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).
+The tribe's one-drop: a cheaper, smaller Loafer of the Arbour that counts as a Satyr for Panic in the Thicket and the Horned Lord. It filters the hand while it sits, and never gives card advantage, only card quality. The satyr drinking to the weather on a wet hillside is the faith's sloth at its most harmless.
+
+**Old Satyr on the Wine-Cask** · Uncommon · Creature (Satyr) · 2R · 1/3 · Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on target Satyr you control.
+The tribe's slow engine: as long as he stays home, one Satyr a turn grows, and he may grow himself if nothing else is there. It is weaker than an anthem and needs a turn of patience each time, which keeps it fair at uncommon. The old satyr telling the young ones how it was in his day, without rising from his cask, is Silenus in all but name.
+
+**Panic in the Thicket** · Uncommon · Spell (Revelry), instant · 1R · Deal 1 damage to target enemy creature for each Satyr you control.
+The Satyr payoff spell and the faith's one new instant here: creature-only burn that scales with the herd, so it is a cheap trick with two Satyrs and real removal with four. It never touches the player, which keeps it removal and not a finisher. "Panic" comes from the old shepherds' tale of the god of the wild whose shout scattered armies; here the noise is only pipes and hooves in the dark, and it is the sentries who run.
+
+**Horned Lord of the Rout** · Rare · Creature (Satyr) · 2RR · 2/4 · Other Satyrs you control have haste. Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player for each Satyr you control.
+The build-around that joins the two halves of the tribe: he gives the herd haste so it can charge at once, and rewards himself for staying behind with damage for every Satyr. With three Satyrs he is three points a turn, but he hits only the player and dies to 4 damage, so he is a clock to be answered, never a lock. The lord who sends the rout down the hill and follows at his own pace, which is to say not at all, is the Revel's comedy of excess in a single figure.

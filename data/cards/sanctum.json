@@ -664,6 +664,68 @@
     "art": "res://art/cards/sanctum_c_027.webp"
   },
   {
+    "id": "sanctum_c_028",
+    "name": "Parish Priest of the Valley",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Priest",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "When this enters, target creature you control gets +1/+1 permanently.",
+    "flavor": "He blessed the seed in spring and the sheaves in autumn, and every soul in the valley by name.",
+    "art": "res://art/cards/sanctum_c_028.webp"
+  },
+  {
+    "id": "sanctum_c_029",
+    "name": "Absolution Before Battle",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Sacrament",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "own_creature",
+        "power": 0,
+        "toughness": 3,
+        "duration": "turn"
+      },
+      {
+        "trigger": "cast",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1,
+        "amount_per": "Priest"
+      }
+    ],
+    "speed": "instant",
+    "text": "Target creature you control gets +0/+3 until end of turn. Gain 1 life for each Priest you control.",
+    "flavor": "Ego te absolvo. The men rose from their knees lighter than they had knelt, and the line held.",
+    "art": "res://art/cards/sanctum_c_029.webp"
+  },
+  {
     "id": "sanctum_u_001",
     "name": "Brother of Mercy",
     "faction": "sanctum",
@@ -750,7 +812,7 @@
     "faction": "sanctum",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Monk",
+    "subtype": "Human Monk Priest",
     "cost": {
       "W": 1,
       "generic": 3
@@ -784,7 +846,7 @@
     "faction": "sanctum",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Human Inquisitor",
+    "subtype": "Human Priest Inquisitor",
     "cost": {
       "W": 1,
       "generic": 3
@@ -1166,12 +1228,69 @@
     "art": "res://art/cards/sanctum_u_018.webp"
   },
   {
+    "id": "sanctum_u_019",
+    "name": "Confessor of the Cathedral",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Priest",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [
+      "sanctified"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "text": "Sanctified (protection from the Pact). When this enters, gain 2 life.",
+    "flavor": "What is told him in the box he carries to the grave, and the devil, who wanted it, never learns a word.",
+    "art": "res://art/cards/sanctum_u_019.webp"
+  },
+  {
+    "id": "sanctum_u_020",
+    "name": "Celebrant of the Dawn Mass",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Priest",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Priest",
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Whenever another Priest enters under your control, target creature you control gets +1/+1 permanently.",
+    "flavor": "Introibo ad altare Dei, ad Deum qui laetificat juventutem meam.",
+    "art": "res://art/cards/sanctum_u_020.webp"
+  },
+  {
     "id": "sanctum_r_001",
     "name": "Abbot of the Silent Order",
     "faction": "sanctum",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Human Monk",
+    "subtype": "Human Monk Priest",
     "cost": {
       "W": 2,
       "generic": 2
@@ -1472,6 +1591,42 @@
     "text": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 2 life for each Angel you control.",
     "flavor": "I am the angel Raphael, one of the seven who stand before the Lord.",
     "art": "res://art/cards/sanctum_r_011.webp"
+  },
+  {
+    "id": "sanctum_r_012",
+    "name": "Bishop of the Mountain See",
+    "faction": "sanctum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Priest",
+    "cost": {
+      "W": 2,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 1,
+        "amount_per": "Priest"
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Priest"
+      }
+    ],
+    "text": "Other Priests you control get +1/+1. At the beginning of your upkeep, gain 1 life for each Priest you control.",
+    "flavor": "He ordained them in the cathedral above the clouds, and sent them down to the valleys two by two.",
+    "art": "res://art/cards/sanctum_r_012.webp"
   },
   {
     "id": "sanctum_m_001",

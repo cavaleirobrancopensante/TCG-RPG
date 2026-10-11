@@ -29,8 +29,8 @@ A 2/2 for three that sets up the next few turns. Without flying it moves down to
 **Wandering Cynic** · Common · Creature (Human Philosopher) · 3U · 3/3 · When this enters, return target enemy creature to its owner's hand.
 A tempo creature: an on-rate 3/3 that also sets back the enemy's best play. Bounce is temporary, so this is fine at common. Renamed from the Peripatetic, because the Stoa descends from the Cynics: Zeno learned from Crates, who owned exactly a cloak, a staff and a satchel.
 
-**Shipwrecked Merchant** · Common · Creature (Human Merchant) · 3U · 2/4 · When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).
-The defensive twin of the Cynic. The freeze on arrival keeps the enemy's best attacker home for a turn, and the 2/4 body holds the ground afterwards. Zeno was a merchant whose cargo sank off Athens; he wandered into a bookshop and found philosophy instead.
+**Shipwrecked Merchant** · Common · Creature (Human Merchant Sailor) · 3U · 2/4 · When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).
+The defensive twin of the Cynic. The freeze on arrival keeps the enemy's best attacker home for a turn, and the 2/4 body holds the ground afterwards. Zeno was a merchant whose cargo sank off Athens; he wandered into a bookshop and found philosophy instead. In 1.25 he became a Sailor too, since a trader who ships his own purple dye across the Aegean has spent his life at sea.
 
 **Veteran of the Long Walls** · Common · Creature (Human Soldier) · 4U · 4/5 · Steadfast (prevent 1 of the damage dealt to it by each source).
 The common top end. A 4/5 with steadfast for five is on rate and very hard to wear down in combat, since every blocker and attacker deals one less. It gives the faith a real body to finish games. The Long Walls joined Athens to its harbour, and the line is from the Discourses (1.24).
@@ -74,8 +74,8 @@ The uncommon Composure payoff: a plain 2/2 that becomes a steadfast 3/3 while yo
 **Unbroken Shieldwall** · Uncommon · Creature (Human Soldier) · 2U · 1/5 · Defender. Steadfast.
 A wall built to outlast: a 1/5 defender that also shrugs off one damage from every source. Two keywords take it to uncommon, but defender keeps it honest. The flavour is Epictetus's distinction between what is in our power and what is not, set in a soldier's mouth.
 
-**Great-Owl of the Archive** · Uncommon · Creature (Bird) · 3U · 2/3 · At the beginning of your upkeep, foresight 2.
-A slow card quality engine on a body. The set 1 Great-Owl was a plain flier; without flight it becomes the archive's familiar, sorting your library every turn. A 2/3 for four is under rate because the trigger is worth a great deal over a long game.
+**Great-Owl of the Archive** · Uncommon · Creature (Bird) · 3U · 2/3 · Flying. At the beginning of your upkeep, foresight 2.
+A slow card quality engine on a body. A 2/3 for four was under rate because the trigger is worth a great deal over a long game; in 1.25 the Stoa was allowed two small Bird fliers, and the owl of Athena takes one of the places, which brings the card up to rate (a 2/3 flier for four, with the engine as the uncommon twist) without making it a threat.
 
 **Strategos of the Shieldwall** · Uncommon · Creature (Human Soldier) · 3U · 3/3 · Vigilance. Other Soldier creatures you control get +0/+1.
 A small Soldier lord. The +0/+1 is modest, but on a line of hoplites it puts every wall out of reach of the enemy's removal and blockers. A strategos was a Greek general, elected for his judgement.
@@ -185,3 +185,23 @@ The Hoplite anthem as a relic: harder to remove than a lord and the build-around
 
 **Xenophon of the Ten Thousand** · Mythic · Creature (Human Hoplite Philosopher) · 3UU · 4/5 · Vigilance. Other Hoplite creatures you control get +1/+1. When this enters, draw a card for each Philosopher you control.
 The tribal mythic: a lord for the line and a refill for the school in one body, splashy but still a creature that a destroy or a bounce answers. He counts himself, so he always draws at least one. Xenophon, pupil of Socrates, led the Ten Thousand out of Persia to the Black Sea, where they cried "Thalatta!" at the sight of it.
+
+### Third tribe (1.25)
+
+The Stoa's third tribe is the **Sailors**: the rowers, helmsmen, pilots and admirals of the Athenian fleet. It is small and plays the faith's own game at sea: reading the water (foresight), holding a course (vigilance) and freezing or tapping what stands in the way. Its members are the Oarsman, the Helmsman, the Pilot and Phormio, with the Navarch of the Cold Sea (already a Sailor) and the Shipwrecked Merchant retagged, six in all; the payoffs are modest, a kinship on a one-drop, a foresight trigger on a gull, a vigilance grant, a foresight count and a rare lord. Two Birds now fly, as the spec allows the Stoa at most two small fliers: the new Gull of the Sea Lanes and the Great-Owl of the Archive.
+
+**Oarsman of the Thranite Bench** · Common · Creature (Human Sailor) · U · 1/1 · This gets +1/+0 for each other Sailor you control.
+The tribe's one-drop and its kinship member: a 1/1 alone, a real attacker in a full crew. It fills the faith's thin one-drop slot. The thranites rowed on the top bench of a trireme, the hardest and best-paid seats, and the crew of about 170 oars pulled to a single time.
+
+**Gull of the Sea Lanes** · Common · Creature (Bird) · 1U · 1/1 · Flying. Whenever a Sailor enters under your control, foresight 1.
+One of the Stoa's two fliers: power 1, so it is an evasive chip and a scout, not a threat, and it pays a point of rate (a Church dove is a 1/1 flier for one) for the trigger. It is not a Sailor itself but rewards them. Seamen of every age have read land from the gulls; the temple of Poseidon on Cape Sounion was the Athenian sailor's first sight of home.
+
+**Helmsman of the Paralos** · Uncommon · Creature (Human Sailor) · 2U · 2/3 · Vigilance. Other Sailor creatures you control have vigilance.
+The tribe's keyword grant, in the faith's own keyword: the crew attacks and still keeps watch. A vigilant 2/3 for three is fair alone, and the grant is a modest twist rather than a lord's bonus. The Paralos was one of Athens's two sacred state triremes, crewed by free citizens and used for embassies and sacred missions.
+
+**Pilot of the Long Swell** · Uncommon · Creature (Human Sailor) · 2U · 2/3 · When this enters, foresight 2 for each Sailor you control.
+The tribe-counting card: counting itself, it always looks at two cards, and in a full crew it sorts much of the library. It draws nothing, so it smooths draws without adding cards, as a Stoa uncommon should. The pilot (kybernetes) was the ship's master of the sea's signs; the long swell that runs ahead of a storm is the oldest of them.
+
+**Phormio of Naupactus** · Rare · Creature (Human Sailor) · 3UU · 3/4 · Other Sailor creatures you control get +1/+1. When this enters, freeze target enemy creature.
+The Sailor lord and the tribe's rare: five mana for a 3/4 that freezes on arrival and lifts the crew, so it is slow and still answered by any removal. It does not give the anthem to the whole board, which stays the Church's. Thucydides (2.83 to 2.84) tells how Phormio, in 429 BC, rowed round the Corinthian fleet's defensive ring and waited for the morning wind out of the gulf; when it came the ships fouled one another and he fell on them. The patience is pure Stoa.
+
