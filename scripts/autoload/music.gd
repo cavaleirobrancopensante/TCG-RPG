@@ -83,9 +83,10 @@ func label(t: Dictionary) -> String:
 
 ## kind: "menu" | "world" | "city" | "battle" | "lair". faction may be "" for menu.
 func set_context(kind: String, faction: String = "") -> void:
-	# on the road and in towns you hear your own faith's music, wherever you are;
-	# a duel plays the music of the faith you are fighting
-	if (kind == "world" or kind == "city") and GameState.hero != "":
+	# on the road and in towns you hear the music of the land you are in, with a sprinkle
+	# (about one song in four) of your own faith's; at home it is all your own.
+	# A duel plays the combat music of the faith you are fighting.
+	if (kind == "world" or kind == "city") and GameState.hero != "" and (faction == "" or faction == GameState.hero):
 		kind = "home"
 		faction = GameState.hero
 	var key := kind + ":" + faction
@@ -119,9 +120,9 @@ func set_context(kind: String, faction: String = "") -> void:
 		"home":
 			list = faction_tracks(faction, "anthem") + faction_tracks(faction, "menu")
 		"world":
-			list = faction_tracks(faction, "menu")
+			list = _with_home(faction_tracks(faction, "anthem") + faction_tracks(faction, "menu"))
 		"city":
-			list = faction_tracks(faction, "anthem") + faction_tracks(faction, "menu")
+			list = _with_home(faction_tracks(faction, "anthem") + faction_tracks(faction, "menu"))
 		"battle":
 			var combat := faction_tracks(faction, "combat")
 			var boss: String = combat[2] if combat.size() > 2 else ""
@@ -138,6 +139,21 @@ func set_context(kind: String, faction: String = "") -> void:
 		return
 	# a city greets you with its anthem first, even when shuffling
 	_set_playlist(list, 0, kind == "city")
+
+
+## A foreign land's songs with a few of the hero's own faith mixed in (one in four).
+func _with_home(land: Array) -> Array:
+	if GameState.hero == "" or land.is_empty():
+		return land
+	var mine: Array = faction_tracks(GameState.hero, "anthem") + faction_tracks(GameState.hero, "menu")
+	mine.shuffle()
+	var n := maxi(1, int(round(land.size() / 3.0)))
+	var out := land.duplicate()
+	# spread them through the list so they come now and then, not all at the end
+	for k in mini(n, mine.size()):
+		var at := 1 + int(float(k + 1) * out.size() / float(n + 1))
+		out.insert(mini(at, out.size()), mine[k])
+	return out
 
 
 func faction_tracks_all(kind: String) -> Array:

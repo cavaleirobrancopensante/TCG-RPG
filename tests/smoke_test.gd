@@ -95,7 +95,10 @@ func _ready() -> void:
 	main._on_city_entered("cogspire")
 	await _frames(3)
 	var c: CityScreen = main.screen
-	assert(Music.current["faction"] == GameState.hero and Music.current["kind"] != "combat", "towns play the hero's own faith's music")
+	assert(Music.current["faction"] in ["machine", GameState.hero] and Music.current["kind"] != "combat", "a town plays its own land's music, with a sprinkle of the hero's")
+	var mix: Array = Music.playlist
+	var own := mix.filter(func(id): return String(id).begins_with(GameState.hero)).size()
+	assert(own >= 1 and own * 3 <= mix.size(), "about one song in four is the hero's own")
 	# The player strip: picker, manual choice, transport, back to auto.
 	Music._bar._toggle_picker()
 	await _frames(2)
@@ -122,7 +125,7 @@ func _ready() -> void:
 	assert(Music.paused, "paused")
 	Music.toggle_pause()
 	Music.set_auto(true)
-	assert(Music.current["faction"] == GameState.hero, "auto resumes the hero's own music in town")
+	assert(Music.current["faction"] in ["machine", GameState.hero], "auto resumes the town's music")
 	Music._bar._toggle_picker()
 	print("music player ok")
 	for t in ["shop", "sell", "town", "inn"]:
