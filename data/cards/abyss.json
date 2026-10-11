@@ -110,7 +110,7 @@
         "condition": "bloodied"
       }
     ],
-    "text": "As long as you have 10 or less life (Bloodied), this gets +1/+1.",
+    "text": "As long as you have 5 or less life (Bloodied), this gets +1/+1.",
     "flavor": "The closer you come to the grave, the better it can smell you.",
     "art": "res://art/cards/abyss_c_005.webp"
   },
@@ -125,7 +125,7 @@
       "B": 1,
       "generic": 2
     },
-    "power": 2,
+    "power": 3,
     "toughness": 2,
     "keywords": [
       "dread"
@@ -168,7 +168,7 @@
     "subtype": "Zombie",
     "cost": {
       "B": 1,
-      "generic": 2
+      "generic": 1
     },
     "power": 2,
     "toughness": 2,
@@ -615,10 +615,10 @@
       {
         "trigger": "enter",
         "action": "lose_life",
-        "amount": 2
+        "amount": 1
       }
     ],
-    "text": "When this enters, you lose 2 life.",
+    "text": "When this enters, you lose 1 life.",
     "flavor": "It comes up through the cellar floor, and the whole house smells of the pit for a week.",
     "art": "res://art/cards/abyss_c_024.webp"
   },
@@ -826,7 +826,7 @@
       "generic": 2
     },
     "power": 2,
-    "toughness": 1,
+    "toughness": 2,
     "keywords": [
       "deathtouch",
       "dread"
@@ -1033,7 +1033,7 @@
         "amount": 2
       }
     ],
-    "text": "If you have 10 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
+    "text": "If you have 5 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
     "flavor": "The contract was always clear. It was only written very small.",
     "art": "res://art/cards/abyss_u_010.webp"
   },
@@ -1139,7 +1139,7 @@
       "generic": 2
     },
     "power": 2,
-    "toughness": 2,
+    "toughness": 3,
     "keywords": [],
     "statics": [
       {
@@ -1300,7 +1300,7 @@
     "subtype": "Curse",
     "cost": {
       "B": 1,
-      "generic": 2
+      "generic": 1
     },
     "keywords": [],
     "effects": [
@@ -1350,7 +1350,7 @@
         "condition": "bloodied"
       }
     ],
-    "text": "As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
+    "text": "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
     "flavor": "\"Honour was a fine horse. I sold it and bought ten mercenaries.\" (Oathbreaker Knight)",
     "art": "res://art/cards/abyss_r_001.webp"
   },
@@ -1446,8 +1446,8 @@
       "B": 1,
       "generic": 4
     },
-    "power": 3,
-    "toughness": 3,
+    "power": 4,
+    "toughness": 4,
     "keywords": [],
     "abilities": [
       {
@@ -1506,11 +1506,11 @@
       },
       {
         "action": "lose_life",
-        "amount": 4,
+        "amount": 2,
         "trigger": "cast"
       }
     ],
-    "text": "Return target creature card from your graveyard to play. You lose 4 life.",
+    "text": "Return target creature card from your graveyard to play. You lose 2 life.",
     "flavor": "A mockery of the true rising. The body walks, and nothing looks out of its eyes.",
     "art": "res://art/cards/abyss_r_006.webp"
   },

@@ -17,8 +17,8 @@ An early answer to the two-mana fliers of the Church and the Pact. One power kee
 **Acorn Gatherer** · Common · Creature (Human Druid) · 1G · 1/1 · When this enters, create a 1/1 Sapling token.
 Two bodies for two mana, the cheapest way into the token side of the faith. Each body is small, but together they feed pumps and the Stampede. The flavour treats planting oaks as a gift to the far future, which is the patient way this faith thinks.
 
-**Antlered Barrow-Stag** · Common · Creature (Beast) · 2G · 2/2 · Trample (excess combat damage goes to the player).
-A 2/2 trampler for three, a point under rate to pay for the keyword after testing showed the earlier, bigger stag was too strong at common. It is the faith's modest three-drop attacker and stops chump blocks from working. Barrow mounds and sleeping kings set it in the old landscape of Britain.
+**Antlered Barrow-Stag** · Common · Creature (Beast) · 2G · 3/2 · Trample (excess combat damage goes to the player).
+A 3/2 trampler for three, a point under rate to pay for the keyword. Earlier passes cut it from 3/3 to 3/2 and then to 2/2 while the Old Ways were the strongest faith; the 1.32 pass, with the Old Ways now slightly under even, put it back at 3/2, where the spec's rate puts it. It is the faith's modest three-drop attacker and stops chump blocks from working. Barrow mounds and sleeping kings set it in the old landscape of Britain.
 
 **Oakmoot Sentinel** · Common · Creature (Treefolk) · 2G · 2/4 · Reach (can block creatures with flying).
 A sturdy wall against fliers and early ground attackers alike. A 2/4 for three is the faith's defensive rate, and reach is the small bonus. A moot was the old gathering of the land, and a tree that "saw no need to leave" suits it well.
@@ -168,11 +168,11 @@ The Wolf lord, the classic three-mana 2/2 that makes every other member of the t
 **Old Grey Wolf** · Uncommon · Creature (Wolf Beast) · 3G · 3/3 · Whenever another Wolf enters under your control, this gets +1/+1 permanently.
 A slow-growing threat: a 3/3 for four that gains a counter's worth of size with every Wolf that joins it, including tokens. It needs the pack to grow, so it is weak on an empty board and frightening in a long game. The proud old wolf who grows more dangerous with every cub is the uncommon twist on the kinship commons.
 
-**Old Moot-Oak** · Uncommon · Creature (Treefolk) · 3GG · 3/5 · Other Treefolk you control get +1/+1.
-The Treefolk lord. Saplings become 2/2s and Oaklings 3/3s, and the oak itself is a sturdy 3/5 that holds the ground while the grove grows. Five mana makes it a later play than the Wolf lord, which suits the slower tribe. Old law was given under great trees across the north of Europe, and a tree that remembers the laws before there were kings is the faith's long memory.
+**Old Moot-Oak** · Uncommon · Creature (Treefolk) · 2GG · 3/5 · Other Treefolk you control get +1/+1.
+The Treefolk lord. Saplings become 2/2s and Oaklings 3/3s, and the oak itself is a sturdy 3/5 that holds the ground while the grove grows. Four mana (five until the 1.32 pass) still makes it a later play than the Wolf lord, which suits the slower tribe; at five it lost its place to the faith's bigger five-drops and was almost never cast. Old law was given under great trees across the north of Europe, and a tree that remembers the laws before there were kings is the faith's long memory.
 
-**Acorn of the Elder Oak** · Uncommon · Relic (Relic) · 1G · Your Treefolk creature cards cost 1 less.
-A tribal cost reducer, the Treefolk answer to the faith's ramp: big trees arrive a turn early, and a Coppiced Hazel can come down with it on turn two. It does nothing for Saplings made by spells and nothing on an empty hand, and relic removal answers it. An acorn that makes the wood owe you a favour for three hundred years keeps the faith's patient sense of time.
+**Acorn of the Elder Oak** · Uncommon · Relic (Relic) · G · Your Treefolk creature cards cost 1 less.
+A tribal cost reducer, the Treefolk answer to the faith's ramp: big trees arrive a turn early, and a Coppiced Hazel can come down with it on turn one or two. It cost 1G until the 1.32 pass; a two-mana card that saves one mana per Treefolk rarely paid for itself, and the Treefolk decks were the weakest of the Old Ways. It does nothing for Saplings made by spells and nothing on an empty hand, and relic removal answers it. An acorn that makes the wood owe you a favour for three hundred years keeps the faith's patient sense of time.
 
 **Pack Hunt** · Uncommon · Spell (Rite) · 2G · Target creature you control gets +1/+0 until end of turn for each Wolf you control. Then target creature you control fights target enemy creature.
 Tribal removal on the model of Trial by Tooth and Claw: the more wolves you have, the harder your chosen creature bites. The pump adds no toughness, so the fighter can still die in the exchange. Wolves bringing down a stag by surrounding it, one to hold its eye and the rest to strike, is how a real pack hunts.

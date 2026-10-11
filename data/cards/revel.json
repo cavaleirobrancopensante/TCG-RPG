@@ -68,7 +68,7 @@
     "subtype": "Human Noble",
     "cost": {
       "R": 1,
-      "generic": 1
+      "generic": 2
     },
     "power": 0,
     "toughness": 3,
@@ -1426,7 +1426,7 @@
       "R": 2,
       "generic": 2
     },
-    "power": 5,
+    "power": 4,
     "toughness": 4,
     "keywords": [
       "haste"
@@ -1657,7 +1657,7 @@
     "subtype": "Satyr",
     "cost": {
       "R": 2,
-      "generic": 2
+      "generic": 3
     },
     "power": 2,
     "toughness": 4,

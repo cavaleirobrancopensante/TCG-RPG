@@ -122,7 +122,7 @@ if it holds when it would happen.
 - `composure`: you hold four or more cards in hand (Stoa)
 - `rooted`: you control six or more lands (Old Ways)
 - `carouse`: you already played another non-land card this turn (Revel)
-- `bloodied`: you have 10 or less life (Pact)
+- `bloodied`: you have 5 or less life (Pact)
 - `control:<kind>` (any faith, with its own tribes): you control at least one **other**
   permanent of that kind; the source itself never counts. The kind is a tribe word
   (`control:Priest`, `control:Sailor`), `Relic` (any relic), `Aura` (Old Ways) or `Equipment`

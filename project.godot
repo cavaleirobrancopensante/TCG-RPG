@@ -27,6 +27,7 @@ boot_splash/use_filter=true
 CardDB="*res://scripts/autoload/card_db.gd"
 GameState="*res://scripts/autoload/game_state.gd"
 Music="*res://scripts/autoload/music.gd"
+TouchScroll="*res://scripts/autoload/touch_scroll.gd"
 
 [display]
 

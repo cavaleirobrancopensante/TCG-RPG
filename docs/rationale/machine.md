@@ -26,7 +26,7 @@ The common face of the upkeep mechanic: a 3/3 for two that costs a mana every tu
 
 A wall that becomes an attacker. Alone it is a 0/3 blocker for two; with two other Constructs it is a 2/5. It replaces the set 1 defender version, since defender belongs to the Stoa, and gives the faith early defence that rewards building out. The doorway flavour is kept from set 1.
 
-**Piston Laborer** · Common · Creature (Construct) · 2C · 3/3 · (No abilities.)
+**Piston Laborer** · Common · Creature (Construct) · 2C · 3/3 · No abilities.
 
 A vanilla 3/3 for three at full rate, the reliable body every faith needs at common. The C symbol is what earns full stats. Its tireless work is the faith's efficiency over passion in one line.
 
@@ -50,7 +50,7 @@ A generic Overclock body: a 3/4 for four or a 5/6 for six, both a point under ra
 
 A five-drop that brings a helper: a 4/3 plus a 1/1, a point of toughness under full rate in exchange for the second body. Two Constructs in one card is exactly what Assembly wants. The side vent that spits out a Servo is the comic, slightly sinister edge of the foundry.
 
-**Cogspire Hulk** · Common · Creature (Construct) · 6 · 5/6 · (No abilities.)
+**Cogspire Hulk** · Common · Creature (Construct) · 6 · 5/6 · No abilities.
 
 The common top end: a generic 5/6 for six, a stat point under rate. Any deck can run it, but a big vanilla body takes nothing away from another faith's identity. The invoice joke is the guild's accounts in miniature.
 
@@ -130,9 +130,9 @@ A steady stream of Servos for four mana, and the core of many Technocracy engine
 
 The plain cost reducer that replaces the old mana rocks: it speeds up only Technocracy cards, so it does nothing in a Church or Revel deck. It is priced at three so that a deck must invest before it pays off. The ledger as a source of power is the guild's faith in accounts.
 
-**Clockwork Gaol** · Uncommon · Relic (Snare) · C · When this enters, choose target enemy creature. It can't attack or block while this stays in play. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).
+**Clockwork Gaol** · Uncommon · Relic (Snare) · C · When this enters, choose target enemy creature with power 2 or less. It can't attack or block while this stays in play.
 
-A one-mana snare that you must keep paying for, combining two of the faith's mechanics. It can shut down a dangerous creature of your choice on turn one, but every mana spent on it is a mana not spent building. When the payments stop, the prisoner walks free.
+The cheapest snare: one mana for a small creature, below Gear Trap (power 3 or less for two) and Brass Manacles (any creature for three). Until the 1.32 pass it caught any creature and carried Upkeep 1; in testing the upkeep drained the Technocracy's mana every turn, often for a Gaol that had nothing worth holding, and it was the faith's least winning card in its wanderer decks. The power limit keeps a one-mana answer from locking up a big threat.
 
 **Guild Comptroller** · Rare · Creature (Human Clerk) · 1C · 1/3 · Your Technocracy cards cost 1 less to play. This reduces only generic mana.
 
@@ -254,9 +254,9 @@ The Technocracy's third theme is not a creature tribe but its own gear: relics a
 
 The cheapest relic in the faith, so it turns on the relic payoffs from the first turns and can be played with no creature out. +1/+0 and first strike is a modest bonus at early-2000s rates (Leonin Scimitar gave +1/+1 for 1, Equip 1), paid for with the dearer Equip 2. First strike stays a Revel keyword on creatures; here it is only lent by a machine, which the spec allows for Equipment. A lance that fires its point forward on a spring is the guild's answer to the joust.
 
-**Tool-Rack Automaton** · Common · Creature (Construct) · 1C · 1/3 · This gets +1/+0 for each relic you control.
+**Tool-Rack Automaton** · Common · Creature (Construct) · 1C · 1/3 · This gets +1/+1 for each relic you control.
 
-The common relic payoff, shaped like Tended Automaton: a cheap Construct that is a wall on its own and an attacker once the bench is full. With two relics out it is a 3/3 for two, and it counts for Assembly as well, so it fits either Technocracy deck. A machine that carries every tool of the workshop on its back is the faith's idea of a good labourer.
+The common relic payoff, shaped like Tended Automaton: a cheap Construct that is a wall on its own and an attacker once the bench is full. With two relics out it is a 3/5 for two (it got +1/+0 per relic until the 1.32 pass, which left the relic wanderer decks the weakest in the game), and it counts for Assembly as well, so it fits either Technocracy deck. A machine that carries every tool of the workshop on its back is the faith's idea of a good labourer.
 
 **Riveted Pauldron** · Uncommon · Relic (Equipment) · 3 · When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)
 

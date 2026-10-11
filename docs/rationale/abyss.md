@@ -14,17 +14,17 @@ The pact in its simplest form: a 3/2 for two, a full point above rate, paid for 
 **Tomb Crawler** · Common · Creature (Skeleton) · 1B · 1/1 · Deathtouch (any damage this deals to a creature destroys it).
 A cheap deterrent. Nothing large wants to attack into a deathtouch blocker, so this 1/1 for two holds the ground far above its size. It shows the Pact's habit of destroying what is greater than itself, and as a Skeleton it is the cheapest body the bony host can field.
 
-**Famished Ghoul** · Common · Creature (Zombie) · 1B · 2/2 · As long as you have 10 or less life (Bloodied), this gets +1/+1.
+**Famished Ghoul** · Common · Creature (Zombie) · 1B · 2/2 · As long as you have 5 or less life (Bloodied), this gets +1/+1.
 The common introduction to Bloodied: an on-rate 2/2 for two that becomes a 3/3 once you have paid enough life. It rewards the player who has been spending life freely without punishing anyone early. A ghoul that smells you better as you near the grave is exactly what the condition means.
 
-**Hellmaw Hound** · Common · Creature (Demon Hound) · 2B · 2/2 · Dread (can only be blocked by Pact creatures and Constructs).
-The common dread creature, a 2/2 for three with evasion priced like a flier. It replaces the old flying shade, since the Pact no longer flies, and gives the faith a steady evasive clock at common. Honest dogs fleeing from it while only the damned can stand in its way is dread told as flavour.
+**Hellmaw Hound** · Common · Creature (Demon Hound) · 2B · 3/2 · Dread (can only be blocked by Pact creatures and Constructs).
+The common dread creature, a 3/2 for three with evasion priced like a flier: one point under the vanilla rate for the keyword. It was a 2/2, two points under, until the 1.32 pass found it among the Pact's weakest commons. It replaces the old flying shade, since the Pact no longer flies, and gives the faith a steady evasive clock at common. Honest dogs fleeing from it while only the damned can stand in its way is dread told as flavour.
 
 **Grave Chanter** · Common · Creature (Human Cultist) · 2B · 2/3 · When this enters, the enemy player loses 1 life and you gain 1 life.
 A 2/3 for three with a one point drain on arrival. The body is a little under rate and the drain makes it up, so it is a steady common that tips races and blocks small attackers. Singing hymns backwards is the traditional inversion of sacred worship and marks the cultist as plainly diabolic.
 
-**Charnel Glutton** · Common · Creature (Zombie) · 2B · 2/2 · Sacrifice another Zombie: this gets +3/+3 until end of turn.
-The Zombie sacrifice outlet (re-aimed in 1.27 with the new tribe sacrifice cost). A plain 2/2 for three that can eat a Restless Dead token or a doomed shambler to win a combat or push damage through. It only eats its own kind now, so the bonus grew from +2/+2 to +3/+3 to keep the card where it was. It teaches the faith's habit of spending its own creatures without being a combo engine, because the bonus only lasts the turn.
+**Charnel Glutton** · Common · Creature (Zombie) · 1B · 2/2 · Sacrifice another Zombie: this gets +3/+3 until end of turn.
+The Zombie sacrifice outlet (re-aimed in 1.27 with the new tribe sacrifice cost). A plain 2/2 for two (three until the 1.32 pass, when the Zombie decks lost too often and the Glutton won under a third of the games it was cast in) that can eat a Restless Dead token or a doomed shambler to win a combat or push damage through. It only eats its own kind now, so the bonus grew from +2/+2 to +3/+3 to keep the card where it was. It teaches the faith's habit of spending its own creatures without being a combo engine, because the bonus only lasts the turn.
 
 **Blight-Sower Cultist** · Common · Creature (Human Cultist) · 3B · 2/2 · When this enters, target enemy creature gets -2/-2 until end of turn.
 The common shrink creature: a 2/2 for four that kills an x/2 or wins a combat when it arrives. The body is under rate because the effect is a real two for one against small creatures. A cultist scattering ash and calling it a blessing is a mockery of the farmer's prayer, which shows the faith for what it is.
@@ -68,8 +68,8 @@ A two-drop that turns sacrifices into cards, each one costing a point of life. I
 **Wailing Wraith** · Uncommon · Creature (Spirit) · 2B · 2/2 · Whenever this attacks, target enemy creature gets -1/-1 until end of turn.
 An on-rate 2/2 for three that shrinks a blocker each time it attacks. It makes the enemy's blocks worse every turn, a nice twist on a simple body. The wail that widens the weak place in every heart is shrink told as despair.
 
-**Veiled Blade of the Pact** · Uncommon · Creature (Human Assassin) · 2B · 2/1 · Deathtouch, dread.
-Two Pact keywords on a 2/1 for three. Only Pact creatures and Constructs can block it, and whatever does block it dies, so it hits reliably while staying fragile to any removal. Paying assassins in years taken from their victims is suitably sinister.
+**Veiled Blade of the Pact** · Uncommon · Creature (Human Assassin) · 2B · 2/2 · Deathtouch, dread.
+Two Pact keywords on a 2/2 for three (a 2/1 until the 1.32 pass, three points under rate and one of the faith's least winning creatures). Only Pact creatures and Constructs can block it, and whatever does block it dies, so it hits reliably while staying fragile to any removal. Paying assassins in years taken from their victims is suitably sinister.
 
 **Cinder-Pit Fiend** · Uncommon · Creature (Demon) · 2BB · 4/4 · Dread. At the beginning of your upkeep, you lose 1 life.
 A 4/4 dread for four, well above rate, taxed by a life every upkeep. It rewards the player who attacks with it at once and punishes the one who keeps it too long, which is the lesson: the demon serves but is always hungry.
@@ -89,7 +89,7 @@ Unconditional removal for three mana and 2 life, moved down to uncommon as plann
 **Breath of the Ossuary** · Uncommon · Spell (Curse) · 1BB · All creatures get -2/-2 until end of turn.
 A symmetric sweeper: every creature gets -2/-2 until end of turn. It wipes out tokens and small creatures on both sides, so the Pact player must build around it, often with death triggers that profit from his own losses. Bones sighing and the living growing lighter is a quiet, eerie image.
 
-**The Debt Comes Due** · Uncommon · Spell (Curse) · 2B · If you have 10 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.
+**The Debt Comes Due** · Uncommon · Spell (Curse) · 2B · If you have 5 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.
 Drain 2 for three mana, doubled to drain 4 if you are Bloodied when you cast it. It is the comeback card of the faith: weak when healthy, strong when the price has already been paid. The contract written very small is the faith's whole method.
 
 **Chalice of Black Vows** · Uncommon · Relic (Relic) · 2B · At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.
@@ -101,7 +101,7 @@ A sacrifice outlet that turns your creatures into shrink effects. It makes chump
 **Censer of Bitter Ash** · Uncommon · Relic (Relic) · 2B · Tap, pay 2 and 2 life: the enemy discards a card at random.
 Repeatable hand attack at a steep price: two mana and 2 life for each random discard. It grinds out long games and is too slow to matter in short ones. The censer mocks the incense of the sanctuary, carrying thoughts away instead of prayers up, a profanation that shows its evil plainly.
 
-**Oathbreaker Knight** · Rare · Creature (Human Knight) · 2B · 3/3 · As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.
+**Oathbreaker Knight** · Rare · Creature (Human Knight) · 2B · 3/3 · As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.
 The Bloodied build-around. A 3/3 for three becomes a 5/5 with dread and deathtouch once you are at 10 life or less, which is a real threat that only Pact creatures can block and that kills them when they do. He swore to guard the weak and sold the oath for strength, the clearest picture of the broken vow.
 
 **Dream-Thief Fiend** · Rare · Creature (Demon) · 2BB · 2/2 · Dread. Whenever this attacks, the enemy discards a card at random.
@@ -113,11 +113,11 @@ A 5/5 dread demon, now at five mana and 3 life instead of four mana and 4 life, 
 **Hollow-Crowned Lich** · Rare · Creature (Lich) · 3BB · 3/5 · Deathtouch. At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.
 A durable defensive engine: a deathtouch 3/5 that drains a point every upkeep. Its stats are about par, and the drain makes it a rare that wins long games if left alone. The hollow crown is what sin pays: everything traded, nothing gained.
 
-**Bone-Lord of the Ossuary** · Rare · Creature (Skeleton) · 4B · 3/3 · Other Skeletons you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.
-The Skeleton build-around (since 1.25; he was a Zombie lord before and is now redrawn as a crowned skeleton). He strengthens the other Skeletons and can turn any creature, for B and a sacrifice, into a 2/2 Restless Dead Zombie, which feeds the Zombies' payoffs instead of his own anthem. The anthem is restricted to Skeletons, so it does not tread on the Church's team-wide anthems. A lord whose walls are lined with the skulls of his kneeling subjects shows the rule of the pit.
+**Bone-Lord of the Ossuary** · Rare · Creature (Skeleton) · 4B · 4/4 · Other Skeletons you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.
+The Skeleton build-around (since 1.25; he was a Zombie lord before and is now redrawn as a crowned skeleton). He strengthens the other Skeletons and can turn any creature, for B and a sacrifice, into a 2/2 Restless Dead Zombie, which feeds the Zombies' payoffs instead of his own anthem. The anthem is restricted to Skeletons, so it does not tread on the Church's team-wide anthems. The 1.32 pass raised him from 3/3 to 4/4, the same body as the Demons' Brimstone Marshal, because the Skeleton decks were the weakest Pact theme and a five-mana 3/3 died to almost everything. A lord whose walls are lined with the skulls of his kneeling subjects shows the rule of the pit.
 
-**Profane Resurrection** · Rare · Spell (Necromancy) · 2B · Return target creature card from your graveyard to play. You lose 4 life.
-Unrestricted reanimation for three mana and 4 life. It can bring back a demon lord, so the life price is high and the card sits at rare. The flavour calls it a mockery of the true rising, which keeps the necromancy plainly evil.
+**Profane Resurrection** · Rare · Spell (Necromancy) · 2B · Return target creature card from your graveyard to play. You lose 2 life.
+Unrestricted reanimation for three mana and 2 life. It can bring back a demon lord, so the life price is real and the card sits at rare. The 1.32 pass cut the price from 4 life to 2: at a starting total of 10, four life was close to half the duel, and the Zombie decks that cast it won only a third of the time. The flavour calls it a mockery of the true rising, which keeps the necromancy plainly evil.
 
 **Night of Unmaking** · Rare · Spell (Curse) · 3BB · Destroy all creatures.
 Destroy all creatures for five mana, the Pact's sweeper. It is the faith of unconditional destruction, so it gets the true wrath, and its owner loses his own board too. The Pact counting a silent field as victory says what it values.
@@ -150,8 +150,8 @@ A cheap Demon that rewards every later Demon with a small shrink, enough to kill
 **Bone-Rattle Picket** · Common · Creature (Skeleton) · 2B · 2/2 · When this dies, create a 1/1 Restless Dead Zombie token.
 An on-rate Skeleton that leaves a Zombie token behind, so it serves both tribes: it counts for the Skeleton lords while alive, then for the Shambler and the Corpse-Bell, and it feeds every sacrifice outlet. It keeps the rule that the Pact raises the dead only from death or sacrifice. A dead sentry still keeping his post at the barrow is the Skeletons' stubbornness in one figure.
 
-**Sulphur Brute** · Common · Creature (Demon) · 2B · 4/3 · When this enters, you lose 2 life.
-The honest common Demon: a full point above rate for three mana, paid for in life. It triggers the Imp, the Herald's discount and the Duke, and it walks its owner toward Bloodied. A fiend coming up through a farmhouse cellar keeps the horror close to home.
+**Sulphur Brute** · Common · Creature (Demon) · 2B · 4/3 · When this enters, you lose 1 life.
+The honest common Demon: a full point above rate for three mana, paid for in life. The price was 2 life until the 1.32 pass; with duels starting at 10 life, one point is the same share of a life total that two were before. It triggers the Imp, the Herald's discount and the Duke, and it walks its owner toward Bloodied. A fiend coming up through a farmhouse cellar keeps the horror close to home.
 
 **Chill of the Charnel Host** · Common · Spell (Curse) · 1B · Target enemy creature gets -1/-1 until end of turn for each Skeleton you control.
 The Skeleton removal: weak with one skeleton, a kill with three or four. It is an instant so it can answer an attack or ambush a blocker, and it fizzles with no Skeletons in play, which keeps it honest. The cold of a single dead hand multiplied by a host is the image of the whole tribe.
@@ -162,8 +162,8 @@ The Demon card draw, always paired with life as the Pact's draw must be. With on
 **Marsh-Light Shade** · Common · Creature (Spirit) · 3B · 3/2 · Dread (can only be blocked by Pact creatures and Constructs).
 A common evasive Spirit between the Hound and the Wight: four mana, a point under rate for dread. Since 1.25 it belongs to neither tribe, a plain evasive clock for any Pact deck. The will-o'-the-wisp that leads travellers off the causeway into the fen is old folklore of the drowned dead.
 
-**Drummer of the Dead March** · Uncommon · Creature (Skeleton) · 2B · 2/2 · Other Skeletons you control get +1/+0.
-The Skeleton lord at uncommon, held to +1/+0 so the rare Bone-Lord keeps the stronger anthem. It turns a column of bony soldiers into a real attack (his marching column is now drawn all of skeletons) and is a priority target, as a lord should be. The danse macabre led by a drumming skeleton is one of the most familiar late medieval images of death.
+**Drummer of the Dead March** · Uncommon · Creature (Skeleton) · 2B · 2/3 · Other Skeletons you control get +1/+0.
+The Skeleton lord at uncommon, held to +1/+0 so the rare Bone-Lord keeps the stronger anthem. A 2/3 since the 1.32 pass (2/2 before), so the lord survives the 2-damage blockers and pings that killed him before his column could march. It turns a column of bony soldiers into a real attack (his marching column is now drawn all of skeletons) and is a priority target, as a lord should be. The danse macabre led by a drumming skeleton is one of the most familiar late medieval images of death.
 
 **Herald of the Burning Gate** · Uncommon · Creature (Demon) · 2B · 2/2 · Your Demon creature cards cost 1 less to play.
 The Demon enabler: a weak body that brings the big fiends a turn early. Demons already cost life as well as mana, so cutting the mana is where the tribe gains speed. The herald who holds the gate while something larger comes through tells the player exactly what he is for.
@@ -199,8 +199,8 @@ The grave return at common, since 1.27 a true gravedigger: a 2/2 for four, two p
 **Plague-Cart Drover** · Uncommon · Creature (Zombie) · 2B · 2/2 · When this dies, create two 1/1 Restless Dead Zombie tokens.
 An on-rate 2/2 that becomes two Zombie tokens when it dies, so it is three bodies for sacrifice and three triggers of the Corpse-Bell over its life. The tokens only appear from death, as the Pact's rule requires. The dead-cart and its cry to bring out your dead are the plague years remembered; here the carter is one of his own load.
 
-**Hunger of the Grave** · Uncommon · Spell (Curse) · 2B · The enemy player loses 1 life and you gain 1 life for each Zombie you control.
-The tribe-counting spell: with two Zombies it is a Siphon of Ashes at one more mana, with four or five it swings a race by ten. It does nothing to the board and needs Zombies in play, which keeps it fair. Sorcery speed, because the drain gains nothing from surprise. A knight's warmth drawn out of him into the open mouths of the dead shows the Pact taking life it cannot give.
+**Hunger of the Grave** · Uncommon · Spell (Curse) · 1B · The enemy player loses 1 life and you gain 1 life for each Zombie you control.
+The tribe-counting spell: with two Zombies it is a Siphon of Ashes at the same cost, with four or five it swings a race by ten. It cost 2B until the 1.32 pass, which left it strictly worse than Siphon of Ashes in most games. It does nothing to the board and needs Zombies in play, which keeps it fair. Sorcery speed, because the drain gains nothing from surprise. A knight's warmth drawn out of him into the open mouths of the dead shows the Pact taking life it cannot give.
 
 **Ghoul-Master of the Plague Pits** · Rare · Creature (Zombie) · 2BB · 3/3 · Other Zombies you control get +1/+1. When this dies, create a 1/1 Restless Dead Zombie token.
 The modest Zombie lord: an on-rate 3/3 for four whose anthem turns 1/1 tokens into 2/2s and leaves one more token when he falls. The anthem is restricted to Zombies, so it stays clear of the Church's team anthems, and he gives himself nothing. The parish gravedigger of the plague year, still keeping the pits with his spade and crowned with coffin nails, is a picture of a duty turned into damnation.

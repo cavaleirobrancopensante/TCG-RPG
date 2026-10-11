@@ -214,6 +214,20 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Balance and swiping (1.32)
+
+- A balance pass over the whole set after the new rules (16,800 AI games): 20 cards retuned,
+  mostly halving life numbers now that duels start at 10 life (Saint Raphael, Abbot of the
+  Silent Order, Profane Resurrection, Sulphur Brute), a few Pact and Old Ways cards made
+  stronger, and the Nobles, Priests, Angels and Performers brought down a little. Details in
+  docs/rationale/balance.md.
+- Bloodied (Pact) now means 5 or less life; at 10 starting life it was always on.
+- The AI no longer plays snares and traps with nothing to catch.
+- Every scrolling list in the game scrolls by swiping up and down, not only by its bar
+  (character creation, settings and the rest).
+- The music bar wears your faith's colours and no longer covers the track title; the hero
+  sheet sits clear of it.
+
 ## New rules text and a faith-tinted look (1.31)
 
 - Music follows the land: on the road and in towns you hear the music of the faith whose

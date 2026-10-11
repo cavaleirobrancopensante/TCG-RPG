@@ -145,7 +145,7 @@
       "G": 1,
       "generic": 2
     },
-    "power": 2,
+    "power": 3,
     "toughness": 2,
     "keywords": [
       "trample"
@@ -1260,7 +1260,7 @@
     "subtype": "Treefolk",
     "cost": {
       "G": 2,
-      "generic": 3
+      "generic": 2
     },
     "power": 3,
     "toughness": 5,
@@ -1287,8 +1287,7 @@
     "type": "relic",
     "subtype": "Relic",
     "cost": {
-      "G": 1,
-      "generic": 1
+      "G": 1
     },
     "keywords": [],
     "effects": [],
