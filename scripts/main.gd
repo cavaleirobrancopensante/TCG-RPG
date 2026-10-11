@@ -30,17 +30,10 @@ var _tour_prev_deck := 0
 
 
 class MenuBg extends Control:
-	## Title page: a framed miniature (Church vs Pact) and the six faith roundels.
+	## Title page: parchment, a border and the six faith roundels down both sides.
 	var t := 0.0
-	const CAST := [
-		{"faction": "sanctum", "subtype": "Human Knight", "name": "Knight", "x": -0.30, "face": 1.0},
-		{"faction": "sanctum", "subtype": "Human Cleric", "name": "Cleric lantern", "x": -0.14, "face": 1.0},
-		{"faction": "abyss", "subtype": "Human Cultist", "name": "Cultist", "x": 0.14, "face": -1.0},
-		{"faction": "abyss", "subtype": "Demon", "name": "Fiend", "x": 0.31, "face": -1.0},
-	]
 
 	var _acc := 0.0
-	var panel_h := -1.0        # the miniature's height (-1: 30% of the page); short pages shrink it
 	var side_room := 0.0       # kept clear on each side (the language flags, top right)
 	var top_clear := 0.0       # the foot of the language flags: the roundels start below it
 
@@ -55,23 +48,6 @@ class MenuBg extends Control:
 		var r := Rect2(Vector2.ZERO, size)
 		Tapestry.draw_parchment(self, r)
 		Tapestry.draw_band(self, r, 16, "rings")
-		# the miniature
-		var pw := maxf(300.0, minf(minf(size.x * 0.5, 640.0), size.x - 2.0 * side_room))
-		var panel := Rect2(Vector2((size.x - pw) * 0.5, UIKit.TOP + 26), Vector2(pw, panel_h if panel_h > 0.0 else size.y * 0.30))
-		Tapestry.draw_diaper(self, panel, Tapestry.ULTRAMARINE, Color(Tapestry.GILT, 0.5), 26)
-		var ground := Rect2(panel.position.x, panel.end.y - 36, panel.size.x, 36)
-		Tapestry.draw_ground(self, ground)
-		Tapestry.draw_tree(self, Vector2(panel.position.x + 30, ground.position.y + 8), 1.6)
-		Tapestry.draw_tree(self, Vector2(panel.end.x - 30, ground.position.y + 8), 1.6)
-		# a falling star between the two hosts
-		var star := Vector2(panel.get_center().x + 10, panel.position.y + 44 + sin(t * 0.8) * 4)
-		draw_colored_polygon(PackedVector2Array([star + Vector2(-70, -18), star + Vector2(-6, -8), star + Vector2(-6, 8), star + Vector2(-60, 4)]), Color(1, 0.7, 0.2, 0.75))
-		Tapestry.ink_circle(self, star, 14, Color(1.0, 0.55, 0.18), 2)
-		Tapestry.ink_circle(self, star, 7, Color(1.0, 0.85, 0.35), 1.5)
-		for c in CAST:
-			var feet := Vector2(panel.get_center().x + float(c["x"]) * panel.size.x, ground.position.y + 14)
-			FigurePainter.paint(self, c, Transform2D(0, feet), panel.size.y * 0.62, c["face"], 1.0)
-		Tapestry.draw_band(self, panel.grow(10), 10, "dots")
 		# faith roundels down both sides
 		for i in Factions.ORDER.size():
 			var f: String = Factions.ORDER[i]
@@ -554,20 +530,13 @@ func show_menu() -> void:
 	_set_screen(m)
 	await get_tree().process_frame
 	if is_instance_valid(v):
-		# the miniature gives up height on a short page, so the buttons never cover it
-		# nor run into the version line at the bottom
+		# the title and buttons sit in the middle of the page, clear of the version line
 		var bottom_room := m.size.y - 52.0
-		var mini_top := UIKit.TOP + 26.0
-		var room := bottom_room - 12.0 - v.size.y - 22.0 - mini_top
-		if room < 90.0:      # a phone held sideways: the motto makes way
+		if v.size.y > bottom_room - (UIKit.TOP + 10):      # a short page: the motto makes way
 			sub.visible = false
 			v.reset_size()
-			room = bottom_room - 12.0 - v.get_combined_minimum_size().y - 22.0 - mini_top
-		bg.panel_h = clampf(room, 70.0, m.size.y * 0.30)
-		bg.queue_redraw()
-		v.position = Vector2((m.size.x - v.size.x) * 0.5, mini_top + bg.panel_h + 22.0)
-		if v.position.y + v.size.y > bottom_room:
-			v.position.y = maxf(UIKit.TOP + 10, bottom_room - v.size.y)
+		v.position = (m.size - v.size) * 0.5
+		v.position.y = clampf(v.position.y, UIKit.TOP + 10, maxf(UIKit.TOP + 10, bottom_room - v.size.y))
 
 
 ## "Version 1.6 · build 3f2a9c1 · 10 Oct 2026" — build details are stamped by the web deploy.
