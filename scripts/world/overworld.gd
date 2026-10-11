@@ -544,6 +544,9 @@ func _spawn_enemy(force_night: bool = false) -> void:
 			f = "abyss"
 			night_walker = true
 			disposition = "neutral" if GameState.hero == "abyss" else "hostile"
+		# civilised country: near towns and on the roads, a hostile spawn is usually turned away
+		if disposition == "hostile" and not night_walker and not force_night and _rng.randf() < civil_calm(p):
+			continue
 		var lvl := clampi(1 + int(p.distance_to(start) / 800.0), 1, 5)
 		var e := {
 			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": _look_for(f),
@@ -863,12 +866,25 @@ func ambush(e: Dictionary) -> void:
 	enemy_engaged.emit(e)
 
 
+## How safe a spot is from hostile wanderers: high beside a town, fading over 1600 px, and a
+## little more on a road. 0 in the wilds.
+func civil_calm(p: Vector2) -> float:
+	var d := INF
+	for c in cities:
+		d = minf(d, p.distance_to(Vector2(c["x"], c["y"])))
+	var calm := clampf(1.0 - (d - SAFE_RADIUS) / 1600.0, 0.0, 1.0) * 0.8
+	if ground_at(p) == ROAD:
+		calm = minf(0.9, calm + 0.25)
+	return calm
+
+
 func _move_enemies(delta: float) -> void:
 	var player_safe := _in_safe_zone(player_pos)
+	var chase_r := CHASE_RADIUS * (1.0 - 0.5 * civil_calm(player_pos))
 	for e in enemies:
 		var p: Vector2 = e["pos"]
 		var d := p.distance_to(player_pos)
-		e["chasing"] = e.get("disposition", "hostile") == "hostile" and d < CHASE_RADIUS and not player_safe and grace <= 0.0 \
+		e["chasing"] = e.get("disposition", "hostile") == "hostile" and d < chase_r and not player_safe and grace <= 0.0 \
 			and faction_at(player_pos) == e.get("region", e["faction"]) \
 			and player_pos.distance_to(e["home"]) < CHASE_LEASH
 		var target: Vector2
