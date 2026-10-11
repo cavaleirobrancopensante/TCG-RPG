@@ -193,9 +193,12 @@
       "regenerate"
     ],
     "effects": [],
-    "text": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
+    "text": "Regenerate {G} ({G}: The next time this creature would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.)",
     "flavor": "Dig him out of one hole and he is already snoring in the next.",
-    "art": "res://art/cards/wild_c_008.webp"
+    "art": "res://art/cards/wild_c_008.webp",
+    "regen_cost": {
+      "G": 1
+    }
   },
   {
     "id": "wild_c_009",
@@ -295,9 +298,13 @@
       "regenerate"
     ],
     "effects": [],
-    "text": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
+    "text": "Regenerate {1}{G} ({1}{G}: The next time this creature would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.)",
     "flavor": "Lightning is the sky's love for the oak, the druids taught. They held this view until it struck them.",
-    "art": "res://art/cards/wild_c_012.webp"
+    "art": "res://art/cards/wild_c_012.webp",
+    "regen_cost": {
+      "generic": 1,
+      "G": 1
+    }
   },
   {
     "id": "wild_c_013",
@@ -743,7 +750,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "When Bark-Skin enters, put two +0/+1 counters on target creature you control. That creature gains regenerate. (The first time each turn it would be destroyed, instead tap it and remove all damage from it.)",
+    "text": "When Bark-Skin enters, put two +0/+1 counters on target creature you control. That creature gains regenerate {1}{G}. ({1}{G}: The next time it would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.)",
     "flavor": "He binds oak bark to a man's arm and calls it a blessing. It turns a blade well enough.",
     "art": "res://art/cards/wild_c_028.webp"
   },
@@ -854,9 +861,12 @@
       "regenerate"
     ],
     "effects": [],
-    "text": "Reach, regenerate.",
+    "text": "Reach. Regenerate {G}.",
     "flavor": "The stones remember every wrong, and forgive whoever brings them milk. (A saying of the Moot)",
-    "art": "res://art/cards/wild_u_003.webp"
+    "art": "res://art/cards/wild_u_003.webp",
+    "regen_cost": {
+      "G": 1
+    }
   },
   {
     "id": "wild_u_004",
@@ -1470,9 +1480,12 @@
         "duration": "permanent"
       }
     ],
-    "text": "Regenerate. Whenever White Hart of the Greenwood attacks, put a +1/+1 counter on target creature you control.",
+    "text": "Regenerate {G}. Whenever White Hart of the Greenwood attacks, put a +1/+1 counter on target creature you control.",
     "flavor": "To hunt the hart is murder, the druids teach. To hunt the hunter is merely housekeeping.",
-    "art": "res://art/cards/wild_r_002.webp"
+    "art": "res://art/cards/wild_r_002.webp",
+    "regen_cost": {
+      "G": 1
+    }
   },
   {
     "id": "wild_r_003",
@@ -1531,9 +1544,13 @@
         "condition": "rooted"
       }
     ],
-    "text": "Reach, regenerate. Rooted: As long as you control six or more lands, Yew of a Thousand Winters gets +3/+0.",
+    "text": "Reach. Regenerate {1}{G}. Rooted: As long as you control six or more lands, Yew of a Thousand Winters gets +3/+0.",
     "flavor": "Bury your dead beneath the yew and they become yew. That is all the heaven anyone needs. (Grey Elder of the Henge)",
-    "art": "res://art/cards/wild_r_004.webp"
+    "art": "res://art/cards/wild_r_004.webp",
+    "regen_cost": {
+      "generic": 1,
+      "G": 1
+    }
   },
   {
     "id": "wild_r_005",
@@ -1553,9 +1570,13 @@
       "regenerate"
     ],
     "effects": [],
-    "text": "Trample, regenerate.",
+    "text": "Trample. Regenerate {1}{G}.",
     "flavor": "Cut it in two and throw half in the river. By morning it has found itself again.",
-    "art": "res://art/cards/wild_r_005.webp"
+    "art": "res://art/cards/wild_r_005.webp",
+    "regen_cost": {
+      "generic": 1,
+      "G": 1
+    }
   },
   {
     "id": "wild_r_006",
@@ -1729,9 +1750,13 @@
         "subtype": "Treefolk"
       }
     ],
-    "text": "Reach, regenerate. Other Treefolk you control have reach and regenerate.",
+    "text": "Reach. Regenerate {1}{G}. Other Treefolk you control have reach and regenerate {1}{G}.",
     "flavor": "Ironwood, the charcoal burners call him, and they have broken three axes on his kin.",
-    "art": "res://art/cards/wild_r_011.webp"
+    "art": "res://art/cards/wild_r_011.webp",
+    "regen_cost": {
+      "generic": 1,
+      "G": 1
+    }
   },
   {
     "id": "wild_r_012",

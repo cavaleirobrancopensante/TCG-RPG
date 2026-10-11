@@ -633,6 +633,10 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "%s will regenerate if it is destroyed this turn.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "%s is pacified: it can't attack.",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -909,6 +913,10 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "%s is about to be destroyed: tap it to pay for Regenerate, or pass.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "%s waits on the stack: answer it, or let it resolve.",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -998,6 +1006,10 @@
   },
   {
    "key": "Equip %d",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Regenerate",
    "note": "scripts/battle/battle_state.gd"
   },
   {
@@ -2861,7 +2873,7 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Regenerate: the first time each turn it would be destroyed, it is tapped and healed instead.",
+   "key": "Regenerate: pay its cost to shield it; the next time it would be destroyed this turn, it is tapped, healed and taken out of combat instead.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -3294,10 +3306,6 @@
   },
   {
    "key": "Reach",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Regenerate",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -6431,7 +6439,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
+   "key": "Regenerate {G} ({G}: The next time this creature would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.)",
    "note": "rules text of Sett Badger"
   },
   {
@@ -6477,6 +6485,10 @@
   {
    "key": "Old Hollow Oak",
    "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Regenerate {1}{G} ({1}{G}: The next time this creature would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.)",
+   "note": "rules text of Old Hollow Oak"
   },
   {
    "key": "Lightning is the sky's love for the oak, the druids taught. They held this view until it struck them.",
@@ -6663,7 +6675,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "When Bark-Skin enters, put two +0/+1 counters on target creature you control. That creature gains regenerate. (The first time each turn it would be destroyed, instead tap it and remove all damage from it.)",
+   "key": "When Bark-Skin enters, put two +0/+1 counters on target creature you control. That creature gains regenerate {1}{G}. ({1}{G}: The next time it would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.)",
    "note": "rules text of Bark-Skin"
   },
   {
@@ -6711,7 +6723,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Reach, regenerate.",
+   "key": "Reach. Regenerate {G}.",
    "note": "rules text of Stonehide Spirit"
   },
   {
@@ -6947,7 +6959,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Regenerate. Whenever White Hart of the Greenwood attacks, put a +1/+1 counter on target creature you control.",
+   "key": "Regenerate {G}. Whenever White Hart of the Greenwood attacks, put a +1/+1 counter on target creature you control.",
    "note": "rules text of White Hart of the Greenwood"
   },
   {
@@ -6971,7 +6983,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Reach, regenerate. Rooted: As long as you control six or more lands, Yew of a Thousand Winters gets +3/+0.",
+   "key": "Reach. Regenerate {1}{G}. Rooted: As long as you control six or more lands, Yew of a Thousand Winters gets +3/+0.",
    "note": "rules text of Yew of a Thousand Winters"
   },
   {
@@ -6987,7 +6999,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Trample, regenerate.",
+   "key": "Trample. Regenerate {1}{G}.",
    "note": "rules text of Fen-Worm of the Wear"
   },
   {
@@ -7063,7 +7075,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Reach, regenerate. Other Treefolk you control have reach and regenerate.",
+   "key": "Reach. Regenerate {1}{G}. Other Treefolk you control have reach and regenerate {1}{G}.",
    "note": "rules text of Grandsire Hornbeam"
   },
   {
@@ -9631,7 +9643,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Deathtouch (Any damage this creature deals to a creature destroys it.) Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
+   "key": "Deathtouch (Any damage this creature deals to a creature destroys it.) Regenerate {1}{G} ({1}{G}: The next time this creature would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.)",
    "note": "rules text of Gallows Oak"
   },
   {
@@ -9707,7 +9719,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.) Assembly (This creature gets +1/+1 for each other Construct you control.)",
+   "key": "Regenerate {G} ({G}: The next time this creature would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.) Assembly (This creature gets +1/+1 for each other Construct you control.)",
    "note": "rules text of Moss-Grown Sentry"
   },
   {

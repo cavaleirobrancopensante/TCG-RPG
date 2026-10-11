@@ -220,9 +220,13 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Deathtouch (Any damage this creature deals to a creature destroys it.) Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
+    "text": "Deathtouch (Any damage this creature deals to a creature destroys it.) Regenerate {1}{G} ({1}{G}: The next time this creature would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.)",
     "flavor": "The Pact hanged its oathbreakers from the oldest oak in the wood, and the oak learned the wrong lesson.",
-    "art": "res://art/cards/gold_abyss_wild.webp"
+    "art": "res://art/cards/gold_abyss_wild.webp",
+    "regen_cost": {
+      "generic": 1,
+      "G": 1
+    }
   },
   {
     "id": "gold_abyss_revel",
@@ -458,9 +462,12 @@
       }
     ],
     "overclock": {},
-    "text": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.) Assembly (This creature gets +1/+1 for each other Construct you control.)",
+    "text": "Regenerate {G} ({G}: The next time this creature would be destroyed this turn, instead tap it, remove all damage from it, and remove it from combat.) Assembly (This creature gets +1/+1 for each other Construct you control.)",
     "flavor": "Its guild was dissolved a century ago. The ivy holds its joints together now, and it guards the grove instead of the gate.",
-    "art": "res://art/cards/gold_wild_machine.webp"
+    "art": "res://art/cards/gold_wild_machine.webp",
+    "regen_cost": {
+      "G": 1
+    }
   },
   {
     "id": "gold_revel_lyceum",

@@ -25,7 +25,7 @@ const KEYWORDS := {
 	"martyr": "Martyr: when this creature dies, put a +1/+1 counter on another target creature you control.",
 	"sanctified": "Sanctified: Pact cards can't target it, Pact creatures can't block it, and damage from the Pact is prevented.",
 	"dread": "Dread: can only be blocked by Pact creatures and Constructs.",
-	"regenerate": "Regenerate: the first time each turn it would be destroyed, it is tapped and healed instead.",
+	"regenerate": "Regenerate: pay its cost to shield it; the next time it would be destroyed this turn, it is tapped, healed and taken out of combat instead.",
 	"first_strike": "First strike: deals combat damage before creatures without it.",
 	"unmoved": "Unmoved: enemy spells and abilities can't tap it, return it to its owner's hand or shrink it.",
 }

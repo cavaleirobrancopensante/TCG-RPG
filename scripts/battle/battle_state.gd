@@ -32,7 +32,7 @@ class Perm:
 	var pacified := false      # can't attack
 	var snared_by := -1        # uid of the relic holding it (can't attack or block)
 	var frozen := false        # skips its next untap
-	var regen_used := false
+	var regen_shield := 0      # regeneration shields bought this turn (Regenerate {cost})
 	var attacked := false      # attacked this turn
 	var entered_turn := 0
 	var uses := {}             # ability index -> uses this turn
@@ -269,7 +269,6 @@ func begin_turn() -> void:
 		p.attacked = false
 	for sd in sides:
 		for p in sd.creatures + sd.relics:
-			p.regen_used = false
 			p.uses.clear()          # "once per turn" counts each turn, abilities work in both
 	attackers.clear()
 	blocks.clear()
@@ -468,6 +467,7 @@ func end_turn() -> void:
 			p.temp_t = 0
 			p.temp_kw.clear()
 			p.deathtouched = false
+			p.regen_shield = 0
 		sd.pool.clear()
 	active = 1 - active
 	turn += 1
@@ -633,6 +633,41 @@ func item_effect_targets(it: Dictionary) -> Array:
 		elif e.get("action") != "fight":
 			out.append([e, null])
 	return out
+
+
+## Is side i's creature p about to be destroyed, so that a regeneration shield would save it?
+## True when the enemy's spell or ability on top of the stack destroys it or deals it lethal
+## damage, or when, after blocks, the creature it fights would kill it.
+func regen_threatened(i: int, p: Perm) -> bool:
+	if p == null or p.owner != i or p.regen_shield > 0 or find_perm(p.uid) == null:
+		return false
+	if not stack.is_empty():
+		var top: Dictionary = stack.back()
+		if int(top["side"]) != i:
+			for pr in item_effect_targets(top):
+				var eff: Dictionary = pr[0]
+				var ref = pr[1]
+				var t := String(eff.get("target", ""))
+				var hits: bool = (typeof(ref) == TYPE_DICTIONARY and int(ref.get("uid", -1)) == p.uid) \
+						or t in ["all_creatures", "all_enemy_creatures"]
+				if not hits:
+					continue
+				var act := String(eff.get("action", ""))
+				if act == "destroy":
+					return true
+				if act == "damage" and int(eff.get("amount", 1)) >= p.toughness() - p.damage:
+					return true
+	if phase == "combat" and step == "blockers":
+		var foe: Perm = null
+		if attackers.has(p.uid):
+			foe = find_perm(int(blocks.get(p.uid, -1)))
+		else:
+			for a in blocks:
+				if int(blocks[a]) == p.uid:
+					foe = find_perm(int(a))
+		if foe != null and BattleAI._fight_outcome(p, foe)[0]:
+			return true
+	return false
 
 
 func _resolve_card(it: Dictionary) -> void:
@@ -1292,7 +1327,22 @@ func abilities_of(p: Perm) -> Array:
 			n += int(cost[k])
 		list = list + [{"cost": {"mana": cost}, "sorcery": true, "equip": true,
 			"effects": [{"action": "attach", "target": "own_creature"}], "text": I18n.t("Equip %d") % n}]
+	if p.is_creature() and p.has_kw("regenerate"):
+		# Regenerate {cost}: pay to shield it from the next destruction this turn
+		var rc := regen_cost(p)
+		list = list + [{"cost": {"mana": rc}, "regen": true,
+			"effects": [{"action": "regen_shield", "target": "self"}],
+			"text": I18n.t("Regenerate") + " " + CardView.cost_tokens(rc)}]
 	return list
+
+
+## What Regenerate costs for this creature: its own `regen_cost`, or {1}{G} when it was
+## given regenerate by another card.
+static func regen_cost(p) -> Dictionary:
+	var rc = p.card.get("regen_cost", null)
+	if typeof(rc) == TYPE_DICTIONARY and not rc.is_empty():
+		return rc
+	return {"generic": 1, "G": 1}
 
 
 ## Can side i use ability `idx` of permanent `uid` now? (whenever it has priority)
@@ -1550,6 +1600,12 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 						p.temp_p += gp
 						p.temp_t += gt
 					emit({"type": "buff", "uid": p.uid, "p": gp, "t": gt})
+		"regen_shield":
+			for ref in _expand_targets(i, t, chosen, source):
+				var p: Perm = find_perm(int(ref.get("uid", -1))) if ref.get("kind") == "creature" else null
+				if p:
+					p.regen_shield += 1
+					emit({"type": "regen_shield", "uid": p.uid})
 		"destroy":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p := find_perm(ref.get("uid", -1))
@@ -1796,12 +1852,12 @@ func lose_life(i: int, n: int) -> void:
 	emit({"type": "life", "side": i, "value": side(i).life, "delta": -n})
 
 
-## Destroy a permanent. Regenerate saves a creature once per turn (not from sacrifice).
+## Destroy a permanent. A regeneration shield saves a creature (not from sacrifice).
 func destroy_perm(p: Perm, sacrifice: bool = false) -> void:
 	if find_perm(p.uid) == null:
 		return
-	if not sacrifice and p.is_creature() and p.has_kw("regenerate") and not p.regen_used:
-		p.regen_used = true
+	if not sacrifice and p.is_creature() and p.regen_shield > 0:
+		p.regen_shield -= 1
 		p.damage = 0
 		p.deathtouched = false
 		p.tapped = true
