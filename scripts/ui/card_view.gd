@@ -66,7 +66,7 @@ func _process(delta: float) -> void:
 	if foil or highlight or selected:
 		_t += delta
 		_acc += delta
-		if _acc >= 0.05:       # ~20 repaints a second is plenty for the shimmer and glow
+		if _acc >= 0.15:       # a few repaints a second is plenty for the shimmer and glow
 			_acc = 0.0
 			queue_redraw()
 

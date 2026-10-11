@@ -578,6 +578,7 @@ class _Arrows extends Control:
 	var scene: BattleScene
 	var flashes: Array = []          # [from, to, colour, time left]
 	var _redraw := false
+	var _tick := 0.0
 
 	func flash(from: Vector2, to: Vector2, col: Color, t: float = 0.9) -> void:
 		flashes.append([from, to, col, t])
@@ -591,7 +592,9 @@ class _Arrows extends Control:
 		flashes = flashes.filter(func(fl): return fl[3] > 0.0)
 		# arrows that stay follow their figures while the layout settles
 		var stays: bool = scene != null and scene.st != null and (scene.mode == "attack" or scene.st.phase in ["block", "combat"] or not scene.view_stack.is_empty())
-		if live or _redraw or stays:
+		_tick += delta
+		if (live or _redraw or stays) and _tick >= 1.0 / 30.0:
+			_tick = 0.0
 			_redraw = flashes.size() > 0
 			queue_redraw()
 
@@ -932,9 +935,19 @@ func _refresh_bars() -> void:
 		(player_info if i == 0 else enemy_info).text = t
 
 
+var _hand_key := ""          # the hand last built: rebuilt only when it changes
+
+
 func _rebuild_hand() -> void:
-	UIKit.clear(hand_box)
 	var hand: Array = st.side(0).hand
+	# making card views is the costliest thing in a refresh: keep them while the hand is the same
+	var key := "%s|%s" % [str(hand), str(hand_scale)]
+	if key == _hand_key and hand_box.get_child_count() == hand.size():
+		hand_box.arrange()
+		_update_hand_glow()
+		return
+	_hand_key = key
+	UIKit.clear(hand_box)
 	for idx in hand.size():
 		var cv := CardView.create(hand[idx], hand_scale)
 		var i2 := idx
@@ -1000,7 +1013,7 @@ class _Glow extends Control:
 			return
 		_t += delta
 		_acc += delta
-		if _acc >= 0.05:
+		if _acc >= 0.2:        # a slow beat: five repaints a second is plenty for a glow
 			_acc = 0.0
 			queue_redraw()
 

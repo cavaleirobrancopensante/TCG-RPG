@@ -557,3 +557,10 @@ under *Export → Resources → Filters to export non-resource files*.
 - Card and figure art, music and sound
 - Faith-themed boosters and lair-specific boss decks
 - Story missions chaining across cities
+
+## Smoother duels (1.39)
+
+- Duels paint far less often: animations run at about 30 frames a second, figures at rest stand
+  still (no idle bob), the green glow on playable cards pulses slowly, and card shimmer repaints
+  a few times a second instead of every frame.
+- The hand is rebuilt only when it changes, so refreshes after each action are much lighter.

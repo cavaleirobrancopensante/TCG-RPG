@@ -94,14 +94,18 @@ func sync(p) -> void:   # p: BattleState.Perm
 ## Painting a figure is costly, so redraw only while something moves: every frame during
 ## animations, a few times a second for the idle bob and the pulsing marks.
 func _process(delta: float) -> void:
-	_bob += delta * 2.2
 	var animating := summon_t < 1.0 or fade < 1.0 or flash > 0.0 or lunge != Vector2.ZERO
-	if animating:
-		queue_redraw()
-		return
 	_idle_acc += delta
-	if _idle_acc >= (0.08 if mark != "" else 0.25):
+	if animating:
+		# animations at about 30 frames a second: smooth enough, half the painting
+		if _idle_acc >= 1.0 / 30.0:
+			_idle_acc = 0.0
+			queue_redraw()
+		return
+	# at rest a figure stands still (no idle bob); a mark (ready, selected) beats slowly
+	if mark != "" and _idle_acc >= 0.25:
 		_idle_acc = 0.0
+		_bob += 0.55
 		queue_redraw()
 
 
