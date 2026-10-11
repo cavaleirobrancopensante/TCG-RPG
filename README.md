@@ -597,3 +597,12 @@ under *Export → Resources → Filters to export non-resource files*.
   sooner when a hit would leave it at 2 life or less. Technocracy decks are built with more
   creatures and fewer self-defeating relics.
 - Herne's hunt is now wolves. The Revel mask lost its plume.
+
+## Volume buttons, type tabs in the deck builder (1.44)
+
+- Music volume is set with - and + buttons (in steps of 10%) in Settings and in the music panel.
+  The old sliders jumped to wherever a finger landed, so a swipe through Settings could silence
+  the music. A volume left at zero by that is brought back to 80% once.
+- The deck builder has the draft's type tabs: All, Creatures, Sorceries, Instants, Relics and
+  Lands with the deck's count of each. The chosen type filters your collection, the deck list
+  and the mana curve together.

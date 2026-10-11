@@ -224,6 +224,11 @@ func toggle_pause() -> void:
 
 func set_volume(v: float) -> void:
 	volume = clampf(v, 0.0, 1.0)
+	if _fade and _fade.is_valid():
+		# a fade under way would end at the old volume: finish it now
+		_fade.kill()
+		var other: AudioStreamPlayer = _players[1 - _active]
+		other.stop()
 	var p: AudioStreamPlayer = _players[_active]
 	if p.playing:
 		p.volume_db = _db()
@@ -310,6 +315,13 @@ func _load_settings() -> void:
 	var cf := ConfigFile.new()
 	if cf.load(SETTINGS) == OK:
 		volume = float(cf.get_value("music", "volume", 0.8))
+		# before 1.44 a swipe across the volume slider could leave it at zero: bring it back once
+		if not bool(cf.get_value("music", "volume_fixed", false)):
+			if volume < 0.05:
+				volume = 0.8
+			cf.set_value("music", "volume_fixed", true)
+			cf.set_value("music", "volume", volume)
+			cf.save(SETTINGS)
 		auto = bool(cf.get_value("music", "auto", true))
 		shuffle = bool(cf.get_value("music", "shuffle", true))
 

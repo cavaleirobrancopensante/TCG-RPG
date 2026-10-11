@@ -63,6 +63,7 @@ var warn_label: Label
 var shown_label: Label
 var drawer_shown: Label
 var curve: ManaCurve
+var type_tabs: GridContainer      # All, Creatures, Sorceries...: the same type filter as the drawer's
 var search: LineEdit
 var in_deck_toggle: CheckButton
 var filter_opts: Array = []       # the four filter OptionButtons (type, cost, rarity, ability)
@@ -228,6 +229,12 @@ func _ready() -> void:
 		land_pips[f] = pip
 		lands_row.add_child(pip)
 
+	type_tabs = GridContainer.new()
+	type_tabs.name = "TypeTabs"
+	type_tabs.columns = 3
+	type_tabs.add_theme_constant_override("h_separation", 4)
+	type_tabs.add_theme_constant_override("v_separation", 4)
+	right.add_child(type_tabs)
 	curve = ManaCurve.new()
 	curve.custom_minimum_size = Vector2(0, 50 if compact else 64)
 	right.add_child(curve)
@@ -380,7 +387,7 @@ func filters_open() -> bool:
 ## How many of the drawer's filters narrow the list (the sort does not count).
 func active_filter_count() -> int:
 	var n := 0
-	for v in [f_type, f_cost, f_rarity, f_keyword]:
+	for v in [f_cost, f_rarity, f_keyword]:       # the type shows on its own tabs
 		if v > 0:
 			n += 1
 	return n + (1 if only_in_deck else 0)
@@ -710,6 +717,33 @@ func _sort_key(c: Dictionary) -> Array:
 
 # ------------------------------------------------------------------ refresh
 
+## The type tabs: All, then each type with its count in this deck; the chosen one also filters
+## the collection (the drawer's type filter follows it).
+func _fill_type_tabs(d: Dictionary) -> void:
+	UIKit.clear(type_tabs)
+	var by_kind := {}
+	for id in d:
+		var k := CardView.kind(CardDB.get_card(id))
+		by_kind[k] = int(by_kind.get(k, 0)) + int(d[id])
+	for ti in TYPES.size():
+		var t: int = ti
+		var nm: String = I18n.t("All") if ti == 0 else I18n.t(DraftScreen.KIND_NAMES[TYPES[ti].to_lower()])
+		var n: int = DeckTools.count(d) if ti == 0 else int(by_kind.get(TYPES[ti].to_lower(), 0))
+		var b := UIKit.button("%s %d" % [nm, n], func():
+			f_type = t
+			if not filter_opts.is_empty():
+				filter_opts[0].select(t)
+			_filters_changed(), 0)
+		b.name = "Tab_%d" % ti
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", UIKit.FS_MIN)
+		b.clip_text = true
+		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		b.tooltip_text = "%s %d" % [nm, n]
+		UIKit.set_selected(b, ti == f_type)
+		type_tabs.add_child(b)
+
+
 func _refresh() -> void:
 	_refresh_now.call_deferred()
 
@@ -772,9 +806,16 @@ func _refresh_now() -> void:
 	var dids := d.keys()
 	dids.sort_custom(func(a, b): return _sort_key(CardDB.get_card(a)) < _sort_key(CardDB.get_card(b)))
 	var row_ids := dids.filter(func(x): return not CardDB.is_basic_land(x))
+	# the type tab narrows the deck list and the curve too
+	if f_type > 0:
+		row_ids = row_ids.filter(func(x): return CardView.kind(CardDB.get_card(x)) == TYPES[f_type].to_lower())
 	for id in row_ids:
 		deck_list.add_child(_deck_row(id, int(d[id]), row_ids))
-	if row_ids.is_empty():
+	if row_ids.is_empty() and f_type > 0 and not d.is_empty():
+		var none := UIKit.label(I18n.t("None of this type."), UIKit.FS_SECONDARY, UIKit.DIM, true)
+		none.name = "EmptyHint"
+		deck_list.add_child(none)
+	elif row_ids.is_empty():
 		var empty := UIKit.label(I18n.t("This deck is empty. Tap + on a card to add it, or tap the card to read it first. Auto build in the Deck menu makes a deck for you."), UIKit.FS_SECONDARY, UIKit.DIM, true)
 		empty.name = "EmptyHint"
 		deck_list.add_child(empty)
@@ -782,7 +823,14 @@ func _refresh_now() -> void:
 		land_pips[f].count = int(d.get(Factions.land_id(f), 0))
 		land_pips[f].queue_redraw()
 	count_label.text = I18n.t("%d cards · %d lands") % [DeckTools.count(d), DeckTools.land_count(d)]
-	curve.set_deck(d)
+	var cd := d
+	if f_type > 0:
+		cd = {}
+		for id in d:
+			if CardView.kind(CardDB.get_card(id)) == TYPES[f_type].to_lower():
+				cd[id] = d[id]
+	curve.set_deck(cd)
+	_fill_type_tabs(d)
 	var problem := DeckTools.validate(d, owned, _copy_limit())
 	var hint := ""
 	if not compact:

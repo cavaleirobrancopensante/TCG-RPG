@@ -26,7 +26,7 @@ var list_btn: Button
 var list_panel: PanelContainer   # the faith tabs, Auto, volume and the pieces (behind ☰)
 var list_box: VBoxContainer
 var auto_btn: CheckButton
-var vol: HSlider
+var vol: HBoxContainer
 var shown_faction := "sanctum"
 var _sigil_faction := "sanctum"
 var _faith := ""                 # the hero's faith while a game is under way, "" in the menus
@@ -271,13 +271,7 @@ func _build_picker() -> void:
 	var vl := UIKit.label("Volume", UIKit.FS_MIN, UIKit.DIM)
 	vl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	ctl.add_child(vl)
-	vol = HSlider.new()
-	vol.min_value = 0
-	vol.max_value = 1
-	vol.step = 0.05
-	vol.custom_minimum_size = Vector2(110, UIKit.TARGET)
-	vol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vol.value_changed.connect(func(x): Music.set_volume(x))
+	vol = UIKit.volume_stepper()
 	ctl.add_child(vol)
 	_list_scroll = ScrollContainer.new()
 	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -381,7 +375,7 @@ func _fill_list() -> void:
 	if list_box == null:
 		return
 	auto_btn.set_pressed_no_signal(Music.auto)
-	vol.set_value_no_signal(Music.volume)
+	(vol.get_meta("refresh") as Callable).call()
 	for c in list_box.get_children():
 		list_box.remove_child(c)
 		c.queue_free()

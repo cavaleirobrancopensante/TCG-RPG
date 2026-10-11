@@ -3477,6 +3477,10 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "Tab_%d",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
    "key": "Played in the next match",
    "note": "scripts/ui/deck_builder.gd"
   },
@@ -3494,6 +3498,10 @@
   },
   {
    "key": "Showing %d of the %d different cards you own",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "None of this type.",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3602,10 +3610,6 @@
   },
   {
    "key": "You won't see which card it is until it lands in your picks.",
-   "note": "scripts/ui/draft_screen.gd"
-  },
-  {
-   "key": "None of this type.",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
@@ -4462,6 +4466,18 @@
   },
   {
    "key": "This cannot be undone.",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "Value",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "Down",
+   "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "Up",
    "note": "scripts/ui/ui_kit.gd"
   },
   {
