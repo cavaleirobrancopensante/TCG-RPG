@@ -214,6 +214,23 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## The Church year, and words of the faiths (1.26)
+
+- The year is 2500 A.D. and the one calendar is the Church's: the Roman calendar of 1962.
+  Under the sun and moon dial you see the weekday, the date and the day's feast in its
+  liturgical colour (Sundays, seasons, Easter and the moveable feasts reckoned by the
+  computus). The other faiths keep their own feasts around the same calendar (Carnival, the
+  solstice fires, the Panathenaea, the Foundry Charter day, the Pact's black nights, when more
+  of its people walk the roads).
+- Feast errands: before a feast, a city asks you to fetch what the feast needs (wine,
+  beeswax candles, a lamb, incense, oil, firewood) from another place. On the way back
+  thieves come for the goods. Deliver in time for the full reward; late, for less.
+- On first class feasts the Church's inns give the night's bed free.
+- New flavour text: the Church quotes the Fathers, Doctors and saints and the Douay-Rheims;
+  the Stoa quotes Marcus Aurelius, Seneca and Epictetus; the Revel, Epicurus, Horace and
+  Machiavelli; the Technocracy, Bacon and Taylor and its own guild maxims; the Black Pact and
+  the Old Ways speak their errors in their own (plainly foolish) words.
+
 ## Third tribes, auras and equipment (1.25)
 
 - Each faith gets a smaller third tribe with a few synergies (5 new cards each, plus older

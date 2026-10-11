@@ -62,7 +62,10 @@ var clock := 8.0                  # hour of the day; it runs only while you trav
 var explored := PackedByteArray() # fog of war: one byte per map cell, 1 = seen
 var _regen := 0.0
 var last_region := ""             # the faith of the lands you are in (for tolls)
-var errand: Dictionary = {}       # a favour asked by a friend on the road: {giver, need, done, reward}
+## The one errand in hand: a favour asked by a friend on the road ({giver, need, done, reward}),
+## or a feast errand from a city ({kind: "feast", city, feast, feast_day, goods, source, state, ...}).
+var errand: Dictionary = {}
+var feast_log: Array = []         # feast errands delivered, as "city@day", so none is offered twice
 var slot := 1                     # the slot this run auto-saves into
 var play_time := 0.0              # seconds played in this run
 var _session_start := 0
@@ -119,6 +122,7 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Diction
 	rested = false
 	last_region = ""
 	errand = {}
+	feast_log = []
 	# the boosters a hero sets out with depend on the difficulty
 	var packs: Array = Hero.START_PACKS.get(difficulty, [2, 1])
 	pending_boosters = int(packs[0]) + int(packs[1])
@@ -228,7 +232,7 @@ func save_game(n: int = 0) -> void:
 		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters,
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
-		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand,
+		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand, "feast_log": feast_log,
 		"attrs": attrs, "difficulty": difficulty, "look": Hero.look_to_save(look), "life": life, "clock": clock,
 		"explored": Marshalls.raw_to_base64(explored),
 		"meta": _meta(),
@@ -321,6 +325,10 @@ func load_game(n: int = 0) -> bool:
 	rested = bool(data.get("rested", false))
 	last_region = String(data.get("last_region", ""))
 	errand = data.get("errand", {})
+	if errand.get("kind", "") == "feast":
+		for k in ["feast_day", "reward", "lost"]:
+			errand[k] = int(errand.get(k, 0))
+	feast_log = Array(data.get("feast_log", []))
 	attrs = data.get("attrs", {})
 	if attrs.is_empty():      # saves from before the hero sheet: a sheet that suits the faith
 		var r := RandomNumberGenerator.new()
@@ -457,12 +465,117 @@ func make_camp() -> float:
 
 
 func rest_at_inn() -> bool:
-	if not spend_gold(Economy.inn_price()):
+	if not spend_gold(inn_cost()):
 		return false
 	life = max_life()
 	day += 1
 	clock = 7.0
 	return true
+
+
+## A bed at the inn of a city (the current one by default): on a I class feast the Church's
+## inns give it for charity.
+func inn_cost(city_id: String = "") -> int:
+	var cid := city_id if city_id != "" else current_city
+	if LiturgicalCalendar.free_inn(String(city(cid).get("faction", "")), day):
+		return 0
+	return Economy.inn_price()
+
+
+# ------------------------------------------------------------------ feast errands
+## Before a feast of a city's faith (for the Church, a feast of the I or II class) the city asks
+## for something for it, fetched from another city. Picked up, the goods ride in the pack; on the
+## way back a thief comes for them (see main.gd). Delivered by the feast day: the full reward,
+## and sometimes a card of the city's faith; late: half the gold. A week after the feast the
+## errand lapses.
+
+const FEAST_HORIZON := 14         # a city asks this many days ahead at most
+const FEAST_MIN_AHEAD := 2        # and no later than two days before
+const FEAST_LATE_DAYS := 7
+const FEAST_CARD_CHANCE := 0.35
+
+
+func is_feast_errand() -> bool:
+	return errand.get("kind", "") == "feast"
+
+
+## What a city asks for its next feast, or {} (none near, already done, or nothing to fetch).
+func feast_errand_offer(city_id: String) -> Dictionary:
+	var c := city(city_id)
+	if c.is_empty():
+		return {}
+	var faith := String(c.get("faction", ""))
+	var f := LiturgicalCalendar.next_feast(faith, day, FEAST_HORIZON, FEAST_MIN_AHEAD)
+	if f.is_empty() or feast_log.has("%s@%d" % [city_id, int(f["day"])]):
+		return {}
+	var choices: Array = LiturgicalCalendar.data().get("errand_goods", {}).get(faith, []).filter(
+		func(g): return String(g.get("source", "")) != city_id and not city(String(g.get("source", ""))).is_empty())
+	if choices.is_empty():
+		return {}
+	var g: Dictionary = choices[absi(hash(city_id + ":" + str(int(f["day"])))) % choices.size()]
+	var src := city(String(g["source"]))
+	var dist := Vector2(c["x"], c["y"]).distance_to(Vector2(src["x"], src["y"]))
+	return {
+		"kind": "feast", "city": city_id, "faith": faith, "feast": String(f["name"]), "feast_short": String(f.get("short", "")),
+		"feast_day": int(f["day"]), "goods": String(g["goods"]), "source": String(g["source"]),
+		"reward": Economy.income(40 + int(dist / 80.0)), "state": "fetch", "ambushed": false, "lost": 0,
+	}
+
+
+func accept_feast_errand(offer: Dictionary) -> bool:
+	if not errand.is_empty() or offer.is_empty():
+		return false
+	errand = offer.duplicate(true)
+	return true
+
+
+## Entering the source city with the errand in hand: the goods go into the pack.
+func feast_pickup(city_id: String) -> bool:
+	if not is_feast_errand() or errand.get("state", "") != "fetch" or errand.get("source", "") != city_id:
+		return false
+	errand["state"] = "carry"
+	errand["ambushed"] = false
+	return true
+
+
+## The thief has the goods: back to the source for more, if there is time.
+func feast_goods_lost() -> void:
+	if not is_feast_errand() or errand.get("state", "") != "carry":
+		return
+	errand["state"] = "fetch"
+	errand["ambushed"] = false
+	errand["lost"] = int(errand.get("lost", 0)) + 1
+
+
+## The full reward, or half of it after the feast day.
+func feast_reward(on_time: bool) -> int:
+	var r := int(errand.get("reward", 40))
+	return r if on_time else maxi(1, r / 2)
+
+
+## Entering the city that asked, with the goods: {gold, card, on_time}, or {}.
+func feast_deliver(city_id: String) -> Dictionary:
+	if not is_feast_errand() or errand.get("state", "") != "carry" or errand.get("city", "") != city_id:
+		return {}
+	var on_time := day <= int(errand.get("feast_day", 0))
+	var g := feast_reward(on_time)
+	add_gold(g)
+	var cid := ""
+	if on_time and rng.randf() < FEAST_CARD_CHANCE:
+		var rar := Booster.weighted_rarity(rng, {"common": 50, "uncommon": 40, "rare": 10})
+		cid = CardDB.random_of_rarity(rar, rng, [String(errand.get("faith", "machine"))])
+		add_card(cid)
+	feast_log.append("%s@%d" % [city_id, int(errand.get("feast_day", 0))])
+	errand = {}
+	return {"gold": g, "card": cid, "on_time": on_time}
+
+
+## A week after the feast nobody waits for the goods any more. True when it lapses now.
+func feast_errand_lapsed() -> bool:
+	if is_feast_errand() and day > int(errand.get("feast_day", 0)) + FEAST_LATE_DAYS:
+		errand = {}
+		return true
+	return false
 
 
 # ------------------------------------------------------------------ the hero sheet

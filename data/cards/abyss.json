@@ -20,7 +20,7 @@
       }
     ],
     "text": "When this dies, the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "Even his last breath was promised to someone else.",
+    "flavor": "\"Your soul is only a coin. Spend it while it still buys something.\" (a Pact recruiting sermon)",
     "art": "res://art/cards/abyss_c_001.webp"
   },
   {
@@ -64,7 +64,7 @@
       }
     ],
     "text": "When this enters, you lose 1 life.",
-    "flavor": "The oath was signed in a fingertip of blood. The rest came due later.",
+    "flavor": "\"Read the contract? Only the weak read. The strong sign.\" (a Pact notary)",
     "art": "res://art/cards/abyss_c_003.webp"
   },
   {
@@ -191,7 +191,7 @@
       }
     ],
     "text": "Sacrifice another creature: this gets +2/+2 until end of turn.",
-    "flavor": "It is never full. It is only, for a moment, less empty.",
+    "flavor": "\"Enough is a word invented by men who already have too much.\" (a Pact preacher)",
     "art": "res://art/cards/abyss_c_008.webp"
   },
   {
@@ -219,7 +219,7 @@
       }
     ],
     "text": "When this enters, target enemy creature gets -2/-2 until end of turn.",
-    "flavor": "He scatters ash on the furrows and calls it a blessing.",
+    "flavor": "\"A ruined harvest is still a harvest, if you are the one selling the bread.\" (the Blight-Sower's creed)",
     "art": "res://art/cards/abyss_c_009.webp"
   },
   {
@@ -346,7 +346,7 @@
       }
     ],
     "text": "Destroy target enemy creature with power 2 or less.",
-    "flavor": "The flesh remembers that it is only borrowed.",
+    "flavor": "\"Life is short. That is why you must take other people's.\" (a Pact preacher)",
     "art": "res://art/cards/abyss_c_014.webp"
   },
   {
@@ -374,7 +374,7 @@
       }
     ],
     "text": "Draw two cards. You lose 2 life.",
-    "flavor": "Two secrets for two drops. The scribe never mentions the interest.",
+    "flavor": "\"Sin is only a debt, and debts are for the poor.\" (the Pact catechism)",
     "art": "res://art/cards/abyss_c_015.webp"
   },
   {
@@ -397,7 +397,7 @@
       }
     ],
     "text": "The enemy player loses 2 life and you gain 2 life.",
-    "flavor": "Their warmth drains out like wine from a cracked chalice.",
+    "flavor": "\"Charity is theft from yourself. Take, and call it balance.\" (the Black Synod)",
     "art": "res://art/cards/abyss_c_016.webp"
   },
   {
@@ -420,7 +420,7 @@
       }
     ],
     "text": "The enemy discards two cards at random.",
-    "flavor": "A single word in the night, and every plan they had unravels.",
+    "flavor": "\"A lie told at the right hour is worth a hundred truths told too late.\" (Malgrith, Lich of the Black Ledger)",
     "art": "res://art/cards/abyss_c_017.webp"
   },
   {
@@ -474,7 +474,7 @@
       }
     ],
     "text": "Sacrifice a creature: the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "Its stone is never dry, and its keepers never ask whose turn is next.",
+    "flavor": "\"Sacrifice is a holy thing, provided it is always someone else's.\" (the Pact catechism)",
     "art": "res://art/cards/abyss_c_019.webp"
   },
   {
@@ -508,7 +508,7 @@
       }
     ],
     "text": "Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.",
-    "flavor": "The broken oath swings in the wind, and every man below remembers his own.",
+    "flavor": "\"Swear by everything. Then nothing can hold you to anything.\" (a Pact notary)",
     "art": "res://art/cards/abyss_c_020.webp"
   },
   {
@@ -562,7 +562,7 @@
       }
     ],
     "text": "Whenever another Demon enters under your control, target enemy creature gets -1/-1 until end of turn.",
-    "flavor": "It laughs whenever a greater fiend arrives, because then someone else will suffer.",
+    "flavor": "\"Loyalty is only waiting for a better master.\" (Cackling Imp)",
     "art": "res://art/cards/abyss_c_022.webp"
   },
   {
@@ -677,7 +677,7 @@
       }
     ],
     "text": "Draw a card for each Demon you control. You lose 1 life for each Demon you control.",
-    "flavor": "Every fiend brings a secret, and every secret is billed to his master.",
+    "flavor": "\"The Pact asks only a tenth of you. Then a tenth of what remains. Then a tenth of that.\" (a Pact tithe-collector)",
     "art": "res://art/cards/abyss_c_026.webp"
   },
   {
@@ -784,7 +784,7 @@
       }
     ],
     "text": "Sacrifice another creature: draw a card and you lose 1 life.",
-    "flavor": "He reads the future in knucklebones, and he is never short of knucklebones.",
+    "flavor": "\"Conscience is a fever of the young. Bleed it out early.\" (Bone-Priest of the Pact)",
     "art": "res://art/cards/abyss_u_001.webp"
   },
   {
@@ -833,7 +833,7 @@
       "dread"
     ],
     "text": "Deathtouch, dread.",
-    "flavor": "The Pact pays its assassins in years taken from their victims.",
+    "flavor": "\"Murder is such a vulgar word. We say early settlement.\" (a Pact paymaster)",
     "art": "res://art/cards/abyss_u_003.webp"
   },
   {
@@ -860,7 +860,7 @@
       }
     ],
     "text": "Dread. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "It serves well, and it is always, always hungry.",
+    "flavor": "\"Gratitude is a tax, and the Pact is exempt.\" (the Pact catechism)",
     "art": "res://art/cards/abyss_u_004.webp"
   },
   {
@@ -890,7 +890,7 @@
       }
     ],
     "text": "When this enters, the enemy discards a card at random. When this dies, the enemy discards a card at random.",
-    "flavor": "He never lies. He simply lets you hear what you wanted to hear.",
+    "flavor": "\"Repent tomorrow. Tomorrow is always such a convenient day.\" (Tempter of Broken Vows)",
     "art": "res://art/cards/abyss_u_005.webp"
   },
   {
@@ -979,7 +979,7 @@
       }
     ],
     "text": "Destroy target enemy creature. You lose 2 life.",
-    "flavor": "Every unmaking costs the maker a little of his own soul.",
+    "flavor": "\"Mercy is a debt owed to the weak, and the Pact never pays its debts.\" (the Black Synod)",
     "art": "res://art/cards/abyss_u_008.webp",
     "speed": "instant"
   },
@@ -1058,7 +1058,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "It is never empty, and no one asks what it is filled with.",
+    "flavor": "\"Drink. Guilt is only a thirst you have not yet satisfied.\" (a Pact cupbearer)",
     "art": "res://art/cards/abyss_u_011.webp"
   },
   {
@@ -1177,7 +1177,7 @@
       }
     ],
     "text": "Your Demon creature cards cost 1 less to play.",
-    "flavor": "He holds the gate open, and something larger is always waiting behind him.",
+    "flavor": "\"Every man serves someone. Serve the one with the bigger fire.\" (Herald of the Burning Gate)",
     "art": "res://art/cards/abyss_u_015.webp"
   },
   {
@@ -1352,7 +1352,7 @@
       }
     ],
     "text": "As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
-    "flavor": "He swore to guard the weak. Then a voice offered to make him strong.",
+    "flavor": "\"Honour was a fine horse. I sold it and bought ten mercenaries.\" (Oathbreaker Knight)",
     "art": "res://art/cards/abyss_r_001.webp"
   },
   {
@@ -1406,7 +1406,7 @@
       }
     ],
     "text": "Dread. When this enters, you lose 3 life.",
-    "flavor": "He arrives on a tide of smoke, and presents his bill at the door.",
+    "flavor": "\"Better feared than loved, and better paid than feared.\" (Marquis of the Wailing Pit)",
     "art": "res://art/cards/abyss_r_003.webp"
   },
   {
@@ -1433,7 +1433,7 @@
       }
     ],
     "text": "Deathtouch. At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
-    "flavor": "It traded its heart for a crown, and found the crown was hollow too.",
+    "flavor": "\"Why fear the judgement? I have simply arranged never to arrive at it.\" (Hollow-Crowned Lich)",
     "art": "res://art/cards/abyss_r_004.webp"
   },
   {
@@ -1535,7 +1535,7 @@
       }
     ],
     "text": "Destroy all creatures.",
-    "flavor": "By dawn the field was quiet, and the Pact counted it a victory.",
+    "flavor": "\"When no one is left to accuse you, you are innocent.\" (the Black Synod, Canon of Silence)",
     "art": "res://art/cards/abyss_r_007.webp"
   },
   {
@@ -1563,7 +1563,7 @@
       }
     ],
     "text": "The enemy discards three cards at random. You lose 3 life.",
-    "flavor": "First the names of friends go, then the prayers, then the reason for prayer.",
+    "flavor": "\"An empty mind is a free mind. An empty soul is freer still.\" (the Pact catechism)",
     "art": "res://art/cards/abyss_r_008.webp"
   },
   {
@@ -1597,7 +1597,7 @@
       }
     ],
     "text": "Tap: draw a card and you lose 1 life.",
-    "flavor": "Every page is a soul, and every soul is overdue.",
+    "flavor": "\"Every soul has its price. The trick is to buy before he learns it.\" (Malgrith, Lich of the Black Ledger)",
     "art": "res://art/cards/abyss_r_009.webp"
   },
   {
@@ -1658,7 +1658,7 @@
       }
     ],
     "text": "Other Demons you control get +1/+1. When this enters, you lose 1 life for each Demon you control.",
-    "flavor": "He drills the legions of the pit, and every recruit is paid for in someone's blood.",
+    "flavor": "\"Never ask a recruit why he joined. Ask him what he still owes.\" (Brimstone Marshal)",
     "art": "res://art/cards/abyss_r_011.webp"
   },
   {
@@ -1731,7 +1731,7 @@
       }
     ],
     "text": "Dread. When this enters, destroy target enemy creature and you lose 3 life.",
-    "flavor": "Where he walks, the ground forgets it was ever green.",
+    "flavor": "\"I did not fall. I merely went into business for myself.\" (Belzareth, Prince of Cinders)",
     "art": "res://art/cards/abyss_m_001.webp"
   },
   {
@@ -1767,7 +1767,7 @@
       }
     ],
     "text": "When this enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
-    "flavor": "He has outlived every debtor, and he collects from their sons.",
+    "flavor": "\"Death is only a creditor, and I have never paid a creditor in my life.\" (Malgrith, Lich of the Black Ledger)",
     "art": "res://art/cards/abyss_m_002.webp"
   },
   {
@@ -1798,7 +1798,7 @@
       }
     ],
     "text": "Enemy creatures get -1/-1. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "Sign, and your enemies wither. Sign, and so do you.",
+    "flavor": "\"Read nothing. Sign everything. Regret is a clause for later.\" (the Black Contract, preamble)",
     "art": "res://art/cards/abyss_m_003.webp"
   },
   {
@@ -1839,7 +1839,7 @@
       }
     ],
     "text": "Dread. Other Demons you control have deathtouch (any damage they deal to a creature destroys it). Whenever another Demon enters under your control, the enemy discards a card at random. When this enters, you lose 3 life.",
-    "flavor": "He keeps no court of nobles, only of debtors, and none has ever left it.",
+    "flavor": "\"In my court there is perfect freedom: every man is free to pay.\" (Azgaroth, Duke of the Ninth Pit)",
     "art": "res://art/cards/abyss_m_004.webp"
   }
 ]

@@ -14,7 +14,7 @@
     "keywords": [],
     "effects": [],
     "text": "No abilities.",
-    "flavor": "He starts every fight with a toast and ends it with a stool.",
+    "flavor": "Ira furor brevis est: anger is a brief madness. (Horace, Epistles 1.2)",
     "art": "res://art/cards/revel_c_001.webp"
   },
   {
@@ -35,7 +35,7 @@
     ],
     "effects": [],
     "text": "Haste (this can attack the turn it comes into play).",
-    "flavor": "He dances straight from the wine-press into the battle line, hooves still purple.",
+    "flavor": "Nunc est bibendum: now is the time for drinking, now the time to beat the earth with unfettered foot. (Horace, Odes 1.37)",
     "art": "res://art/cards/revel_c_002.webp"
   },
   {
@@ -82,7 +82,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
-    "flavor": "He has not stood up since the spring, and his wit has only grown sharper.",
+    "flavor": "Men ought either to be well treated or crushed. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_c_004.webp"
   },
   {
@@ -107,7 +107,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
-    "flavor": "There is always work to be done, and always a shady bench beside it.",
+    "flavor": "A Book of Verses underneath the Bough, a Jug of Wine, a Loaf of Bread, and Thou. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_c_005.webp"
   },
   {
@@ -135,7 +135,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
-    "flavor": "Each day he wakes a little later and a little heavier.",
+    "flavor": "When you want a laugh, come and see me, fat and sleek and well cared for, a hog from Epicurus' herd. (Horace, Epistles 1.4)",
     "art": "res://art/cards/revel_c_006.webp"
   },
   {
@@ -186,7 +186,7 @@
       }
     ],
     "text": "When this enters, you lose 2 life.",
-    "flavor": "Seven courses, nine vintages, and still he rises hungry for more.",
+    "flavor": "Nothing is enough for the man to whom enough is too little. (Epicurus, Vatican Sayings)",
     "art": "res://art/cards/revel_c_008.webp"
   },
   {
@@ -292,7 +292,7 @@
       }
     ],
     "text": "When this enters, creatures you control get +1/+0 until end of turn.",
-    "flavor": "They lead him through the streets in flowers, and the crowd follows him into battle.",
+    "flavor": "Let us crown ourselves with roses, before they be withered: let no meadow escape our riot. (Wisdom 2:8)",
     "art": "res://art/cards/revel_c_012.webp"
   },
   {
@@ -315,7 +315,7 @@
       }
     ],
     "text": "Deal 2 damage to any enemy creature or the enemy player.",
-    "flavor": "\"To your health!\" he cried, and lit the brandy.",
+    "flavor": "Come, fill the Cup, and in the fire of Spring / Your Winter-garment of Repentance fling. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_c_013.webp"
   },
   {
@@ -491,7 +491,7 @@
       }
     ],
     "text": "Tap, pay 1 life: deal 1 damage to the enemy player.",
-    "flavor": "It warms the dancers, lights the masks, and singes everyone who stands too close.",
+    "flavor": "The things which produce certain pleasures entail annoyances many times greater than the pleasures themselves. (Epicurus, Principal Doctrines)",
     "art": "res://art/cards/revel_c_019.webp"
   },
   {
@@ -548,7 +548,7 @@
     ],
     "effects": [],
     "text": "Haste (this can attack the turn it comes into play).",
-    "flavor": "He sings of battles he has never seen, on his way to one.",
+    "flavor": "Carpe diem: seize the day, trusting as little as possible in tomorrow. (Horace, Odes 1.11)",
     "art": "res://art/cards/revel_c_021.webp"
   },
   {
@@ -621,7 +621,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
-    "flavor": "He has never held anything heavier than a pomander, and he means to keep it so.",
+    "flavor": "Odi profanum vulgus et arceo: I hate the uninitiated crowd and keep it far from me. (Horace, Odes 3.1)",
     "art": "res://art/cards/revel_c_024.webp"
   },
   {
@@ -651,7 +651,7 @@
       }
     ],
     "text": "First strike (this deals combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
-    "flavor": "He accepts every challenge, and names a date some time after the next feast.",
+    "flavor": "A wise lord cannot, nor ought he to, keep faith when such observance may be turned against him. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_c_025.webp"
   },
   {
@@ -703,7 +703,7 @@
       }
     ],
     "text": "Deal 1 damage to the enemy player for each Noble you control.",
-    "flavor": "Each lord rose in turn to drink to the enemy's ruin, and the enemy felt every cup.",
+    "flavor": "It is much safer to be feared than loved, when, of the two, either must be dispensed with. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_c_027.webp"
   },
   {
@@ -756,7 +756,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
-    "flavor": "He drinks to the battle, to the victory, to the fallen, and on wet days to the weather.",
+    "flavor": "Now drive away your cares with wine; tomorrow we sail the vast sea again. (Horace, Odes 1.7)",
     "art": "res://art/cards/revel_c_029.webp"
   },
   {
@@ -838,7 +838,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player.",
-    "flavor": "His jokes are cruel, his aim is crueller, and he delivers both lying down.",
+    "flavor": "Mix a little folly with your plans: it is sweet to play the fool in season. (Horace, Odes 4.12)",
     "art": "res://art/cards/revel_u_003.webp"
   },
   {
@@ -866,7 +866,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+0 counter on target creature you control.",
-    "flavor": "He never leaves his couch, yet no guest ever leaves his table hungry.",
+    "flavor": "We call pleasure the beginning and end of the blessed life. (Epicurus, Letter to Menoeceus)",
     "art": "res://art/cards/revel_u_004.webp"
   },
   {
@@ -958,7 +958,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put two +1/+1 counters on this and you lose 2 life.",
-    "flavor": "Every evening he swears it will be his last feast, and every evening he is right about nothing.",
+    "flavor": "It is not an unbroken succession of drinking-bouts and of revelry... which produce a pleasant life. (Epicurus, Letter to Menoeceus)",
     "art": "res://art/cards/revel_u_007.webp"
   },
   {
@@ -1051,7 +1051,7 @@
       }
     ],
     "text": "Deal 2 damage to each enemy creature. You lose 2 life.",
-    "flavor": "The dancers spin closer to the bonfire with every verse.",
+    "flavor": "Death is nothing to us. (Epicurus, Principal Doctrines)",
     "art": "res://art/cards/revel_u_010.webp"
   },
   {
@@ -1085,7 +1085,7 @@
       }
     ],
     "text": "Rummage twice (each time, draw a card, then discard a card). Then deal 2 damage to the enemy player.",
-    "flavor": "By the end of the night the cellar was empty, and so, curiously, were the guests.",
+    "flavor": "Drink! for you know not whence you came, nor why: / Drink! for you know not why you go, nor where. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_u_011.webp"
   },
   {
@@ -1108,7 +1108,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, rummage (draw a card, then discard a card).",
-    "flavor": "Pleasure that never ends is its own slow wound.",
+    "flavor": "The Wine of Life keeps oozing drop by drop, / The Leaves of Life keep falling one by one. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_u_012.webp"
   },
   {
@@ -1133,7 +1133,7 @@
       }
     ],
     "text": "Carouse (if you already played another non-land card this turn): creatures you control have first strike.",
-    "flavor": "Behind a painted face, the clumsiest guest moves like a fencing master.",
+    "flavor": "Every one sees what you appear to be, few really know what you are. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_u_013.webp"
   },
   {
@@ -1220,7 +1220,7 @@
       }
     ],
     "text": "This gets +1/+1 for each other Noble you control.",
-    "flavor": "He knows every scandal at court, and is the subject of most of them.",
+    "flavor": "Men judge generally more by the eye than by the hand. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_u_016.webp"
   },
   {
@@ -1247,7 +1247,7 @@
       }
     ],
     "text": "Whenever another Performer enters under your control, deal 1 damage to the enemy player.",
-    "flavor": "For the twelve nights of the feast the fool wears the paper crown, and the hall obeys him.",
+    "flavor": "In all their rule there was but this one clause to be observed: Do what thou wilt. (Rabelais, Gargantua)",
     "art": "res://art/cards/revel_u_017.webp"
   },
   {
@@ -1301,7 +1301,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on target Satyr you control.",
-    "flavor": "\"In my day we ran with the vintage,\" he tells the young ones, and does not get up.",
+    "flavor": "Eheu fugaces, Postume, Postume: alas, Postumus, Postumus, the fleeting years slip by. (Horace, Odes 2.14)",
     "art": "res://art/cards/revel_u_019.webp"
   },
   {
@@ -1439,7 +1439,7 @@
       }
     ],
     "text": "Haste. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "His banquet has lasted eleven years. His liver has filed several complaints.",
+    "flavor": "Let us eat and drink; for to morrow we shall die. (Isaias 22:13)",
     "art": "res://art/cards/revel_r_004.webp"
   },
   {
@@ -1496,7 +1496,7 @@
       }
     ],
     "text": "Deal 5 damage to any enemy creature or the enemy player.",
-    "flavor": "The fireworks were the finale. Nobody had planned for the encore.",
+    "flavor": "Pulvis et umbra sumus: we are dust and shadow. (Horace, Odes 4.7)",
     "art": "res://art/cards/revel_r_006.webp"
   },
   {
@@ -1527,7 +1527,7 @@
       }
     ],
     "text": "Creatures you control get +3/+0 until end of turn. You lose 3 life.",
-    "flavor": "At dawn they drew the curtains and called it midnight again.",
+    "flavor": "Suns may set and rise again; for us, when once our brief light has set, there is one endless night to be slept. (Catullus, Carmina 5)",
     "art": "res://art/cards/revel_r_007.webp"
   },
   {
@@ -1586,7 +1586,7 @@
       }
     ],
     "text": "Creatures you control have haste.",
-    "flavor": "Under the paper lanterns no one waits for anything.",
+    "flavor": "Unborn To-morrow, and dead Yesterday, / Why fret about them if To-day be sweet! (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_r_009.webp"
   },
   {
@@ -1645,7 +1645,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on each Noble you control.",
-    "flavor": "He gives his vote to whichever prince serves the longest dinner.",
+    "flavor": "Men are ungrateful, fickle, false, cowardly, covetous. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_r_011.webp"
   },
   {
@@ -1712,7 +1712,7 @@
       }
     ],
     "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.",
-    "flavor": "He raises a cup to every guest; the guests who drink do not rise again.",
+    "flavor": "Dust into Dust, and under Dust to lie, / Sans Wine, sans Song, sans Singer, and sans End! (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_m_001.webp"
   },
   {

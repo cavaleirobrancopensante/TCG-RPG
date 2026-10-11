@@ -4,13 +4,21 @@ extends Control
 ## an old clock. A wheel turns behind it once a day, carrying the sun on one side and the
 ## moon on the other, so the sun climbs over the hills at dawn, rides high at noon and sets
 ## at dusk, and the moon follows it across the night sky. The sky's colour follows the hour.
+## Under the window a plate carries the date of the Church's calendar ("Tuesday, 2 February
+## 2500"), the day's feast in its liturgical colour (on a gilt ribbon for the I class), and, in
+## the lands of another faith keeping a feast of its own today, a third line naming it.
 
-const W := 190.0
-const H := 118.0
+const W := 300.0                 # the whole dial (the plate is wider than the window)
+const WIN := 190.0               # the window onto the sky
+const WIN_H := 88.0              # from the top to the horizon line
+const H := 150.0                 # the usual height (two lines on the plate); see plate_height()
+const PAD := 6.0
 
 var hour := 8.0
 var day := 0
+var region := ""                 # the faith of the lands the hero stands in
 var _stars: Array = []
+var _lines: Array = []           # [{text, size, font, color, kind}]
 
 
 func _init() -> void:
@@ -26,11 +34,78 @@ func _init() -> void:
 
 
 func set_time(h: float, d: int) -> void:
-	if absf(h - hour) < 0.01 and d == day:
+	if absf(h - hour) < 0.01 and d == day and not _lines.is_empty():
 		return
+	var new_day := d != day or _lines.is_empty()
 	hour = h
 	day = d
+	if new_day:
+		_build_lines()
 	queue_redraw()
+
+
+## The faith of the lands underfoot (the third line names its feast, if it keeps one today).
+func set_region(faith: String) -> void:
+	if faith == region:
+		return
+	region = faith
+	_build_lines()
+	queue_redraw()
+
+
+## What the plate says today, fitted to its width (smaller type, then two lines, if need be).
+func _build_lines() -> void:
+	_lines = []
+	var room := W - 2.0 * PAD - 8.0
+	var black := Tapestry.font("black")
+	var book := Tapestry.font("book")
+	var date := LiturgicalCalendar.date_text(day)
+	_lines.append({"text": date, "size": _fit(black, date, room, 16, 11), "font": black, "kind": "date"})
+	var c := LiturgicalCalendar.of_day(day)
+	var feast := LiturgicalCalendar.dial_line(c)
+	var fs := _fit(book, feast, room - 16.0, 15, 12)
+	var parts := [feast]
+	if book.get_string_size(feast, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > room - 16.0:
+		parts = _split(feast)
+		fs = maxi(_fit(book, parts[0], room - 16.0, 15, 11), 11)
+		fs = mini(fs, _fit(book, parts[1], room - 16.0, 15, 11))
+	for i in parts.size():
+		_lines.append({"text": parts[i], "size": fs, "font": book, "kind": "feast", "swatch": i == 0,
+			"color": c["color"], "gilt": c["cls"] == "I"})
+	if region != "" and region != "sanctum":
+		var theirs := LiturgicalCalendar.faith_feasts(region, day)
+		if not theirs.is_empty():
+			var t := I18n.t("%s: %s") % [Factions.info(region)["short"], I18n.t(theirs[0])]
+			_lines.append({"text": t, "size": _fit(book, t, room, 14, 11), "font": book, "kind": "faith"})
+	var h := plate_height()
+	custom_minimum_size = Vector2(W, WIN_H + h)
+	size = custom_minimum_size
+
+
+func plate_height() -> float:
+	var h := 14.0                 # the hour's cartouche sits on the top edge
+	for l in _lines:
+		h += float(l["size"]) + 6.0
+	return h + 6.0
+
+
+static func _fit(f: Font, text: String, room: float, big: int, small: int) -> int:
+	var s := big
+	while s > small and f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s).x > room:
+		s -= 1
+	return s
+
+
+## Two lines of about equal length, broken at a space.
+static func _split(text: String) -> Array:
+	var best := -1
+	var mid := text.length() / 2
+	for i in text.length():
+		if text[i] == " " and (best < 0 or absi(i - mid) < absi(best - mid)):
+			best = i
+	if best < 0:
+		return [text]
+	return [text.substr(0, best), text.substr(best + 1)]
 
 
 ## 0 at full night, 1 at full day, easing through dawn (5 to 7) and dusk (18 to 20).
@@ -68,8 +143,10 @@ func _sky_cols() -> Array:
 
 
 func _draw() -> void:
-	var c := Vector2(W * 0.5, H - 30.0)      # centre of the wheel, on the horizon line
-	var r := W * 0.5 - 8.0
+	if _lines.is_empty():
+		_build_lines()
+	var c := Vector2(W * 0.5, WIN_H)         # centre of the wheel, on the horizon line
+	var r := WIN * 0.5 - 8.0
 	var cols := _sky_cols()
 	var arc := PackedVector2Array()
 	var arc_cols := PackedColorArray()
@@ -127,18 +204,52 @@ func _draw() -> void:
 		var a := PI + PI * float(i) / n
 		outer.append(c + Vector2(cos(a), sin(a)) * (r + 6.0))
 	draw_polyline(outer, Tapestry.INK, 2.0, true)
-	# the plate under the window, with the day and the hour
-	var plate := Rect2(Vector2(2, c.y), Vector2(W - 4, H - c.y - 2))
+	_draw_plate(c)
+
+
+## The plate under the window: the hour on a cartouche, then the date, the feast and,
+## in another faith's lands on its feast day, that feast.
+func _draw_plate(c: Vector2) -> void:
+	var plate := Rect2(Vector2(2, c.y), Vector2(W - 4, plate_height() - 2))
 	Tapestry.ink_rect(self, plate, Tapestry.PARCHMENT_LIGHT, 2.0)
 	draw_line(plate.position + Vector2(4, 4), plate.position + Vector2(plate.size.x - 4, 4), Tapestry.GILT, 2.0)
 	var h := int(hour)
 	var m := int((hour - h) * 60.0) / 15 * 15
-	var t := I18n.t("Day %d, %02d:%02d") % [day + 1, h, m]
-	var f := Tapestry.font("black")
-	var fs := 18
-	var tw := f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	draw_string(f, Vector2(W * 0.5 - tw * 0.5, plate.position.y + plate.size.y * 0.5 + fs * 0.38), t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs,
+	var ht := "%02d:%02d" % [h, m]
+	var black := Tapestry.font("black")
+	var hw := black.get_string_size(ht, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x
+	var cart := Rect2(Vector2(W * 0.5 - hw * 0.5 - 8, c.y - 11), Vector2(hw + 16, 21))
+	Tapestry.ink_rect(self, cart, Tapestry.PARCHMENT, 1.5)
+	draw_string(black, Vector2(W * 0.5 - hw * 0.5, c.y + 5), ht, HORIZONTAL_ALIGNMENT_LEFT, -1, 15,
 		Tapestry.ULTRA_DARK if daylight(hour) < 0.5 else Tapestry.RUBRIC)
+	var y := c.y + 14.0
+	for l in _lines:
+		var f: Font = l["font"]
+		var fs: int = l["size"]
+		var text: String = l["text"]
+		var tw := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var base := y + fs * 0.92
+		match l["kind"]:
+			"date":
+				draw_string(f, Vector2(W * 0.5 - tw * 0.5, base), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Tapestry.INK)
+			"feast":
+				var sw := 14.0 if l.get("swatch", false) else 0.0
+				var x := W * 0.5 - (tw + sw) * 0.5
+				if l.get("gilt", false):
+					# a I class feast is written on a gilt ribbon
+					var band := Rect2(Vector2(x - 6, y - 1), Vector2(tw + sw + 12, fs + 6))
+					draw_rect(band, Color(Tapestry.GILT, 0.75))
+					draw_rect(band, Color(Tapestry.INK, 0.6), false, 1.0)
+				if sw > 0.0:
+					var cl := Rect2(Vector2(x, y + fs * 0.18), Vector2(8, fs * 0.8))
+					Tapestry.ink_rect(self, cl, LiturgicalCalendar.cloth(l["color"]), 1.2)
+				var col := LiturgicalCalendar.ink(l["color"])
+				if l.get("gilt", false) and l["color"] == "white":
+					col = Tapestry.INK          # gold on gold would not read: the white is in the swatch
+				draw_string(f, Vector2(x + sw, base), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+			"faith":
+				draw_string(f, Vector2(W * 0.5 - tw * 0.5, base), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, UIKit.faction_ink(region))
+		y += fs + 6.0
 
 
 func _sky_at(p: Vector2, c: Vector2, r: float, cols: Array) -> Color:

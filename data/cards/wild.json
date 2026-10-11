@@ -50,7 +50,7 @@
       }
     ],
     "text": "Tap: add G.",
-    "flavor": "He coaxes the green out of the soil the way one coaxes a shy child.",
+    "flavor": "The soil is our true mother, and the ploughman owes her an apology every spring. (Hedgerow Druid)",
     "art": "res://art/cards/wild_c_002.webp"
   },
   {
@@ -99,7 +99,7 @@
     ],
     "effects": [],
     "text": "Reach (can block creatures with flying).",
-    "flavor": "Its web hangs between the blackthorns, and the finches have learned to fly around it.",
+    "flavor": "Kill no spider, kill no fly, kill no wolf. Kill only the woodcutter, who is the true pest. (A Moot precept)",
     "art": "res://art/cards/wild_c_004.webp"
   },
   {
@@ -131,7 +131,7 @@
       }
     ],
     "text": "When this enters, create a 1/1 Sapling token.",
-    "flavor": "Every acorn he lets fall is a gift to someone two hundred years from now.",
+    "flavor": "Every acorn has more right to this valley than every child of man. (Acorn Gatherer)",
     "art": "res://art/cards/wild_c_005.webp"
   },
   {
@@ -152,7 +152,7 @@
     ],
     "effects": [],
     "text": "Trample (excess combat damage goes to the player).",
-    "flavor": "It leaps the barrow-mounds where the old kings sleep.",
+    "flavor": "Our forefathers did not die. They became mushrooms, and one must never be rude to them. (A moot-folk saying)",
     "art": "res://art/cards/wild_c_006.webp"
   },
   {
@@ -173,7 +173,7 @@
     ],
     "effects": [],
     "text": "Reach (can block creatures with flying).",
-    "flavor": "It stood guard at the moot for a hundred years, and saw no need to leave.",
+    "flavor": "The trees are the true judges. Men only borrow their shade to hold court. (A saying of the Moot)",
     "art": "res://art/cards/wild_c_007.webp"
   },
   {
@@ -275,7 +275,7 @@
     ],
     "effects": [],
     "text": "Trample (excess combat damage goes to the player).",
-    "flavor": "The last of the wild cattle, and the whole valley still steps aside for it.",
+    "flavor": "Every field is a wound, and every farmer a surgeon who will not stop cutting. (A hedgerow sermon)",
     "art": "res://art/cards/wild_c_011.webp"
   },
   {
@@ -296,7 +296,7 @@
     ],
     "effects": [],
     "text": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
-    "flavor": "Lightning has split it twice. Both times it simply grew thicker.",
+    "flavor": "Lightning is the sky's love for the oak, the druids taught. They held this view until it struck them.",
     "art": "res://art/cards/wild_c_012.webp"
   },
   {
@@ -319,7 +319,7 @@
       }
     ],
     "text": "Add GG.",
-    "flavor": "Seed into soil, soil into sap, sap into power.",
+    "flavor": "The earth is the goddess, and the goddess is never wrong, not even about the blight. (Greening chant)",
     "art": "res://art/cards/wild_c_013.webp"
   },
   {
@@ -344,7 +344,7 @@
       }
     ],
     "text": "Target creature you control gets +3/+3 until end of turn.",
-    "flavor": "For a moment, the beast remembers what the forest was before men.",
+    "flavor": "Man is a stain upon the forest. Be a beast, and be clean. (The Archdruid of the Moot)",
     "art": "res://art/cards/wild_c_014.webp",
     "speed": "instant"
   },
@@ -368,7 +368,7 @@
       }
     ],
     "text": "Target creature you control fights target enemy creature (each deals damage equal to its power to the other).",
-    "flavor": "In autumn the stags settle their quarrels, and the forest settles with them.",
+    "flavor": "The forest knows no right or wrong, only stronger and weaker. The druids call this wisdom.",
     "art": "res://art/cards/wild_c_015.webp"
   },
   {
@@ -416,7 +416,7 @@
       }
     ],
     "text": "Destroy target enemy relic.",
-    "flavor": "Leave any engine out in the rain long enough and the green will claim it.",
+    "flavor": "Every engine is a sin against the leaf. The ivy is only hearing its confession. (A Moot druid)",
     "art": "res://art/cards/wild_c_017.webp"
   },
   {
@@ -668,7 +668,7 @@
       }
     ],
     "text": "This gets +1/+0 for each other Treefolk you control.",
-    "flavor": "When the moot is full, the old elm leans in to hear, and the boughs creak with opinions.",
+    "flavor": "The moot voted that the elm is wiser than the elders. The elm, as usual, abstained. (Records of the Moot)",
     "art": "res://art/cards/wild_c_025.webp"
   },
   {
@@ -777,7 +777,7 @@
       }
     ],
     "text": "Whenever an Aura enters under your control, this gets +1/+1 permanently.",
-    "flavor": "For every garland he plaits for another man, he weaves one leaf into his own.",
+    "flavor": "Wear one leaf and you are forgiven. Wear two and you are holy. (Wreath-Weaver Druid)",
     "art": "res://art/cards/wild_c_029.webp"
   },
   {
@@ -859,7 +859,7 @@
     ],
     "effects": [],
     "text": "Reach, regenerate.",
-    "flavor": "The standing stones are not empty. They are only patient.",
+    "flavor": "The stones remember every wrong, and forgive whoever brings them milk. (A saying of the Moot)",
     "art": "res://art/cards/wild_u_003.webp"
   },
   {
@@ -916,7 +916,7 @@
       }
     ],
     "text": "When this enters, create two 1/1 Sapling tokens.",
-    "flavor": "He plants acorns as he walks; by evening they walk beside him.",
+    "flavor": "We are not the masters of the wood. We are its weeds, and ought to apologise for it. (Elder of the Oak Circle)",
     "art": "res://art/cards/wild_u_005.webp"
   },
   {
@@ -952,7 +952,7 @@
       }
     ],
     "text": "Tap: target creature you control gets +2/+2 until end of turn.",
-    "flavor": "His face looks out from every leaf, and where he looks, things grow.",
+    "flavor": "There is no sin but the axe, and no prayer but the rustle of leaves. (The druids' creed of the Green Man)",
     "art": "res://art/cards/wild_u_006.webp"
   },
   {
@@ -1013,7 +1013,7 @@
       }
     ],
     "text": "Rooted: as long as you control six or more lands, this gets +2/+2 and has trample.",
-    "flavor": "When the farms thin out and the wild grows deep, the wild man comes down from the fells.",
+    "flavor": "Throw off your boots, your plough and your manners, says the wild man. He has no use for any of them, nor for soap.",
     "art": "res://art/cards/wild_u_008.webp"
   },
   {
@@ -1036,7 +1036,7 @@
       }
     ],
     "text": "When this enters, attach it to target creature you control. That creature gets +2/+2.",
-    "flavor": "The oak gives slowly, but it never takes back.",
+    "flavor": "The forest gives freely, says the Archdruid. He will tell you the price afterwards.",
     "art": "res://art/cards/wild_u_009.webp",
     "attach": "aura",
     "grants": {
@@ -1073,7 +1073,7 @@
       }
     ],
     "text": "Target creature you control gets +2/+2 until end of turn. Then target creature you control fights target enemy creature.",
-    "flavor": "The forest holds no courts. It holds contests.",
+    "flavor": "Mercy is a sickness of the towns. The forest is healthy, and eats its young. (The Archdruid of the Moot)",
     "art": "res://art/cards/wild_u_010.webp"
   },
   {
@@ -1148,7 +1148,7 @@
       }
     ],
     "text": "Tap: add G.",
-    "flavor": "The forked stick dips, and there is water, or power, or both.",
+    "flavor": "The river forgives every sin, so long as you confess it downstream of the village. (A dowser's saying)",
     "art": "res://art/cards/wild_u_012.webp"
   },
   {
@@ -1275,7 +1275,7 @@
       }
     ],
     "text": "Other Treefolk you control get +1/+1.",
-    "flavor": "Laws were given under his boughs before there were kings to give them.",
+    "flavor": "The first law given under his boughs: the tree is holy and the woodcutter is damned. (Law of the Moot)",
     "art": "res://art/cards/wild_u_016.webp"
   },
   {
@@ -1445,7 +1445,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, add G. Tap, pay G: target creature you control gets +1/+1 permanently.",
-    "flavor": "His golden sickle has cut the sacred bough for sixty winters.",
+    "flavor": "The Earth is our mother and our god, and she has asked me, personally, to collect the tithe. (Mistletoe Archdruid)",
     "art": "res://art/cards/wild_r_001.webp"
   },
   {
@@ -1475,7 +1475,7 @@
       }
     ],
     "text": "Regenerate. Whenever this attacks, target creature you control gets +1/+1 permanently.",
-    "flavor": "Kings have hunted it for a thousand years. It has never once been caught.",
+    "flavor": "To hunt the hart is murder, the druids teach. To hunt the hunter is merely housekeeping.",
     "art": "res://art/cards/wild_r_002.webp"
   },
   {
@@ -1505,7 +1505,7 @@
       }
     ],
     "text": "Trample. Other Beasts you control get +1/+1.",
-    "flavor": "Crowned with twelve tines, he leads every beast of the marsh.",
+    "flavor": "Bow to the antlered king, the druids say, for he is a god. In the hungry winters the moot-folk call him venison.",
     "art": "res://art/cards/wild_r_003.webp"
   },
   {
@@ -1536,7 +1536,7 @@
       }
     ],
     "text": "Reach, regenerate. Rooted: as long as you control six or more lands, this gets +3/+0.",
-    "flavor": "It was old when the barrows were raised, and it will be old when they are ploughed flat.",
+    "flavor": "Bury your dead beneath the yew and they become yew. That is all the heaven anyone needs. (Grey Elder of the Henge)",
     "art": "res://art/cards/wild_r_004.webp"
   },
   {
@@ -1584,7 +1584,7 @@
       }
     ],
     "text": "Creatures you control get +2/+2 until end of turn.",
-    "flavor": "Hooves, horns and howling, and the earth itself rides with them.",
+    "flavor": "Become the herd! Thinking was our first mistake, and together we shall undo it. (A Moot chant)",
     "art": "res://art/cards/wild_r_006.webp"
   },
   {
@@ -1645,7 +1645,7 @@
       }
     ],
     "text": "Create three 2/2 Oakling tokens with reach.",
-    "flavor": "The druid sang, and the wood remembered it had roots that could walk.",
+    "flavor": "The trees have souls, the druids teach, and woodcutters do not. The trees agree.",
     "art": "res://art/cards/wild_r_008.webp"
   },
   {
@@ -1669,7 +1669,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, add GG.",
-    "flavor": "Raised by no hand anyone remembers, aligned to no star anyone can name.",
+    "flavor": "Pray to the stones. In all these years they have never once contradicted a druid. (Grey Elder of the Henge)",
     "art": "res://art/cards/wild_r_009.webp"
   },
   {
@@ -1844,7 +1844,7 @@
       }
     ],
     "text": "Trample, reach. When this enters, create two 2/2 Oakling tokens.",
-    "flavor": "Empires rose and fell in the span of a single ring of its wood.",
+    "flavor": "The druids worship him as god of the wood. He is a tree, and has never asked for any of it.",
     "art": "res://art/cards/wild_m_002.webp"
   },
   {
@@ -1887,7 +1887,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, create a 1/1 Sapling token. Rooted: if you control six or more lands, also create a 3/3 Stag token.",
-    "flavor": "Seed, flower, harvest, frost. And then, always, seed again.",
+    "flavor": "Nothing is born, nothing dies, nothing is judged. Only the wheel turns, and the druid takes his cut. (Archdruid of the Moot)",
     "art": "res://art/cards/wild_m_003.webp"
   },
   {

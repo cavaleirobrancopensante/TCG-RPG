@@ -500,28 +500,59 @@ func _spawn_enemy(force_night: bool = false) -> void:
 			night_walker = true
 			disposition = "neutral" if GameState.hero == "abyss" else "hostile"
 		var lvl := clampi(1 + int(p.distance_to(start) / 800.0), 1, 5)
-		var pool: Array = []
-		for r in ["common", "uncommon"]:
-			for cid in CardDB.pools[f][r]:
-				if CardDB.get_card(cid)["type"] == "creature":
-					pool.append(cid)
-		var look: String = pool[_rng.randi_range(0, pool.size() - 1)] if not pool.is_empty() else ""
 		var e := {
-			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": look,
+			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": _look_for(f),
 			"name": WorldEntities.enemy_name(f, _rng), "wander": p, "chasing": false,
 			"region": region, "disposition": disposition, "night": night_walker, "extra": force_night,
 		}
-		enemies.append(e)
-		var w := Walker.new()
-		var lk: Dictionary = CardDB.get_card(look)
-		w.look = lk if not lk.is_empty() else {"faction": f, "name": e["name"]}
-		w.position = p
-		w.disposition = disposition
-		w.face = 0.0           # forces the first paint
-		add_child(w)
-		_walkers[e["id"]] = w
-		_next_enemy_id += 1
+		_add_enemy(e)
 		return
+
+
+## A creature of the faith to dress a wanderer in.
+func _look_for(f: String) -> String:
+	var pool: Array = []
+	for r in ["common", "uncommon"]:
+		for cid in CardDB.pools[f][r]:
+			if CardDB.get_card(cid)["type"] == "creature":
+				pool.append(cid)
+	return pool[_rng.randi_range(0, pool.size() - 1)] if not pool.is_empty() else ""
+
+
+func _add_enemy(e: Dictionary) -> void:
+	enemies.append(e)
+	var w := Walker.new()
+	var lk: Dictionary = CardDB.get_card(String(e["look"]))
+	w.look = lk if not lk.is_empty() else {"faction": e["faction"], "name": e["name"]}
+	w.position = e["pos"]
+	w.disposition = e["disposition"]
+	w.face = 0.0           # forces the first paint
+	add_child(w)
+	_walkers[e["id"]] = w
+	_next_enemy_id += 1
+
+
+## Someone who wants what you carry (a feast errand's goods) waits on your road, a little way
+## ahead towards `toward`. `faction` "" means a thief of the lands he stands in.
+## Returns the new wanderer, or {} if there is nowhere to put him.
+func spawn_thief(faction: String, thief_name: String, toward: Vector2) -> Dictionary:
+	var dir := (toward - player_pos).normalized() if toward.distance_to(player_pos) > 1.0 else Vector2.RIGHT
+	var start := Vector2(GameState.world_data.get("start", {}).get("x", 3000), GameState.world_data.get("start", {}).get("y", 2200))
+	for attempt in 30:
+		var p := nearest_walkable(player_pos + dir.rotated(_rng.randf_range(-0.7, 0.7)) * _rng.randf_range(360.0, 520.0))
+		if _in_safe_zone(p) or not walkable(p) or ground_at(p) == LANDING or p.distance_to(player_pos) < 200.0:
+			continue
+		var region := faction_at(p)
+		var f := faction if faction != "" else region
+		var e := {
+			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "look": _look_for(f),
+			"level": clampi(1 + int(p.distance_to(start) / 800.0), 2, 5),
+			"name": thief_name, "wander": p, "chasing": false, "region": region,
+			"disposition": "hostile", "night": false, "extra": false, "thief": true,
+		}
+		_add_enemy(e)
+		return e
+	return {}
 
 
 ## At full day the night's walkers slip back into the shadows (and others come in their place).
@@ -531,9 +562,9 @@ var _nightfall_day := -1
 func _dawn_check() -> void:
 	var light := SkyDial.daylight(GameState.clock)
 	if light < 0.3 and GameState.clock >= 19.0 and _nightfall_day != GameState.day:
-		# nightfall: more of the Pact come out
+		# nightfall: more of the Pact come out, twice as many on the Pact's sabbath nights
 		_nightfall_day = GameState.day
-		for i in 4:
+		for i in nightfall_walkers():
 			_spawn_enemy(true)
 	if light < 0.9:
 		return
@@ -544,6 +575,11 @@ func _dawn_check() -> void:
 				respawn_queue.pop_back()     # the nightfall extras are not replaced
 			else:
 				respawn_queue[respawn_queue.size() - 1] = _rng.randf_range(2.0, 8.0)
+
+
+## How many of the Pact come out at nightfall tonight.
+static func nightfall_walkers() -> int:
+	return 8 if LiturgicalCalendar.is_pact_sabbath(GameState.day) else 4
 
 
 func _in_safe_zone(p: Vector2) -> bool:
@@ -560,7 +596,8 @@ func remove_enemy(id: int) -> void:
 			if _walkers.has(id):
 				_walkers[id].queue_free()
 				_walkers.erase(id)
-			respawn_queue.append(RESPAWN_TIME)
+			if not e.get("thief", false):      # a thief is one of a kind: nobody takes his place
+				respawn_queue.append(RESPAWN_TIME)
 			return
 
 
