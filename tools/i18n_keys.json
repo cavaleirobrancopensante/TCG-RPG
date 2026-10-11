@@ -225,6 +225,106 @@
    "note": "scripts/autoload/music.gd"
   },
   {
+   "key": "Back",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Close",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Cancel",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Leave",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Leave him be",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Not now",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "No, thank you",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Stay",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Keep playing",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Space / Enter",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Main action: End turn, Pass, Take, Done, Begin, OK",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Esc",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Back, close or cancel; on the map, the menu",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Deck (on the map)",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Journal (on the map)",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Hero sheet (on the map)",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Left / Right",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Previous or next card in the card viewer",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Open or close the music player",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Main",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Ok",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Result",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Begin",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Journal",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
+   "key": "Hero",
+   "note": "scripts/autoload/shortcuts.gd"
+  },
+  {
    "key": "Small",
    "note": "scripts/autoload/ui_scale.gd"
   },
@@ -282,10 +382,6 @@
   },
   {
    "key": "No attack",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
-   "key": "Cancel",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -609,10 +705,6 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Keep playing",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
    "key": "%s waits on the stack: answer it, or let it resolve.",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -650,10 +742,6 @@
   },
   {
    "key": "You flee the duel.",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
-   "key": "Result",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -1493,24 +1581,160 @@
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "Human Cleric",
-   "note": "scripts/main.gd"
+   "key": "%s is today.",
+   "note": "scripts/core/story.gd"
   },
   {
-   "key": "Cleric lantern",
-   "note": "scripts/main.gd"
+   "key": "%s falls on %s.",
+   "note": "scripts/core/story.gd"
   },
   {
-   "key": "Cultist",
-   "note": "scripts/main.gd"
+   "key": "You carry %s.",
+   "note": "scripts/core/story.gd"
   },
   {
-   "key": "Demon",
-   "note": "scripts/main.gd"
+   "key": "close by",
+   "note": "scripts/core/story.gd"
   },
   {
-   "key": "Fiend",
-   "note": "scripts/main.gd"
+   "key": "to the %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "Go to %s, who awaits you.",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "Story: %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "Where: %s.",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: the story is complete.",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s, chapter %d of %d: %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "• Side quest, %s: %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "   Done: Chapter %d, %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "The story is complete.",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "• Chapter %d of %d: %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "   Done: %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "Side quests",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "Persons met: %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: no %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: unknown place %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: unknown faith",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: unknown card %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: no lines",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: %d chapters",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: the first chapter has no place",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: unknown giver %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: no title or intro",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: unknown objective %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: no objective text",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: unknown character %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: page by unknown %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: %s needs npc and done",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: bad feast",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: unknown theme %s",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: duel needs foe and level",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: a boss waits at a lair",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: bring needs item, from, to, npc, pickup",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: bring needs from_npc or from_name",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: unknown lair",
+   "note": "scripts/core/story.gd"
+  },
+  {
+   "key": "%s: the last chapter gives no mythic",
+   "note": "scripts/core/story.gd"
   },
   {
    "key": "Preparing the parchment",
@@ -1542,10 +1766,6 @@
   },
   {
    "key": "Challenge",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Leave him be",
    "note": "scripts/main.gd"
   },
   {
@@ -1629,10 +1849,6 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Leave",
-   "note": "scripts/main.gd"
-  },
-  {
    "key": "Thank you",
    "note": "scripts/main.gd"
   },
@@ -1653,19 +1869,11 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "No, thank you",
-   "note": "scripts/main.gd"
-  },
-  {
    "key": "\"Raiders trouble these roads. Beat %d hostile wanderers and I will pay you %d gold.\"",
    "note": "scripts/main.gd"
   },
   {
    "key": "Accept",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Not now",
    "note": "scripts/main.gd"
   },
   {
@@ -1781,10 +1989,6 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Stay",
-   "note": "scripts/main.gd"
-  },
-  {
    "key": "Toll into the lands of %s: %d gold.",
    "note": "scripts/main.gd"
   },
@@ -1822,6 +2026,10 @@
   },
   {
    "key": "build %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Your story begins in %s. The gold star on the map shows the way.",
    "note": "scripts/main.gd"
   },
   {
@@ -1886,14 +2094,6 @@
   },
   {
    "key": "Cards",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Hero",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Journal",
    "note": "scripts/main.gd"
   },
   {
@@ -2009,6 +2209,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Story",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Complete! Return to %s.",
    "note": "scripts/main.gd"
   },
@@ -2029,7 +2233,11 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Close",
+   "key": "The story so far",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "No story yet.",
    "note": "scripts/main.gd"
   },
   {
@@ -2225,6 +2433,62 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Side quest: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Chapter %d: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Objective: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%d booster(s) of %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Side quest complete: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Chapter complete: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "So ends %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You take %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s falls on %s, %d day(s) from now. You may wait here for it, or go about your business and come back in time.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Wait for the feast (%d days)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Later",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Not yet",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You gain %d experience for the duel.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s will be waiting when you return.",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Tap the cards to reveal them.",
    "note": "scripts/ui/booster_screen.gd"
   },
@@ -2274,10 +2538,6 @@
   },
   {
    "key": "Card Database",
-   "note": "scripts/ui/card_database.gd"
-  },
-  {
-   "key": "Back",
    "note": "scripts/ui/card_database.gd"
   },
   {
@@ -3493,23 +3753,7 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
-   "key": "Language",
-   "note": "scripts/ui/settings_screen.gd"
-  },
-  {
-   "key": "Main",
-   "note": "scripts/ui/settings_screen.gd"
-  },
-  {
-   "key": "Interface size",
-   "note": "scripts/ui/settings_screen.gd"
-  },
-  {
-   "key": "Size_",
-   "note": "scripts/ui/settings_screen.gd"
-  },
-  {
-   "key": "Normal picks the size for your device: larger on a phone.",
+   "key": "Sound",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -3533,6 +3777,34 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
+   "key": "Display",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Interface size",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Size_",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Normal picks the size for your device: larger on a phone.",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Full screen",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Fill the whole screen",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Duel",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
    "key": "Duel animation speed",
    "note": "scripts/ui/settings_screen.gd"
   },
@@ -3549,11 +3821,15 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
-   "key": "Full screen",
+   "key": "Language and Text",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
-   "key": "Fill the whole screen",
+   "key": "Language",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Game",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -3562,6 +3838,18 @@
   },
   {
    "key": "Settings apply to every save slot.",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Keyboard shortcuts",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Shortcuts",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Head_",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -3697,10 +3985,6 @@
    "note": "scripts/ui/start_screen.gd"
   },
   {
-   "key": "Begin",
-   "note": "scripts/ui/start_screen.gd"
-  },
-  {
    "key": "Difficulty",
    "note": "scripts/ui/start_screen.gd"
   },
@@ -3790,10 +4074,6 @@
   },
   {
    "key": "This cannot be undone.",
-   "note": "scripts/ui/ui_kit.gd"
-  },
-  {
-   "key": "Ok",
    "note": "scripts/ui/ui_kit.gd"
   },
   {
@@ -4053,6 +4333,10 @@
   {
    "key": "Lantern-Bearer Acolyte",
    "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Human Cleric",
+   "note": "card subtype"
   },
   {
    "key": "Martyr (when this dies, another creature you control gets +1/+1).",
@@ -5001,6 +5285,10 @@
   {
    "key": "Pit-Chained Fiend",
    "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Demon",
+   "note": "card subtype"
   },
   {
    "key": "When this enters, you lose 2 life.",

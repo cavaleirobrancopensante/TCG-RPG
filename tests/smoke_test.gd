@@ -267,6 +267,7 @@ func _ready() -> void:
 	await _frames(2)
 	assert(GameState.load_game(2), "load slot 2")
 	print("save/load ok")
+	await _story_smoke()
 	await _village_visit()
 	await _feast_errand()
 	# Draft tournament: enter, draft, build, one match, prize.
@@ -508,6 +509,8 @@ func _owned() -> int:
 
 
 func _close_dialogs() -> void:
+	if main.story_enc:
+		main._story_close(false)
 	for n in main.ui_layer.get_children():
 		if n is ColorRect:
 			n.queue_free()
@@ -811,3 +814,78 @@ func _map_hud() -> void:
 	GameState.missions = keep
 	GameState.errand = keep_er
 	print("map hud ok")
+
+
+## Press "Continue" through a story meeting, then the choice `label` (false if it is not offered).
+func _story_press(label: String) -> bool:
+	for i in 12:
+		await _frames(2)
+		var enc: EncounterScreen = main.story_enc
+		if enc == null or not is_instance_valid(enc):
+			return false
+		if enc.choose(label):
+			await _frames(2)
+			return true
+		if not enc.choose("Continue"):
+			return false
+	return false
+
+
+## The Stoa hero's storyline in the real scenes: the intro in Porticus, a talk at Elaia with its
+## reward, the next chapter at once, a story duel at Dafni won, the journal and the gold star.
+func _story_smoke() -> void:
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	var w: Overworld = main.world
+	GameState.gold = 300
+	GameState.story = {}
+	Story.ensure_main()
+	main._story_refresh_marker()
+	var por := Story.place("porticus")
+	assert(w.story_marker == Vector2(por["x"], por["y"]), "the gold star is over Porticus")
+	main._on_city_entered("porticus")
+	await _frames(3)
+	assert(main.screen is CityScreen and main.story_enc != null, "Master Theon meets the hero in Porticus")
+	assert(main.story_enc.who == I18n.t("Master Theon"), "the Scholarch speaks")
+	assert(await _story_press("Onward"), "the first chapter's intro ends with Onward")
+	assert(Story.progress("stoa")["state"] == "active" and main.story_enc == null and main.screen is CityScreen, "the objective is set, the city stays open")
+	var el := Story.place("elaia")
+	assert(w.story_marker == Vector2(el["x"], el["y"]), "the star moves to Elaia")
+	(main.screen as CityScreen).closed.emit()
+	await _frames(2)
+	var g0 := GameState.gold
+	main._on_village_entered("elaia")
+	await _frames(3)
+	assert(main.story_enc != null and main.story_enc.who == I18n.t("Phormio"), "Phormio speaks at Elaia")
+	assert(await _story_press("Onward"), "the talk ends with the reward page")
+	assert(Story.progress("stoa")["ch"] == 1 and GameState.gold > g0, "chapter 1 done and paid")
+	await _frames(3)
+	assert(main.story_enc != null, "the next chapter's intro follows at once")
+	assert(await _story_press("Onward"), "chapter 2's intro")
+	main.screen.closed.emit()
+	await _frames(2)
+	main._on_village_entered("dafni")
+	await _frames(3)
+	assert(main.story_enc != null and main.story_enc.disposition == "hostile", "Kallias bars the way at Dafni")
+	assert(await _story_press("Fight"), "the story duel is offered")
+	await _frames(3)
+	var b: BattleScene = main.screen
+	assert(b is BattleScene, "the story duel begins")
+	await _wait(1.0)
+	b.finished.emit(true)
+	await _frames(3)
+	assert(main.story_enc != null, "the beaten rhetor speaks")
+	assert(await _story_press("Onward"), "the duel's chapter is rewarded")
+	assert(Story.progress("stoa")["ch"] == 2 and Story.progress("stoa")["state"] == "wait", "chapter 3 waits in Porticus")
+	assert(w.story_marker == Vector2(por["x"], por["y"]), "the star goes back to Porticus")
+	main.show_journal()
+	await _frames(2)
+	_press_first_dialog_button()       # to the missions page
+	await _frames(2)
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	GameState.save_game()
+	assert(GameState.load_game(GameState.slot) and Story.progress("stoa")["ch"] == 2, "the story is saved")
+	print("story ok: chapter ", Story.progress("stoa")["ch"] + 1, " of the Stoa, ", Story.journal_lines(w.player_pos).size(), " journal lines")

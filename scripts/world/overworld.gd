@@ -78,6 +78,7 @@ var path := PackedVector2Array()
 var _path_i := 0
 var _repath_t := 0.0
 var _ferry_lock := -1           # the landing we arrived on, until we step off it
+var story_marker := Vector2.INF  # the gold star over the place the storyline points at (INF: none)
 
 
 ## A figure on the map, painted once and then only moved. Repainted when it turns,
@@ -1188,7 +1189,42 @@ func refresh_player() -> void:
 		_player.queue_redraw()
 
 
+## Set (or, with INF, clear) the storyline's gold star.
+func set_story_marker(p: Vector2) -> void:
+	if p == story_marker:
+		return
+	story_marker = p
+	queue_redraw()
+
+
+## The points of a five-pointed star around c.
+static func star_points(c: Vector2, r_out: float, r_in: float) -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	for i in 10:
+		var a := -PI * 0.5 + PI * float(i) / 5.0
+		pts.append(c + Vector2(cos(a), sin(a)) * (r_out if i % 2 == 0 else r_in))
+	return pts
+
+
+## A small gold star over the place, drawn above the fog so the way shows through unknown country.
+func _draw_story_marker() -> void:
+	if not story_marker.is_finite():
+		return
+	var c := story_marker + Vector2(0, -STAR_LIFT)
+	draw_colored_polygon(star_points(c + Vector2(2, 3), STAR_R, STAR_R * 0.44), Color(0, 0, 0, 0.25))
+	var pts := star_points(c, STAR_R, STAR_R * 0.44)
+	draw_colored_polygon(pts, Tapestry.GILT)
+	pts.append(pts[0])
+	draw_polyline(pts, Tapestry.INK, 2.0, true)
+	draw_colored_polygon(star_points(c, STAR_R * 0.38, STAR_R * 0.16), Color(1.0, 0.93, 0.62))
+
+
+const STAR_R := 22.0
+const STAR_LIFT := 110.0
+
+
 func _draw() -> void:
+	_draw_story_marker()
 	if moving:
 		draw_arc(move_target, 18, 0, TAU, 24, Color(Tapestry.VERMILION, 0.8), 3.0, true)
 		draw_line(move_target + Vector2(-8, -8), move_target + Vector2(8, 8), Color(Tapestry.VERMILION, 0.8), 2.0)

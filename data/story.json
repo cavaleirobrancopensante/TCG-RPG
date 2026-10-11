@@ -1,0 +1,1833 @@
+{
+ "about": "The main storyline of each faith (kind main, for a hero of that faith) and one short side quest per faith (kind side, for heroes of the other faiths). A chapter's intro is spoken by its giver at the place 'at' (or, with no 'at', at once where the last chapter ended); its objective is talk, duel, bring, feast, lair or boss. Characters: leaders, allies, rivals and the foes met on the way.",
+ "characters": {
+  "cardinal_benincasa": {
+   "name": "Cardinal Aurelio Benincasa",
+   "title": "Archbishop of Santa Lucerna",
+   "faith": "sanctum",
+   "role": "leader",
+   "place": "santa_lucerna",
+   "look": {
+    "subtype": "Human Bishop"
+   },
+   "description": "A miller's son from San Isidro who rose to the red hat and never lost the miller's hands. He sings the Office in the cathedral choir at the hours and governs the diocese in between. He has outlived two plagues and three legates, is slow to anger and hard to fool, and fears nothing in the world save a soul lost through his own neglect.",
+   "lines": [
+    "\"Pax tecum, my son. Kneel if you must, but be quick about it: the work will not wait on ceremony.\"",
+    "\"We do not fight the Pact in order to win. The victory is Christ's already. We fight because souls are at stake.\"",
+    "\"Go to confession before you go to the sword. A clean soul swings a steadier blade.\""
+   ]
+  },
+  "mother_scholastica": {
+   "name": "Mother Scholastica",
+   "title": "Abbess of San Benedetto",
+   "faith": "sanctum",
+   "role": "ally",
+   "place": "san_benedetto",
+   "look": {
+    "subtype": "Human Monk",
+    "figure": {
+     "main": [
+      0.13,
+      0.12,
+      0.14
+     ],
+     "second": [
+      0.95,
+      0.94,
+      0.9
+     ],
+     "skin": [
+      0.96,
+      0.84,
+      0.72
+     ],
+     "hair": "long",
+     "hair_col": [
+      0.3,
+      0.2,
+      0.12
+     ],
+     "beard": "",
+     "head": "hood"
+    }
+   },
+   "description": "Abbess of the Benedictine nuns of San Benedetto, named for the sister of the holy patriarch whose Rule she keeps. She never leaves the enclosure and speaks to the world through the grille of the parlour, yet knights ride two days to hear her. She has read the Fathers and nursed the dying, and she judges men quickly and kindly.",
+   "lines": [
+    "\"Ora et labora, child. You have laboured; now let us pray a little before you go.\"",
+    "\"Pride is the first theft. All the others follow from it.\"",
+    "\"I cannot ride with you. But the whole house will keep vigil while you do.\""
+   ]
+  },
+  "fra_bonaventura": {
+   "name": "Fra Bonaventura",
+   "title": "Capuchin and Exorcist of the Diocese",
+   "faith": "sanctum",
+   "role": "ally",
+   "place": "san_rocco",
+   "look": {
+    "subtype": "Human Friar"
+   },
+   "description": "A Capuchin of the hill friary at San Rocco, bearded, sandalled in every season, and named exorcist of the diocese by the Cardinal. He has faced the enemy more often than any man living, and it has made him merry rather than grim: the devil, he says, can bear anything except being laughed at.",
+   "lines": [
+    "\"Peace and good, brother! Mind the dog. He only bites Pact men.\"",
+    "\"I can do nothing by my own power. I do what the Church bids, with the leave she gives, in the Name she gives.\"",
+    "\"Keep your sword for the wolves. The demon is mine; or rather, God's.\""
+   ]
+  },
+  "ser_tancredi": {
+   "name": "Ser Tancredi",
+   "title": "Knight Commander of the Hospital",
+   "faith": "sanctum",
+   "role": "ally",
+   "place": "san_isidro",
+   "look": {
+    "subtype": "Human Knight Hospitaller"
+   },
+   "description": "Knight Commander of the Hospital of the Lamp, warden of the pilgrim road from Santa Lucerna to the southern marches. He took the cross at sixteen and the vows of religion at thirty, and he has held the ford below San Isidro against the Pact four times. He speaks little, prays the rosary in the saddle and keeps his word to Christian and pagan alike.",
+   "lines": [
+    "\"The road is open. I mean to keep it so.\"",
+    "\"A knight of the Hospital serves the sick first and fights second. Today, alas, it is the second.\""
+   ]
+  },
+  "corvin_apostate": {
+   "name": "Corvin the Apostate",
+   "title": "Once Canon of the Cathedral",
+   "faith": "abyss",
+   "role": "rival",
+   "place": "widows_turning",
+   "look": {
+    "subtype": "Human Cultist"
+   },
+   "description": "A canon of the cathedral chapter, learned and admired, who wanted to be admired more. Passed over for a mitre, he listened to the Pact's brokers, stole the relic of Saint Lucy from the high altar and fled south to buy a greatness the Church would not give him. He is a priest still, for that cannot be undone, and some part of him knows it.",
+   "lines": [
+    "\"They gave the mitre to a miller's son. A miller's son!\"",
+    "\"The Pit keeps its promises. That is more than I can say for Rome.\""
+   ],
+   "rival_of": "sanctum"
+  },
+  "ulric_oathbreaker": {
+   "name": "Ulric the Oathbreaker",
+   "title": "Fallen Knight",
+   "faith": "abyss",
+   "role": "foe",
+   "place": "san_isidro",
+   "look": "abyss_r_001",
+   "description": "A knight who broke his vows for a purse of Pact gold and now hires out his sword and his band of bone-men to any traitor who can pay.",
+   "lines": [
+    "\"I swore an oath once. It was heavier than this sword.\""
+   ]
+  },
+  "azgaroth": {
+   "name": "Azgaroth, Duke of the Ninth Pit",
+   "title": "Fallen Angel",
+   "faith": "abyss",
+   "role": "foe",
+   "place": "lair_pit",
+   "look": "abyss_m_004",
+   "description": "One of the angels who fell with the first rebel, now lord of the deepest pit under the land. He wants the relic of Saint Lucy not for its worth but for the pleasure of defiling it.",
+   "lines": [
+    "\"Non serviam. My master said it first, and I said it with him. I say it still.\""
+   ]
+  },
+  "black_gilles": {
+   "name": "Black Gilles",
+   "title": "Robber of the Pilgrim Road",
+   "faith": "abyss",
+   "role": "foe",
+   "place": "santa_agnese",
+   "look": {
+    "subtype": "Human Thrall"
+   },
+   "description": "A cutpurse who took the Pact's mark for the courage it gave him, and robs the alms of pilgrims with it.",
+   "lines": [
+    "\"Alms for the poor, friend. I am the poor.\""
+   ]
+  },
+  "morcant_vael": {
+   "name": "Morcant Vael",
+   "title": "Arch-Heresiarch of the Black Pact",
+   "faith": "abyss",
+   "role": "leader",
+   "place": "ashenmouth",
+   "look": {
+    "subtype": "Human Necromancer"
+   },
+   "description": "He sits in the Hall of Debts at Ashenmouth on a chair of black iron and keeps his own name off every contract he draws. Born to a good house, he has spent sixty years proving that a clever man need owe nothing to anyone; he owes everything to the Pit and pretends not to know it. He smiles often, and never at a jest.",
+   "lines": [
+    "\"Sit. Not there; that chair is spoken for. Every chair here is spoken for.\"",
+    "\"Mercy is a debt the weak expect others to pay. We do not pay it.\"",
+    "\"Sign quickly. Reading only makes the ink nervous.\""
+   ]
+  },
+  "brother_sallow": {
+   "name": "Brother Sallow",
+   "title": "Clerk of the Black Ledger",
+   "faith": "abyss",
+   "role": "ally",
+   "place": "gallows_cross",
+   "look": {
+    "subtype": "Human Cultist"
+   },
+   "description": "A thin clerk with ink to the elbows who keeps the Black Ledger for Malgrith, the lich who lends at interest to the damned. He has not slept in years, he says, because sleep is unpaid time. He trusts nobody, which in Ashenmouth passes for wisdom.",
+   "lines": [
+    "\"Name? Ah. You have a page already. Several, in fact.\"",
+    "\"The Ledger forgets nothing. I forget everything. So we balance.\"",
+    "\"Interest compounds, friend. So does regret, but nobody pays me for that.\""
+   ]
+  },
+  "grey_factor": {
+   "name": "The Grey Factor",
+   "title": "Broker of Debts",
+   "faith": "abyss",
+   "role": "ally",
+   "place": "ashenmouth",
+   "look": {
+    "subtype": "Human Official"
+   },
+   "description": "A broker in a grey coat who buys and sells promises in the market of Ashenmouth. Nobody remembers his face five minutes after he leaves, and he likes it that way. He serves the Arch-Heresiarch exactly as far as the Arch-Heresiarch pays him.",
+   "lines": [
+    "\"Everything has a price. Most people are merely embarrassed to name it.\"",
+    "\"I do not lie. I simply sell the truth by the ounce.\""
+   ]
+  },
+  "dravo_kesh": {
+   "name": "Dravo Kesh",
+   "title": "The Second Signatory",
+   "faith": "abyss",
+   "role": "rival",
+   "place": "widows_turning",
+   "look": {
+    "subtype": "Human Cultist"
+   },
+   "description": "A blackguard of your own age who signed the Book on the same night as you, one line below. He has spent every day since trying to be the line above. He has a fine voice, a fine coat and no friends, and he keeps a small fiend in a birdcage that he feeds on other men's luck.",
+   "lines": [
+    "\"Ah, the first signature. How is the view from one line up?\"",
+    "\"Gratitude is for men who cannot steal.\""
+   ]
+  },
+  "grimbald": {
+   "name": "Grimbald the Gravedigger",
+   "title": "Sexton of Crowsfoot",
+   "faith": "abyss",
+   "role": "foe",
+   "place": "crowsfoot",
+   "look": {
+    "subtype": "Zombie Gravedigger"
+   },
+   "description": "The sexton of Crowsfoot, who owes the Ledger a tithe of corpses and thought that tearing out the page would cancel the debt.",
+   "lines": [
+    "\"A debt nobody can read is a debt nobody can collect. That is only sense.\""
+   ]
+  },
+  "belzareth_herald": {
+   "name": "Belzareth's Herald",
+   "title": "Voice of the Prince of Cinders",
+   "faith": "abyss",
+   "role": "foe",
+   "place": "lair_pit",
+   "look": {
+    "subtype": "Demon"
+   },
+   "description": "The fiend who speaks for Belzareth at the bottom of the Ninth Pit and tests every soul that comes down to sign.",
+   "lines": [
+    "\"Come down, come down. The stairs only go one way.\""
+   ]
+  },
+  "archdruid_cathbad": {
+   "name": "Archdruid Cathbad",
+   "title": "Archdruid of the Henge",
+   "faith": "wild",
+   "role": "leader",
+   "place": "elderholt",
+   "look": "wild_r_001",
+   "description": "Tall, white-bearded and painted with woad to the eyebrows, he cuts the mistletoe with a golden sickle and reads the will of the oaks in smoke, in birds and in the entrails of hares. Every omen he reads agrees with what he wanted already. He calls the Wheel of the Year a mercy; it has never occurred to him that a wheel only goes round.",
+   "lines": [
+    "\"The oaks have spoken. They usually agree with me.\"",
+    "\"Blood for the root, sap for the branch, a tithe of the harvest for the Henge. That is the old bargain.\"",
+    "\"Do not ask what lies beyond the Wheel. The Wheel turns. That is all.\""
+   ]
+  },
+  "old_ivo": {
+   "name": "Old Ivo",
+   "title": "Keeper of the Grove",
+   "faith": "wild",
+   "role": "ally",
+   "place": "ashgrove",
+   "look": {
+    "subtype": "Human Elder"
+   },
+   "description": "A charcoal-burner turned grove-keeper, older than anyone in Ashgrove can count, who talks to the trees and swears they answer. He is kind to children and to strangers, and afraid of the dark between the trunks, though he would never say so.",
+   "lines": [
+    "\"Mind the roots, friend. They remember who trod on them.\"",
+    "\"I burned charcoal once. The oaks have forgiven me. Mostly.\""
+   ]
+  },
+  "wat_greycloak": {
+   "name": "Wat Greycloak",
+   "title": "Huntsman of Thornwick",
+   "faith": "wild",
+   "role": "ally",
+   "place": "thornwick",
+   "look": {
+    "subtype": "Human Huntsman"
+   },
+   "description": "A broad, silent huntsman with a grey pelt over his shoulders who tracks deer and men with the same patience. He does what the Archdruid tells him and has never asked why; the not asking has cost him more sleep than he admits.",
+   "lines": [
+    "\"The Archdruid says the moon is right. The moon looks the same to me.\"",
+    "\"Tracks don't lie. That is why I like them better than people.\""
+   ]
+  },
+  "ruthven": {
+   "name": "Ruthven of the Antlers",
+   "title": "The Antler-Priest",
+   "faith": "wild",
+   "role": "rival",
+   "place": "thornwick",
+   "look": {
+    "subtype": "Human Druid"
+   },
+   "description": "A druid who wears a stag's skull for a crown and thinks the Archdruid has grown soft. The old oaks were fed with more than sheaves once, he says, and would be again if men had the stomach for it. The hungriest of the hunters follow him, and the Antlered One answers his horn.",
+   "lines": [
+    "\"The Wheel wants blood, not barley.\"",
+    "\"Cathbad cuts mistletoe. I cut deeper.\""
+   ]
+  },
+  "foreman_kettering": {
+   "name": "Foreman Kettering",
+   "title": "Timber Foreman of Grindwell",
+   "faith": "machine",
+   "role": "foe",
+   "place": "grindwell",
+   "look": {
+    "subtype": "Human Artificer"
+   },
+   "description": "A Technocracy timber foreman with a writ, a steam-saw and no patience for trees that talk.",
+   "lines": [
+    "\"I have a writ. Signed and stamped. Trees cannot read.\""
+   ]
+  },
+  "antlered_one": {
+   "name": "The Antlered One",
+   "title": "Beast of the Den",
+   "faith": "wild",
+   "role": "foe",
+   "place": "lair_beast",
+   "look": "wild_r_003",
+   "description": "The great stag-beast of the Den, maddened by Ruthven's horn and fed on things no beast should eat.",
+   "lines": [
+    "The beast lowers its antlers. Behind it, a horn sounds."
+   ]
+  },
+  "fenrick_howler": {
+   "name": "Fenrick the Howler",
+   "title": "Man-Eater's Huntsman",
+   "faith": "wild",
+   "role": "foe",
+   "place": "mossbrook",
+   "look": {
+    "subtype": "Human Hunter"
+   },
+   "description": "A huntsman who ran with a wolf pack until he forgot which side of the hunt he was on.",
+   "lines": [
+    "\"The pack is hungry. So am I.\""
+   ]
+  },
+  "prince_ruggiero": {
+   "name": "Ruggiero",
+   "title": "Prince of the Masque",
+   "faith": "revel",
+   "role": "leader",
+   "place": "vinemere",
+   "look": "revel_m_004",
+   "description": "Patron of the players and first gentleman of Vinemere, he has not taken off his half-mask in public for twenty years and swears he has forgotten what is under it. He is generous, idle and quick, loves a good line more than a good deed, and is honest about nothing except his debts, which are famous.",
+   "lines": [
+    "\"Ah, a guest! Every guest is welcome here. Most of them even leave.\"",
+    "\"Pleasure is a serious business, my friend. It is the only business we have.\"",
+    "\"Never trust a man who does not drink, unless he is paying.\""
+   ]
+  },
+  "master_pandolfo": {
+   "name": "Master Pandolfo",
+   "title": "King of the Minstrels",
+   "faith": "revel",
+   "role": "ally",
+   "place": "montevino",
+   "look": "revel_r_010",
+   "description": "A fat, merry lutenist who has played at every wedding, wake and coronation for forty years and remembers the scandal of each. He is crowned King of the Minstrels every Carnival and abdicates every Lent.",
+   "lines": [
+    "\"A song for a coin, a verse for a cup, and the truth for nothing at all, since nobody buys it.\"",
+    "\"I have played for dukes and for drunkards. The drunkards tip better.\""
+   ]
+  },
+  "brandimarte": {
+   "name": "Brandimarte",
+   "title": "Prince of Fire-Eaters",
+   "faith": "revel",
+   "role": "ally",
+   "place": "mascarino",
+   "look": "revel_m_002",
+   "description": "A duellist who swallows fire between bouts for the crowd and has never lost a wager he cared about. Vain, brave and loyal, he would follow Ruggiero into the Pit if there were an audience.",
+   "lines": [
+    "\"A blade, a torch, and somebody watching. What else does a man need?\"",
+    "\"I never fight a man I would not drink with afterwards.\""
+   ]
+  },
+  "vessar": {
+   "name": "Vessar",
+   "title": "Master of the Undying Feast",
+   "faith": "revel",
+   "role": "rival",
+   "place": "lair_banquet",
+   "look": "revel_m_001",
+   "description": "Once the finest host in Vinemere, he swore he would never let a feast end, and made a bargain with something that took him at his word. His guests dance until they fall and are carried back to the table; nobody has left the Endless Banquet in seven years. He is still charming, which is the worst of it.",
+   "lines": [
+    "\"Sit, sit! The soup is eternal, and so is the company.\"",
+    "\"Ending is the only sin I know.\""
+   ]
+  },
+  "count_sforzino": {
+   "name": "Count Sforzino",
+   "title": "Herald of the Undying Feast",
+   "faith": "revel",
+   "role": "foe",
+   "place": "malvasia",
+   "look": {
+    "subtype": "Human Noble"
+   },
+   "description": "A perfumed count who carries Vessar's invitations through the vineyards and is paid in wine that never runs out.",
+   "lines": [
+    "\"You are invited. Everyone is invited. That is the beauty of it.\""
+   ]
+  },
+  "master_theon": {
+   "name": "Master Theon",
+   "title": "Scholarch of the Porch",
+   "faith": "lyceum",
+   "role": "leader",
+   "place": "porticus",
+   "look": {
+    "subtype": "Human Philosopher"
+   },
+   "description": "Scholarch of the Porch at Porticus, a small dry man of seventy who rises before the sun, eats bread and olives, and teaches in the cold colonnade so that his pupils learn to bear discomfort. He has written nothing in thirty years: the books are written already, he says, and the task is to live them.",
+   "lines": [
+    "\"Some things are in our power, and some are not. Let us begin with the first.\"",
+    "\"You are troubled by the road? The road is not troubled by you.\"",
+    "\"Sit. Think. Then walk; it helps.\""
+   ]
+  },
+  "phormio": {
+   "name": "Phormio",
+   "title": "Navarch of Elaia",
+   "faith": "lyceum",
+   "role": "ally",
+   "place": "elaia",
+   "look": "lyceum_r_012",
+   "description": "An old sea captain, named for the admiral of Naupactus, who keeps the triremes of the Porch at Elaia. He has been shipwrecked three times and considers each a lesson in what is not in our power.",
+   "lines": [
+    "\"The sea does not argue. It simply wins. I respect that.\"",
+    "\"Trim the sail you have, not the one you wish you had.\""
+   ]
+  },
+  "xenias": {
+   "name": "Xenias",
+   "title": "Drillmaster of the Phalanx",
+   "faith": "lyceum",
+   "role": "ally",
+   "place": "melissai",
+   "look": {
+    "subtype": "Human Hoplite"
+   },
+   "description": "A grey hoplite who has drilled the young men of Melissai for thirty years and read Xenophon to them by the fire every night of it. He holds that a man shows what he believes by where he stands when the line is pressed.",
+   "lines": [
+    "\"Shield up. The man on your left is trusting you with his life.\"",
+    "\"Philosophy is easy in a library. Try it in the front rank.\""
+   ]
+  },
+  "thrasymachus": {
+   "name": "Thrasymachus",
+   "title": "The Sophist",
+   "faith": "lyceum",
+   "role": "rival",
+   "place": "lair_observatory",
+   "look": {
+    "subtype": "Human Sophist Scholar"
+   },
+   "description": "A rhetor from Vinemere who teaches, for a large fee, that justice is only the advantage of the stronger and that a man who can win any argument need never be right. He has seized the Observatory and its silent sage, and sells the old man's silence as his own wisdom.",
+   "lines": [
+    "\"Justice? Name your price and I will prove it either way.\"",
+    "\"The wise man is the one who is paid for it.\""
+   ]
+  },
+  "kallias": {
+   "name": "Kallias the Rhetor",
+   "title": "Pupil of Thrasymachus",
+   "faith": "lyceum",
+   "role": "foe",
+   "place": "dafni",
+   "look": {
+    "subtype": "Human Rhetor Scholar"
+   },
+   "description": "A young rhetor with a borrowed cloak and a borrowed philosophy, who argues for whoever paid last.",
+   "lines": [
+    "\"I can make the weaker argument the stronger. For a fee.\""
+   ]
+  },
+  "drogo_corsair": {
+   "name": "Drogo the Corsair",
+   "title": "Pirate of the Cold Sea",
+   "faith": "lyceum",
+   "role": "foe",
+   "place": "dafni",
+   "look": {
+    "subtype": "Human Sailor"
+   },
+   "description": "A pilot of the Porch's fleet who decided that other men's cargo was the shortest course to wealth.",
+   "lines": [
+    "\"Every ship on this coast pays me a toll. Even the ones that sink.\""
+   ]
+  },
+  "octavian_pell": {
+   "name": "Octavian Pell",
+   "title": "Grand Tabulator of Cogspire",
+   "faith": "machine",
+   "role": "leader",
+   "place": "cogspire",
+   "look": {
+    "subtype": "Human Scholar"
+   },
+   "description": "Keeper of the great engine in the Counting Hall, whose ten thousand brass wheels tally every ton of coal and every ingot in the guild's lands, and the only man allowed to read its tapes. He believes that what cannot be counted is probably not important, and has never managed to count why he is lonely.",
+   "lines": [
+    "\"Good morning. You are four minutes early, which I have noted in your favour.\"",
+    "\"The engine does not lie. Men lie. That is why we built the engine.\"",
+    "\"Report in triplicate: one for me, one for the engine, one for posterity.\""
+   ]
+  },
+  "ambrose_quill": {
+   "name": "Ambrose Quill",
+   "title": "Master Horologist",
+   "faith": "machine",
+   "role": "ally",
+   "place": "sixmills",
+   "look": "machine_r_010",
+   "description": "The finest clockmaker of the guild, who keeps the escapements of every mill at Sixmills in time and hears a slipped gear from across a valley. He is fussy, honest and brave in the way of men who have never thought about bravery.",
+   "lines": [
+    "\"Listen. Hear that? The third mill is losing a second an hour. Disgraceful.\"",
+    "\"A clock that is wrong twice a day is still wrong. I mend it.\""
+   ]
+  },
+  "overseer_brask": {
+   "name": "Overseer Brask",
+   "title": "Guild Clerk",
+   "faith": "machine",
+   "role": "ally",
+   "place": "cogspire",
+   "look": {
+    "subtype": "Human Artificer"
+   },
+   "description": "The guild clerk at the gate of Cogspire who hands out work to every duellist who passes and remembers every one who failed to come back. He likes the Grand Tabulator and pities him, in that order.",
+   "lines": [
+    "\"Papers? No? Then a duel will do as proof of character.\"",
+    "\"The engine counts the coal. I count the men. Somebody has to.\""
+   ]
+  },
+  "comptroller_varn": {
+   "name": "Comptroller Varn",
+   "title": "Guild Comptroller",
+   "faith": "machine",
+   "role": "rival",
+   "place": "furnace_end",
+   "look": "machine_r_001",
+   "description": "The guild's second-best accountant, who decided that if the books never balanced anyway they might as well balance in his favour. He has quietly diverted brass, coal and three master-smiths to the Runaway Forge, where he is building an engine that answers to nobody but himself.",
+   "lines": [
+    "\"Numbers are flexible, if you hold them firmly.\"",
+    "\"Every system has a margin. I am the margin.\""
+   ]
+  },
+  "rivet_jack": {
+   "name": "Rivet-Jack",
+   "title": "The Comptroller's Enforcer",
+   "faith": "machine",
+   "role": "foe",
+   "place": "slagford",
+   "look": {
+    "subtype": "Construct Automaton"
+   },
+   "description": "A rebuilt foundry automaton with a riveting arm and orders to keep auditors away from Slagford.",
+   "lines": [
+    "\"AUDIT. NOT. AUTHORISED.\""
+   ]
+  },
+  "prime_engine": {
+   "name": "The Prime Engine",
+   "title": "Heart of the Runaway Forge",
+   "faith": "machine",
+   "role": "foe",
+   "place": "lair_forge",
+   "look": "machine_m_001",
+   "description": "The engine Varn built with stolen brass, which has begun to give orders of its own.",
+   "lines": [
+    "The engine wakes with a roar of steam. Somewhere inside it, Varn is shouting orders it no longer obeys."
+   ]
+  }
+ },
+ "arcs": {
+  "church": {
+   "faith": "sanctum",
+   "kind": "main",
+   "title": "The Lamp and the Pit",
+   "chapters": [
+    {
+     "id": "church_1",
+     "title": "The Empty Reliquary",
+     "giver": "cardinal_benincasa",
+     "at": "santa_lucerna",
+     "intro": [
+      "\"You come at a bitter hour. Three nights ago the relic of Saint Lucy, patroness of this city, was taken from the high altar of the cathedral.\"",
+      "\"The thief was one of our own: Corvin, a canon of this chapter, a learned man passed over for a mitre. He fled before Lauds, and he did not flee towards Rome.\"",
+      "\"Before you ride after him, seek counsel. Mother Scholastica, Abbess of San Benedetto, knew him as a boy. Go to her, and listen.\""
+     ],
+     "objective": {
+      "type": "talk",
+      "place": "san_benedetto",
+      "npc": "mother_scholastica",
+      "text": "Seek the counsel of Mother Scholastica at San Benedetto.",
+      "done": [
+       "\"Corvin. I taught him his psalter at this grille when he was seven. He was clever, and he was praised for it, and nobody taught him that praise is a debt.\"",
+       "\"He has gone south by the pilgrim road, towards the Pact's lands. A fallen knight rides with him: Ulric, who broke his vows for gold.\""
+      ]
+     },
+     "reward": {
+      "gold": 40,
+      "xp": 60
+     }
+    },
+    {
+     "id": "church_2",
+     "title": "Wolves on the Pilgrim Road",
+     "giver": "mother_scholastica",
+     "intro": [
+      "\"Ser Tancredi of the Hospital keeps the ford below San Isidro. Ulric and his band of bone-men have him pinned there, and the pilgrims cannot pass.\"",
+      "\"Go to San Isidro and break them. And do not hate Ulric; pray for him. Hatred is a cord the enemy holds by the other end.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "san_isidro",
+      "foe": "ulric_oathbreaker",
+      "theme": "pact_skeletons",
+      "level": 2,
+      "text": "Break Ulric the Oathbreaker's band at San Isidro.",
+      "challenge": [
+       "\"A knight of the Lamp? I was one, once. The pay is better on this side.\""
+      ],
+      "done": [
+       "\"Enough. Take the road, then. Corvin is past the river already, and the Pit is expecting him.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "booster": 1
+     }
+    },
+    {
+     "id": "church_3",
+     "title": "The Bishop's Leave",
+     "giver": "ser_tancredi",
+     "intro": [
+      "\"God reward you. The ford is ours again.\"",
+      "\"Corvin means to hand the relic to the Duke of the Ninth Pit. No sword can close that door. It wants an exorcist: Fra Bonaventura, at the friary of San Rocco.\"",
+      "\"But the friar will not read the Rite without the express leave of his Ordinary. That is the Church's law, and he keeps it. Bring him the Cardinal's letter.\""
+     ],
+     "objective": {
+      "type": "bring",
+      "item": "the Cardinal's letter",
+      "from": "santa_lucerna",
+      "from_npc": "cardinal_benincasa",
+      "to": "san_rocco",
+      "npc": "fra_bonaventura",
+      "text": "Bring the Cardinal's letter of leave from Santa Lucerna to Fra Bonaventura at San Rocco.",
+      "pickup": [
+       "\"Ser Tancredi wrote to me. Here is my leave for Fra Bonaventura, under my seal. Ride carefully: the letter is worth more than the horse.\""
+      ],
+      "done": [
+       "\"Peace and good! The Cardinal's hand, and his seal. Now I may do what I could not do before.\"",
+       "\"Mind, brother: it is not my power that binds the enemy. It is the Church's, lent to me for the asking. I would be a fool to borrow without leave.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "card_rarity": "uncommon"
+     }
+    },
+    {
+     "id": "church_4",
+     "title": "Michaelmas",
+     "giver": "fra_bonaventura",
+     "intro": [
+      "\"No man goes down into the Pit unshriven. Come to the cathedral for the Dedication of Saint Michael the Archangel, on the twenty-ninth of September.\"",
+      "\"Make your confession, hear the Cardinal's Mass, and have your sword blessed. Then we go down together.\""
+     ],
+     "objective": {
+      "type": "feast",
+      "place": "santa_lucerna",
+      "npc": "cardinal_benincasa",
+      "feast": {
+       "date": "09-29",
+       "name": "Michaelmas"
+      },
+      "text": "Be at the cathedral of Santa Lucerna for Michaelmas.",
+      "done": [
+       "You make your confession at dawn. At the third hour the Cardinal sings the pontifical Mass of the Archangel, and the choir takes up the Introit: Benedicite Dominum, omnes Angeli ejus.",
+       "\"Kneel. I bless this sword, not that the steel be holier, but that the hand which holds it be just. Sancte Michael Archangele, defende nos in proelio.\""
+      ]
+     },
+     "reward": {
+      "gold": 80,
+      "xp": 100,
+      "card_rarity": "rare"
+     }
+    },
+    {
+     "id": "church_5",
+     "title": "The Apostate",
+     "giver": "cardinal_benincasa",
+     "intro": [
+      "\"Word from the south: Corvin waits at Widow's Turning, for a guide to bring him down to the Pit.\"",
+      "\"Stop him. Bring him back alive if you can. He is a priest for ever, according to the order of Melchisedech, and I would sooner see him a penitent than a corpse.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "widows_turning",
+      "foe": "corvin_apostate",
+      "theme": "pact_demons",
+      "level": 4,
+      "text": "Stop Corvin the Apostate at Widow's Turning.",
+      "challenge": [
+       "\"They send a knight? I hoped at least for a bishop. Very well. The Pit has taught me a few things the seminary did not.\""
+      ],
+      "done": [
+       "\"I wanted to be great. I gave the relic to the Duke's messengers three nights ago, and it bought me nothing. Is there any mercy left for a man like me?\"",
+       {
+        "by": "fra_bonaventura",
+        "text": "Fra Bonaventura, who has followed you down the road, sits with him by the wayside and speaks low. You stand off and do not listen. When the friar rises he says only: \"He goes back to the Cardinal as a penitent. His censures are reserved to Rome, and his soul belongs to God.\""
+       }
+      ]
+     },
+     "reward": {
+      "gold": 100,
+      "xp": 120,
+      "booster": 1
+     }
+    },
+    {
+     "id": "church_6",
+     "title": "The Ninth Pit",
+     "giver": "fra_bonaventura",
+     "intro": [
+      "\"The relic is in the Pit, in the hands of Azgaroth, who calls himself its Duke. Saint Lucy's bones are not afraid of him. We should not be either.\"",
+      "\"I will read the exorcism of Pope Leo against Satan and the apostate angels. You keep the Duke from me until it is finished. Do not bargain with him; do not even answer him.\""
+     ],
+     "objective": {
+      "type": "boss",
+      "place": "lair_pit",
+      "foe": "azgaroth",
+      "theme": "pact_demons",
+      "level": 6,
+      "life": 32,
+      "text": "Go down into the Ninth Pit and hold back Azgaroth while Fra Bonaventura reads the Rite.",
+      "challenge": [
+       "\"A friar and a knight, come to take back a dead girl's bones? Non serviam, little knight. My master said it first, and I say it still.\""
+      ],
+      "done": [
+       {
+        "by": "fra_bonaventura",
+        "text": "\"Exorcizamus te, omnis immundus spiritus, omnis satanica potestas...\" The friar's voice does not rise, and it does not stop. The Duke is driven down into the dark below the Pit, and the Pit falls silent."
+       },
+       {
+        "by": "cardinal_benincasa",
+        "text": "You carry Saint Lucy home. The bells of Santa Lucerna ring for an hour, and the Cardinal gives you the cathedral's gift: an image of Saint Michael, painted for his feast."
+       }
+      ]
+     },
+     "reward": {
+      "gold": 200,
+      "xp": 200,
+      "card": "sanctum_m_004"
+     }
+    }
+   ]
+  },
+  "pact": {
+   "faith": "abyss",
+   "kind": "main",
+   "title": "The Black Ledger",
+   "chapters": [
+    {
+     "id": "pact_1",
+     "title": "Ink and Ash",
+     "giver": "morcant_vael",
+     "at": "ashenmouth",
+     "intro": [
+      "\"A page has gone from the Black Ledger. The page with the debts of half of Crowsfoot on it. And, as it happens, yours.\"",
+      "\"A missing debt is an insult to the Pit, and the Pit does not distinguish between the thief and the debtor. Neither do I.\"",
+      "\"Go to Brother Sallow at Gallows Cross. He keeps the Ledger. Find out who tore it.\""
+     ],
+     "objective": {
+      "type": "talk",
+      "place": "gallows_cross",
+      "npc": "brother_sallow",
+      "text": "Ask Brother Sallow at Gallows Cross who tore the page from the Ledger.",
+      "done": [
+       "\"Grimbald the Gravedigger, of Crowsfoot. He owes a tithe of corpses and imagines that a debt nobody can read is a debt nobody must pay.\"",
+       "\"The fool. The ink came back on its own the next morning. It always does. Collect from him anyway; the Arch-Heresiarch likes a lesson.\""
+      ]
+     },
+     "reward": {
+      "gold": 40,
+      "xp": 60
+     }
+    },
+    {
+     "id": "pact_2",
+     "title": "A Debt Called In",
+     "giver": "brother_sallow",
+     "intro": [
+      "\"Go to Crowsfoot and take the page back from Grimbald. If he will not give it, take what he owes instead. The Ledger is not particular about the currency.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "crowsfoot",
+      "foe": "grimbald",
+      "theme": "pact_zombies",
+      "level": 2,
+      "text": "Collect the torn page from Grimbald the Gravedigger at Crowsfoot.",
+      "challenge": [
+       "\"You want the page? Come and dig for it.\""
+      ],
+      "done": [
+       "\"Take it, take it. It never did me any good. The writing came back the next morning anyway, and the interest with it.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "booster": 1
+     }
+    },
+    {
+     "id": "pact_3",
+     "title": "The Hangman's Rope",
+     "giver": "brother_sallow",
+     "intro": [
+      "Brother Sallow steps out of the crowd of gawkers, counting on his fingers.",
+      "\"Good. Now, the Grey Factor wants a rope for the Arch-Heresiarch: one that has hanged an honest man, to bind a bargain tight. There is such a rope at Hangman's Fork. Bring it to him in Ashenmouth.\""
+     ],
+     "objective": {
+      "type": "bring",
+      "item": "the hangman's rope",
+      "from": "hangmans_fork",
+      "to": "ashenmouth",
+      "npc": "grey_factor",
+      "text": "Fetch the hangman's rope at Hangman's Fork and bring it to the Grey Factor in Ashenmouth.",
+      "pickup": [
+       "\"Three coins, and take it away. I will not look at it again.\" The rope is lighter than you expected, and colder."
+      ],
+      "done": [
+       "\"Ah. Yes. That is the one. You can always tell: an honest man's rope never quite stops swinging. The Arch-Heresiarch will be pleased, insofar as he is ever pleased.\""
+      ],
+      "from_name": "Hangman of the Fork"
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "card_rarity": "uncommon"
+     }
+    },
+    {
+     "id": "pact_4",
+     "title": "Audience with the Lich",
+     "giver": "grey_factor",
+     "intro": [
+      "\"One more errand. The Nameless Lich in his crypt has stopped paying his tithe to the Hall. The dead think themselves beyond debt. Go and correct him.\""
+     ],
+     "objective": {
+      "type": "lair",
+      "place": "lair_crypt",
+      "lair": "lair_crypt",
+      "text": "Clear the Crypt of the Nameless Lich and take his tithe.",
+      "done": [
+       "Among the Lich's dust lies his own copy of the Ledger. Your name is in it, too. Everyone's is."
+      ]
+     },
+     "reward": {
+      "gold": 80,
+      "xp": 100,
+      "card_rarity": "rare"
+     }
+    },
+    {
+     "id": "pact_5",
+     "title": "The Second Signatory",
+     "giver": "morcant_vael",
+     "at": "ashenmouth",
+     "intro": [
+      "\"While you were collecting my debts, Dravo Kesh was collecting yours. He has bought your page from the Grey Factor, who sells everything, and he means to sell it on to the Herald of the Pit.\"",
+      "\"He waits at Widow's Turning. Settle it. I do not care which of you comes back, so long as one of you does.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "widows_turning",
+      "foe": "dravo_kesh",
+      "theme": "pact_demons",
+      "level": 4,
+      "text": "Settle your debts with Dravo Kesh at Widow's Turning.",
+      "challenge": [
+       "\"The first signature, at last. My little fiend has been looking forward to your luck.\""
+      ],
+      "done": [
+       "\"You think you have won? Read the Ledger. We are both still in it.\""
+      ]
+     },
+     "reward": {
+      "gold": 100,
+      "xp": 120,
+      "booster": 1
+     }
+    },
+    {
+     "id": "pact_6",
+     "title": "The Ninth Pit",
+     "giver": "dravo_kesh",
+     "intro": [
+      "\"Go on, then, down to the Pit. The Herald wants the first signature, not the second. I wish you joy of it. I truly do.\""
+     ],
+     "objective": {
+      "type": "boss",
+      "place": "lair_pit",
+      "foe": "belzareth_herald",
+      "theme": "pact_demons",
+      "level": 6,
+      "life": 32,
+      "text": "Go down into the Ninth Pit and pass the trial of Belzareth's Herald.",
+      "challenge": [
+       "\"Come down, come down. The Prince of Cinders has heard of you. Show him what your signature is worth.\""
+      ],
+      "done": [
+       "\"The Prince of Cinders accepts your service. His gift is given. His price is you.\"",
+       {
+        "by": "brother_sallow",
+        "text": "Back in Ashenmouth, Brother Sallow turns a fresh page and writes your name at the top of it. It is the largest debt in the book, and it grows while you watch."
+       }
+      ]
+     },
+     "reward": {
+      "gold": 200,
+      "xp": 200,
+      "card": "abyss_m_001"
+     }
+    }
+   ]
+  },
+  "oldways": {
+   "faith": "wild",
+   "kind": "main",
+   "title": "The Wheel of the Year",
+   "chapters": [
+    {
+     "id": "wild_1",
+     "title": "The Felled Oak",
+     "giver": "archdruid_cathbad",
+     "at": "elderholt",
+     "intro": [
+      "\"The hares ran widdershins at dawn and the smoke bent south. I read it at once: the oaks are wronged.\"",
+      "\"Iron-men have felled the great oak of Ashgrove, that was old when the Henge was raised. Go to Old Ivo, who keeps that grove, and learn who did it.\""
+     ],
+     "objective": {
+      "type": "talk",
+      "place": "ashgrove",
+      "npc": "old_ivo",
+      "text": "Ask Old Ivo at Ashgrove who felled the great oak.",
+      "done": [
+       "\"Men from Grindwell, with a steam-saw and a paper they called a writ. Their foreman is Kettering. He laughed when I told him the oak would remember him.\""
+      ]
+     },
+     "reward": {
+      "gold": 40,
+      "xp": 60
+     }
+    },
+    {
+     "id": "wild_2",
+     "title": "Iron in the Grove",
+     "giver": "old_ivo",
+     "intro": [
+      "\"Go to Grindwell and stop Kettering before he fells another. Gently, if you can. He is only a man with a saw. The oaks are not gentle, but you need not be like them.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "grindwell",
+      "foe": "foreman_kettering",
+      "theme": "tech_artificers",
+      "level": 2,
+      "text": "Stop Foreman Kettering at Grindwell.",
+      "challenge": [
+       "\"I have a writ. Signed and stamped. Trees cannot read, and neither, I suspect, can you.\""
+      ],
+      "done": [
+       "\"All right! All right. We will cut in the north, where the trees are only trees. Tell your Archdruid he can keep his talking ones.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "booster": 1
+     }
+    },
+    {
+     "id": "wild_3",
+     "title": "The Yew of Rowan Hollow",
+     "giver": "archdruid_cathbad",
+     "at": "elderholt",
+     "intro": [
+      "\"The oak's spirit is homeless and angry. It must have a staff of yew cut from the oldest tree in Rowan Hollow, to stand in the stump. Fetch it. Do not look back at the yew when you leave it. It dislikes that.\""
+     ],
+     "objective": {
+      "type": "bring",
+      "item": "the yew staff",
+      "from": "rowan_hollow",
+      "from_npc": "wat_greycloak",
+      "to": "elderholt",
+      "npc": "archdruid_cathbad",
+      "text": "Cut a yew staff at Rowan Hollow and bring it to the Archdruid at Elderholt.",
+      "pickup": [
+       "\"The Archdruid sent me to watch you cut it. Don't look back at the tree. I never have, and I never will know why.\""
+      ],
+      "done": [
+       "\"Good. The staff will stand in the stump until Midsummer, and then we shall see what the oak wants. It will want something. They always do.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "card_rarity": "uncommon"
+     }
+    },
+    {
+     "id": "wild_4",
+     "title": "Midsummer Fires",
+     "giver": "archdruid_cathbad",
+     "intro": [
+      "\"At Midsummer I shall cut the mistletoe with the golden sickle and read the fires. Be here on the night. The omens like a crowd.\""
+     ],
+     "objective": {
+      "type": "feast",
+      "place": "elderholt",
+      "npc": "archdruid_cathbad",
+      "feast": {
+       "date": "06-21",
+       "name": "Midsummer Fires"
+      },
+      "text": "Be at Elderholt for the Midsummer Fires.",
+      "done": [
+       "The Archdruid climbs the oldest oak and cuts the mistletoe with a golden sickle. Then he throws a black cockerel into the bonfire, to the cheers of the crowd, and peers at the smoke.",
+       "\"There! A man crowned with antlers, and treachery. Ruthven. I knew it before the bird was in the fire, of course, but now the oaks agree.\""
+      ]
+     },
+     "reward": {
+      "gold": 80,
+      "xp": 100,
+      "card_rarity": "rare"
+     }
+    },
+    {
+     "id": "wild_5",
+     "title": "The Antler-Priest",
+     "giver": "archdruid_cathbad",
+     "intro": [
+      "\"Ruthven of the Antlers says I am soft. He says the oaks were fed with more than cockerels once. He gathers the hungriest hunters at Thornwick. Go and humble him before he finds out whether he is right.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "thornwick",
+      "foe": "ruthven",
+      "theme": "wild_druids",
+      "level": 4,
+      "text": "Humble Ruthven of the Antlers at Thornwick.",
+      "challenge": [
+       "\"Cathbad's errand-boy. The Wheel wants blood, not barley, and today it may have yours.\""
+      ],
+      "done": [
+       "\"Run home to the old man and his mistletoe. I go to the Den. The Antlered One will have his feast, and the oaks will be grateful.\""
+      ]
+     },
+     "reward": {
+      "gold": 100,
+      "xp": 120,
+      "booster": 1
+     }
+    },
+    {
+     "id": "wild_6",
+     "title": "Den of the Antlered Beast",
+     "giver": "wat_greycloak",
+     "intro": [
+      "\"I tracked him. He has gone to the Den, and the beast with him. I will not go in. I have never asked the Archdruid why, and I am not going to ask the beast. You go.\""
+     ],
+     "objective": {
+      "type": "boss",
+      "place": "lair_beast",
+      "foe": "antlered_one",
+      "theme": "wild_wolves",
+      "level": 5,
+      "life": 30,
+      "text": "Go into the Den of the Antlered Beast and end Ruthven's hunt.",
+      "challenge": [
+       "The beast lowers its antlers. Behind it, in the dark, Ruthven sounds his horn."
+      ],
+      "done": [
+       "The beast falls, and Ruthven with it, under its weight. Nobody in the Den is left to sound the horn.",
+       {
+        "by": "archdruid_cathbad",
+        "text": "Back in Elderholt the Archdruid hears your tale without surprise. \"Good. The Wheel has turned. Take the seed of the Thousand-Year Oak, with the Henge's thanks. Next Midsummer the oaks will be hungry again, of course. They always are.\""
+       }
+      ]
+     },
+     "reward": {
+      "gold": 200,
+      "xp": 200,
+      "card": "wild_m_002"
+     }
+    }
+   ]
+  },
+  "revel": {
+   "faith": "revel",
+   "kind": "main",
+   "title": "The Endless Banquet",
+   "chapters": [
+    {
+     "id": "revel_1",
+     "title": "An Invitation Unanswered",
+     "giver": "prince_ruggiero",
+     "at": "vinemere",
+     "intro": [
+      "\"Seven nights ago I sent my best players to sing at Vessar's banquet. None of them came back. In Vinemere that is not unusual, but they owe me money.\"",
+      "\"Master Pandolfo, the King of the Minstrels, played there once and came home. Find him at Montevino and ask him how.\""
+     ],
+     "objective": {
+      "type": "talk",
+      "place": "montevino",
+      "npc": "master_pandolfo",
+      "text": "Ask Master Pandolfo at Montevino about Vessar's banquet.",
+      "done": [
+       "\"How did I come home? I was too drunk to dance, so they let me sleep under the table, and I crawled out at dawn. Vessar's herald, Count Sforzino, is handing out new invitations at Malvasia.\""
+      ]
+     },
+     "reward": {
+      "gold": 40,
+      "xp": 60
+     }
+    },
+    {
+     "id": "revel_2",
+     "title": "The Herald of the Feast",
+     "giver": "master_pandolfo",
+     "intro": [
+      "\"Stop Sforzino before he fills the banquet hall with every fool in the vineyards. I would go myself, but I am needed here. At the bar.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "malvasia",
+      "foe": "count_sforzino",
+      "theme": "revel_nobles",
+      "level": 2,
+      "text": "Stop Count Sforzino at Malvasia.",
+      "challenge": [
+       "\"You are invited! Everyone is invited. Refusing is the only rudeness Vessar cannot forgive.\""
+      ],
+      "done": [
+       "\"The invitation still stands, you know. Everyone's invitation always stands.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "booster": 1
+     }
+    },
+    {
+     "id": "revel_3",
+     "title": "The Oldest Cask",
+     "giver": "prince_ruggiero",
+     "at": "vinemere",
+     "intro": [
+      "\"There is one thing Vessar has never refused: a wine older than his feast. The cellars of Vigna Rossa keep a cask laid down before he was born. Bring it to me, and do not taste it. I will know.\""
+     ],
+     "objective": {
+      "type": "bring",
+      "item": "the oldest cask",
+      "from": "vigna_rossa",
+      "from_npc": "master_pandolfo",
+      "to": "vinemere",
+      "npc": "prince_ruggiero",
+      "text": "Fetch the oldest cask from Vigna Rossa and bring it to Prince Ruggiero in Vinemere.",
+      "pickup": [
+       "\"Ruggiero sent me ahead to check it was the right cask. I have checked. Twice. It is the right cask.\""
+      ],
+      "done": [
+       "\"Splendid. A little lighter than I remembered, but splendid. Now we have something to bring to the Masque.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "card_rarity": "uncommon"
+     }
+    },
+    {
+     "id": "revel_4",
+     "title": "The Midsummer Masque",
+     "giver": "prince_ruggiero",
+     "intro": [
+      "\"At the Midsummer Masque every mask in the land comes to Vinemere, even Vessar's. Be there, and keep your eyes open behind your own.\""
+     ],
+     "objective": {
+      "type": "feast",
+      "place": "vinemere",
+      "npc": "prince_ruggiero",
+      "feast": {
+       "date": "07-20",
+       "name": "Midsummer Masque"
+      },
+      "text": "Be in Vinemere for the Midsummer Masque.",
+      "done": [
+       "At midnight a mask with no face behind it bows to the Prince, takes a cup of the old wine, and is gone. The players who came with it do not go home; they simply follow.",
+       "\"So he came himself. Then we go to him. Brandimarte is the only blade in Vinemere sober enough to come. Find him at Mascarino.\""
+      ]
+     },
+     "reward": {
+      "gold": 80,
+      "xp": 100,
+      "card_rarity": "rare"
+     }
+    },
+    {
+     "id": "revel_5",
+     "title": "The Fire-Eater's Wager",
+     "giver": "prince_ruggiero",
+     "intro": [
+      "\"Brandimarte will not walk into the Banquet beside a man he has not crossed blades with. It is a matter of taste. Win his wager at Mascarino.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "mascarino",
+      "foe": "brandimarte",
+      "theme": "revel_performers",
+      "level": 4,
+      "text": "Win Brandimarte's wager at Mascarino.",
+      "challenge": [
+       "\"Ruggiero's champion! Good. A blade, a torch, and somebody watching. Let us give them a show.\""
+      ],
+      "done": [
+       "\"Well struck! I never fight a man I would not drink with after. Let us drink, and then let us go and spoil Vessar's supper.\""
+      ]
+     },
+     "reward": {
+      "gold": 100,
+      "xp": 120,
+      "booster": 1
+     }
+    },
+    {
+     "id": "revel_6",
+     "title": "The Endless Banquet",
+     "giver": "brandimarte",
+     "intro": [
+      "\"I will hold the door so nobody else wanders in. You go to the head of the table. Do not eat anything. Do not sit down. And whatever you do, do not dance.\""
+     ],
+     "objective": {
+      "type": "boss",
+      "place": "lair_banquet",
+      "foe": "vessar",
+      "theme": "revel_nobles",
+      "level": 5,
+      "life": 30,
+      "text": "Go into the Endless Banquet and end Vessar's feast.",
+      "challenge": [
+       "\"A new guest! Sit, sit. The soup is eternal, and so is the company. Ending is the only sin I know.\""
+      ],
+      "done": [
+       "\"It ends? It can end? How... restful.\" The candles gutter at last. The guests blink, stagger out into the morning and go home to sleep for a week.",
+       {
+        "by": "prince_ruggiero",
+        "text": "\"My players are back, my debts are forgiven by the grateful, and I owe you everything, which I shall never pay. Take my seal instead: you are patron of the players now.\""
+       }
+      ]
+     },
+     "reward": {
+      "gold": 200,
+      "xp": 200,
+      "card": "revel_m_004"
+     }
+    }
+   ]
+  },
+  "stoa": {
+   "faith": "lyceum",
+   "kind": "main",
+   "title": "The Silence at the Observatory",
+   "chapters": [
+    {
+     "id": "stoa_1",
+     "title": "The Silent Sage",
+     "giver": "master_theon",
+     "at": "porticus",
+     "intro": [
+      "\"The sage of the Observatory has written no letter since the equinox. Yet answers in his name are sold in the markets of Vinemere, signed by a sophist who calls himself his pupil.\"",
+      "\"Silence may be wisdom. Selling it is not. Phormio, our navarch at Elaia, sails past the headland every week. Ask him what he has seen.\""
+     ],
+     "objective": {
+      "type": "talk",
+      "place": "elaia",
+      "npc": "phormio",
+      "text": "Ask Phormio at Elaia what he has seen at the Observatory.",
+      "done": [
+       "\"Lights at night where there were none, and boats from Vinemere at the jetty. One of the sophist's pupils, a rhetor called Kallias, holds disputations for money at Dafni.\""
+      ]
+     },
+     "reward": {
+      "gold": 40,
+      "xp": 60
+     }
+    },
+    {
+     "id": "stoa_2",
+     "title": "A Disputation at Dafni",
+     "giver": "phormio",
+     "intro": [
+      "\"Go to Dafni and dispute with Kallias. Beat him, and he will talk; that sort always talks. Trim the sail you have, friend, not the one you wish you had.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "dafni",
+      "foe": "kallias",
+      "theme": "stoa_philosophers",
+      "level": 2,
+      "text": "Defeat Kallias the Rhetor in disputation at Dafni.",
+      "challenge": [
+       "\"A pupil of the Porch? I can make the weaker argument the stronger. Shall I show you, for a fee?\""
+      ],
+      "done": [
+       "\"My master holds the Observatory. The old man there will not speak a word, so my master speaks for him, and charges for it. It is very profitable.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "booster": 1
+     }
+    },
+    {
+     "id": "stoa_3",
+     "title": "The Sage's Letters",
+     "giver": "master_theon",
+     "at": "porticus",
+     "intro": [
+      "\"Before we accuse a man we must know. The sage's old letters are kept by the scribes of Libanos. Bring them here, and I will set his hand beside the hand that signs the answers in Vinemere.\""
+     ],
+     "objective": {
+      "type": "bring",
+      "item": "the sage's letters",
+      "from": "libanos",
+      "from_npc": "xenias",
+      "to": "porticus",
+      "npc": "master_theon",
+      "text": "Fetch the sage's letters from Libanos and bring them to Master Theon at Porticus.",
+      "pickup": [
+       "\"Theon sent word that you were coming, and I came to see you safely on the road. Here are the letters. Carry them as you would carry a shield: in front of you.\""
+      ],
+      "done": [
+       "\"The hand is false. The answers are forged. That settles what the man is; it does not yet settle what we must do. Let us think about it at the Lamp Race.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "card_rarity": "uncommon"
+     }
+    },
+    {
+     "id": "stoa_4",
+     "title": "The Lamp Race",
+     "giver": "master_theon",
+     "intro": [
+      "\"At the Lamp Race the young men run the torch from the harbour to the Porch, hand to hand. Be here for it. It is the best lecture I give all year, and I do not say a word.\""
+     ],
+     "objective": {
+      "type": "feast",
+      "place": "porticus",
+      "npc": "master_theon",
+      "feast": {
+       "date": "10-20",
+       "name": "Lamp Race"
+      },
+      "text": "Be at Porticus for the Lamp Race.",
+      "done": [
+       "The torch comes up from the harbour through the dusk, passed from runner to runner, and never once goes out.",
+       "\"So it is with wisdom: no man owns it, each carries it a stretch and hands it on. Thrasymachus would sell the torch. Xenias at Melissai will march with you against him, if you can stand in his line.\""
+      ]
+     },
+     "reward": {
+      "gold": 80,
+      "xp": 100,
+      "card_rarity": "rare"
+     }
+    },
+    {
+     "id": "stoa_5",
+     "title": "The Shield-Wall",
+     "giver": "master_theon",
+     "intro": [
+      "\"Xenias will not march with a man who has not stood in his line. It is not pride. He simply wants to know where you will be when the line is pressed. Go to Melissai.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "melissai",
+      "foe": "xenias",
+      "theme": "stoa_hoplites",
+      "level": 4,
+      "text": "Stand in Xenias's line at Melissai.",
+      "challenge": [
+       "\"Shield up. Philosophy is easy in a library. Let us see it in the front rank.\""
+      ],
+      "done": [
+       "\"You held. Good. I will bring twelve shields to the Observatory, and we will see how the sophist argues with a phalanx.\""
+      ]
+     },
+     "reward": {
+      "gold": 100,
+      "xp": 120,
+      "booster": 1
+     }
+    },
+    {
+     "id": "stoa_6",
+     "title": "The Observatory",
+     "giver": "xenias",
+     "intro": [
+      "\"My men will hold the stair. The sophist is yours. Remember: he will try to make you angry, because an angry man argues badly. Do not give him the satisfaction.\""
+     ],
+     "objective": {
+      "type": "boss",
+      "place": "lair_observatory",
+      "foe": "thrasymachus",
+      "theme": "stoa_philosophers",
+      "level": 5,
+      "life": 30,
+      "text": "Climb to the Observatory and refute Thrasymachus.",
+      "challenge": [
+       "\"Justice is the advantage of the stronger. Come, prove me wrong. You will find it very expensive.\""
+      ],
+      "done": [
+       "\"You have refuted me with a deck of cards. Very well: it seems the stronger was right after all.\"",
+       {
+        "by": "master_theon",
+        "text": "The old sage speaks at last: \"I was silent because there was no one worth answering.\" Master Theon sends you the Porch's gift: the image of Xenophon, who brought the Ten Thousand home."
+       }
+      ]
+     },
+     "reward": {
+      "gold": 200,
+      "xp": 200,
+      "card": "lyceum_m_004"
+     }
+    }
+   ]
+  },
+  "technocracy": {
+   "faith": "machine",
+   "kind": "main",
+   "title": "The Audit",
+   "chapters": [
+    {
+     "id": "tech_1",
+     "title": "A Discrepancy",
+     "giver": "octavian_pell",
+     "at": "cogspire",
+     "intro": [
+      "\"The engine reports a discrepancy. Four hundred tons of coal, nine tons of brass and three master-smiths, all gone missing between one quarter and the next.\"",
+      "\"Engines do not lose things. Men lose things. Master Quill at Sixmills keeps the mills in time; he will know whose clock has been running fast. Go to him.\""
+     ],
+     "objective": {
+      "type": "talk",
+      "place": "sixmills",
+      "npc": "ambrose_quill",
+      "text": "Ask Master Quill at Sixmills about the missing brass.",
+      "done": [
+       "\"Brass? Yes. Carts at night, going west to Slagford, with the Comptroller's seal. And a riveting automaton guarding the road. I complained. Nobody listens to clockmakers.\""
+      ]
+     },
+     "reward": {
+      "gold": 40,
+      "xp": 60
+     }
+    },
+    {
+     "id": "tech_2",
+     "title": "Slag and Rivets",
+     "giver": "ambrose_quill",
+     "intro": [
+      "\"Go to Slagford and see where the carts go. Mind the automaton. It was a good machine once; somebody has wound it wrong.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "slagford",
+      "foe": "rivet_jack",
+      "theme": "tech_constructs",
+      "level": 2,
+      "text": "Get past Rivet-Jack at Slagford.",
+      "challenge": [
+       "\"AUDIT. NOT. AUTHORISED. PLEASE. DISPERSE.\""
+      ],
+      "done": [
+       "The automaton winds down with a long sigh of steam. On its brass chest is stamped the Comptroller's seal."
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "booster": 1
+     }
+    },
+    {
+     "id": "tech_3",
+     "title": "The Coal Tally",
+     "giver": "overseer_brask",
+     "at": "cogspire",
+     "intro": [
+      "\"The Comptroller's seal? Then we need proof the engine cannot argue with. The pit-head at Coalpit Row keeps its own tally, sealed every night. Bring it here.\""
+     ],
+     "objective": {
+      "type": "bring",
+      "item": "the sealed coal tally",
+      "from": "coalpit_row",
+      "from_npc": "ambrose_quill",
+      "to": "cogspire",
+      "npc": "octavian_pell",
+      "text": "Fetch the sealed coal tally from Coalpit Row and bring it to the Grand Tabulator in Cogspire.",
+      "pickup": [
+       "\"I came to check the pit-head clock. It was slow. Of course it was slow. Here is the tally, sealed. Do not drop it in a puddle.\""
+      ],
+      "done": [
+       "\"The tally and the engine disagree by exactly the amount signed for by Comptroller Varn. How very tidy of him.\""
+      ]
+     },
+     "reward": {
+      "gold": 60,
+      "xp": 80,
+      "card_rarity": "uncommon"
+     }
+    },
+    {
+     "id": "tech_4",
+     "title": "The Lighting of the Furnaces",
+     "giver": "octavian_pell",
+     "intro": [
+      "\"On the day of the Lighting of the Furnaces every foundry in the guild is lit at once, and the engine counts them. Be here. We shall see whose furnace stays dark.\""
+     ],
+     "objective": {
+      "type": "feast",
+      "place": "cogspire",
+      "npc": "octavian_pell",
+      "feast": {
+       "date": "10-15",
+       "name": "Lighting of the Furnaces"
+      },
+      "text": "Be in Cogspire for the Lighting of the Furnaces.",
+      "done": [
+       "At the stroke of noon the furnaces of the guild roar up together, and the engine's ten thousand wheels turn to count them. One stays dark: the furnace at Furnace End, under the Comptroller's charge.",
+       "\"There. The engine has spoken. Comptroller Varn is at Furnace End. Bring him to account.\""
+      ]
+     },
+     "reward": {
+      "gold": 80,
+      "xp": 100,
+      "card_rarity": "rare"
+     }
+    },
+    {
+     "id": "tech_5",
+     "title": "The Comptroller's Books",
+     "giver": "octavian_pell",
+     "intro": [
+      "\"I have drawn up the charges in triplicate. One for me, one for the engine, and one for you to deliver to Varn at Furnace End, by hand.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "furnace_end",
+      "foe": "comptroller_varn",
+      "theme": "tech_relics",
+      "level": 4,
+      "text": "Bring Comptroller Varn to account at Furnace End.",
+      "challenge": [
+       "\"An audit? How quaint. Numbers are flexible, if you hold them firmly.\""
+      ],
+      "done": [
+       "\"Very well, I concede this column. But the Forge is mine, and the engine I built there answers to nobody. Audit that, if you can.\""
+      ]
+     },
+     "reward": {
+      "gold": 100,
+      "xp": 120,
+      "booster": 1
+     }
+    },
+    {
+     "id": "tech_6",
+     "title": "The Runaway Forge",
+     "giver": "ambrose_quill",
+     "intro": [
+      "\"I followed you down. The Runaway Forge, is it? I can hear it from here: an engine with no governor, running faster every hour. Take these tools and stop it before it shakes the hills apart.\""
+     ],
+     "objective": {
+      "type": "boss",
+      "place": "lair_forge",
+      "foe": "prime_engine",
+      "theme": "tech_constructs",
+      "level": 5,
+      "life": 30,
+      "text": "Go into the Runaway Forge and stop the Prime Engine.",
+      "challenge": [
+       "The engine wakes with a roar of steam. Somewhere inside it, Varn is shouting orders it no longer obeys."
+      ],
+      "done": [
+       "The governor drops into place and the great wheels slow, and stop. Varn climbs out of the engine black with soot, and almost grateful.",
+       {
+        "by": "octavian_pell",
+        "text": "\"The books balance,\" says the Grand Tabulator, as near to smiling as he comes. \"The guild gives you the image of the Archwright of Cogspire, who built the first engine. He would have liked you.\""
+       }
+      ]
+     },
+     "reward": {
+      "gold": 200,
+      "xp": 200,
+      "card": "machine_m_004"
+     }
+    }
+   ]
+  },
+  "side_church": {
+   "faith": "sanctum",
+   "kind": "side",
+   "title": "Alms for the Pilgrims",
+   "chapters": [
+    {
+     "id": "side_church_1",
+     "title": "Alms for the Pilgrims",
+     "giver": "mother_scholastica",
+     "at": "san_benedetto",
+     "intro": [
+      "\"You are not of the Church, traveller, but charity asks no one's creed. A robber called Black Gilles took the alms of the pilgrims at Sant'Agnese. Will you bring them back? The poor will pray for you, whether you like it or not.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "santa_agnese",
+      "foe": "black_gilles",
+      "theme": "pact_zombies",
+      "level": 3,
+      "text": "Take back the pilgrims' alms from Black Gilles at Sant'Agnese.",
+      "challenge": [
+       "\"Alms for the poor, friend. I am the poor.\""
+      ],
+      "done": [
+       "The purse goes back to the almoner of Sant'Agnese. That evening the nuns of San Benedetto sing Compline for a traveller whose name they do not know."
+      ]
+     },
+     "reward": {
+      "gold": 70,
+      "xp": 60,
+      "card_rarity": "uncommon"
+     }
+    }
+   ]
+  },
+  "side_pact": {
+   "faith": "abyss",
+   "kind": "side",
+   "title": "The Fiend in the Birdcage",
+   "chapters": [
+    {
+     "id": "side_pact_1",
+     "title": "The Fiend in the Birdcage",
+     "giver": "dravo_kesh",
+     "at": "widows_turning",
+     "intro": [
+      "\"A stranger in Widow's Turning! Your luck smells sweet, friend. My little fiend would like a taste. Let us duel for it, and if you win, I will even pay you. I can afford to: I have other men's luck.\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "widows_turning",
+      "foe": "dravo_kesh",
+      "theme": "pact_demons",
+      "level": 3,
+      "text": "Win the duel against Dravo Kesh at Widow's Turning.",
+      "challenge": [
+       "\"Gratitude is for men who cannot steal. Let us begin.\""
+      ],
+      "done": [
+       "\"Take the purse. It was never mine either.\" The fiend in the birdcage rattles its bars and glares at its master."
+      ]
+     },
+     "reward": {
+      "gold": 70,
+      "xp": 60,
+      "card_rarity": "uncommon"
+     }
+    }
+   ]
+  },
+  "side_oldways": {
+   "faith": "wild",
+   "kind": "side",
+   "title": "The Howler of Mossbrook",
+   "chapters": [
+    {
+     "id": "side_oldways_1",
+     "title": "The Howler of Mossbrook",
+     "giver": "wat_greycloak",
+     "at": "thornwick",
+     "intro": [
+      "\"There is a huntsman at Mossbrook who ran with the wolves so long he forgot which end of the hunt he was on. Two shepherds are gone. The Archdruid says the omens are unclear. I say a man is a man. Will you go?\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "mossbrook",
+      "foe": "fenrick_howler",
+      "theme": "wild_wolves",
+      "level": 3,
+      "text": "Stop Fenrick the Howler at Mossbrook.",
+      "challenge": [
+       "\"The pack is hungry. So am I.\""
+      ],
+      "done": [
+       "The pack scatters into the fens. Wat Greycloak pays you in silver and says nothing, which from him is high praise."
+      ]
+     },
+     "reward": {
+      "gold": 70,
+      "xp": 60,
+      "card_rarity": "uncommon"
+     }
+    }
+   ]
+  },
+  "side_revel": {
+   "faith": "revel",
+   "kind": "side",
+   "title": "A Cask for the King",
+   "chapters": [
+    {
+     "id": "side_revel_1",
+     "title": "A Cask for the King",
+     "giver": "master_pandolfo",
+     "at": "montevino",
+     "intro": [
+      "\"Stranger! A song for a coin, or a coin for an errand? The vintners of Malvasia owe me a cask for playing at their harvest. Fetch it, and I will pay you better than they paid me.\""
+     ],
+     "objective": {
+      "type": "bring",
+      "item": "a cask of Malvasia wine",
+      "from": "malvasia",
+      "to": "montevino",
+      "npc": "master_pandolfo",
+      "text": "Fetch Master Pandolfo's cask from Malvasia and bring it to Montevino.",
+      "pickup": [
+       "\"Pandolfo's cask? Take it, and tell him he played flat at our harvest. Twice.\""
+      ],
+      "done": [
+       "\"Ah, the cask! The King of the Minstrels thanks you. He also notices it is full, which is a rare virtue in a messenger.\""
+      ],
+      "from_name": "Vintner of Malvasia"
+     },
+     "reward": {
+      "gold": 70,
+      "xp": 60,
+      "card_rarity": "uncommon"
+     }
+    }
+   ]
+  },
+  "side_stoa": {
+   "faith": "lyceum",
+   "kind": "side",
+   "title": "The Corsair's Toll",
+   "chapters": [
+    {
+     "id": "side_stoa_1",
+     "title": "The Corsair's Toll",
+     "giver": "phormio",
+     "at": "elaia",
+     "intro": [
+      "\"A pilot of my own fleet, Drogo, has turned corsair and takes a toll from every boat that puts in at Dafni. I cannot spare a trireme. Can you spare an afternoon?\""
+     ],
+     "objective": {
+      "type": "duel",
+      "place": "dafni",
+      "foe": "drogo_corsair",
+      "theme": "stoa_sailors",
+      "level": 3,
+      "text": "Stop Drogo the Corsair at Dafni.",
+      "challenge": [
+       "\"Every ship on this coast pays me a toll. Even the ones that sink.\""
+      ],
+      "done": [
+       "Drogo is put in irons and sent to Elaia. Phormio thanks you as sailors do, briefly, and pays you in good silver."
+      ]
+     },
+     "reward": {
+      "gold": 70,
+      "xp": 60,
+      "card_rarity": "uncommon"
+     }
+    }
+   ]
+  },
+  "side_technocracy": {
+   "faith": "machine",
+   "kind": "side",
+   "title": "Mainsprings for Sixmills",
+   "chapters": [
+    {
+     "id": "side_technocracy_1",
+     "title": "Mainsprings for Sixmills",
+     "giver": "ambrose_quill",
+     "at": "sixmills",
+     "intro": [
+      "\"You there! You have legs, and I have a deadline. A crate of mainsprings waits at Furnace End, and the mills are losing a second an hour without them. Disgraceful. Fetch them, please.\""
+     ],
+     "objective": {
+      "type": "bring",
+      "item": "the crate of mainsprings",
+      "from": "furnace_end",
+      "to": "sixmills",
+      "npc": "ambrose_quill",
+      "text": "Fetch the crate of mainsprings from Furnace End and bring it to Master Quill at Sixmills.",
+      "pickup": [
+       "\"Quill's mainsprings. Here. Do not drop the crate: it ticks, and he counts the ticks.\""
+      ],
+      "done": [
+       "\"Splendid! And on time, give or take. Mostly give. Here, for your trouble.\""
+      ],
+      "from_name": "Smith of Furnace End"
+     },
+     "reward": {
+      "gold": 70,
+      "xp": 60,
+      "card_rarity": "uncommon"
+     }
+    }
+   ]
+  }
+ }
+}
