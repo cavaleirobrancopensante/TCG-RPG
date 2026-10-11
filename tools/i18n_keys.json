@@ -3605,6 +3605,10 @@
    "note": "scripts/ui/draft_screen.gd"
   },
   {
+   "key": "None of this type.",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
    "key": "Nothing yet.",
    "note": "scripts/ui/draft_screen.gd"
   },
@@ -3614,6 +3618,10 @@
   },
   {
    "key": "Tap the arrow on a card to move it here.",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Tab_",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
