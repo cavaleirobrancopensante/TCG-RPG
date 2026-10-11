@@ -36,7 +36,7 @@ creatures through its own mechanics, and its basic land.
 | Faith (mana) | Owns | Never has |
 |---|---|---|
 | **Holy Church** (W) | `flying` (angels, heralds, doves), `martyr`, `lifelink`, `sanctified`; life gain (`heal`); martyrdom (`death` triggers that help you); **Grace** condition; permanent anthems (`static` anthem); removal only against the guilty: `destroy` with `tapped: true`, and `pacify`; tokens only as small Angel or Knight tokens (subtype with Angel or Knight, power 1 or less, e.g. "a 1/1 Human Knight token" from a rare), never armies of soldiers (tokens belong to the Old Ways) | burn, discard, sacrifice, drain, card draw, tap/bounce, haste, trample |
-| **Black Pact** (B) | `deathtouch`, `dread`; paying life (`lose_life` on enter/cast, `life` in costs); **sacrifice** (`sacrifice` in costs); unconditional `destroy`; shrink (`buff` with negative numbers on enemies); `discard_enemy`; `reanimate` and `regrow`; tribe sacrifice (`"sacrifice": "tribe:Zombie"`); `drain`; drawing cards for life (`draw` paired with `lose_life` only) | flying, life gain other than drain, tokens other than the dead it raises (allowed: "Restless Dead" 1/1 or 2/2 Zombie tokens only from death or sacrifice), haste |
+| **Black Pact** (B) | `deathtouch`, `dread`; `flying` only as a narrow exception: printed on a few winged Demons (subtype contains Demon), which then have no dread, never granted, no Pact flying payoffs; paying life (`lose_life` on enter/cast, `life` in costs); **sacrifice** (`sacrifice` in costs); unconditional `destroy`; shrink (`buff` with negative numbers on enemies); `discard_enemy`; `reanimate` and `regrow`; tribe sacrifice (`"sacrifice": "tribe:Zombie"`); `drain`; drawing cards for life (`draw` paired with `lose_life` only) | flying (except winged Demons, see Owns), life gain other than drain, tokens other than its own tribes raised from death or sacrifice (Skeletons raise "Risen Bones" Skeleton tokens, Zombies raise "Restless Dead" Zombie tokens, Demons summon Imp Demon tokens; 1/1 or 2/2), haste |
 | **Old Ways** (G) | `trample`, `reach`, `regenerate`; mana creatures and rituals (`add_mana` with G); tokens (beasts, wolves, oaklings, saplings); +X/+X pumps on its own creatures (`buff` own_creature); `fight`; `regrow` (graveyard to hand); destroying fliers (`destroy` with `flying: true`); destroying relics (`destroy_relic`); **Rooted** condition | flying, card draw, life gain, burn, tapping |
 | **Revel** (R) | `haste`, `first_strike`; `damage` (burn, the only faith that hits players directly); temporary team attack bonuses (`buff` all_own_creatures with duration turn, power only); **Carouse** condition; **Idle** trigger (laziness: rewards creatures that stay untapped and did not attack); `rummage` (discard then draw); paying its own life for excess | flying, life gain, destroy, card draw without discarding first |
 | **Stoa** (U) | `vigilance`, `defender`, `unmoved`; plain card draw (`draw`); `foresight`; `tap`; `freeze`; `bounce`; `tax`; **Composure** condition | flying (no birds that fly), damage, destroy, life gain, haste |
@@ -78,7 +78,7 @@ creatures through its own mechanics, and its basic land.
 
 | keyword | meaning | owner |
 |---|---|---|
-| `flying` | can only be blocked by flying or reach | Church |
+| `flying` | can only be blocked by flying or reach | Church (narrow exceptions: Stoa Birds; winged Pact Demons, printed only) |
 | `martyr` | when it dies, another creature you control gets +1/+1 (the player chooses) | Church |
 | `lifelink` | damage it deals also gains you that much life | Church |
 | `sanctified` | protection from the Pact: Pact cards can't target it, Pact creatures can't block it, damage from Pact sources is prevented | Church |
@@ -171,7 +171,7 @@ controller's turn began (or haste).
 ```json
 "abilities": [
   {"cost": {"mana": {"G": 1}, "tap": true}, "effects": [{"action": "add_mana", "color": "G", "amount": 2}],
-   "text": "Tap, pay G: add GG."}
+   "text": "Tap, pay {G}: add {G}{G}."}
 ]
 ```
 
@@ -246,7 +246,7 @@ Both are relics that sit on a creature and give it `grants`
   `{"trigger": "enter", "action": "attach", "target": "own_creature"}`. It goes to the
   graveyard when its creature leaves play, or if there is no creature to enchant.
 - **Equipment** (Technocracy only, usually colourless generic cost): `"attach": "equipment"`,
-  subtype "Equipment", and `"equip": {"generic": 2}`. It enters unattached; "Equip N" is a
+  subtype "Equipment", and `"equip": {"generic": 2}`. It enters unattached; "Equip {N}" is a
   built-in ability (sorcery speed) that moves it onto a creature of yours. It stays in play
   when the creature dies. Equipment may grant first strike, trample, vigilance or reach.
 - Relic synergy: tribe word **"Relic"** counts every relic you control (`kinship`,
@@ -296,7 +296,7 @@ in your own main phase, with an empty stack.
 ```json
 "overclock": {"cost": {"generic": 2}, "effects": [{"action": "buff", "target": "self", "power": 2, "toughness": 2, "duration": "permanent"}]}
 ```
-Text: "Overclock 2 (you may pay 2 more as you play this). If overclocked, it enters with
+Text: "Overclock {2} (you may pay {2} more as you play this). If overclocked, it enters with
 two +1/+1 counters."
 
 ## Balance guide (early-2000s rates)

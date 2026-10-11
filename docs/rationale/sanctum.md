@@ -162,7 +162,7 @@ A cheap tribal engine that turns every Knight into a small Asperges. It rewards 
 **Gloria in Excelsis** · Common · Spell (Prayer) · 1W · Gain 2 life for each Angel you control.
 An instant that scales with the choir: with two Angels it is four life for two mana, with none it does nothing. At instant speed it can answer burn or keep Grace on through the enemy's turn, but it never touches the board. The Gloria is the hymn of the angels to the shepherds at Bethlehem, sung at every festive Mass.
 
-**Preceptor of the Commandery** · Uncommon · Creature (Human Knight) · 2W · 2/3 · Your Knight creature cards cost 1 less to play (1 less generic mana).
+**Preceptor of the Commandery** · Uncommon · Creature (Human Knight) · 2W · 2/3 · Your Knight creature cards cost {1} less to play (1 less generic mana).
 The Knight deck's accelerant: from the turn after him, two drops cost one and the Grand Master costs three. His own 2/3 body is fair, so he is never a blank. A preceptor ran a commandery, the local house of a military order, keeping its lands, horses and recruits for the war in the East.
 
 **War Banner of the Temple** · Uncommon · Relic (Relic) · 2W · Knights you control get +1/+1.

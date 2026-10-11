@@ -1251,8 +1251,12 @@ def abyss_r_003(p):
         p.blob((h[0] + 7, h[1] - 7), 9, 2.4, C.hex('d8c8a0'), width=1.2)
         wax_seal(p, (h[0] + 10, h[1] + 31), 3.4)
 
-    Demon(pose='offer', hands=((27, -70), (-14, -54)), skin=C.hex('8a2a2a'), robe=C.hex('2a0e14'), robe_trim=GOLD, horns='ram',
-          wings=True, wing_span=0.9, wing_col=C.hex('2a1014'), crown=GOLD, mouth='smile', beard=C.hex('1a0a0a'), eye=C.hex('ffd040'),
+    # no wings: a mantle of hell-smoke rises off his shoulders instead
+    smoke(p, [(330, 560), (300, 420), (250, 300), (210, 170)], 30, 80, C.hex('2a1a1e'), 0.6)
+    smoke(p, [(350, 540), (390, 400), (430, 280), (470, 160)], 26, 70, C.hex('2a1a1e'), 0.5)
+    p.glow((330, 300), 160, EMBER, 0.2)
+    Demon(pose='offer', skin=C.hex('8a2a2a'), robe=C.hex('2a0e14'), robe_trim=GOLD, horns='great', horn_col=C.hex('2a1a16'),
+          wings=False, stout=1.2, crown=GOLD, mouth='smile', beard=C.hex('1a0a0a'), eye=C.hex('ffd040'),
           props_front=[bill], fist='f').draw(p, 330, 600, 480)
     embers(p, (100, 80, 900, 500), 30)
 
@@ -2325,16 +2329,17 @@ def abyss_u_015(p):
     # the open passage full of fire and the greater shape
     p.shape([(330, H + 10, 0), (330, 260), (500, 150), (670, 260), (670, H + 10, 0)], ('v', C.hex('ffb048'), EMBER, HELL), width=2.2)
     p.clip_shape([(330, H + 10, 0), (330, 260), (500, 150), (670, 260), (670, H + 10, 0)])
-    ghosted(p, lambda q: Demon(pose='stand', skin=C.hex('2a0a08'), horns='great', horn_col=C.hex('1a0a08'), wings=True, wing_col=C.hex('1a0606'),
-                               eye=FLAME_CORE, stout=1.3, wing_span=1.0).draw(q, 520, 700, 560), 0.75)
+    ghosted(p, lambda q: Demon(pose='stand', skin=C.hex('2a0a08'), horns='great', horn_col=C.hex('1a0a08'), wings=False, spikes=True,
+                               eye=FLAME_CORE, stout=1.4).draw(q, 520, 700, 560), 0.75)
     fire(p, 330, 670, 620, 150, 9)
     p.unclip()
     bg.round_arch(p, 330, 670, 260, C.hex('3a2426'), 30)
     # the gate leaf swung open toward the viewer on the left, its ring in the herald's hand
     iron_gate(p, 120, 230, 300, 600, IRON_DARK)
     p.shape([(-20, H + 10, 0), (-20, 600), (W + 20, 596), (W + 20, H + 10, 0)], ('v', C.hex('3a2420'), C.hex('140a0a')), ink=INK.alpha(0.6), width=2)
-    Demon(pose='reach', hands=((31, -68), (-21, -62)), skin=C.hex('6a2430'), horns='ram', horn_col=C.hex('3a2a24'), wings=True, wing_span=0.75,
-          wing_col=C.hex('3a1018'), mouth='smile', thin=0.75, eye=C.hex('ffd040'), robe=C.hex('2a1014'), robe_trim=OLD_GOLD,
+    # wingless: a lean herald, a wisp of smoke trailing off his horns
+    smoke(p, [(300, 260), (270, 190), (240, 110)], 10, 34, C.hex('2a1a1e'), 0.45)
+    Demon(pose='reach', skin=C.hex('6a2430'), horns='ram', horn_col=C.hex('3a2a24'), wings=False, mouth='smile', thin=0.75, eye=C.hex('ffd040'), robe=C.hex('2a1014'), robe_trim=OLD_GOLD,
           collar=OLD_GOLD, fist='b').draw(p, 300, 604, 430)
     # the gate leaf on the right, swung back against the wall
     iron_gate(p, 690, 250, 850, 600, IRON_DARK)
@@ -2467,8 +2472,8 @@ def abyss_r_011(p):
         pts = [(-8, -79), (-17, -60), (-26, -30), (-31, -3, 0), (-20, -6), (-12, -2, 0), (-2, -8), (8, -4, 0), (12, -74)]
         p.shape(pts, ('v', C.hex('2a0a0c'), C.hex('140406')), width=2.0, shade=0.8, rim=0.4)
 
-    _ArmouredDemon(pose='point', hands=((30, -66), (-17, -56)), fist='f', skin=C.hex('6a2a20'), horns='ram', horn_col=C.hex('2a1e1a'), wings=True,
-                   wing_col=C.hex('3a0e0c'), wing_span=0.85, eye=C.hex('ffe060'), mouth='roar', cloth=C.hex('1a0e0e'), trim=OLD_GOLD, stout=1.1,
+    _ArmouredDemon(pose='point', fist='f', skin=C.hex('6a2a20'), horns='ram', horn_col=C.hex('2a1e1a'), wings=False,
+                   chains=True, eye=C.hex('ffe060'), mouth='roar', cloth=C.hex('1a0e0e'), trim=OLD_GOLD, stout=1.1,
                    props_back=[cape], props_front=[baton(26)]).draw(p, 300, 610, 480)
     embers(p, (100, 120, 900, 520), 30)
 
@@ -2493,7 +2498,7 @@ def abyss_m_004(p):
         fire(p, x - 36, x + 36, 472, 80, 5)
     # attendant fiends either side of the throne
     for x, fl, sk in ((640, True, C.hex('4a2a3a')), (360, False, C.hex('3a2a2a'))):
-        Demon(pose='hold', hands=((18, -62), (-12, -52)), skin=sk, horns='bull', wings=True, wing_span=0.6, wing_col=sk.dark(0.4), eye=C.hex('ffe060'),
+        Demon(pose='hold', skin=sk, horns='bull', wings=False, stout=1.2, spikes=True, eye=C.hex('ffe060'),
               mouth='grin', shadow=False, props_front=[skel_spear(112, col=C.hex('2a1a14'))]).draw(p, x, 520, 240, flip=fl)
     # the duke
 
@@ -2504,8 +2509,11 @@ def abyss_m_004(p):
         scroll_lines(p, hb[0], hb[1] + 1, hb[0] + 11, hb[1] + 28, 9, BLOOD.alpha(0.6), 0.8)
         wax_seal(p, (hb[0] + 6, hb[1] + 30), 3.0)
 
-    Demon(pose='hold', hands=((20, -62), (-16, -54)), skin=C.hex('5a1e1e'), robe=C.hex('1e0a0e'), robe_trim=OLD_GOLD, horns='great', horn_col=C.hex('2a1a16'),
-          wings=True, wing_span=1.05, wing_col=C.hex('2a0a0a'), crown=OLD_GOLD, mouth='smile', beard=C.hex('120606'), eye=FLAME_CORE, fist='f',
+    # no wings: a hulking duke, smoke pouring off him against the throne
+    smoke(p, [(470, 470), (430, 340), (400, 220)], 24, 70, C.hex('1a0a0c'), 0.55)
+    smoke(p, [(530, 470), (570, 340), (600, 220)], 24, 70, C.hex('1a0a0c'), 0.55)
+    Demon(pose='hold', skin=C.hex('5a1e1e'), robe=C.hex('1e0a0e'), robe_trim=OLD_GOLD, horns='great', horn_col=C.hex('2a1a16'),
+          wings=False, stout=1.3, crown=OLD_GOLD, mouth='smile', beard=C.hex('120606'), eye=FLAME_CORE, fist='f',
           fire_hair=EMBER, props_front=[sceptre(64)], props_back=[contract]).draw(p, 500, 600, 470)
     # chained debtors kneeling before him
     for x, fl, col in ((180, False, C.hex('5a4a3a')), (820, True, C.hex('4a4a5a'))):

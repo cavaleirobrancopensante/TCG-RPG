@@ -183,6 +183,47 @@ func _ready() -> void:
 	d._refresh_now()
 	assert(d.grid.get_child_count() == 0 and n_all > 0, "search filter")
 	d._clear_filters()
+	# type filter: Instant shows only instants
+	d.f_type = DeckBuilder.TYPES.find("Instant")
+	d._refresh_now()
+	for cv in d.grid.get_children():
+		assert(CardView.kind((cv as CardView).card) == "instant", "instant filter")
+	d._clear_filters()
+	d._refresh_now()
+	# tap a card: the viewer opens with Add to deck, and stays open for more
+	var addable: CardView = null
+	for cv in d.grid.get_children():
+		var q := cv.find_child("QuickAdd", false, false) as Button
+		if q != null and q.visible:
+			addable = cv
+			break
+	assert(addable != null, "a card can be added")
+	var aid := addable.card_id
+	var n0 := int(d._deck().get(aid, 0))
+	addable.tapped.emit(addable)
+	var dv: CardViewer = null
+	for ch in d.get_children():
+		if ch is CardViewer:
+			dv = ch
+	assert(dv != null and dv.entry()["id"] == aid, "tapping a collection card opens the viewer")
+	var dacts: Array = dv.actions.call(dv.entry(), dv.index)
+	assert(String(dacts[0][0]) == I18n.t("Add to deck (%d in deck)") % n0 and dacts[0][2], "Add to deck offered")
+	dacts[0][1].call()
+	assert(int(d._deck().get(aid, 0)) == n0 + 1, "added from the viewer")
+	dacts = dv.actions.call(dv.entry(), dv.index)
+	assert(dacts.size() == 2 and dacts[1][0] == "Remove", "Remove offered once it is in the deck")
+	dacts[1][1].call()
+	assert(int(d._deck().get(aid, 0)) == n0, "removed from the viewer")
+	dv.close()
+	await _frames(2)
+	d._refresh_now()
+	# the quick "+" adds without opening anything
+	for cv in d.grid.get_children():
+		if (cv as CardView).card_id == aid:
+			(cv.find_child("QuickAdd", false, false) as Button).pressed.emit()
+	assert(int(d._deck().get(aid, 0)) == n0 + 1, "the + adds a copy")
+	d._change(aid, -1)
+	d._refresh_now()
 	# a second deck: copy, rename, make it the duel deck
 	d._copy_deck()
 	assert(GameState.decks.size() == 2 and d.editing == 1, "copy deck")
@@ -216,6 +257,13 @@ func _ready() -> void:
 	await _frames(3)
 	var ds: DraftScreen = main.screen
 	assert(ds is DraftScreen, "draft screen")
+	# tapping a card in the pack opens the viewer with Take
+	var dvw := ds._read(0)
+	var tk: Array = dvw.actions.call(dvw.entry(), dvw.index)
+	assert(tk[0][0] == "Take" and ds.chosen == 0, "draft: tap opens the viewer with Take")
+	tk[0][1].call()
+	dvw.close()
+	await _frames(2)
 	while main.tournament.is_drafting():
 		ds._take_index(0)
 	await _frames(3)
@@ -489,12 +537,26 @@ func _interactive_battle() -> void:
 	assert((b.preview as CardViewer).index == 1, "hand viewer next")
 	b._close_preview()
 	await _frames(2)
-	# 1) Targeted burn at the enemy's face.
+	# 1) Targeted burn at the enemy's face: tap the card in hand, it is lifted into the preview
+	#    with Play and Cancel; Play starts the targeting.
 	var life_before: int = st.side(1).life
-	b._begin_play(0)
+	b._on_hand_tapped(0)
+	await _frames(2)
+	var pv := b.preview as CardViewer
+	assert(pv != null and pv.close_label == "Cancel" and pv.index == 0, "tapping a hand card lifts it into the preview")
+	var acts: Array = pv.actions.call(pv.entry(), pv.index)
+	assert(acts[0][0] == "Play" and acts[0][2] and b.play_block_reason(0) == "", "Play is offered for a playable card")
+	acts[0][1].call()
 	if b.mode != "target":
 		print("no target mode: busy=%s can_play=%s priority=%d phase=%s step=%s stack=%d window=%s idle_main=%s hand=%s" % [b.busy, st.can_play(0, 0), st.priority, st.phase, st.step, st.stack.size(), st.window_open, b.idle_main, me.hand])
 	assert(b.mode == "target", "should ask for a target")
+	# while choosing, a hand card still shows, but Play waits (with the reason)
+	b._on_hand_tapped(1)
+	await _frames(1)
+	assert(b.preview is CardViewer and b.play_block_reason(1) != "", "in targeting mode Play is disabled with a reason")
+	var blocked: Array = (b.preview as CardViewer).actions.call((b.preview as CardViewer).entry(), 1)
+	assert(not blocked[0][2] and String(blocked[0][4]) != "", "the reason travels with the disabled Play")
+	b._close_preview()
 	b._on_player_target(1)
 	while b.busy or b.mode != "idle":
 		await _wait(0.2)
@@ -505,6 +567,33 @@ func _interactive_battle() -> void:
 	b._begin_play(0)
 	await _settle(b)
 	assert(st.side(0).creatures.size() >= 2, "creatures summoned")
+	# a tap on a creature (press and release in place) reads it; a long press does too; a drag is neither
+	var fig0: SummonFigure = b.figures[st.side(0).creatures[0].uid]
+	var taps := [0, 0]
+	var on_tap := func(): taps[0] += 1
+	var on_long := func(): taps[1] += 1
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.global_position = Vector2(100, 100)
+	var release: InputEventMouseButton = press.duplicate()
+	release.pressed = false
+	b._hold_event(press, fig0, on_tap, on_long)
+	b._hold_event(release, fig0, on_tap, on_long)
+	assert(taps == [1, 0], "press and release is a tap")
+	b._hold_event(press, fig0, on_tap, on_long)
+	var drag_ev := InputEventMouseMotion.new()
+	drag_ev.global_position = Vector2(160, 100)
+	b._hold_event(drag_ev, fig0, on_tap, on_long)
+	b._hold_event(release, fig0, on_tap, on_long)
+	assert(taps == [1, 0], "a drag is not a tap")
+	b._hold_event(press, fig0, on_tap, on_long)
+	await _wait(BattleScene.HOLD_TIME + 0.15)
+	b._hold_event(release, fig0, on_tap, on_long)
+	assert(taps == [1, 1], "holding is a long press, not a tap")
+	b._on_figure_tapped(fig0)
+	assert(b.preview is CardViewer, "tapping a creature shows it")
+	b._close_preview()
 	# an instant and an untapped land kept for the enemy's turn
 	me.hand.append("wild_c_014")
 	me.lands.append({"id": "land_wild", "color": "G", "tapped": false})
@@ -556,6 +645,12 @@ func _interactive_battle() -> void:
 		if ready > 1:
 			b._on_figure_tapped(b.figures[b.sel_attackers[0]])     # hold one back
 			assert(b.sel_attackers.size() == ready - 1, "tapping holds a creature back")
+		# in attack mode a long press still reads the card, without changing the attackers
+		if ready > 0:
+			var n_sel := b.sel_attackers.size()
+			b._on_figure_long(b.figures[st.attack_candidates(0)[0].uid])
+			assert(b.preview is CardViewer and b.sel_attackers.size() == n_sel and b.mode == "attack", "long press reads a card in attack mode")
+			b._close_preview()
 		var n := b.sel_attackers.size()
 		b._on_main()
 		await _settle(b)

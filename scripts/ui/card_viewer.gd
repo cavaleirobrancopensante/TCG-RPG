@@ -6,7 +6,10 @@ extends Control
 ##   CardViewer.open(parent, entries, index, actions)
 ##     entries: Array of ids, or of {"id": String, "foil": bool, "data": Dictionary (tokens)}
 ##     actions: Callable(entry: Dictionary, index: int) -> Array of
-##              [label: String, callback: Callable, enabled: bool, closes: bool]
+##              [label: String, callback: Callable, enabled: bool, closes: bool, why_not: String]
+##              (why_not, optional: shown under the buttons while the action is disabled)
+##   close_label: the dismiss button's text ("Close", or "Cancel" for the duel's hand preview).
+##   The "?" button opens the rules glossary (card types, keywords, the stack).
 
 signal closed
 
@@ -50,6 +53,7 @@ const SWIPE := 70.0
 var entries: Array = []
 var index := 0
 var actions: Callable
+var close_label := "Close"
 var card_view: CardView
 var info_box: VBoxContainer
 var left_btn: Button
@@ -71,8 +75,9 @@ var _pinch_mid := Vector2.ZERO
 var _pinching := false
 
 
-static func open(parent: Node, p_entries: Array, p_index: int, p_actions: Callable = Callable()) -> CardViewer:
+static func open(parent: Node, p_entries: Array, p_index: int, p_actions: Callable = Callable(), p_close_label: String = "Close") -> CardViewer:
 	var v := CardViewer.new()
+	v.close_label = p_close_label
 	for e in p_entries:
 		v.entries.append(e if typeof(e) == TYPE_DICTIONARY else {"id": e, "foil": false})
 	v.index = clampi(p_index, 0, maxi(0, p_entries.size() - 1))
@@ -208,22 +213,39 @@ func _fill_info(e: Dictionary) -> void:
 	UIKit.clear(info_box)
 	var c: Dictionary = e.get("data", {}) if e.has("data") else CardDB.get_card(e["id"])
 	var f: String = c.get("faction", "machine")
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 8)
+	info_box.add_child(head)
 	var tl := UIKit.title(I18n.t(c.get("name", "")), 30)
 	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	tl.custom_minimum_size.x = 300
-	info_box.add_child(tl)
+	tl.custom_minimum_size.x = 240
+	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(tl)
+	var help := UIKit.button("?", open_glossary, 52)
+	help.name = "GlossaryButton"
+	help.custom_minimum_size = Vector2(52, 52)
+	help.tooltip_text = I18n.t("Rules glossary")
+	help.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	head.add_child(help)
 	var line := "%s · %s" % [Factions.info(f)["name"], I18n.t(String(c.get("rarity", "")).capitalize())]
 	if e.get("foil", false):
 		line += " · " + I18n.t("Foil")
 	info_box.add_child(UIKit.label(line, 18, UIKit.faction_ink(f), true))
-	var type_line := I18n.type_line(c)
+	# type line, cost (as pips) and power/toughness
+	var type_line := CardView.type_line(c)
 	if c.get("type") != "land" and c.get("rarity") != "token":
-		type_line += "   ·   " + I18n.t("Cost %s") % UIKit.cost_text(c.get("cost", {}))
+		type_line += "   ·   " + I18n.t("Cost %s") % CardView.cost_tokens(c.get("cost", {}))
 	if c.get("type") == "creature":
 		type_line += "   ·   %d/%d" % [c.get("power", 0), c.get("toughness", 0)]
-	info_box.add_child(UIKit.label(type_line, 17, UIKit.TEXT, true))
+	var tline := CardView.RulesText.new(type_line, 17, UIKit.TEXT)
+	tline.name = "TypeLine"
+	tline.custom_minimum_size.x = 300
+	info_box.add_child(tline)
 	if c.get("text", "") != "":
-		info_box.add_child(UIKit.label(I18n.t(c["text"]), 19, UIKit.TEXT, true))
+		var rules := CardView.RulesText.new(I18n.t(c["text"]), 19, UIKit.TEXT)
+		rules.name = "RulesText"
+		rules.custom_minimum_size.x = 300
+		info_box.add_child(rules)
 	for kw in c.get("keywords", []):
 		if KEYWORDS.has(kw):
 			info_box.add_child(UIKit.label(I18n.t(KEYWORDS[kw]), 15, UIKit.DIM, true))
@@ -236,8 +258,11 @@ func _fill_info(e: Dictionary) -> void:
 	if c.get("rarity") != "token" and c.get("type") != "land":
 		info_box.add_child(UIKit.label(I18n.t("You own %d") % GameState.owned_count(e["id"]), 16, UIKit.DIM))
 	info_box.add_child(UIKit.label("%d / %d" % [index + 1, entries.size()], 17, UIKit.DIM))
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
+	var row := HFlowContainer.new()
+	row.name = "Actions"
+	row.add_theme_constant_override("h_separation", 10)
+	row.add_theme_constant_override("v_separation", 8)
+	var reasons: Array = []
 	if actions.is_valid():
 		for a in actions.call(e, index):
 			var cb: Callable = a[1]
@@ -250,8 +275,31 @@ func _fill_info(e: Dictionary) -> void:
 					refresh.call_deferred(), 150)
 			b.disabled = not a[2]
 			row.add_child(b)
-	row.add_child(UIKit.button("Close", close, 120))
+			if b.disabled and a.size() > 4 and String(a[4]) != "":
+				reasons.append(String(a[4]))
+	var cl := UIKit.button(close_label, close, 120)
+	cl.name = "CloseButton"
+	row.add_child(cl)
 	info_box.add_child(row)
+	for why in reasons:
+		var wl := UIKit.label(why, 16, UIKit.RED, true)
+		wl.name = "WhyNot"
+		wl.custom_minimum_size.x = 300
+		info_box.add_child(wl)
+
+
+## The rules glossary over the viewer: card types, keywords, conditions, the stack.
+func open_glossary() -> RulesGlossary:
+	var g := RulesGlossary.new()
+	add_child(g)
+	return g
+
+
+func _glossary_open() -> bool:
+	for ch in get_children():
+		if ch is RulesGlossary:
+			return true
+	return false
 
 
 # ------------------------------------------------------------------ swipe & keys
@@ -259,7 +307,7 @@ func _fill_info(e: Dictionary) -> void:
 ## Swipes are read anywhere on the screen (over the card, the text or the background),
 ## and the card follows the finger while dragging.
 func _input(event: InputEvent) -> void:
-	if not is_visible_in_tree() or not _is_top():
+	if not is_visible_in_tree() or not _is_top() or _glossary_open():
 		return
 	if _zoom_input(event):
 		get_viewport().set_input_as_handled()
@@ -382,6 +430,8 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _glossary_open():
+		return
 	if event.is_action_pressed("ui_right"):
 		next()
 		get_viewport().set_input_as_handled()

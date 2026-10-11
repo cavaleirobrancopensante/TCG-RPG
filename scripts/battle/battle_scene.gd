@@ -119,7 +119,7 @@ func _build_ui() -> void:
 	ebar.add_child(enemy_info)
 	enemy_relics = HBoxContainer.new()
 	ebar.add_child(enemy_relics)
-	var flee := UIKit.button("Flee", _on_flee, 90)
+	var flee := UIKit.button("Flee", _ask_flee, 90)
 	flee.custom_minimum_size.y = 44
 	ebar.add_child(flee)
 
@@ -227,7 +227,8 @@ func _view_entry(sid: int, side_i: int, id: String, ability: bool, text: String,
 	var nm := pname
 	if nm == "":
 		nm = String(token.get("name", "")) if not token.is_empty() else String(CardDB.get_card(id).get("name", id))
-	return {"sid": sid, "side": side_i, "id": id, "name": nm, "ability": ability, "text": text, "targets": targets, "token": token}
+	# the stack shows an ability's text as plain text: translated here, mana tokens as (2), (W)
+	return {"sid": sid, "side": side_i, "id": id, "name": nm, "ability": ability, "text": CardView.plain_text(I18n.t(text)), "targets": targets, "token": token}
 
 
 func _show_stack_card(e: Dictionary) -> void:
@@ -601,7 +602,8 @@ func _spawn_figure(p, animate: bool) -> SummonFigure:
 	var fig := SummonFigure.new()
 	fig.setup(p.uid, p.card, p.owner == 1)
 	fig.sync(p)
-	fig.tapped.connect(_on_figure_tapped)
+	# tap on release, long press to read the card (in every mode); see _watch_hold
+	_watch_hold(fig, func(): _on_figure_tapped(fig), func(): _on_figure_long(fig))
 	figures[p.uid] = fig
 	(player_field if p.owner == 0 else enemy_field).add_child(fig)
 	_restack(p.owner)
@@ -621,11 +623,11 @@ func _refresh_relics(i: int) -> void:
 		b.add_theme_font_size_override("font_size", 14)
 		var ruid: int = r.uid
 		var rside := i
-		b.pressed.connect(func():
-			if mode == "target":
+		_watch_hold(b, func():
+			if mode == "target" and not busy:
 				_choose_target({"kind": "relic", "uid": ruid})
-			else:
-				_show_board(rside, ruid))
+			elif mode == "idle" or busy:
+				_show_board(rside, ruid), func(): _show_board(rside, ruid))
 		if _is_valid_target({"kind": "relic", "uid": ruid}):
 			b.modulate = Color(1.4, 1.2, 0.6)
 		var has_ab := false
@@ -686,6 +688,7 @@ func _rebuild_hand() -> void:
 		cv.highlight = st.can_play(0, idx) and mode == "idle" and not busy
 		var i2 := idx
 		cv.tapped.connect(func(_v): _on_hand_tapped(i2))
+		cv.long_pressed.connect(func(_v): _on_hand_tapped(i2))
 		hand_box.add_child(cv)
 
 
@@ -1104,6 +1107,7 @@ func _wait(t: float) -> void:
 
 
 func _log(t: String) -> void:
+	t = CardView.plain_text(t)
 	log_label.text = t
 
 
@@ -1287,14 +1291,43 @@ func _player_mulligan() -> void:
 
 # =================================================================== preview overlay
 
-## Read a card: from the hand (leaf through the hand, with Play) or a single card.
+## Read a card: from the hand (lifted to full size, leafing through the hand, with Play and
+## Cancel; Play is disabled with the reason when the card can't be played now) or a single card.
 func _show_preview(id: String, hand_idx: int) -> void:
 	_close_preview()
 	if hand_idx >= 0:
 		preview = CardViewer.open(self, st.side(0).hand.duplicate(), hand_idx, func(_e, i):
-			return [["Play", func(): _begin_play(i), st.can_play(0, i) and not busy and mode == "idle", true]])
+			var why := play_block_reason(i)
+			return [["Play", func(): _begin_play(i), why == "", true, why]], "Cancel")
 	else:
 		preview = CardViewer.open(self, [id], 0)
+
+
+## Why the hand card at `i` can't be played right now ("" when it can).
+func play_block_reason(i: int) -> String:
+	var me := st.side(0)
+	if i < 0 or i >= me.hand.size():
+		return I18n.t("That card has left your hand.")
+	if st.phase == "over":
+		return I18n.t("The duel is over.")
+	if busy:
+		return I18n.t("Wait a moment: the duel is still moving.")
+	if mode == "target":
+		return I18n.t("Choose the target first, or cancel.")
+	if mode == "attack" or mode == "block":
+		return I18n.t("Finish the attack or the blocks first.")
+	if st.can_play(0, i):
+		return ""
+	var c := CardDB.get_card(me.hand[i])
+	if c.get("type") == "land":
+		if me.land_played:
+			return I18n.t("You have already played a land this turn.")
+		return I18n.t("Lands are played in your own main phase, with the stack empty.")
+	if not st.has_priority(0):
+		return I18n.t("Wait until you have priority: your main phase, or when the duel stops for you to answer.")
+	if not BattleState.is_instant(c) and not st.sorcery_time(0):
+		return I18n.t("Only in your own main phase, with the stack empty. Only an Instant can be cast at other times.")
+	return I18n.t("Not enough mana.")
 
 
 ## Read the cards on one side of the battlefield (creatures then relics), starting at uid.
@@ -1320,7 +1353,7 @@ func _show_board(side_i: int, uid: int) -> void:
 				var ab: Dictionary = list[k]
 				var kk: int = k
 				var quid: int = q.uid
-				out.append([I18n.t("Use") + ": " + I18n.t(String(ab.get("text", ""))).left(38), func(): _begin_ability(quid, kk),
+				out.append([I18n.t("Use") + ": " + CardView.plain_text(I18n.t(String(ab.get("text", "")))).left(38), func(): _begin_ability(quid, kk),
 					st.can_activate(0, q.uid, k) and not busy and mode == "idle", true])
 			return out)
 
@@ -1333,8 +1366,10 @@ func _close_preview() -> void:
 
 # =================================================================== input
 
+## Tap a card in hand: it is lifted to a full-size preview with Play (or the reason it can't
+## be played now) and Cancel. Works in every mode; Play then runs the usual play flow.
 func _on_hand_tapped(idx: int) -> void:
-	if busy or mode != "idle":
+	if idx < 0 or idx >= st.side(0).hand.size():
 		return
 	_show_preview(st.side(0).hand[idx], idx)
 
@@ -1495,10 +1530,11 @@ func _on_player_target(side_i: int) -> void:
 
 
 func _on_figure_tapped(fig: SummonFigure) -> void:
-	if busy:
-		return
 	var p = st.find_perm(fig.uid)
 	if p == null:
+		return
+	if busy:
+		_show_board(p.owner, p.uid)      # read it while the duel moves; its abilities wait
 		return
 	match mode:
 		"target":
@@ -1533,6 +1569,48 @@ func _on_figure_tapped(fig: SummonFigure) -> void:
 				refresh()
 		_:
 			_show_board(p.owner, p.uid)
+
+
+## Long press on a creature: read it, in every mode (attack, block and targeting keep tap
+## for choosing).
+func _on_figure_long(fig: SummonFigure) -> void:
+	var p = st.find_perm(fig.uid)
+	if p != null:
+		_show_board(p.owner, p.uid)
+
+
+const HOLD_TIME := 0.45           # seconds held for a long press
+const HOLD_SLOP := 14.0           # px a finger may wander and still tap
+var _hold_id := 0
+var _hold_node: Control = null
+var _hold_pos := Vector2.ZERO
+
+
+## Tap (press and release in place) and long press (held HOLD_TIME) on a battlefield piece,
+## read from the control's gui_input. A drag is neither.
+func _watch_hold(c: Control, on_tap: Callable, on_long: Callable) -> void:
+	c.gui_input.connect(func(ev: InputEvent): _hold_event(ev, c, on_tap, on_long))
+
+
+func _hold_event(ev: InputEvent, c: Control, on_tap: Callable, on_long: Callable) -> void:
+	if ev is InputEventMouseButton and ev.button_index == MOUSE_BUTTON_LEFT:
+		if ev.pressed:
+			_hold_id += 1
+			var id := _hold_id
+			_hold_node = c
+			_hold_pos = ev.global_position
+			get_tree().create_timer(HOLD_TIME).timeout.connect(func():
+				if id == _hold_id and _hold_node == c and is_instance_valid(c):
+					_hold_node = null
+					on_long.call())
+		elif _hold_node == c:
+			_hold_node = null
+			_hold_id += 1
+			if ev.global_position.distance_to(_hold_pos) < HOLD_SLOP:
+				on_tap.call()
+	elif ev is InputEventMouseMotion and _hold_node == c and ev.global_position.distance_to(_hold_pos) > HOLD_SLOP:
+		_hold_node = null
+		_hold_id += 1
 
 
 func _on_alt() -> void:
@@ -1884,6 +1962,15 @@ func _ai_main(i: int) -> void:
 
 
 var fled := false
+
+
+## Fleeing costs dearly on the road, so it always asks first and names the price.
+func _ask_flee() -> void:
+	if st.phase == "over":
+		return
+	var body := I18n.t("You will lose this match.") if info.get("tournament", false) \
+		else I18n.t("You will drop %d gold (half your purse) and lose 5 random cards from your deck.") % int(GameState.gold / 2)
+	UIKit.confirm(self, I18n.t("Flee the duel?"), body, I18n.t("Flee"), _on_flee)
 
 
 func _on_flee() -> void:

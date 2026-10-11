@@ -36,9 +36,9 @@
     "power": 1,
     "toughness": 1,
     "keywords": [
-      "dread"
+      "flying"
     ],
-    "text": "Dread (can only be blocked by Pact creatures and Constructs).",
+    "text": "Flying (can only be blocked by creatures with flying or reach).",
     "flavor": "It is small, it is spiteful, and it is never where you swing.",
     "art": "res://art/cards/abyss_c_002.webp"
   },
@@ -241,16 +241,16 @@
         "trigger": "death",
         "action": "summon",
         "token": {
-          "name": "Restless Dead",
+          "name": "Risen Bones",
           "power": 1,
           "toughness": 1,
-          "subtype": "Zombie",
+          "subtype": "Skeleton",
           "keywords": []
         },
         "count": 1
       }
     ],
-    "text": "When this dies, create a 1/1 Restless Dead Zombie token.",
+    "text": "When this dies, create a 1/1 Risen Bones Skeleton token.",
     "flavor": "Break it apart and the pieces keep walking.",
     "art": "res://art/cards/abyss_c_010.webp"
   },
@@ -508,7 +508,7 @@
       }
     ],
     "text": "Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.",
-    "flavor": "\"Swear by everything. Then nothing can hold you to anything.\" (a Pact notary)",
+    "flavor": "\"An oath is a rope. A wise man ties it round other men's necks.\" (a Pact notary)",
     "art": "res://art/cards/abyss_c_020.webp"
   },
   {
@@ -584,16 +584,16 @@
         "trigger": "death",
         "action": "summon",
         "token": {
-          "name": "Restless Dead",
+          "name": "Risen Bones",
           "power": 1,
           "toughness": 1,
-          "subtype": "Zombie",
+          "subtype": "Skeleton",
           "keywords": []
         },
         "count": 1
       }
     ],
-    "text": "When this dies, create a 1/1 Restless Dead Zombie token.",
+    "text": "When this dies, create a 1/1 Risen Bones Skeleton token.",
     "flavor": "Knock it down and something else climbs out of the same grave.",
     "art": "res://art/cards/abyss_c_023.webp"
   },
@@ -1120,10 +1120,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap, pay 2 and 2 life: the enemy discards a card at random."
+        "text": "Tap, pay {2} and 2 life: the enemy discards a card at random."
       }
     ],
-    "text": "Tap, pay 2 and 2 life: the enemy discards a card at random.",
+    "text": "Tap, pay {2} and 2 life: the enemy discards a card at random.",
     "flavor": "Its smoke mocks the incense of the sanctuary. It carries no prayers up, only thoughts away.",
     "art": "res://art/cards/abyss_u_013.webp"
   },
@@ -1368,7 +1368,7 @@
     "power": 2,
     "toughness": 2,
     "keywords": [
-      "dread"
+      "flying"
     ],
     "effects": [
       {
@@ -1377,7 +1377,7 @@
         "amount": 1
       }
     ],
-    "text": "Dread. Whenever this attacks, the enemy discards a card at random.",
+    "text": "Flying. Whenever this attacks, the enemy discards a card at random.",
     "flavor": "In the morning you remember that you had a plan. You cannot remember what it was.",
     "art": "res://art/cards/abyss_r_002.webp"
   },
@@ -1461,16 +1461,16 @@
           {
             "action": "summon",
             "token": {
-              "name": "Restless Dead",
-              "power": 2,
-              "toughness": 2,
-              "subtype": "Zombie",
+              "name": "Risen Bones",
+              "power": 1,
+              "toughness": 1,
+              "subtype": "Skeleton",
               "keywords": []
             },
             "count": 1
           }
         ],
-        "text": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token."
+        "text": "{B}, sacrifice another creature: create a 1/1 Risen Bones Skeleton token."
       }
     ],
     "statics": [
@@ -1482,7 +1482,7 @@
         "subtype": "Skeleton"
       }
     ],
-    "text": "Other Skeletons you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
+    "text": "Other Skeletons you control get +1/+1. {B}, sacrifice another creature: create a 1/1 Risen Bones Skeleton token.",
     "flavor": "Every skull on his walls once knelt to him. Most of them still do.",
     "art": "res://art/cards/abyss_r_005.webp"
   },
@@ -1534,7 +1534,7 @@
       }
     ],
     "text": "Destroy all creatures.",
-    "flavor": "\"When no one is left to accuse you, you are innocent.\" (the Black Synod, Canon of Silence)",
+    "flavor": "\"Leave no witness, and the deed was never done.\" (the Black Synod, Canon of Silence)",
     "art": "res://art/cards/abyss_r_007.webp"
   },
   {
@@ -1715,7 +1715,7 @@
     "power": 5,
     "toughness": 5,
     "keywords": [
-      "dread"
+      "flying"
     ],
     "effects": [
       {
@@ -1729,7 +1729,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "Dread. When this enters, destroy target enemy creature and you lose 3 life.",
+    "text": "Flying. When this enters, destroy target enemy creature and you lose 3 life.",
     "flavor": "\"I did not fall. I merely went into business for myself.\" (Belzareth, Prince of Cinders)",
     "art": "res://art/cards/abyss_m_001.webp"
   },
@@ -1838,7 +1838,7 @@
       }
     ],
     "text": "Dread. Other Demons you control have deathtouch (any damage they deal to a creature destroys it). Whenever another Demon enters under your control, the enemy discards a card at random. When this enters, you lose 3 life.",
-    "flavor": "\"In my court there is perfect freedom: every man is free to pay.\" (Azgaroth, Duke of the Ninth Pit)",
+    "flavor": "\"Every man in my court is free. He is free to pay, and free to pay again.\" (Azgaroth, Duke of the Ninth Pit)",
     "art": "res://art/cards/abyss_m_004.webp"
   }
 ]

@@ -1106,7 +1106,7 @@
         "amount": 1
       }
     ],
-    "text": "Your Knight creature cards cost 1 less to play (1 less generic mana).",
+    "text": "Your Knight creature cards cost {1} less to play (1 less generic mana).",
     "flavor": "He keeps the accounts, the horses and the novices, and every spring he sends the ready ones East.",
     "art": "res://art/cards/sanctum_u_014.webp"
   },

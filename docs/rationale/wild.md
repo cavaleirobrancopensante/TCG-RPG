@@ -5,7 +5,7 @@ The Old Ways win by growing more than the opponent can cut down: bigger bodies f
 **Briar Fox** · Common · Creature (Beast) · G · 2/1 · Trample (excess combat damage goes to the player).
 The faith's one-drop attacker. A 2/1 for one is the baseline rate, and trample on a body this small rarely matters, so it is a gentle bonus rather than a real point of power. The fox slipping through the hedge before the hounds arrive is the English countryside in a single picture.
 
-**Hedgerow Druid** · Common · Creature (Human Druid) · 1G · 1/2 · Tap: add G.
+**Hedgerow Druid** · Common · Creature (Human Druid) · 1G · 1/2 · Tap: add {G}.
 The common mana creature. In set 1 he added mana at upkeep; now he taps for it, which is easier to read and means he can be attacked around or killed before he pays off. Two mana for a 1/2 that ramps by one is fair, and it lets a turn two Druid lead to a four-drop on turn three. A country druid coaxing growth from the soil is a traditional figure, shown warmly.
 
 **Thornback Boar** · Common · Creature (Beast) · 1G · 2/2 · Whenever this attacks, it gets +1/+0 until end of turn.
@@ -38,7 +38,7 @@ The common top-end beater. A 4/4 trampler for five pays a point of stats for the
 **Old Hollow Oak** · Common · Creature (Treefolk) · 5G · 4/6 · Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).
 A six-drop that is very hard to remove: it blocks, survives and blocks again. Two points of power under a 6/6 pay for regenerate, so it is a wall first and an attacker second. Ancient hollow oaks struck by lightning and still growing are a common sight in English parkland.
 
-**Greening Rite** · Common · Spell (Rite) · G · Add GG.
+**Greening Rite** · Common · Spell (Rite) · G · Add {G}{G}.
 One-shot acceleration that nets a single mana and costs a card. With set 1's permanent ramp trimmed, this is how the faith makes an early big play without a lasting engine. The flavour, seed into soil and sap into power, is the faith's whole belief in one line.
 
 **Wildsurge** · Common · Spell (Rite) · G · Target creature you control gets +3/+3 until end of turn.
@@ -56,10 +56,10 @@ Nature against machines. It answers Technocracy relics and the slow engines of t
 **Call of the Pack** · Common · Spell (Rite) · 2G · Create two 2/2 Wolf tokens.
 Four power over two bodies for three mana, the most efficient common token card in the faith. It is good with pumps and with the Antler-King, since the wolves are Beasts. One howl and the hills answering is the Old Ways at their most alive.
 
-**Rowan Charm** · Common · Relic (Relic) · G · Tap, pay G: target creature you control gets +1/+1 until end of turn.
+**Rowan Charm** · Common · Relic (Relic) · G · Tap, pay {G}: target creature you control gets +1/+1 until end of turn.
 A cheap repeatable pump that turns every combat slightly in your favour. It costs mana every turn, so it competes with casting creatures, and +1/+1 is modest. A sprig of rowan over the byre door is a real country charm against harm.
 
-**Sower's Basket** · Common · Relic (Relic) · 1G · Tap, pay 1G: create a 1/1 Sapling token.
+**Sower's Basket** · Common · Relic (Relic) · 1G · Tap, pay {1}{G}: create a 1/1 Sapling token.
 A slow token engine for long games, and a use for spare mana once the Rooted lands arrive. Two mana a turn for a 1/1 is a poor rate early, which keeps it fair at common. Sowing by hand in spring and reaping by the cartload is the harvest cycle the faith celebrates.
 
 **Wolfsire of the Fen** · Uncommon · Creature (Wolf Beast) · 2G · 2/2 · When this enters, create a 2/2 Wolf token.
@@ -95,13 +95,13 @@ Fight with a pump attached, so the chosen creature usually survives and still ki
 **Wassail the Orchard** · Uncommon · Spell (Rite) · 2G · Create two 1/1 Sapling tokens. Rooted: if you control six or more lands, create two more.
 Two bodies early, four late. The Rooted mode turns a modest card into a strong one for a deck that has let its lands build up. Wassailing the apple trees with cider and song is a real English winter custom, cheerful and harmless.
 
-**Dowser's Hazel Rod** · Uncommon · Relic (Relic) · 2G · Tap: add G.
+**Dowser's Hazel Rod** · Uncommon · Relic (Relic) · 2G · Tap: add {G}.
 A plain mana relic. Three mana for one extra mana a turn is slower than the Druid, but it cannot be killed in combat. The forked hazel stick of the water diviner is a country tradition that suits a faith that finds power in the earth.
 
-**Horn of the Wild Hunt** · Uncommon · Relic (Relic) · 2G · Tap, pay 2G: create a 2/2 Wolf token.
+**Horn of the Wild Hunt** · Uncommon · Relic (Relic) · 2G · Tap, pay {2}{G}: create a 2/2 Wolf token.
 A wolf every turn for three mana, a strong engine in long games and too slow to matter in a race. It is the uncommon big brother of the Sower's Basket. A horn blown on a winter night that something in the hills always answers is the Wild Hunt as folk tale, eerie but gentle.
 
-**Mistletoe Archdruid** · Rare · Creature (Human Druid) · 2G · 2/3 · At the beginning of your upkeep, add G. Tap, pay G: target creature you control gets +1/+1 permanently.
+**Mistletoe Archdruid** · Rare · Creature (Human Druid) · 2G · 2/3 · At the beginning of your upkeep, add {G}. Tap, pay {G}: target creature you control gets +1/+1 permanently.
 The set 1 Archdruid made GG every turn and was the clearest balance problem in the faith, so now he adds a single G. The build-around side is his blessing: each turn he can spend that mana to grow a creature permanently. Cutting the sacred mistletoe with a golden sickle is the druidic rite Pliny describes.
 
 **White Hart of the Greenwood** · Rare · Creature (Beast Spirit) · 1GG · 2/3 · Regenerate. Whenever this attacks, target creature you control gets +1/+1 permanently.
@@ -125,7 +125,7 @@ Fight early, a double kill late. The second fight needs a creature that survived
 **Awaken the Grove** · Rare · Spell (Rite) · 3GG · Create three 2/2 Oakling tokens with reach.
 Six power over three bodies for five mana, and all of them guard the sky. It refills the board after a sweeper and shuts down flying attacks. The druid singing until the wood remembers it can walk is the faith's folk magic at full strength.
 
-**Circle of Standing Stones** · Rare · Relic (Relic) · 3G · At the beginning of your upkeep, add GG.
+**Circle of Standing Stones** · Rare · Relic (Relic) · 3G · At the beginning of your upkeep, add {G}{G}.
 Heavy ramp, moved from uncommon to rare as the set 1 notes asked. Four mana for two extra mana each turn sets up enormous turns, but it adds nothing to the board, so a fast deck can punish it. Stones raised by no hand anyone remembers evoke Stonehenge and the circles of the west.
 
 **Herne, Lord of the Wild Hunt** · Mythic · Creature (Spirit Hunter) · 3GG · 5/5 · Trample. Whenever this attacks, create a 2/2 Wolf token.
@@ -150,7 +150,7 @@ A 3/2 for three at the common rate, with a small bonus that makes the turn you c
 **Run with the Pack** · Common · Spell (Rite) · 1G · Target creature you control gets +1/+1 until end of turn for each Wolf you control.
 The Wolf combat trick. With one Wolf it is a weak instant pump, with three it is better than Wildsurge, so its strength depends entirely on the tribe being on the table. Two mana at instant speed follows the spec's "a little dearer" rule. The flavour line is the oldest lesson of the pack: alone a wolf starves.
 
-**Coppiced Hazel** · Common · Creature (Treefolk) · 1G · 0/3 · Tap: add G.
+**Coppiced Hazel** · Common · Creature (Treefolk) · 1G · 0/3 · Tap: add {G}.
 A mana creature for the Treefolk deck, whose big trees want to arrive a turn early. No power and three toughness make it a wall that ramps, unlike the Hedgerow Druid who can at least chip in. Coppicing, cutting hazel to the stool so it springs again thicker, is the old woodland craft of England, and a tree that grows back stronger every time it is cut suits the faith.
 
 **Hedge-Elm of the Moot** · Common · Creature (Treefolk) · 3G · 3/4 · This gets +1/+0 for each other Treefolk you control.
@@ -171,7 +171,7 @@ A slow-growing threat: a 3/3 for four that gains a counter's worth of size with 
 **Old Moot-Oak** · Uncommon · Creature (Treefolk) · 2GG · 3/5 · Other Treefolk you control get +1/+1.
 The Treefolk lord. Saplings become 2/2s and Oaklings 3/3s, and the oak itself is a sturdy 3/5 that holds the ground while the grove grows. Four mana (five until the 1.32 pass) still makes it a later play than the Wolf lord, which suits the slower tribe; at five it lost its place to the faith's bigger five-drops and was almost never cast. Old law was given under great trees across the north of Europe, and a tree that remembers the laws before there were kings is the faith's long memory.
 
-**Acorn of the Elder Oak** · Uncommon · Relic (Relic) · G · Your Treefolk creature cards cost 1 less.
+**Acorn of the Elder Oak** · Uncommon · Relic (Relic) · G · Your Treefolk creature cards cost {1} less.
 A tribal cost reducer, the Treefolk answer to the faith's ramp: big trees arrive a turn early, and a Coppiced Hazel can come down with it on turn one or two. It cost 1G until the 1.32 pass; a two-mana card that saves one mana per Treefolk rarely paid for itself, and the Treefolk decks were the weakest of the Old Ways. It does nothing for Saplings made by spells and nothing on an empty hand, and relic removal answers it. An acorn that makes the wood owe you a favour for three hundred years keeps the faith's patient sense of time.
 
 **Pack Hunt** · Uncommon · Spell (Rite) · 2G · Target creature you control gets +1/+0 until end of turn for each Wolf you control. Then target creature you control fights target enemy creature.
@@ -199,7 +199,7 @@ The Druid two-drop, a 1/2 that grows with every Aura you play, on the model of O
 **Wolf-Pelt Mantle** · Uncommon · Relic (Charm) · 2G · When this enters, target creature you control gets +1/+1 and gains trample for good, and you create a 2/2 Wolf token.
 The uncommon twist ties the Druids to the Wolves: an Aura and a Wolf in one card, so it triggers both Aura and Wolf payoffs. Three mana for a 2/2 and a small trample bonus is fair, and if the enchanted creature dies the wolf remains. Wolf skins worn as hoods appear in the old northern tales of wolf-coated men; here the wolves simply follow, and never say why.
 
-**Mantle-Keeper of the Circle** · Uncommon · Creature (Human Druid) · 2G · 1/2 · Your relic cards cost 1 less. As long as you control a relic, this gets +1/+1.
+**Mantle-Keeper of the Circle** · Uncommon · Creature (Human Druid) · 2G · 1/2 · Your relic cards cost {1} less. As long as you control a relic, this gets +1/+1.
 The tribal cost cut, like Acorn of the Elder Oak for the Treefolk: Bark-Skin costs G, the Mantle and the Gift cost 1G. It only reduces generic mana, so it never makes an Aura free. Since 1.27 it checks for an Aura in play: a 1/2 alone, a 2/3 once the circle wears its regalia, so the Druid deck that wanted it gets a better body and others a worse one. The keeper of the circle's regalia, lending them more freely than he ought, is a gentle comic figure.
 
 **Grey Elder of the Henge** · Rare · Creature (Human Druid) · 2GG · 2/3 · This gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.

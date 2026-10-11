@@ -46,10 +46,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap: add G."
+        "text": "Tap: add {G}."
       }
     ],
-    "text": "Tap: add G.",
+    "text": "Tap: add {G}.",
     "flavor": "The soil is our true mother, and the ploughman owes her an apology every spring. (Hedgerow Druid)",
     "art": "res://art/cards/wild_c_002.webp"
   },
@@ -318,7 +318,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Add GG.",
+    "text": "Add {G}{G}.",
     "flavor": "The earth is the goddess, and the goddess is never wrong, not even about the blight. (Greening chant)",
     "art": "res://art/cards/wild_c_013.webp"
   },
@@ -478,10 +478,10 @@
             "duration": "turn"
           }
         ],
-        "text": "Tap, pay G: target creature you control gets +1/+1 until end of turn."
+        "text": "Tap, pay {G}: target creature you control gets +1/+1 until end of turn."
       }
     ],
-    "text": "Tap, pay G: target creature you control gets +1/+1 until end of turn.",
+    "text": "Tap, pay {G}: target creature you control gets +1/+1 until end of turn.",
     "flavor": "A sprig of rowan over the byre door, and no ill thing crosses.",
     "art": "res://art/cards/wild_c_019.webp"
   },
@@ -520,10 +520,10 @@
             "count": 1
           }
         ],
-        "text": "Tap, pay 1G: create a 1/1 Sapling token."
+        "text": "Tap, pay {1}{G}: create a 1/1 Sapling token."
       }
     ],
-    "text": "Tap, pay 1G: create a 1/1 Sapling token.",
+    "text": "Tap, pay {1}{G}: create a 1/1 Sapling token.",
     "flavor": "Scattered by hand in spring, gathered by the cartload in autumn.",
     "art": "res://art/cards/wild_c_020.webp"
   },
@@ -637,10 +637,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap: add G."
+        "text": "Tap: add {G}."
       }
     ],
-    "text": "Tap: add G.",
+    "text": "Tap: add {G}.",
     "flavor": "Cut to the stool every seventh year, and every seventh year he comes back thicker.",
     "art": "res://art/cards/wild_c_024.webp"
   },
@@ -1138,10 +1138,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap: add G."
+        "text": "Tap: add {G}."
       }
     ],
-    "text": "Tap: add G.",
+    "text": "Tap: add {G}.",
     "flavor": "The river forgives every sin, so long as you confess it downstream of the village. (A dowser's saying)",
     "art": "res://art/cards/wild_u_012.webp"
   },
@@ -1180,10 +1180,10 @@
             "count": 1
           }
         ],
-        "text": "Tap, pay 2G: create a 2/2 Wolf token."
+        "text": "Tap, pay {2}{G}: create a 2/2 Wolf token."
       }
     ],
-    "text": "Tap, pay 2G: create a 2/2 Wolf token.",
+    "text": "Tap, pay {2}{G}: create a 2/2 Wolf token.",
     "flavor": "Blow it once on a winter night, and something in the hills always answers.",
     "art": "res://art/cards/wild_u_013.webp"
   },
@@ -1291,7 +1291,7 @@
         "subtype": "Treefolk"
       }
     ],
-    "text": "Your Treefolk creature cards cost 1 less.",
+    "text": "Your Treefolk creature cards cost {1} less.",
     "flavor": "Plant it, and the wood will owe you a favour for three hundred years.",
     "art": "res://art/cards/wild_u_017.webp"
   },
@@ -1394,7 +1394,7 @@
         "condition": "control:Relic"
       }
     ],
-    "text": "Your relic cards cost 1 less. As long as you control a relic, this gets +1/+1.",
+    "text": "Your relic cards cost {1} less. As long as you control a relic, this gets +1/+1.",
     "flavor": "He keeps the pelts, crowns and bark-cloths of the circle in an oak chest, and lends them out more freely than he ought.",
     "art": "res://art/cards/wild_u_020.webp"
   },
@@ -1437,10 +1437,10 @@
             "duration": "permanent"
           }
         ],
-        "text": "Tap, pay G: target creature you control gets +1/+1 permanently."
+        "text": "Tap, pay {G}: target creature you control gets +1/+1 permanently."
       }
     ],
-    "text": "At the beginning of your upkeep, add G. Tap, pay G: target creature you control gets +1/+1 permanently.",
+    "text": "At the beginning of your upkeep, add {G}. Tap, pay {G}: target creature you control gets +1/+1 permanently.",
     "flavor": "The Earth is our mother and our god, and she has asked me, personally, to collect the tithe. (Mistletoe Archdruid)",
     "art": "res://art/cards/wild_r_001.webp"
   },
@@ -1664,7 +1664,7 @@
         "amount": 2
       }
     ],
-    "text": "At the beginning of your upkeep, add GG.",
+    "text": "At the beginning of your upkeep, add {G}{G}.",
     "flavor": "Pray to the stones. In all these years they have never once contradicted a druid. (Grey Elder of the Henge)",
     "art": "res://art/cards/wild_r_009.webp"
   },

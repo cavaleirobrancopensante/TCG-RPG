@@ -11,7 +11,7 @@ extends Control
 signal closed
 
 const GROUPS := ["all", "sanctum", "abyss", "wild", "revel", "lyceum", "machine", "gold", "lands"]
-const TYPES := ["Any type", "Creature", "Spell", "Relic", "Land"]
+const TYPES := ["Any type", "Creature", "Sorcery", "Instant", "Relic", "Land"]
 const RARITIES := ["Any rarity", "Basic", "Common", "Uncommon", "Rare", "Mythic"]
 const RARITY_ORDER := ["basic", "common", "uncommon", "rare", "mythic"]
 const FRAME_MS := 8               # time spent making thumbnails per frame
@@ -198,7 +198,7 @@ func _passes(c: Dictionary) -> bool:
 		var ok: bool = g == f_group or (g == "gold" and (c.get("faction") == f_group or c.get("faction2") == f_group))
 		if not ok:
 			return false
-	if f_type > 0 and c.get("type", "") != TYPES[f_type].to_lower():
+	if f_type > 0 and CardView.kind(c) != TYPES[f_type].to_lower():
 		return false
 	if f_rarity > 0 and c.get("rarity", "") != RARITIES[f_rarity].to_lower():
 		return false

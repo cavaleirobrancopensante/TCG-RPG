@@ -214,6 +214,21 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Playtest fixes (1.34)
+
+- Tap a card to see it, everywhere: in a duel a tapped hand card rises to full size with
+  Play and Cancel (and says why it can't be played); creatures and relics show their
+  abilities; the deck builder opens the card with Add and Remove, and a small "+" adds at once.
+- Card types read Sorcery or Instant (with the subtype after, e.g. "Instant (Curse)"); a "?" in
+  the card viewer opens a glossary of card types, mana symbols and keywords.
+- Mana costs in card text are drawn as mana symbols, like the cost in the corner, instead of
+  "pay 2".
+- Scripture is quoted only on Church cards now.
+- Tokens fit their makers: Skeletons raise Skeletons, Saplings are Treefolk everywhere.
+- Winged Demons fly (Pit Imp, Dream-Thief Fiend, Belzareth) and lose dread; the others lost
+  their wings in the art and keep dread.
+- Fleeing a duel asks first and names the price. The title screen shows the right version.
+
 ## Tournaments that survive quitting, and charms instead of auras (1.33)
 
 - A tournament in progress (draft, sealed or the city tournaments) is saved after every pick,

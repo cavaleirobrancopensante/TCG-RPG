@@ -69,7 +69,7 @@
           "name": "Sapling",
           "power": 1,
           "toughness": 1,
-          "subtype": "Plant",
+          "subtype": "Treefolk",
           "keywords": []
         },
         "count": 1
@@ -193,7 +193,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "At the beginning of your upkeep, gain 2 life. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+    "text": "At the beginning of your upkeep, gain 2 life. Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
     "flavor": "The abbot built it to ring the Hours. The brothers still rise to pray them, for a clock can count the Office but never say it.",
     "art": "res://art/cards/gold_sanctum_machine.webp"
   },
@@ -418,7 +418,7 @@
           "name": "Sapling",
           "power": 1,
           "toughness": 1,
-          "subtype": "Plant",
+          "subtype": "Treefolk",
           "keywords": []
         },
         "count": 1,
@@ -488,7 +488,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): tax 1 (the enemy's next non-land card costs 1 more).",
+    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): tax 1 (the enemy's next non-land card costs {1} more).",
     "flavor": "\"Pleasure is the highest good,\" he says from his cushion. The Stoics have been refuting him since noon, and the enemy envoy is still waiting for a hearing.",
     "art": "res://art/cards/gold_revel_lyceum.webp"
   },
@@ -525,7 +525,7 @@
         }
       ]
     },
-    "text": "Haste. Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, deal 2 damage to any enemy creature or the enemy player.",
+    "text": "Haste. Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, deal 2 damage to any enemy creature or the enemy player.",
     "flavor": "The Revel ordered a spectacle. The guild delivered one, itemised, with a surcharge for the burns.",
     "art": "res://art/cards/gold_revel_machine.webp"
   },
@@ -563,7 +563,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "At the beginning of your upkeep, draw a card, then foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom). Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+    "text": "At the beginning of your upkeep, draw a card, then foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom). Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
     "flavor": "The Stoics called the cosmos a perfect mechanism. The guild took them at their word and built one.",
     "art": "res://art/cards/gold_lyceum_machine.webp"
   }
