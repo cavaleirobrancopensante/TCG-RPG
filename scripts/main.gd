@@ -1598,12 +1598,16 @@ func _draft_finished() -> void:
 	d.finish_draft()
 	for e in d.picks[0]:
 		GameState.add_card(e["id"], e.get("foil", false))      # the drafted cards are yours to keep
-	# the player builds his own deck: an empty list, every drafted card in the pool beside it
+	# the player builds his own deck: the first list is the Deck pile of the draft (empty for
+	# sealed), every drafted card in the pool beside it
 	_tour_decks = []
 	_tour_prev_deck = GameState.active_deck
-	_tour_deck = _new_tour_list()
+	_tour_deck = _new_tour_list({} if d.sealed else d.deck_pool())
 	_save_tour("deck")
 	var how := I18n.t("Your deck starts empty: add cards from your pool (at least 40 cards, %d of them not lands; basic lands are free). Auto build in the Deck menu makes one for you. You can make more than one list from the same pool and choose one before each match.") % DeckTools.MIN_SPELLS
+	if not d.sealed:
+		how = I18n.t("Your deck starts as the Deck pile you drafted (%d cards); the sideboard and the rest of the pool are beside it. A deck needs at least 40 cards, %d of them not lands; basic lands are free. Auto build in the Deck menu makes one for you. You can make more than one list from the same pool and choose one before each match.") % [
+			DeckTools.count(GameState.decks[_tour_deck]["cards"]), DeckTools.MIN_SPELLS]
 	if d.sealed:
 		show_dialog("Your sealed pool", I18n.t("You opened %d cards; they are now in your collection.") % d.picks[0].size() + "\n\n" + how,
 			[["Build my deck", _tournament_deck]], [])

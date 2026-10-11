@@ -216,6 +216,10 @@ Hospice) are open to most heroes.
 
 ## Playtest round two (1.38)
 
+- During a draft your picks fall into two piles, Deck on top and Sideboard below; move a card
+  between them with one tap. When the draft ends, the deck builder opens with the Deck pile as
+  your first list.
+
 - Rules text reads like Magic: +1/+1 counters instead of "for good" or "permanently", cards
   name themselves ("put a +1/+1 counter on Coupling Automaton"), Martyr's reminder text,
   ability words with a colon, and no more "No abilities." (those cards show their flavour).

@@ -4564,5 +4564,11 @@
  "<draft_base> 1": "<draft_base> 1",
  "Row": "Row",
  "Flavor": "Flavor",
- "Glow": "Glow"
+ "Glow": "Glow",
+ "Sideboard": "Reserva",
+ "No cards in the deck pile.": "Nenhuma carta na pilha do baralho.",
+ "Tap the arrow on a card to move it here.": "Toque na seta de uma carta para movê-la para cá.",
+ "Move to sideboard": "Mover para a reserva",
+ "Move to deck": "Mover para o baralho",
+ "Your deck starts as the Deck pile you drafted (%d cards); the sideboard and the rest of the pool are beside it. A deck needs at least 40 cards, %d of them not lands; basic lands are free. Auto build in the Deck menu makes one for you. You can make more than one list from the same pool and choose one before each match.": "Seu baralho começa com a pilha Baralho que você escolheu no draft (%d cartas); a reserva e o resto do acervo ficam ao lado. Um baralho precisa de pelo menos 40 cartas, %d delas que não sejam terrenos; os terrenos básicos são grátis. Montar automaticamente, no menu Baralho, monta um para você. Você pode fazer mais de uma lista com o mesmo acervo e escolher uma antes de cada partida."
 }
