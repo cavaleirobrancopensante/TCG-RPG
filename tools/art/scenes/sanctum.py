@@ -2281,3 +2281,193 @@ def sanctum_m_004(p):
     # small cross at the butt
     p.taper([v_add(butt, v_mul(n, 10)), v_sub(butt, v_mul(n, 10))], 3, 3, GOLD, width=1.2)
     redraw_hand(p, mich, 400, 604, 500)
+
+
+# ====================================================================== third tribe: Priests (1.25)
+
+def _host_hand(which='f', r=4.6):
+    """The Host lifted between the fingers of the raised hand."""
+    def fn(p, j):
+        x, y = j['hand_' + which]
+        L.host(p, (x + 0.6, y - 6.4), r)
+    return fn
+
+
+def _breviary(which='f', col=C.hex('2a2a2a')):
+    """A small black breviary open in the hand, ribbons hanging."""
+    def fn(p, j):
+        x, y = j['hand_' + which]
+        p.shape([(x - 6.5, y - 4.5), (x + 0.2, y - 3.2), (x + 0.2, y + 1.6), (x - 6.2, y + 0.6)], PARCH, width=1.0, shade=0.3)
+        p.shape([(x + 0.2, y - 3.2), (x + 6.8, y - 5.0), (x + 6.6, y + 0.4), (x + 0.2, y + 1.6)], PARCH.light(0.1), width=1.0, shade=0.3)
+        p.line([(x - 6.4, y + 1.0), (x + 0.2, y + 2.4), (x + 6.8, y + 0.8)], col, 1.4)
+        for dy in (-2.2, -1.0, 0.2):
+            p.line([(x - 5.2, y + dy - 0.6), (x - 1.0, y + dy + 0.2)], INK.alpha(0.4), 0.4, smooth=False)
+            p.line([(x + 1.4, y + dy + 0.2), (x + 5.6, y + dy - 0.8)], INK.alpha(0.4), 0.4, smooth=False)
+        p.blob((x - 4.4, y - 2.8), 0.6, 0.6, VERMILION, ink=False)
+        for dx, cc in ((-0.6, VERMILION), (0.6, MALACHITE), (1.6, GOLD)):
+            p.line([(x + dx, y + 1.8), (x + dx + 0.4, y + 7.4)], cc, 0.6)
+    return fn
+
+
+def _sheaf_hold(which='f'):
+    def fn(p, j):
+        x, y = j['hand_' + which]
+        for k in range(9):
+            a = -0.5 + k * 0.12
+            tip = (x + 2 + math.sin(a) * 16, y - 14 - math.cos(a) * 4)
+            p.line([(x + math.sin(a) * 1.2, y + 10), (x, y), tip], C.hex('d8b048'), 0.7)
+            p.blob(tip, 1.0, 2.4, C.hex('e8c058'), rot=a, width=0.4)
+        p.taper([(x - 2.4, y + 1), (x + 2.6, y + 1)], 1.0, 1.0, C.hex('9a7030'), width=0.5)
+    return fn
+
+
+def sanctum_c_028(p):
+    """Parish Priest of the Valley: on a harvest morning the village priest in
+    cassock, surplice and gold stole sprinkles holy water over the young reaper who kneels with
+    the first sheaf, the server holding the holy water, the church on the green."""
+    bg.sky(p, C.hex('3a62b0'), C.hex('8fb4e0'), C.hex('f6ecc8'), 0.58)
+    bg.clouds(p, 120, 2, xs=[260, 760], scale=0.8)
+    L.mountains(p, 360, C.hex('8a9ab8'), [(160, 140, 170), (420, 110, 150), (760, 160, 190), (960, 120, 150)])
+    bg.hills(p, 380, C.hex('7aa070'), 30, n=6)
+    # the village church with its bell tower on the green
+    bg.abbey(p, 760, 420, 0.9)
+    _houses(p, 430, [120, 230, 960], 0.55)
+    bg.hills(p, 440, C.hex('8ab45a'), 16, n=5)
+    for x in (40, 330, 560, 990):
+        bg.tiny_tree(p, x, 436, 1.2, LEAF, 'round')
+    # stubble field and green in front
+    p.shape([(-10, 452), (W + 10, 446), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('d8bc68'), C.hex('a88a3a')), width=2)
+    for i in range(240):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(460, H)
+        _wheat(p, x, y, 6 + (y - 450) * 0.08)
+    for x, y in ((610, 490), (880, 500), (960, 560)):
+        _sheaf(p, x, y, 0.8 + (y - 480) * 0.004)
+    # the server with the holy water bucket
+    Fig(pose='hold', garb='alb', main=LEAD_WHITE, hair='curly', hair_col=C.hex('8a5a2a'), emblem=_cassock_cotta(BLACK_HABIT), belt=None,
+        blush=0.8, props_front=[PR.bucket('f')]).draw(p, 150, 596, 300)
+    # the young reaper kneeling with the first sheaf
+    Fig(pose='pray', garb='tunic', main=C.hex('9a6a3a'), second=C.hex('6a5a4a'), hair='curly', hair_col=C.hex('6a4a2a'), kneel=True,
+        eyes='down', belt='leather').draw(p, 600, 606, 400, flip=True)
+    _sheaf(p, 700, 604, 1.6)
+    # the priest blessing
+    Fig(pose='sprinkle', garb='alb', main=LEAD_WHITE, hair='short', hair_col=C.hex('5a4030'), beard=None, emblem=_priest_vest(BLACK_HABIT, C.hex('d8b048')),
+        belt=None, props_front=[PR.aspergillum('f')], eyes='open').draw(p, 380, 600, 450)
+
+
+def sanctum_c_029(p):
+    """Absolution Before Battle: at grey dawn before the camp the priest in surplice
+    and purple stole lifts his hand over the kneeling men-at-arms, the banners
+    still hanging slack over the tents."""
+    bg.dawn_sky(p)
+    p.glow((800, 380), 380, C.hex('ffd9a0'), 0.55)
+    bg.hills(p, 380, C.hex('6a6a8a'), 30, n=6)
+    for x, col, pen in ((90, LEAD_WHITE, VERMILION), (300, C.hex('e8dcc0'), ULTRA), (840, LEAD_WHITE, VERMILION), (990, C.hex('e8dcc0'), MALACHITE)):
+        L.tent(p, x, 440, 190, 150, col, ULTRA if pen == VERMILION else VERMILION, pen)
+    p.shape([(-10, 436), (W + 10, 432), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('7a8a5a'), C.hex('4a5a34')), width=2)
+    for i in range(160):
+        x, y = p.rng.uniform(0, W), p.rng.uniform(450, H)
+        p.line([(x, y), (x + p.rng.uniform(-2, 2), y - 6 - (y - 450) * 0.03)], C.hex('3a4a2a').alpha(0.6), 1.2)
+    # a banner of the host planted in the ground
+    def _gold_cross(p, c):
+        p.shape([(c[0] - 5, c[1] - 30, 0), (c[0] + 5, c[1] - 30, 0), (c[0] + 5, c[1] + 30, 0), (c[0] - 5, c[1] + 30, 0)], GOLD, width=1.2, smooth=False)
+        p.shape([(c[0] - 22, c[1] - 12, 0), (c[0] + 22, c[1] - 12, 0), (c[0] + 22, c[1] - 2, 0), (c[0] - 22, c[1] - 2, 0)], GOLD, width=1.2, smooth=False)
+    _banner_pole(p, (560, 470), (560, 190), ULTRA, _gold_cross)
+    # men-at-arms kneeling for absolution
+    for x, y, h, col, beard, sh in ((860, 600, 380, VERMILION, 'short', 'cross_white'), (720, 612, 410, ULTRA, 'forked', 'lily'),
+                                   (600, 620, 420, MALACHITE.dark(0.1), None, None)):
+        Fig(pose='pray', garb='surcoat', main=col, mail=True, head='coif', hair='short', beard=beard, hair_col=C.hex('5a3a20'), belt='sword',
+            kneel=True, eyes='closed').draw(p, x, y, h, flip=True)
+    # the priest
+    Fig(pose='bless', garb='alb', main=LEAD_WHITE, hair='short', hair_col=C.hex('8a8a8a'), beard='short', age='old', emblem=_priest_vest(BLACK_HABIT, PURPLE_VEST),
+        belt=None, props_front=[_breviary('b')], eyes='open', mouth='open').draw(p, 330, 604, 460)
+
+
+def sanctum_u_019(p):
+    """Confessor of the Cathedral: in the dim aisle the confessor in surplice and
+    purple stole waits by his carved box, breviary in hand, an old man kneeling at
+    the grille; a little fiend in the shadow shrinks from the light about him."""
+    gothic_choir(p, dark=True, windows=3, saints=True, floor_y=0.84)
+    p.glow((420, 330), 360, C.hex('ffd890'), 0.35)
+    L.confessional(p, 650, 560, 340, 380, WALNUT, PURPLE_VEST, open_side=1)
+    # votive stand at the left
+    p.shape([(60, 560, 0), (220, 560, 0), (210, 470, 0), (70, 470, 0)], ('v', IRON.light(0.2), IRON.dark(0.2)), width=1.6, smooth=False)
+    for i in range(10):
+        L.votive(p, 84 + (i % 5) * 28, 488 + (i // 5) * 40, 1.0, True)
+    # the penitent kneeling at the right bay
+    Fig(pose='pray', garb='robe', main=C.hex('6a5a4a'), hair='white', beard='short', age='old', kneel=True, eyes='closed', belt='leather',
+        cloak='mantle', cloak_col=C.hex('4a3a2a')).draw(p, 760, 600, 330, flip=True)
+    # the fiend recoiling in the shadow
+    demon(p, 110, 610, 1.6, flip=True, cower=0.9)
+    p.glow((330, 330), 160, C.hex('fff3c4'), 0.35)
+    Fig(pose='book', garb='alb', main=LEAD_WHITE, hair='short', hair_col=C.hex('3a2818'), beard='short', emblem=_priest_vest(BLACK_HABIT, PURPLE_VEST),
+        belt=None, props_front=[_breviary('f')], eyes='down').draw(p, 340, 604, 460)
+
+
+def _kneel_cotta():
+    """Emblem fn: a short white lace cotta over a black cassock, placed from the
+    shoulders, so it also sits right on a kneeling server."""
+    def fn(p, c):
+        k = c[1] + 64
+        pts = [(-4, -84 + k), (-9.4, -81.5 + k), (-11, -70 + k), (-12.5, -50 + k, 0), (13.5, -50 + k, 0), (11.6, -70 + k), (10, -81.5 + k), (4.4, -84 + k)]
+        p.shape(pts, LEAD_WHITE, width=1.6, shade=0.6, rim=0.3)
+        for xx in (-7, -2, 3, 8):
+            p.fold([(xx * 0.6, -80 + k), (xx, -51 + k)], LEAD_WHITE, 1.0)
+        xx = -12.5
+        while xx < 13.5:
+            p.cx.new_path()
+            p.cx.arc(xx + 1.3, -50 + k, 1.3, 0, math.pi)
+            p.fill(LEAD_WHITE)
+            xx += 2.6
+        p.line([(-12.5, -51.5 + k), (13.5, -51.5 + k)], BONE.dark(0.2), 0.7)
+    return fn
+
+
+def sanctum_u_020(p):
+    """Celebrant of the Dawn Mass: at the first light the priest in a green gothic
+    chasuble lifts the Host at the elevation, the server kneeling on the step
+    behind him with the bell, the candles lit on the altar."""
+    gothic_choir(p, windows=3, saints=True, floor_y=0.86)
+    bg.light_shafts(p, (760, 60), 0.5, 4, C.hex('fff0c0'), 900, 0.18)
+    # the altar on the right, seen from the side, with the retable
+    L.retable(p, 800, 420, 280, 200)
+    L.altar(p, 800, 560, 300, 140, CHASUBLE_GREEN.light(0.1))
+    for x in (690, 910):
+        L.candlestick(p, x, 414, 70)
+    L.altar_cross(p, 800, 414, 80)
+    # the predella step
+    p.shape([(560, 560, 0), (W + 10, 560, 0), (W + 10, 600, 0), (520, 600, 0)], ('v', C.hex('b8a888'), C.hex('8a7a62')), width=1.8, smooth=False)
+    # the server kneeling with the bell
+    Fig(pose='hold', garb='robe', main=BLACK_HABIT, hair='curly', hair_col=C.hex('6a4a2a'), emblem=_kneel_cotta(), belt=None,
+        kneel=True, eyes='up', blush=0.8, props_front=[PR.bell('f')]).draw(p, 230, 610, 360)
+    # the celebrant at the elevation
+    Fig(pose='raise', garb='alb', main=LEAD_WHITE, hair='tonsure', hair_col=C.hex('5a4030'), emblem=L.chasuble(CHASUBLE_GREEN, GOLD),
+        belt=None, sleeves='fitted', props_front=[_host_hand('f')], eyes='up').draw(p, 520, 590, 460)
+
+
+def sanctum_r_012(p):
+    """Bishop of the Mountain See: on the terrace of his cathedral above the clouds
+    the old bishop in a gold cope and mitre blesses the valleys, while two young
+    priests he has ordained set off down the mountain road."""
+    bg.sky(p, C.hex('1e3a8a'), C.hex('6a90d0'), C.hex('f2e4c8'), 0.6)
+    L.mountains(p, 400, C.hex('8a94b0'), [(110, 230, 190), (330, 170, 160), (700, 260, 210), (930, 200, 170)])
+    # sea of cloud filling the valleys
+    for i in range(14):
+        x = p.rng.uniform(-40, W + 40)
+        p.blob((x, 404 + p.rng.uniform(-8, 12)), p.rng.uniform(80, 150), p.rng.uniform(18, 30), LEAD_WHITE.alpha(0.85), ink=False)
+    # the crag with the cathedral at the right
+    p.shape([(560, 640, 0), (600, 420), (700, 360), (820, 340), (960, 360), (W + 20, 380, 0), (W + 20, 640, 0)], ('v', C.hex('8a7a6a'), C.hex('5a4e44')), width=2, shade=0.7)
+    L.cathedral_facade(p, 820, 360, 0.36, lit=0.6)
+    # the road winding down with the two young priests
+    p.shape([(940, 640, 0), (900, 520), (760, 470), (700, 440), (720, 436), (790, 462), (950, 512), (1010, 640, 0)], C.hex('c9b28a'), width=1.6)
+    for x, y, h in ((790, 476, 120), (830, 492, 128)):
+        Fig(pose='staff', garb='alb', main=LEAD_WHITE, hair='short', hair_col=UMBER, emblem=_cassock_cotta(BLACK_HABIT), belt=None,
+            props_back=[PR.staff('f', 'plain', 110, OAK)]).draw(p, x, y, h)
+    # the terrace parapet
+    p.shape([(-10, 470, 0), (600, 470, 0), (640, 640, 0), (-10, 640, 0)], ('v', C.hex('d8ccb0'), C.hex('a89878')), width=2, smooth=False)
+    L.ashlar(p, (-10, 470, 610, 520), C.hex('d8ccb0'), 26, 70, 0.8)
+    p.shape([(-10, 464, 0), (612, 464, 0), (612, 478, 0), (-10, 478, 0)], C.hex('e6dcc4'), width=1.6, smooth=False, shade=0.4)
+    bg.tile_floor(p, 520, C.hex('8a5a3a'), C.hex('e0d0ac'), rows=4)
+    # the bishop
+    Fig(pose='sa_bless_staff', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=GOLD, trim=VERMILION, head='mitre', hair='white', beard='long', age='old',
+        props_back=[PR.staff('b', 'crook', 108, GOLD_DARK)], eyes='open', emblem=_stole(VEST_WHITE)).draw(p, 330, 604, 480)

@@ -214,6 +214,19 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Third tribes, auras and equipment (1.25)
+
+- Each faith gets a smaller third tribe with a few synergies (5 new cards each, plus older
+  cards that joined): Priests (Church), Zombies (Black Pact; its main tribes are now
+  Skeletons and Demons, "Undead" is no longer a tribe), Druids with auras (Old Ways),
+  Satyrs (Revel), Sailors (Stoa), and relics and equipment (Technocracy).
+- Auras: Old Ways relics that sit on a creature and fall with it.
+- Equipment: Technocracy relics that you equip onto a creature (Equip N, in your main phase);
+  they stay when the creature dies.
+- Relic synergy: cards that count your relics, grow when a relic enters, or make relics cheaper.
+- The Stoa may have two small flying Birds: the Great-Owl of the Archive and the Gull of the
+  Sea Lanes. Flying payoffs stay the Church's.
+
 ## Day and night (1.24)
 
 - A sun and moon dial at the top of the map: the wheel turns once a day, the sun climbs
@@ -238,7 +251,7 @@ Hospice) are open to most heroes.
   its targets.
 - The AI answers too: a pump to save a creature, removal after blocks, tricks in combat.
 - 90 new cards, 15 per faith, built around two tribes each: Knights and Angels, Undead and
-  Demons, Wolves and Treefolk, Nobles and Performers, Hoplites and Philosophers, Constructs
+  Demons (Undead became Skeletons and Zombies in 1.25), Wolves and Treefolk, Nobles and Performers, Hoplites and Philosophers, Constructs
   and Artificers. New tribal tools: kinship (+1 for each other member), "whenever another
   one enters", cheaper tribe members, and effects counted per member. Some older cards
   joined the tribes and a few spells became instants.

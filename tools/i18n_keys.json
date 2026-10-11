@@ -585,6 +585,10 @@
    "note": "scripts/battle/battle_state.gd"
   },
   {
+   "key": "Equip %d",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
    "key": "Servo",
    "note": "scripts/battle/battle_state.gd"
   },
@@ -1169,6 +1173,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Camp",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Journal",
    "note": "scripts/main.gd"
   },
@@ -1181,11 +1189,31 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "%s Day %d, %02d:%02d",
+   "key": "Boosters (%d)",
    "note": "scripts/main.gd"
   },
   {
-   "key": "Boosters (%d)",
+   "key": "You can't make camp here.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You light a small fire, roll out your blanket and sleep under the open sky.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You wake with %d life (%+d).",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "A sound in the dark: someone has found your camp.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "To arms",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Break camp",
    "note": "scripts/main.gd"
   },
   {
@@ -2261,6 +2289,10 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
+   "key": "Day %d, %02d:%02d",
+   "note": "scripts/ui/sky_dial.gd"
+  },
+  {
    "key": "Begin a New Game",
    "note": "scripts/ui/slot_screen.gd"
   },
@@ -2955,6 +2987,34 @@
    "note": "flavour text of Gloria in Excelsis"
   },
   {
+   "key": "Parish Priest of the Valley",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Human Priest",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, target creature you control gets +1/+1 permanently.",
+   "note": "rules text of Parish Priest of the Valley"
+  },
+  {
+   "key": "He blessed the seed in spring and the sheaves in autumn, and every soul in the valley by name.",
+   "note": "flavour text of Parish Priest of the Valley"
+  },
+  {
+   "key": "Absolution Before Battle",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Target creature you control gets +0/+3 until end of turn. Gain 1 life for each Priest you control.",
+   "note": "rules text of Absolution Before Battle"
+  },
+  {
+   "key": "Ego te absolvo. The men rose from their knees lighter than they had knelt, and the line held.",
+   "note": "flavour text of Absolution Before Battle"
+  },
+  {
    "key": "Brother of Mercy",
    "note": "card name (sanctum, creature)"
   },
@@ -2995,6 +3055,10 @@
    "note": "card name (sanctum, creature)"
   },
   {
+   "key": "Human Monk Priest",
+   "note": "card subtype"
+  },
+  {
    "key": "Other creatures you control get +0/+1. As long as you have more life than you started with, they get +1/+1 instead.",
    "note": "rules text of Cistercian Abbot"
   },
@@ -3007,7 +3071,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Human Inquisitor",
+   "key": "Human Priest Inquisitor",
    "note": "card subtype"
   },
   {
@@ -3175,6 +3239,30 @@
    "note": "flavour text of Angelic Intercession"
   },
   {
+   "key": "Confessor of the Cathedral",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Sanctified (protection from the Pact). When this enters, gain 2 life.",
+   "note": "rules text of Confessor of the Cathedral"
+  },
+  {
+   "key": "What is told him in the box he carries to the grave, and the devil, who wanted it, never learns a word.",
+   "note": "flavour text of Confessor of the Cathedral"
+  },
+  {
+   "key": "Celebrant of the Dawn Mass",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Whenever another Priest enters under your control, target creature you control gets +1/+1 permanently.",
+   "note": "rules text of Celebrant of the Dawn Mass"
+  },
+  {
+   "key": "Introibo ad altare Dei, ad Deum qui laetificat juventutem meam.",
+   "note": "flavour text of Celebrant of the Dawn Mass"
+  },
+  {
    "key": "Abbot of the Silent Order",
    "note": "card name (sanctum, creature)"
   },
@@ -3303,6 +3391,18 @@
    "note": "flavour text of Saint Raphael, Medicine of God"
   },
   {
+   "key": "Bishop of the Mountain See",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Other Priests you control get +1/+1. At the beginning of your upkeep, gain 1 life for each Priest you control.",
+   "note": "rules text of Bishop of the Mountain See"
+  },
+  {
+   "key": "He ordained them in the cathedral above the clouds, and sent them down to the valleys two by two.",
+   "note": "flavour text of Bishop of the Mountain See"
+  },
+  {
    "key": "Archangel of the Last Vigil",
    "note": "card name (sanctum, creature)"
   },
@@ -3395,7 +3495,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Undead Zombie",
+   "key": "Skeleton",
    "note": "card subtype"
   },
   {
@@ -3409,6 +3509,10 @@
   {
    "key": "Famished Ghoul",
    "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Zombie",
+   "note": "card subtype"
   },
   {
    "key": "As long as you have 10 or less life (Bloodied), this gets +1/+1.",
@@ -3467,16 +3571,16 @@
    "note": "flavour text of Blight-Sower Cultist"
   },
   {
-   "key": "Ossuary Ghoul",
+   "key": "Ossuary Bone-Walker",
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this dies, create a 1/1 Restless Dead Undead Zombie token.",
-   "note": "rules text of Ossuary Ghoul"
+   "key": "When this dies, create a 1/1 Restless Dead Zombie token.",
+   "note": "rules text of Ossuary Bone-Walker"
   },
   {
    "key": "Break it apart and the pieces keep walking.",
-   "note": "flavour text of Ossuary Ghoul"
+   "note": "flavour text of Ossuary Bone-Walker"
   },
   {
    "key": "Restless Dead",
@@ -3497,10 +3601,6 @@
   {
    "key": "Barrow Wight",
    "note": "card name (abyss, creature)"
-  },
-  {
-   "key": "Undead Spirit",
-   "note": "card subtype"
   },
   {
    "key": "It still wears the gold it was buried with, and it wants yours.",
@@ -3615,7 +3715,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "This gets +1/+0 for each other Undead you control.",
+   "key": "This gets +1/+0 for each other Zombie you control.",
    "note": "rules text of Lych-Gate Shambler"
   },
   {
@@ -3639,10 +3739,6 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Undead Skeleton",
-   "note": "card subtype"
-  },
-  {
    "key": "Knock it down and something else climbs out of the same grave.",
    "note": "flavour text of Bone-Rattle Picket"
   },
@@ -3659,11 +3755,11 @@
    "note": "card name (abyss, spell)"
   },
   {
-   "key": "Target enemy creature gets -1/-1 until end of turn for each Undead you control.",
+   "key": "Target enemy creature gets -1/-1 until end of turn for each Skeleton you control.",
    "note": "rules text of Chill of the Charnel Host"
   },
   {
-   "key": "One dead hand is cold. A hundred of them are the grave itself.",
+   "key": "One dead hand is cold. A hundred bony hands are the grave itself.",
    "note": "flavour text of Chill of the Charnel Host"
   },
   {
@@ -3683,8 +3779,32 @@
    "note": "card name (abyss, creature)"
   },
   {
+   "key": "Spirit",
+   "note": "card subtype"
+  },
+  {
    "key": "Travellers follow its pale lantern off the causeway, and the fen keeps them.",
    "note": "flavour text of Marsh-Light Shade"
+  },
+  {
+   "key": "Plague-Pit Shambler",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "They tipped him into the plague pit with the others. He did not stay with them.",
+   "note": "flavour text of Plague-Pit Shambler"
+  },
+  {
+   "key": "Gravepit Ghoul",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When this enters, return target creature card with mana value 2 or less from your graveyard to play.",
+   "note": "rules text of Gravepit Ghoul"
+  },
+  {
+   "key": "It digs all night in the churchyard, and what it digs up follows it home.",
+   "note": "flavour text of Gravepit Ghoul"
   },
   {
    "key": "Bone-Priest of the Pact",
@@ -3859,7 +3979,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Other Undead you control get +1/+0.",
+   "key": "Other Skeletons you control get +1/+0.",
    "note": "rules text of Drummer of the Dead March"
   },
   {
@@ -3879,16 +3999,16 @@
    "note": "flavour text of Herald of the Burning Gate"
   },
   {
-   "key": "Gravecaller Ghast",
+   "key": "Gravecaller Bone-Warden",
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Whenever another Undead enters under your control, this gets +1/+1 for the rest of the duel.",
-   "note": "rules text of Gravecaller Ghast"
+   "key": "Whenever another Skeleton enters under your control, this gets +1/+1 for the rest of the duel.",
+   "note": "rules text of Gravecaller Bone-Warden"
   },
   {
-   "key": "Each corpse that rises feeds it a little of the cold it carries.",
-   "note": "flavour text of Gravecaller Ghast"
+   "key": "Every skeleton that climbs out of the earth lends him a little more of its cold.",
+   "note": "flavour text of Gravecaller Bone-Warden"
   },
   {
    "key": "Brimstone Exhalation",
@@ -3907,12 +4027,36 @@
    "note": "card name (abyss, relic)"
   },
   {
-   "key": "Whenever another Undead enters under your control, the enemy player loses 1 life and you gain 1 life.",
+   "key": "Whenever another Zombie enters under your control, the enemy player loses 1 life and you gain 1 life.",
    "note": "rules text of Corpse-Bell of the Barrow"
   },
   {
    "key": "It was cast to ring the dead to rest. The Pact recast it to ring them up again.",
    "note": "flavour text of Corpse-Bell of the Barrow"
+  },
+  {
+   "key": "Plague-Cart Drover",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When this dies, create two 1/1 Restless Dead Zombie tokens.",
+   "note": "rules text of Plague-Cart Drover"
+  },
+  {
+   "key": "\"Bring out your dead,\" he croaks, and the dead in his cart climb down to help.",
+   "note": "flavour text of Plague-Cart Drover"
+  },
+  {
+   "key": "Hunger of the Grave",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "The enemy player loses 1 life and you gain 1 life for each Zombie you control.",
+   "note": "rules text of Hunger of the Grave"
+  },
+  {
+   "key": "The dead are never fed. They only take, a mouthful of warmth at a time.",
+   "note": "flavour text of Hunger of the Grave"
   },
   {
    "key": "Oathbreaker Knight",
@@ -3955,10 +4099,6 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Undead Lich",
-   "note": "card subtype"
-  },
-  {
    "key": "Deathtouch. At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.",
    "note": "rules text of Hollow-Crowned Lich"
   },
@@ -3971,7 +4111,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Other Zombies you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Undead Zombie token.",
+   "key": "Other Skeletons you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
    "note": "rules text of Bone-Lord of the Ossuary"
   },
   {
@@ -3979,7 +4119,7 @@
    "note": "flavour text of Bone-Lord of the Ossuary"
   },
   {
-   "key": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Undead Zombie token.",
+   "key": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
    "note": "activated ability text of Bone-Lord of the Ossuary"
   },
   {
@@ -4035,7 +4175,11 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Other Undead you control have dread (they can only be blocked by Pact creatures and Constructs).",
+   "key": "Skeleton Lord",
+   "note": "card subtype"
+  },
+  {
+   "key": "Other Skeletons you control have dread (they can only be blocked by Pact creatures and Constructs).",
    "note": "rules text of Barrow-King of the Hollow Hills"
   },
   {
@@ -4053,6 +4197,18 @@
   {
    "key": "He drills the legions of the pit, and every recruit is paid for in someone's blood.",
    "note": "flavour text of Brimstone Marshal"
+  },
+  {
+   "key": "Ghoul-Master of the Plague Pits",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Other Zombies you control get +1/+1. When this dies, create a 1/1 Restless Dead Zombie token.",
+   "note": "rules text of Ghoul-Master of the Plague Pits"
+  },
+  {
+   "key": "He was the parish gravedigger in the year of the plague. He still keeps the pits, and the pits keep him.",
+   "note": "flavour text of Ghoul-Master of the Plague Pits"
   },
   {
    "key": "Belzareth, Prince of Cinders",
@@ -4431,6 +4587,34 @@
    "note": "flavour text of Dusk-Runner Wolf"
   },
   {
+   "key": "Bark-Skin",
+   "note": "card name (wild, relic)"
+  },
+  {
+   "key": "Aura",
+   "note": "card subtype"
+  },
+  {
+   "key": "When this enters, attach it to target creature you control. That creature gets +0/+2 and has regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+   "note": "rules text of Bark-Skin"
+  },
+  {
+   "key": "He binds oak bark to a man's arm and calls it a blessing. It turns a blade well enough.",
+   "note": "flavour text of Bark-Skin"
+  },
+  {
+   "key": "Wreath-Weaver Druid",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Whenever an Aura enters under your control, this gets +1/+1 permanently.",
+   "note": "rules text of Wreath-Weaver Druid"
+  },
+  {
+   "key": "For every garland he plaits for another man, he weaves one leaf into his own.",
+   "note": "flavour text of Wreath-Weaver Druid"
+  },
+  {
    "key": "Wolfsire of the Fen",
    "note": "card name (wild, creature)"
   },
@@ -4453,10 +4637,6 @@
   {
    "key": "Stonehide Spirit",
    "note": "card name (wild, creature)"
-  },
-  {
-   "key": "Spirit",
-   "note": "card subtype"
   },
   {
    "key": "Reach, regenerate.",
@@ -4536,10 +4716,10 @@
   },
   {
    "key": "Gift of the Greenwood",
-   "note": "card name (wild, spell)"
+   "note": "card name (wild, relic)"
   },
   {
-   "key": "Target creature you control gets +2/+2 permanently.",
+   "key": "When this enters, attach it to target creature you control. That creature gets +2/+2.",
    "note": "rules text of Gift of the Greenwood"
   },
   {
@@ -4649,6 +4829,30 @@
   {
    "key": "The stag turned to face one wolf, and the other five did the rest.",
    "note": "flavour text of Pack Hunt"
+  },
+  {
+   "key": "Wolf-Pelt Mantle",
+   "note": "card name (wild, relic)"
+  },
+  {
+   "key": "When this enters, attach it to target creature you control and create a 2/2 Wolf token. That creature gets +1/+1 and has trample.",
+   "note": "rules text of Wolf-Pelt Mantle"
+  },
+  {
+   "key": "The hill folk say the pack follows the man who wears its grey. The wolves have never said why.",
+   "note": "flavour text of Wolf-Pelt Mantle"
+  },
+  {
+   "key": "Mantle-Keeper of the Circle",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Your Aura cards cost 1 less.",
+   "note": "rules text of Mantle-Keeper of the Circle"
+  },
+  {
+   "key": "He keeps the pelts, crowns and bark-cloths of the circle in an oak chest, and lends them out more freely than he ought.",
+   "note": "flavour text of Mantle-Keeper of the Circle"
   },
   {
    "key": "Mistletoe Archdruid",
@@ -4795,6 +4999,18 @@
    "note": "flavour text of Grandsire Hornbeam"
   },
   {
+   "key": "Grey Elder of the Henge",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "This gets +1/+1 for each other Druid you control. Whenever an Aura enters under your control, create a 1/1 Sapling token.",
+   "note": "rules text of Grey Elder of the Henge"
+  },
+  {
+   "key": "His circle has kept its rites since before the first bell rang in the valley. He suspects the bell will outlast them.",
+   "note": "flavour text of Grey Elder of the Henge"
+  },
+  {
    "key": "Herne, Lord of the Wild Hunt",
    "note": "card name (wild, creature)"
   },
@@ -4867,7 +5083,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Human Bacchant",
+   "key": "Satyr Bacchant",
    "note": "card subtype"
   },
   {
@@ -4875,7 +5091,7 @@
    "note": "rules text of Vine-Crowned Bacchant"
   },
   {
-   "key": "He dances straight from the wine-press into the battle line.",
+   "key": "He dances straight from the wine-press into the battle line, hooves still purple.",
    "note": "flavour text of Vine-Crowned Bacchant"
   },
   {
@@ -5183,6 +5399,26 @@
    "note": "flavour text of Toast to the Peerage"
   },
   {
+   "key": "Satyr Piper of the Pines",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Whenever this attacks, other Satyrs you control get +1/+0 until end of turn.",
+   "note": "rules text of Satyr Piper of the Pines"
+  },
+  {
+   "key": "His tune has no words, but every goat-footed rascal on the hill knows it means \"charge\".",
+   "note": "flavour text of Satyr Piper of the Pines"
+  },
+  {
+   "key": "Wineskin Satyr",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "He drinks to the battle, to the victory, to the fallen, and on wet days to the weather.",
+   "note": "flavour text of Wineskin Satyr"
+  },
+  {
    "key": "Duelist of the Velvet Court",
    "note": "card name (revel, creature)"
   },
@@ -5249,6 +5485,10 @@
   {
    "key": "Hierophant of the Bacchanal",
    "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Human Bacchant",
+   "note": "card subtype"
   },
   {
    "key": "Haste. When this enters, creatures you control get +1/+0 until end of turn.",
@@ -5403,6 +5643,30 @@
    "note": "flavour text of Royal Command Performance"
   },
   {
+   "key": "Old Satyr on the Wine-Cask",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on target Satyr you control.",
+   "note": "rules text of Old Satyr on the Wine-Cask"
+  },
+  {
+   "key": "\"In my day we ran with the vintage,\" he tells the young ones, and does not get up.",
+   "note": "flavour text of Old Satyr on the Wine-Cask"
+  },
+  {
+   "key": "Panic in the Thicket",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Deal 1 damage to target enemy creature for each Satyr you control.",
+   "note": "rules text of Panic in the Thicket"
+  },
+  {
+   "key": "Out of the dark wood came a skirl of pipes and a clatter of hooves, and the sentries forgot their courage.",
+   "note": "flavour text of Panic in the Thicket"
+  },
+  {
    "key": "Salamander Juggler",
    "note": "card name (revel, creature)"
   },
@@ -5537,6 +5801,18 @@
   {
    "key": "He gives his vote to whichever prince serves the longest dinner.",
    "note": "flavour text of Elector of the Endless Banquet"
+  },
+  {
+   "key": "Horned Lord of the Rout",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Other Satyrs you control have haste (they can attack the turn they come into play). Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player for each Satyr you control.",
+   "note": "rules text of Horned Lord of the Rout"
+  },
+  {
+   "key": "He sends the herd down the hill at a gallop and follows at his own pace, which is to say not at all.",
+   "note": "flavour text of Horned Lord of the Rout"
   },
   {
    "key": "Vessar, Master of the Undying Feast",
@@ -5715,7 +5991,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Human Merchant",
+   "key": "Human Merchant Sailor",
    "note": "card subtype"
   },
   {
@@ -5931,6 +6207,34 @@
    "note": "flavour text of Morning Lecture"
   },
   {
+   "key": "Oarsman of the Thranite Bench",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Human Sailor",
+   "note": "card subtype"
+  },
+  {
+   "key": "This gets +1/+0 for each other Sailor you control.",
+   "note": "rules text of Oarsman of the Thranite Bench"
+  },
+  {
+   "key": "A hundred and seventy oars and one stroke. There is no room on the benches for a man who keeps his own time.",
+   "note": "flavour text of Oarsman of the Thranite Bench"
+  },
+  {
+   "key": "Gull of the Sea Lanes",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Flying. Whenever a Sailor enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+   "note": "rules text of Gull of the Sea Lanes"
+  },
+  {
+   "key": "Where the gulls wheel, there is land. The helmsman watches them before he trusts the stars.",
+   "note": "flavour text of Gull of the Sea Lanes"
+  },
+  {
    "key": "Agora Inspector",
    "note": "card name (lyceum, creature)"
   },
@@ -5987,7 +6291,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "At the beginning of your upkeep, foresight 2.",
+   "key": "Flying. At the beginning of your upkeep, foresight 2.",
    "note": "rules text of Great-Owl of the Archive"
   },
   {
@@ -6009,10 +6313,6 @@
   {
    "key": "Navarch of the Cold Sea",
    "note": "card name (lyceum, creature)"
-  },
-  {
-   "key": "Human Sailor",
-   "note": "card subtype"
   },
   {
    "key": "When this enters, freeze target enemy creature.",
@@ -6155,6 +6455,30 @@
    "note": "flavour text of Othismos"
   },
   {
+   "key": "Helmsman of the Paralos",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Vigilance. Other Sailor creatures you control have vigilance (they don't tap to attack).",
+   "note": "rules text of Helmsman of the Paralos"
+  },
+  {
+   "key": "One hand on the steering oar, both eyes on the sea, and not a word wasted.",
+   "note": "flavour text of Helmsman of the Paralos"
+  },
+  {
+   "key": "Pilot of the Long Swell",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "When this enters, foresight 2 for each Sailor you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom).",
+   "note": "rules text of Pilot of the Long Swell"
+  },
+  {
+   "key": "The storm is written in the swell a day before it comes. He reads it as a scholar reads a scroll.",
+   "note": "flavour text of Pilot of the Long Swell"
+  },
+  {
    "key": "Keeper of the Stacks",
    "note": "card name (lyceum, creature)"
   },
@@ -6293,6 +6617,18 @@
   {
    "key": "Where the enemy turned, the victors hung his arms upon a post, and the place was honoured ever after.",
    "note": "flavour text of Trophy of Marathon"
+  },
+  {
+   "key": "Phormio of Naupactus",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Other Sailor creatures you control get +1/+1. When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+   "note": "rules text of Phormio of Naupactus"
+  },
+  {
+   "key": "He circled the enemy fleet and waited for the dawn wind. It came, as he knew it would, and broke their ring for him.",
+   "note": "flavour text of Phormio of Naupactus"
   },
   {
    "key": "Zeno of Citium",
@@ -6671,6 +7007,34 @@
    "note": "flavour text of Mule-Frame Automaton"
   },
   {
+   "key": "Spring-Loaded Lance",
+   "note": "card name (machine, relic)"
+  },
+  {
+   "key": "Equipment",
+   "note": "card subtype"
+  },
+  {
+   "key": "Equipped creature gets +1/+0 and has first strike. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)",
+   "note": "rules text of Spring-Loaded Lance"
+  },
+  {
+   "key": "A coiled spring, a brass catch, and a point that arrives before the enemy has finished deciding.",
+   "note": "flavour text of Spring-Loaded Lance"
+  },
+  {
+   "key": "Tool-Rack Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "This gets +1/+0 for each relic you control.",
+   "note": "rules text of Tool-Rack Automaton"
+  },
+  {
+   "key": "It carries the workshop on its back and swings whatever hangs nearest.",
+   "note": "flavour text of Tool-Rack Automaton"
+  },
+  {
    "key": "Siege Automaton",
    "note": "card name (machine, creature)"
   },
@@ -6887,6 +7251,30 @@
    "note": "flavour text of Masterwork Automaton"
   },
   {
+   "key": "Riveted Pauldron",
+   "note": "card name (machine, relic)"
+  },
+  {
+   "key": "When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)",
+   "note": "rules text of Riveted Pauldron"
+  },
+  {
+   "key": "Forty rivets, each one counted, each one entered in the ledger.",
+   "note": "flavour text of Riveted Pauldron"
+  },
+  {
+   "key": "Guild Armourer",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Your relic cards cost 1 less to play. This reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on this.",
+   "note": "rules text of Guild Armourer"
+  },
+  {
+   "key": "He fits a man for armour the way a clerk fits a column of figures: by measurement, never by trust.",
+   "note": "flavour text of Guild Armourer"
+  },
+  {
    "key": "Guild Comptroller",
    "note": "card name (machine, creature)"
   },
@@ -7021,6 +7409,18 @@
   {
    "key": "The guild built a machine to build machines. It has not yet asked for wages.",
    "note": "flavour text of Self-Winding Wright"
+  },
+  {
+   "key": "Arsenal Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "This gets +1/+1 for each relic you control. Whenever a relic enters under your control, create a 1/1 Servo Construct token.",
+   "note": "rules text of Arsenal Automaton"
+  },
+  {
+   "key": "The guild hung every spare tool on one frame and entered the result in the books as a garrison.",
+   "note": "flavour text of Arsenal Automaton"
   },
   {
    "key": "The Prime Engine",

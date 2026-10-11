@@ -1762,3 +1762,115 @@ def banner(p, x, top, w, h, col, charge=None):
     p.unclip()
     if charge != 'none':
         gear(p, (x, top + h * 0.38), w * 0.26, 10, GOLD, 0.2, width=1.4, spokes=4)
+
+
+# ------------------------------------------------------------------ relics and equipment (1.25)
+
+def lance(p, a, b, s=1.0, col=VERMILION, spring_open=1.0, grip=None):
+    """A spring-loaded lance from butt `a` to tip `b`: leather grip, brass spring housing
+    with the coil showing through a slot, a flaring vamplate and a painted, tapering shaft
+    ending in a steel head. Widths scale with `s` (canvas units at s=1 suit a 400 long lance).
+    `grip` (0..1 along the lance) is where a hand closes; the housing sits behind it."""
+    u = v_norm(v_sub(b, a))
+    n = v_perp(u)
+    L = v_len(v_sub(b, a))
+    g = grip if grip is not None else 0.18
+
+    def at(t, off=0.0):
+        return v_add(v_add(a, v_mul(u, L * t)), v_mul(n, off))
+    # shaft: painted spiral stripes, tapering towards the head
+    t0, t1 = g + 0.1, 0.86
+    sh = [at(t0, 7 * s), at(t1, 3.2 * s), at(t1, -3.2 * s), at(t0, -7 * s)]
+    p.shape(sh, ('v', col.light(0.25), col, col.dark(0.35)), width=1.8, smooth=False, shade=0.6)
+    p.clip_shape(sh, smooth=False)
+    k = 0
+    t = t0
+    while t < t1:
+        q = at(t)
+        p.line([v_add(q, v_mul(n, 9 * s)), v_add(v_add(q, v_mul(n, -9 * s)), v_mul(u, 14 * s))], LEAD_WHITE.dark(0.08), 5 * s)
+        t += 30 * s / L
+        k += 1
+    p.unclip()
+    p.line([at(t0, -3 * s), at(t1, -1.2 * s)], C(1, 1, 0.92, 0.45), 1.6 * s)
+    # steel head: socket and long leaf point
+    p.shape([at(t1 - 0.01, 4 * s), at(t1 + 0.04, 3.4 * s), at(t1 + 0.04, -3.4 * s), at(t1 - 0.01, -4 * s)], metal(STEELC), width=1.4, smooth=False, shade=0.7)
+    p.shape([at(t1 + 0.04, 4.6 * s), at(t1 + 0.08, 6.4 * s), at(1.0) + (0,), at(t1 + 0.08, -6.4 * s), at(t1 + 0.04, -4.6 * s)], metal(STEELC.light(0.1)), width=1.6, shade=0.8)
+    p.line([at(t1 + 0.05), at(0.985)], STEELC.dark(0.35), 1.0 * s)
+    p.line([at(t1 + 0.06, -1.6 * s), at(0.97, -0.6 * s)], C(1, 1, 1, 0.75), 1.2 * s)
+    # butt cap and grip
+    p.shape([at(0, 6 * s), at(g - 0.08, 6 * s), at(g - 0.08, -6 * s), at(0, -6 * s)], metal(BRASS_D), width=1.6, smooth=False, shade=0.7)
+    gw = [at(g - 0.08, 5.6 * s), at(g + 0.03, 5.6 * s), at(g + 0.03, -5.6 * s), at(g - 0.08, -5.6 * s)]
+    p.shape(gw, LEATHER, width=1.6, smooth=False, shade=0.7)
+    for i in range(7):
+        q = at(g - 0.075 + i * 0.016)
+        p.line([v_add(q, v_mul(n, 5.4 * s)), v_add(v_add(q, v_mul(n, -5.4 * s)), v_mul(u, 4 * s))], LEATHER.dark(0.35), 1.0)
+    # spring housing between grip and vamplate: a brass tube with a slot showing the coil
+    h0, h1 = g + 0.03, g + 0.1
+    hs = [at(h0, 8.5 * s), at(h1, 8.5 * s), at(h1, -8.5 * s), at(h0, -8.5 * s)]
+    p.shape(hs, metal_band(BRASS, 'v'), width=1.8, smooth=False)
+    slot = [at(h0 + 0.006, 4 * s), at(h1 - 0.006, 4 * s), at(h1 - 0.006, -4 * s), at(h0 + 0.006, -4 * s)]
+    p.shape(slot, SOOT, width=1.2, smooth=False)
+    spring(p, at(h0 + 0.008), at(h0 + 0.008 + (h1 - h0 - 0.016) * (0.55 + 0.45 * spring_open)), 3.2 * s, 6, STEELC.light(0.2), 1.4 * s)
+    for t in (h0, h1):
+        p.shape([at(t - 0.004, 9.5 * s), at(t + 0.004, 9.5 * s), at(t + 0.004, -9.5 * s), at(t - 0.004, -9.5 * s)], metal(BRASS_D), width=1.2, smooth=False)
+    rivet(p, at((h0 + h1) / 2, 7 * s), 1.6 * s, BRASS_L)
+    rivet(p, at((h0 + h1) / 2, -7 * s), 1.6 * s, BRASS_L)
+    # the catch lever on top of the housing
+    p.taper([at(h0 + 0.01, 9 * s), at(h0 - 0.02, 15 * s)], 1.8 * s, 1.4 * s, metal(STEELC), width=1.0)
+    p.blob(at(h0 - 0.02, 15 * s), 2.2 * s, 2.2 * s, BRASS_L, width=1.0)
+    # vamplate: a cone flaring back towards the hand
+    vb, vf = h1 + 0.005, h1 + 0.07
+    vp = [at(vb, 30 * s), at(vb + 0.012, 31 * s), at(vf, 8 * s), at(vf, -8 * s), at(vb + 0.012, -31 * s), at(vb, -30 * s)]
+    p.shape(vp, metal(STEELC.light(0.05)), width=2.0, shade=0.9, rim=0.35)
+    p.shape([at(vb, 30 * s), at(vb + 0.012, 31 * s), at(vb + 0.012, -31 * s), at(vb, -30 * s)], metal_band(BRASS, 'v'), width=1.4, smooth=False)
+    for i in range(7):
+        rivet(p, at(vb + 0.006, (-26 + i * 8.6) * s), 1.5 * s, BRASS_L)
+    p.line([at(vb + 0.02, 22 * s), at(vf - 0.006, 6 * s)], C(1, 1, 1, 0.55), 2 * s)
+    return at(g - 0.025)
+
+
+def pauldron(p, c, s=1.0, col=STEELC, trim=BRASS, strap=LEATHER, flip=False):
+    """A riveted pauldron seen from the front-side: a broad shell (the cop) curving over
+    the shoulder and down, and four crescent lames below it that wrap the upper arm, each
+    narrower than the one above, rivets along every edge, a strap and buckle at the neck
+    side. `c` is the top of the shell; about 130 wide and 140 tall at s=1. Faces right:
+    the neck side is on the left."""
+    p.push(c[0], c[1], s, flip)
+    lw = p.lw
+    # strap running in towards the neck
+    p.shape([(-52, 30), (-82, 34), (-84, 46), (-52, 44)], strap, width=1.6, shade=0.6)
+    p.shape([(-80, 30, 0), (-68, 30, 0), (-68, 48, 0), (-80, 48, 0)], None, ink=INK, width=4.4, smooth=False)
+    p.shape([(-80, 30, 0), (-68, 30, 0), (-68, 48, 0), (-80, 48, 0)], None, ink=trim, width=2.4, smooth=False)
+    # lames, lowest first; each a crescent sagging at the middle, shifted to the arm side
+    for i in (3, 2, 1, 0):
+        cx = 14 + i * 4
+        y0 = 58 + i * 20
+        w0 = 54 - i * 7
+        sag = 10 + i * 1.5
+        top = [(cx - w0, y0 - 8), (cx - w0 * 0.5, y0 - 6 + sag * 0.6), (cx, y0 - 4 + sag), (cx + w0 * 0.5, y0 - 6 + sag * 0.6), (cx + w0, y0 - 10)]
+        bot = [(cx + w0 + 2, y0 + 8), (cx + w0 * 0.5, y0 + 12 + sag * 0.7), (cx, y0 + 14 + sag), (cx - w0 * 0.5, y0 + 12 + sag * 0.7), (cx - w0 - 2, y0 + 10)]
+        p.shape(top + bot, metal(col.dark(0.05 * i), 'h'), width=2.0, shade=0.9, rim=0.4)
+        p.line([(cx - w0 + 3, y0 + 7), (cx - w0 * 0.5, y0 + 9 + sag * 0.7), (cx, y0 + 11 + sag), (cx + w0 * 0.5, y0 + 9 + sag * 0.7), (cx + w0, y0 + 6)], trim, 2.2)
+        for k in range(5):
+            t = (k + 0.5) / 5
+            x = cx - w0 * 0.85 + t * w0 * 1.7
+            yy = y0 + 1 + math.sin(t * math.pi) * sag * 0.95
+            rivet(p, (x, yy), 2.3, trim)
+        p.line([(cx - w0 * 0.6, y0 - 3 + sag * 0.3), (cx, y0 + sag * 0.75), (cx + w0 * 0.5, y0 - 2 + sag * 0.3)], C(1, 1, 1, 0.4), 1.4)
+    # the cop: a broad shell rising high over the shoulder and falling to the arm
+    shell = [(-60, 40), (-58, 14), (-40, -6), (-8, -16), (28, -12), (56, 6), (72, 34), (70, 62), (50, 70), (20, 66), (-14, 58), (-44, 50)]
+    p.shape(shell, metal(col.light(0.06), 'v'), width=2.4, shade=1.0, rim=0.45)
+    # a raised medial ridge and a turned brass rim along the lower edge
+    p.taper([(-30, 4), (2, -4), (34, 6), (58, 30), (62, 56)], 2.4, 1.6, col.dark(0.3), width=0.8, ink=False)
+    p.line([(-32, 2), (0, -6), (32, 4), (56, 28), (60, 54)], C(1, 1, 1, 0.65), 2.2)
+    p.taper([(-58, 42), (-40, 50), (-12, 58), (20, 66), (50, 70), (70, 62)], 3.4, 3.4, metal_band(trim, 'v'), width=1.4)
+    for k in range(8):
+        t = (k + 0.5) / 8
+        x = -50 + t * 116
+        yy = 42 + t * 22 - math.sin(t * math.pi) * 2 - 6
+        rivet(p, (x, yy), 2.7, trim)
+    for q in ((-44, 16), (-20, 2), (10, -2), (40, 10)):
+        rivet(p, q, 2.4, trim)
+    p.blob((-18, 10), 16, 7, C(1, 1, 0.95, 0.32), rot=-0.3, ink=False)
+    p.pop()
+    p.lw = lw

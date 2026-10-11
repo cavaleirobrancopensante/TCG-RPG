@@ -786,6 +786,58 @@
     "art": "res://art/cards/machine_c_027.webp"
   },
   {
+    "id": "machine_c_028",
+    "name": "Spring-Loaded Lance",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Equipment",
+    "cost": {
+      "generic": 1
+    },
+    "keywords": [],
+    "attach": "equipment",
+    "equip": {
+      "generic": 2
+    },
+    "grants": {
+      "power": 1,
+      "toughness": 0,
+      "keywords": [
+        "first_strike"
+      ]
+    },
+    "text": "Equipped creature gets +1/+0 and has first strike. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)",
+    "flavor": "A coiled spring, a brass catch, and a point that arrives before the enemy has finished deciding.",
+    "art": "res://art/cards/machine_c_028.webp"
+  },
+  {
+    "id": "machine_c_029",
+    "name": "Tool-Rack Automaton",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 3,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Relic",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each relic you control.",
+    "flavor": "It carries the workshop on its back and swings whatever hangs nearest.",
+    "art": "res://art/cards/machine_c_029.webp"
+  },
+  {
     "id": "machine_u_001",
     "name": "Siege Automaton",
     "faction": "machine",
@@ -1330,6 +1382,75 @@
     "art": "res://art/cards/machine_u_018.webp"
   },
   {
+    "id": "machine_u_019",
+    "name": "Riveted Pauldron",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Equipment",
+    "cost": {
+      "generic": 3
+    },
+    "keywords": [],
+    "attach": "equipment",
+    "equip": {
+      "generic": 2
+    },
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "attach",
+        "target": "own_creature"
+      }
+    ],
+    "grants": {
+      "power": 1,
+      "toughness": 2,
+      "keywords": [
+        "vigilance"
+      ]
+    },
+    "text": "When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)",
+    "flavor": "Forty rivets, each one counted, each one entered in the ledger.",
+    "art": "res://art/cards/machine_u_019.webp"
+  },
+  {
+    "id": "machine_u_020",
+    "name": "Guild Armourer",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "cost_reduce",
+        "subtype": "Relic",
+        "amount": 1
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Relic",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Your relic cards cost 1 less to play. This reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on this.",
+    "flavor": "He fits a man for armour the way a clerk fits a column of figures: by measurement, never by trust.",
+    "art": "res://art/cards/machine_u_020.webp"
+  },
+  {
     "id": "machine_r_001",
     "name": "Guild Comptroller",
     "faction": "machine",
@@ -1677,6 +1798,47 @@
     "text": "Assembly (this gets +1/+1 for each other Construct you control). Whenever another Artificer enters under your control, create a 1/1 Servo Construct token.",
     "flavor": "The guild built a machine to build machines. It has not yet asked for wages.",
     "art": "res://art/cards/machine_r_011.webp"
+  },
+  {
+    "id": "machine_r_012",
+    "name": "Arsenal Automaton",
+    "faction": "machine",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Relic",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Relic",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Servo Construct",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "This gets +1/+1 for each relic you control. Whenever a relic enters under your control, create a 1/1 Servo Construct token.",
+    "flavor": "The guild hung every spare tool on one frame and entered the result in the books as a garrison.",
+    "art": "res://art/cards/machine_r_012.webp"
   },
   {
     "id": "machine_m_001",

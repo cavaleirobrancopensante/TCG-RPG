@@ -230,7 +230,7 @@
     "faction": "lyceum",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Human Merchant",
+    "subtype": "Human Merchant Sailor",
     "cost": {
       "U": 1,
       "generic": 3
@@ -682,6 +682,60 @@
     "art": "res://art/cards/lyceum_c_027.webp"
   },
   {
+    "id": "lyceum_c_028",
+    "name": "Oarsman of the Thranite Bench",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Sailor",
+    "cost": {
+      "U": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "kinship",
+        "subtype": "Sailor",
+        "power": 1,
+        "toughness": 0
+      }
+    ],
+    "text": "This gets +1/+0 for each other Sailor you control.",
+    "flavor": "A hundred and seventy oars and one stroke. There is no room on the benches for a man who keeps his own time.",
+    "art": "res://art/cards/lyceum_c_028.webp"
+  },
+  {
+    "id": "lyceum_c_029",
+    "name": "Gull of the Sea Lanes",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Bird",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "power": 1,
+    "toughness": 1,
+    "keywords": [
+      "flying"
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Sailor",
+        "action": "foresight",
+        "amount": 1
+      }
+    ],
+    "text": "Flying. Whenever a Sailor enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+    "flavor": "Where the gulls wheel, there is land. The helmsman watches them before he trusts the stars.",
+    "art": "res://art/cards/lyceum_c_029.webp"
+  },
+  {
     "id": "lyceum_u_001",
     "name": "Agora Inspector",
     "faction": "lyceum",
@@ -802,7 +856,9 @@
     },
     "power": 2,
     "toughness": 3,
-    "keywords": [],
+    "keywords": [
+      "flying"
+    ],
     "effects": [
       {
         "trigger": "upkeep",
@@ -810,7 +866,7 @@
         "amount": 2
       }
     ],
-    "text": "At the beginning of your upkeep, foresight 2.",
+    "text": "Flying. At the beginning of your upkeep, foresight 2.",
     "flavor": "It keeps the night hours of the library, and suffers no careless readers.",
     "art": "res://art/cards/lyceum_u_005.webp"
   },
@@ -1173,6 +1229,61 @@
     "art": "res://art/cards/lyceum_u_018.webp"
   },
   {
+    "id": "lyceum_u_019",
+    "name": "Helmsman of the Paralos",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Sailor",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [
+      "vigilance"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "vigilance",
+        "scope": "other_own_creatures",
+        "subtype": "Sailor"
+      }
+    ],
+    "text": "Vigilance. Other Sailor creatures you control have vigilance (they don't tap to attack).",
+    "flavor": "One hand on the steering oar, both eyes on the sea, and not a word wasted.",
+    "art": "res://art/cards/lyceum_u_019.webp"
+  },
+  {
+    "id": "lyceum_u_020",
+    "name": "Pilot of the Long Swell",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Sailor",
+    "cost": {
+      "U": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "foresight",
+        "amount": 2,
+        "amount_per": "Sailor"
+      }
+    ],
+    "text": "When this enters, foresight 2 for each Sailor you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom).",
+    "flavor": "The storm is written in the swell a day before it comes. He reads it as a scholar reads a scroll.",
+    "art": "res://art/cards/lyceum_u_020.webp"
+  },
+  {
     "id": "lyceum_r_001",
     "name": "Keeper of the Stacks",
     "faction": "lyceum",
@@ -1470,6 +1581,40 @@
     "text": "Hoplite creatures you control get +1/+1.",
     "flavor": "Where the enemy turned, the victors hung his arms upon a post, and the place was honoured ever after.",
     "art": "res://art/cards/lyceum_r_011.webp"
+  },
+  {
+    "id": "lyceum_r_012",
+    "name": "Phormio of Naupactus",
+    "faction": "lyceum",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Human Sailor",
+    "cost": {
+      "U": 2,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "freeze",
+        "target": "enemy_creature"
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Sailor"
+      }
+    ],
+    "text": "Other Sailor creatures you control get +1/+1. When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+    "flavor": "He circled the enemy fleet and waited for the dawn wind. It came, as he knew it would, and broke their ring for him.",
+    "art": "res://art/cards/lyceum_r_012.webp"
   },
   {
     "id": "lyceum_m_001",

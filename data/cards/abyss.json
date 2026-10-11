@@ -73,7 +73,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Undead Zombie",
+    "subtype": "Skeleton",
     "cost": {
       "B": 1,
       "generic": 1
@@ -93,7 +93,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Undead Zombie",
+    "subtype": "Zombie",
     "cost": {
       "B": 1,
       "generic": 1
@@ -165,7 +165,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Undead Zombie",
+    "subtype": "Zombie",
     "cost": {
       "B": 1,
       "generic": 2
@@ -224,11 +224,11 @@
   },
   {
     "id": "abyss_c_010",
-    "name": "Ossuary Ghoul",
+    "name": "Ossuary Bone-Walker",
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Undead Zombie",
+    "subtype": "Skeleton",
     "cost": {
       "B": 1,
       "generic": 3
@@ -244,13 +244,13 @@
           "name": "Restless Dead",
           "power": 1,
           "toughness": 1,
-          "subtype": "Undead Zombie",
+          "subtype": "Zombie",
           "keywords": []
         },
         "count": 1
       }
     ],
-    "text": "When this dies, create a 1/1 Restless Dead Undead Zombie token.",
+    "text": "When this dies, create a 1/1 Restless Dead Zombie token.",
     "flavor": "Break it apart and the pieces keep walking.",
     "art": "res://art/cards/abyss_c_010.webp"
   },
@@ -285,7 +285,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Undead Spirit",
+    "subtype": "Skeleton",
     "cost": {
       "B": 1,
       "generic": 4
@@ -517,7 +517,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Undead Zombie",
+    "subtype": "Zombie",
     "cost": {
       "B": 1
     },
@@ -527,12 +527,12 @@
     "statics": [
       {
         "static": "kinship",
-        "subtype": "Undead",
+        "subtype": "Zombie",
         "power": 1,
         "toughness": 0
       }
     ],
-    "text": "This gets +1/+0 for each other Undead you control.",
+    "text": "This gets +1/+0 for each other Zombie you control.",
     "flavor": "It waits by the lych-gate for the next funeral, and it is never alone for long.",
     "art": "res://art/cards/abyss_c_021.webp"
   },
@@ -571,7 +571,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Undead Skeleton",
+    "subtype": "Skeleton",
     "cost": {
       "B": 1,
       "generic": 2
@@ -587,13 +587,13 @@
           "name": "Restless Dead",
           "power": 1,
           "toughness": 1,
-          "subtype": "Undead Zombie",
+          "subtype": "Zombie",
           "keywords": []
         },
         "count": 1
       }
     ],
-    "text": "When this dies, create a 1/1 Restless Dead Undead Zombie token.",
+    "text": "When this dies, create a 1/1 Restless Dead Zombie token.",
     "flavor": "Knock it down and something else climbs out of the same grave.",
     "art": "res://art/cards/abyss_c_023.webp"
   },
@@ -643,11 +643,11 @@
         "power": -1,
         "toughness": -1,
         "duration": "turn",
-        "amount_per": "Undead"
+        "amount_per": "Skeleton"
       }
     ],
-    "text": "Target enemy creature gets -1/-1 until end of turn for each Undead you control.",
-    "flavor": "One dead hand is cold. A hundred of them are the grave itself.",
+    "text": "Target enemy creature gets -1/-1 until end of turn for each Skeleton you control.",
+    "flavor": "One dead hand is cold. A hundred bony hands are the grave itself.",
     "art": "res://art/cards/abyss_c_025.webp"
   },
   {
@@ -686,7 +686,7 @@
     "faction": "abyss",
     "rarity": "common",
     "type": "creature",
-    "subtype": "Undead Spirit",
+    "subtype": "Spirit",
     "cost": {
       "B": 1,
       "generic": 3
@@ -699,6 +699,57 @@
     "text": "Dread (can only be blocked by Pact creatures and Constructs).",
     "flavor": "Travellers follow its pale lantern off the causeway, and the fen keeps them.",
     "art": "res://art/cards/abyss_c_027.webp"
+  },
+  {
+    "id": "abyss_c_028",
+    "name": "Plague-Pit Shambler",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Zombie",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "drain",
+        "amount": 1
+      }
+    ],
+    "text": "When this dies, the enemy player loses 1 life and you gain 1 life.",
+    "flavor": "They tipped him into the plague pit with the others. He did not stay with them.",
+    "art": "res://art/cards/abyss_c_028.webp"
+  },
+  {
+    "id": "abyss_c_029",
+    "name": "Gravepit Ghoul",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Zombie",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "reanimate",
+        "max_mv": 2,
+        "target": "own_grave_creature"
+      }
+    ],
+    "text": "When this enters, return target creature card with mana value 2 or less from your graveyard to play.",
+    "flavor": "It digs all night in the churchyard, and what it digs up follows it home.",
+    "art": "res://art/cards/abyss_c_029.webp"
   },
   {
     "id": "abyss_u_001",
@@ -742,7 +793,7 @@
     "faction": "abyss",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Undead Spirit",
+    "subtype": "Spirit",
     "cost": {
       "B": 1,
       "generic": 2
@@ -1083,7 +1134,7 @@
     "faction": "abyss",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Undead Skeleton",
+    "subtype": "Skeleton",
     "cost": {
       "B": 1,
       "generic": 2
@@ -1097,10 +1148,10 @@
         "power": 1,
         "toughness": 0,
         "scope": "other_own_creatures",
-        "subtype": "Undead"
+        "subtype": "Skeleton"
       }
     ],
-    "text": "Other Undead you control get +1/+0.",
+    "text": "Other Skeletons you control get +1/+0.",
     "flavor": "He beats a drum of stretched hide, and every grave in the parish keeps time.",
     "art": "res://art/cards/abyss_u_014.webp"
   },
@@ -1131,11 +1182,11 @@
   },
   {
     "id": "abyss_u_016",
-    "name": "Gravecaller Ghast",
+    "name": "Gravecaller Bone-Warden",
     "faction": "abyss",
     "rarity": "uncommon",
     "type": "creature",
-    "subtype": "Undead Zombie",
+    "subtype": "Skeleton",
     "cost": {
       "B": 1,
       "generic": 3
@@ -1146,7 +1197,7 @@
     "effects": [
       {
         "trigger": "ally_enter",
-        "ally_subtype": "Undead",
+        "ally_subtype": "Skeleton",
         "action": "buff",
         "target": "self",
         "power": 1,
@@ -1154,8 +1205,8 @@
         "duration": "permanent"
       }
     ],
-    "text": "Whenever another Undead enters under your control, this gets +1/+1 for the rest of the duel.",
-    "flavor": "Each corpse that rises feeds it a little of the cold it carries.",
+    "text": "Whenever another Skeleton enters under your control, this gets +1/+1 for the rest of the duel.",
+    "flavor": "Every skeleton that climbs out of the earth lends him a little more of its cold.",
     "art": "res://art/cards/abyss_u_016.webp"
   },
   {
@@ -1200,14 +1251,70 @@
     "effects": [
       {
         "trigger": "ally_enter",
-        "ally_subtype": "Undead",
+        "ally_subtype": "Zombie",
         "action": "drain",
         "amount": 1
       }
     ],
-    "text": "Whenever another Undead enters under your control, the enemy player loses 1 life and you gain 1 life.",
+    "text": "Whenever another Zombie enters under your control, the enemy player loses 1 life and you gain 1 life.",
     "flavor": "It was cast to ring the dead to rest. The Pact recast it to ring them up again.",
     "art": "res://art/cards/abyss_u_018.webp"
+  },
+  {
+    "id": "abyss_u_019",
+    "name": "Plague-Cart Drover",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Zombie",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "summon",
+        "token": {
+          "name": "Restless Dead",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Zombie",
+          "keywords": []
+        },
+        "count": 2
+      }
+    ],
+    "text": "When this dies, create two 1/1 Restless Dead Zombie tokens.",
+    "flavor": "\"Bring out your dead,\" he croaks, and the dead in his cart climb down to help.",
+    "art": "res://art/cards/abyss_u_019.webp"
+  },
+  {
+    "id": "abyss_u_020",
+    "name": "Hunger of the Grave",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Curse",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "drain",
+        "amount": 1,
+        "amount_per": "Zombie"
+      }
+    ],
+    "text": "The enemy player loses 1 life and you gain 1 life for each Zombie you control.",
+    "flavor": "The dead are never fed. They only take, a mouthful of warmth at a time.",
+    "art": "res://art/cards/abyss_u_020.webp"
   },
   {
     "id": "abyss_r_001",
@@ -1308,7 +1415,7 @@
     "faction": "abyss",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Undead Lich",
+    "subtype": "Lich",
     "cost": {
       "B": 2,
       "generic": 3
@@ -1335,7 +1442,7 @@
     "faction": "abyss",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Undead Zombie",
+    "subtype": "Skeleton",
     "cost": {
       "B": 1,
       "generic": 4
@@ -1358,13 +1465,13 @@
               "name": "Restless Dead",
               "power": 2,
               "toughness": 2,
-              "subtype": "Undead Zombie",
+              "subtype": "Zombie",
               "keywords": []
             },
             "count": 1
           }
         ],
-        "text": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Undead Zombie token."
+        "text": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token."
       }
     ],
     "statics": [
@@ -1373,10 +1480,10 @@
         "power": 1,
         "toughness": 1,
         "scope": "other_own_creatures",
-        "subtype": "Zombie"
+        "subtype": "Skeleton"
       }
     ],
-    "text": "Other Zombies you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Undead Zombie token.",
+    "text": "Other Skeletons you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
     "flavor": "Every skull on his walls once knelt to him. Most of them still do.",
     "art": "res://art/cards/abyss_r_005.webp"
   },
@@ -1499,7 +1606,7 @@
     "faction": "abyss",
     "rarity": "rare",
     "type": "creature",
-    "subtype": "Undead Spirit",
+    "subtype": "Skeleton Lord",
     "cost": {
       "B": 2,
       "generic": 3
@@ -1512,10 +1619,10 @@
         "static": "keyword",
         "keyword": "dread",
         "scope": "other_own_creatures",
-        "subtype": "Undead"
+        "subtype": "Skeleton"
       }
     ],
-    "text": "Other Undead you control have dread (they can only be blocked by Pact creatures and Constructs).",
+    "text": "Other Skeletons you control have dread (they can only be blocked by Pact creatures and Constructs).",
     "flavor": "When he rides out of the hill at midnight, his host walks where no living man can stop it.",
     "art": "res://art/cards/abyss_r_010.webp"
   },
@@ -1555,6 +1662,47 @@
     "art": "res://art/cards/abyss_r_011.webp"
   },
   {
+    "id": "abyss_r_012",
+    "name": "Ghoul-Master of the Plague Pits",
+    "faction": "abyss",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Zombie",
+    "cost": {
+      "B": 2,
+      "generic": 2
+    },
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Zombie"
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "summon",
+        "token": {
+          "name": "Restless Dead",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Zombie",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "Other Zombies you control get +1/+1. When this dies, create a 1/1 Restless Dead Zombie token.",
+    "flavor": "He was the parish gravedigger in the year of the plague. He still keeps the pits, and the pits keep him.",
+    "art": "res://art/cards/abyss_r_012.webp"
+  },
+  {
     "id": "abyss_m_001",
     "name": "Belzareth, Prince of Cinders",
     "faction": "abyss",
@@ -1592,7 +1740,7 @@
     "faction": "abyss",
     "rarity": "mythic",
     "type": "creature",
-    "subtype": "Undead Lich",
+    "subtype": "Lich",
     "cost": {
       "B": 2,
       "generic": 4

@@ -245,3 +245,27 @@ The only card in both tribes: a machine that builds machines, which counts for e
 **The Archwright of Cogspire** · Mythic · Creature (Human Artificer) · 2CC · 2/4 · Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock 3 (you may pay 3 more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.
 
 The faith's tribal showpiece: every machine that enters makes every craftsman stronger, and overclocked he arrives with three Servos, putting three counters on himself and each other Artificer at once. It is splashy but answerable: the counters stay, but without him the engine stops, and he is a single creature with no protection. The master whose hand or pupils drew every machine is the guild's highest rank, and its proudest boast.
+
+### Third tribe (1.25)
+
+The Technocracy's third theme is not a creature tribe but its own gear: relics and the new Equipment. The tribe word "Relic" counts every relic you control, so the faith's existing Snares, Workshops and Engines (Gear Trap, Brass Manacles, Calibration Bench, Galvanic Coil, Self-Mending Forge, Foundry Ledger, Clockwork Gaol, Cogspire Lockworks, Perpetual Engine, The Grand Tabulator) already belong to it, together with the two new Equipment: twelve relics in all, and no retagging was needed. The five new cards are two cheap colourless Equipment that feed the count early and three payoffs that count relics or reward each one that enters (a kinship common, a cost cutter with an ally trigger, and a rare engine). Equipment lend first strike and vigilance, which the spec allows on Technocracy Equipment only; the faith still owns no keyword on its creatures. There is no energy or other new resource: everything runs on mana, relics in play and the cards already in the spec.
+
+**Spring-Loaded Lance** · Common · Relic (Equipment) · 1 · Equipped creature gets +1/+0 and has first strike. Equip 2.
+
+The cheapest relic in the faith, so it turns on the relic payoffs from the first turns and can be played with no creature out. +1/+0 and first strike is a modest bonus at early-2000s rates (Leonin Scimitar gave +1/+1 for 1, Equip 1), paid for with the dearer Equip 2. First strike stays a Revel keyword on creatures; here it is only lent by a machine, which the spec allows for Equipment. A lance that fires its point forward on a spring is the guild's answer to the joust.
+
+**Tool-Rack Automaton** · Common · Creature (Construct) · 1C · 1/3 · This gets +1/+0 for each relic you control.
+
+The common relic payoff, shaped like Tended Automaton: a cheap Construct that is a wall on its own and an attacker once the bench is full. With two relics out it is a 3/3 for two, and it counts for Assembly as well, so it fits either Technocracy deck. A machine that carries every tool of the workshop on its back is the faith's idea of a good labourer.
+
+**Riveted Pauldron** · Uncommon · Relic (Equipment) · 3 · When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip 2.
+
+The uncommon twist is that it straps itself on as it enters, so it works the turn it is played; afterward it moves for Equip 2 like any Equipment. +1/+2 and vigilance makes any body an attacker that still guards, which suits the faith's slow, sturdy machines. Three mana is a point dear for the bonus, the price of the free first attachment. Vigilance is a Stoa keyword, lent here only through Equipment as the spec allows.
+
+**Guild Armourer** · Uncommon · Creature (Human Artificer) · 2C · 2/2 · Your relic cards cost 1 less to play. This reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on this.
+
+The relic cost cutter, at the same rate as Guild Fitter but for relics, and an Artificer, so he also counts for that tribe's payoffs. Each relic that enters makes him bigger for good, so in a relic deck he grows into a 4/4 or more while cheapening the Equipment that make him grow. Equip costs are not reduced, which keeps him honest. The armourer who measures rather than trusts is the Technocracy's craftsman at his most typical.
+
+**Arsenal Automaton** · Rare · Creature (Construct) · 3C · 2/2 · This gets +1/+1 for each relic you control. Whenever a relic enters under your control, create a 1/1 Servo Construct token.
+
+The build-around: every relic both grows it and brings a Servo, so cheap Equipment become two-for-one cards and the Servos feed Assembly and the Construct lords. A 2/2 for four with no relics is weak, and Old Ways relic removal or any creature removal stops it, so it is splashy but answerable. The guild filing a frame hung with spare gear as a garrison is the faith's quiet joke about soldiers who need no wages.

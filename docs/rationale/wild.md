@@ -86,8 +86,8 @@ A trampling 4/4 for five that also breaks a relic, so it is never dead against t
 **Woodwose of the Fells** · Uncommon · Creature (Woodwose) · 4G · 4/4 · Rooted: as long as you control six or more lands, this gets +2/+2 and has trample.
 A 4/4 for five early, a 6/6 trampler late. It is an uncommon step up from the Barrowland Bear, adding trample to the Rooted reward. The woodwose is the wild man of medieval English folklore, and here he comes down only when the land grows wild enough.
 
-**Gift of the Greenwood** · Uncommon · Spell (Rite) · 2G · Target creature you control gets +2/+2 permanently.
-A lasting pump, more expensive than Wildsurge because it never goes away. It risks being lost to removal, which is the usual price of putting everything on one creature. The oak that gives slowly and never takes back is the faith's idea of a blessing.
+**Gift of the Greenwood** · Uncommon · Relic (Aura) · 2G · When this enters, attach it to target creature you control. That creature gets +2/+2.
+A lasting pump, more expensive than Wildsurge because it never goes away. In 1.25 it became an Aura instead of a permanent pump spell: the bonus is the same, but now it can also be lost to relic removal, so it is no stronger alone and only gains from the Druid cards that reward Auras. The oak that gives slowly and never takes back is the faith's idea of a blessing.
 
 **Trial by Tooth and Claw** · Uncommon · Spell (Rite) · 2G · Target creature you control gets +2/+2 until end of turn. Then target creature you control fights target enemy creature.
 Fight with a pump attached, so the chosen creature usually survives and still kills. It costs a mana more than Test of Antlers for the extra reliability. "The forest holds no courts. It holds contests" sums up how the Old Ways deal with threats.
@@ -185,3 +185,23 @@ The Treefolk build-around, sharing the faith's defensive keywords with the whole
 
 **Wolfwood, the Denning Oak** · Mythic · Creature (Treefolk Spirit) · 4GG · 6/6 · Trample. Other Treefolk you control get +1/+1. Other Wolves you control get +1/+1.
 The mythic that unites the two tribes: a 6/6 trampler that is a lord of both the grove and the pack. Six mana and no protection keep it answerable, and its anthems do nothing without a board, so it rewards a deck that has already built one. Wolves denning among the roots of a great tree is a true picture of the wild wood, and the oak sheltering both is the Old Ways' idea of nature as one household.
+
+### Third tribe (1.25)
+
+The Old Ways' third tribe is the **Druids**, the men who keep the circle, small and tied to the faith's new **Auras**: relics that sit on one of your creatures and lend it their strength (bark that turns a blade, a wolf's grey skin, a garland). The tribe is a few synergies, not a lord package: a common that grows whenever an Aura enters, an uncommon that makes Auras cheaper, and a rare who counts the other Druids and plants a Sapling for every Aura, which also feeds the Treefolk. The older Druids (Hedgerow Druid, Acorn Gatherer, Elder of the Oak Circle, Mistletoe Archdruid) were already Human Druids, so the tribe has seven members with no retagging; the Hunters stay Hunters, because a huntsman is not a priest of the grove. Gift of the Greenwood became an Aura, giving the faith three. The Old Ways are shown as they are, pagan rites kept with care by old men, with a gentle wryness: the flavour lets the bell in the valley have the last word.
+
+**Bark-Skin** · Common · Relic (Aura) · 1G · When this enters, attach it to target creature you control. That creature gets +0/+2 and has regenerate.
+The common defensive Aura: two mana makes any creature a wall that shrugs off its first death each turn. It adds no power, so it cannot win a race by itself, and like every Aura it is lost with its creature. Druids rubbing oak bark into a warrior's arm is a picture of the old wood-lore, and the flavour keeps it plain: it turns a blade well enough.
+
+**Wreath-Weaver Druid** · Common · Creature (Human Druid) · 1G · 1/2 · Whenever an Aura enters under your control, this gets +1/+1 permanently.
+The Druid two-drop, a 1/2 that grows with every Aura you play, on the model of Old Grey Wolf but cheap and small. With three Auras in the faith he rarely grows past 3/4, so he stays a common. Plaiting May garlands from hawthorn blossom is an old country custom, and a man who keeps one leaf of every garland for himself is the tribe's quiet humour.
+
+**Wolf-Pelt Mantle** · Uncommon · Relic (Aura) · 2G · When this enters, attach it to target creature you control and create a 2/2 Wolf token. That creature gets +1/+1 and has trample.
+The uncommon twist ties the Druids to the Wolves: an Aura and a Wolf in one card, so it triggers both Aura and Wolf payoffs. Three mana for a 2/2 and a small trample bonus is fair, and if the enchanted creature dies the wolf remains. Wolf skins worn as hoods appear in the old northern tales of wolf-coated men; here the wolves simply follow, and never say why.
+
+**Mantle-Keeper of the Circle** · Uncommon · Creature (Human Druid) · 2G · 2/2 · Your Aura cards cost 1 less.
+The tribal cost cut, like Acorn of the Elder Oak for the Treefolk: Bark-Skin costs G, the Mantle and the Gift cost 1G. It only reduces generic mana, so it never makes an Aura free, and a 2/2 body for three is under rate to pay for the static. The keeper of the circle's regalia, lending them more freely than he ought, is a gentle comic figure.
+
+**Grey Elder of the Henge** · Rare · Creature (Human Druid) · 2GG · 2/3 · This gets +1/+1 for each other Druid you control. Whenever an Aura enters under your control, create a 1/1 Sapling token.
+The Druid build-around: a 2/3 for four that grows with the circle (kinship) and turns every Aura into a Sapling, which is also a Treefolk for that tribe's lords. Alone he is under rate and dies to ordinary removal, so he rewards building the tribe rather than winning by himself. The stone ring at dawn with a small church on the far hill shows the Old Ways as old and patient, but no longer the only voice in the valley.
+

@@ -1664,3 +1664,218 @@ def lyceum_m_004(p):
     hoplite(pose='ly_hand_out', head=attic(LEAD_WHITE, BRONZE, VERMILION), main=C.hex('2a3a7a'), cuirass=BRONZE_LIGHT.dark(0.05), hair='curly',
             hair_col=C.hex('5a3a20'), beard='short', hoplon='owl', hoplon_field=LEAD_WHITE, hoplon_r=26, cloak='mantle', cloak_col=VERMILION,
             lining=VERMILION.light(0.3), eyes='open', trim=GOLD).draw(p, 500, 606, 470)
+
+
+# ------------------------------------------------------------------ third tribe: Sailors (1.25)
+
+def _planks(p, poly, n, col, horiz=True):
+    p.shape(poly, ('v', col.light(0.08), col.dark(0.12)), width=2, shade=0.6, smooth=False)
+    xs = [q[0] for q in poly]
+    ys = [q[1] for q in poly]
+    p.clip_shape(poly)
+    p.texture((min(xs), min(ys), max(xs), max(ys)))
+    for k in range(1, n):
+        y = min(ys) + (max(ys) - min(ys)) * k / n
+        p.line([(min(xs) - 5, y), (max(xs) + 5, y)], col.dark(0.45).alpha(0.6), 1.4, smooth=False)
+    p.unclip()
+
+
+def lyceum_c_028(p):
+    """Oarsman of the Thranite Bench: on the top bench of a trireme, one stroke with all the others."""
+    hz = sea_sky(p, 'day', 0.5)
+    bg.clouds(p, H * 0.14, 2, xs=[260, 700])
+    island(p, 300, hz, 260, 50, C.hex('8a9a8a'), temple=True, haze=0.5)
+    sea(p, hz, 'day', y1=380)
+    ship(p, 640, hz + 30, 0.3, LEAD_WHITE, ULTRA, oars=True, hull=C.hex('4a3a2e'))
+    # the far side of the hull: the gunwale and outrigger seen from inside
+    _planks(p, [(-10, 330, 0), (W + 10, 318, 0), (W + 10, 392, 0), (-10, 400, 0)], 3, C.hex('7a5636'))
+    p.line([(-10, 330), (W + 10, 318)], GOLD_DARK, 3, smooth=False)
+    meander(p, -10, W + 10, 336, 12, GOLD)
+    # the mast and the furled sail on the yard, the stern post rising beyond
+    rod(p, [(820, 400), (820, 60)], 9, 7, C.hex('6a4a2e'), width=2, shade=0.7)
+    rod(p, [(600, 110), (980, 100)], 6, 6, C.hex('6a4a2e'), width=1.8, shade=0.7)
+    p.shape([(610, 104), (970, 94), (960, 126), (790, 134), (620, 128)], ('v', LINEN, LINEN.dark(0.2)), width=1.8, shade=0.6)
+    for k in range(8):
+        p.line([(640 + k * 44, 102), (636 + k * 44, 128)], INK.alpha(0.25), 1.2)
+    # the dim hold below the far benches, where the lower ranks row
+    p.shape([(-10, 396, 0), (W + 10, 390, 0), (W + 10, 476, 0), (-10, 480, 0)], ('v', C.hex('4a3422'), C.hex('2a1c12')), ink=False, smooth=False)
+    for k in range(16):
+        x = 20 + k * 64
+        p.line([(x, 404), (x + 30, 470)], C.hex('7a5a3a').alpha(0.7), 4)
+    # the far rank of thranites, rowing in time
+    for i, x in enumerate((90, 230, 370, 640, 780, 920)):
+        col = [C.hex('b8786a'), C.hex('8aa0b8'), C.hex('a8b890'), C.hex('c8a870'), C.hex('9a7aa0'), C.hex('b89a7a')][i]
+        L.BenchGreek(pose='staff2', garb='tunic', main=col, sleeves='none', hair='curly', hair_col=[HAIR_DARK, C.hex('6a4a2a')][i % 2],
+                     beard='short' if i % 2 else None, trim=None, props_front=[rowing_oar('f', 0.15, 24, 70)]).draw(p, x, 470, 190)
+        p.shape(rect(x - 40, 470 - 190 * 0.27, x + 24, 470 - 190 * 0.22), C.hex('6b4a2e'), width=1.4, smooth=False, shade=0.5)
+    # the deck between the benches
+    _planks(p, [(-10, 470, 0), (W + 10, 462, 0), (W + 10, H + 10, 0), (-10, H + 10, 0)], 6, C.hex('9a7650'))
+    # the keleustes calling the stroke at the gangway
+    Greek(pose='ly_finger', garb='tunic', main=C.hex('3a4a7a'), sleeves='none', hair='curly', hair_col=HAIR_GREY, beard='short', age='old',
+          mouth='open', belt='leather').draw(p, 760, 560, 280, flip=True)
+    # his own bench, a sheepskin cushion on it
+    p.shape(rect(260, 476, 560, 500), ('v', C.hex('8a6440'), C.hex('5a3e26')), width=2, smooth=False, shade=0.6)
+    p.shape(rect(280, 500, 300, 606), C.hex('5a3e26'), width=1.6, smooth=False)
+    p.shape(rect(520, 500, 540, 606), C.hex('5a3e26'), width=1.6, smooth=False)
+    p.blob((400, 474), 70, 10, C.hex('e8dcc0'), width=1.6, shade=0.5)
+    for k in range(10):
+        p.line([(340 + k * 12, 468), (344 + k * 12, 482)], C.hex('b8a888').alpha(0.8), 1.2)
+    L.BenchGreek(pose='staff2', garb='tunic', main=C.hex('c86a3a'), sleeves='none', hair='curly', hair_col=HAIR_DARK, beard='short', trim=None,
+                 skin=SKIN_OLIVE, mouth='stern', props_front=[rowing_oar('f', 0.5, 30, 140)]).draw(p, 400, 606, 470)
+    # water shipped through the oar port, glinting on the deck
+    for k in range(6):
+        p.blob((700 + k * 40, 600 - (k % 2) * 6), 26, 4, SEA_LIGHT.alpha(0.5), ink=False)
+
+
+def lyceum_c_029(p):
+    """Gull of the Sea Lanes: at dawn off Sounion, a gull leads the fleet home past the temple on the cape."""
+    hz = sea_sky(p, 'dawn', 0.62, sun=(700, H * 0.62))
+    bg.clouds(p, H * 0.2, 2, col=C.hex('f8e0d0').alpha(0.8), xs=[740, 300])
+    sea(p, hz, 'dawn')
+    # the cape: a steep headland with the temple of the sea god at its edge
+    cape = [(-20, H + 10, 0), (-20, 300), (60, 290), (180, 300), (300, 330), (360, 380), (390, hz), (420, H + 10, 0)]
+    p.shape(cape, ('h', C.hex('8a7a6a'), C.hex('6a5a4e'), C.hex('4a3e36')), width=2.4, shade=0.6, rim=0.3)
+    p.clip_shape(cape)
+    p.texture((-20, 280, 420, H))
+    for k in range(9):
+        y = 330 + k * 30
+        p.line([(-20, y), (200, y + 8), (400, y - 4)], C.hex('3a2e26').alpha(0.35), 1.6)
+    for k in range(7):
+        p.shape([(20 + k * 52, 360 + k * 26, 0), (60 + k * 52, 330 + k * 30), (90 + k * 50, 380 + k * 28, 0)], C.hex('a08a74').alpha(0.5), ink=False)
+    p.unclip()
+    p.line([(-20, 300), (60, 290), (180, 300), (300, 330), (360, 380)], C.hex('ffd8a8').alpha(0.7), 3)
+    for (x, y) in ((40, 300), (90, 296), (260, 322), (310, 340), (230, 312)):
+        for k in range(3):
+            p.blob((x + k * 9 - 9, y - 4 - (k % 2) * 4), 9, 6, C.hex('5a6a3a'), width=1, shade=0.6)
+    temple(p, 170, 300, 210, 90, 'doric', n=7, col=C.hex('f2ece0'), roof=False)
+    p.glow((170, 250), 120, C.hex('ffe2b0'), 0.25)
+    # surf at the foot of the cliff
+    for k in range(6):
+        p.blob((380 + k * 26, hz + 10 + k * 14), 40, 7, LEAD_WHITE.alpha(0.6), ink=False)
+    # the fleet coming home round the cape
+    for (x, y, sc) in ((620, hz + 22, 0.28), (800, hz + 30, 0.34), (930, hz + 46, 0.42)):
+        ship(p, x, y, sc, C.hex('f4e8d8'), VERMILION, oars=True, hull=C.hex('4a3a2e'), flip=True)
+    # far gulls over the ships
+    for (x, y, sc, u) in ((760, 290, 0.32, 0.9), (880, 250, 0.26, 0.2), (640, 330, 0.22, 0.6)):
+        gull(p, (x, y), sc, flip=True, up=u)
+    # the gull leading, wide-winged over the water
+    gull(p, (560, 300), 2.6, flip=True, up=0.55)
+    # spray and foam in the foreground
+    for k in range(14):
+        x = 430 + k * 44
+        y = 560 + (k % 3) * 18
+        p.line([(x - 26, y + 4), (x, y - 4), (x + 26, y + 4)], LEAD_WHITE.alpha(0.6), 3)
+
+
+def lyceum_u_019(p):
+    """Helmsman of the Paralos: at the stern of the sacred ship, garlanded, he holds her course."""
+    hz = sea_sky(p, 'day', 0.56)
+    bg.clouds(p, H * 0.15, 2, xs=[560, 860])
+    island(p, 760, hz, 360, 80, C.hex('9aa68a'), temple=True, haze=0.45)
+    island(p, 980, hz, 200, 40, C.hex('9aa6a0'), haze=0.6)
+    sea(p, hz, 'day')
+    ship(p, 900, hz + 70, 0.42, LEAD_WHITE, ULTRA, oars=True, hull=C.hex('3a2e26'))
+    # the wake behind the stern
+    for k in range(7):
+        p.blob((120 + k * 50, hz + 60 + k * 20), 90 - k * 6, 8, LEAD_WHITE.alpha(0.45), ink=False)
+    for (x, y, u) in ((620, 120, 0.7), (700, 170, 0.2)):
+        gull(p, (x, y), 0.35, up=u)
+    # the stern ornament curling up behind him, an olive garland hung on it
+    aphlaston(p, 150, 560, 1.7)
+    for k in range(11):
+        a = 0.2 + k * 0.26
+        q = (98 + 44 * math.cos(a), 372 + 30 * math.sin(a))
+        p.blob(q, 9, 4.5, OLIVE_LEAF, rot=a + 1.2, width=1)
+    for q in ((80, 398), (122, 398)):
+        p.taper([q, (q[0] + 4, q[1] + 50), (q[0] - 6, q[1] + 90)], 3, 2, LEAD_WHITE, width=1)
+    # the stern deck
+    _planks(p, [(-10, 540, 0), (W + 10, 524, 0), (W + 10, 600, 0), (-10, 604, 0)], 3, C.hex('9a7650'))
+    Greek(pose='staff', garb='tunic', main=C.hex('e8dcc0'), sleeves='none', hair='curly', hair_col=C.hex('5a3a20'), beard='short',
+          chlamys=C.hex('2a4a8a'), belt='leather', skin=SKIN_OLIVE, mouth='stern', head=fillet(LEAD_WHITE),
+          props_front=[steering_oar('f', -118, (40, 8))]).draw(p, 470, 580, 450)
+    # the near gunwale, painted, and the steering oar going down over it into the sea
+    p.shape([(-10, 588, 0), (W + 10, 574, 0), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', ULTRA, ULTRA_DEEP), width=2.4, smooth=False, shade=0.5)
+    meander(p, -10, W + 10, 594, 14, GOLD)
+    rod(p, [(470 + 40 * 4.5 - 2, 580 + 8 * 4.5 - 6), (470 + 54 * 4.5, H + 20)], 9, 11, C.hex('8a6440'), width=2, shade=0.7)
+
+
+def lyceum_u_020(p):
+    """Pilot of the Long Swell: on the rocks at dusk he reads tomorrow's storm in the swell."""
+    hz = sea_sky(p, 'dusk', 0.5, sun=(180, H * 0.5))
+    # the storm bank far out on the horizon
+    for k in range(7):
+        x = 560 + k * 70
+        p.blob((x, hz - 40 - (k % 3) * 14), 110, 46, C.hex('2a2840').alpha(0.75), ink=False)
+    p.shape([(520, hz), (560, hz - 50), (980, hz - 90), (1010, hz)], C.hex('2a2840').alpha(0.7), ink=False)
+    for k in range(10):
+        x = 600 + k * 38
+        p.line([(x, hz - 40), (x - 16, hz)], C.hex('4a4a6a').alpha(0.6), 2)
+    p.line([(820, hz - 96), (808, hz - 64), (822, hz - 58), (806, hz - 20)], C.hex('f0e8c0').alpha(0.75), 2.2, smooth=False)
+    sea(p, hz, 'dusk', glints=False)
+    long_swell(p, hz + 20, 560, C.hex('3a4a7a'), n=6, crest=C.hex('f0c8a0'))
+    # a beached trireme behind him, drawn up stern first on the shingle
+    ground(p, 520, C.hex('8a7a62'), dry=True)
+    ship(p, 120, 520, 0.6, LINEN.dark(0.15), VERMILION, oars=False, hull=C.hex('3a2e26'), flip=True, sail_up=False)
+    # the rocks he stands on, wet with spray
+    rocks = [(180, H + 10, 0), (220, 560), (300, 530), (420, 520), (540, 540), (640, 580), (700, H + 10, 0)]
+    p.shape(rocks, ('v', C.hex('6a6058'), C.hex('3a342e')), width=2.4, shade=0.8, rim=0.4)
+    p.clip_shape(rocks)
+    p.texture((180, 500, 700, H))
+    for k in range(6):
+        p.line([(240 + k * 70, 540), (230 + k * 66, H)], INK.alpha(0.3), 1.6)
+    p.unclip()
+    for k in range(8):
+        x = 700 + k * 40
+        p.blob((x, 600 - (k % 2) * 20), 50, 16, LEAD_WHITE.alpha(0.55), ink=False)
+    for k in range(18):
+        p.blob((p.rng.uniform(620, 980), p.rng.uniform(470, 600)), p.rng.uniform(2, 5), p.rng.uniform(2, 5), LEAD_WHITE.alpha(0.6), ink=False)
+    Greek(pose='point', garb='tunic', main=C.hex('6a5a7a'), sleeves='fitted', hair='curly', hair_col=HAIR_GREY, beard='long', age='old',
+          cloak='mantle', cloak_col=C.hex('8a4a2a'), lining=C.hex('c8a060'), belt='leather', head=pilos(C.hex('a0784a')),
+          skin=SKIN_OLIVE, eyes='open').draw(p, 400, 540, 440)
+
+
+def lyceum_r_012(p):
+    """Phormio of Naupactus: at dawn the wind comes out of the gulf, and the enemy's ring of ships breaks itself."""
+    hz = sea_sky(p, 'dawn', 0.5, sun=(780, H * 0.5))
+    L.mountains(p, hz, C.hex('8a84a0'), [(120, 120), (420, 90), (760, 140), (960, 100)])
+    sea(p, hz, 'dawn')
+    # wind streaming out of the gulf
+    for k in range(9):
+        y = 120 + k * 34
+        x = 500 + (k % 3) * 60
+        p.line([(x, y), (x + 120, y - 6), (x + 260, y + 4)], LEAD_WHITE.alpha(0.4), 2)
+    swirl(p, (870, 170), 40, 1.6, LEAD_WHITE, 3, 0.45)
+    # the enemy's ring: ships fouling each other, oars tangled
+    cx, cy = 720, hz + 70
+    for k in range(10):
+        a = k * math.tau / 10
+        x = cx + 190 * math.cos(a)
+        y = cy + 42 * math.sin(a)
+        p.push(x, y, 1.0, rot=0.25 * math.sin(k * 2.3))
+        ship(p, 0, 0, 0.2 + 0.05 * math.sin(a), C.hex('d8c8a8'), C.hex('3a3a3a'), oars=True, hull=C.hex('2a2220'), flip=math.cos(a) < 0, sail_up=False)
+        p.pop()
+    for k in range(10):
+        p.blob((cx + p.rng.uniform(-200, 200), cy + p.rng.uniform(-40, 40)), 30, 6, LEAD_WHITE.alpha(0.4), ink=False)
+    # the Athenians sweeping in under sail
+    for (x, y, sc) in ((420, hz + 40, 0.3), (980, hz + 120, 0.36)):
+        ship(p, x, y, sc, LEAD_WHITE, ULTRA, oars=True, hull=C.hex('4a3a2e'), flip=x > 700)
+    # his own mast and the sail bellying with the wind
+    rod(p, [(150, 560), (150, 70)], 10, 8, C.hex('6a4a2e'), width=2, shade=0.7)
+    rod(p, [(30, 100), (290, 92)], 7, 7, C.hex('6a4a2e'), width=1.8, shade=0.7)
+    sail = [(34, 104), (286, 96), (320, 230), (300, 360), (150, 380), (40, 350), (60, 230)]
+    p.shape(sail, ('h', LINEN.dark(0.18), LINEN, LINEN.dark(0.1)), width=2, shade=0.7, rim=0.3)
+    p.clip_shape(sail)
+    for k in range(3):
+        xx = 60 + k * 80
+        p.shape([(xx, 90, 0), (xx + 26, 90, 0), (xx + 40, 400, 0), (xx + 14, 400, 0)], ULTRA.alpha(0.8), ink=False, smooth=False)
+    for k in range(5):
+        p.line([(40 + k * 60, 100), (70 + k * 58, 370)], INK.alpha(0.2), 1.2)
+    p.unclip()
+    owl(p, (166, 300), 0.75, col=GOLD_DARK, eye=GOLD_LIGHT)
+    for q in ((34, 104), (286, 96)):
+        p.line([q, (q[0] + 30, 560)], INK.alpha(0.5), 1.2, smooth=False)
+    # the deck and its rail
+    _planks(p, [(-10, 560, 0), (W + 10, 548, 0), (W + 10, H + 10, 0), (-10, H + 10, 0)], 4, C.hex('9a7650'))
+    Greek(pose='ly_calm', garb='tunic', main=C.hex('8a2a2a'), sleeves='none', hair='short', hair_col=HAIR_GREY, beard='short', age='old',
+          cuirass=BRONZE_LIGHT.dark(0.08), greaves=True, chlamys=ULTRA, mouth='stern', eyes='open').draw(p, 470, 604, 470)
+    p.shape([(-10, 606, 0), (W + 10, 598, 0), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', VERMILION.dark(0.1), VERMILION.dark(0.4)), width=2, smooth=False)

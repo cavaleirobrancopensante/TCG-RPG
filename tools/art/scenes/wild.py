@@ -2120,3 +2120,196 @@ def wild_m_004(p):
     for _ in range(24):
         q = (r.uniform(150, 850), r.uniform(150, 580))
         p.glow(q, r.uniform(5, 10), C.hex('e0ffa0'), 0.6)
+
+
+# ------------------------------------------------------------------ third tribe: Druids and auras (1.25)
+
+def wild_c_028(p):
+    """Bark-Skin: an old druid binds the oak's bark to a young spearman; it turns a blade well enough."""
+    sky(p, 'day', horizon=0.45)
+    treeline(p, 330, C.hex('3e5a34'), 170)
+    rays_from(p, (300, -80), 6, 0.7, C.hex('fff6c8'), strength=0.18, angle=math.pi / 2 - 0.25)
+    ground(p, 450, C.hex('557a34'), tufts=24, ferns=10, leaves=(AUTUMN_GOLD, 14))
+    # the great oak whose bark he borrows, a scar of bare wood on its trunk
+    trunk = [(800, H + 10), (812, 430), (826, 280), (842, 120), (860, -20), (1040, -20), (1040, H + 10)]
+    p.shape(trunk, ('h', BARK.light(0.1), BARK.dark(0.3)), width=2.4, shade=0.7)
+    bark(p, trunk, BARK)
+    scar = [(846, 470), (850, 400), (858, 330, 0), (870, 300), (884, 330), (890, 400), (886, 470, 0), (868, 486)]
+    p.shape(scar, ('v', C.hex('e8d4a8'), C.hex('c8a878')), width=1.6, shade=0.5)
+    ivy(p, [(830, 600), (820, 520), (836, 460), (826, 380)], every=1)
+    leaf_mass(p, (700, 60), 200, 90, 'summer')
+    leaf_mass(p, (240, 40), 170, 70, 'summer')
+    for x in (90, 160):
+        fern(p, x, 610, 70, 1)
+    mushroom(p, 760, 604, 1.4)
+    # strips of bark laid ready on a stone
+    p.shape([(620, 610), (630, 580), (720, 576), (744, 610)], ('v', STONE.light(0.15), STONE.dark(0.3)), width=2, shade=0.7)
+    for k in range(3):
+        bark_scale(p, (650 + k * 26, 574 - k * 2), 14, 6, 0.1 * k, BARK)
+    # the druid, gnarled and old, reaching to the young man's arm
+    Druid(pose='point', garb='robe', main=C.hex('6a6a44'), second=C.hex('4a4a30'), head='hood', hood_col=C.hex('4f5f34'),
+          beard='long', hair_col=C.hex('d8d2c4'), age='old', wreath='oak', sleeves='bell', eyes='open').draw(p, 250, 606, 410)
+    # the spearman, his breast and arm already sheathed in bark
+    Figure(pose='staff', garb='tunic', main=C.hex('8a6a44'), second=C.hex('6a5034'), hair='curly', hair_col=C.hex('5a3a22'), beard='short',
+           belt='leather', sleeves='fitted', eyes='down', mouth='stern',
+           props_front=[bark_plates(BARK), PR.spear('f', 128), grip('f')]).draw(p, 540, 606, 460)
+    p.glow((560, 300), 60, C.hex('e8ffc0'), 0.25)
+
+
+def wild_c_029(p):
+    """Wreath-Weaver Druid: a May morning; every garland he plaits for another, he weaves a leaf into his own."""
+    sky(p, 'day')
+    bg.clouds(p, 110, 3, xs=[250, 560, 820])
+    hills(p, 380, C.hex('8aa868'), 30)
+    fields(p, 400, rows=2)
+    ground(p, 460, C.hex('6a9440'), tufts=40, flowers=60)
+    # a hawthorn in May blossom on either side, garlands strung between them
+    tree(p, 120, 520, 360, 'hawthorn', 'spring')
+    tree(p, 890, 520, 340, 'hawthorn', 'spring')
+    r = p.rng
+    for t in range(40):
+        q = (r.uniform(20, 240), r.uniform(200, 360))
+        p.blob(q, 2.4, 2.4, LEAD_WHITE.alpha(0.9), ink=False)
+        q = (r.uniform(780, 990), r.uniform(220, 360))
+        p.blob(q, 2.4, 2.4, LEAD_WHITE.alpha(0.9), ink=False)
+    rope = [(170, 250), (350, 300), (500, 312), (650, 300), (840, 255)]
+    p.line(rope, C.hex('8a6a3a'), 2.2)
+    for k, t in enumerate((0.1, 0.25, 0.86, 0.96)):
+        i = t * (len(rope) - 1)
+        q = v_lerp(rope[int(i)], rope[int(i) + 1], i - int(i))
+        p.line([q, (q[0], q[1] + 18)], C.hex('8a6a3a'), 1.2)
+        wreath(p, (q[0], q[1] + 40), 24, 22, ['flowers', 'rowan', 'flowers', 'oak'][k], s=2.6)
+    # a rush basket of cut flowers at his feet
+    basket = [(300, 610), (290, 560), (400, 560), (390, 610)]
+    p.shape(basket, C.hex('b48a4a'), width=1.8, shade=0.7)
+    wicker(p, basket)
+    for k in range(14):
+        q = (300 + k * 7, 552 - (k % 3) * 6)
+        pc = [LEAD_WHITE, GOLD_LIGHT, ROSE.light(0.2), AZURE.light(0.35)][k % 4]
+        for a in range(5):
+            p.blob(polar(q, 3.2, a * math.tau / 5), 2.6, 2.6, pc, ink=False)
+        p.blob(q, 1.4, 1.4, GOLD, ink=False)
+    Druid(pose='present', garb='robe', main=C.hex('5a7a3a'), second=C.hex('3f5a2a'), head='hood', hood_col=C.hex('7a6a44'),
+          beard='short', hair_col=C.hex('7a5232'), wreath='rowan', sleeves='fitted', eyes='down', belt='leather',
+          props_front=[wreath_held('flowers', 9, 7)]).draw(p, 520, 606, 460)
+    # a few blossoms drifting
+    for _ in range(12):
+        q = (r.uniform(300, 760), r.uniform(150, 420))
+        p.blob(q, 2.2, 1.4, LEAD_WHITE, rot=r.uniform(0, 3), width=0.5)
+
+
+def wild_u_019(p):
+    """Wolf-Pelt Mantle: the pack follows the man who wears its grey; the wolves have never said why."""
+    sky(p, 'dusk')
+    p.glow((300, 400), 300, C.hex('f0a060'), 0.45)
+    hills(p, 380, C.hex('4a3e5a'), 50)
+    hills(p, 420, C.hex('5a4a5a'), 30)
+    for x, y, s in ((760, 412, 0.5), (820, 416, 0.45)):
+        make_beast('wolf', pose='walk', col=C.hex('3a3040'), belly=C.hex('3a3040'), dark=C.hex('2a2030')).draw(p, x, y, s, flip=True)
+    moor = [(-20, H + 10, 0), (-20, 455), (300, 444), (600, 458), (W + 20, 446), (W + 20, H + 10, 0)]
+    p.shape(moor, ('v', C.hex('6a5a4a'), C.hex('3a2e24')), width=2)
+    heather(p, (0, 455, W, H), 320)
+    standing_stone(p, 170, 560, 80, 230, C.hex('8a8690'), carved=True)
+    # the wearer, staff in hand, the grey skin over head and shoulders
+    grey = C.hex('8c8a84')
+    Druid(pose='staff', garb='robe', main=C.hex('5a4a3a'), second=C.hex('3a2e24'), head=wolf_pelt_head(grey), hair='short',
+          hair_col=C.hex('4a3a2a'), beard='long', belt='leather', sleeves='fitted', eyes='open', mouth='stern',
+          props_back=[pelt_back(grey)], props_front=[pelt_paws(grey), leaf_staff('f', 116), grip('f')]).draw(p, 470, 606, 450)
+    # a wolf of the pack at his heel, looking up at him
+    make_beast('wolf', pose='stand', col=C.hex('9a968e'), belly=C.hex('e0dace'), dark=C.hex('4a4844'), neck=16, head_pitch=-10).draw(p, 720, 606, 1.9, flip=True)
+    heather(p, (0, 598, W, H + 10), 30)
+
+
+def wild_u_020(p):
+    """Mantle-Keeper of the Circle: he keeps the pelts, crowns and bark-cloths in an oak chest, and lends them freely."""
+    # inside a roundhouse at night: wattle walls, a hearth, smoke going up to the thatch
+    p.shape([(-20, -20, 0), (W + 20, -20, 0), (W + 20, H + 10, 0), (-20, H + 10, 0)], ('v', C.hex('1e140e'), C.hex('3a2a1c')), ink=False)
+    for k in range(9):
+        x = -40 + k * 135
+        p.taper([(x, H + 10), (x + 10, 200), (500, -40)], 9, 5, C.hex('4a3422'), width=1.4, shade=0.6)
+    for row in range(8):
+        y = 230 + row * 30
+        pts = [(x, y + 6 * math.sin(x / 40 + row)) for x in range(-20, int(W) + 40, 40)]
+        p.line(pts, C.hex('5a4028').alpha(0.8), 5)
+        p.line([(x, y + 3) for x, y in pts], C.hex('7a5a38').alpha(0.4), 2)
+    floor = [(-20, H + 10, 0), (-20, 500), (W + 20, 490), (W + 20, H + 10, 0)]
+    p.shape(floor, ('v', C.hex('5a4430'), C.hex('2e2218')), width=2)
+    # bundles of herbs hanging from the rafters
+    r = p.rng
+    for x in (230, 300, 700, 780):
+        y0 = 120 + (x % 7) * 6
+        p.line([(x, 60), (x, y0)], C.hex('8a6a3a'), 1.2)
+        for k in range(7):
+            p.taper([(x, y0), (x + (k - 3) * 4, y0 + 40 + r.uniform(0, 12))], 2.4, 1.0, SAP.dark(0.2).mix(OCHRE, r.random() * 0.4), width=0.8)
+    # the hearth on the left: a ring of stones, crossed logs, a tall fire
+    p.glow((130, 520), 520, C.hex('ffa850'), 0.55)
+    p.glow((130, 540), 200, C.hex('ffd27a'), 0.5)
+    for a0, a1 in (((60, 600), (200, 560)), ((70, 560), (200, 604))):
+        p.taper([a0, a1], 9, 8, C.hex('5a3a22'), width=1.6, shade=0.7)
+    for k in range(7):
+        p.blob((50 + k * 28, 604 - (k % 2) * 4), 16, 9, STONE.dark(0.15).mix(C.hex('ffb070'), 0.25), width=1.4, shade=0.7)
+    for k, (fx, fh, fw) in enumerate(((112, 110, 26), (140, 140, 30), (166, 96, 22), (128, 70, 18), (154, 64, 16))):
+        base = 586
+        outer = [(fx - fw, base), (fx - fw * 0.9, base - fh * 0.4), (fx - fw * 0.3, base - fh * 0.75), (fx + fw * 0.15, base - fh, 0),
+                 (fx + fw * 0.4, base - fh * 0.6), (fx + fw * 0.95, base - fh * 0.35), (fx + fw, base)]
+        p.shape(outer, ('v', C.hex('ffe8a0'), FLAME, C.hex('c8401a')), width=1.0)
+        inner = [(fx - fw * 0.45, base), (fx - fw * 0.35, base - fh * 0.35), (fx, base - fh * 0.62, 0), (fx + fw * 0.35, base - fh * 0.3), (fx + fw * 0.45, base)]
+        p.shape(inner, ('v', C.hex('fffbe0'), FLAME_CORE), ink=False)
+    r2 = p.rng
+    for _ in range(16):
+        p.glow((r2.uniform(90, 200), r2.uniform(340, 470)), 4, C.hex('ffd27a'), 0.8)
+    # the open chest with its treasures: a wolf pelt, a bark-cloth, crowns and a horn
+    oak_chest(p, 720, 604, 260, 118)
+    grey = C.hex('9a968e')
+    pelt = [(600, 488), (640, 470), (700, 478), (760, 466), (820, 476), (846, 490), (840, 500), (680, 498)]
+    p.shape(pelt, ('v', grey.light(0.1), grey.dark(0.3)), width=1.6, shade=0.7)
+    # the pelt spilling over the front of the chest, its masked head hanging down
+    drape = [(612, 494), (650, 496), (660, 540), (650, 590), (634, 600), (616, 584), (606, 540)]
+    p.shape(drape, ('h', grey.light(0.1), grey, grey.dark(0.3)), width=1.6, shade=0.8, rim=0.4)
+    p.clip_shape(drape)
+    strokes(p, (600, 490, 664, 604), math.pi * 0.5, C.hex('4a4844'), 60, (4, 9), (0.8, 1.4), (0.2, 0.45), 0.2)
+    p.unclip()
+    for px in (620, 642):
+        p.shape([(px - 5, 590), (px + 5, 590), (px + 6, 606), (px, 610), (px - 6, 606)], grey.dark(0.1), width=1.2, shade=0.6)
+        for cx in (-3, 0, 3):
+            p.shape([(px + cx - 0.8, 608), (px + cx, 614, 0), (px + cx + 0.8, 608)], C.hex('2a2622'), width=0.5)
+    # a roll of bark-cloth standing in the corner of the chest
+    p.shape([(800, 500), (806, 420), (822, 404), (842, 410), (846, 500)], ('h', C.hex('c8a878'), C.hex('8a6a44')), width=1.4, shade=0.6)
+    for k in range(4):
+        bark_scale(p, (824, 432 + k * 18), 9, 5, 0.1, BARK)
+    # an oak crown resting on the pelt, and a horn
+    wreath(p, (720, 462), 30, 12, 'oak', s=3.0)
+    p.taper([(760, 486), (776, 470), (796, 466)], 4, 8, BONE, width=1.4, shade=0.6)
+    # the keeper, holding up a mistletoe crown to the light of the fire
+    Druid(pose='present', garb='robe', main=C.hex('7a6a4a'), second=C.hex('5a4a34'), head='hood', hood_col=C.hex('5a4a34'), hair='short', hair_col=C.hex('8a8070'),
+          beard='forked', age='old', wreath='oak', sleeves='bell', fur=C.hex('8a7a6a'), eyes='open', cloak='mantle', cloak_col=C.hex('4f5f34'),
+          props_front=[wreath_held('mistletoe', 9.5, 6.5)]).draw(p, 420, 606, 450)
+    p.glow((470, 300), 50, C.hex('f0ffd0'), 0.3)
+    # smoke curling up through the roof hole
+    for k in range(6):
+        p.blob((140 + k * 14, 480 - k * 60), 30 + k * 6, 16 + k * 3, C.hex('8a7a6a').alpha(0.12), ink=False)
+
+
+def wild_r_012(p):
+    """Grey Elder of the Henge: the circle has kept its rites since before the first bell rang in the valley."""
+    sky(p, 'dawn')
+    sun = (690, 380)
+    p.glow(sun, 380, C.hex('ffe6a0'), 0.6)
+    p.blob(sun, 34, 34, C.hex('fff4c8'), ink=False)
+    hills(p, 370, C.hex('8a8aa8'), 40)
+    # far across the valley, a small stone church with its bell tower, catching the first light
+    bg.abbey(p, 250, 372, 0.55)
+    p.glow((230, 330), 40, C.hex('fff4c8'), 0.3)
+    ground(p, 400, C.hex('6a8a4a'), tufts=30)
+    mist_band(p, 420, 50, C.hex('f8e8d0'), 0.55)
+    stone_ring(p, 560, 470, 380, 70, 12, 190, 66, C.hex('a8a49a'), front=False)
+    # druids of his circle standing at the stones, smaller with distance
+    for x, y, h, fl, col in ((380, 446, 170, False, C.hex('d8d0b8')), (760, 448, 170, True, C.hex('d8d0b8')), (860, 470, 200, True, C.hex('cfc6ae'))):
+        Druid(pose='pray', garb='robe', main=col, head='hood', hood_col=col.dark(0.1), beard='short', wreath='oak', eyes='down').draw(p, x, y, h, flip=fl)
+    stone_ring(p, 560, 470, 380, 70, 12, 190, 66, C.hex('a8a49a'), back=False)
+    # saplings springing where he has walked
+    for x, y, s in ((640, 600, 1.6), (700, 586, 1.3), (760, 598, 1.5)):
+        oakling(p, x, y, s, 'spring', sapling=True)
+    Druid(pose='staff', garb='robe', main=C.hex('a8a49c'), second=C.hex('7a766e'), head='hood', hood_col=C.hex('8a867e'), hair='white',
+          beard='long', age='old', wreath='mistletoe', belt='gold', cloak='mantle', cloak_col=C.hex('6a6a6a'), lining=C.hex('c8c0a8'), eyes='open',
+          props_front=[leaf_staff('f', 120, glow=C.hex('e8ffd0')), grip('f')]).draw(p, 470, 606, 470)

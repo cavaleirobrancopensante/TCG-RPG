@@ -1,0 +1,10 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+
+[params]
+
+compress/mode=1
+compress/lossy_quality=0.85
+mipmaps/generate=true

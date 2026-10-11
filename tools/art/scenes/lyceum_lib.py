@@ -1942,3 +1942,131 @@ def tropaion(p, x, y, s=1.0):
     p.taper([(70, -116), (82, -80), (78, -40), (64, -14)], 3.6, 1.6, IRON.light(0.35), width=1.2, shade=0.5)
     p.shape(rect(64, -126, 78, -116), GOLD, width=1.0, smooth=False)
     p.pop()
+
+
+# ------------------------------------------------------------------ sailors (1.25)
+
+def gull(p, c, s=1.0, flip=False, up=0.5, col=LEAD_WHITE, back=C.hex('a8b2bc')):
+    """A herring gull in flight, wings spread in the sea bird's long M, head to the right,
+    about 250*s across. up: 0 wings nearly level, 1 wrists raised high."""
+    p.push(c[0], c[1], s, flip)
+    tip_col = C.hex('1e2228')
+    wy = -24 - 30 * up
+    ty = -14 - 26 * up
+    for side in (-1, 1):
+        sh = (side * 6, -2)
+        wr = (side * 52, wy)
+        tip = (side * 124, ty)
+        pts = [(side * 4, -9), (side * 26, wy * 0.7 - 4), wr, (side * 92, wy + 4), tip + (0,),
+               (side * 104, ty + 8), (side * 78, wy + 22), (side * 50, wy + 30), (side * 26, 4), (side * 4, 8)]
+        cc = back if side < 0 else back.light(0.08)
+        p.shape(pts, ('v', cc.light(0.15), cc, cc.dark(0.15)), width=1.8, shade=0.6, rim=0.3)
+        p.clip_shape(pts)
+        # black primaries with white mirrors at the tip
+        p.shape([(side * 84, wy - 20), (side * 140, ty - 20), (side * 140, ty + 30), (side * 90, wy + 40)], tip_col, ink=False)
+        for k in range(3):
+            q = v_lerp((side * 92, wy + 12), (side * 118, ty + 4), k / 2.0)
+            p.blob(q, 2.4, 1.6, LEAD_WHITE.alpha(0.9), ink=False)
+        # rows of coverts and the white trailing edge
+        for k in range(6):
+            x = side * (14 + k * 12)
+            yy = wy * min(1.0, (k + 1) / 4.0)
+            p.line([(x, yy * 0.8 + 8), (x - side * 4, yy * 0.8 + 18)], cc.dark(0.35).alpha(0.5), 1.1)
+        p.line([(side * 6, 7), (side * 26, 3.5), (side * 50, wy + 29), (side * 78, wy + 21)], LEAD_WHITE.alpha(0.85), 2.2)
+        p.line([(side * 8, -8), (side * 26, wy * 0.7 - 3), wr], LEAD_WHITE.alpha(0.5), 1.3)
+        p.unclip()
+    # tail
+    p.shape([(-24, 0), (-44, -5, 0), (-48, 3, 0), (-44, 11, 0), (-24, 7)], col.dark(0.06), width=1.6, shade=0.5)
+    # body
+    body = [(-28, 3), (-8, -6), (14, -9), (26, -10), (30, -4), (26, 5), (12, 9), (-10, 9), (-26, 8)]
+    p.shape(body, ('v', col, col.dark(0.14)), width=2, shade=0.8, rim=0.4)
+    p.line([(-10, 9), (-18, 13)], C.hex('d8a07a'), 2.2)
+    # head
+    p.blob((32, -12), 11, 9.5, col, width=1.8, shade=0.7, rim=0.3)
+    p.shape([(40, -15), (56, -12.5, 0), (58, -10), (54, -8), (41, -8)], C.hex('f0c030'), width=1.3, shade=0.4)
+    p.blob((52.5, -8.6), 2.0, 1.5, VERMILION, ink=False)
+    p.line([(42, -11), (55, -10.8)], INK.alpha(0.6), 0.9)
+    p.blob((35.5, -14.5), 2.4, 2.4, C.hex('f4e070'), ink=VERMILION.dark(0.2), width=1.0)
+    p.blob((36, -14.5), 1.1, 1.1, INK, ink=False)
+    p.pop()
+
+
+def pilos(col=C.hex('9a7a52')):
+    """The conical felt cap of seamen and craftsmen."""
+    def fn(p, hc):
+        hx, hy = hc
+        pts = [(hx - 7.6, hy - 3.4), (hx - 6.4, hy - 10), (hx - 1, hy - 17.5), (hx + 1.6, hy - 18), (hx + 6.4, hy - 11), (hx + 8.4, hy - 3.6), (hx + 0.4, hy - 5.4)]
+        p.shape(pts, ('h', col.light(0.2), col, col.dark(0.25)), width=1.5, shade=0.8, rim=0.35)
+        p.line([(hx - 7.4, hy - 4), (hx + 0.4, hy - 5.8), (hx + 8.2, hy - 4.2)], col.dark(0.4), 1.0)
+        p.line([(hx - 4.6, hy - 9.6), (hx - 0.6, hy - 16)], col.light(0.4).alpha(0.7), 0.8)
+    return fn
+
+
+def aphlaston(p, x, y, s=1.0, col=C.hex('8a6440'), flip=False):
+    """The stern of a trireme rising from (x, y) and curling forward over the deck,
+    its top opening into the fan of narrow slats called the aphlaston."""
+    p.push(x, y, s, flip)
+    post = [(-30, 0), (-46, -60), (-50, -130), (-36, -180), (-10, -200), (10, -196), (4, -176), (-14, -150), (-12, -90), (6, -30), (16, 0)]
+    p.shape(post, ('h', col.light(0.15), col, col.dark(0.3)), width=2.2, shade=0.8, rim=0.4)
+    p.clip_shape(post)
+    p.texture((-60, -210, 30, 0))
+    for k in range(3):
+        p.line([(-22 + k * 10, 0), (-36 + k * 8, -120), (-20 + k * 8, -186)], col.dark(0.4).alpha(0.5), 1.3)
+    p.unclip()
+    p.taper([(-4, 0), (-28, -80), (-30, -150), (-16, -190)], 3, 2, GOLD, width=1.0)
+    # the fan of slats, each curling forward at the end
+    for k in range(6):
+        a = -1.9 + k * 0.22
+        base = (-8, -192)
+        mid = polar(base, 46, a)
+        end = polar(mid, 26, a + 0.9)
+        p.taper([base, mid, end], 4.2, 2.4, col.light(0.05 * k), width=1.4, shade=0.6)
+        p.blob(end, 3.2, 3.2, GOLD, width=1.0)
+    p.blob((-8, -192), 9, 7, col.dark(0.1), width=1.6, shade=0.6)
+    p.pop()
+
+
+def long_swell(p, y0, y1, col, n=6, crest=LEAD_WHITE, seed=0.0):
+    """Broad rolling swells between y0 and y1, each a darker trough and a lit back."""
+    for k in range(n):
+        t = k / max(1, n - 1)
+        yy = y0 + (y1 - y0) * t * t
+        amp = 6 + 26 * t
+        wl = 160 + 260 * t
+        ph = seed + k * 1.7
+        pts = []
+        for i in range(-2, 32):
+            x = i * W / 28.0
+            pts.append((x, yy + amp * math.sin(x / wl * math.tau + ph)))
+        band = pts + [(W + 40, yy + amp + 40 + 30 * t, 0), (-40, yy + amp + 40 + 30 * t, 0)]
+        p.shape(band, ('v', col.light(0.18), col, col.dark(0.3)), ink=False)
+        p.line(pts, crest.alpha(0.35 + 0.35 * t), 1.5 + 2.5 * t)
+        p.line([(q[0], q[1] + 5 + 6 * t) for q in pts], col.light(0.35).alpha(0.3), 1 + t)
+
+
+def rowing_oar(which='f', ang=0.62, back=26, front=170, col=C.hex('a07a4a')):
+    """An oar gripped in the fist: the handle behind the hand, the loom running down
+    and forward to the blade. Drawn before the fist."""
+    def fn(p, j):
+        h = j['hand_' + which]
+        d = (math.cos(ang), math.sin(ang))
+        butt = v_sub(h, v_mul(d, back))
+        end = v_add(h, v_mul(d, front))
+        rod(p, [butt, end], 1.5, 1.2, col, width=1.2, shade=0.6)
+        rod(p, [butt, v_add(butt, v_mul(d, 10))], 1.7, 1.6, col.dark(0.25), width=1.0)
+    fn.grip = which
+    return fn
+
+
+def steering_oar(which='f', top=-112, foot=(34, 30), col=C.hex('8a6440')):
+    """The steering oar, its loom passing through the fist and down over the side."""
+    def fn(p, j):
+        h = j['hand_' + which]
+        d = v_norm(v_sub(foot, h))
+        tp = v_sub(h, v_mul(d, (h[1] - top)))
+        rod(p, [tp, foot], 2.0, 2.4, col, width=1.3, shade=0.7)
+        p.blob(tp, 2.4, 2.0, col.light(0.15), width=1.0)
+        # the short tiller bar crossing at the grip
+        rod(p, [v_add(h, (-7, 1.5)), v_add(h, (6, -1.5))], 1.3, 1.2, col.dark(0.2), width=1.0)
+    fn.grip = which
+    return fn

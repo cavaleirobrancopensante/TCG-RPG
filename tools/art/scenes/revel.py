@@ -93,7 +93,7 @@ def revel_c_001(p):
 
 
 def revel_c_002(p):
-    """Vine-Crowned Bacchant: he dances out of the wine-press, thyrsus and grapes aloft."""
+    """Vine-Crowned Bacchant: a satyr dancing out of the wine-press, thyrsus and grapes aloft."""
     vineyard_bg(p, 'day')
     # a distant battle line on the ridge
     for i in range(12):
@@ -117,10 +117,10 @@ def revel_c_002(p):
     p.taper([(vx + 120, vy - 30), (vx + 160, vy - 20)], 6, 6, C.hex('6a4426'), width=1.4)
     p.taper([(vx + 160, vy - 18), (vx + 170, vy + 30)], 4, 2, WINE_LIGHT, width=1.0)
     p.blob((vx + 172, vy + 36), 30, 7, WINE, width=1.0)
-    RFig(pose='re_couch', garb='tunic', stance='dance', main=C.hex('6e2a6a'), second=C.hex('4a1a4a'),
-         hose=SKIN.dark(0.05), shoes=C.hex('8a5a32'), hair='curly', hair_col=C.hex('3a2414'), mouth='open', eyes='up',
-         belt='gold', head=vine_crown(), sleeves='none', props_front=[fawn_skin, thyrsus('f', 112)],
-         props_back=[grapes('b')]).draw(p, 520, 600, 460)
+    SatyrFig(pose='re_couch', stance='dance', main=C.hex('6e2a6a'), second=C.hex('4a1a4a'),
+             hair='curly', hair_col=C.hex('3a2414'), mouth='open', eyes='up', goat_col=C.hex('5e3e2a'),
+             belt='gold', head=heads(goat_horns(), vine_crown()), sleeves='none', props_front=[fawn_skin, thyrsus('f', 112)],
+             props_back=[grapes('b')]).draw(p, 520, 600, 460)
     for i in range(8):
         grapes_at(p, (380 + i * 70, 600 + (i % 2) * 8), 1.6, AMETHYST, leaf=i % 2 == 0)
 
@@ -1854,3 +1854,184 @@ def revel_m_004(p):
         p.shape([(x - 7, 452), (x - 10, 480), (x - 6, 508), (x + 6, 508), (x + 10, 480), (x + 7, 452)], ('h', C.hex('e8dcc0'), C.hex('8a7a5a')), width=1.4)
     p.shape([(0, 508, 0), (410, 508, 0), (410, 640, 0), (0, 640, 0)], ('v', C.hex('c8b898'), C.hex('8a7a5a')), width=2, smooth=False)
     swag(p, 0, 400, 452, CRIMSON, n=3, depth=50)
+
+
+# ---------------------------------------------------------------- third tribe: Satyrs (1.25)
+
+def _slope(p, pts, col, shade=0.6):
+    p.shape(pts, col, width=1.8, shade=shade)
+
+
+def revel_c_028(p):
+    """Satyr Piper of the Pines: he pipes the charge as the herd bounds down the pine slope."""
+    bg.sky(p, ULTRA, AZURE, C.hex('f8ecc8'), 0.62)
+    p.glow((640, 150), 260, C.hex('fff2c8'), 0.45)
+    bg.clouds(p, 110, 2, xs=[300, 700], scale=0.7)
+    bg.hills(p, 330, C.hex('8aa8a0'), 30, n=5)
+    # the enemy camp in the valley at right
+    bg.hills(p, 370, C.hex('9ab07a'), 18, n=4)
+    for i, x in enumerate((700, 760, 820, 880)):
+        y = 372 + (i % 2) * 6
+        p.shape([(x - 22, y, 0), (x, y - 34, 0), (x + 22, y, 0)], (LEAD_WHITE, C.hex('e8d8b0'))[i % 2], width=1.2, smooth=False, shade=0.5)
+        p.line([(x, y - 34), (x, y - 46)], INK, 1.2)
+        p.shape([(x, y - 46, 0), (x + 12, y - 43, 0), (x, y - 40, 0)], VERMILION, width=0.8, smooth=False)
+    for i in range(10):
+        x = 660 + i * 26
+        p.line([(x, 392), (x + 1, 372)], INK.alpha(0.6), 1.0)
+    # the pine slope falling from left to right
+    _slope(p, [(-10, 330), (300, 360), (620, 430), (1010, 520), (1010, 640, 0), (-10, 640, 0)], ('v', C.hex('7a9a4a'), C.hex('4f7032')))
+    for x, y, s in ((90, 400, 1.15), (230, 380, 0.9), (930, 560, 1.3)):
+        pine(p, x, y, s)
+    for x, y, s in ((560, 440, 0.45), (610, 452, 0.4)):
+        fir(p, x, y, s)
+    # the herd bounding down the slope behind him
+    herd = [(520, 452, 150, 'prance', C.hex('8a3a3a')), (610, 470, 140, 'stride', C.hex('3a5a8a')),
+            (700, 500, 165, 'prance', C.hex('b07a2a')), (790, 520, 150, 'stride', C.hex('6a3a6a'))]
+    for x, y, h, st, col in herd:
+        SatyrFig(pose='staff', stance=st, main=col, sleeves='none', hair='curly', hair_col=C.hex('3a2414'), belt='leather',
+                 head=goat_horns(), mouth='open', props_front=[thyrsus('f', 100)]).draw(p, x, y, h)
+    # pine needles and cones in the foreground grass
+    for i in range(30):
+        q = (p.rng.uniform(40, 960), p.rng.uniform(560, 615))
+        p.line([q, v_add(q, (p.rng.uniform(-8, 8), -6))], C.hex('3a5a22'), 1.4)
+    for q in ((120, 600), (690, 606), (850, 598)):
+        p.blob(q, 9, 6, C.hex('7a5232'), width=1.2, shade=0.7)
+        for k in range(3):
+            p.line([(q[0] - 6, q[1] - 2 + k * 2.4), (q[0] + 6, q[1] - 2 + k * 2.4)], INK.alpha(0.5), 0.8)
+    # the piper himself
+    SatyrFig(pose='sa_pipe', stance='stride', main=C.hex('3f6a32'), sleeves='none', hair='curly', hair_col=C.hex('2e1c10'),
+             beard='short', head=heads(goat_horns(), ivy_crown()), belt='leather', props_front=[fawn_skin, panpipes_lips()]).draw(p, 330, 604, 470)
+    notes(p, [(445, 200), (490, 168), (535, 196), (575, 150)], 1.0, INK_SOFT)
+
+
+def revel_c_029(p):
+    """Wineskin Satyr: on a wet hillside he drinks to the weather while the battle goes on below."""
+    bg.sky(p, C.hex('5a6470'), C.hex('8a949a'), C.hex('c8ccc4'), 0.6)
+    bg.clouds(p, 80, 4, col=C.hex('9aa0a4').alpha(0.9), xs=[180, 400, 620, 820], scale=1.1)
+    bg.hills(p, 340, C.hex('7a8a80'), 26, n=5)
+    # the battle in the rain, far below: banners and lines of men
+    for i in range(16):
+        x = 600 + i * 14
+        y = 372 + (i % 3)
+        p.line([(x, y), (x + 3, y - 36)], INK.alpha(0.5), 1.2)
+        p.blob((x, y + 2), 4.5, 7, C.hex('4a4a52'), ink=False)
+    for x, col in ((640, CRIMSON), (760, ULTRA)):
+        p.line([(x, 372), (x, 318)], INK.alpha(0.7), 1.6)
+        p.shape([(x, 318, 0), (x + 22, 322, 0), (x + 18, 330), (x, 334, 0)], col, width=1.0, smooth=False)
+    bg.hills(p, 400, C.hex('6a7a50'), 20, n=4)
+    # a rocky knoll with an old oak giving poor shelter
+    p.shape([(-10, 470), (200, 440), (420, 470), (560, 520), (1010, 540), (1010, 640, 0), (-10, 640, 0)], ('v', C.hex('6a7a42'), C.hex('4a5a30')), width=1.8, shade=0.5)
+    p.taper([(150, 600), (160, 420), (140, 260), (100, 150)], 30, 12, C.hex('4a3a2a'), width=2, shade=0.8, rim=0.3)
+    p.taper([(160, 330), (260, 230), (330, 190)], 12, 4, C.hex('4a3a2a'), width=1.6, shade=0.7)
+    for q, r in (((150, 130), 80), ((270, 170), 70), ((70, 220), 60)):
+        p.blob(q, r, r * 0.65, C.hex('3a5a30'), width=1.6, shade=0.8)
+    p.shape([(560, 606), (590, 540), (660, 520), (740, 540), (770, 606)], ('v', C.hex('a09a8a'), C.hex('6a6458')), width=1.8, shade=0.8, rim=0.3)
+    p.shape([(700, 606), (720, 570), (790, 562), (830, 606)], ('v', C.hex('948e80'), C.hex('5e584e')), width=1.6, shade=0.8)
+    # puddles
+    for q, rx in (((420, 612), 60), ((860, 616), 50)):
+        p.blob(q, rx, 7, C.hex('9aa8b0').alpha(0.8), width=1.0)
+        p.line([(q[0] - rx * 0.5, q[1] - 2), (q[0] + rx * 0.2, q[1] - 2)], LEAD_WHITE.alpha(0.6), 1.0)
+    # his pipes and a cup left on the rock
+    goblet_w(p, 650, 522, 1.6, C.hex('a07a50'), C.hex('9aa8b0'), 0.0)
+    SatyrFig(pose='sa_swig', stance='stand', main=C.hex('9a4a2a'), sleeves='none', hair='curly', hair_col=C.hex('3a2414'), belt='leather',
+             head=goat_horns(), eyes='closed', props_front=[wineskin('f')]).draw(p, 380, 606, 470)
+    # rain over everything
+    for i in range(160):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(40, 620)
+        p.line([(x, y), (x - 6, y + 22)], C(0.85, 0.9, 0.95, 0.45), 1.2, smooth=False)
+    for q in ((410, 614), (880, 618), (460, 610)):
+        p.blob(q, 8, 2, None, ink=LEAD_WHITE.alpha(0.6), width=0.8)
+
+
+def revel_u_019(p):
+    """Old Satyr on the Wine-Cask: he tells the young ones how it was, and does not get up."""
+    cellar_bg(p, floor_y=470, casks=True)
+    # warm lamplight in the vault
+    for x in (300, 720):
+        p.line([(x, 20), (x, 120)], INK, 1.6)
+        p.shape([(x - 10, 120, 0), (x + 10, 120, 0), (x + 6, 140, 0), (x - 6, 140, 0)], GOLD_DARK, width=1.2, smooth=False)
+        PR.flame(p, (x, 112), 2.0, glow_r=120)
+    # the great cask he sits on, lying on its side
+    barrel(p, (690, 540), 1.9, side=True, col=C.hex('7a4a2a'), tap=True)
+    # two young satyrs on the floor at left, listening, one half asleep
+    SatyrFig(pose='re_hold_hip', stance='stand', main=C.hex('3a5a8a'), sleeves='none', hair='curly', hair_col=C.hex('2a1a10'), belt='leather',
+             head=goat_horns(big=0.6), props_front=[goblet('f', C.hex('a07a50'))]).draw(p, 200, 604, 330)
+    barrel(p, (372, 606), 0.95, col=C.hex('6a4426'))
+    SatyrFig(pose='sa_seat_cup', seat='chair', main=C.hex('8a6a2a'), sleeves='none', hair='curly', hair_col=C.hex('5a3a1a'), belt='leather',
+             goat_col=C.hex('7a5a3a'), head=goat_horns(big=0.55), eyes='closed', props_front=[goblet('f', C.hex('a07a50'), tilt=0.3)]).draw(p, 345, 610, 300)
+    zzz(p, 400, 400, 1.0)
+    # the old one, white-bearded, ivy-crowned, cup raised to the past
+    SatyrFig(pose='sa_seat_cup', seat='chair', main=C.hex('6e2a3a'), sleeves='none', hair='white', beard='long', age='old', belt='gold',
+             fur=C.hex('ece6d8'), width=1.15, head=heads(goat_horns(C.hex('c8b890'), big=1.0), ivy_crown()), mouth='open',
+             goat_col=C.hex('8a7a6a'), props_front=[leopard_skin, goblet('f', GOLD)]).draw(p, 690, 566, 470, flip=True)
+    # spilled wine and a jug on the floor
+    jug(p, 880, 604, 1.8)
+    p.blob((560, 612), 50, 6, WINE, width=0.9)
+
+
+def revel_u_020(p):
+    """Panic in the Thicket: out of the dark wood, pipes and hooves, and the sentries run."""
+    bg.night_sky(p, moon=True, stars=60)
+    bg.hills(p, 360, C.hex('1e2a3a'), 26, n=5)
+    p.shape([(-10, 430), (500, 420), (1010, 440), (1010, 640, 0), (-10, 640, 0)], ('v', C.hex('2a3a2a'), C.hex('1a2418')), width=1.6)
+    # the dark wood at left
+    for x, s in ((40, 1.6), (150, 1.9), (260, 1.5), (-20, 1.8), (340, 1.2)):
+        fir(p, x, 470, s, C.hex('142a1c'))
+    for q, r in (((80, 520), 90), ((230, 540), 100), ((360, 560), 70)):
+        p.blob(q, r, r * 0.55, C.hex('1a3020'), width=1.6, shade=0.8)
+    # eyes glinting in the thicket
+    for q in ((70, 500), (110, 498), (300, 520), (330, 518), (190, 470), (215, 469)):
+        p.glow(q, 10, C.hex('ffd27a'), 0.8)
+        p.blob(q, 2.6, 1.6, C.hex('ffe090'), ink=False)
+    # the sentries' fire, kicked over, and a dropped helm and spear
+    bonfire(p, 560, 570, 0.8)
+    p.taper([(540, 600), (860, 588)], 3, 3, UMBER, width=1.2)
+    p.shape([(860, 588), (878, 583, 0), (861, 594)], STEEL, width=1.0)
+    p.blob((600, 598), 16, 11, STEEL, width=1.4, shade=0.8)
+    p.blob((600, 590), 17, 4, STEEL.dark(0.2), width=1.0)
+    # the satyrs bursting from the wood, piping and carrying a torch
+    SatyrFig(pose='sa_pipe', stance='prance', main=C.hex('5a2a4a'), sleeves='none', hair='curly', hair_col=C.hex('1a100a'), beard='short',
+             belt='leather', head=goat_horns(big=1.0), props_front=[panpipes_lips()]).draw(p, 330, 604, 400)
+    SatyrFig(pose='re_flame', stance='stride', main=C.hex('7a5a2a'), sleeves='none', hair='curly', hair_col=C.hex('2a1a10'),
+             belt='leather', mouth='open', head=goat_horns(), props_front=[torch('f', 26)]).draw(p, 160, 590, 330)
+    notes(p, [(440, 260), (500, 230), (560, 270)], 1.0, C.hex('e8d8a8'))
+    # the sentries fleeing to the right
+    RFig(pose='staff', stance='stride', garb='surcoat', main=C.hex('7a7a6a'), second=C.hex('4a4a3a'), mail=True, head='coif', mouth='open',
+         belt='sword', props_front=[PR.spear('f', 118)]).draw(p, 880, 604, 350)
+    RFig(pose='re_both_up', stance='stride', garb='surcoat', main=C.hex('6a3a2a'), mail=True, hair='short', hair_col=C.hex('3a2a1a'),
+         mouth='open', belt='leather').draw(p, 740, 604, 330)
+    # wood smoke and sparks
+    sparks(p, (640, 380, 780, 560), 24)
+
+
+def revel_r_012(p):
+    """Horned Lord of the Rout: from his rock he sends the herd down the hill, and stays put."""
+    bg.sky(p, C.hex('2a2a6a'), C.hex('c86a4a'), C.hex('f8c878'), 0.6)
+    p.glow((760, 330), 320, C.hex('ffc070'), 0.6)
+    bg.hills(p, 340, C.hex('7a6a7a'), 30, n=5)
+    # a walled town in the valley, the rout pouring down toward it
+    bg.town(p, 820, 380, 0.9, roof=C.hex('8a3a2a'))
+    p.shape([(300, 380), (600, 400), (1010, 420), (1010, 640, 0), (300, 640, 0)], ('v', C.hex('8a8a4a'), C.hex('5a6a32')), width=1.6)
+    for i in range(14):
+        t = i / 13
+        x = 430 + t * 380 + p.rng.uniform(-20, 20)
+        y = 540 - t * 120 + p.rng.uniform(-10, 10)
+        h = 130 - t * 70
+        col = [C.hex('8a3a3a'), C.hex('3a5a8a'), C.hex('b07a2a'), C.hex('6a3a6a'), C.hex('3a6a3a')][i % 5]
+        SatyrFig(pose='staff', stance=('prance', 'stride')[i % 2], main=col, sleeves='none', hair='curly', hair_col=C.hex('2a1a10'),
+                 belt='leather', head=goat_horns(), props_front=[thyrsus('f', 100)]).draw(p, x, y, h)
+        p.blob((x - h * 0.2, y), h * 0.25, h * 0.05, C.hex('d8c098').alpha(0.4), ink=False)
+    # the crag and his rock seat
+    p.shape([(-10, 330), (120, 300), (300, 330), (420, 420), (470, 640, 0), (-10, 640, 0)], ('h', C.hex('a09080'), C.hex('5a5048')), width=2, shade=0.8, rim=0.3)
+    for pts in (((40, 380), (120, 420), (90, 500)), ((260, 360), (330, 430)), ((180, 520), (300, 560))):
+        p.line(list(pts), INK.alpha(0.4), 1.6)
+    p.shape([(140, 520), (150, 470), (330, 460), (360, 520)], ('v', C.hex('b0a090'), C.hex('7a6a5a')), width=1.8, shade=0.7)
+    for i in range(10):
+        q = (150 + i * 20, 470 - (i % 3) * 3)
+        p.shape([(q[0], q[1] + 2), (q[0] - 5, q[1] - 2), (q[0], q[1] - 7, 0), (q[0] + 5, q[1] - 2)], C.hex('2f6a2a'), width=0.7)
+    goblet_w(p, 400, 600, 1.5)
+    bottle_w(p, 90, 604, 1.6, tilt=-0.4)
+    SatyrFig(pose='sa_seat_cup', seat='chair', main=C.hex('7a1a3a'), sleeves='none', hair='curly_long', hair_col=C.hex('2a1a10'), beard='forked',
+             belt='gold', width=1.1, head=heads(goat_horns(C.hex('e0d0a8'), big=1.25), ivy_crown()), fur=GOLD, goat_col=C.hex('4a3020'),
+             props_front=[leopard_skin, goblet('f', GOLD)]).draw(p, 230, 562, 500)
