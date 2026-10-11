@@ -283,6 +283,9 @@ func _ready() -> void:
 	tk[0][1].call()
 	dvw.close()
 	await _frames(2)
+	assert(main.tournament.deck_pool().size() == 1 and main.tournament.side.is_empty(), "draft: the pick goes to the Deck pile")
+	ds.move_pick(main.tournament.picks[0][0]["id"], true)
+	assert(main.tournament.side.size() == 1, "draft: a pick moves to the Sideboard")
 	while main.tournament.is_drafting():
 		ds._take_index(0)
 	await _frames(3)
@@ -290,7 +293,9 @@ func _ready() -> void:
 	await _frames(3)
 	var db: DeckBuilder = main.screen
 	assert(db is DeckBuilder and db.draft_deck >= 0, "draft deck builder")
-	assert(db._deck().is_empty(), "the draft deck starts empty")
+	assert(db._deck() == main.tournament.deck_pool(), "the draft deck starts as the Deck pile")
+	GameState.decks[db.editing]["cards"] = {}
+	db._refresh_now()
 	db._done()
 	await _frames(3)
 	assert(main.screen == db, "an empty draft deck can't be played")

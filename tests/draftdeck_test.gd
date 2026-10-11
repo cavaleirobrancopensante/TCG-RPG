@@ -1,7 +1,9 @@
 extends Node
 ## Draft decks, end to end in the real scenes:
-##  - after the draft (and sealed) the deck starts empty, the pool is all there, Auto build is
-##    in the Deck menu and builds within the pool;
+##  - during the draft the picks sit in two piles, Deck (top) and Sideboard (bottom); new picks
+##    go to the Deck, a row's arrow or the viewer moves them, the piles survive a reload;
+##  - after the draft the first list is the Deck pile (sealed: empty), the pool is all there,
+##    Auto build is in the Deck menu and builds within the pool;
 ##  - deck rows: a tap reads the card (Add / Remove), "-" and "+" change the count;
 ##  - several lists from one pool (the same cards in both), chosen on the bracket, saved and
 ##    resumed with the tournament, kept as the player's decks afterwards (within the slots);
@@ -116,12 +118,23 @@ func _intro_draft() -> void:
 	await _frames()
 	var ds: DraftScreen = main.screen
 	ds._take_index(0)
+	ds._take_index(0)
+	ds._take_index(0)
 	await _frames()
+	var d0: Draft = main.tournament
+	_check(d0.side.is_empty() and DeckTools.count(d0.deck_pool()) == 3, "new picks go to the Deck pile")
+	var moved_id: String = d0.picks[0][1]["id"]
+	ds.move_pick(moved_id, true)
+	_check(int(d0.side_pool().get(moved_id, 0)) == 1 and DeckTools.count(d0.deck_pool()) == 2, "a pick moves to the Sideboard")
 	# quitting and loading mid-draft is what left a Starter deck of 40 Foundries
 	await _reload()
 	_check(DeckTools.land_count(GameState.decks[0]["cards"]) < 40, "a reload mid-draft does not make a deck of lands (%s)" % str(GameState.decks[0]["cards"]))
 	ds = main.screen
 	_check(ds is DraftScreen, "back on the draft screen")
+	_check(main.tournament.side_pool() == {moved_id: 1} and DeckTools.count(main.tournament.deck_pool()) == 2, "the piles survive a save and reload")
+	_check(ds.side_box.get_node_or_null("Side_" + moved_id) != null, "the Sideboard pile shows the moved pick after the reload")
+	ds.move_pick(moved_id, false)
+	_check(main.tournament.side.is_empty() and DeckTools.count(main.tournament.deck_pool()) == 3, "and moves back to the Deck")
 	# half the picks as the bots would take them, half at random
 	var k := 0
 	while main.tournament.is_drafting():
@@ -129,7 +142,7 @@ func _intro_draft() -> void:
 		var idx: int = d.bot_choice(0) if k % 2 == 0 else rng.randi_range(0, d.holding[0].size() - 1)
 		if k == 20:
 			await _frames()
-			_check_picks_panel(ds)
+			await _check_picks_panel(ds)
 			await _shot("draft")
 		ds._take_index(idx)
 		k += 1
@@ -137,7 +150,9 @@ func _intro_draft() -> void:
 	await _frames()
 	_check(main._tour_decks.size() == 1 and main._tour_deck == main._tour_decks[0], "one list after the draft")
 	var first: int = main._tour_deck
-	_check(GameState.decks[first]["cards"].is_empty(), "the draft deck starts empty")
+	var dpile: Dictionary = main.tournament.deck_pool()
+	_check(not main.tournament.side.is_empty() and DeckTools.count(dpile) < main.tournament.picks[0].size(), "some picks ended in the Sideboard")
+	_check(GameState.decks[first]["cards"] == dpile, "the first list is the Deck pile (%d cards)" % DeckTools.count(dpile))
 	_check(String(GameState.decks[first]["name"]).ends_with(" 1"), "named \"%s\"" % GameState.decks[first]["name"])
 	await _close_dialogs()
 	main._tournament_deck()
@@ -145,9 +160,13 @@ func _intro_draft() -> void:
 	var db: DeckBuilder = main.screen
 	_check(db is DeckBuilder and db.draft_deck == first, "the deck builder opens on the draft list")
 	var pool: Dictionary = main.tournament.pool(0)
-	_check(db.grid.get_child_count() > 0 and db.deck_list.get_child_count() == 1 and db.deck_list.get_child(0).name == "EmptyHint", "the pool is shown, the deck is empty (with a hint)")
+	_check(db.grid.get_child_count() > 0 and db.deck_list.get_node_or_null("EmptyHint") == null and db._deck() == dpile, "the pool is shown, the deck holds the Deck pile")
+	_check(db.pool == pool, "the whole draft (both piles) is the pool")
+	await _shot("deck_first")
+	# emptied, the deck is not ready
+	GameState.decks[first]["cards"] = {}
+	db._refresh_now()
 	_check(DeckTools.validate(db._deck(), pool, DeckTools.DRAFT_COPIES) != "", "an empty deck is not ready")
-	await _shot("deck_empty")
 	db._done()
 	await _frames()
 	_check(main.screen == db, "Done with an empty deck stays in the builder")
@@ -270,46 +289,90 @@ func _row_tests(db: DeckBuilder) -> void:
 
 
 func _check_picks_panel(ds: DraftScreen) -> void:
-	var pool: Dictionary = ds.draft.pool(0)
+	var d: Draft = ds.draft
+	_check(d.side.is_empty() and d.deck_pool() == d.pool(0), "picks panel: every pick is in the Deck pile by default")
+	var deck := d.deck_pool()
 	var rows := 0
 	var groups := 0
 	for c in ds.picks_box.get_children():
-		if c is DeckBuilder.CardRow:
+		if String(c.name).begins_with("Pick_"):
 			rows += 1
 		elif String(c.name).begins_with("Group_"):
 			groups += 1
-	_check(rows == pool.size() and groups >= 1, "picks panel: a row per card (%d) in %d type groups" % [rows, groups])
+	_check(rows == deck.size() and groups >= 1, "picks panel: a row per card (%d) in %d type groups" % [rows, groups])
+	_check(ds.side_box.get_node_or_null("EmptyHint") != null, "picks panel: the Sideboard starts empty (with a hint)")
 	_check(ds.types_label.text.contains(I18n.t("Creatures")), "picks panel: counts by type (%s)" % ds.types_label.text)
 	var fsum := 0
 	for f in ds.faith_row.counts:
 		fsum += int(ds.faith_row.counts[f])
 	_check(fsum > 0 and not ds.curve.counts.is_empty(), "picks panel: counts by faith and a curve")
-	var first: DeckBuilder.CardRow = null
+	var first: HBoxContainer = null
 	for c in ds.picks_box.get_children():
-		if c is DeckBuilder.CardRow:
+		if String(c.name).begins_with("Pick_"):
 			first = c
 			break
-	first.pressed.emit()
+	var id := String(first.name).substr(5)
+	var mv: Button = first.get_node("Move")
+	_check(mv.size.x >= UIKit.TARGET_W - 0.5 and mv.size.y >= UIKit.TARGET - 0.5, "picks panel: the move arrow is a full tap target")
+	# a tap on the row reads the card, with Move to sideboard
+	(first.get_node("Row") as Button).pressed.emit()
 	var v: CardViewer = null
 	for c in ds.get_children():
 		if c is CardViewer:
 			v = c
-	_check(v != null and v.entry().get("id", "") == first.card_id, "picks panel: a tap reads the card")
+	_check(v != null and v.entry().get("id", "") == id, "picks panel: a tap reads the card")
 	if v != null:
+		var acts: Array = v.actions.call(v.entry(), v.index)
+		_check(acts.size() == 1 and String(acts[0][0]) == I18n.t("Move to sideboard"), "the viewer offers Move to sideboard")
+		acts[0][1].call()
+		_check(int(d.side_pool().get(id, 0)) == 1, "Move to sideboard in the viewer moves it")
+		acts = v.actions.call(v.entry(), v.index)
+		var back := acts.filter(func(a): return String(a[0]) == I18n.t("Move to deck"))
+		_check(back.size() == 1, "then the viewer offers Move to deck")
+		if back.size() == 1:
+			back[0][1].call()
+		_check(d.side.is_empty(), "Move to deck in the viewer moves it back")
 		v.close()
+		await _frames()
+	# the arrow: one tap to the Sideboard, one tap on the Sideboard row back up
+	(ds.picks_box.get_node("Pick_" + id).get_node("Move") as Button).pressed.emit()
+	await _frames()
+	var srow := ds.side_box.get_node_or_null("Side_" + id)
+	_check(int(d.side_pool().get(id, 0)) == 1 and srow != null, "the arrow moves a pick to the Sideboard")
+	_check(ds.side_head.text.contains("(1)"), "the Sideboard heading counts it (%s)" % ds.side_head.text)
+	if srow != null:
+		(srow.get_node("Move") as Button).pressed.emit()
+		await _frames()
+		_check(d.side.is_empty() and ds.side_box.get_node_or_null("Side_" + id) == null, "the Sideboard arrow moves it back to the Deck")
+	# a press after a drag is no tap
+	ds.picks_drag.dragged = true
+	(ds.picks_box.get_node("Pick_" + id).get_node("Move") as Button).pressed.emit()
+	(ds.picks_box.get_node("Pick_" + id).get_node("Row") as Button).pressed.emit()
+	await _frames()
+	var opened := false
+	for c in ds.get_children():
+		if c is CardViewer:
+			opened = true
+	_check(d.side.is_empty() and not opened, "a drag over a row neither moves nor reads it")
+	ds.picks_drag.dragged = false
 	# rows sorted by cost inside each group
 	var last_kind := ""
 	var last_mv := -1
 	var sorted := true
 	for c in ds.picks_box.get_children():
-		if c is DeckBuilder.CardRow:
-			var cd: Dictionary = c.card
+		if String(c.name).begins_with("Pick_"):
+			var cd: Dictionary = (c.get_node("Row") as DeckBuilder.CardRow).card
 			var kind := CardView.kind(cd)
 			if kind == last_kind and int(cd.get("mana_value", 0)) < last_mv:
 				sorted = false
 			last_kind = kind
 			last_mv = int(cd.get("mana_value", 0))
 	_check(sorted, "picks panel: sorted by cost")
+	# leave a few picks in the Sideboard for the deck builder checks (and the screenshot)
+	var ids := d.deck_pool().keys()
+	for i in mini(4, ids.size()):
+		ds.move_pick(ids[i], true)
+	await _frames()
 
 
 ## A paid sealed tournament with the deck slots nearly full: only the list used last is kept.
@@ -319,11 +382,12 @@ func _sealed_slots() -> void:
 	main.open_tournament(cap, false, true)
 	await _frames()
 	var first: int = main._tour_deck
-	_check(GameState.decks[first]["cards"].is_empty(), "sealed: the deck starts empty too")
+	_check(GameState.decks[first]["cards"].is_empty(), "sealed: the deck starts empty")
 	await _close_dialogs()
 	main._tournament_deck()
 	await _frames()
 	var db: DeckBuilder = main.screen
+	_check(db.pool == main.tournament.pool(0) and DeckTools.count(db.pool) == main.tournament.picks[0].size(), "sealed: every opened card is in the pool")
 	db._on_menu(4)
 	db._copy_deck()
 	await _frames()

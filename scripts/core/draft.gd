@@ -22,6 +22,7 @@ var city := ""
 var names: Array = []          # seat -> name
 var faiths: Array = []         # seat -> the faith the drafter leans to at first (bots)
 var picks: Array = []          # seat -> Array of entries {"id", "foil"}
+var side: Array = []           # the player's sideboard pile: indices into picks[0] (the rest is the Deck pile)
 var holding: Array = []        # seat -> the pack in hand (Array of entries)
 var round_no := 0              # 0..2
 var pick_no := 0               # picks taken this round
@@ -56,6 +57,7 @@ func start(p_city: String, player_name: String, seed_value: int = 0) -> void:
 	picks = []
 	for s in SEATS:
 		picks.append([])
+	side = []
 	round_no = 0
 	_open_packs()
 
@@ -80,7 +82,7 @@ func to_dict() -> Dictionary:
 	return {"seed": rng.seed, "rng": rng.state, "city": city, "names": names, "faiths": faiths,
 		"picks": picks, "holding": holding, "round_no": round_no, "pick_no": pick_no, "decks": decks,
 		"bracket": bracket, "stage": stage, "results": results, "player_out": player_out,
-		"player_stage": player_stage, "sealed": sealed}
+		"player_stage": player_stage, "sealed": sealed, "side": side}
 
 
 static func from_dict(d: Dictionary) -> Draft:
@@ -108,6 +110,10 @@ static func from_dict(d: Dictionary) -> Draft:
 	t.player_out = bool(d.get("player_out", false))
 	t.player_stage = int(d.get("player_stage", 0))
 	t.sealed = bool(d.get("sealed", false))
+	t.side = []
+	for i in d.get("side", []):
+		if int(i) >= 0 and int(i) < (t.picks[0].size() if not t.picks.is_empty() else 0) and not t.side.has(int(i)):
+			t.side.append(int(i))
 	return t
 
 
@@ -221,6 +227,38 @@ func pool(seat: int) -> Dictionary:
 	for e in picks[seat]:
 		out[e["id"]] = int(out.get(e["id"], 0)) + 1
 	return out
+
+
+## The player's picks in one pile: the Deck pile (to_side false; what the deck builder starts
+## with) or the Sideboard pile. New picks go to the Deck pile.
+func pile_pool(to_side: bool) -> Dictionary:
+	var out := {}
+	for i in picks[0].size():
+		if side.has(i) == to_side:
+			var id: String = picks[0][i]["id"]
+			out[id] = int(out.get(id, 0)) + 1
+	return out
+
+
+func deck_pool() -> Dictionary:
+	return pile_pool(false)
+
+
+func side_pool() -> Dictionary:
+	return pile_pool(true)
+
+
+## Move one copy of a pick to the other pile (to_side: Deck -> Sideboard). False if no copy
+## of it is in the pile it would leave.
+func move_pick(id: String, to_side: bool) -> bool:
+	for i in range(picks[0].size() - 1, -1, -1):
+		if picks[0][i]["id"] == id and side.has(i) != to_side:
+			if to_side:
+				side.append(i)
+			else:
+				side.erase(i)
+			return true
+	return false
 
 
 ## After the draft: decks for the bots (the player builds his own), and the bracket.

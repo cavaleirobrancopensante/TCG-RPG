@@ -20,8 +20,11 @@ func _ready() -> void:
 	for i in 5:
 		main.screen._take_index(0)
 	var picks_before: int = main.tournament.picks[0].size()
+	main.screen.move_pick(main.tournament.picks[0][1]["id"], true)       # one pick to the sideboard
+	var side_before: Dictionary = main.tournament.side_pool()
 	await _reload(main)
 	_check(main.tournament != null and main.tournament.picks[0].size() == picks_before, "draft resumes with %d picks" % picks_before)
+	_check(main.tournament.side_pool() == side_before and DeckTools.count(main.tournament.deck_pool()) == picks_before - 1, "the Deck and Sideboard piles survive the reload")
 	_check(main.screen is DraftScreen, "back on the draft screen")
 	while main.tournament.is_drafting():
 		main.screen._take_index(0)

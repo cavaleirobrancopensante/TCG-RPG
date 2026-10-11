@@ -4564,5 +4564,11 @@
  "<draft_base> 1": "<draft_base> 1",
  "Row": "Row",
  "Flavor": "Flavor",
- "Glow": "Glow"
+ "Glow": "Glow",
+ "Sideboard": "Banquillo",
+ "No cards in the deck pile.": "Ninguna carta en la pila del mazo.",
+ "Tap the arrow on a card to move it here.": "Toca la flecha de una carta para moverla aquí.",
+ "Move to sideboard": "Mover al banquillo",
+ "Move to deck": "Mover al mazo",
+ "Your deck starts as the Deck pile you drafted (%d cards); the sideboard and the rest of the pool are beside it. A deck needs at least 40 cards, %d of them not lands; basic lands are free. Auto build in the Deck menu makes one for you. You can make more than one list from the same pool and choose one before each match.": "Tu mazo empieza con la pila Mazo que elegiste en el draft (%d cartas); el banquillo y el resto de tu reserva están al lado. Un mazo necesita al menos 40 cartas, %d de ellas que no sean tierras; las tierras básicas son gratis. Armar automáticamente, en el menú Mazo, arma uno por ti. Puedes hacer más de una lista con la misma reserva y elegir una antes de cada partida."
 }

@@ -2597,6 +2597,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Your deck starts as the Deck pile you drafted (%d cards); the sideboard and the rest of the pool are beside it. A deck needs at least 40 cards, %d of them not lands; basic lands are free. Auto build in the Deck menu makes one for you. You can make more than one list from the same pool and choose one before each match.",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Your sealed pool",
    "note": "scripts/main.gd"
   },
@@ -3565,11 +3569,11 @@
    "note": "scripts/ui/draft_screen.gd"
   },
   {
-   "key": "Your picks",
+   "key": "Curve",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
-   "key": "Curve",
+   "key": "Sideboard",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
@@ -3585,11 +3589,35 @@
    "note": "scripts/ui/draft_screen.gd"
   },
   {
+   "key": "No cards in the deck pile.",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Tap the arrow on a card to move it here.",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
    "key": "Group_",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
+   "key": "Side_",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
    "key": "Pick_",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Move",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Move to sideboard",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Move to deck",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
