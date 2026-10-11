@@ -1,0 +1,421 @@
+{
+ "villages": [
+  {
+   "id": "san_benedetto",
+   "name": "San Benedetto",
+   "faction": "sanctum",
+   "x": 2350,
+   "y": 500,
+   "description": "A hamlet gathered under the walls of a Benedictine priory. The monks keep bees, bake the altar breads and pour the candles for half the diocese.",
+   "wares": [
+    "candles",
+    "wheat"
+   ],
+   "gossip": [
+    "The brothers sing the Office seven times a day. Some travellers stop only to hear it.",
+    "Prior Odo says a pilgrim never leaves San Benedetto without bread in his pack."
+   ]
+  },
+  {
+   "id": "santa_agnese",
+   "name": "Sant'Agnese",
+   "faction": "sanctum",
+   "x": 2050,
+   "y": 800,
+   "description": "Shepherds' cottages around a chapel of St Agnes. On her feast the lambs are blessed, and their wool is spun for the pallia of the bishops.",
+   "wares": [
+    "lamb"
+   ],
+   "gossip": [
+    "Every spring the best lamb of the flock goes to the Cathedral of the Lamp.",
+    "The shepherds say wolves will not cross the chapel's boundary stones."
+   ]
+  },
+  {
+   "id": "san_isidro",
+   "name": "San Isidro",
+   "faction": "sanctum",
+   "x": 2400,
+   "y": 1150,
+   "description": "A farming hamlet named for St Isidore the labourer. Its wheat fields run right up to the feet of the Spine.",
+   "wares": [
+    "wheat",
+    "seed corn"
+   ],
+   "gossip": [
+    "They say St Isidore's angels plough the fields while the farmers are at Mass.",
+    "Good seed corn is kept here in the church loft, blessed on Rogation Days."
+   ]
+  },
+  {
+   "id": "sant_ambrogio",
+   "name": "Sant'Ambrogio",
+   "faction": "sanctum",
+   "x": 3850,
+   "y": 680,
+   "description": "Hives line every garden wall of this hamlet of St Ambrose, patron of beekeepers. Its honey is sweet and its wax burns clean.",
+   "wares": [
+    "honey",
+    "beeswax",
+    "candles",
+    "mead"
+   ],
+   "gossip": [
+    "Old Brother Ivo talks to the bees each morning, and tells them every death and every wedding.",
+    "Their mead is so good that even the scholars of Porticus send for it."
+   ]
+  },
+  {
+   "id": "san_rocco",
+   "name": "San Rocco",
+   "faction": "sanctum",
+   "x": 3550,
+   "y": 1050,
+   "description": "A hospice of St Roch on the pilgrims' road, with a dog carved over its gate. The sick are nursed here for nothing.",
+   "wares": [
+    "olive oil for the lamps"
+   ],
+   "gossip": [
+    "The hospitallers ask no one his faith before they dress his wounds.",
+    "A faithful dog brought St Roch his bread. The hamlet dogs are fed first at every feast."
+   ]
+  },
+  {
+   "id": "gallows_cross",
+   "name": "Gallows Cross",
+   "faction": "abyss",
+   "x": 1850,
+   "y": 2700,
+   "description": "Four roads meet under an old gibbet. The Pact holds its markets here at midnight, and nobody asks where the goods came from.",
+   "wares": [
+    "pitch"
+   ],
+   "gossip": [
+    "Do not bargain after the third bell. What is sold then cannot be bought back.",
+    "The rope on the gibbet is never taken down. They say it is waiting for someone."
+   ]
+  },
+  {
+   "id": "crowsfoot",
+   "name": "Crowsfoot",
+   "faction": "abyss",
+   "x": 2350,
+   "y": 3000,
+   "description": "A huddle of black timber houses where three tracks split like a crow's claw. Woodcutters live here, and stranger folk.",
+   "wares": [
+    "firewood"
+   ],
+   "gossip": [
+    "The woodcutters cut only by moonlight. They say the trees bleed otherwise.",
+    "A traveller who whistles on the crow's road is never seen again. Keep quiet."
+   ]
+  },
+  {
+   "id": "widows_turning",
+   "name": "Widow's Turning",
+   "faction": "abyss",
+   "x": 1900,
+   "y": 3150,
+   "description": "Shuttered houses at a bend of the dead wood, where a widow once sold her husband's soul for a purse of gold. Tar pits smoke behind them.",
+   "wares": [
+    "pitch",
+    "firewood"
+   ],
+   "gossip": [
+    "The tar pits never cool. Some say the fire comes from below.",
+    "The widow still keeps the inn, they say, and she has not aged a day."
+   ]
+  },
+  {
+   "id": "hangmans_fork",
+   "name": "Hangman's Fork",
+   "faction": "abyss",
+   "x": 800,
+   "y": 2950,
+   "description": "A coal-pit hamlet under the Barrow Fells, ringed with slag heaps and gallows. The colliers pay their tithe to the Black Pact.",
+   "wares": [
+    "coal"
+   ],
+   "gossip": [
+    "Down in the deep seams the colliers hear knocking. They knock back, three times, for luck.",
+    "The hangman here is also the mayor, and the priest, and the judge."
+   ]
+  },
+  {
+   "id": "montevino",
+   "name": "Montevino",
+   "faction": "revel",
+   "x": 4500,
+   "y": 2700,
+   "description": "A hill town of terraced vines and painted shutters. Every cellar door stands open, and every cellar has a song.",
+   "wares": [
+    "wine"
+   ],
+   "gossip": [
+    "The harvest dance lasts three nights. Whoever falls asleep first pays for the fourth.",
+    "Old Dom Ferrante swears his red is older than the Church. He is lying, but pour him another."
+   ]
+  },
+  {
+   "id": "vigna_rossa",
+   "name": "Vigna Rossa",
+   "faction": "revel",
+   "x": 4500,
+   "y": 3275,
+   "description": "Red vines to the horizon and a press house as big as a cathedral. The grape treaders work to fiddles and drums.",
+   "wares": [
+    "wine"
+   ],
+   "gossip": [
+    "Their wine is so dark it stains the moon, the treaders say.",
+    "A merchant from Vinemere comes every week to taste the casks. He leaves on a cart, never on foot."
+   ]
+  },
+  {
+   "id": "malvasia",
+   "name": "Malvasia",
+   "faction": "revel",
+   "x": 5250,
+   "y": 2250,
+   "description": "A sun-baked village under the Vintner's Ridge, famous for its sweet white wine and its spice merchants from over the sea.",
+   "wares": [
+    "wine",
+    "sugar and spices"
+   ],
+   "gossip": [
+    "Ships unload pepper and cinnamon at the cove below, and nobody pays the toll.",
+    "Drink the Malvasia slowly. It is sweet going down and bitter in the morning."
+   ]
+  },
+  {
+   "id": "mascarino",
+   "name": "Mascarino",
+   "faction": "revel",
+   "x": 4700,
+   "y": 3650,
+   "description": "A village of mask makers and ribbon weavers. Half its houses are workshops, and the other half are taverns.",
+   "wares": [
+    "masks",
+    "ribbons"
+   ],
+   "gossip": [
+    "Nobody in Mascarino shows his face on a feast night. Not even to his wife.",
+    "The mask makers say every face they carve is somebody's. Pray it is not yours."
+   ]
+  },
+  {
+   "id": "dafni",
+   "name": "Dafni",
+   "faction": "lyceum",
+   "x": 4450,
+   "y": 1250,
+   "description": "A village of laurel groves and white walls. Its wreaths crown the victors of the games at Porticus.",
+   "wares": [
+    "laurel"
+   ],
+   "gossip": [
+    "The elders argue in the square every evening. Nobody wins, but everybody enjoys it.",
+    "A laurel leaf under the pillow brings clear dreams, the village women say."
+   ]
+  },
+  {
+   "id": "elaia",
+   "name": "Elaia",
+   "faction": "lyceum",
+   "x": 4550,
+   "y": 800,
+   "description": "Silver olive terraces above the cold sea. The presses of Elaia have run since before the philosophers had names.",
+   "wares": [
+    "olive oil"
+   ],
+   "gossip": [
+    "Old Nikandros keeps an olive tree he says was planted by Zeno himself.",
+    "The best oil is pressed cold, and sold only to those who ask politely."
+   ]
+  },
+  {
+   "id": "libanos",
+   "name": "Libanos",
+   "faction": "lyceum",
+   "x": 4500,
+   "y": 1700,
+   "description": "A quiet village of resin gatherers. Incense from its trees burns in the temples of the Stoa, and in the Church's censers too.",
+   "wares": [
+    "incense"
+   ],
+   "gossip": [
+    "The resin weeps from the bark like tears. They gather it at dawn, in silence.",
+    "A priest from Santa Lucerna comes each Lent to buy incense. He and the elders talk until midnight."
+   ]
+  },
+  {
+   "id": "melissai",
+   "name": "Melissai",
+   "faction": "lyceum",
+   "x": 4950,
+   "y": 1800,
+   "description": "Beehives of woven straw on every rooftop. The village is named for the bees, which the scholars say keep a perfect republic.",
+   "wares": [
+    "honey"
+   ],
+   "gossip": [
+    "Plato would have liked our bees, the keepers say: every one knows its place.",
+    "Thyme honey from Melissai is the only sweet the Stoics allow themselves."
+   ]
+  },
+  {
+   "id": "hollin_dell",
+   "name": "Hollin Dell",
+   "faction": "wild",
+   "x": 1400,
+   "y": 1125,
+   "description": "Round houses in a dell of holly and oak. The folk here keep wild bees in hollow trunks and brew the old mead.",
+   "wares": [
+    "honey",
+    "beeswax"
+   ],
+   "gossip": [
+    "Never cut holly in Hollin Dell. The Holly King remembers.",
+    "Our bees knew the forest before the first king was crowned."
+   ]
+  },
+  {
+   "id": "ashgrove",
+   "name": "Ashgrove",
+   "faction": "wild",
+   "x": 1850,
+   "y": 1350,
+   "description": "Woodcutters and charcoal burners among tall ash trees. They take only fallen wood, and leave an offering for each branch.",
+   "wares": [
+    "firewood"
+   ],
+   "gossip": [
+    "The great ash at the heart of the grove has never been touched by an axe.",
+    "Charcoal from Ashgrove burns hotter than any coal from the pits."
+   ]
+  },
+  {
+   "id": "mossbrook",
+   "name": "Mossbrook",
+   "faction": "wild",
+   "x": 1600,
+   "y": 2050,
+   "description": "A sheepfold village beside a mossy brook. Its lambs graze on wild thyme, and the shepherds play pipes at dusk.",
+   "wares": [
+    "lamb"
+   ],
+   "gossip": [
+    "Our fattened lambs fetch double at the feasts of Vinemere.",
+    "The brook speaks if you listen long enough. Mostly it speaks of rain."
+   ]
+  },
+  {
+   "id": "thornwick",
+   "name": "Thornwick",
+   "faction": "wild",
+   "x": 950,
+   "y": 2480,
+   "description": "A hedged village at the edge of the Barrow Fells. Bay and laurel grow in its sheltered gardens, out of the wind.",
+   "wares": [
+    "laurel"
+   ],
+   "gossip": [
+    "The barrows on the fells are older than Elderholt. Do not sleep on them.",
+    "Thornwick hedges are planted with thorn so no spirit can wander in."
+   ]
+  },
+  {
+   "id": "rowan_hollow",
+   "name": "Rowan Hollow",
+   "faction": "wild",
+   "x": 300,
+   "y": 2150,
+   "description": "A hidden hamlet deep in the oak wood, under red rowan berries. Its mead halls are older than any road.",
+   "wares": [
+    "mead"
+   ],
+   "gossip": [
+    "Rowan wood over the door keeps the evil eye away.",
+    "The mead of Rowan Hollow is brewed with nine herbs. Nobody outside knows which nine."
+   ]
+  },
+  {
+   "id": "sixmills",
+   "name": "Sixmills",
+   "faction": "machine",
+   "x": 3725,
+   "y": 1825,
+   "description": "Six great waterwheels turn along the race, grinding grain for Cogspire day and night. The miller's guild rings a bell at every shift.",
+   "wares": [
+    "wheat",
+    "seed corn"
+   ],
+   "gossip": [
+    "The sixth mill has not stopped in forty years. The guild has a wager on it.",
+    "Flour from Sixmills is so fine the bakers of Cogspire weigh it by the ounce."
+   ]
+  },
+  {
+   "id": "slagford",
+   "name": "Slagford",
+   "faction": "machine",
+   "x": 2350,
+   "y": 2125,
+   "description": "A smithing town at a ford choked with slag. The forges cast pots, cauldrons and the iron of half the bridges in the land.",
+   "wares": [
+    "iron"
+   ],
+   "gossip": [
+    "The ironmasters test every cauldron by ringing it. A dull note goes back into the furnace.",
+    "When the wind is from the west, Slagford smells of hot iron for a mile."
+   ]
+  },
+  {
+   "id": "coalpit_row",
+   "name": "Coalpit Row",
+   "faction": "machine",
+   "x": 2750,
+   "y": 2650,
+   "description": "Terraced cottages over the coal seams. The winding gear clanks all day, and the colliers come up black at sunset.",
+   "wares": [
+    "coal"
+   ],
+   "gossip": [
+    "The guild bought the deep seam from Ashenmouth. Nobody asks what was paid.",
+    "A collier's lamp that burns blue means firedamp. Run."
+   ]
+  },
+  {
+   "id": "furnace_end",
+   "name": "Furnace End",
+   "faction": "machine",
+   "x": 3200,
+   "y": 2700,
+   "description": "The last stop on the foundry road: oil works and boiling vats where the guild renders the oils that keep the engines turning.",
+   "wares": [
+    "foundry oil",
+    "lamp oil"
+   ],
+   "gossip": [
+    "The overseer says one day the engines will run without oil. He has said it for twenty years.",
+    "Do not light a pipe within a hundred paces of the vats."
+   ]
+  },
+  {
+   "id": "grindwell",
+   "name": "Grindwell",
+   "faction": "machine",
+   "x": 2425,
+   "y": 1700,
+   "description": "A windmill town on the shoulder of the Spine. Its sails grind wheat in summer and sugar cane brought up from the coast in winter.",
+   "wares": [
+    "wheat",
+    "sugar"
+   ],
+   "gossip": [
+    "When the sails stop, the whole town comes out to look. It means the wind has changed.",
+    "The miller's daughter can tell the weather by the creak of the cogs."
+   ]
+  }
+ ]
+}

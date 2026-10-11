@@ -244,3 +244,262 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 		spells += 1
 	add_lands(owned, TARGET_LANDS)
 	return owned
+
+
+# ------------------------------------------------------------------ themed wanderer decks
+
+const THEMES_PATH := "res://data/themes.json"
+## Wanted spells at each mana value (6 means six or more) for a 23-card non-land part.
+const CURVE := {1: 3, 2: 6, 3: 6, 4: 4, 5: 2, 6: 2}
+const MIN_CREATURES := 13
+const THEME_MAX := 17            # on-theme cards at most, so the curve can be filled
+const SPLASH_MAX := 4            # single-faith splash cards at most
+
+static var _themes: Dictionary = {}
+static var _theme_cache: Dictionary = {}     # theme_id -> {card id: bool}
+
+
+## Every theme from data/themes.json: id -> {faith, tribe, kin, splash, names}.
+static func themes() -> Dictionary:
+	if _themes.is_empty():
+		var data = JSON.parse_string(FileAccess.get_file_as_string(THEMES_PATH))
+		if typeof(data) == TYPE_DICTIONARY:
+			_themes = data
+	return _themes
+
+
+static func theme(theme_id: String) -> Dictionary:
+	return themes().get(theme_id, {})
+
+
+## Theme ids of one faith, in file order.
+static func themes_of(faith: String) -> Array:
+	var out := []
+	for id in themes():
+		if _themes[id].get("faith", "") == faith:
+			out.append(id)
+	return out
+
+
+## True when a card belongs to a theme: a member of its tribe (or kin), a relic for "Relic",
+## or a card whose effects, abilities or statics name the tribe.
+static func is_on_theme(card_id: String, theme_id: String) -> bool:
+	if not _theme_cache.has(theme_id):
+		_theme_cache[theme_id] = {}
+	var cache: Dictionary = _theme_cache[theme_id]
+	if cache.has(card_id):
+		return cache[card_id]
+	var th := theme(theme_id)
+	var c := CardDB.get_card(card_id)
+	var hit := false
+	if not th.is_empty() and not c.is_empty() and c.get("type") != "land":
+		var words: Array = [th.get("tribe", "")]
+		words.append_array(th.get("kin", []))
+		var sub: Array = String(c.get("subtype", "")).split(" ", false)
+		var blob := JSON.stringify([c.get("effects", []), c.get("abilities", []), c.get("statics", [])])
+		for w in words:
+			if w == "":
+				continue
+			if sub.has(w) or (w == "Relic" and c.get("type") == "relic"):
+				hit = true
+				break
+			var re := RegEx.create_from_string("\\b%s\\b" % w)
+			if re.search(blob):
+				hit = true
+				break
+	cache[card_id] = hit
+	return hit
+
+
+## The mana colours a deck's non-land cards ask for (e.g. ["W"] or ["R", "G"]).
+static func deck_colours(deck: Dictionary) -> Array:
+	var out := []
+	for id in deck:
+		if CardDB.is_land(id):
+			continue
+		for k in CardDB.get_card(id).get("cost", {}):
+			if k != "generic" and not out.has(k):
+				out.append(k)
+	if out.is_empty():
+		out.append("C")
+	return out
+
+
+## Average mana value of the non-land cards.
+static func average_mv(deck: Dictionary) -> float:
+	var n := 0
+	var t := 0
+	for id in deck:
+		if CardDB.is_land(id):
+			continue
+		n += int(deck[id])
+		t += int(CardDB.get_card(id).get("mana_value", 0)) * int(deck[id])
+	return float(t) / maxf(1.0, float(n))
+
+
+static func _curve_slot(c: Dictionary) -> int:
+	return clampi(int(c.get("mana_value", 0)), 1, 6)
+
+
+## A wanderer's deck that keeps his name's promise: on-theme cards first, then the faith's
+## other cards by curve, the copies-by-level rule, and lands in proportion. Unknown themes fall
+## back to a plain enemy deck of a random faith.
+static func themed_deck(theme_id: String, level: int, rng: RandomNumberGenerator) -> Dictionary:
+	var th := theme(theme_id)
+	if th.is_empty():
+		return enemy_deck(Factions.ORDER[rng.randi_range(0, Factions.ORDER.size() - 1)], level, rng)
+	var faith: String = th["faith"]
+	var splash: String = th.get("splash", "")
+	var copies := clampi(1 + level / 2, 1, MAX_COPIES)
+	var max_rares := clampi(level + 1, 1, 6)
+	var max_mythics := 0 if level < 3 else (1 if level < 5 else 2)
+	var allowed := [faith]
+	if splash != "":
+		allowed.append(splash)
+	# candidates: the faith's cards, the gold cards of faith + splash, and cheap splash cards
+	var theme_pool := []
+	var faith_pool := []
+	var splash_pool := []
+	var seen := {}
+	for f in allowed:
+		for id in CardDB.faction_ids(f):
+			if seen.has(id) or CardDB.is_land(id):
+				continue
+			seen[id] = true
+			var c := CardDB.get_card(id)
+			var f1: String = c.get("faction", "")
+			var f2: String = c.get("faction2", "")
+			if not allowed.has(f1) or (f2 != "" and not allowed.has(f2)):
+				continue
+			var own := f1 == faith or f2 == faith
+			if not own:
+				# a light splash: cheap cards with a single coloured symbol
+				var sym := 0
+				for k in c["cost"]:
+					if k != "generic":
+						sym += int(c["cost"][k])
+				if sym > 1 or int(c["mana_value"]) > 4:
+					continue
+			var entry := [id, _build_value(c) + rng.randf() * 1.5]
+			if is_on_theme(id, theme_id):
+				theme_pool.append(entry)
+			elif own:
+				faith_pool.append(entry)
+			else:
+				splash_pool.append(entry)
+	var by_value := func(a, b): return a[1] > b[1]
+	theme_pool.sort_custom(by_value)
+	faith_pool.sort_custom(by_value)
+	splash_pool.sort_custom(by_value)
+	var st := {"deck": {}, "picked": 0, "creatures": 0, "rares": 0, "mythics": 0, "splash": 0,
+		"slots": {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}, "noncreature": 0}
+	# 1. on-theme cards, keeping the top of the curve in check
+	var theme_n := 0
+	for e in theme_pool:
+		if theme_n >= THEME_MAX:
+			break
+		var c := CardDB.get_card(e[0])
+		var slot := _curve_slot(c)
+		if slot >= 5 and int(st["slots"][5]) + int(st["slots"][6]) >= CURVE[5] + CURVE[6]:
+			continue
+		if slot == 6 and int(st["slots"][6]) >= CURVE[6]:
+			continue
+		var over := 1 if slot <= 3 else 0          # a little extra room low on the curve
+		if slot >= 2 and slot <= 4 and int(st["slots"][slot]) >= int(CURVE[slot]) + over:
+			continue
+		if c["type"] != "creature" and int(st["noncreature"]) >= TARGET_SPELLS - MIN_CREATURES:
+			continue
+		var n := mini(copies, THEME_MAX - theme_n)
+		if slot >= 5:
+			n = mini(n, int(CURVE[5]) + int(CURVE[6]) - int(st["slots"][5]) - int(st["slots"][6]))
+		if slot >= 2 and slot <= 4:
+			n = mini(n, int(CURVE[slot]) + over - int(st["slots"][slot]))
+		# the tribe's own rares are what the name promises: one more is allowed for them
+		theme_n += _themed_add(st, e[0], n, max_rares + 1, max_mythics, faith)
+	# 2. creatures until the AI has a board to play
+	for pool in [faith_pool, splash_pool]:
+		for e in pool:
+			if int(st["creatures"]) >= MIN_CREATURES or int(st["picked"]) >= TARGET_SPELLS:
+				break
+			var c := CardDB.get_card(e[0])
+			if c["type"] != "creature" or st["deck"].has(e[0]):
+				continue
+			var slot := _curve_slot(c)
+			if int(st["slots"][slot]) >= CURVE[slot]:
+				continue
+			var need := mini(MIN_CREATURES - int(st["creatures"]), int(CURVE[slot]) - int(st["slots"][slot]))
+			_themed_add(st, e[0], mini(copies, need), max_rares, max_mythics, faith)
+	# 3. fill the curve's gaps, then 4. the cheapest cards left to finish the 23
+	var by_mv := func(a, b):
+		var ma := int(CardDB.get_card(a[0])["mana_value"])
+		var mb := int(CardDB.get_card(b[0])["mana_value"])
+		return ma < mb if ma != mb else a[1] > b[1]
+	for strict in [true, false]:
+		if not strict:
+			faith_pool.sort_custom(by_mv)
+			splash_pool.sort_custom(by_mv)
+			theme_pool.sort_custom(by_mv)
+		for pool in [faith_pool, splash_pool, theme_pool]:
+			for e in pool:
+				if int(st["picked"]) >= TARGET_SPELLS:
+					break
+				var c := CardDB.get_card(e[0])
+				# keep the last places for creatures if the board is still short of them
+				if c["type"] != "creature" and TARGET_SPELLS - int(st["picked"]) <= MIN_CREATURES - int(st["creatures"]):
+					continue
+				var slot := _curve_slot(c)
+				var room: int = (int(CURVE[slot]) - int(st["slots"][slot])) if strict else (99 if slot <= 4 else 0)
+				var have := int(st["deck"].get(e[0], 0))
+				var n := mini(mini(copies - have, room), TARGET_SPELLS - int(st["picked"]))
+				if n > 0:
+					_themed_add(st, e[0], n, max_rares, max_mythics, faith)
+	var deck: Dictionary = st["deck"]
+	# a faith too thin to fill 23 (never with the current cards): top up with more lands
+	add_lands(deck, TARGET_LANDS + maxi(0, TARGET_SPELLS - int(st["picked"])))
+	return deck
+
+
+## Add up to `n` copies of a card, honouring the rarity and splash limits. Returns how many.
+static func _themed_add(st: Dictionary, id: String, n: int, max_rares: int, max_mythics: int, faith: String) -> int:
+	if n <= 0:
+		return 0
+	var c := CardDB.get_card(id)
+	var deck: Dictionary = st["deck"]
+	var fresh := not deck.has(id)
+	var r: String = c.get("rarity", "common")
+	if fresh and r == "rare" and int(st["rares"]) >= max_rares:
+		return 0
+	if fresh and r == "mythic" and int(st["mythics"]) >= max_mythics:
+		return 0
+	var splash_card: bool = c.get("faction", "") != faith and c.get("faction2", "") != faith
+	if splash_card:
+		n = mini(n, SPLASH_MAX - int(st["splash"]))
+		if n <= 0:
+			return 0
+		st["splash"] = int(st["splash"]) + n
+	if fresh and r == "rare":
+		st["rares"] = int(st["rares"]) + 1
+	if fresh and r == "mythic":
+		st["mythics"] = int(st["mythics"]) + 1
+	deck[id] = int(deck.get(id, 0)) + n
+	st["picked"] = int(st["picked"]) + n
+	st["slots"][_curve_slot(c)] = int(st["slots"][_curve_slot(c)]) + n
+	if c["type"] == "creature":
+		st["creatures"] = int(st["creatures"]) + n
+	else:
+		st["noncreature"] = int(st["noncreature"]) + n
+	return n
+
+
+## A common or uncommon creature of the theme to dress its wanderer in ("" if none).
+static func theme_look(theme_id: String, rng: RandomNumberGenerator) -> String:
+	var th := theme(theme_id)
+	if th.is_empty():
+		return ""
+	var pool := []
+	for r in ["common", "uncommon"]:
+		for id in CardDB.pools[th["faith"]][r]:
+			var c := CardDB.get_card(id)
+			if c["type"] == "creature" and is_on_theme(id, theme_id) and c.get("faction2", "") == "":
+				pool.append(id)
+	return pool[rng.randi_range(0, pool.size() - 1)] if not pool.is_empty() else ""

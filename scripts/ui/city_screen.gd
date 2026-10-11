@@ -76,6 +76,7 @@ func _ready() -> void:
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 10)
 	scroll.add_child(content)
+	DragScroll.attach(self, scroll)      # finger and mouse drag over the shop's cards
 	GameState.gold_changed.connect(func(_g): _update_gold())
 	_update_gold()
 	_show()
@@ -225,7 +226,11 @@ func _show_feast_errand() -> void:
 	panel.add_child(v)
 	var feast := LiturgicalCalendar.feast_label({"name": e["feast"], "short": e.get("feast_short", "")})
 	v.add_child(UIKit.title(I18n.t("%s, for the feast of %s") % [I18n.t(ERRAND_GIVERS.get(faction, "The steward")), feast], 24))
-	var src: String = GameState.city(e["source"]).get("name", "")
+	var src: String = GameState.place(e["source"]).get("name", "")
+	var sv := GameState.village(String(e["source"]))
+	if not sv.is_empty():
+		# a village may be off the hero's map yet: say which way it lies
+		src += " " + I18n.t("(a village to the %s)") % VillageScreen.direction(Vector2(city["x"], city["y"]), Vector2(sv["x"], sv["y"]))
 	var when := LiturgicalCalendar.short_date_text(int(e["feast_day"]))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)

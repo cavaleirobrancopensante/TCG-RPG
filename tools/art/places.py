@@ -1243,6 +1243,97 @@ def city_ashenmouth(p):
     return 30
 
 
+# ====================================================================== villages
+
+VILLAGE_HOUSES = {
+    # walls, roof, timber
+    'sanctum': ([C.hex('ece2c8'), C.hex('e2d4b0'), C.hex('f0e8d4')], VERMILION.dark(0.1), C.hex('5a3a24')),
+    'abyss': ([C.hex('3a3034'), C.hex('2e262a'), C.hex('443a3a')], C.hex('1e1618'), C.hex('120c0e')),
+    'revel': ([C.hex('e8c890'), C.hex('dcb07a'), C.hex('f0d8a8')], CRIMSON, None),
+    'lyceum': ([C.hex('f0ece2'), C.hex('e6e0d0'), C.hex('f4f0e6')], C.hex('c87a4a'), None),
+    'machine': ([C.hex('a8644a'), C.hex('94583e'), C.hex('b87458')], C.hex('5a5e68'), C.hex('3a3a40')),
+}
+
+
+def well(p, x, y, s=1.0):
+    """A village well: a stone ring, two posts, a little roof and a bucket on its rope."""
+    wood = C.hex('6a4a2c')
+    p.shape([(x - 46 * s, y, 0), (x - 46 * s, y - 40 * s, 0), (x + 46 * s, y - 40 * s, 0), (x + 46 * s, y, 0)], ('h', STONE.light(0.15), STONE.dark(0.25)), width=1.6, smooth=False)
+    p.blob((x, y - 40 * s), 46 * s, 10 * s, C.hex('2a2a34'), width=1.6)
+    for k in range(4):
+        yy = y - 10 * s - k * 10 * s
+        p.line([(x - 46 * s, yy), (x + 46 * s, yy)], STONE.dark(0.35).alpha(0.6), 1.2, smooth=False)
+    for sx in (-38, 38):
+        p.shape([(x + (sx - 4) * s, y - 40 * s, 0), (x + (sx - 4) * s, y - 120 * s, 0), (x + (sx + 4) * s, y - 120 * s, 0), (x + (sx + 4) * s, y - 40 * s, 0)], wood, width=1.3, smooth=False)
+    p.shape([(x - 60 * s, y - 112 * s, 0), (x, y - 150 * s, 0), (x + 60 * s, y - 112 * s, 0)], ('v', C.hex('8a5a34'), C.hex('5a3a20')), width=1.5, smooth=False)
+    p.line([(x - 38 * s, y - 104 * s), (x + 38 * s, y - 104 * s)], wood.dark(0.2), 4 * s, smooth=False)
+    p.line([(x, y - 104 * s), (x, y - 72 * s)], INK.alpha(0.7), 1.4, smooth=False)
+    p.shape([(x - 9 * s, y - 72 * s, 0), (x + 9 * s, y - 72 * s, 0), (x + 7 * s, y - 56 * s, 0), (x - 7 * s, y - 56 * s, 0)], C.hex('8a6a44'), width=1.2, smooth=False)
+
+
+def chapel(p, x, y, s=1.0):
+    """A small white chapel with a bell cote and the Cross, its door open and lit within."""
+    wall = C.hex('f0e8d4')
+    p.shape([(x - 70 * s, y, 0), (x - 70 * s, y - 90 * s, 0), (x + 70 * s, y - 90 * s, 0), (x + 70 * s, y, 0)], ('h', wall.light(0.08), wall.dark(0.2)), width=1.6, smooth=False)
+    p.shape([(x - 82 * s, y - 88 * s, 0), (x, y - 150 * s, 0), (x + 82 * s, y - 88 * s, 0)], ('v', C.hex('a85a3a'), C.hex('6a3424')), width=1.6, smooth=False)
+    # the bell cote over the gable
+    p.shape([(x - 14 * s, y - 146 * s, 0), (x - 14 * s, y - 186 * s, 0), (x + 14 * s, y - 186 * s, 0), (x + 14 * s, y - 146 * s, 0)], wall, width=1.4, smooth=False)
+    p.shape([(x - 7 * s, y - 152 * s, 0), (x - 7 * s, y - 172 * s), (x, y - 178 * s), (x + 7 * s, y - 172 * s), (x + 7 * s, y - 152 * s, 0)], C.hex('2a2228'), width=1)
+    p.blob((x, y - 160 * s), 5 * s, 6 * s, GOLD, width=1)
+    p.line([(x, y - 186 * s), (x, y - 218 * s)], GOLD_DARK, 4 * s, smooth=False)
+    p.line([(x - 10 * s, y - 208 * s), (x + 10 * s, y - 208 * s)], GOLD_DARK, 4 * s, smooth=False)
+    # the open door, candlelit
+    p.shape([(x - 18 * s, y, 0), (x - 18 * s, y - 40 * s), (x, y - 54 * s), (x + 18 * s, y - 40 * s), (x + 18 * s, y, 0)], C.hex('ffcf6a'), width=1.4)
+    p.glow((x, y - 24 * s), 50 * s, C.hex('ffd890'), 0.35)
+    for wx in (-46, 46):
+        p.shape([(x + (wx - 7) * s, y - 40 * s, 0), (x + (wx - 7) * s, y - 62 * s), (x + wx * s, y - 70 * s), (x + (wx + 7) * s, y - 62 * s), (x + (wx + 7) * s, y - 40 * s, 0)], ULTRA.light(0.2), width=1.1)
+
+
+def village_houses(p, f, y, xs, s):
+    if f == 'wild':
+        for i, x in enumerate(xs):
+            root_house(p, x, y + (i % 2) * 6, s * (1.0 + 0.1 * (i % 2)))
+        return
+    walls, roof, timber = VILLAGE_HOUSES[f]
+    house_row(p, y, xs, s, walls=walls, roof=roof, timber=timber, lit=0.6 if f == 'abyss' else 0.0)
+
+
+def village(p, f):
+    """A village of the faith: the lane running in between its houses, a well (or a chapel) on the green."""
+    time = {'abyss': 'dusk', 'wild': 'dawn', 'sanctum': 'day', 'revel': 'gold', 'lyceum': 'cold', 'machine': 'haze'}[f]
+    land_sky(p, f, time)
+    hz = 330
+    far_land(p, f, hz, landmark_x=780 if f != 'lyceum' else 760)
+    midground(p, f, hz)
+    near_ground(p, f, hz + 96, flowers=f not in ('abyss', 'machine'))
+    road_curve(p, (500, hz + 70), 500, 10, 240, bend=40, col=LANDS[f]['road'])
+    # far houses up the lane, nearer ones framing it
+    village_houses(p, f, hz + 120, [300, 380, 640, 720], 0.6)
+    village_houses(p, f, hz + 190, [60, 170, 840, 950], 1.05)
+    if f == 'sanctum':
+        chapel(p, 300, hz + 156, 0.95)
+    else:
+        well(p, 700, hz + 210, 0.8)
+    if f == 'revel':
+        RL.lantern_string(p, [(180, hz + 60), (500, hz + 90), (820, hz + 60)], s=0.8, sag=30)
+        RL.barrel(p, (250, hz + 230), 0.9)
+        vine_rows(p, hz + 100, (0, 140), (880, W))
+    elif f == 'machine':
+        ML.smokestack(p, 120, hz + 100, hz - 60, 18, C.hex('8a5a4a'), SOOT.light(0.4), brick=True, n=5, alpha=0.5)
+        ML.waterwheel(p, (900, hz + 150), 40, C.hex('6a4a2c'))
+    elif f == 'abyss':
+        AL.candle_stand(p, 260, hz + 250, 150, lit=True)
+        for x, yy in ((230, 150), (260, 170), (770, 120)):
+            AL.crow(p, x, yy, 0.9, flying=True)
+    elif f == 'lyceum':
+        LL.statue_plinth(p, 300, hz + 220, 60, 34)
+    elif f == 'wild':
+        WL.standing_stone(p, 300, hz + 230, 40, 110, lean=0.05, carved=True)
+        WL.fireflies(p, (100, 200, 900, 480), 24)
+    foreground(p, f)
+    return 22
+
+
 # ====================================================================== lairs
 
 def lair_forge(p):
@@ -1388,6 +1479,7 @@ def scenes():
     for f in FAITHS:
         for k in KINDS:
             s['terrain_%s_%s' % (f, k)] = (lambda fn, ff: (lambda p: fn(p, ff)))(fns[k], f)
+        s['village_%s' % f] = (lambda ff: (lambda p: village(p, ff)))(f)
     return s
 
 

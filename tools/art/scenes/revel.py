@@ -320,6 +320,19 @@ def revel_c_010(p):
          props_front=[goblet('b'), lance('f', 128, -0.05)]).draw(p, 405, 600 - 104 * 2.3 + 19 * 3.4, 340)
 
 
+def _drooping_goblet(col=C.hex('a08060')):
+    """A goblet slipping from a sleeping hand, tipped forward, the last of the wine dribbling out."""
+    def fn(p, j):
+        h = j['hand_f']
+        goblet_at(p, h[0] + 1.6, h[1] + 1.2, 1.0, col, WINE, tilt=2.1, gem=None)
+        lip = (h[0] + 13.0, h[1] + 6.4)
+        p.taper([lip, (lip[0] + 1.2, lip[1] + 5.0), (lip[0] + 0.6, lip[1] + 10.5)], 0.9, 0.5, WINE_LIGHT, width=0.6)
+        # drops falling to the puddle on the grass (the ground is at y = -17 for a lounger)
+        for yy in range(int(lip[1] + 13), -19, 3):
+            p.blob((lip[0] + 0.7, yy), 0.6, 0.9, WINE_LIGHT, width=0.4)
+    return fn
+
+
 def revel_c_011(p):
     """Satyr of the Drowsy Vineyard: he meant to join the raid, but the afternoon grew warm."""
     vineyard_bg(p, 'dusk', villa=False)
@@ -339,15 +352,31 @@ def revel_c_011(p):
         p.blob(q, r, r * 0.7, C.hex('3f6a2a'), width=1.8, shade=0.8)
         for k in range(10):
             p.blob((q[0] + p.rng.uniform(-r, r) * 0.7, q[1] + p.rng.uniform(-r, r) * 0.4), 8, 5, C.hex('6a9a3a').alpha(0.6), ink=False)
-    barrel(p, (220, 600), 2.4, col=C.hex('7a4a2a'))
-    goblet_w(p, 560, 604, 1.0, C.hex('a08060'), None, 1.4)
-    p.blob((620, 606), 40, 6, WINE, width=0.8)
-    RFig(pose='re_lap', garb='jerkin', seat='lounge', goat=True, main=C.hex('a87a4a'), second=C.hex('7a5a3a'),
-         hair='curly', hair_col=C.hex('3a2414'), beard='short', head=satyr_head(), eyes='closed', mouth='calm', sleeves='fitted',
-         belt=None, width=1.1, props_front=[panpipes('f')]).draw(p, 320, 596 + 19 * 4.2, 420)
-    zzz(p, 410, 230, 1.6)
-    for i in range(6):
-        grapes_at(p, (430 + i * 90, 590 + (i % 2) * 10), 1.8, AMETHYST, leaf=True)
+    # a grassy bank in the tree's shade, clear of the vine rows, where he has settled
+    p.shape([(60, 640, 0), (70, 560), (200, 528), (420, 534), (620, 556), (700, 640, 0)],
+            ('v', C.hex('8aa850'), C.hex('5f7f34')), width=1.6, shade=0.5)
+    for i in range(26):
+        q = (p.rng.uniform(90, 660), p.rng.uniform(560, 630))
+        p.line([q, v_add(q, (p.rng.uniform(-3, 3), -7))], C.hex('4a6a2a').alpha(0.7), 1.2)
+    p.blob((400, 604), 200, 14, C(0.1, 0.12, 0.04, 0.22), ink=False)
+    barrel(p, (225, 600), 2.4, col=C.hex('7a4a2a'))
+    # his panpipes dropped in the grass, and the spilled wine
+    p.push(600, 602, 2.6, rot=-0.18)
+    for i in range(7):
+        hh = 13 - i * 1.4
+        p.shape([(i * 1.9 - 0.85, -hh, 0), (i * 1.9 + 0.85, -hh, 0), (i * 1.9 + 0.85, 0, 0), (i * 1.9 - 0.85, 0, 0)],
+                ('h', C.hex('d8b870'), C.hex('a88a48')), width=0.6, smooth=False)
+    for dy in (-3.0, -6.4):
+        p.line([(-1.2, dy), (12.8, dy)], CRIMSON, 0.9)
+    p.pop()
+    p.blob((486, 604), 30, 5, WINE, width=0.8)
+    s = 4.6
+    SatyrFig(pose='sa_lounge', seat='lounge', main=C.hex('8a2a3a'), sleeves='none', hair='curly', hair_col=C.hex('3a2414'),
+             beard='short', head=heads(goat_horns(big=0.9), ivy_crown()), eyes='closed', mouth='calm', belt='leather',
+             goat_col=C.hex('7a5236'), width=1.1, props_front=[_drooping_goblet()]).draw(p, 290, 598 + 17 * s, 100 * s)
+    zzz(p, 360, 236, 1.6)
+    for i in range(4):
+        grapes_at(p, (700 + i * 80, 590 + (i % 2) * 10), 1.8, AMETHYST, leaf=True)
 
 
 def revel_c_012(p):

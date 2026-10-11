@@ -17,6 +17,29 @@ static func enemy_name(faction: String, rng: RandomNumberGenerator) -> String:
 	return names[rng.randi_range(0, names.size() - 1)]
 
 
+## A wanderer whose name promises his deck: returns [name, theme_id] for one of the faith's
+## themes in data/themes.json (build the deck with DeckTools.themed_deck(theme_id, ...)).
+## A faith without themes gives a plain name and theme_id "".
+static func themed_name(faction: String, rng: RandomNumberGenerator) -> Array:
+	var ids: Array = DeckTools.themes_of(faction)
+	if ids.is_empty():
+		return [enemy_name(faction, rng), ""]
+	var tid: String = ids[rng.randi_range(0, ids.size() - 1)]
+	var names: Array = DeckTools.theme(tid).get("names", [])
+	if names.is_empty():
+		return [enemy_name(faction, rng), tid]
+	return [names[rng.randi_range(0, names.size() - 1)], tid]
+
+
+## The theme a wanderer's name belongs to ("" if none), for old saves that kept only the name.
+static func theme_for_name(enemy: String) -> String:
+	var all := DeckTools.themes()
+	for tid in all:
+		if all[tid].get("names", []).has(enemy):
+			return tid
+	return ""
+
+
 ## A little walled town with a spire and the faith's banner.
 static func draw_city(ci: CanvasItem, faction: String, visited: bool) -> void:
 	var c1 := Factions.color(faction)

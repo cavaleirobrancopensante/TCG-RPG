@@ -205,6 +205,7 @@ func _ready() -> void:
 	await _frames(2)
 	assert(GameState.load_game(2), "load slot 2")
 	print("save/load ok")
+	await _village_visit()
 	await _feast_errand()
 	# Draft tournament: enter, draft, build, one match, prize.
 	GameState.add_gold(400)
@@ -263,7 +264,7 @@ func _feast_errand() -> void:
 	_close_dialogs()
 	main._set_screen(null)
 	main._pause_world(false)
-	main._on_city_entered(offer["source"])
+	_enter_place(offer["source"])
 	await _frames(3)
 	assert(GameState.errand["state"] == "carry", "the goods are picked up at %s" % offer["source"])
 	_close_dialogs()
@@ -271,7 +272,7 @@ func _feast_errand() -> void:
 	main._pause_world(false)
 	# well out on the road back, the thief waits ahead
 	var w: Overworld = main.world
-	var sp := Vector2(GameState.city(offer["source"])["x"], GameState.city(offer["source"])["y"])
+	var sp := Vector2(GameState.place(offer["source"])["x"], GameState.place(offer["source"])["y"])
 	var dp := Vector2(GameState.city("santa_lucerna")["x"], GameState.city("santa_lucerna")["y"])
 	for t in [0.5, 0.45, 0.55, 0.4, 0.6, 0.35, 0.65]:
 		w.player_pos = w.nearest_walkable(sp.lerp(dp, t))
@@ -295,7 +296,7 @@ func _feast_errand() -> void:
 	assert(GameState.errand["state"] == "fetch" and not w.enemies.has(thief), "the thief takes the goods and goes")
 	main._set_screen(null)
 	main._pause_world(false)
-	main._on_city_entered(offer["source"])
+	_enter_place(offer["source"])
 	await _frames(3)
 	_close_dialogs()
 	main._set_screen(null)
@@ -310,6 +311,63 @@ func _feast_errand() -> void:
 	main._set_screen(null)
 	main._pause_world(false)
 	print("feast errand ok")
+
+
+## Into a city or a village, as walking there would.
+func _enter_place(id: String) -> void:
+	if not GameState.village(id).is_empty():
+		main._on_village_entered(id)
+	else:
+		main._on_city_entered(id)
+
+
+## Walk into a village on the map: its screen opens; the inn, the well (or chapel), the pedlar
+## and the gossip work; it is marked visited; leaving goes back to the road.
+func _village_visit() -> void:
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	var w: Overworld = main.world
+	var v: Dictionary = GameState.world_data["villages"][0]
+	var vp := Vector2(v["x"], v["y"])
+	w.player_pos = vp + Vector2(0, 200)
+	w.inside_village = ""
+	w.inside_city = ""
+	w.active = true
+	w.go_to(vp)
+	var t := 0.0
+	while not (main.screen is VillageScreen) and t < 10.0:
+		await _wait(0.25)
+		t += 0.25
+	assert(main.screen is VillageScreen, "walking into %s opens the village" % v["id"])
+	assert(GameState.visited_villages.has(v["id"]), "the village is marked visited")
+	var vs: VillageScreen = main.screen
+	await _frames(3)
+	assert(not vs.gossip.is_empty(), "there is gossip in the village")
+	GameState.gold = 500
+	GameState.life = maxi(1, GameState.max_life() - 3)
+	if v["faction"] == "sanctum":
+		vs._pray()
+	else:
+		vs._drink()
+	assert(GameState.well_used(v["id"]), "the well (or chapel) was used")
+	var stock := GameState.pedlar_stock(v["id"])
+	vs._buy(stock[0])
+	assert(GameState.pedlar_stock(v["id"]).size() == stock.size() - 1, "bought from the pedlar")
+	GameState.life = 1
+	await _frames(3)
+	var g0 := GameState.gold
+	GameState.rest_at_inn(v["id"])
+	assert(GameState.life == GameState.max_life() and GameState.gold < g0, "slept at the village inn")
+	vs._show()
+	await _frames(3)
+	vs._leave()
+	await _frames(3)
+	assert(main.screen == null and main.world.active, "leaving the village goes back to the road")
+	main.show_journal()
+	await _frames(2)
+	_close_dialogs()
+	print("village ok: ", v["name"])
 
 
 ## New game in slot 2, the starting boosters opened, the first deck built.

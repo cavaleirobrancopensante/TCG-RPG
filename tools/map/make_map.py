@@ -6,7 +6,7 @@ The map is 6000 x 4000 world units, painted at half scale in 3 x 2 tiles of 1000
 The walking grid has one cell per 25 world units:
     0 blocked (sea, lakes, rivers, mountains, lava)   1 open ground
     2 slow (forest, marsh)   3 road   4 bridge   5 ferry landing
-Cities and lairs come from data/world.json; roads, bridges, ferries and the geography are
+Cities and lairs come from data/world.json, the named villages from data/villages.json; roads, bridges, ferries and the geography are
 defined here and exported to data/map.json for the game.
 """
 import json
@@ -34,6 +34,8 @@ GW, GH = int(WW / CELL), int(WH / CELL)
 world = json.load(open(os.path.join(ROOT, 'data', 'world.json')))
 CITIES = {c['id']: (c['x'], c['y'], c['faction']) for c in world['cities']}
 LAIRS = {l['id']: (l['x'], l['y'], l['faction']) for l in world['lairs']}
+# the named villages one can enter (data/villages.json): painted as clusters of houses
+VILLAGES = {v['id']: (v['x'], v['y'], v['faction']) for v in json.load(open(os.path.join(ROOT, 'data', 'villages.json')))['villages']}
 
 rng = random.Random(2026)
 
@@ -104,6 +106,7 @@ FERRIES = [
 ]
 
 PLACES = [(x, y) for (x, y, _f) in CITIES.values()] + [(x, y) for (x, y, _f) in LAIRS.values()]
+VPLACES = [(x, y) for (x, y, _f) in VILLAGES.values()]
 
 
 def smooth(pts, n=12):
@@ -211,7 +214,7 @@ def is_mountain(p):
 
 def busy(p, r=90):
     """Keep scenery off roads, places, water."""
-    if near_any(p, PLACES, 260):
+    if near_any(p, PLACES, 260) or near_any(p, VPLACES, 150):
         return True
     for line in ROAD_LINES:
         if dist_to_polyline(p, line) < r:
@@ -504,6 +507,10 @@ def village(m, p, region=None):
         house(m, q, rng.uniform(0.9, 1.2), roof=roofs.get(region, VERMILION))
     if region == 'sanctum':
         church(m, (p[0] + 30, p[1] - 20), 1.1)
+    elif region == 'machine':
+        smokestack(m, (p[0] + 70, p[1] - 30), 0.8)
+    elif region == 'abyss':
+        gallows(m, (p[0] + 80, p[1] - 10), 0.7)
 
 
 def church(m, p, s=1.2):
@@ -792,8 +799,6 @@ def plan_scenery():
             items.append(['tree', p, rng.uniform(0.9, 1.3), kind])
     # landmarks of each faith
     marks = [
-        ('village', (2700, 1700)), ('village', (3350, 2400)), ('village', (2650, 600)), ('village', (3500, 950)),
-        ('village', (1350, 2250)), ('village', (4700, 2800)), ('village', (4750, 1550)), ('village', (1700, 3550)),
         ('windmill', (2450, 2100)), ('windmill', (3450, 1850)), ('windmill', (3300, 700)), ('windmill', (4850, 3300)),
         ('wayside_cross', (2850, 1050)), ('wayside_cross', (3250, 420)), ('wayside_cross', (2350, 780)), ('wayside_cross', (3700, 650)),
         ('church', (2400, 520)), ('church', (3600, 1000)),
@@ -807,6 +812,9 @@ def plan_scenery():
         if busy(p, 60) or is_water(p) or is_mountain(p):
             continue
         items.append([kind, p, None, None])
+    # the named villages, always painted where the game expects them
+    for (x, y, _f) in VILLAGES.values():
+        items.append(['village', (x, y), None, None])
     return items
 
 
@@ -855,6 +863,12 @@ def walk_grid():
         for gy in range(int((y - 140) / CELL), int((y + 140) / CELL) + 1):
             for gx in range(int((x - 140) / CELL), int((x + 140) / CELL) + 1):
                 if 0 <= gx < GW and 0 <= gy < GH and (gx * CELL - x) ** 2 + (gy * CELL - y) ** 2 < 140 ** 2 and g[gy, gx] in (0, 2):
+                    g[gy, gx] = 1
+    # villages stand on open ground too (a smaller green)
+    for (x, y) in VPLACES:
+        for gy in range(int((y - 100) / CELL), int((y + 100) / CELL) + 1):
+            for gx in range(int((x - 100) / CELL), int((x + 100) / CELL) + 1):
+                if 0 <= gx < GW and 0 <= gy < GH and (gx * CELL - x) ** 2 + (gy * CELL - y) ** 2 < 100 ** 2 and g[gy, gx] == 2:
                     g[gy, gx] = 1
     # ferry landings
     for a, b, _price in FERRIES:
@@ -934,7 +948,7 @@ def main():
 
 
 def check_reachable(g):
-    """Every city, lair and ferry landing must be reachable from Cogspire on foot or by ferry."""
+    """Every city, lair, village and ferry landing must be reachable from Cogspire on foot or by ferry."""
     from collections import deque
 
     def cell(p):
@@ -960,7 +974,7 @@ def check_reachable(g):
                 if cell(x) in seen and cell(y) not in seen:
                     flood(cell(y), seen)
                     grew = True
-    bad = [name for name, p in list(CITIES.items()) + list(LAIRS.items()) if cell(p[:2]) not in seen]
+    bad = [name for name, p in list(CITIES.items()) + list(LAIRS.items()) + list(VILLAGES.items()) if cell(p[:2]) not in seen]
     assert not bad, 'unreachable: %s' % bad
 
 

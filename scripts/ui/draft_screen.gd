@@ -14,6 +14,7 @@ var sub: Label
 var picks_box: VBoxContainer
 var take_btn: Button
 var chosen := -1
+var drag: DragScroll              # drag over the pack (finger or mouse) to scroll it
 
 
 func _ready() -> void:
@@ -48,6 +49,7 @@ func _ready() -> void:
 	grid.add_theme_constant_override("h_separation", 10)
 	grid.add_theme_constant_override("v_separation", 10)
 	scroll.add_child(grid)
+	drag = DragScroll.attach(self, scroll)
 
 	var right := PanelContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -63,6 +65,7 @@ func _ready() -> void:
 	picks_box = VBoxContainer.new()
 	picks_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	ps.add_child(picks_box)
+	DragScroll.attach(self, ps)
 	_refresh()
 
 
@@ -81,8 +84,12 @@ func _refresh() -> void:
 		var e: Dictionary = pack[i]
 		var cv := CardView.create(e["id"], SCALE, e.get("foil", false))
 		var idx := i
-		cv.tapped.connect(func(_c): _choose(idx))
-		cv.long_pressed.connect(func(_c): _read(idx))
+		cv.tapped.connect(func(_c):
+			if not drag.dragged:
+				_choose(idx))
+		cv.long_pressed.connect(func(_c):
+			if not drag.dragged:
+				_read(idx))
 		grid.add_child(cv)
 	_fill_picks()
 

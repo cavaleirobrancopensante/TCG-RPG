@@ -1,18 +1,18 @@
 ## The Holy Church (W)
 
-The Holy Church plays the long game. It holds the ground with guardians, outlasts the enemy with life gain and lifelink, and punishes only those who strike first, since its removal hits tapped creatures or pacifies them. The congregation grows stronger through anthems and martyrdom, and many cards reward staying in Grace, with more life than you started the duel with.
+The Holy Church plays the long game. It holds the ground with sturdy bodies and martyrs whose deaths strengthen those left behind, outlasts the enemy with life gain and lifelink, and punishes only those who strike first, since its removal hits tapped creatures or pacifies them. The congregation grows stronger through anthems and martyrdom, and many cards reward staying in Grace, with more life than you started the duel with.
 
-**Lantern-Bearer Acolyte** · Common · Creature (Human Cleric) · W · 1/2 · Guardian (blocks as if it had +0/+2).
-The Church's first turn play: a 1/2 that blocks as a 1/4, so early attackers bounce off it, while its single point of power keeps it from being an aggressive threat. It tells the player at once that this faith holds the line. Acolytes were one of the minor orders, and carrying lit candles in procession was their office.
+**Lantern-Bearer Acolyte** · Common · Creature (Human Cleric) · W · 1/2 · Martyr (when this dies, another creature you control gets +1/+1).
+The Church's first turn play: a cheap 1/2 that trades with early attackers, and when it dies it leaves +1/+1 on another creature of your choice, so even its death strengthens the line. Its single point of power keeps it from being an aggressive threat, and it teaches Martyr from the first turn. Acolytes were one of the minor orders, and carrying lit candles in procession was their office.
 
 **Cloister Dove** · Common · Creature (Bird) · W · 1/1 · Flying (can only be blocked by creatures with flying or reach).
 A one mana 1/1 flier, the smallest piece of the Church's air force. It chips in a point each turn while the ground is locked up, and it can stand in front of an enemy flier in a pinch. The dove is the image of the Holy Spirit and a fixture of every cloister garth, which earns it wings at common where angels would be too much.
 
-**Novice of the Choir** · Common · Creature (Human Nun) · 1W · 1/3 · When this enters, gain 2 life.
-A sturdy two drop that trades a point of power for a 1/3 body and 2 life. It slows early aggression and, just as important, pushes the Church above its starting life so Grace switches on early. The novice learning the sung Office is a young religious in a traditional role, and her singing is a quiet weapon against evil.
+**Novice of the Choir** · Common · Creature (Human Monk) · 1W · 1/3 · When this enters, gain 2 life.
+A sturdy two drop that trades a point of power for a 1/3 body and 2 life. It slows early aggression and, just as important, pushes the Church above its starting life so Grace switches on early. The novice learning the sung Office is a young monk in his first years in the choir, and his chant is a quiet weapon against evil.
 
-**Cloister Gatewarden** · Common · Creature (Human Monk) · 1W · 2/2 · Guardian (blocks as if it had +0/+2).
-An on rate 2/2 that blocks as a 2/4. Unlike the Acolyte it can still attack for real damage, which keeps Church decks from being purely passive. The porter was an honoured office in the Rule of Saint Benedict, the brother who answers the gate and lets no stranger pass unannounced.
+**Cloister Gatewarden** · Common · Creature (Human Monk) · 1W · 2/2 · Martyr (when this dies, another creature you control gets +1/+1).
+An on rate 2/2 with Martyr. Unlike the Acolyte it can still attack for real damage, and whenever it falls the +1/+1 it leaves behind keeps the trade in the Church's favour, which keeps Church decks from being purely passive. The porter was an honoured office in the Rule of Saint Benedict, the brother who answers the gate and lets no stranger pass unannounced.
 
 **Martyr of the Pilgrim Road** · Common · Creature (Human Pilgrim) · 1W · 2/1 · When this dies, gain 3 life.
 The Church's aggressive two drop and the simplest form of martyrdom. A 2/1 trades easily, but every trade leaves 3 life behind, so the opponent never wins the exchange cleanly. The pilgrim roads, Compostela above all, were lined with shrines to travellers who died on the way.
@@ -27,10 +27,10 @@ The standard common flier, a 2/2 for three, and one of the few angels allowed at
 This card teaches Grace at common. A 2/3 for three is a little under rate, but once you are above your starting life he becomes a 3/4, a full point over. The knightly orders were founded to guard pilgrims, and the liturgical seasons in the flavour place him in the rhythm of the Church year.
 
 **Thurifer of the Procession** · Common · Creature (Human Cleric) · 2W · 2/2 · When this dies, target creature you control gets +1/+1 permanently.
-Martyrdom that passes strength on rather than life. A 2/2 for three is below rate, but its death leaves a permanent +1/+1 on a friend, so it trades as a card and a half. The thurifer carries the censer at the head of a procession, and incense rising is the old image of prayer going up to God.
+Martyrdom that passes strength on rather than life, older than the Martyr keyword and spelled out in full. A 2/2 for three is below rate, but its death leaves a permanent +1/+1 on a friend, so it trades as a card and a half. The thurifer carries the censer at the head of a procession, and incense rising is the old image of prayer going up to God.
 
-**Abbey Man-at-Arms** · Common · Creature (Human Soldier) · 3W · 3/4 · Guardian (blocks as if it had +0/+2).
-A 3/4 for four that blocks as a 3/6, a real wall against the Old Ways and the Revel. On offence he is slightly under rate, which is the right price for that defence. Abbeys kept armed retainers, and the flavour shows force in the service of charity: he guards orphans, not glory.
+**Abbey Man-at-Arms** · Common · Creature (Human Soldier) · 3W · 3/4 · Martyr (when this dies, another creature you control gets +1/+1).
+A 3/4 for four with Martyr, a real wall against the Old Ways and the Revel, and when he finally falls another creature of your choice carries on with +1/+1. On offence he is slightly under rate, which is the right price for that staying power. Abbeys kept armed retainers, and the flavour shows force in the service of charity: he guards orphans, not glory.
 
 **Knight Hospitaller** · Common · Creature (Human Knight) · 3W · 3/3 · Lifelink (damage this deals also gains you that much life).
 A 3/3 lifelinker for four, a point under a vanilla body to pay for the keyword. He is the common that makes long races hopeless for the opponent and keeps the Church in Grace. The Knights of the Hospital of Saint John were both nurses and soldiers, which is exactly this card.
@@ -57,16 +57,16 @@ The Church's main common removal, rebuilt for set 2. It can kill anything, howev
 A one mana relic that gains a life every turn. It never affects the board, but played early it puts you into Grace by your second turn and keeps you there. The rack of votive candles before a saint's statue is one of the most familiar sights in any church.
 
 **Holy Water Stoup** · Common · Relic (Relic) · 1W · 2, Tap: target creature you control gets +0/+1 permanently.
-A slow mana sink for the late game. Each use adds a point of toughness, so walls and guardians grow out of reach of burn and combat. It costs a card and three mana a turn to matter, which keeps it a common. The stoup by the church door holds the holy water with which the faithful bless themselves.
+A slow mana sink for the late game. Each use adds a point of toughness, so walls and blockers grow out of reach of burn and combat. It costs a card and three mana a turn to matter, which keeps it a common. The stoup by the church door holds the holy water with which the faithful bless themselves.
 
 **Processional Cross** · Common · Relic (Relic) · 2W · Creatures you control get +0/+1.
 The common anthem, small and defensive: one more toughness for the whole congregation. It turns 2/2s into 2/3s and many trades into survivals, which suits a faith that wins by outlasting. In every procession the cross is carried at the head, and the people walk behind it together.
 
-**Sister of Mercy** · Uncommon · Creature (Human Nun) · 2W · 2/3 · Lifelink. When this enters, gain 2 life.
-A strong three drop for life decks: a 2/3 lifelinker with 2 life up front. It is about a mana better than a vanilla 2/3, which suits an uncommon, and it nearly guarantees Grace on turn three. She is a nursing sister in the tradition of the hospital orders, showing the universal charity of the Church.
+**Brother of Mercy** · Uncommon · Creature (Human Monk) · 2W · 2/3 · Lifelink. When this enters, gain 2 life.
+A strong three drop for life decks: a 2/3 lifelinker with 2 life up front. It is about a mana better than a vanilla 2/3, which suits an uncommon, and it nearly guarantees Grace on turn three. He is a nursing brother in the tradition of the hospital orders, and the flavour is the end of the parable of the Good Samaritan: the universal charity of the Church.
 
 **Martyr of the Far Mission** · Uncommon · Creature (Human Friar) · 1W · 1/2 · When this dies, pacify target enemy creature (it can't attack for the rest of the duel).
-A two drop that punishes whoever kills it: when it dies, an enemy creature can never attack again. Opponents must choose between leaving a blocker alone and losing their best attacker. The missionary friar whose death converts his killer is a story told of many martyrs in the far missions, and it is martyrdom as victory.
+A two drop that punishes whoever kills it: when it dies, an enemy creature can never attack again. Opponents must choose between leaving a blocker alone and losing the attacker its owner picks out for pacifying. The missionary friar whose death converts his killer is a story told of many martyrs in the far missions, and it is martyrdom as victory.
 
 **Templar of the Red Cross** · Uncommon · Creature (Human Knight) · 2W · 3/2 · Sanctified (protection from the Pact). Whenever this attacks, gain 1 life.
 The Church's cheapest sanctified creature, a 3/2 attacker that Pact decks cannot block, target or damage. Each attack also gains a life, so he pushes toward Grace while pressing the opponent. The Latin is the Templars' motto from Psalm 113: not to us, O Lord, but to Thy name give glory.
@@ -77,13 +77,13 @@ An anthem on a body, and the uncommon that ties the congregation theme to Grace.
 **Inquisitor of the Pale Flame** · Uncommon · Creature (Human Priest Inquisitor) · 3W · 3/3 · When this enters, destroy target tapped enemy creature.
 The classic uncommon two for one, rebuilt so that it only answers creatures that attacked. On rate 3/3 stats for four plus removal is strong, but the opponent can play around it by holding back. The flavour treats the inquisitor as a patient seeker of truth, not a caricature, which fits the reverent tone. In 1.25 he joins the Priest tribe, since the inquisitors of the Church were ordained clergy, most often Dominican friars in holy orders.
 
-**Guardian Angel of the Parish** · Uncommon · Creature (Angel) · 3W · 2/4 · Flying, guardian.
-A defensive flier that blocks as a 2/6 in the air or on the ground. Two keywords on a four mana body leaves him with little power, so he guards more than he kills. The flavour is the opening of the traditional prayer to one's guardian angel, which every Catholic child learns.
+**Guardian Angel of the Parish** · Uncommon · Creature (Angel) · 3W · 2/4 · Flying, martyr.
+A defensive flier, a 2/4 that holds the air, and when he falls he leaves +1/+1 on another creature of your choice. Two keywords on a four mana body leave him with little power, so he guards more than he kills. The flavour is the opening of the traditional prayer to one's guardian angel, which every Catholic child learns.
 
 **Angel of Compline** · Uncommon · Creature (Angel) · 4W · 3/4 · Flying. As long as you have more life than you started with, this has lifelink.
 A five mana 3/4 flier that gains lifelink in Grace, so the richer you are, the faster you pull away. Without Grace he is a fair evasive body, and with it he is a strong one. Compline is the last hour of the Divine Office before sleep, and the flavour comes from its closing prayer asking the holy angels to guard the house through the night.
 
-**Smite the Proud** · Uncommon · Spell (Exorcism) · Instant · 2W · Destroy target tapped enemy creature with power 4 or greater.
+**Smite the Proud** · Uncommon · Spell (Exorcism) · 2W · Destroy target tapped enemy creature with power 4 or greater.
 The mirror of Rebuke the Wicked: three mana to kill a big creature, provided it has tapped. Since 1.23 it is an instant, so it answers a big attacker in the middle of combat, and it costs one more for that. It stays cheap because it is narrow, useless against small creatures and anything that stays home. The flavour is from the Magnificat, sung every day at Vespers, and humbling the proud is the whole point of the card.
 
 **Truce of God** · Uncommon · Spell (Blessing) · 2W · Pacify target enemy creature (it can't attack for the rest of the duel). Gain 3 life.
@@ -92,7 +92,7 @@ A heavier Sign of Peace that also gains 3 life, so it stops an attacker and push
 **Te Deum** · Uncommon · Spell (Prayer) · 3W · Gain 3 life. Then, if you have more life than you started with, creatures you control get +1/+1 permanently.
 A one shot team pump that only works in Grace, with the 3 life usually making sure it does. Four mana for 3 life and a permanent +1/+1 on everything is strong on a wide board and weak on an empty one, which is the right risk for an uncommon. The Te Deum is the ancient hymn of thanksgiving sung at Matins and on great occasions of the Church.
 
-**Litany of the Saints** · Uncommon · Spell (Prayer) · Instant · 2W · Creatures you control get +0/+2 permanently.
+**Litany of the Saints** · Uncommon · Spell (Prayer) · 2W · Creatures you control get +0/+2 permanently.
 A defensive team blessing that lasts for the rest of the duel, and since 1.23 an instant, cast in the middle of combat to turn the enemy's attack into a bad trade. Extra toughness rarely wins a race but it wins many combats, and it makes the board resistant to burn and sweepers. The Litany of the Saints calls on the whole Communion of Saints by name, and each answer of pray for us is a little more strength for the line.
 
 **Icon of the Heavenly Host** · Uncommon · Relic (Relic) · 2W · Angels you control get +1/+1.
@@ -101,8 +101,8 @@ A small tribal anthem for the Church's angels. Angels are spread across every ra
 **Monstrance of the Blessed Sacrament** · Uncommon · Relic (Relic) · 3W · As long as you have more life than you started with, creatures you control have lifelink.
 A Grace engine: while you are ahead of your starting life, every creature gains you life, which keeps you in Grace. It does nothing if you fall behind, so it rewards the patient Church player and punishes the one who gets rushed. The monstrance displays the consecrated Host for adoration, and the flavour is the opening of the hymn O Salutaris Hostia.
 
-**Abbess of the Silent Order** · Rare · Creature (Human Nun) · 2WW · 2/4 · When this enters, gain 3 life. When this dies, other creatures you control get +1/+1 permanently.
-The rare martyr. She stabilises when she arrives, and her death makes the whole congregation stronger for good, so opponents would rather leave her alone. A 2/4 body with two strong triggers for four mana is a build around for wide Church boards. The silent order evokes the Carthusians and Trappists, and the card recalls Tertullian: the blood of the martyrs is the seed of the Church.
+**Abbot of the Silent Order** · Rare · Creature (Human Monk Priest) · 2WW · 2/4 · When this enters, gain 3 life. When this dies, other creatures you control get +1/+1 permanently.
+The rare martyr. He stabilises when he arrives, and his death makes the whole congregation stronger for good, where the Martyr keyword blesses only one, so opponents would rather leave him alone. A 2/4 body with two strong triggers for four mana is a build around for wide Church boards. The silent order evokes the Carthusians and Trappists, and the card recalls Tertullian: the blood of the martyrs is the seed of the Church.
 
 **Seraph of the Dawn Watch** · Rare · Creature (Angel) · 2WW · 3/4 · Flying, sanctified.
 A four mana 3/4 flier that the Pact simply cannot touch: no targeting, no blocking, no damage. Against other faiths he is a clean, strong evasive threat. Vigilance from set 1 is now a Stoa keyword, so sanctified takes its place. Seraphim are the highest of the nine choirs, and a seraph watching over the cathedral is a fine image of the guardian angels of places.
@@ -110,11 +110,11 @@ A four mana 3/4 flier that the Pact simply cannot touch: no targeting, no blocki
 **Knight of the Holy Grail** · Rare · Creature (Human Knight) · 1WW · 2/2 · As long as you have more life than you started with, this gets +2/+2 and has lifelink.
 The rare Grace payoff on a three drop. Out of Grace he is a plain 2/2, but in Grace he is a 4/4 lifelinker, and lifelink keeps him there. It rewards Church decks that gain life early and punishes them if they fall behind. The Grail knights, Galahad above all, found the Grail through purity rather than strength.
 
-**Castellan of the Krak** · Rare · Creature (Human Knight) · 3W · 3/3 · Other creatures you control have guardian.
-A defensive build around: every other creature you control blocks with +0/+2. Combined with anthems and toughness blessings, the Church board becomes a fortress that attackers break against. His own 3/3 body for four is fair, and he is the card the opponent must deal with before attacking. Krak des Chevaliers was the great castle of the Knights Hospitaller in Syria, held for over a century.
+**Castellan of the Krak** · Rare · Creature (Human Knight) · 3W · 2/3 · Other creatures you control have martyr.
+A build around for the congregation: every other creature you control has Martyr, so each one that dies passes +1/+1 to a survivor. Trades stop costing the Church anything, and combined with anthems and toughness blessings the board grows stronger with every loss. His own 2/3 body for four is under rate, which pays for the effect, and he is the card the opponent must deal with before attacking. Krak des Chevaliers was the great castle of the Knights Hospitaller in Syria, held for over a century.
 
-**Grand Prior of the Hospital** · Rare · Creature (Human Knight) · 3WW · 4/5 · Guardian, lifelink.
-The Church's rare top end creature. A 4/5 for five that blocks as a 4/7 and gains life every time he deals damage, attacking or blocking, which makes racing the Church nearly impossible. Two keywords on a five mana body put him slightly above rate, which suits a rare. The Hospitaller Rule called the sick our lords, and the knights served them as vassals serve a king.
+**Grand Prior of the Hospital** · Rare · Creature (Human Knight) · 3WW · 4/5 · Martyr, lifelink.
+The Church's rare top end creature. A 4/5 for five that gains life every time he deals damage, attacking or blocking, which makes racing the Church nearly impossible, and if he does fall, his Martyr blessing passes to another creature. Two keywords on a five mana body put him slightly above rate, which suits a rare. The Hospitaller Rule called the sick our lords, and the knights served them as vassals serve a king.
 
 **Rite of Exorcism** · Rare · Spell (Exorcism) · 3W · Destroy target tapped enemy creature. Then pacify target enemy creature (it can't attack for the rest of the duel).
 A rare two for one: one attacker is destroyed and a second is pacified for good. Four mana for two answers is strong, but the first half still needs a tapped target, so the opponent who never attacks blunts it. The Latin is from the Roman Ritual's rite of exorcism, and the flavour stresses that evil, however old, must obey the Church's command.
@@ -159,7 +159,7 @@ A permanent +2/+2, priced at three mana and limited to Knights, so it is a littl
 **Hospital of Saint John** · Common · Relic (Relic) · 1W · Whenever a Knight enters under your control, gain 2 life.
 A cheap tribal engine that turns every Knight into a small Asperges. It rewards a dense Knight deck with steady life and switches Grace on early for cards like Knight of the Pilgrim Way. The great Hospital of the Order of Saint John in Jerusalem cared for pilgrims of every nation, and its sisters nursed beside the brothers; this is the one card where a nursing sister appears, unarmed and at her work.
 
-**Gloria in Excelsis** · Common · Spell (Prayer) · Instant · 1W · Gain 2 life for each Angel you control.
+**Gloria in Excelsis** · Common · Spell (Prayer) · 1W · Gain 2 life for each Angel you control.
 An instant that scales with the choir: with two Angels it is four life for two mana, with none it does nothing. At instant speed it can answer burn or keep Grace on through the enemy's turn, but it never touches the board. The Gloria is the hymn of the angels to the shepherds at Bethlehem, sung at every festive Mass.
 
 **Preceptor of the Commandery** · Uncommon · Creature (Human Knight) · 2W · 2/3 · Your Knight creature cards cost 1 less to play (1 less generic mana).
@@ -168,19 +168,19 @@ The Knight deck's accelerant: from the turn after him, two drops cost one and th
 **War Banner of the Temple** · Uncommon · Relic (Relic) · 2W · Knights you control get +1/+1.
 The Knight twin of Icon of the Heavenly Host, a tribal anthem at three mana. It is fragile to the Old Ways' relic removal and does nothing without Knights, which is the right price. The Beauceant, the black and white banner of the Templars, was the rallying point in battle, and while it flew no brother was permitted to leave the field.
 
-**Angel of the Choir of Virtues** · Uncommon · Creature (Angel) · 3W · 2/3 · Flying. This gets +1/+1 for each other Angel you control.
+**Angel of the Choir of Virtues** · Uncommon · Creature (Angel) · 3W · 2/3 · Flying (can only be blocked by creatures with flying or reach). This gets +1/+1 for each other Angel you control.
 A 2/3 flier for four that grows by +1/+1 for each other Angel, so in a choir of three it is a 4/5 in the air. Full kinship is uncommon strength and needs a committed deck. The Virtues are the fifth of the nine choirs in the hierarchy of Pseudo-Dionysius, the angels through whom miracles are worked.
 
-**Angel of the Dominions** · Uncommon · Creature (Angel) · 2W · 1/3 · Flying. Whenever another Angel enters under your control, gain 2 life.
+**Angel of the Dominions** · Uncommon · Creature (Angel) · 2W · 1/3 · Flying (can only be blocked by creatures with flying or reach). Whenever another Angel enters under your control, gain 2 life.
 A cheap blocker in the air that turns every later Angel into a life gain spell. It holds off early fliers and pushes the Church into Grace for its Angel payoffs. The Dominions are the fourth choir, who govern the duties of the lower angels; the art crowns him and gives him the sceptre, as tradition does.
 
-**Angelic Intercession** · Uncommon · Spell (Prayer) · Instant · 2W · Creatures you control get +0/+2 until end of turn. Gain 1 life for each Angel you control.
+**Angelic Intercession** · Uncommon · Spell (Prayer) · 2W · Creatures you control get +0/+2 until end of turn. Gain 1 life for each Angel you control.
 The Church's combat trick, and so an instant: it saves the whole team from a bad block or a burn spell and gains a little life for each Angel. It only adds toughness, because temporary power for the team is the Revel's. The flavour is the guardian angel's office of turning aside harm that the guarded man never sees.
 
 **Grand Master of the Temple** · Rare · Creature (Human Knight) · 2WW · 3/3 · Sanctified (protection from the Pact). Other Knights you control get +1/+1 and have sanctified.
 The Knight lord. Every other Knight gets +1/+1 and protection from the Pact, so against the Black Pact a Knight army walks through their blockers and removal. His own 3/3 body for four dies to ordinary damage, which keeps him answerable. The flavour is the Templars' motto from Psalm 113, and the abacus he holds was the staff of the Grand Master's office.
 
-**Saint Raphael, Medicine of God** · Rare · Creature (Angel) · 3WW · 3/4 · Flying. When this enters, gain 2 life for each Angel you control.
+**Saint Raphael, Medicine of God** · Rare · Creature (Angel) · 3WW · 3/4 · Flying (can only be blocked by creatures with flying or reach). When this enters, gain 2 life for each Angel you control.
 The Angel deck's rare: a 3/4 flier for five that gains at least two life and usually six or eight. It stabilises a losing board and switches Grace on for many turns. Raphael's name means God heals; in the Book of Tobit he walks with young Tobias, tells him to take the fish from the Tigris, and heals his father's blindness with it, and the flavour is his own word in Tobit 12:15.
 
 **Saint Michael the Archangel** · Mythic · Creature (Angel) · 4WW · 4/5 · Flying, sanctified (protection from the Pact). Other Angels and Knights you control get +1/+1.
@@ -193,7 +193,7 @@ The Church's third tribe is the **Priest**: the parish priest, the confessor, th
 **Parish Priest of the Valley** · Common · Creature (Human Priest) · 1W · 1/1 · When this enters, target creature you control gets +1/+1 permanently.
 The tribe's cheap member: a 1/1 for two that leaves a permanent +1/+1 behind, so it is a Sacrament of Confirmation with a small body instead of the life. Played on an empty board he blesses himself into a 2/2, which is still on rate. A blessing at common keeps the third tribe in the Church's niche of permanent growth. The country priest who blesses the seed at Rogationtide and the harvest in autumn, and knows his flock by name, is the backbone of Catholic life.
 
-**Absolution Before Battle** · Common · Spell (Sacrament) · Instant · 1W · Target creature you control gets +0/+3 until end of turn. Gain 1 life for each Priest you control.
+**Absolution Before Battle** · Common · Spell (Sacrament) · 1W · Target creature you control gets +0/+3 until end of turn. Gain 1 life for each Priest you control.
 The tribe's one instant and its counting spell: a protective trick that saves a creature from a block or a burn spell, with a little life for each Priest. It adds only toughness, because temporary power is the Revel's and single creature pumps belong to the Old Ways, and it is a point dearer than a sorcery would be. General absolution given to soldiers before battle is an old practice of the Church, and the flavour opens with the words of absolution.
 
 **Confessor of the Cathedral** · Uncommon · Creature (Human Priest) · 2W · 2/3 · Sanctified (protection from the Pact). When this enters, gain 2 life.

@@ -53,13 +53,13 @@ A four point swing for two mana. It is reach for drain decks and does nothing to
 **Dread Whisper** · Common · Spell (Curse) · 2B · The enemy discards two cards at random.
 Two cards at random for three mana, the classic common hand attack. It was a little cheap at two mana in the first set, so it moves to three and to common. Undoing every plan with a single word in the night is the tempter's work.
 
-**Unquiet Grave** · Common · Spell (Necromancy) · 3B · Return your best creature card with mana value 3 or less from your graveyard to play.
+**Unquiet Grave** · Common · Spell (Necromancy) · 3B · Return target creature card with mana value 3 or less from your graveyard to play.
 Common reanimation, held to creatures of mana value 3 or less so it brings back a Chanter or a Glutton rather than a demon. Four mana for a returned three-drop is fair card advantage in a long game. The flavour makes the point that the Pact does not respect the rest of the dead.
 
-**Black Altar** · Common · Relic · 1B · Sacrifice a creature: the enemy player loses 1 life and you gain 1 life.
+**Black Altar** · Common · Relic (Relic) · 1B · Sacrifice a creature: the enemy player loses 1 life and you gain 1 life.
 A cheap sacrifice outlet that turns every creature about to die into a point of drain. It does nothing alone, which keeps it a common, but with Initiates and Restless Dead it becomes a steady leak of the enemy's life. The black altar is the heart of the Pact's worship, and its stone is never dry.
 
-**Gibbet of the Forsworn** · Common · Relic · 2B · Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.
+**Gibbet of the Forsworn** · Common · Relic (Relic) · 2B · Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.
 A slow, life-hungry removal engine: 1 life a turn to shrink an enemy creature. It kills x/1s and swings combats, and the life cost makes it a real decision every turn. A gibbet hanging an oathbreaker in the wind is a warning to every man who passes below.
 
 **Bone-Priest of the Pact** · Uncommon · Creature (Human Cultist) · 1B · 1/2 · Sacrifice another creature: draw a card and you lose 1 life.
@@ -80,7 +80,7 @@ A 2/2 for four that strips a card when it enters and another when it dies. The w
 **Blood-Bound Reaver** · Uncommon · Creature (Human Warrior) · 3B · 3/3 · Pay 2 life: this gets +1/+1 until end of turn.
 An on-rate 3/3 for four that can grow as long as its owner will bleed for it. The ability has no limit, so it threatens a big hit, but every point costs two life and walks you toward the grave. A warrior who takes every wound on credit is the pact made flesh.
 
-**Grave Summoner** · Uncommon · Creature (Human Necromancer) · 4B · 2/3 · When this enters, return your best creature card with mana value 4 or less from your graveyard to play.
+**Grave Summoner** · Uncommon · Creature (Human Necromancer) · 4B · 2/3 · When this enters, return target creature card with mana value 4 or less from your graveyard to play.
 Value reanimation on a weak body. It now returns only creatures of mana value 4 or less, as the first set notes suggested, so it cannot bring back a mythic on turn five. The necromancer's line shows the Pact's contempt for the rest of the dead.
 
 **Unmaking Rite** · Uncommon · Spell (Curse) · 2B · Destroy target enemy creature. You lose 2 life.
@@ -92,13 +92,13 @@ A symmetric sweeper: every creature gets -2/-2 until end of turn. It wipes out t
 **The Debt Comes Due** · Uncommon · Spell (Curse) · 2B · If you have 10 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.
 Drain 2 for three mana, doubled to drain 4 if you are Bloodied when you cast it. It is the comeback card of the faith: weak when healthy, strong when the price has already been paid. The contract written very small is the faith's whole method.
 
-**Chalice of Black Vows** · Uncommon · Relic · 2B · At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.
+**Chalice of Black Vows** · Uncommon · Relic (Relic) · 2B · At the beginning of your upkeep, the enemy player loses 1 life and you gain 1 life.
 A drain clock: two points of swing each turn for three mana. It is slow and does nothing to the board, so it fits uncommon. A chalice that is never empty and whose contents no one asks about inverts the cup of the altar, and the inversion is meant to look evil.
 
-**Knife of the Black Tithe** · Uncommon · Relic · 2B · Sacrifice a creature: target enemy creature gets -2/-2 until end of turn.
+**Knife of the Black Tithe** · Uncommon · Relic (Relic) · 2B · Sacrifice a creature: target enemy creature gets -2/-2 until end of turn.
 A sacrifice outlet that turns your creatures into shrink effects. It makes chump blocks into removal and gives Restless Dead tokens a second job. The tithe of the pit is one life for the knife and one for the curse, and the flavour says so.
 
-**Censer of Bitter Ash** · Uncommon · Relic · 2B · Tap, pay 2 and 2 life: the enemy discards a card at random.
+**Censer of Bitter Ash** · Uncommon · Relic (Relic) · 2B · Tap, pay 2 and 2 life: the enemy discards a card at random.
 Repeatable hand attack at a steep price: two mana and 2 life for each random discard. It grinds out long games and is too slow to matter in short ones. The censer mocks the incense of the sanctuary, carrying thoughts away instead of prayers up, a profanation that shows its evil plainly.
 
 **Oathbreaker Knight** · Rare · Creature (Human Knight) · 2B · 3/3 · As long as you have 10 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.
@@ -116,7 +116,7 @@ A durable defensive engine: a deathtouch 3/5 that drains a point every upkeep. I
 **Bone-Lord of the Ossuary** · Rare · Creature (Skeleton) · 4B · 3/3 · Other Skeletons you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.
 The Skeleton build-around (since 1.25; he was a Zombie lord before and is now redrawn as a crowned skeleton). He strengthens the other Skeletons and can turn any creature, for B and a sacrifice, into a 2/2 Restless Dead Zombie, which feeds the Zombies' payoffs instead of his own anthem. The anthem is restricted to Skeletons, so it does not tread on the Church's team-wide anthems. A lord whose walls are lined with the skulls of his kneeling subjects shows the rule of the pit.
 
-**Profane Resurrection** · Rare · Spell (Necromancy) · 2B · Return your best creature card from your graveyard to play. You lose 4 life.
+**Profane Resurrection** · Rare · Spell (Necromancy) · 2B · Return target creature card from your graveyard to play. You lose 4 life.
 Unrestricted reanimation for three mana and 4 life. It can bring back a demon lord, so the life price is high and the card sits at rare. The flavour calls it a mockery of the true rising, which keeps the necromancy plainly evil.
 
 **Night of Unmaking** · Rare · Spell (Curse) · 3BB · Destroy all creatures.
@@ -125,13 +125,13 @@ Destroy all creatures for five mana, the Pact's sweeper. It is the faith of unco
 **Rite of the Emptied Mind** · Rare · Spell (Curse) · 1BB · The enemy discards three cards at random. You lose 3 life.
 Three random discards for three mana and 3 life, a heavy hand attack that can empty a player's options in one stroke. The randomness and the life keep it from being oppressive. The order of loss in the flavour, friends then prayers then the reason for prayer, is the path of despair.
 
-**Ledger of the Damned** · Rare · Relic · 3B · Tap: draw a card and you lose 1 life.
+**Ledger of the Damned** · Rare · Relic (Relic) · 3B · Tap: draw a card and you lose 1 life.
 The repeatable draw engine, kept at rare as the spec asks. A card a turn for 1 life is strong, but it does nothing to the board and it drains its owner steadily into Bloodied range. Every page a soul, every soul overdue: the Pact as a moneylender of the damned.
 
 **Belzareth, Prince of Cinders** · Mythic · Creature (Demon Lord) · 4BB · 5/5 · Dread. When this enters, destroy target enemy creature and you lose 3 life.
 The faith's bomb, rebalanced. He keeps his removal on entry, loses the death drain, trades flying for dread, and now costs 3 life when he arrives. A 5/5 evasive body plus a kill is still a mythic swing, but the price is real. The name echoes Beelzebub, and the earth forgetting it was ever green shows him as blight, not glamour.
 
-**Malgrith, Lich of the Black Ledger** · Mythic · Creature (Lich) · 4BB · 5/5 · When this enters, return your best creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.
+**Malgrith, Lich of the Black Ledger** · Mythic · Creature (Lich) · 4BB · 5/5 · When this enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.
 The long-game mythic: a 5/5 for six that brings back a creature of mana value 4 or less and then draws a card every upkeep for a point of life. The reanimation limit means he cannot return himself or Belzareth, so he is splashy but not endless. A lich who outlives his debtors and collects from their sons is the pact passed down the generations.
 
 **The Black Contract** · Mythic · Relic (Pact) · 2BB · Enemy creatures get -1/-1. At the beginning of your upkeep, you lose 1 life.
@@ -174,7 +174,7 @@ An on-rate 3/3 that grows permanently with every Skeleton that arrives, reanimat
 **Brimstone Exhalation** · Uncommon · Spell (Curse) · 2BB · All enemy creatures get -1/-1 until end of turn for each Demon you control.
 A one-sided sweeper that only works for a player committed to Demons: with one it clears tokens, with two or three it clears a board. Four mana and the need for a board in play keep it from being a plain wrath. Sulphur and choking fumes are the smell of hell in every medieval vision of it.
 
-**Corpse-Bell of the Barrow** · Uncommon · Relic · 2B · Whenever another Zombie enters under your control, the enemy player loses 1 life and you gain 1 life.
+**Corpse-Bell of the Barrow** · Uncommon · Relic (Relic) · 2B · Whenever another Zombie enters under your control, the enemy player loses 1 life and you gain 1 life.
 The Zombie drain engine (re-aimed in 1.25; the hands answering it are now rotting ones). Restless Dead tokens from death and sacrifice, grave returns and cheap shamblers each tip the race by two, so the relic is strong only in a deck built for it. A bell cast to ring the dead to rest and recast to wake them is a plain profanation, and the flavour says so.
 
 **Barrow-King of the Hollow Hills** · Rare · Creature (Skeleton Lord) · 3BB · 4/4 · Other Skeletons you control have dread (they can only be blocked by Pact creatures and Constructs).
