@@ -216,6 +216,10 @@ Hospice) are open to most heroes.
 
 ## New rules text and a faith-tinted look (1.31)
 
+- Music follows the land: on the road and in towns you hear the music of the faith whose
+  land you are in, with about one song in four from your own faith (at home it is all your
+  own). Duels still play the combat music of the faith you fight.
+
 - New card abilities: keywords until end of turn ("gains sanctified until end of turn"),
   "if you control a Priest" style conditions, "whenever another Zombie dies", returning a
   creature from your graveyard to your hand, "sacrifice a Zombie", tokens counted per tribe
