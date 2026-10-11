@@ -3,7 +3,7 @@ extends Node
 ## topmost thing on screen (a dialog, a panel, a screen) and presses its own button or calls
 ## its own function, so a key does exactly what a tap would.
 ##
-##   Space / Enter   the safe main action: End turn, Pass or Resolve in a duel, Take in the
+##   Space / Enter   the safe main action: End turn, Pass or Resolve in a duel, Take random (asks first) in the
 ##                   draft, Done in the deck builder, Begin on the road screen, OK in a dialog
 ##   Escape          Back, Close or Cancel of the topmost dialog, viewer, panel or screen; on
 ##                   the map with nothing open, the Menu panel. It never quits the game.

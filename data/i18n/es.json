@@ -4573,5 +4573,8 @@
  "Reach. Regenerate {1}{G}. Other Treefolk you control have reach and regenerate {1}{G}.": "Alcance. Regenerar {1}{G}. Los demás Silvanos que controlas tienen alcance y regenerar {1}{G}.",
  "%s is about to be destroyed: tap it to pay for Regenerate, or pass.": "%s está a punto de ser destruida: tócala para pagar Regenerar, o pasa.",
  "%s will regenerate if it is destroyed this turn.": "%s se regenerará si es destruida este turno.",
- "Regenerate: pay its cost to shield it; the next time it would be destroyed this turn, it is tapped, healed and taken out of combat instead.": "Regenerar: paga el coste para protegerla; la próxima vez este turno que fuera a ser destruida, se gira, se cura y se retira del combate."
+ "Regenerate: pay its cost to shield it; the next time it would be destroyed this turn, it is tapped, healed and taken out of combat instead.": "Regenerar: paga el coste para protegerla; la próxima vez este turno que fuera a ser destruida, se gira, se cura y se retira del combate.",
+ "Take random": "Tomar al azar",
+ "Are you sure you want a random card from this pack?": "¿Seguro que quieres una carta al azar de este sobre?",
+ "You won't see which card it is until it lands in your picks.": "No verás qué carta es hasta que llegue a tus elecciones."
 }
