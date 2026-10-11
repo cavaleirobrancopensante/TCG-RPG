@@ -1081,7 +1081,10 @@ func _update_marks() -> void:
 					fig.mark = "target"
 			"idle":
 				if p.owner == 0 and st.has_priority(0) and not busy:
-					for k in st.abilities_of(p).size():
+					var abl: Array = st.abilities_of(p)
+					for k in abl.size():
+						if abl[k].get("regen", false) and not st.regen_threatened(0, p):
+							continue
 						if st.can_activate(0, uid, k):
 							fig.mark = "select"      # it has an ability ready: tap it to use it
 
@@ -1536,6 +1539,11 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 					f.sync(p)
 				_float_text(I18n.t("Regenerates"), f.global_position + _fsz() * 0.5, UIKit.GREEN)
 				await f.play_buff()
+		"regen_shield":
+			_log(_cap(I18n.t("%s will regenerate if it is destroyed this turn.") % _obj(int(e["uid"]))))
+			if figures.has(e["uid"]):
+				var f2: SummonFigure = figures[e["uid"]]
+				_float_text("↻", f2.global_position + _fsz() * 0.5, UIKit.GREEN)
 		"pacify", "snare":
 			var pn := _obj(int(e["uid"]))
 			if e["type"] == "pacify":
@@ -2481,9 +2489,26 @@ func _can_respond() -> bool:
 	for p in me.creatures + me.relics:
 		var list: Array = st.abilities_of(p)
 		for k in list.size():
+			if list[k].get("regen", false) and not st.regen_threatened(0, p):
+				continue          # Regenerate is only worth asking about when it would die
 			if not BattleState.is_mana_ability(list[k]) and st.can_activate(0, p.uid, k):
 				return true
 	return false
+
+
+## One of your creatures is about to be destroyed and you can pay to regenerate it.
+func _regen_needed() -> bool:
+	return _regen_doomed() != ""
+
+
+## The name of that creature, or "".
+func _regen_doomed() -> String:
+	for p in st.side(0).creatures:
+		var list: Array = st.abilities_of(p)
+		for k in list.size():
+			if list[k].get("regen", false) and st.regen_threatened(0, p) and st.can_activate(0, p.uid, k):
+				return I18n.t(p.name)
+	return ""
 
 
 ## Anything to do in your own main phase (a land, a card, an ability, an attack)?
@@ -2519,7 +2544,7 @@ func _run_priority(key: String) -> void:
 			if st.priority == p and st.ai_controls(p) and (st.window_open or not st.stack.is_empty()):
 				st._pass(p)       # cannot happen; never hang on it
 			continue
-		var asked := wants_response(st, key, _stop_on(key), respond_to_every_spell()) and _can_respond()
+		var asked := (wants_response(st, key, _stop_on(key), respond_to_every_spell()) and _can_respond()) or _regen_needed()
 		if asked:
 			await _wait_for_player()
 		else:
@@ -2530,7 +2555,10 @@ func _run_priority(key: String) -> void:
 func _wait_for_player() -> void:
 	waiting_priority = true
 	busy = false
-	if not st.stack.is_empty():
+	var doomed := _regen_doomed()
+	if doomed != "":
+		_log(I18n.t("%s is about to be destroyed: tap it to pay for Regenerate, or pass.") % doomed, false)
+	elif not st.stack.is_empty():
 		var top: Dictionary = st.stack.back()
 		var nm: String = I18n.t(String(top.get("name", CardDB.get_card(top["id"]).get("name", ""))))
 		_log(I18n.t("%s waits on the stack: answer it, or let it resolve.") % nm, false)

@@ -564,3 +564,13 @@ under *Export → Resources → Filters to export non-resource files*.
   still (no idle bob), the green glow on playable cards pulses slowly, and card shimmer repaints
   a few times a second instead of every frame.
 - The hand is rebuilt only when it changes, so refreshes after each action are much lighter.
+
+## Regenerate costs mana (1.40)
+
+- Regenerate is no longer free. Each regenerating creature shows its price, Regenerate {G} on the
+  small ones and Regenerate {1}{G} on the great trees; creatures given regenerate by another card
+  pay {1}{G}. Paying puts a shield on it for the turn: the next time it would be destroyed, it is
+  tapped, healed and taken out of combat instead. Pay again for another shield.
+- When one of your regenerators is about to die (a block it would lose, a spell aimed at it), the
+  duel stops and tells you, so you can tap it and pay, or let it go. The AI pays only when its
+  creature would otherwise die.

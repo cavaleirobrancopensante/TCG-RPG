@@ -48,7 +48,7 @@ func test_card_db() -> void:
 		for r in Factions.RARITIES:
 			line += "%s %d/%d  " % [r.substr(0, 1).to_upper(), counts[f][r], Factions.SET_TARGET[r]]
 		print(line)
-	var valid_actions := ["attach", "grant", "regrow", "damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate",
+	var valid_actions := ["attach", "grant", "regrow", "regen_shield", "damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate",
 		"rummage", "freeze", "pacify", "snare", "fight", "destroy_relic", "foresight", "tax", "upkeep_cost"]
 	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
 	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "martyr",
@@ -357,9 +357,43 @@ func _test_ai_foresight() -> void:
 	check(not late.is_empty() and int(late[0]) == lamp.uid, "the AI uses the Lamp with spare mana in main 2")
 
 
+func _test_ai_regenerate() -> void:
+	# the AI pays for Regenerate when its blocker would die, and not when it would live
+	var st := _duel()
+	_lands(st, 1, "GG")
+	var ogre := _put(st, 0, "Ogre")
+	var troll := _put(st, 1, "Troll")
+	st.active = 0
+	st.phase = "combat"
+	st.step = "blockers"
+	st.attackers = [ogre.uid]
+	st.blocks = {ogre.uid: troll.uid}
+	st.window_open = true
+	st.priority = 1
+	check(st.regen_threatened(1, troll), "regenerate: a 3/3 blocking a 4/4 is threatened")
+	var paid := BattleAI.respond(st, 1)
+	if not st.stack.is_empty():
+		st._resolve_top()
+	check(paid and troll.regen_shield == 1, "the AI pays to regenerate a blocker that would die")
+	check(not st.regen_threatened(1, troll), "a shielded creature is no longer threatened")
+	var st2 := _duel()
+	_lands(st2, 1, "GG")
+	var bear := _put(st2, 0, "Bear")
+	var troll2 := _put(st2, 1, "Troll")
+	st2.active = 0
+	st2.phase = "combat"
+	st2.step = "blockers"
+	st2.attackers = [bear.uid]
+	st2.blocks = {bear.uid: troll2.uid}
+	st2.window_open = true
+	st2.priority = 1
+	check(not st2.regen_threatened(1, troll2) and not BattleAI.respond(st2, 1), "no Regenerate when the blocker lives anyway")
+
+
 func _test_tribes() -> void:
 	_test_attachments()
 	_test_ai_foresight()
+	_test_ai_regenerate()
 	var st := _duel()
 	var w1 := _put(st, 0, "Packwolf")
 	check(w1.power() == 2, "kinship alone: no bonus")
@@ -485,13 +519,21 @@ func test_mechanics() -> void:
 	st.play(0, 0)
 	st.play(0, 0)
 	check(st.can_attack(st.side(0).creatures[1]) and not st.can_attack(st.side(0).creatures[2]), "haste attacks at once, others wait")
-	# Regenerate saves once per turn.
+	# Regenerate costs mana: no shield, no save; a paid shield saves once.
 	st = _duel()
 	var troll := _put(st, 1, "Troll")
+	var rab: Array = st.abilities_of(troll)
+	check(rab.size() == 1 and rab[0].get("regen", false) and rab[0]["cost"]["mana"] == {"generic": 1, "G": 1},
+		"regenerate: an ability costing {1}{G} by default")
+	troll.regen_shield = 1
 	st.destroy_perm(troll)
-	check(st.find_perm(troll.uid) != null and troll.tapped, "regenerate: survives tapped")
+	check(st.find_perm(troll.uid) != null and troll.tapped and troll.regen_shield == 0, "regenerate: a shield saves it, tapped")
 	st.destroy_perm(troll)
-	check(st.find_perm(troll.uid) == null, "regenerate only once per turn")
+	check(st.find_perm(troll.uid) == null, "regenerate: without a shield it dies")
+	st = _duel()
+	var troll2 := _put(st, 1, "Troll")
+	st.destroy_perm(troll2)
+	check(st.find_perm(troll2.uid) == null, "regenerate is not free")
 	# Death triggers and tokens.
 	st = _duel()
 	var mar := _put(st, 0, "Martyr")

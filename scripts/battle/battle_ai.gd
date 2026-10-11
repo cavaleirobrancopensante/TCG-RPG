@@ -942,6 +942,14 @@ static func respond(st: BattleState, i: int) -> bool:
 				continue
 			if not st.can_activate(i, p.uid, idx):
 				continue
+			if ab.get("regen", false):
+				# Regenerate: pay only when it is about to die
+				if st.regen_threatened(i, p):
+					var rv: float = p.value() + 1.0 - 0.15 * CardDB.mana_value(ab["cost"]["mana"])
+					if rv > best_v:
+						best_v = rv
+						best = ["ability", [p.uid, idx], []]
+				continue
 			st._with_source(p.card)
 			var r := _answer_value(st, i, ab.get("effects", []), p, p.card)
 			var v: float = r[0]
