@@ -301,7 +301,8 @@ func _check_picks_panel(ds: DraftScreen) -> void:
 			groups += 1
 	_check(rows == deck.size() and groups >= 1, "picks panel: a row per card (%d) in %d type groups" % [rows, groups])
 	_check(ds.side_box.get_node_or_null("EmptyHint") != null, "picks panel: the Sideboard starts empty (with a hint)")
-	_check(ds.types_label.text.contains(I18n.t("Creatures")), "picks panel: counts by type (%s)" % ds.types_label.text)
+	var tabs: Array = ds.type_tabs.get_children().map(func(b): return b.text)
+	_check(tabs.size() == 6 and tabs[0].begins_with(I18n.t("All")) and tabs[1].begins_with(I18n.t("Creatures")), "picks panel: All, then counts by type (%s)" % str(tabs))
 	var fsum := 0
 	for f in ds.faith_row.counts:
 		fsum += int(ds.faith_row.counts[f])

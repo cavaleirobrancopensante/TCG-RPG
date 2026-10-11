@@ -49,6 +49,35 @@ func _ready() -> void:
 		await get_tree().process_frame
 	_check(ds.draft.pick_no == 1, "confirming takes one card (pick %d)" % ds.draft.pick_no)
 	_check(DeckTools.count(ds.draft.deck_pool()) + DeckTools.count(ds.draft.side_pool()) == picks_before + 1, "it lands in the picks")
+	# a few more picks, then the type tabs: shots of All and of Creatures
+	for k in 6:
+		ds._take_index(0)
+		for i in 3:
+			await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(OS.get_user_data_dir() + "/shots/draft_tabs_all.png")
+	var tab: Button = ds.type_tabs.get_node("Tab_creature")
+	tab.pressed.emit()
+	for i in 4:
+		await get_tree().process_frame
+	_check(ds.kind_filter == "creature", "the Creatures tab filters the panel")
+	var shown := 0
+	for row in ds.picks_box.get_children():
+		if String(row.name).begins_with("Pick_"):
+			var id := String(row.name).substr(5)
+			shown += 1
+			_check(CardView.kind(CardDB.get_card(id)) == "creature", "only creatures listed (%s)" % id)
+	var mv := 0
+	for v in ds.curve.counts.values():
+		mv += int(v)
+	var ncre := 0
+	var pool: Dictionary = ds.draft.deck_pool()
+	for id in pool:
+		if CardView.kind(CardDB.get_card(id)) == "creature":
+			ncre += int(pool[id])
+	_check(mv == ncre, "the curve counts only creatures (%d of %d)" % [mv, ncre])
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(OS.get_user_data_dir() + "/shots/draft_tabs_creatures.png")
 	print("draft random test ", "ok" if fails == 0 else "FAILED")
 	get_tree().quit(1 if fails else 0)
 

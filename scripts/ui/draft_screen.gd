@@ -27,7 +27,8 @@ var picks_box: VBoxContainer      # the Deck pile's rows
 var side_box: VBoxContainer       # the Sideboard pile's rows
 var picks_head: Label
 var side_head: Label
-var types_label: Label
+var type_tabs: GridContainer      # All, Creatures, Sorceries...: filters the panel
+var kind_filter := "all"
 var faith_row: _FaithRow
 var curve: DeckBuilder.ManaCurve
 var picks_drag: DragScroll
@@ -99,10 +100,12 @@ func _ready() -> void:
 	picks_head.clip_text = true
 	picks_head.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	rv.add_child(picks_head)
-	types_label = UIKit.label("", UIKit.FS_MIN, UIKit.TEXT, true)
-	types_label.name = "TypeCounts"
-	types_label.max_lines_visible = 2 if compact else 3
-	rv.add_child(types_label)
+	type_tabs = GridContainer.new()
+	type_tabs.name = "TypeCounts"
+	type_tabs.columns = 3
+	type_tabs.add_theme_constant_override("h_separation", 4)
+	type_tabs.add_theme_constant_override("v_separation", 4)
+	rv.add_child(type_tabs)
 	faith_row = _FaithRow.new()
 	faith_row.name = "FaithCounts"
 	faith_row.custom_minimum_size = Vector2(0, 22 if compact else 26)
@@ -220,15 +223,56 @@ func _fill_picks() -> void:
 		for f in [c.get("faction", ""), c.get("faction2", "")]:
 			if f != "":
 				by_faith[f] = int(by_faith.get(f, 0)) + int(deck[id])
-	var parts: Array = []
-	for k in KINDS:
-		parts.append("%s %d" % [I18n.t(KIND_NAMES[k]), int(by_kind.get(k, 0))])
-	types_label.text = " · ".join(parts)
+	_fill_tabs(by_kind, nd)
+	# the chosen type filters everything below it: faith counts, curve and both piles
+	var fdeck := _filtered(deck)
+	var fside := _filtered(side)
+	if kind_filter != "all":
+		by_faith = {}
+		for id in fdeck:
+			var c := CardDB.get_card(id)
+			for f in [c.get("faction", ""), c.get("faction2", "")]:
+				if f != "" and kind_filter != "land":
+					by_faith[f] = int(by_faith.get(f, 0)) + int(fdeck[id])
 	faith_row.counts = by_faith
 	faith_row.queue_redraw()
-	curve.set_deck(deck)
-	_fill_pile(picks_box, deck, false, I18n.t("Nothing yet.") if draft.picks[0].is_empty() else I18n.t("No cards in the deck pile."))
-	_fill_pile(side_box, side, true, I18n.t("Tap the arrow on a card to move it here."))
+	curve.set_deck(fdeck)
+	var none := I18n.t("None of this type.")
+	var deck_empty: String = I18n.t("Nothing yet.") if draft.picks[0].is_empty() else (none if kind_filter != "all" else I18n.t("No cards in the deck pile."))
+	_fill_pile(picks_box, fdeck, false, deck_empty)
+	_fill_pile(side_box, fside, true, none if kind_filter != "all" and not side.is_empty() else I18n.t("Tap the arrow on a card to move it here."))
+
+
+## The type tabs: All first, then each type with its count in the Deck pile; one is chosen.
+func _fill_tabs(by_kind: Dictionary, total: int) -> void:
+	UIKit.clear(type_tabs)
+	var keys: Array = ["all"] + KINDS
+	for k in keys:
+		var kk: String = k
+		var nm: String = I18n.t("All") if k == "all" else I18n.t(KIND_NAMES[k])
+		var n: int = total if k == "all" else int(by_kind.get(k, 0))
+		var b := UIKit.button("%s %d" % [nm, n], func():
+			kind_filter = kk
+			_fill_picks(), 0)
+		b.name = "Tab_" + kk
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", UIKit.FS_MIN)
+		b.clip_text = true
+		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		b.tooltip_text = "%s %d" % [nm, n]
+		UIKit.set_selected(b, k == kind_filter)
+		type_tabs.add_child(b)
+
+
+## The cards of a pile that match the chosen type.
+func _filtered(pool: Dictionary) -> Dictionary:
+	if kind_filter == "all":
+		return pool
+	var out := {}
+	for id in pool:
+		if CardView.kind(CardDB.get_card(id)) == kind_filter:
+			out[id] = pool[id]
+	return out
 
 
 ## One pile's rows grouped by type, cheapest first; a row per card ("2×" for a second copy),

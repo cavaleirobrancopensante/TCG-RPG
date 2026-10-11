@@ -580,3 +580,9 @@ under *Export → Resources → Filters to export non-resource files*.
 - The button at the top of the draft is now Take random: it asks "Are you sure you want a random
   card from this pack?" and, if you say yes, takes one blind. To choose a card yourself, tap it and
   use Take in the viewer.
+
+## Type tabs in the draft (1.42)
+
+- The picks panel has tabs: All (chosen at first), Creatures, Sorceries, Instants, Relics and
+  Lands, each with its count. Choosing a type shows only those cards in both piles, and the faith
+  counts and mana curve count only that type. All shows everything again.
