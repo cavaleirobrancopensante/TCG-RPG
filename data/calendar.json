@@ -1,0 +1,2827 @@
+{
+ "about": "The Roman calendar of 1962 (fixed sanctoral cycle; the temporal cycle is computed in scripts/core/calendar.gd), the other faiths' feasts kept around it, and the goods the cities ask for before a feast.",
+ "sanctoral": {
+  "01-01": [
+   {
+    "name": "Octave Day of the Nativity (Circumcision of Our Lord)",
+    "class": "I",
+    "color": "white",
+    "short": "Octave of Christmas",
+    "lord": true
+   }
+  ],
+  "01-05": [
+   {
+    "name": "St Telesphorus",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "01-06": [
+   {
+    "name": "Epiphany of Our Lord",
+    "class": "I",
+    "color": "white",
+    "short": "Epiphany",
+    "lord": true
+   }
+  ],
+  "01-11": [
+   {
+    "name": "St Hyginus",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "01-13": [
+   {
+    "name": "Commemoration of the Baptism of Our Lord",
+    "class": "II",
+    "color": "white",
+    "short": "Baptism of Our Lord",
+    "lord": true
+   }
+  ],
+  "01-14": [
+   {
+    "name": "St Hilary",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   },
+   {
+    "name": "St Felix of Nola",
+    "class": "C",
+    "color": "red",
+    "title": "Priest and Martyr"
+   }
+  ],
+  "01-15": [
+   {
+    "name": "St Paul the First Hermit",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "St Maurus",
+    "class": "C",
+    "color": "white",
+    "title": "Abbot"
+   }
+  ],
+  "01-16": [
+   {
+    "name": "St Marcellus I",
+    "class": "III",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "01-17": [
+   {
+    "name": "St Anthony",
+    "class": "III",
+    "color": "white",
+    "title": "Abbot"
+   }
+  ],
+  "01-18": [
+   {
+    "name": "St Prisca",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "01-19": [
+   {
+    "name": "SS Marius, Martha, Audifax and Abachum",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   },
+   {
+    "name": "St Canute",
+    "class": "C",
+    "color": "red",
+    "title": "King and Martyr"
+   }
+  ],
+  "01-20": [
+   {
+    "name": "SS Fabian and Sebastian",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "01-21": [
+   {
+    "name": "St Agnes",
+    "class": "III",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "01-22": [
+   {
+    "name": "SS Vincent and Anastasius",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "01-23": [
+   {
+    "name": "St Raymond of Peñafort",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "St Emerentiana",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "01-24": [
+   {
+    "name": "St Timothy",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "01-25": [
+   {
+    "name": "Conversion of St Paul",
+    "class": "III",
+    "color": "white",
+    "title": "Apostle"
+   }
+  ],
+  "01-26": [
+   {
+    "name": "St Polycarp",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "01-27": [
+   {
+    "name": "St John Chrysostom",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "01-28": [
+   {
+    "name": "St Peter Nolasco",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "St Agnes (second feast)",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "01-29": [
+   {
+    "name": "St Francis de Sales",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "01-30": [
+   {
+    "name": "St Martina",
+    "class": "III",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "01-31": [
+   {
+    "name": "St John Bosco",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "02-01": [
+   {
+    "name": "St Ignatius of Antioch",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "02-02": [
+   {
+    "name": "Purification of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "short": "Candlemas",
+    "lord": true
+   }
+  ],
+  "02-03": [
+   {
+    "name": "St Blaise",
+    "class": "C",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "02-04": [
+   {
+    "name": "St Andrew Corsini",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "02-05": [
+   {
+    "name": "St Agatha",
+    "class": "III",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "02-06": [
+   {
+    "name": "St Titus",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   },
+   {
+    "name": "St Dorothy",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "02-07": [
+   {
+    "name": "St Romuald",
+    "class": "III",
+    "color": "white",
+    "title": "Abbot"
+   }
+  ],
+  "02-08": [
+   {
+    "name": "St John of Matha",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "02-09": [
+   {
+    "name": "St Cyril of Alexandria",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   },
+   {
+    "name": "St Apollonia",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "02-10": [
+   {
+    "name": "St Scholastica",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "02-11": [
+   {
+    "name": "Apparition of the Immaculate Virgin Mary",
+    "class": "III",
+    "color": "white",
+    "short": "Our Lady of Lourdes"
+   }
+  ],
+  "02-12": [
+   {
+    "name": "Seven Holy Founders of the Servite Order",
+    "class": "III",
+    "color": "white",
+    "title": "Confessors",
+    "short": "Seven Holy Founders"
+   }
+  ],
+  "02-14": [
+   {
+    "name": "St Valentine",
+    "class": "C",
+    "color": "red",
+    "title": "Priest and Martyr"
+   }
+  ],
+  "02-15": [
+   {
+    "name": "SS Faustinus and Jovita",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "02-18": [
+   {
+    "name": "St Simeon",
+    "class": "C",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "02-22": [
+   {
+    "name": "Chair of St Peter",
+    "class": "II",
+    "color": "white",
+    "title": "Apostle"
+   }
+  ],
+  "02-23": [
+   {
+    "name": "St Peter Damian",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "02-24": [
+   {
+    "name": "St Matthias",
+    "class": "II",
+    "color": "red",
+    "title": "Apostle"
+   }
+  ],
+  "02-27": [
+   {
+    "name": "St Gabriel of Our Lady of Sorrows",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor",
+    "short": "St Gabriel of the Sorrowful Virgin"
+   }
+  ],
+  "03-04": [
+   {
+    "name": "St Casimir",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "St Lucius I",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "03-06": [
+   {
+    "name": "SS Perpetua and Felicity",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "03-07": [
+   {
+    "name": "St Thomas Aquinas",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor and Doctor"
+   }
+  ],
+  "03-08": [
+   {
+    "name": "St John of God",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "03-09": [
+   {
+    "name": "St Frances of Rome",
+    "class": "III",
+    "color": "white",
+    "title": "Widow"
+   }
+  ],
+  "03-10": [
+   {
+    "name": "Forty Holy Martyrs",
+    "class": "III",
+    "color": "red"
+   }
+  ],
+  "03-12": [
+   {
+    "name": "St Gregory the Great",
+    "class": "III",
+    "color": "white",
+    "title": "Pope, Confessor and Doctor"
+   }
+  ],
+  "03-17": [
+   {
+    "name": "St Patrick",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "03-18": [
+   {
+    "name": "St Cyril of Jerusalem",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "03-19": [
+   {
+    "name": "St Joseph, Spouse of the Blessed Virgin Mary",
+    "class": "I",
+    "color": "white",
+    "title": "Confessor",
+    "short": "St Joseph"
+   }
+  ],
+  "03-21": [
+   {
+    "name": "St Benedict",
+    "class": "III",
+    "color": "white",
+    "title": "Abbot"
+   }
+  ],
+  "03-24": [
+   {
+    "name": "St Gabriel the Archangel",
+    "class": "III",
+    "color": "white"
+   }
+  ],
+  "03-25": [
+   {
+    "name": "Annunciation of the Blessed Virgin Mary",
+    "class": "I",
+    "color": "white",
+    "short": "Annunciation"
+   }
+  ],
+  "03-27": [
+   {
+    "name": "St John Damascene",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor and Doctor"
+   }
+  ],
+  "03-28": [
+   {
+    "name": "St John Capistran",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "04-02": [
+   {
+    "name": "St Francis of Paola",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "04-04": [
+   {
+    "name": "St Isidore",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "04-05": [
+   {
+    "name": "St Vincent Ferrer",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "04-11": [
+   {
+    "name": "St Leo the Great",
+    "class": "III",
+    "color": "white",
+    "title": "Pope, Confessor and Doctor"
+   }
+  ],
+  "04-13": [
+   {
+    "name": "St Hermenegild",
+    "class": "III",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "04-14": [
+   {
+    "name": "St Justin",
+    "class": "III",
+    "color": "red",
+    "title": "Martyr"
+   },
+   {
+    "name": "SS Tiburtius, Valerian and Maximus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "04-17": [
+   {
+    "name": "St Anicetus",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "04-21": [
+   {
+    "name": "St Anselm",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "04-22": [
+   {
+    "name": "SS Soter and Caius",
+    "class": "III",
+    "color": "red",
+    "title": "Popes and Martyrs"
+   }
+  ],
+  "04-23": [
+   {
+    "name": "St George",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "04-24": [
+   {
+    "name": "St Fidelis of Sigmaringen",
+    "class": "III",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "04-25": [
+   {
+    "name": "St Mark",
+    "class": "II",
+    "color": "red",
+    "title": "Evangelist"
+   }
+  ],
+  "04-26": [
+   {
+    "name": "SS Cletus and Marcellinus",
+    "class": "III",
+    "color": "red",
+    "title": "Popes and Martyrs"
+   }
+  ],
+  "04-27": [
+   {
+    "name": "St Peter Canisius",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor and Doctor"
+   }
+  ],
+  "04-28": [
+   {
+    "name": "St Paul of the Cross",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "04-29": [
+   {
+    "name": "St Peter of Verona",
+    "class": "III",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "04-30": [
+   {
+    "name": "St Catherine of Siena",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "05-01": [
+   {
+    "name": "St Joseph the Worker",
+    "class": "I",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "05-02": [
+   {
+    "name": "St Athanasius",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "05-03": [
+   {
+    "name": "SS Alexander, Eventius, Theodulus and Juvenal",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "05-04": [
+   {
+    "name": "St Monica",
+    "class": "III",
+    "color": "white",
+    "title": "Widow"
+   }
+  ],
+  "05-05": [
+   {
+    "name": "St Pius V",
+    "class": "III",
+    "color": "white",
+    "title": "Pope and Confessor"
+   }
+  ],
+  "05-07": [
+   {
+    "name": "St Stanislaus",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "05-09": [
+   {
+    "name": "St Gregory Nazianzen",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "05-10": [
+   {
+    "name": "St Antoninus",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   },
+   {
+    "name": "SS Gordian and Epimachus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "05-11": [
+   {
+    "name": "SS Philip and James",
+    "class": "II",
+    "color": "red",
+    "title": "Apostles"
+   }
+  ],
+  "05-12": [
+   {
+    "name": "SS Nereus, Achilleus, Domitilla and Pancras",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "05-13": [
+   {
+    "name": "St Robert Bellarmine",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "05-14": [
+   {
+    "name": "St Boniface of Tarsus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "05-15": [
+   {
+    "name": "St John Baptist de la Salle",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "05-16": [
+   {
+    "name": "St Ubald",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "05-17": [
+   {
+    "name": "St Paschal Baylon",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "05-18": [
+   {
+    "name": "St Venantius",
+    "class": "III",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "05-19": [
+   {
+    "name": "St Peter Celestine",
+    "class": "III",
+    "color": "white",
+    "title": "Pope and Confessor"
+   },
+   {
+    "name": "St Pudentiana",
+    "class": "C",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "05-20": [
+   {
+    "name": "St Bernardine of Siena",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "05-25": [
+   {
+    "name": "St Gregory VII",
+    "class": "III",
+    "color": "white",
+    "title": "Pope and Confessor"
+   },
+   {
+    "name": "St Urban I",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "05-26": [
+   {
+    "name": "St Philip Neri",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "St Eleutherius",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "05-27": [
+   {
+    "name": "St Bede the Venerable",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor and Doctor"
+   },
+   {
+    "name": "St John I",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "05-28": [
+   {
+    "name": "St Augustine of Canterbury",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "05-29": [
+   {
+    "name": "St Mary Magdalen de' Pazzi",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "05-30": [
+   {
+    "name": "St Felix I",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "05-31": [
+   {
+    "name": "Queenship of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "short": "Mary, Queen"
+   },
+   {
+    "name": "St Petronilla",
+    "class": "C",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "06-01": [
+   {
+    "name": "St Angela Merici",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "06-02": [
+   {
+    "name": "SS Marcellinus, Peter and Erasmus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "06-04": [
+   {
+    "name": "St Francis Caracciolo",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "06-05": [
+   {
+    "name": "St Boniface",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "06-06": [
+   {
+    "name": "St Norbert",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "06-09": [
+   {
+    "name": "SS Primus and Felician",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "06-10": [
+   {
+    "name": "St Margaret of Scotland",
+    "class": "III",
+    "color": "white",
+    "title": "Widow"
+   }
+  ],
+  "06-11": [
+   {
+    "name": "St Barnabas",
+    "class": "III",
+    "color": "red",
+    "title": "Apostle"
+   }
+  ],
+  "06-12": [
+   {
+    "name": "St John of San Facundo",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "SS Basilides, Cyrinus, Nabor and Nazarius",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "06-13": [
+   {
+    "name": "St Anthony of Padua",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor and Doctor"
+   }
+  ],
+  "06-14": [
+   {
+    "name": "St Basil the Great",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "06-15": [
+   {
+    "name": "SS Vitus, Modestus and Crescentia",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "06-17": [
+   {
+    "name": "St Gregory Barbarigo",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "06-18": [
+   {
+    "name": "St Ephrem the Syrian",
+    "class": "III",
+    "color": "white",
+    "title": "Deacon, Confessor and Doctor"
+   },
+   {
+    "name": "SS Mark and Marcellian",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "06-19": [
+   {
+    "name": "St Juliana Falconieri",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   },
+   {
+    "name": "SS Gervase and Protase",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "06-20": [
+   {
+    "name": "St Silverius",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "06-21": [
+   {
+    "name": "St Aloysius Gonzaga",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "06-22": [
+   {
+    "name": "St Paulinus of Nola",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "06-23": [
+   {
+    "name": "Vigil of St John the Baptist",
+    "class": "II",
+    "color": "violet"
+   }
+  ],
+  "06-24": [
+   {
+    "name": "Nativity of St John the Baptist",
+    "class": "I",
+    "color": "white",
+    "short": "St John the Baptist"
+   }
+  ],
+  "06-25": [
+   {
+    "name": "St William",
+    "class": "III",
+    "color": "white",
+    "title": "Abbot"
+   }
+  ],
+  "06-26": [
+   {
+    "name": "SS John and Paul",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "06-28": [
+   {
+    "name": "Vigil of SS Peter and Paul",
+    "class": "II",
+    "color": "violet"
+   },
+   {
+    "name": "St Irenaeus",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "06-29": [
+   {
+    "name": "SS Peter and Paul",
+    "class": "I",
+    "color": "red",
+    "title": "Apostles"
+   }
+  ],
+  "06-30": [
+   {
+    "name": "Commemoration of St Paul",
+    "class": "III",
+    "color": "red",
+    "title": "Apostle"
+   }
+  ],
+  "07-01": [
+   {
+    "name": "Most Precious Blood of Our Lord Jesus Christ",
+    "class": "I",
+    "color": "red",
+    "short": "Most Precious Blood",
+    "lord": true
+   }
+  ],
+  "07-02": [
+   {
+    "name": "Visitation of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "short": "Visitation"
+   },
+   {
+    "name": "SS Processus and Martinian",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "07-03": [
+   {
+    "name": "St Leo II",
+    "class": "III",
+    "color": "white",
+    "title": "Pope and Confessor"
+   }
+  ],
+  "07-05": [
+   {
+    "name": "St Anthony Mary Zaccaria",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "07-07": [
+   {
+    "name": "SS Cyril and Methodius",
+    "class": "III",
+    "color": "white",
+    "title": "Bishops and Confessors"
+   }
+  ],
+  "07-08": [
+   {
+    "name": "St Elizabeth of Portugal",
+    "class": "III",
+    "color": "white",
+    "title": "Widow"
+   }
+  ],
+  "07-10": [
+   {
+    "name": "Seven Holy Brothers, and SS Rufina and Secunda",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs",
+    "short": "Seven Holy Brothers"
+   }
+  ],
+  "07-11": [
+   {
+    "name": "St Pius I",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "07-12": [
+   {
+    "name": "St John Gualbert",
+    "class": "III",
+    "color": "white",
+    "title": "Abbot"
+   },
+   {
+    "name": "SS Nabor and Felix",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "07-13": [
+   {
+    "name": "St Anacletus",
+    "class": "III",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "07-14": [
+   {
+    "name": "St Bonaventure",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "07-15": [
+   {
+    "name": "St Henry",
+    "class": "III",
+    "color": "white",
+    "title": "Emperor and Confessor"
+   }
+  ],
+  "07-16": [
+   {
+    "name": "Our Lady of Mount Carmel",
+    "class": "C",
+    "color": "white"
+   }
+  ],
+  "07-17": [
+   {
+    "name": "St Alexius",
+    "class": "C",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "07-18": [
+   {
+    "name": "St Camillus de Lellis",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "St Symphorosa and her Seven Sons",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "07-19": [
+   {
+    "name": "St Vincent de Paul",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "07-20": [
+   {
+    "name": "St Jerome Emiliani",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "St Margaret",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "07-21": [
+   {
+    "name": "St Lawrence of Brindisi",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor and Doctor"
+   },
+   {
+    "name": "St Praxedes",
+    "class": "C",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "07-22": [
+   {
+    "name": "St Mary Magdalene",
+    "class": "III",
+    "color": "white",
+    "title": "Penitent"
+   }
+  ],
+  "07-23": [
+   {
+    "name": "St Apollinaris",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   },
+   {
+    "name": "St Liborius",
+    "class": "C",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "07-24": [
+   {
+    "name": "St Christina",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "07-25": [
+   {
+    "name": "St James",
+    "class": "II",
+    "color": "red",
+    "title": "Apostle"
+   },
+   {
+    "name": "St Christopher",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "07-26": [
+   {
+    "name": "St Anne, Mother of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "short": "St Anne"
+   }
+  ],
+  "07-27": [
+   {
+    "name": "St Pantaleon",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "07-28": [
+   {
+    "name": "SS Nazarius, Celsus, Victor I and Innocent I",
+    "class": "III",
+    "color": "red"
+   }
+  ],
+  "07-29": [
+   {
+    "name": "St Martha",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   },
+   {
+    "name": "SS Felix, Simplicius, Faustinus and Beatrice",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "07-30": [
+   {
+    "name": "SS Abdon and Sennen",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "07-31": [
+   {
+    "name": "St Ignatius of Loyola",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "08-01": [
+   {
+    "name": "Holy Machabees",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "08-02": [
+   {
+    "name": "St Alphonsus Mary de Liguori",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   },
+   {
+    "name": "St Stephen I",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "08-04": [
+   {
+    "name": "St Dominic",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "08-05": [
+   {
+    "name": "Dedication of Our Lady of the Snows",
+    "class": "III",
+    "color": "white",
+    "short": "Our Lady of the Snows"
+   }
+  ],
+  "08-06": [
+   {
+    "name": "Transfiguration of Our Lord Jesus Christ",
+    "class": "II",
+    "color": "white",
+    "short": "Transfiguration",
+    "lord": true
+   },
+   {
+    "name": "SS Sixtus II, Felicissimus and Agapitus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "08-07": [
+   {
+    "name": "St Cajetan",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "St Donatus",
+    "class": "C",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "08-08": [
+   {
+    "name": "SS Cyriacus, Largus and Smaragdus",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "08-09": [
+   {
+    "name": "St John Mary Vianney",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "Vigil of St Lawrence",
+    "class": "C",
+    "color": "violet"
+   },
+   {
+    "name": "St Romanus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "08-10": [
+   {
+    "name": "St Lawrence",
+    "class": "II",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "08-11": [
+   {
+    "name": "SS Tiburtius and Susanna",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "08-12": [
+   {
+    "name": "St Clare",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "08-13": [
+   {
+    "name": "SS Hippolytus and Cassian",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "08-14": [
+   {
+    "name": "Vigil of the Assumption",
+    "class": "II",
+    "color": "violet"
+   },
+   {
+    "name": "St Eusebius",
+    "class": "C",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "08-15": [
+   {
+    "name": "Assumption of the Blessed Virgin Mary",
+    "class": "I",
+    "color": "white",
+    "short": "Assumption"
+   }
+  ],
+  "08-16": [
+   {
+    "name": "St Joachim, Father of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "title": "Confessor",
+    "short": "St Joachim"
+   }
+  ],
+  "08-17": [
+   {
+    "name": "St Hyacinth",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "08-18": [
+   {
+    "name": "St Agapitus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "08-19": [
+   {
+    "name": "St John Eudes",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "08-20": [
+   {
+    "name": "St Bernard",
+    "class": "III",
+    "color": "white",
+    "title": "Abbot and Doctor"
+   }
+  ],
+  "08-21": [
+   {
+    "name": "St Jane Frances de Chantal",
+    "class": "III",
+    "color": "white",
+    "title": "Widow"
+   }
+  ],
+  "08-22": [
+   {
+    "name": "Immaculate Heart of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "short": "Immaculate Heart of Mary"
+   },
+   {
+    "name": "SS Timothy, Hippolytus and Symphorian",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "08-23": [
+   {
+    "name": "St Philip Benizi",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "08-24": [
+   {
+    "name": "St Bartholomew",
+    "class": "II",
+    "color": "red",
+    "title": "Apostle"
+   }
+  ],
+  "08-25": [
+   {
+    "name": "St Louis",
+    "class": "III",
+    "color": "white",
+    "title": "King and Confessor"
+   }
+  ],
+  "08-26": [
+   {
+    "name": "St Zephyrinus",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "08-27": [
+   {
+    "name": "St Joseph Calasanz",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "08-28": [
+   {
+    "name": "St Augustine",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   },
+   {
+    "name": "St Hermes",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "08-29": [
+   {
+    "name": "Beheading of St John the Baptist",
+    "class": "III",
+    "color": "red"
+   },
+   {
+    "name": "St Sabina",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "08-30": [
+   {
+    "name": "St Rose of Lima",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   },
+   {
+    "name": "SS Felix and Adauctus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "08-31": [
+   {
+    "name": "St Raymond Nonnatus",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "09-01": [
+   {
+    "name": "St Giles",
+    "class": "C",
+    "color": "white",
+    "title": "Abbot"
+   },
+   {
+    "name": "Twelve Holy Brothers",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "09-02": [
+   {
+    "name": "St Stephen of Hungary",
+    "class": "III",
+    "color": "white",
+    "title": "King and Confessor"
+   }
+  ],
+  "09-03": [
+   {
+    "name": "St Pius X",
+    "class": "III",
+    "color": "white",
+    "title": "Pope and Confessor"
+   }
+  ],
+  "09-05": [
+   {
+    "name": "St Lawrence Justinian",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "09-08": [
+   {
+    "name": "Nativity of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "short": "Nativity of Our Lady"
+   },
+   {
+    "name": "St Adrian",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "09-09": [
+   {
+    "name": "St Gorgonius",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "09-10": [
+   {
+    "name": "St Nicholas of Tolentino",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "09-11": [
+   {
+    "name": "SS Protus and Hyacinth",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "09-12": [
+   {
+    "name": "Most Holy Name of Mary",
+    "class": "III",
+    "color": "white"
+   }
+  ],
+  "09-14": [
+   {
+    "name": "Exaltation of the Holy Cross",
+    "class": "II",
+    "color": "red",
+    "lord": true
+   }
+  ],
+  "09-15": [
+   {
+    "name": "Seven Sorrows of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "short": "Our Lady of Sorrows"
+   },
+   {
+    "name": "St Nicomedes",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "09-16": [
+   {
+    "name": "SS Cornelius and Cyprian",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   },
+   {
+    "name": "SS Euphemia, Lucy and Geminianus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "09-17": [
+   {
+    "name": "Impression of the Stigmata of St Francis",
+    "class": "C",
+    "color": "white"
+   }
+  ],
+  "09-18": [
+   {
+    "name": "St Joseph of Cupertino",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "09-19": [
+   {
+    "name": "St Januarius and Companions",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "09-20": [
+   {
+    "name": "SS Eustace and Companions",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "09-21": [
+   {
+    "name": "St Matthew",
+    "class": "II",
+    "color": "red",
+    "title": "Apostle and Evangelist"
+   }
+  ],
+  "09-22": [
+   {
+    "name": "St Thomas of Villanova",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   },
+   {
+    "name": "SS Maurice and Companions",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "09-23": [
+   {
+    "name": "St Linus",
+    "class": "III",
+    "color": "red",
+    "title": "Pope and Martyr"
+   },
+   {
+    "name": "St Thecla",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "09-24": [
+   {
+    "name": "Our Lady of Ransom",
+    "class": "C",
+    "color": "white"
+   }
+  ],
+  "09-26": [
+   {
+    "name": "SS Cyprian and Justina",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "09-27": [
+   {
+    "name": "SS Cosmas and Damian",
+    "class": "III",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "09-28": [
+   {
+    "name": "St Wenceslaus",
+    "class": "III",
+    "color": "red",
+    "title": "Duke and Martyr"
+   }
+  ],
+  "09-29": [
+   {
+    "name": "Dedication of St Michael the Archangel",
+    "class": "I",
+    "color": "white",
+    "short": "Michaelmas"
+   }
+  ],
+  "09-30": [
+   {
+    "name": "St Jerome",
+    "class": "III",
+    "color": "white",
+    "title": "Priest, Confessor and Doctor"
+   }
+  ],
+  "10-01": [
+   {
+    "name": "St Remigius",
+    "class": "C",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "10-02": [
+   {
+    "name": "Holy Guardian Angels",
+    "class": "III",
+    "color": "white"
+   }
+  ],
+  "10-03": [
+   {
+    "name": "St Teresa of the Child Jesus",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "10-04": [
+   {
+    "name": "St Francis of Assisi",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "10-05": [
+   {
+    "name": "SS Placid and Companions",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "10-06": [
+   {
+    "name": "St Bruno",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "10-07": [
+   {
+    "name": "Our Lady of the Rosary",
+    "class": "II",
+    "color": "white"
+   },
+   {
+    "name": "St Mark, Pope",
+    "class": "C",
+    "color": "white",
+    "title": "Pope and Confessor"
+   }
+  ],
+  "10-08": [
+   {
+    "name": "St Bridget of Sweden",
+    "class": "III",
+    "color": "white",
+    "title": "Widow"
+   },
+   {
+    "name": "SS Sergius, Bacchus, Marcellus and Apuleius",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "10-09": [
+   {
+    "name": "St John Leonardi",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "SS Denis, Rusticus and Eleutherius",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "10-10": [
+   {
+    "name": "St Francis Borgia",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "10-11": [
+   {
+    "name": "Maternity of the Blessed Virgin Mary",
+    "class": "II",
+    "color": "white",
+    "short": "Divine Maternity of Mary"
+   }
+  ],
+  "10-13": [
+   {
+    "name": "St Edward",
+    "class": "III",
+    "color": "white",
+    "title": "King and Confessor"
+   }
+  ],
+  "10-14": [
+   {
+    "name": "St Callistus I",
+    "class": "III",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "10-15": [
+   {
+    "name": "St Teresa of Avila",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "10-16": [
+   {
+    "name": "St Hedwig",
+    "class": "III",
+    "color": "white",
+    "title": "Widow"
+   }
+  ],
+  "10-17": [
+   {
+    "name": "St Margaret Mary Alacoque",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "10-18": [
+   {
+    "name": "St Luke",
+    "class": "II",
+    "color": "red",
+    "title": "Evangelist"
+   }
+  ],
+  "10-19": [
+   {
+    "name": "St Peter of Alcantara",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "10-20": [
+   {
+    "name": "St John Cantius",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "10-21": [
+   {
+    "name": "St Hilarion",
+    "class": "C",
+    "color": "white",
+    "title": "Abbot"
+   },
+   {
+    "name": "St Ursula and Companions",
+    "class": "C",
+    "color": "red",
+    "title": "Virgins and Martyrs"
+   }
+  ],
+  "10-23": [
+   {
+    "name": "St Anthony Mary Claret",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "10-24": [
+   {
+    "name": "St Raphael the Archangel",
+    "class": "III",
+    "color": "white"
+   }
+  ],
+  "10-25": [
+   {
+    "name": "SS Chrysanthus and Daria",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "10-26": [
+   {
+    "name": "St Evaristus",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "10-28": [
+   {
+    "name": "SS Simon and Jude",
+    "class": "II",
+    "color": "red",
+    "title": "Apostles"
+   }
+  ],
+  "11-01": [
+   {
+    "name": "All Saints",
+    "class": "I",
+    "color": "white"
+   }
+  ],
+  "11-02": [
+   {
+    "name": "Commemoration of All the Faithful Departed",
+    "class": "I",
+    "color": "black",
+    "short": "All Souls",
+    "not_on_sunday": true
+   }
+  ],
+  "11-04": [
+   {
+    "name": "St Charles Borromeo",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   },
+   {
+    "name": "SS Vitalis and Agricola",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "11-08": [
+   {
+    "name": "Four Holy Crowned Martyrs",
+    "class": "C",
+    "color": "red"
+   }
+  ],
+  "11-09": [
+   {
+    "name": "Dedication of the Archbasilica of the Most Holy Saviour",
+    "class": "II",
+    "color": "white",
+    "short": "Dedication of the Lateran",
+    "lord": true
+   },
+   {
+    "name": "St Theodore",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "11-10": [
+   {
+    "name": "St Andrew Avellino",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   },
+   {
+    "name": "SS Tryphon, Respicius and Nympha",
+    "class": "C",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "11-11": [
+   {
+    "name": "St Martin of Tours",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   },
+   {
+    "name": "St Mennas",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "11-12": [
+   {
+    "name": "St Martin I",
+    "class": "III",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "11-13": [
+   {
+    "name": "St Didacus",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "11-14": [
+   {
+    "name": "St Josaphat",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "11-15": [
+   {
+    "name": "St Albert the Great",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "11-16": [
+   {
+    "name": "St Gertrude",
+    "class": "III",
+    "color": "white",
+    "title": "Virgin"
+   }
+  ],
+  "11-17": [
+   {
+    "name": "St Gregory Thaumaturgus",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "11-18": [
+   {
+    "name": "Dedication of the Basilicas of SS Peter and Paul",
+    "class": "III",
+    "color": "white"
+   }
+  ],
+  "11-19": [
+   {
+    "name": "St Elizabeth of Hungary",
+    "class": "III",
+    "color": "white",
+    "title": "Widow"
+   },
+   {
+    "name": "St Pontian",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "11-20": [
+   {
+    "name": "St Felix of Valois",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "11-21": [
+   {
+    "name": "Presentation of the Blessed Virgin Mary",
+    "class": "III",
+    "color": "white",
+    "short": "Presentation of Our Lady"
+   }
+  ],
+  "11-22": [
+   {
+    "name": "St Cecilia",
+    "class": "III",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "11-23": [
+   {
+    "name": "St Clement I",
+    "class": "III",
+    "color": "red",
+    "title": "Pope and Martyr"
+   },
+   {
+    "name": "St Felicity",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "11-24": [
+   {
+    "name": "St John of the Cross",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor and Doctor"
+   },
+   {
+    "name": "St Chrysogonus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "11-25": [
+   {
+    "name": "St Catherine of Alexandria",
+    "class": "III",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "11-26": [
+   {
+    "name": "St Sylvester Gozzolini",
+    "class": "III",
+    "color": "white",
+    "title": "Abbot"
+   },
+   {
+    "name": "St Peter of Alexandria",
+    "class": "C",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "11-29": [
+   {
+    "name": "St Saturninus",
+    "class": "C",
+    "color": "red",
+    "title": "Martyr"
+   }
+  ],
+  "11-30": [
+   {
+    "name": "St Andrew",
+    "class": "II",
+    "color": "red",
+    "title": "Apostle"
+   }
+  ],
+  "12-02": [
+   {
+    "name": "St Bibiana",
+    "class": "III",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "12-03": [
+   {
+    "name": "St Francis Xavier",
+    "class": "III",
+    "color": "white",
+    "title": "Confessor"
+   }
+  ],
+  "12-04": [
+   {
+    "name": "St Peter Chrysologus",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   },
+   {
+    "name": "St Barbara",
+    "class": "C",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "12-05": [
+   {
+    "name": "St Sabbas",
+    "class": "C",
+    "color": "white",
+    "title": "Abbot"
+   }
+  ],
+  "12-06": [
+   {
+    "name": "St Nicholas",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop and Confessor"
+   }
+  ],
+  "12-07": [
+   {
+    "name": "St Ambrose",
+    "class": "III",
+    "color": "white",
+    "title": "Bishop, Confessor and Doctor"
+   }
+  ],
+  "12-08": [
+   {
+    "name": "Immaculate Conception of the Blessed Virgin Mary",
+    "class": "I",
+    "color": "white",
+    "short": "Immaculate Conception",
+    "over_sunday": true
+   }
+  ],
+  "12-10": [
+   {
+    "name": "St Melchiades",
+    "class": "C",
+    "color": "red",
+    "title": "Pope and Martyr"
+   }
+  ],
+  "12-11": [
+   {
+    "name": "St Damasus I",
+    "class": "III",
+    "color": "white",
+    "title": "Pope and Confessor"
+   }
+  ],
+  "12-13": [
+   {
+    "name": "St Lucy",
+    "class": "III",
+    "color": "red",
+    "title": "Virgin and Martyr"
+   }
+  ],
+  "12-16": [
+   {
+    "name": "St Eusebius of Vercelli",
+    "class": "III",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "12-21": [
+   {
+    "name": "St Thomas",
+    "class": "II",
+    "color": "red",
+    "title": "Apostle"
+   }
+  ],
+  "12-24": [
+   {
+    "name": "Vigil of the Nativity of Our Lord",
+    "class": "I",
+    "color": "violet",
+    "short": "Christmas Eve",
+    "over_sunday": true
+   }
+  ],
+  "12-25": [
+   {
+    "name": "Nativity of Our Lord Jesus Christ",
+    "class": "I",
+    "color": "white",
+    "short": "Christmas",
+    "lord": true,
+    "over_sunday": true
+   }
+  ],
+  "12-26": [
+   {
+    "name": "St Stephen",
+    "class": "II",
+    "color": "red",
+    "title": "Protomartyr"
+   }
+  ],
+  "12-27": [
+   {
+    "name": "St John",
+    "class": "II",
+    "color": "white",
+    "title": "Apostle and Evangelist"
+   }
+  ],
+  "12-28": [
+   {
+    "name": "Holy Innocents",
+    "class": "II",
+    "color": "red",
+    "title": "Martyrs"
+   }
+  ],
+  "12-29": [
+   {
+    "name": "St Thomas Becket",
+    "class": "C",
+    "color": "red",
+    "title": "Bishop and Martyr"
+   }
+  ],
+  "12-31": [
+   {
+    "name": "St Sylvester I",
+    "class": "C",
+    "color": "white",
+    "title": "Pope and Confessor"
+   }
+  ]
+ },
+ "faiths": {
+  "wild": [
+   {
+    "name": "Greening Day",
+    "days": 1,
+    "date": "03-20"
+   },
+   {
+    "name": "May-Eve Fires",
+    "days": 1,
+    "date": "04-30"
+   },
+   {
+    "name": "Midsummer Fires",
+    "days": 1,
+    "date": "06-21"
+   },
+   {
+    "name": "First Sheaf",
+    "days": 1,
+    "date": "08-01"
+   },
+   {
+    "name": "Harvest Home",
+    "days": 2,
+    "date": "09-22"
+   },
+   {
+    "name": "Midwinter Watch",
+    "days": 1,
+    "date": "12-21"
+   }
+  ],
+  "revel": [
+   {
+    "name": "Carnival",
+    "days": 4,
+    "easter": -50
+   },
+   {
+    "name": "Rose Revel",
+    "days": 1,
+    "date": "05-15"
+   },
+   {
+    "name": "Midsummer Masque",
+    "days": 1,
+    "date": "07-20"
+   },
+   {
+    "name": "The Vintage",
+    "days": 3,
+    "date": "09-25"
+   },
+   {
+    "name": "Opening of the Casks",
+    "days": 1,
+    "date": "11-15"
+   }
+  ],
+  "lyceum": [
+   {
+    "name": "Founding of the Porch",
+    "days": 1,
+    "date": "03-07"
+   },
+   {
+    "name": "Feast of the Muses",
+    "days": 1,
+    "date": "06-01"
+   },
+   {
+    "name": "Panathenaea",
+    "days": 3,
+    "date": "08-14"
+   },
+   {
+    "name": "Lamp Race",
+    "days": 1,
+    "date": "10-20"
+   },
+   {
+    "name": "Day of Disputation",
+    "days": 1,
+    "date": "12-01"
+   }
+  ],
+  "machine": [
+   {
+    "name": "Spring Assay",
+    "days": 1,
+    "date": "03-15"
+   },
+   {
+    "name": "Foundry Charter Day",
+    "days": 1,
+    "date": "04-12"
+   },
+   {
+    "name": "Fair of Engines",
+    "days": 1,
+    "date": "07-08"
+   },
+   {
+    "name": "Lighting of the Furnaces",
+    "days": 1,
+    "date": "10-15"
+   },
+   {
+    "name": "Day of the Ledger",
+    "days": 1,
+    "date": "12-30"
+   }
+  ],
+  "abyss": [
+   {
+    "name": "Night of the Hollow Moon",
+    "days": 1,
+    "date": "01-31",
+    "sabbath": true
+   },
+   {
+    "name": "Night of the Black Book",
+    "days": 1,
+    "date": "04-30",
+    "sabbath": true
+   },
+   {
+    "name": "Night of the Burnt Sheaf",
+    "days": 1,
+    "date": "07-31",
+    "sabbath": true
+   },
+   {
+    "name": "The Black Night",
+    "days": 1,
+    "date": "10-31",
+    "sabbath": true
+   },
+   {
+    "name": "Night of the Long Dark",
+    "days": 1,
+    "date": "12-21",
+    "sabbath": true
+   }
+  ]
+ },
+ "errand_goods": {
+  "sanctum": [
+   {
+    "goods": "wine for the Mass",
+    "source": "vinemere"
+   },
+   {
+    "goods": "beeswax candles",
+    "source": "elderholt"
+   },
+   {
+    "goods": "spotless lamb",
+    "source": "elderholt"
+   },
+   {
+    "goods": "incense",
+    "source": "porticus"
+   },
+   {
+    "goods": "olive oil for the lamps",
+    "source": "porticus"
+   },
+   {
+    "goods": "wheat for the altar breads",
+    "source": "cogspire"
+   }
+  ],
+  "wild": [
+   {
+    "goods": "mead for the feast",
+    "source": "santa_lucerna"
+   },
+   {
+    "goods": "seed corn",
+    "source": "cogspire"
+   },
+   {
+    "goods": "ribbons for the garlands",
+    "source": "vinemere"
+   },
+   {
+    "goods": "iron cauldron",
+    "source": "cogspire"
+   }
+  ],
+  "revel": [
+   {
+    "goods": "masks and ribbons",
+    "source": "porticus"
+   },
+   {
+    "goods": "honey for the cakes",
+    "source": "elderholt"
+   },
+   {
+    "goods": "sugar and spices",
+    "source": "cogspire"
+   },
+   {
+    "goods": "fattened lamb for the banquet",
+    "source": "elderholt"
+   }
+  ],
+  "lyceum": [
+   {
+    "goods": "wine for the symposium",
+    "source": "vinemere"
+   },
+   {
+    "goods": "laurel for the wreaths",
+    "source": "elderholt"
+   },
+   {
+    "goods": "olive oil for the lamp race",
+    "source": "santa_lucerna"
+   },
+   {
+    "goods": "lamp oil",
+    "source": "cogspire"
+   }
+  ],
+  "machine": [
+   {
+    "goods": "cask of foundry oil",
+    "source": "ashenmouth"
+   },
+   {
+    "goods": "coal for the furnaces",
+    "source": "ashenmouth"
+   },
+   {
+    "goods": "beeswax for the moulds",
+    "source": "elderholt"
+   },
+   {
+    "goods": "wine for the guild banquet",
+    "source": "vinemere"
+   }
+  ],
+  "abyss": [
+   {
+    "goods": "pitch for the torches",
+    "source": "cogspire"
+   },
+   {
+    "goods": "wine for the black banquet",
+    "source": "vinemere"
+   },
+   {
+    "goods": "firewood for the bonfire",
+    "source": "elderholt"
+   }
+  ]
+ },
+ "thieves": {
+  "sanctum": [
+   "abyss",
+   "Pact Raider"
+  ],
+  "wild": [
+   "revel",
+   "Rival Reveller"
+  ],
+  "revel": [
+   "revel",
+   "Rival Reveller"
+  ],
+  "lyceum": [
+   "revel",
+   "Drunken Reveller"
+  ],
+  "machine": [
+   "abyss",
+   "Pact Raider"
+  ],
+  "abyss": [
+   "",
+   "Road Thief"
+  ]
+ }
+}

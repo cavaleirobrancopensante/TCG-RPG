@@ -31,7 +31,7 @@
       }
     ],
     "text": "Sacrifice this: put a +1/+1 counter on target Construct you control.",
-    "flavor": "It skitters through the foundry vents, and when a larger machine needs a part, it volunteers.",
+    "flavor": "\"No part is too small to be spent, and no part too precious to be spared.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_c_001.webp"
   },
   {
@@ -53,7 +53,7 @@
       }
     ],
     "text": "Assembly (this gets +1/+1 for each other Construct you control).",
-    "flavor": "Alone it is a cog. In a line of others it is a quarter of a machine.",
+    "flavor": "\"The cog does not envy the wheel. It has been spared the burden of wanting.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_c_002.webp"
   },
   {
@@ -183,7 +183,7 @@
     "toughness": 3,
     "keywords": [],
     "text": "(No abilities.)",
-    "flavor": "It neither tires, nor complains, nor stops for lunch.",
+    "flavor": "\"A man must be fed, rested and forgiven. A piston asks only for oil.\" (from the Charter of Cogspire)",
     "art": "res://art/cards/machine_c_007.webp"
   },
   {
@@ -253,7 +253,7 @@
       ]
     },
     "text": "Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
-    "flavor": "His guild papers name him competent. His workbench names him prolific.",
+    "flavor": "\"Do not ask whether the work is good. Ask whether it is within tolerance.\" (the guild examination, first article)",
     "art": "res://art/cards/machine_c_009.webp"
   },
   {
@@ -302,7 +302,7 @@
       ]
     },
     "text": "Overclock 2 (you may pay 2 more as you play this). If overclocked, it enters with two +1/+1 counters.",
-    "flavor": "Cast in a single pour, quenched in river water, animated by arithmetic.",
+    "flavor": "\"Nature to be commanded must be obeyed.\" (Francis Bacon, Novum Organum)",
     "art": "res://art/cards/machine_c_011.webp"
   },
   {
@@ -398,7 +398,7 @@
       ]
     },
     "text": "Create a 1/1 Servo Construct token. Overclock 2 (you may pay 2 more as you play this). If overclocked, create another Servo.",
-    "flavor": "Every bolt in the bin is a soldier waiting for orders.",
+    "flavor": "\"Every man is a spare part. The wise ones keep themselves well oiled.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_c_014.webp"
   },
   {
@@ -428,7 +428,7 @@
       }
     ],
     "text": "Create two 1/1 Servo Construct tokens.",
-    "flavor": "Two units, standard pattern, charged to the account of the Third Furnace.",
+    "flavor": "\"Men are requisitioned on the same form as rivets. It saves paper.\" (a Foundry clerk)",
     "art": "res://art/cards/machine_c_015.webp"
   },
   {
@@ -496,7 +496,7 @@
       ]
     },
     "text": "Put a +1/+1 counter on target Construct you control. Overclock 1C (you may pay 1C more as you play this). If overclocked, also deal 2 damage to target enemy creature.",
-    "flavor": "Measured to the volt. Aimed to the inch.",
+    "flavor": "\"When you can measure what you are speaking about, and express it in numbers, you know something about it.\" (Lord Kelvin)",
     "art": "res://art/cards/machine_c_017.webp"
   },
   {
@@ -543,7 +543,7 @@
       }
     ],
     "text": "When this enters, choose target enemy creature. It can't attack or block while this stays in play.",
-    "flavor": "Forged for the Cogspire courts, where every sentence is served in full.",
+    "flavor": "\"Justice is a sum. Mercy is a rounding error, and the Cogspire courts do not round.\" (the Reckoner of the Courts)",
     "art": "res://art/cards/machine_c_019.webp"
   },
   {
@@ -580,7 +580,7 @@
       }
     ],
     "text": "Tap, pay 1C: put a +1/+1 counter on target Construct you control.",
-    "flavor": "Every gauge true, every spring tight, every machine a little better than yesterday.",
+    "flavor": "\"Progress is the only prayer that is always answered.\" (from the Charter of Cogspire)",
     "art": "res://art/cards/machine_c_020.webp"
   },
   {
@@ -670,7 +670,7 @@
       ]
     },
     "text": "Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.",
-    "flavor": "His drawings are passed from bench to bench, and every man who reads them works a little better.",
+    "flavor": "\"The plan is wiser than the men who follow it, and wiser than the man who drew it.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_c_023.webp"
   },
   {
@@ -901,7 +901,7 @@
       }
     ],
     "text": "Tap, pay 2: create a 1/1 Servo Construct token.",
-    "flavor": "He has not touched a tool in twenty years. He has only pointed.",
+    "flavor": "\"In the past the man has been first; in the future the system must be first.\" (Frederick W. Taylor, The Principles of Scientific Management)",
     "art": "res://art/cards/machine_u_002.webp"
   },
   {
@@ -1028,7 +1028,7 @@
       }
     ],
     "text": "Assembly (this gets +1/+1 for each other Construct you control).",
-    "flavor": "A hundred gears, each turning its neighbour, none of them asking why.",
+    "flavor": "\"A gear that asks why has already stopped turning.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_u_006.webp"
   },
   {
@@ -1068,7 +1068,7 @@
       ]
     },
     "text": "Put a +1/+1 counter on each creature you control. Overclock 2 (you may pay 2 more as you play this). If overclocked, put another +1/+1 counter on each creature you control.",
-    "flavor": "The new standard was issued at dawn. By noon the whole line had been brought up to it.",
+    "flavor": "\"Yesterday's standard is today's scrap. So it is with machines, and so it will be with men.\" (the Archwright of Cogspire)",
     "art": "res://art/cards/machine_u_007.webp"
   },
   {
@@ -1107,7 +1107,7 @@
       }
     ],
     "text": "Create a 1/1 Servo Construct token, then put two +1/+1 counters on target Construct you control.",
-    "flavor": "The guild grants patents in a week, provided the fee arrives in a day.",
+    "flavor": "\"Knowledge itself is power.\" (Francis Bacon, Meditationes Sacrae)",
     "art": "res://art/cards/machine_u_008.webp"
   },
   {
@@ -1137,7 +1137,7 @@
       }
     ],
     "text": "Create three 1/1 Servo Construct tokens.",
-    "flavor": "Price per unit falls with volume. So does the value placed on each.",
+    "flavor": "\"It is the greatest happiness of the greatest number that is the measure of right and wrong.\" (Jeremy Bentham, A Fragment on Government)",
     "art": "res://art/cards/machine_u_009.webp"
   },
   {
@@ -1191,7 +1191,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, create a 1/1 Servo Construct token.",
-    "flavor": "No smith tends it. It has long since learned to tend itself.",
+    "flavor": "\"Soon the forge will need no smith, and the city no citizens. We call this progress.\" (a Foundry prospectus)",
     "art": "res://art/cards/machine_u_011.webp"
   },
   {
@@ -1212,7 +1212,7 @@
       }
     ],
     "text": "Your Technocracy cards cost 1 less to play. This reduces only generic mana.",
-    "flavor": "Debits on the left, credits on the right, and a margin of efficiency in the middle.",
+    "flavor": "\"What is not in the ledger did not happen. What is in the ledger cannot be undone.\" (from the Charter of Cogspire)",
     "art": "res://art/cards/machine_u_012.webp"
   },
   {
@@ -1264,7 +1264,7 @@
       }
     ],
     "text": "Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
-    "flavor": "He keeps a drawer of parts already cut, and so his machines are half built before they are ordered.",
+    "flavor": "\"Waste is the only sin the guild recognises, and it is never forgiven.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_u_014.webp"
   },
   {
@@ -1291,7 +1291,7 @@
       }
     ],
     "text": "Constructs you control get +1/+1.",
-    "flavor": "He walks the line with a lamp and a gauge, and no machine leaves it until he nods.",
+    "flavor": "\"The line does not wait for the slow man. It finds a faster one.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_u_015.webp"
   },
   {
@@ -1323,7 +1323,7 @@
       ]
     },
     "text": "Overclock 1C (you may pay 1C more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.",
-    "flavor": "He calls it natural philosophy. The guild calls it a line item.",
+    "flavor": "\"...and thus render ourselves the lords and possessors of nature.\" (René Descartes, Discourse on Method)",
     "art": "res://art/cards/machine_u_016.webp"
   },
   {
@@ -1471,7 +1471,7 @@
       }
     ],
     "text": "Your Technocracy cards cost 1 less to play. This reduces only generic mana.",
-    "flavor": "He has never built a machine, but every machine in Cogspire was built on his approval.",
+    "flavor": "\"Sentiment cannot be audited. Therefore, in Cogspire, it does not exist.\" (the Comptroller's standing order)",
     "art": "res://art/cards/machine_r_001.webp"
   },
   {
@@ -1670,7 +1670,7 @@
       }
     ],
     "text": "Create two 1/1 Servo Construct tokens, then put a +1/+1 counter on each creature you control.",
-    "flavor": "The guild unveiled its new models to the public. The public was invited to stand well back.",
+    "flavor": "\"Behold the future. Your place in it will be assigned shortly.\" (placard at the Cogspire Exhibition)",
     "art": "res://art/cards/machine_r_007.webp"
   },
   {
@@ -1726,7 +1726,7 @@
       }
     ],
     "text": "Your Technocracy cards cost 2 less to play. This reduces only generic mana. Upkeep 1.",
-    "flavor": "The engineers who designed it are still arguing over why it needs feeding.",
+    "flavor": "\"Do not ask where progress leads. To ask is to slow it.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_r_009.webp"
   },
   {
@@ -1758,7 +1758,7 @@
       }
     ],
     "text": "Other Artificers you control get +1/+1. Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
-    "flavor": "He set the great clock of Cogspire, and every workshop in the city keeps his time.",
+    "flavor": "\"In Cogspire the bell does not ring for prayer. It rings for the shift.\" (a Foundry saying)",
     "art": "res://art/cards/machine_r_010.webp"
   },
   {
@@ -1796,7 +1796,7 @@
       }
     ],
     "text": "Assembly (this gets +1/+1 for each other Construct you control). Whenever another Artificer enters under your control, create a 1/1 Servo Construct token.",
-    "flavor": "The guild built a machine to build machines. It has not yet asked for wages.",
+    "flavor": "\"First, machines to serve men. Then, machines to build machines. The third step is discussed only in committee.\" (Foundry minutes)",
     "art": "res://art/cards/machine_r_011.webp"
   },
   {
@@ -1874,7 +1874,7 @@
       }
     ],
     "text": "Assembly. When this enters, create two 1/1 Servo Construct tokens.",
-    "flavor": "The heart of the Foundry, beating in iron time. Every other machine is its echo.",
+    "flavor": "\"A heart beats out of time and stops without warning. The Engine never does. Judge which deserves the city.\" (the Grand Tabulator)",
     "art": "res://art/cards/machine_m_001.webp"
   },
   {
@@ -1904,7 +1904,7 @@
       }
     ],
     "text": "Assembly. Upkeep 2.",
-    "flavor": "The guild built it to end a war. The guild is still paying for it.",
+    "flavor": "\"For what is the heart, but a spring; and the nerves, but so many strings; and the joints, but so many wheels?\" (Thomas Hobbes, Leviathan)",
     "art": "res://art/cards/machine_m_002.webp"
   },
   {
@@ -1988,7 +1988,7 @@
       ]
     },
     "text": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock 3 (you may pay 3 more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.",
-    "flavor": "Every machine in the city was drawn by his hand or by a hand he taught.",
+    "flavor": "\"...the enlarging of the bounds of human empire, to the effecting of all things possible.\" (Francis Bacon, New Atlantis)",
     "art": "res://art/cards/machine_m_004.webp"
   }
 ]

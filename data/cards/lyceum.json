@@ -40,7 +40,7 @@
     ],
     "effects": [],
     "text": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
-    "flavor": "At eighteen he swore the oath: never to shame his arms, never to desert the man beside him.",
+    "flavor": "\"It is difficulties that show what men are.\" (Epictetus, Discourses)",
     "art": "res://art/cards/lyceum_c_002.webp"
   },
   {
@@ -93,7 +93,7 @@
       }
     ],
     "text": "When this enters, draw a card.",
-    "flavor": "Copy the text, and the text copies something into you.",
+    "flavor": "\"Such as are thy habitual thoughts, such also will be the character of thy mind; for the soul is dyed by the thoughts.\" (Marcus Aurelius)",
     "art": "res://art/cards/lyceum_c_004.webp"
   },
   {
@@ -114,7 +114,7 @@
     ],
     "effects": [],
     "text": "Defender (can't attack).",
-    "flavor": "\"Be like the headland against which the waves break without ceasing. It stands firm.\" (Marcus Aurelius)",
+    "flavor": "\"Be like the promontory against which the waves continually break, but it stands firm.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_c_005.webp"
   },
   {
@@ -171,7 +171,7 @@
     ],
     "effects": [],
     "text": "Vigilance (doesn't tap to attack).",
-    "flavor": "Forty shields, one mind, no fear.",
+    "flavor": "\"We become just by doing just acts, temperate by doing temperate acts, brave by doing brave acts.\" (Aristotle, Ethics)",
     "art": "res://art/cards/lyceum_c_007.webp"
   },
   {
@@ -196,7 +196,7 @@
       }
     ],
     "text": "When this enters, foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom).",
-    "flavor": "He charts the heavens from a balcony of silver and glass, and reads tomorrow in their order.",
+    "flavor": "\"Demand not that events should happen as you wish; but wish them to happen as they do happen, and you will go on well.\" (Epictetus)",
     "art": "res://art/cards/lyceum_c_008.webp"
   },
   {
@@ -221,7 +221,7 @@
       }
     ],
     "text": "When this enters, return target enemy creature to its owner's hand.",
-    "flavor": "He owns a cloak, a staff and a satchel, and he has argued kings out of their own halls.",
+    "flavor": "\"Stand out of my light.\" (Diogenes the Cynic, to Alexander)",
     "art": "res://art/cards/lyceum_c_009.webp"
   },
   {
@@ -246,7 +246,7 @@
       }
     ],
     "text": "When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
-    "flavor": "\"I made a prosperous voyage when I suffered shipwreck.\" (Zeno of Citium)",
+    "flavor": "\"I made a prosperous voyage when I suffered shipwreck.\" (Zeno of Citium, in Diogenes Laertius)",
     "art": "res://art/cards/lyceum_c_010.webp"
   },
   {
@@ -267,7 +267,7 @@
     ],
     "effects": [],
     "text": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
-    "flavor": "\"It is difficulties that show what men are.\" (Epictetus)",
+    "flavor": "\"For men make the city and not walls or ships without men in them.\" (Nicias, in Thucydides)",
     "art": "res://art/cards/lyceum_c_011.webp"
   },
   {
@@ -289,7 +289,7 @@
       }
     ],
     "text": "Return target enemy creature to its owner's hand.",
-    "flavor": "\"Reconsider.\"",
+    "flavor": "\"The best way of avenging thyself is not to become like the wrong doer.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_c_012.webp",
     "speed": "instant"
   },
@@ -368,7 +368,7 @@
       }
     ],
     "text": "Draw a card, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
-    "flavor": "\"To be everywhere is to be nowhere.\" (Seneca, on reading too many books)",
+    "flavor": "\"Everywhere means nowhere.\" (Seneca, Letters to Lucilius, on reading too many books)",
     "art": "res://art/cards/lyceum_c_015.webp"
   },
   {
@@ -391,7 +391,7 @@
       }
     ],
     "text": "Draw two cards.",
-    "flavor": "Stillness first. Then clarity. Then the answer.",
+    "flavor": "\"It is not that we have a short space of time, but that we waste much of it.\" (Seneca, On the Shortness of Life)",
     "art": "res://art/cards/lyceum_c_016.webp"
   },
   {
@@ -447,7 +447,7 @@
       }
     ],
     "text": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs 1 more).",
-    "flavor": "\"The greatest remedy for anger is delay.\" (Seneca)",
+    "flavor": "\"The greatest remedy for anger is delay.\" (Seneca, On Anger)",
     "art": "res://art/cards/lyceum_c_018.webp"
   },
   {
@@ -555,7 +555,7 @@
       }
     ],
     "text": "Whenever another Philosopher enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
-    "flavor": "He carries the master's stool and the master's water, and carries the master's questions home with him.",
+    "flavor": "\"I feel, my dear Lucilius, that I am being not only reformed, but transformed.\" (Seneca)",
     "art": "res://art/cards/lyceum_c_022.webp"
   },
   {
@@ -601,7 +601,7 @@
       }
     ],
     "text": "When this enters, tax 1 (the enemy's next non-land card costs 1 more).",
-    "flavor": "He asked the general what courage is. The general went home to think it over, and is thinking still.",
+    "flavor": "\"The life which is unexamined is not worth living.\" (Socrates, in Plato's Apology)",
     "art": "res://art/cards/lyceum_c_024.webp"
   },
   {
@@ -622,7 +622,7 @@
     ],
     "effects": [],
     "text": "Vigilance (doesn't tap to attack).",
-    "flavor": "He bought the shield with two harvests of olives, and he will carry it as long as the city asks.",
+    "flavor": "\"Houses and land do not gain men, but men them.\" (Pericles, in Thucydides)",
     "art": "res://art/cards/lyceum_c_025.webp"
   },
   {
@@ -678,7 +678,7 @@
       }
     ],
     "text": "Foresight 2 for each Philosopher you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom), then draw a card.",
-    "flavor": "Before the market opens, the Porch is already full.",
+    "flavor": "\"Begin the morning by saying to thyself, I shall meet with the busy-body, the ungrateful, arrogant, deceitful, envious, unsocial.\" (Marcus Aurelius)",
     "art": "res://art/cards/lyceum_c_027.webp"
   },
   {
@@ -759,7 +759,7 @@
       }
     ],
     "text": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs 1 more).",
-    "flavor": "Every scale in the market is honest while he is near, and every price a little dearer.",
+    "flavor": "\"Man is by nature a political animal.\" (Aristotle, Politics)",
     "art": "res://art/cards/lyceum_u_001.webp"
   },
   {
@@ -784,7 +784,7 @@
       }
     ],
     "text": "Whenever this attacks, tap target enemy creature.",
-    "flavor": "Premise, rebuttal, and the defender left standing in confusion.",
+    "flavor": "\"The universe is transformation: life is opinion.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_u_002.webp"
   },
   {
@@ -818,7 +818,7 @@
       }
     ],
     "text": "As long as you have four or more cards in hand, this gets +1/+1 and has unmoved.",
-    "flavor": "\"Had there been no Chrysippus, there would have been no Stoa.\" (Diogenes Laertius)",
+    "flavor": "\"But for Chrysippus, there had been no Porch.\" (Diogenes Laertius)",
     "art": "res://art/cards/lyceum_u_003.webp"
   },
   {
@@ -840,7 +840,7 @@
     ],
     "effects": [],
     "text": "Defender. Unmoved.",
-    "flavor": "\"What is in my power is to hold this ground. I hold it.\"",
+    "flavor": "\"Some things are in our control and others not.\" (Epictetus, Enchiridion)",
     "art": "res://art/cards/lyceum_u_004.webp"
   },
   {
@@ -897,7 +897,7 @@
       }
     ],
     "text": "Vigilance. Other Hoplite creatures you control get +0/+1.",
-    "flavor": "He has studied every battle ever written down, and lost none of his own.",
+    "flavor": "\"War is the father of all and the king of all.\" (Heraclitus)",
     "art": "res://art/cards/lyceum_u_006.webp"
   },
   {
@@ -922,7 +922,7 @@
       }
     ],
     "text": "When this enters, freeze target enemy creature.",
-    "flavor": "\"If a man does not know to which port he sails, no wind is favourable.\" (Seneca)",
+    "flavor": "\"When a man does not know what harbour he is making for, no wind is the right wind.\" (Seneca)",
     "art": "res://art/cards/lyceum_u_007.webp"
   },
   {
@@ -951,7 +951,7 @@
       }
     ],
     "text": "Return target enemy creature to its owner's hand. Then, if you have four or more cards in hand, draw a card.",
-    "flavor": "\"Let silence be the rule, or say only what is needed, and in few words.\" (Epictetus)",
+    "flavor": "\"Take away thy opinion, and then there is taken away the complaint, 'I have been harmed.'\" (Marcus Aurelius)",
     "art": "res://art/cards/lyceum_u_008.webp"
   },
   {
@@ -980,7 +980,7 @@
       }
     ],
     "text": "Return target enemy creature with power 4 or greater to its owner's hand. Draw a card.",
-    "flavor": "\"Alexander of Macedon and his mule driver were brought to the same end by death.\" (Marcus Aurelius)",
+    "flavor": "\"Alexander the Macedonian and his groom by death were brought to the same state.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_u_009.webp"
   },
   {
@@ -1059,7 +1059,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, tap target enemy creature.",
-    "flavor": "As the brass planets turn, the enemy feels the weight of a fixed order.",
+    "flavor": "\"Ducunt volentem fata, nolentem trahunt.\" The fates lead the willing and drag the unwilling. (Seneca, after Cleanthes)",
     "art": "res://art/cards/lyceum_u_012.webp"
   },
   {
@@ -1082,7 +1082,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs 1 more).",
-    "flavor": "Bronze letters list what a man may spend. The enemy finds that the list includes him.",
+    "flavor": "\"It is not the man who has too little, but the man who craves more, that is poor.\" (Seneca)",
     "art": "res://art/cards/lyceum_u_013.webp"
   },
   {
@@ -1166,7 +1166,7 @@
       }
     ],
     "text": "Draw a card for each Philosopher you control.",
-    "flavor": "One master speaks. A dozen pupils write it down. A thousand years of readers learn it.",
+    "flavor": "\"Men learn while they teach.\" (Seneca, Letters to Lucilius)",
     "art": "res://art/cards/lyceum_u_016.webp"
   },
   {
@@ -1318,7 +1318,7 @@
       }
     ],
     "text": "Defender. Tap, pay 2: draw a card.",
-    "flavor": "He has never left the library, and he has never needed to.",
+    "flavor": "\"I have written my work, not as an essay which is to win the applause of the moment, but as a possession for all time.\" (Thucydides)",
     "art": "res://art/cards/lyceum_r_001.webp"
   },
   {
@@ -1374,7 +1374,7 @@
       }
     ],
     "text": "Vigilance. When this enters, draw two cards.",
-    "flavor": "\"The impediment to action advances action. What stands in the way becomes the way.\" (Marcus Aurelius)",
+    "flavor": "\"The impediment to action advances action. What stands in the way becomes the way.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_r_003.webp"
   },
   {
@@ -1400,7 +1400,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, if you have four or more cards in hand, draw a card.",
-    "flavor": "\"While we are postponing, life speeds by.\" (Seneca)",
+    "flavor": "\"While we are postponing, life speeds by.\" (Seneca, Letters to Lucilius)",
     "art": "res://art/cards/lyceum_r_004.webp"
   },
   {
@@ -1478,7 +1478,7 @@
       }
     ],
     "text": "Return all creatures to their owners' hands.",
-    "flavor": "Chrysippus taught that the cosmos returns at last to its source and begins again, the same in every part.",
+    "flavor": "\"You cannot go into the same water twice.\" (Heraclitus, in Plato's Cratylus)",
     "art": "res://art/cards/lyceum_r_007.webp"
   },
   {
@@ -1501,7 +1501,7 @@
       }
     ],
     "text": "At the beginning of your upkeep, draw a card.",
-    "flavor": "Each morning it opens to a page no one has read before.",
+    "flavor": "\"Nothing, Lucilius, is ours, except time.\" (Seneca, Letters to Lucilius)",
     "art": "res://art/cards/lyceum_r_008.webp"
   },
   {
@@ -1579,7 +1579,7 @@
       }
     ],
     "text": "Hoplite creatures you control get +1/+1.",
-    "flavor": "Where the enemy turned, the victors hung his arms upon a post, and the place was honoured ever after.",
+    "flavor": "\"For heroes have the whole earth for their tomb.\" (Pericles, in Thucydides)",
     "art": "res://art/cards/lyceum_r_011.webp"
   },
   {
@@ -1649,7 +1649,7 @@
       }
     ],
     "text": "Vigilance. Other Philosopher creatures you control get +1/+1. When this enters, draw a card.",
-    "flavor": "\"We have two ears and one mouth, so that we may listen more and speak less.\"",
+    "flavor": "\"The reason why we have two ears and only one mouth is that we may listen the more and talk the less.\"",
     "art": "res://art/cards/lyceum_m_001.webp"
   },
   {
@@ -1677,7 +1677,7 @@
       }
     ],
     "text": "Vigilance, unmoved. Whenever this attacks, freeze target enemy creature.",
-    "flavor": "\"Waste no more time arguing what a good man should be. Be one.\"",
+    "flavor": "\"No longer talk at all about the kind of man that a good man ought to be, but be such.\" (Meditations)",
     "art": "res://art/cards/lyceum_m_002.webp"
   },
   {
@@ -1710,7 +1710,7 @@
       }
     ],
     "text": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs 2 more).",
-    "flavor": "\"Look down from above on the countless herds of men, their solemn rites, their voyages in storm and calm.\" (Marcus Aurelius)",
+    "flavor": "\"Look down from above on the countless herds of men and their countless solemnities.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_m_003.webp"
   },
   {

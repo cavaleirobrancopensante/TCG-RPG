@@ -135,7 +135,9 @@ func _show_tournament() -> void:
 # ------------------------------------------------------------------ town / missions
 
 func _show_town() -> void:
+	_show_feast_day()
 	content.add_child(UIKit.label(I18n.t(city.get("description", "")), 19, UIKit.TEXT, true))
+	_show_feast_errand()
 	for npc in city.get("npcs", []):
 		var panel := PanelContainer.new()
 		content.add_child(panel)
@@ -179,6 +181,78 @@ func _show_town() -> void:
 					any_for_hero = true
 			v.add_child(UIKit.label(I18n.t("\"Come back when you have finished what you began.\"") if any_for_hero
 				else I18n.t("\"I have no work for one of your faith.\""), 16, UIKit.DIM, true))
+
+
+## The day in the calendar: a Church city names the day's celebration; another faith's city
+## names its own feast when it keeps one.
+func _show_feast_day() -> void:
+	var date := LiturgicalCalendar.date_text(GameState.day)
+	if faction == "sanctum":
+		var c := LiturgicalCalendar.of_day(GameState.day)
+		var nm := LiturgicalCalendar.label(c)
+		if String(c.get("title", "")) != "":
+			nm += ", " + I18n.t(c["title"])
+		var l := UIKit.label(I18n.t("%s: %s (%s).") % [date, nm, LiturgicalCalendar.class_name_of(c)], 19,
+			LiturgicalCalendar.ink(c["color"]) if c["color"] != "white" else Tapestry.INK, true)
+		content.add_child(l)
+		if c["cls"] == "I":
+			content.add_child(UIKit.label(I18n.t("It is a great feast: the bells ring, the streets are hung with banners, and the inn gives its beds for charity."), 17, UIKit.GOLD, true))
+		return
+	var theirs := LiturgicalCalendar.faith_feasts(faction, GameState.day)
+	var text := date + "."
+	if not theirs.is_empty():
+		text = I18n.t("%s: the city keeps %s.") % [date, I18n.t(theirs[0])]
+	content.add_child(UIKit.label(text, 19, UIKit.faction_ink(faction), true))
+
+
+const ERRAND_GIVERS := {
+	"sanctum": "The sacristan", "wild": "The grove-keeper", "revel": "The master of revels",
+	"lyceum": "The steward of the Porch", "machine": "The guild quartermaster", "abyss": "The keeper of the black hall",
+}
+
+
+## Before a feast the city asks for something for it, fetched from another city.
+func _show_feast_errand() -> void:
+	var er: Dictionary = GameState.errand
+	var mine: bool = GameState.is_feast_errand() and er.get("city", "") == city_id
+	var offer: Dictionary = {} if mine else GameState.feast_errand_offer(city_id)
+	if not mine and offer.is_empty():
+		return
+	var e: Dictionary = er if mine else offer
+	var panel := PanelContainer.new()
+	content.add_child(panel)
+	var v := VBoxContainer.new()
+	panel.add_child(v)
+	var feast := LiturgicalCalendar.feast_label({"name": e["feast"], "short": e.get("feast_short", "")})
+	v.add_child(UIKit.title(I18n.t("%s, for the feast of %s") % [I18n.t(ERRAND_GIVERS.get(faction, "The steward")), feast], 24))
+	var src: String = GameState.city(e["source"]).get("name", "")
+	var when := LiturgicalCalendar.short_date_text(int(e["feast_day"]))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	v.add_child(row)
+	var txt := ""
+	if mine:
+		txt = I18n.t("\"The feast of %s is on %s. Have you brought the %s from %s?\"") % [feast, when, I18n.t(e["goods"]), src]
+		if e.get("state", "") == "carry":
+			txt += "\n" + I18n.t("You carry the %s in your pack.") % I18n.t(e["goods"])
+		else:
+			txt += "\n" + I18n.t("Fetch the %s from %s and come back here.") % [I18n.t(e["goods"]), src]
+	else:
+		txt = I18n.t("\"The feast of %s is on %s. Whoever fetches the %s from %s before then will not go unthanked.\"") % [feast, when, I18n.t(e["goods"]), src]
+		txt += "\n" + I18n.t("Reward: %d gold (half if you come after the feast), perhaps a card of %s. Beware: such goods tempt thieves.") % [int(e["reward"]), Factions.info(faction)["short"]]
+	var l := UIKit.label(txt, 16, UIKit.TEXT, true)
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(l)
+	if not mine:
+		var b := UIKit.button("Accept", func():
+			if GameState.accept_feast_errand(offer):
+				GameState.save_game()
+				_toast(I18n.t("Feast errand: bring the %s from %s.") % [I18n.t(offer["goods"]), src])
+			_show(), 140)
+		b.disabled = not er.is_empty()
+		row.add_child(b)
+		if not er.is_empty():
+			v.add_child(UIKit.label(I18n.t("You already have an errand in hand."), 15, UIKit.DIM, true))
 
 
 func _state_name(mid: String, state: String) -> String:
@@ -332,18 +406,21 @@ func _show_inn() -> void:
 	var rest_row := HBoxContainer.new()
 	rest_row.add_theme_constant_override("separation", 12)
 	content.add_child(rest_row)
-	var rest := UIKit.button(I18n.t("Sleep here (%d gold)") % Economy.inn_price(), func():
+	var price := GameState.inn_cost(city_id)
+	var rest := UIKit.button(I18n.t("Sleep here (%d gold)") % price if price > 0 else I18n.t("Sleep here (free today)"), func():
 		if GameState.rest_at_inn():
 			GameState.save_game()
 			_toast("You sleep well.")
 		else:
 			_toast("Not enough gold.")
 		_show(), 300)
-	rest.disabled = GameState.life >= GameState.max_life() or GameState.gold < Economy.inn_price()
+	rest.disabled = GameState.life >= GameState.max_life() or GameState.gold < price
 	rest_row.add_child(rest)
 	var note := I18n.t("A night's sleep heals you fully (life %d of %d). The day passes and prices settle.") % [GameState.life, GameState.max_life()]
 	if GameState.life >= GameState.max_life():
 		note = I18n.t("You are rested and whole (life %d of %d).") % [GameState.life, GameState.max_life()]
+	if price == 0:
+		note += " " + I18n.t("For the feast of %s the bed is given for charity.") % LiturgicalCalendar.label(LiturgicalCalendar.of_day(GameState.day), true)
 	var nl := UIKit.label(note, 17, UIKit.DIM, true)
 	nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rest_row.add_child(nl)

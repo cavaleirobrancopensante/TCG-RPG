@@ -129,6 +129,10 @@
    "note": "scripts/autoload/game_state.gd"
   },
   {
+   "key": "city@day",
+   "note": "scripts/autoload/game_state.gd"
+  },
+  {
    "key": "On the road",
    "note": "scripts/autoload/game_state.gd"
   },
@@ -603,6 +607,454 @@
   {
    "key": "No lands",
    "note": "scripts/battle/land_strip.gd"
+  },
+  {
+   "key": "Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Monday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Tuesday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Wednesday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Thursday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Friday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Saturday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "January",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "February",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "March",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "April",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "June",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "July",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "August",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "September",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "October",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "November",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "December",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d January",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d February",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d March",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d April",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d May",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d June",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d July",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d August",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d September",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d October",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d November",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%d December",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "I class",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "II",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "II class",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "III",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "III class",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "IV",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "IV class",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Commemoration",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Saturday of Our Lady",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Comm. of %s",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Nativity of Our Lord Jesus Christ",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Sunday within the Octave of the Nativity",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Day within the Octave of the Nativity",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Feria of Christmastide",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Most Holy Name of Jesus",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Holy Family of Jesus, Mary and Joseph",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Holy Family",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Feria after Epiphany",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Wednesday of Advent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Friday of Advent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Saturday of Advent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%s Sunday of Advent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Feria of Advent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%s Sunday after Epiphany",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Feria",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Septuagesima Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Sexagesima Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Quinquagesima Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ash Wednesday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Palm Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Monday of Holy Week",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Tuesday of Holy Week",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Wednesday of Holy Week",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Holy Thursday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Good Friday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Holy Saturday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Passion Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Wednesday of Lent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Friday of Lent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Saturday of Lent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%s Sunday of Lent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Feria of Passiontide",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Seven Sorrows of the Blessed Virgin Mary",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Feria of Lent",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Easter Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Low Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Monday in the Octave of Easter",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Tuesday in the Octave of Easter",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Wednesday in the Octave of Easter",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Thursday in the Octave of Easter",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Friday in the Octave of Easter",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Saturday in the Octave of Easter",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ascension of Our Lord",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ascension",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Vigil of the Ascension",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Vigil of Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Sunday after the Ascension",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%s Sunday after Easter",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Feria of Eastertide",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Pentecost Sunday",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Monday in the Octave of Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Tuesday in the Octave of Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Wednesday of Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Thursday in the Octave of Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Friday of Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Saturday of Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Most Holy Trinity",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Corpus Christi",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Most Sacred Heart of Jesus",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Sacred Heart",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Wednesday of September",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Friday of September",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember Saturday of September",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Our Lord Jesus Christ the King",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Christ the King",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%s and Last Sunday after Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%s Sunday after Epiphany (resumed)",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "%s Sunday after Pentecost",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Vigil",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Day within",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Feria of",
+   "note": "scripts/core/calendar.gd"
+  },
+  {
+   "key": "Ember",
+   "note": "scripts/core/calendar.gd"
   },
   {
    "key": "Deck needs at least %d cards (has %d).",
@@ -1081,6 +1533,94 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "\"The %s will never reach the feast. Hand it over.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"Somebody is paying well for the %s, friend. It might as well be me.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"Put down the %s and walk on, and nobody gets hurt.\"",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Road Thief",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The feast is long past: %s no longer waits for the %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Someone on the road has an eye on your %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Fight",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Bribe him with the %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Slip away (%d%%)",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s takes the %s and is gone.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Feast errand",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You load the %s for %s. The feast of %s is on %s: be there by then, and keep an eye on the road.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Onward",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "You deliver the %s for the feast of %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "In good time. You are paid %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The feast is past, but they take the %s gladly. You are paid %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "And a card, with their thanks: %s.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "• Favour for %s: beat hostile wanderers (%d/%d), %d gold.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "• Feast errand for %s: bring the %s from %s by %s (%s).",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "In your pack.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Stolen on the road: fetch more.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Late: half the reward.",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Ferryman",
    "note": "scripts/main.gd"
   },
@@ -1241,6 +1781,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Today: %s. %s.",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "\nLairs cleared: %d / %d",
    "note": "scripts/main.gd"
   },
@@ -1293,15 +1837,7 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Fight",
-   "note": "scripts/main.gd"
-  },
-  {
    "key": "Bribe (%d gold)",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Slip away (%d%%)",
    "note": "scripts/main.gd"
   },
   {
@@ -1325,15 +1861,19 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Victory",
-   "note": "scripts/main.gd"
-  },
-  {
    "key": "You gain: %s",
    "note": "scripts/main.gd"
   },
   {
-   "key": "Onward",
+   "key": "You keep the %s safe in your pack.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Victory",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%s makes off with the %s.",
    "note": "scripts/main.gd"
   },
   {
@@ -1669,6 +2209,74 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
+   "key": "It is a great feast: the bells ring, the streets are hung with banners, and the inn gives its beds for charity.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "%s: the city keeps %s.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "The sacristan",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "The grove-keeper",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "The master of revels",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "The steward of the Porch",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "The guild quartermaster",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "The keeper of the black hall",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "%s, for the feast of %s",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "The steward",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "\"The feast of %s is on %s. Have you brought the %s from %s?\"",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "You carry the %s in your pack.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Fetch the %s from %s and come back here.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "\"The feast of %s is on %s. Whoever fetches the %s from %s before then will not go unthanked.\"",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Reward: %d gold (half if you come after the feast), perhaps a card of %s. Beware: such goods tempt thieves.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "Feast errand: bring the %s from %s.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "You already have an errand in hand.",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
    "key": "In progress %d/%d",
    "note": "scripts/ui/city_screen.gd"
   },
@@ -1737,6 +2345,10 @@
    "note": "scripts/ui/city_screen.gd"
   },
   {
+   "key": "Sleep here (free today)",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
    "key": "You sleep well.",
    "note": "scripts/ui/city_screen.gd"
   },
@@ -1746,6 +2358,10 @@
   },
   {
    "key": "You are rested and whole (life %d of %d).",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "For the feast of %s the bed is given for charity.",
    "note": "scripts/ui/city_screen.gd"
   },
   {
@@ -2289,10 +2905,6 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
-   "key": "Day %d, %02d:%02d",
-   "note": "scripts/ui/sky_dial.gd"
-  },
-  {
    "key": "Begin a New Game",
    "note": "scripts/ui/slot_screen.gd"
   },
@@ -2378,18 +2990,6 @@
   },
   {
    "key": "This journey will be lost for ever.",
-   "note": "scripts/ui/slot_screen.gd"
-  },
-  {
-   "key": "II",
-   "note": "scripts/ui/slot_screen.gd"
-  },
-  {
-   "key": "III",
-   "note": "scripts/ui/slot_screen.gd"
-  },
-  {
-   "key": "IV",
    "note": "scripts/ui/slot_screen.gd"
   },
   {
@@ -2655,7 +3255,7 @@
    "note": "rules text of Lantern-Bearer Acolyte"
   },
   {
-   "key": "He carries the light so that others may walk without stumbling.",
+   "key": "Thy word is a lamp to my feet, and a light to my paths. (Psalm 118:105)",
    "note": "flavour text of Lantern-Bearer Acolyte"
   },
   {
@@ -2671,7 +3271,7 @@
    "note": "rules text of Cloister Dove"
   },
   {
-   "key": "The brothers leave crumbs on the sill at Prime, and the dove keeps the hours better than the novices.",
+   "key": "Who will give me wings like a dove, and I will fly and be at rest? (Psalm 54:7)",
    "note": "flavour text of Cloister Dove"
   },
   {
@@ -2687,7 +3287,7 @@
    "note": "rules text of Novice of the Choir"
   },
   {
-   "key": "His voice was the first thing the dark ever feared.",
+   "key": "Sing ye to the Lord a new canticle: sing to the Lord, all the earth. (Psalm 95:1)",
    "note": "flavour text of Novice of the Choir"
   },
   {
@@ -2707,7 +3307,7 @@
    "note": "rules text of Martyr of the Pilgrim Road"
   },
   {
-   "key": "He fell on the road, and the road itself remembered him as holy.",
+   "key": "Thou hast made us for Thyself, O Lord, and our heart is restless until it rest in Thee. (St. Augustine, Confessions)",
    "note": "flavour text of Martyr of the Pilgrim Road"
   },
   {
@@ -2723,7 +3323,7 @@
    "note": "rules text of Barefoot Friar"
   },
   {
-   "key": "He owns a rope belt, a bowl and a breviary, and he gives away the bowl.",
+   "key": "Blessed are the poor in spirit: for theirs is the kingdom of heaven. (Matthew 5:3)",
    "note": "flavour text of Barefoot Friar"
   },
   {
@@ -2735,7 +3335,7 @@
    "note": "card subtype"
   },
   {
-   "key": "He descends at Lauds, and the frost melts from the bell-rope.",
+   "key": "'Angel' is the name of their office, not of their nature. (St. Augustine)",
    "note": "flavour text of Herald of the Morning Bell"
   },
   {
@@ -2759,7 +3359,7 @@
    "note": "rules text of Thurifer of the Procession"
   },
   {
-   "key": "When he fell, the censer kept swinging, and the smoke rose straight to Heaven.",
+   "key": "Let my prayer be directed as incense in thy sight; the lifting up of my hands, as evening sacrifice. (Psalm 140:2)",
    "note": "flavour text of Thurifer of the Procession"
   },
   {
@@ -2791,7 +3391,7 @@
    "note": "rules text of Almoner of the Great Abbey"
   },
   {
-   "key": "Every loaf that leaves his hands comes back as a prayer.",
+   "key": "For I was hungry, and you gave me to eat; I was thirsty, and you gave me to drink. (Matthew 25:35)",
    "note": "flavour text of Almoner of the Great Abbey"
   },
   {
@@ -2823,7 +3423,7 @@
    "note": "rules text of Rebuke the Wicked"
   },
   {
-   "key": "\"You were warned at the threshold. Begone.\"",
+   "key": "Be subject therefore to God, but resist the devil, and he will fly from you. (James 4:7)",
    "note": "flavour text of Rebuke the Wicked"
   },
   {
@@ -2855,7 +3455,7 @@
    "note": "rules text of Sacrament of Confirmation"
   },
   {
-   "key": "Sealed with the gift of the Holy Spirit, he rose a soldier of Christ.",
+   "key": "Grace does not destroy nature, but perfects it. (St. Thomas Aquinas, Summa Theologiae)",
    "note": "flavour text of Sacrament of Confirmation"
   },
   {
@@ -2903,7 +3503,7 @@
    "note": "rules text of Processional Cross"
   },
   {
-   "key": "Where the cross goes first, the faithful follow, and none of them walks alone.",
+   "key": "Vexilla Regis prodeunt. The royal banners forward go, the Cross shines forth in mystic glow. (Venantius Fortunatus)",
    "note": "flavour text of Processional Cross"
   },
   {
@@ -2915,7 +3515,7 @@
    "note": "rules text of Knight of Saint Lazarus"
   },
   {
-   "key": "He took his vows among the lepers, and learned there that a knight's first enemy is his own fear.",
+   "key": "Fear is not in charity: but perfect charity casteth out fear. (1 John 4:18)",
    "note": "flavour text of Knight of Saint Lazarus"
   },
   {
@@ -2927,7 +3527,7 @@
    "note": "rules text of Teutonic Knight-Brother"
   },
   {
-   "key": "Black cross on white mantle, he rides out with his brothers or not at all.",
+   "key": "Behold how good and how pleasant it is for brethren to dwell together in unity. (Psalm 132:1)",
    "note": "flavour text of Teutonic Knight-Brother"
   },
   {
@@ -2935,7 +3535,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Travellers who stop to pray at his shrine find the road shorter afterward, and never know why.",
+   "key": "For he hath given his angels charge over thee; to keep thee in all thy ways. (Psalm 90:11)",
    "note": "flavour text of Angel of the Wayside Shrine"
   },
   {
@@ -2983,7 +3583,7 @@
    "note": "rules text of Gloria in Excelsis"
   },
   {
-   "key": "The shepherds heard it first, and the hills of Bethlehem have kept the tune ever since.",
+   "key": "Glory to God in the highest; and on earth peace to men of good will. (Luke 2:14)",
    "note": "flavour text of Gloria in Excelsis"
   },
   {
@@ -2999,7 +3599,7 @@
    "note": "rules text of Parish Priest of the Valley"
   },
   {
-   "key": "He blessed the seed in spring and the sheaves in autumn, and every soul in the valley by name.",
+   "key": "The priesthood is the love of the Heart of Jesus. (St. John Vianney, the Cure of Ars)",
    "note": "flavour text of Parish Priest of the Valley"
   },
   {
@@ -3023,7 +3623,7 @@
    "note": "rules text of Brother of Mercy"
   },
   {
-   "key": "He tends the wounded of both armies, and asks no one his banner.",
+   "key": "Go, and do thou in like manner. (Luke 10:37)",
    "note": "flavour text of Brother of Mercy"
   },
   {
@@ -3035,7 +3635,7 @@
    "note": "rules text of Martyr of the Far Mission"
   },
   {
-   "key": "The chieftain who killed him knelt at his grave a year later and asked to be baptised.",
+   "key": "The oftener we are mown down by you, the more in number we grow; the blood of Christians is seed. (Tertullian, Apology)",
    "note": "flavour text of Martyr of the Far Mission"
   },
   {
@@ -3063,7 +3663,7 @@
    "note": "rules text of Cistercian Abbot"
   },
   {
-   "key": "Ora et labora. Under his rule the fields grew green and the brothers grew strong.",
+   "key": "Idleness is the enemy of the soul. (Rule of St. Benedict, ch. 48)",
    "note": "flavour text of Cistercian Abbot"
   },
   {
@@ -3079,7 +3679,7 @@
    "note": "rules text of Inquisitor of the Pale Flame"
   },
   {
-   "key": "He seeks the truth patiently, and the lie cannot endure his gaze.",
+   "key": "Outside the Church there is no salvation. (St. Cyprian of Carthage)",
    "note": "flavour text of Inquisitor of the Pale Flame"
   },
   {
@@ -3235,7 +3835,7 @@
    "note": "rules text of Angelic Intercession"
   },
   {
-   "key": "The blow fell, and something no one saw turned it aside.",
+   "key": "A thousand shall fall at thy side, and ten thousand at thy right hand: but it shall not come nigh thee. (Psalm 90:7)",
    "note": "flavour text of Angelic Intercession"
   },
   {
@@ -3283,7 +3883,7 @@
    "note": "rules text of Seraph of the Dawn Watch"
   },
   {
-   "key": "He has kept watch over the cathedral since before the first stone was laid.",
+   "key": "Holy, holy, holy, the Lord God of hosts, all the earth is full of his glory. (Isaias 6:3)",
    "note": "flavour text of Seraph of the Dawn Watch"
   },
   {
@@ -3295,7 +3895,7 @@
    "note": "rules text of Knight of the Holy Grail"
   },
   {
-   "key": "Only the pure of heart may find the Grail, and only the pure of heart are strong enough to carry it home.",
+   "key": "Blessed are the clean of heart: for they shall see God. (Matthew 5:8)",
    "note": "flavour text of Knight of the Holy Grail"
   },
   {
@@ -3343,7 +3943,7 @@
    "note": "rules text of Year of Jubilee"
   },
   {
-   "key": "In the fiftieth year debts are forgiven, the land rests, and every pilgrim at the Holy Door goes home made new.",
+   "key": "Thou shalt sanctify the fiftieth year, and shalt proclaim remission to all the inhabitants of thy land. (Leviticus 25:10)",
    "note": "flavour text of Year of Jubilee"
   },
   {
@@ -3367,7 +3967,7 @@
    "note": "rules text of Reliquary of the First Martyr"
   },
   {
-   "key": "Behind the gold and crystal lies a single bone, and it is enough.",
+   "key": "Lord, lay not this sin to their charge. (Acts 7:59, the last words of St. Stephen)",
    "note": "flavour text of Reliquary of the First Martyr"
   },
   {
@@ -3377,6 +3977,10 @@
   {
    "key": "Sanctified (protection from the Pact). Other Knights you control get +1/+1 and have sanctified.",
    "note": "rules text of Grand Master of the Temple"
+  },
+  {
+   "key": "Blessed be the Lord my God, who teacheth my hands to fight, and my fingers to war. (Psalm 143:1)",
+   "note": "flavour text of Grand Master of the Temple"
   },
   {
    "key": "Saint Raphael, Medicine of God",
@@ -3399,7 +4003,7 @@
    "note": "rules text of Bishop of the Mountain See"
   },
   {
-   "key": "He ordained them in the cathedral above the clouds, and sent them down to the valleys two by two.",
+   "key": "See that ye all follow the bishop, even as Jesus Christ does the Father. (St. Ignatius of Antioch, to the Smyrnaeans)",
    "note": "flavour text of Bishop of the Mountain See"
   },
   {
@@ -3447,7 +4051,7 @@
    "note": "rules text of Saint Michael the Archangel"
   },
   {
-   "key": "Quis ut Deus? Who is like unto God?",
+   "key": "Saint Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. (Pope Leo XIII)",
    "note": "flavour text of Saint Michael the Archangel"
   },
   {
@@ -3459,7 +4063,7 @@
    "note": "rules text of Pact Initiate"
   },
   {
-   "key": "Even his last breath was promised to someone else.",
+   "key": "\"Your soul is only a coin. Spend it while it still buys something.\" (a Pact recruiting sermon)",
    "note": "flavour text of Pact Initiate"
   },
   {
@@ -3487,7 +4091,7 @@
    "note": "rules text of Blood-Oath Thrall"
   },
   {
-   "key": "The oath was signed in a fingertip of blood. The rest came due later.",
+   "key": "\"Read the contract? Only the weak read. The strong sign.\" (a Pact notary)",
    "note": "flavour text of Blood-Oath Thrall"
   },
   {
@@ -3555,7 +4159,7 @@
    "note": "rules text of Charnel Glutton"
   },
   {
-   "key": "It is never full. It is only, for a moment, less empty.",
+   "key": "\"Enough is a word invented by men who already have too much.\" (a Pact preacher)",
    "note": "flavour text of Charnel Glutton"
   },
   {
@@ -3567,7 +4171,7 @@
    "note": "rules text of Blight-Sower Cultist"
   },
   {
-   "key": "He scatters ash on the furrows and calls it a blessing.",
+   "key": "\"A ruined harvest is still a harvest, if you are the one selling the bread.\" (the Blight-Sower's creed)",
    "note": "flavour text of Blight-Sower Cultist"
   },
   {
@@ -3631,7 +4235,7 @@
    "note": "rules text of Wither the Living"
   },
   {
-   "key": "The flesh remembers that it is only borrowed.",
+   "key": "\"Life is short. That is why you must take other people's.\" (a Pact preacher)",
    "note": "flavour text of Wither the Living"
   },
   {
@@ -3643,7 +4247,7 @@
    "note": "rules text of Bargain in Blood"
   },
   {
-   "key": "Two secrets for two drops. The scribe never mentions the interest.",
+   "key": "\"Sin is only a debt, and debts are for the poor.\" (the Pact catechism)",
    "note": "flavour text of Bargain in Blood"
   },
   {
@@ -3655,7 +4259,7 @@
    "note": "rules text of Siphon of Ashes"
   },
   {
-   "key": "Their warmth drains out like wine from a cracked chalice.",
+   "key": "\"Charity is theft from yourself. Take, and call it balance.\" (the Black Synod)",
    "note": "flavour text of Siphon of Ashes"
   },
   {
@@ -3667,7 +4271,7 @@
    "note": "rules text of Dread Whisper"
   },
   {
-   "key": "A single word in the night, and every plan they had unravels.",
+   "key": "\"A lie told at the right hour is worth a hundred truths told too late.\" (Malgrith, Lich of the Black Ledger)",
    "note": "flavour text of Dread Whisper"
   },
   {
@@ -3695,7 +4299,7 @@
    "note": "rules text of Black Altar"
   },
   {
-   "key": "Its stone is never dry, and its keepers never ask whose turn is next.",
+   "key": "\"Sacrifice is a holy thing, provided it is always someone else's.\" (the Pact catechism)",
    "note": "flavour text of Black Altar"
   },
   {
@@ -3707,7 +4311,7 @@
    "note": "rules text of Gibbet of the Forsworn"
   },
   {
-   "key": "The broken oath swings in the wind, and every man below remembers his own.",
+   "key": "\"Swear by everything. Then nothing can hold you to anything.\" (a Pact notary)",
    "note": "flavour text of Gibbet of the Forsworn"
   },
   {
@@ -3731,7 +4335,7 @@
    "note": "rules text of Cackling Imp"
   },
   {
-   "key": "It laughs whenever a greater fiend arrives, because then someone else will suffer.",
+   "key": "\"Loyalty is only waiting for a better master.\" (Cackling Imp)",
    "note": "flavour text of Cackling Imp"
   },
   {
@@ -3771,7 +4375,7 @@
    "note": "rules text of Tithe of the Pit"
   },
   {
-   "key": "Every fiend brings a secret, and every secret is billed to his master.",
+   "key": "\"The Pact asks only a tenth of you. Then a tenth of what remains. Then a tenth of that.\" (a Pact tithe-collector)",
    "note": "flavour text of Tithe of the Pit"
   },
   {
@@ -3815,7 +4419,7 @@
    "note": "rules text of Bone-Priest of the Pact"
   },
   {
-   "key": "He reads the future in knucklebones, and he is never short of knucklebones.",
+   "key": "\"Conscience is a fever of the young. Bleed it out early.\" (Bone-Priest of the Pact)",
    "note": "flavour text of Bone-Priest of the Pact"
   },
   {
@@ -3843,7 +4447,7 @@
    "note": "rules text of Veiled Blade of the Pact"
   },
   {
-   "key": "The Pact pays its assassins in years taken from their victims.",
+   "key": "\"Murder is such a vulgar word. We say early settlement.\" (a Pact paymaster)",
    "note": "flavour text of Veiled Blade of the Pact"
   },
   {
@@ -3855,7 +4459,7 @@
    "note": "rules text of Cinder-Pit Fiend"
   },
   {
-   "key": "It serves well, and it is always, always hungry.",
+   "key": "\"Gratitude is a tax, and the Pact is exempt.\" (the Pact catechism)",
    "note": "flavour text of Cinder-Pit Fiend"
   },
   {
@@ -3867,7 +4471,7 @@
    "note": "rules text of Tempter of Broken Vows"
   },
   {
-   "key": "He never lies. He simply lets you hear what you wanted to hear.",
+   "key": "\"Repent tomorrow. Tomorrow is always such a convenient day.\" (Tempter of Broken Vows)",
    "note": "flavour text of Tempter of Broken Vows"
   },
   {
@@ -3911,7 +4515,7 @@
    "note": "rules text of Unmaking Rite"
   },
   {
-   "key": "Every unmaking costs the maker a little of his own soul.",
+   "key": "\"Mercy is a debt owed to the weak, and the Pact never pays its debts.\" (the Black Synod)",
    "note": "flavour text of Unmaking Rite"
   },
   {
@@ -3947,7 +4551,7 @@
    "note": "rules text of Chalice of Black Vows"
   },
   {
-   "key": "It is never empty, and no one asks what it is filled with.",
+   "key": "\"Drink. Guilt is only a thirst you have not yet satisfied.\" (a Pact cupbearer)",
    "note": "flavour text of Chalice of Black Vows"
   },
   {
@@ -3995,7 +4599,7 @@
    "note": "rules text of Herald of the Burning Gate"
   },
   {
-   "key": "He holds the gate open, and something larger is always waiting behind him.",
+   "key": "\"Every man serves someone. Serve the one with the bigger fire.\" (Herald of the Burning Gate)",
    "note": "flavour text of Herald of the Burning Gate"
   },
   {
@@ -4067,7 +4671,7 @@
    "note": "rules text of Oathbreaker Knight"
   },
   {
-   "key": "He swore to guard the weak. Then a voice offered to make him strong.",
+   "key": "\"Honour was a fine horse. I sold it and bought ten mercenaries.\" (Oathbreaker Knight)",
    "note": "flavour text of Oathbreaker Knight"
   },
   {
@@ -4091,7 +4695,7 @@
    "note": "rules text of Marquis of the Wailing Pit"
   },
   {
-   "key": "He arrives on a tide of smoke, and presents his bill at the door.",
+   "key": "\"Better feared than loved, and better paid than feared.\" (Marquis of the Wailing Pit)",
    "note": "flavour text of Marquis of the Wailing Pit"
   },
   {
@@ -4103,7 +4707,7 @@
    "note": "rules text of Hollow-Crowned Lich"
   },
   {
-   "key": "It traded its heart for a crown, and found the crown was hollow too.",
+   "key": "\"Why fear the judgement? I have simply arranged never to arrive at it.\" (Hollow-Crowned Lich)",
    "note": "flavour text of Hollow-Crowned Lich"
   },
   {
@@ -4143,7 +4747,7 @@
    "note": "rules text of Night of Unmaking"
   },
   {
-   "key": "By dawn the field was quiet, and the Pact counted it a victory.",
+   "key": "\"When no one is left to accuse you, you are innocent.\" (the Black Synod, Canon of Silence)",
    "note": "flavour text of Night of Unmaking"
   },
   {
@@ -4155,7 +4759,7 @@
    "note": "rules text of Rite of the Emptied Mind"
   },
   {
-   "key": "First the names of friends go, then the prayers, then the reason for prayer.",
+   "key": "\"An empty mind is a free mind. An empty soul is freer still.\" (the Pact catechism)",
    "note": "flavour text of Rite of the Emptied Mind"
   },
   {
@@ -4167,7 +4771,7 @@
    "note": "rules text of Ledger of the Damned"
   },
   {
-   "key": "Every page is a soul, and every soul is overdue.",
+   "key": "\"Every soul has its price. The trick is to buy before he learns it.\" (Malgrith, Lich of the Black Ledger)",
    "note": "flavour text of Ledger of the Damned"
   },
   {
@@ -4195,7 +4799,7 @@
    "note": "rules text of Brimstone Marshal"
   },
   {
-   "key": "He drills the legions of the pit, and every recruit is paid for in someone's blood.",
+   "key": "\"Never ask a recruit why he joined. Ask him what he still owes.\" (Brimstone Marshal)",
    "note": "flavour text of Brimstone Marshal"
   },
   {
@@ -4223,7 +4827,7 @@
    "note": "rules text of Belzareth, Prince of Cinders"
   },
   {
-   "key": "Where he walks, the ground forgets it was ever green.",
+   "key": "\"I did not fall. I merely went into business for myself.\" (Belzareth, Prince of Cinders)",
    "note": "flavour text of Belzareth, Prince of Cinders"
   },
   {
@@ -4235,7 +4839,7 @@
    "note": "rules text of Malgrith, Lich of the Black Ledger"
   },
   {
-   "key": "He has outlived every debtor, and he collects from their sons.",
+   "key": "\"Death is only a creditor, and I have never paid a creditor in my life.\" (Malgrith, Lich of the Black Ledger)",
    "note": "flavour text of Malgrith, Lich of the Black Ledger"
   },
   {
@@ -4247,7 +4851,7 @@
    "note": "rules text of The Black Contract"
   },
   {
-   "key": "Sign, and your enemies wither. Sign, and so do you.",
+   "key": "\"Read nothing. Sign everything. Regret is a clause for later.\" (the Black Contract, preamble)",
    "note": "flavour text of The Black Contract"
   },
   {
@@ -4259,7 +4863,7 @@
    "note": "rules text of Azgaroth, Duke of the Ninth Pit"
   },
   {
-   "key": "He keeps no court of nobles, only of debtors, and none has ever left it.",
+   "key": "\"In my court there is perfect freedom: every man is free to pay.\" (Azgaroth, Duke of the Ninth Pit)",
    "note": "flavour text of Azgaroth, Duke of the Ninth Pit"
   },
   {
@@ -4287,7 +4891,7 @@
    "note": "rules text of Hedgerow Druid"
   },
   {
-   "key": "He coaxes the green out of the soil the way one coaxes a shy child.",
+   "key": "The soil is our true mother, and the ploughman owes her an apology every spring. (Hedgerow Druid)",
    "note": "flavour text of Hedgerow Druid"
   },
   {
@@ -4315,7 +4919,7 @@
    "note": "rules text of Bramble Spider"
   },
   {
-   "key": "Its web hangs between the blackthorns, and the finches have learned to fly around it.",
+   "key": "Kill no spider, kill no fly, kill no wolf. Kill only the woodcutter, who is the true pest. (A Moot precept)",
    "note": "flavour text of Bramble Spider"
   },
   {
@@ -4327,7 +4931,7 @@
    "note": "rules text of Acorn Gatherer"
   },
   {
-   "key": "Every acorn he lets fall is a gift to someone two hundred years from now.",
+   "key": "Every acorn has more right to this valley than every child of man. (Acorn Gatherer)",
    "note": "flavour text of Acorn Gatherer"
   },
   {
@@ -4343,7 +4947,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "It leaps the barrow-mounds where the old kings sleep.",
+   "key": "Our forefathers did not die. They became mushrooms, and one must never be rude to them. (A moot-folk saying)",
    "note": "flavour text of Antlered Barrow-Stag"
   },
   {
@@ -4351,7 +4955,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "It stood guard at the moot for a hundred years, and saw no need to leave.",
+   "key": "The trees are the true judges. Men only borrow their shade to hold court. (A saying of the Moot)",
    "note": "flavour text of Oakmoot Sentinel"
   },
   {
@@ -4399,7 +5003,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "The last of the wild cattle, and the whole valley still steps aside for it.",
+   "key": "Every field is a wound, and every farmer a surgeon who will not stop cutting. (A hedgerow sermon)",
    "note": "flavour text of Horned Aurochs"
   },
   {
@@ -4407,7 +5011,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Lightning has split it twice. Both times it simply grew thicker.",
+   "key": "Lightning is the sky's love for the oak, the druids taught. They held this view until it struck them.",
    "note": "flavour text of Old Hollow Oak"
   },
   {
@@ -4423,7 +5027,7 @@
    "note": "rules text of Greening Rite"
   },
   {
-   "key": "Seed into soil, soil into sap, sap into power.",
+   "key": "The earth is the goddess, and the goddess is never wrong, not even about the blight. (Greening chant)",
    "note": "flavour text of Greening Rite"
   },
   {
@@ -4435,7 +5039,7 @@
    "note": "rules text of Wildsurge"
   },
   {
-   "key": "For a moment, the beast remembers what the forest was before men.",
+   "key": "Man is a stain upon the forest. Be a beast, and be clean. (The Archdruid of the Moot)",
    "note": "flavour text of Wildsurge"
   },
   {
@@ -4447,7 +5051,7 @@
    "note": "rules text of Test of Antlers"
   },
   {
-   "key": "In autumn the stags settle their quarrels, and the forest settles with them.",
+   "key": "The forest knows no right or wrong, only stronger and weaker. The druids call this wisdom.",
    "note": "flavour text of Test of Antlers"
   },
   {
@@ -4471,7 +5075,7 @@
    "note": "rules text of Ivy in the Gears"
   },
   {
-   "key": "Leave any engine out in the rain long enough and the green will claim it.",
+   "key": "Every engine is a sin against the leaf. The ivy is only hearing its confession. (A Moot druid)",
    "note": "flavour text of Ivy in the Gears"
   },
   {
@@ -4563,7 +5167,7 @@
    "note": "rules text of Hedge-Elm of the Moot"
   },
   {
-   "key": "When the moot is full, the old elm leans in to hear, and the boughs creak with opinions.",
+   "key": "The moot voted that the elm is wiser than the elders. The elm, as usual, abstained. (Records of the Moot)",
    "note": "flavour text of Hedge-Elm of the Moot"
   },
   {
@@ -4611,7 +5215,7 @@
    "note": "rules text of Wreath-Weaver Druid"
   },
   {
-   "key": "For every garland he plaits for another man, he weaves one leaf into his own.",
+   "key": "Wear one leaf and you are forgiven. Wear two and you are holy. (Wreath-Weaver Druid)",
    "note": "flavour text of Wreath-Weaver Druid"
   },
   {
@@ -4643,7 +5247,7 @@
    "note": "rules text of Stonehide Spirit"
   },
   {
-   "key": "The standing stones are not empty. They are only patient.",
+   "key": "The stones remember every wrong, and forgive whoever brings them milk. (A saying of the Moot)",
    "note": "flavour text of Stonehide Spirit"
   },
   {
@@ -4667,7 +5271,7 @@
    "note": "rules text of Elder of the Oak Circle"
   },
   {
-   "key": "He plants acorns as he walks; by evening they walk beside him.",
+   "key": "We are not the masters of the wood. We are its weeds, and ought to apologise for it. (Elder of the Oak Circle)",
    "note": "flavour text of Elder of the Oak Circle"
   },
   {
@@ -4683,7 +5287,7 @@
    "note": "rules text of Green Man of the Hedgerow"
   },
   {
-   "key": "His face looks out from every leaf, and where he looks, things grow.",
+   "key": "There is no sin but the axe, and no prayer but the rustle of leaves. (The druids' creed of the Green Man)",
    "note": "flavour text of Green Man of the Hedgerow"
   },
   {
@@ -4711,7 +5315,7 @@
    "note": "rules text of Woodwose of the Fells"
   },
   {
-   "key": "When the farms thin out and the wild grows deep, the wild man comes down from the fells.",
+   "key": "Throw off your boots, your plough and your manners, says the wild man. He has no use for any of them, nor for soap.",
    "note": "flavour text of Woodwose of the Fells"
   },
   {
@@ -4723,7 +5327,7 @@
    "note": "rules text of Gift of the Greenwood"
   },
   {
-   "key": "The oak gives slowly, but it never takes back.",
+   "key": "The forest gives freely, says the Archdruid. He will tell you the price afterwards.",
    "note": "flavour text of Gift of the Greenwood"
   },
   {
@@ -4735,7 +5339,7 @@
    "note": "rules text of Trial by Tooth and Claw"
   },
   {
-   "key": "The forest holds no courts. It holds contests.",
+   "key": "Mercy is a sickness of the towns. The forest is healthy, and eats its young. (The Archdruid of the Moot)",
    "note": "flavour text of Trial by Tooth and Claw"
   },
   {
@@ -4755,7 +5359,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "The forked stick dips, and there is water, or power, or both.",
+   "key": "The river forgives every sin, so long as you confess it downstream of the village. (A dowser's saying)",
    "note": "flavour text of Dowser's Hazel Rod"
   },
   {
@@ -4803,7 +5407,7 @@
    "note": "rules text of Old Moot-Oak"
   },
   {
-   "key": "Laws were given under his boughs before there were kings to give them.",
+   "key": "The first law given under his boughs: the tree is holy and the woodcutter is damned. (Law of the Moot)",
    "note": "flavour text of Old Moot-Oak"
   },
   {
@@ -4863,7 +5467,7 @@
    "note": "rules text of Mistletoe Archdruid"
   },
   {
-   "key": "His golden sickle has cut the sacred bough for sixty winters.",
+   "key": "The Earth is our mother and our god, and she has asked me, personally, to collect the tithe. (Mistletoe Archdruid)",
    "note": "flavour text of Mistletoe Archdruid"
   },
   {
@@ -4879,7 +5483,7 @@
    "note": "rules text of White Hart of the Greenwood"
   },
   {
-   "key": "Kings have hunted it for a thousand years. It has never once been caught.",
+   "key": "To hunt the hart is murder, the druids teach. To hunt the hunter is merely housekeeping.",
    "note": "flavour text of White Hart of the Greenwood"
   },
   {
@@ -4891,7 +5495,7 @@
    "note": "rules text of Antler-King of the Fens"
   },
   {
-   "key": "Crowned with twelve tines, he leads every beast of the marsh.",
+   "key": "Bow to the antlered king, the druids say, for he is a god. In the hungry winters the moot-folk call him venison.",
    "note": "flavour text of Antler-King of the Fens"
   },
   {
@@ -4903,7 +5507,7 @@
    "note": "rules text of Yew of a Thousand Winters"
   },
   {
-   "key": "It was old when the barrows were raised, and it will be old when they are ploughed flat.",
+   "key": "Bury your dead beneath the yew and they become yew. That is all the heaven anyone needs. (Grey Elder of the Henge)",
    "note": "flavour text of Yew of a Thousand Winters"
   },
   {
@@ -4931,7 +5535,7 @@
    "note": "rules text of Stampede of the Wild Hunt"
   },
   {
-   "key": "Hooves, horns and howling, and the earth itself rides with them.",
+   "key": "Become the herd! Thinking was our first mistake, and together we shall undo it. (A Moot chant)",
    "note": "flavour text of Stampede of the Wild Hunt"
   },
   {
@@ -4955,7 +5559,7 @@
    "note": "rules text of Awaken the Grove"
   },
   {
-   "key": "The druid sang, and the wood remembered it had roots that could walk.",
+   "key": "The trees have souls, the druids teach, and woodcutters do not. The trees agree.",
    "note": "flavour text of Awaken the Grove"
   },
   {
@@ -4971,7 +5575,7 @@
    "note": "rules text of Circle of Standing Stones"
   },
   {
-   "key": "Raised by no hand anyone remembers, aligned to no star anyone can name.",
+   "key": "Pray to the stones. In all these years they have never once contradicted a druid. (Grey Elder of the Henge)",
    "note": "flavour text of Circle of Standing Stones"
   },
   {
@@ -5035,7 +5639,7 @@
    "note": "rules text of Cernoth, the Thousand-Year Oak"
   },
   {
-   "key": "Empires rose and fell in the span of a single ring of its wood.",
+   "key": "The druids worship him as god of the wood. He is a tree, and has never asked for any of it.",
    "note": "flavour text of Cernoth, the Thousand-Year Oak"
   },
   {
@@ -5047,7 +5651,7 @@
    "note": "rules text of Wheel of the Year"
   },
   {
-   "key": "Seed, flower, harvest, frost. And then, always, seed again.",
+   "key": "Nothing is born, nothing dies, nothing is judged. Only the wheel turns, and the druid takes his cut. (Archdruid of the Moot)",
    "note": "flavour text of Wheel of the Year"
   },
   {
@@ -5075,7 +5679,7 @@
    "note": "rules text of Tavern Brawler"
   },
   {
-   "key": "He starts every fight with a toast and ends it with a stool.",
+   "key": "Ira furor brevis est: anger is a brief madness. (Horace, Epistles 1.2)",
    "note": "flavour text of Tavern Brawler"
   },
   {
@@ -5091,7 +5695,7 @@
    "note": "rules text of Vine-Crowned Bacchant"
   },
   {
-   "key": "He dances straight from the wine-press into the battle line, hooves still purple.",
+   "key": "Nunc est bibendum: now is the time for drinking, now the time to beat the earth with unfettered foot. (Horace, Odes 1.37)",
    "note": "flavour text of Vine-Crowned Bacchant"
   },
   {
@@ -5119,7 +5723,7 @@
    "note": "rules text of Courtier on the Chaise"
   },
   {
-   "key": "He has not stood up since the spring, and his wit has only grown sharper.",
+   "key": "Men ought either to be well treated or crushed. (Machiavelli, The Prince)",
    "note": "flavour text of Courtier on the Chaise"
   },
   {
@@ -5135,7 +5739,7 @@
    "note": "rules text of Loafer of the Arbour"
   },
   {
-   "key": "There is always work to be done, and always a shady bench beside it.",
+   "key": "A Book of Verses underneath the Bough, a Jug of Wine, a Loaf of Bread, and Thou. (Omar Khayyam, tr. FitzGerald)",
    "note": "flavour text of Loafer of the Arbour"
   },
   {
@@ -5147,7 +5751,7 @@
    "note": "rules text of Sleepy Baronet"
   },
   {
-   "key": "Each day he wakes a little later and a little heavier.",
+   "key": "When you want a laugh, come and see me, fat and sleek and well cared for, a hog from Epicurus' herd. (Horace, Epistles 1.4)",
    "note": "flavour text of Sleepy Baronet"
   },
   {
@@ -5167,7 +5771,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Seven courses, nine vintages, and still he rises hungry for more.",
+   "key": "Nothing is enough for the man to whom enough is too little. (Epicurus, Vatican Sayings)",
    "note": "flavour text of Gluttonous Baron"
   },
   {
@@ -5219,7 +5823,7 @@
    "note": "rules text of Garlanded Festival Bull"
   },
   {
-   "key": "They lead him through the streets in flowers, and the crowd follows him into battle.",
+   "key": "Let us crown ourselves with roses, before they be withered: let no meadow escape our riot. (Wisdom 2:8)",
    "note": "flavour text of Garlanded Festival Bull"
   },
   {
@@ -5235,7 +5839,7 @@
    "note": "rules text of Toast of Fire"
   },
   {
-   "key": "\"To your health!\" he cried, and lit the brandy.",
+   "key": "Come, fill the Cup, and in the fire of Spring / Your Winter-garment of Repentance fling. (Omar Khayyam, tr. FitzGerald)",
    "note": "flavour text of Toast of Fire"
   },
   {
@@ -5307,7 +5911,7 @@
    "note": "rules text of Carnival Brazier"
   },
   {
-   "key": "It warms the dancers, lights the masks, and singes everyone who stands too close.",
+   "key": "The things which produce certain pleasures entail annoyances many times greater than the pleasures themselves. (Epicurus, Principal Doctrines)",
    "note": "flavour text of Carnival Brazier"
   },
   {
@@ -5327,7 +5931,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "He sings of battles he has never seen, on his way to one.",
+   "key": "Carpe diem: seize the day, trusting as little as possible in tomorrow. (Horace, Odes 1.11)",
    "note": "flavour text of Wandering Minstrel"
   },
   {
@@ -5355,7 +5959,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "He has never held anything heavier than a pomander, and he means to keep it so.",
+   "key": "Odi profanum vulgus et arceo: I hate the uninitiated crowd and keep it far from me. (Horace, Odes 3.1)",
    "note": "flavour text of Perfumed Lordling"
   },
   {
@@ -5371,7 +5975,7 @@
    "note": "rules text of Count of the Velvet Glove"
   },
   {
-   "key": "He accepts every challenge, and names a date some time after the next feast.",
+   "key": "A wise lord cannot, nor ought he to, keep faith when such observance may be turned against him. (Machiavelli, The Prince)",
    "note": "flavour text of Count of the Velvet Glove"
   },
   {
@@ -5395,7 +5999,7 @@
    "note": "rules text of Toast to the Peerage"
   },
   {
-   "key": "Each lord rose in turn to drink to the enemy's ruin, and the enemy felt every cup.",
+   "key": "It is much safer to be feared than loved, when, of the two, either must be dispensed with. (Machiavelli, The Prince)",
    "note": "flavour text of Toast to the Peerage"
   },
   {
@@ -5415,7 +6019,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "He drinks to the battle, to the victory, to the fallen, and on wet days to the weather.",
+   "key": "Now drive away your cares with wine; tomorrow we sail the vast sea again. (Horace, Odes 1.7)",
    "note": "flavour text of Wineskin Satyr"
   },
   {
@@ -5455,7 +6059,7 @@
    "note": "rules text of Jester of the Lazy Court"
   },
   {
-   "key": "His jokes are cruel, his aim is crueller, and he delivers both lying down.",
+   "key": "Mix a little folly with your plans: it is sweet to play the fool in season. (Horace, Odes 4.12)",
    "note": "flavour text of Jester of the Lazy Court"
   },
   {
@@ -5467,7 +6071,7 @@
    "note": "rules text of Host of the Lantern Garden"
   },
   {
-   "key": "He never leaves his couch, yet no guest ever leaves his table hungry.",
+   "key": "We call pleasure the beginning and end of the blessed life. (Epicurus, Letter to Menoeceus)",
    "note": "flavour text of Host of the Lantern Garden"
   },
   {
@@ -5507,7 +6111,7 @@
    "note": "rules text of Margrave of the Long Table"
   },
   {
-   "key": "Every evening he swears it will be his last feast, and every evening he is right about nothing.",
+   "key": "It is not an unbroken succession of drinking-bouts and of revelry... which produce a pleasant life. (Epicurus, Letter to Menoeceus)",
    "note": "flavour text of Margrave of the Long Table"
   },
   {
@@ -5543,7 +6147,7 @@
    "note": "rules text of Pyre-Dancer's Whirl"
   },
   {
-   "key": "The dancers spin closer to the bonfire with every verse.",
+   "key": "Death is nothing to us. (Epicurus, Principal Doctrines)",
    "note": "flavour text of Pyre-Dancer's Whirl"
   },
   {
@@ -5555,7 +6159,7 @@
    "note": "rules text of Empty the Cellar"
   },
   {
-   "key": "By the end of the night the cellar was empty, and so, curiously, were the guests.",
+   "key": "Drink! for you know not whence you came, nor why: / Drink! for you know not why you go, nor where. (Omar Khayyam, tr. FitzGerald)",
    "note": "flavour text of Empty the Cellar"
   },
   {
@@ -5567,7 +6171,7 @@
    "note": "rules text of Bottomless Wine Cask"
   },
   {
-   "key": "Pleasure that never ends is its own slow wound.",
+   "key": "The Wine of Life keeps oozing drop by drop, / The Leaves of Life keep falling one by one. (Omar Khayyam, tr. FitzGerald)",
    "note": "flavour text of Bottomless Wine Cask"
   },
   {
@@ -5579,7 +6183,7 @@
    "note": "rules text of Carnival Masks"
   },
   {
-   "key": "Behind a painted face, the clumsiest guest moves like a fencing master.",
+   "key": "Every one sees what you appear to be, few really know what you are. (Machiavelli, The Prince)",
    "note": "flavour text of Carnival Masks"
   },
   {
@@ -5615,7 +6219,7 @@
    "note": "rules text of Gossiping Marquis"
   },
   {
-   "key": "He knows every scandal at court, and is the subject of most of them.",
+   "key": "Men judge generally more by the eye than by the hand. (Machiavelli, The Prince)",
    "note": "flavour text of Gossiping Marquis"
   },
   {
@@ -5627,7 +6231,7 @@
    "note": "rules text of Lord of Misrule"
   },
   {
-   "key": "For the twelve nights of the feast the fool wears the paper crown, and the hall obeys him.",
+   "key": "In all their rule there was but this one clause to be observed: Do what thou wilt. (Rabelais, Gargantua)",
    "note": "flavour text of Lord of Misrule"
   },
   {
@@ -5651,7 +6255,7 @@
    "note": "rules text of Old Satyr on the Wine-Cask"
   },
   {
-   "key": "\"In my day we ran with the vintage,\" he tells the young ones, and does not get up.",
+   "key": "Eheu fugaces, Postume, Postume: alas, Postumus, Postumus, the fleeting years slip by. (Horace, Odes 2.14)",
    "note": "flavour text of Old Satyr on the Wine-Cask"
   },
   {
@@ -5711,7 +6315,7 @@
    "note": "rules text of Archduke of the Endless Feast"
   },
   {
-   "key": "His banquet has lasted eleven years. His liver has filed several complaints.",
+   "key": "Let us eat and drink; for to morrow we shall die. (Isaias 22:13)",
    "note": "flavour text of Archduke of the Endless Feast"
   },
   {
@@ -5739,7 +6343,7 @@
    "note": "rules text of Grand Conflagration"
   },
   {
-   "key": "The fireworks were the finale. Nobody had planned for the encore.",
+   "key": "Pulvis et umbra sumus: we are dust and shadow. (Horace, Odes 4.7)",
    "note": "flavour text of Grand Conflagration"
   },
   {
@@ -5751,7 +6355,7 @@
    "note": "rules text of Night Without End"
   },
   {
-   "key": "At dawn they drew the curtains and called it midnight again.",
+   "key": "Suns may set and rise again; for us, when once our brief light has set, there is one endless night to be slept. (Catullus, Carmina 5)",
    "note": "flavour text of Night Without End"
   },
   {
@@ -5775,7 +6379,7 @@
    "note": "rules text of Lanterns of the Pleasure Garden"
   },
   {
-   "key": "Under the paper lanterns no one waits for anything.",
+   "key": "Unborn To-morrow, and dead Yesterday, / Why fret about them if To-day be sweet! (Omar Khayyam, tr. FitzGerald)",
    "note": "flavour text of Lanterns of the Pleasure Garden"
   },
   {
@@ -5799,7 +6403,7 @@
    "note": "rules text of Elector of the Endless Banquet"
   },
   {
-   "key": "He gives his vote to whichever prince serves the longest dinner.",
+   "key": "Men are ungrateful, fickle, false, cowardly, covetous. (Machiavelli, The Prince)",
    "note": "flavour text of Elector of the Endless Banquet"
   },
   {
@@ -5823,7 +6427,7 @@
    "note": "rules text of Vessar, Master of the Undying Feast"
   },
   {
-   "key": "He raises a cup to every guest; the guests who drink do not rise again.",
+   "key": "Dust into Dust, and under Dust to lie, / Sans Wine, sans Song, sans Singer, and sans End! (Omar Khayyam, tr. FitzGerald)",
    "note": "flavour text of Vessar, Master of the Undying Feast"
   },
   {
@@ -5891,7 +6495,7 @@
    "note": "rules text of Ephebe of the Phalanx"
   },
   {
-   "key": "At eighteen he swore the oath: never to shame his arms, never to desert the man beside him.",
+   "key": "\"It is difficulties that show what men are.\" (Epictetus, Discourses)",
    "note": "flavour text of Ephebe of the Phalanx"
   },
   {
@@ -5919,7 +6523,7 @@
    "note": "rules text of Lamp-Lit Scribe"
   },
   {
-   "key": "Copy the text, and the text copies something into you.",
+   "key": "\"Such as are thy habitual thoughts, such also will be the character of thy mind; for the soul is dyed by the thoughts.\" (Marcus Aurelius)",
    "note": "flavour text of Lamp-Lit Scribe"
   },
   {
@@ -5931,7 +6535,7 @@
    "note": "rules text of Bronze-Shield Hoplite"
   },
   {
-   "key": "\"Be like the headland against which the waves break without ceasing. It stands firm.\" (Marcus Aurelius)",
+   "key": "\"Be like the promontory against which the waves continually break, but it stands firm.\" (Marcus Aurelius, Meditations)",
    "note": "flavour text of Bronze-Shield Hoplite"
   },
   {
@@ -5955,7 +6559,7 @@
    "note": "rules text of Disciplined Phalanx"
   },
   {
-   "key": "Forty shields, one mind, no fear.",
+   "key": "\"We become just by doing just acts, temperate by doing temperate acts, brave by doing brave acts.\" (Aristotle, Ethics)",
    "note": "flavour text of Disciplined Phalanx"
   },
   {
@@ -5971,7 +6575,7 @@
    "note": "rules text of Tower Stargazer"
   },
   {
-   "key": "He charts the heavens from a balcony of silver and glass, and reads tomorrow in their order.",
+   "key": "\"Demand not that events should happen as you wish; but wish them to happen as they do happen, and you will go on well.\" (Epictetus)",
    "note": "flavour text of Tower Stargazer"
   },
   {
@@ -5983,7 +6587,7 @@
    "note": "rules text of Wandering Cynic"
   },
   {
-   "key": "He owns a cloak, a staff and a satchel, and he has argued kings out of their own halls.",
+   "key": "\"Stand out of my light.\" (Diogenes the Cynic, to Alexander)",
    "note": "flavour text of Wandering Cynic"
   },
   {
@@ -5999,7 +6603,7 @@
    "note": "rules text of Shipwrecked Merchant"
   },
   {
-   "key": "\"I made a prosperous voyage when I suffered shipwreck.\" (Zeno of Citium)",
+   "key": "\"I made a prosperous voyage when I suffered shipwreck.\" (Zeno of Citium, in Diogenes Laertius)",
    "note": "flavour text of Shipwrecked Merchant"
   },
   {
@@ -6007,7 +6611,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "\"It is difficulties that show what men are.\" (Epictetus)",
+   "key": "\"For men make the city and not walls or ships without men in them.\" (Nicias, in Thucydides)",
    "note": "flavour text of Veteran of the Long Walls"
   },
   {
@@ -6023,7 +6627,7 @@
    "note": "rules text of Measured Rebuke"
   },
   {
-   "key": "\"Reconsider.\"",
+   "key": "\"The best way of avenging thyself is not to become like the wrong doer.\" (Marcus Aurelius, Meditations)",
    "note": "flavour text of Measured Rebuke"
   },
   {
@@ -6063,7 +6667,7 @@
    "note": "rules text of Reading by Lamplight"
   },
   {
-   "key": "\"To be everywhere is to be nowhere.\" (Seneca, on reading too many books)",
+   "key": "\"Everywhere means nowhere.\" (Seneca, Letters to Lucilius, on reading too many books)",
    "note": "flavour text of Reading by Lamplight"
   },
   {
@@ -6075,7 +6679,7 @@
    "note": "rules text of Hour of Contemplation"
   },
   {
-   "key": "Stillness first. Then clarity. Then the answer.",
+   "key": "\"It is not that we have a short space of time, but that we waste much of it.\" (Seneca, On the Shortness of Life)",
    "note": "flavour text of Hour of Contemplation"
   },
   {
@@ -6099,7 +6703,7 @@
    "note": "rules text of Sent Back to the Gate"
   },
   {
-   "key": "\"The greatest remedy for anger is delay.\" (Seneca)",
+   "key": "\"The greatest remedy for anger is delay.\" (Seneca, On Anger)",
    "note": "flavour text of Sent Back to the Gate"
   },
   {
@@ -6147,7 +6751,7 @@
    "note": "rules text of Pupil of the Painted Porch"
   },
   {
-   "key": "He carries the master's stool and the master's water, and carries the master's questions home with him.",
+   "key": "\"I feel, my dear Lucilius, that I am being not only reformed, but transformed.\" (Seneca)",
    "note": "flavour text of Pupil of the Painted Porch"
   },
   {
@@ -6167,7 +6771,7 @@
    "note": "rules text of Questioner in the Agora"
   },
   {
-   "key": "He asked the general what courage is. The general went home to think it over, and is thinking still.",
+   "key": "\"The life which is unexamined is not worth living.\" (Socrates, in Plato's Apology)",
    "note": "flavour text of Questioner in the Agora"
   },
   {
@@ -6175,7 +6779,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "He bought the shield with two harvests of olives, and he will carry it as long as the city asks.",
+   "key": "\"Houses and land do not gain men, but men them.\" (Pericles, in Thucydides)",
    "note": "flavour text of Farmer Called to the Muster"
   },
   {
@@ -6203,7 +6807,7 @@
    "note": "rules text of Morning Lecture"
   },
   {
-   "key": "Before the market opens, the Porch is already full.",
+   "key": "\"Begin the morning by saying to thyself, I shall meet with the busy-body, the ungrateful, arrogant, deceitful, envious, unsocial.\" (Marcus Aurelius)",
    "note": "flavour text of Morning Lecture"
   },
   {
@@ -6247,7 +6851,7 @@
    "note": "rules text of Agora Inspector"
   },
   {
-   "key": "Every scale in the market is honest while he is near, and every price a little dearer.",
+   "key": "\"Man is by nature a political animal.\" (Aristotle, Politics)",
    "note": "flavour text of Agora Inspector"
   },
   {
@@ -6259,7 +6863,7 @@
    "note": "rules text of Dialectician of the Porch"
   },
   {
-   "key": "Premise, rebuttal, and the defender left standing in confusion.",
+   "key": "\"The universe is transformation: life is opinion.\" (Marcus Aurelius, Meditations)",
    "note": "flavour text of Dialectician of the Porch"
   },
   {
@@ -6271,7 +6875,7 @@
    "note": "rules text of Disciple of Chrysippus"
   },
   {
-   "key": "\"Had there been no Chrysippus, there would have been no Stoa.\" (Diogenes Laertius)",
+   "key": "\"But for Chrysippus, there had been no Porch.\" (Diogenes Laertius)",
    "note": "flavour text of Disciple of Chrysippus"
   },
   {
@@ -6283,7 +6887,7 @@
    "note": "rules text of Unbroken Shieldwall"
   },
   {
-   "key": "\"What is in my power is to hold this ground. I hold it.\"",
+   "key": "\"Some things are in our control and others not.\" (Epictetus, Enchiridion)",
    "note": "flavour text of Unbroken Shieldwall"
   },
   {
@@ -6307,7 +6911,7 @@
    "note": "rules text of Strategos of the Shieldwall"
   },
   {
-   "key": "He has studied every battle ever written down, and lost none of his own.",
+   "key": "\"War is the father of all and the king of all.\" (Heraclitus)",
    "note": "flavour text of Strategos of the Shieldwall"
   },
   {
@@ -6319,7 +6923,7 @@
    "note": "rules text of Navarch of the Cold Sea"
   },
   {
-   "key": "\"If a man does not know to which port he sails, no wind is favourable.\" (Seneca)",
+   "key": "\"When a man does not know what harbour he is making for, no wind is the right wind.\" (Seneca)",
    "note": "flavour text of Navarch of the Cold Sea"
   },
   {
@@ -6331,7 +6935,7 @@
    "note": "rules text of Considered Reply"
   },
   {
-   "key": "\"Let silence be the rule, or say only what is needed, and in few words.\" (Epictetus)",
+   "key": "\"Take away thy opinion, and then there is taken away the complaint, 'I have been harmed.'\" (Marcus Aurelius)",
    "note": "flavour text of Considered Reply"
   },
   {
@@ -6343,7 +6947,7 @@
    "note": "rules text of Humbling Lesson"
   },
   {
-   "key": "\"Alexander of Macedon and his mule driver were brought to the same end by death.\" (Marcus Aurelius)",
+   "key": "\"Alexander the Macedonian and his groom by death were brought to the same state.\" (Marcus Aurelius, Meditations)",
    "note": "flavour text of Humbling Lesson"
   },
   {
@@ -6379,7 +6983,7 @@
    "note": "rules text of Orrery of Fixed Stars"
   },
   {
-   "key": "As the brass planets turn, the enemy feels the weight of a fixed order.",
+   "key": "\"Ducunt volentem fata, nolentem trahunt.\" The fates lead the willing and drag the unwilling. (Seneca, after Cleanthes)",
    "note": "flavour text of Orrery of Fixed Stars"
   },
   {
@@ -6391,7 +6995,7 @@
    "note": "rules text of Sumptuary Tablet"
   },
   {
-   "key": "Bronze letters list what a man may spend. The enemy finds that the list includes him.",
+   "key": "\"It is not the man who has too little, but the man who craves more, that is poor.\" (Seneca)",
    "note": "flavour text of Sumptuary Tablet"
   },
   {
@@ -6427,7 +7031,7 @@
    "note": "rules text of Lecture at the Painted Porch"
   },
   {
-   "key": "One master speaks. A dozen pupils write it down. A thousand years of readers learn it.",
+   "key": "\"Men learn while they teach.\" (Seneca, Letters to Lucilius)",
    "note": "flavour text of Lecture at the Painted Porch"
   },
   {
@@ -6487,7 +7091,7 @@
    "note": "rules text of Keeper of the Stacks"
   },
   {
-   "key": "He has never left the library, and he has never needed to.",
+   "key": "\"I have written my work, not as an essay which is to win the applause of the moment, but as a possession for all time.\" (Thucydides)",
    "note": "flavour text of Keeper of the Stacks"
   },
   {
@@ -6515,7 +7119,7 @@
    "note": "rules text of Sage of the Long Patience"
   },
   {
-   "key": "\"The impediment to action advances action. What stands in the way becomes the way.\" (Marcus Aurelius)",
+   "key": "\"The impediment to action advances action. What stands in the way becomes the way.\" (Marcus Aurelius, Meditations)",
    "note": "flavour text of Sage of the Long Patience"
   },
   {
@@ -6527,7 +7131,7 @@
    "note": "rules text of Seneca, Tutor of the Prince"
   },
   {
-   "key": "\"While we are postponing, life speeds by.\" (Seneca)",
+   "key": "\"While we are postponing, life speeds by.\" (Seneca, Letters to Lucilius)",
    "note": "flavour text of Seneca, Tutor of the Prince"
   },
   {
@@ -6563,7 +7167,7 @@
    "note": "rules text of All Things Return"
   },
   {
-   "key": "Chrysippus taught that the cosmos returns at last to its source and begins again, the same in every part.",
+   "key": "\"You cannot go into the same water twice.\" (Heraclitus, in Plato's Cratylus)",
    "note": "flavour text of All Things Return"
   },
   {
@@ -6575,7 +7179,7 @@
    "note": "rules text of Codex of the Unshaken Mind"
   },
   {
-   "key": "Each morning it opens to a page no one has read before.",
+   "key": "\"Nothing, Lucilius, is ours, except time.\" (Seneca, Letters to Lucilius)",
    "note": "flavour text of Codex of the Unshaken Mind"
   },
   {
@@ -6615,7 +7219,7 @@
    "note": "rules text of Trophy of Marathon"
   },
   {
-   "key": "Where the enemy turned, the victors hung his arms upon a post, and the place was honoured ever after.",
+   "key": "\"For heroes have the whole earth for their tomb.\" (Pericles, in Thucydides)",
    "note": "flavour text of Trophy of Marathon"
   },
   {
@@ -6639,7 +7243,7 @@
    "note": "rules text of Zeno of Citium"
   },
   {
-   "key": "\"We have two ears and one mouth, so that we may listen more and speak less.\"",
+   "key": "\"The reason why we have two ears and only one mouth is that we may listen the more and talk the less.\"",
    "note": "flavour text of Zeno of Citium"
   },
   {
@@ -6655,7 +7259,7 @@
    "note": "rules text of Marcus Aurelius"
   },
   {
-   "key": "\"Waste no more time arguing what a good man should be. Be one.\"",
+   "key": "\"No longer talk at all about the kind of man that a good man ought to be, but be such.\" (Meditations)",
    "note": "flavour text of Marcus Aurelius"
   },
   {
@@ -6667,7 +7271,7 @@
    "note": "rules text of The View from Above"
   },
   {
-   "key": "\"Look down from above on the countless herds of men, their solemn rites, their voyages in storm and calm.\" (Marcus Aurelius)",
+   "key": "\"Look down from above on the countless herds of men and their countless solemnities.\" (Marcus Aurelius, Meditations)",
    "note": "flavour text of The View from Above"
   },
   {
@@ -6691,7 +7295,7 @@
    "note": "rules text of Brass Scuttler"
   },
   {
-   "key": "It skitters through the foundry vents, and when a larger machine needs a part, it volunteers.",
+   "key": "\"No part is too small to be spent, and no part too precious to be spared.\" (a Foundry maxim)",
    "note": "flavour text of Brass Scuttler"
   },
   {
@@ -6703,7 +7307,7 @@
    "note": "rules text of Cog Drone"
   },
   {
-   "key": "Alone it is a cog. In a line of others it is a quarter of a machine.",
+   "key": "\"The cog does not envy the wheel. It has been spared the burden of wanting.\" (a Foundry maxim)",
    "note": "flavour text of Cog Drone"
   },
   {
@@ -6767,7 +7371,7 @@
    "note": "rules text of Piston Laborer"
   },
   {
-   "key": "It neither tires, nor complains, nor stops for lunch.",
+   "key": "\"A man must be fed, rested and forgiven. A piston asks only for oil.\" (from the Charter of Cogspire)",
    "note": "flavour text of Piston Laborer"
   },
   {
@@ -6791,7 +7395,7 @@
    "note": "rules text of Gearwright Journeyman"
   },
   {
-   "key": "His guild papers name him competent. His workbench names him prolific.",
+   "key": "\"Do not ask whether the work is good. Ask whether it is within tolerance.\" (the guild examination, first article)",
    "note": "flavour text of Gearwright Journeyman"
   },
   {
@@ -6807,7 +7411,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Cast in a single pour, quenched in river water, animated by arithmetic.",
+   "key": "\"Nature to be commanded must be obeyed.\" (Francis Bacon, Novum Organum)",
    "note": "flavour text of Foundry Golem"
   },
   {
@@ -6839,7 +7443,7 @@
    "note": "rules text of Spare Parts"
   },
   {
-   "key": "Every bolt in the bin is a soldier waiting for orders.",
+   "key": "\"Every man is a spare part. The wise ones keep themselves well oiled.\" (a Foundry maxim)",
    "note": "flavour text of Spare Parts"
   },
   {
@@ -6855,7 +7459,7 @@
    "note": "rules text of Foundry Requisition"
   },
   {
-   "key": "Two units, standard pattern, charged to the account of the Third Furnace.",
+   "key": "\"Men are requisitioned on the same form as rivets. It saves paper.\" (a Foundry clerk)",
    "note": "flavour text of Foundry Requisition"
   },
   {
@@ -6879,7 +7483,7 @@
    "note": "rules text of Calibrated Discharge"
   },
   {
-   "key": "Measured to the volt. Aimed to the inch.",
+   "key": "\"When you can measure what you are speaking about, and express it in numbers, you know something about it.\" (Lord Kelvin)",
    "note": "flavour text of Calibrated Discharge"
   },
   {
@@ -6903,7 +7507,7 @@
    "note": "rules text of Brass Manacles"
   },
   {
-   "key": "Forged for the Cogspire courts, where every sentence is served in full.",
+   "key": "\"Justice is a sum. Mercy is a rounding error, and the Cogspire courts do not round.\" (the Reckoner of the Courts)",
    "note": "flavour text of Brass Manacles"
   },
   {
@@ -6919,7 +7523,7 @@
    "note": "rules text of Calibration Bench"
   },
   {
-   "key": "Every gauge true, every spring tight, every machine a little better than yesterday.",
+   "key": "\"Progress is the only prayer that is always answered.\" (from the Charter of Cogspire)",
    "note": "flavour text of Calibration Bench"
   },
   {
@@ -6955,7 +7559,7 @@
    "note": "rules text of Workshop Draughtsman"
   },
   {
-   "key": "His drawings are passed from bench to bench, and every man who reads them works a little better.",
+   "key": "\"The plan is wiser than the men who follow it, and wiser than the man who drew it.\" (a Foundry maxim)",
    "note": "flavour text of Workshop Draughtsman"
   },
   {
@@ -7055,7 +7659,7 @@
    "note": "rules text of Cogspire Foreman"
   },
   {
-   "key": "He has not touched a tool in twenty years. He has only pointed.",
+   "key": "\"In the past the man has been first; in the future the system must be first.\" (Frederick W. Taylor, The Principles of Scientific Management)",
    "note": "flavour text of Cogspire Foreman"
   },
   {
@@ -7099,7 +7703,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "A hundred gears, each turning its neighbour, none of them asking why.",
+   "key": "\"A gear that asks why has already stopped turning.\" (a Foundry maxim)",
    "note": "flavour text of Gearwork Phalanx"
   },
   {
@@ -7111,7 +7715,7 @@
    "note": "rules text of Mass Retooling"
   },
   {
-   "key": "The new standard was issued at dawn. By noon the whole line had been brought up to it.",
+   "key": "\"Yesterday's standard is today's scrap. So it is with machines, and so it will be with men.\" (the Archwright of Cogspire)",
    "note": "flavour text of Mass Retooling"
   },
   {
@@ -7123,7 +7727,7 @@
    "note": "rules text of Expedited Patent"
   },
   {
-   "key": "The guild grants patents in a week, provided the fee arrives in a day.",
+   "key": "\"Knowledge itself is power.\" (Francis Bacon, Meditationes Sacrae)",
    "note": "flavour text of Expedited Patent"
   },
   {
@@ -7135,7 +7739,7 @@
    "note": "rules text of Bulk Order"
   },
   {
-   "key": "Price per unit falls with volume. So does the value placed on each.",
+   "key": "\"It is the greatest happiness of the greatest number that is the measure of right and wrong.\" (Jeremy Bentham, A Fragment on Government)",
    "note": "flavour text of Bulk Order"
   },
   {
@@ -7163,7 +7767,7 @@
    "note": "rules text of Self-Mending Forge"
   },
   {
-   "key": "No smith tends it. It has long since learned to tend itself.",
+   "key": "\"Soon the forge will need no smith, and the city no citizens. We call this progress.\" (a Foundry prospectus)",
    "note": "flavour text of Self-Mending Forge"
   },
   {
@@ -7175,7 +7779,7 @@
    "note": "rules text of Foundry Ledger"
   },
   {
-   "key": "Debits on the left, credits on the right, and a margin of efficiency in the middle.",
+   "key": "\"What is not in the ledger did not happen. What is in the ledger cannot be undone.\" (from the Charter of Cogspire)",
    "note": "flavour text of Foundry Ledger"
   },
   {
@@ -7199,7 +7803,7 @@
    "note": "rules text of Guild Fitter"
   },
   {
-   "key": "He keeps a drawer of parts already cut, and so his machines are half built before they are ordered.",
+   "key": "\"Waste is the only sin the guild recognises, and it is never forgiven.\" (a Foundry maxim)",
    "note": "flavour text of Guild Fitter"
   },
   {
@@ -7211,7 +7815,7 @@
    "note": "rules text of Foundry Line-Master"
   },
   {
-   "key": "He walks the line with a lamp and a gauge, and no machine leaves it until he nods.",
+   "key": "\"The line does not wait for the slow man. It finds a faster one.\" (a Foundry maxim)",
    "note": "flavour text of Foundry Line-Master"
   },
   {
@@ -7223,7 +7827,7 @@
    "note": "rules text of Arc-Lamp Galvanist"
   },
   {
-   "key": "He calls it natural philosophy. The guild calls it a line item.",
+   "key": "\"...and thus render ourselves the lords and possessors of nature.\" (René Descartes, Discourse on Method)",
    "note": "flavour text of Arc-Lamp Galvanist"
   },
   {
@@ -7283,7 +7887,7 @@
    "note": "card subtype"
   },
   {
-   "key": "He has never built a machine, but every machine in Cogspire was built on his approval.",
+   "key": "\"Sentiment cannot be audited. Therefore, in Cogspire, it does not exist.\" (the Comptroller's standing order)",
    "note": "flavour text of Guild Comptroller"
   },
   {
@@ -7355,7 +7959,7 @@
    "note": "rules text of Cogspire Exhibition"
   },
   {
-   "key": "The guild unveiled its new models to the public. The public was invited to stand well back.",
+   "key": "\"Behold the future. Your place in it will be assigned shortly.\" (placard at the Cogspire Exhibition)",
    "note": "flavour text of Cogspire Exhibition"
   },
   {
@@ -7379,7 +7983,7 @@
    "note": "rules text of Perpetual Engine"
   },
   {
-   "key": "The engineers who designed it are still arguing over why it needs feeding.",
+   "key": "\"Do not ask where progress leads. To ask is to slow it.\" (a Foundry maxim)",
    "note": "flavour text of Perpetual Engine"
   },
   {
@@ -7391,7 +7995,7 @@
    "note": "rules text of Master Horologist"
   },
   {
-   "key": "He set the great clock of Cogspire, and every workshop in the city keeps his time.",
+   "key": "\"In Cogspire the bell does not ring for prayer. It rings for the shift.\" (a Foundry saying)",
    "note": "flavour text of Master Horologist"
   },
   {
@@ -7407,7 +8011,7 @@
    "note": "rules text of Self-Winding Wright"
   },
   {
-   "key": "The guild built a machine to build machines. It has not yet asked for wages.",
+   "key": "\"First, machines to serve men. Then, machines to build machines. The third step is discussed only in committee.\" (Foundry minutes)",
    "note": "flavour text of Self-Winding Wright"
   },
   {
@@ -7431,7 +8035,7 @@
    "note": "rules text of The Prime Engine"
   },
   {
-   "key": "The heart of the Foundry, beating in iron time. Every other machine is its echo.",
+   "key": "\"A heart beats out of time and stops without warning. The Engine never does. Judge which deserves the city.\" (the Grand Tabulator)",
    "note": "flavour text of The Prime Engine"
   },
   {
@@ -7443,7 +8047,7 @@
    "note": "rules text of The Iron Leviathan"
   },
   {
-   "key": "The guild built it to end a war. The guild is still paying for it.",
+   "key": "\"For what is the heart, but a spring; and the nerves, but so many strings; and the joints, but so many wheels?\" (Thomas Hobbes, Leviathan)",
    "note": "flavour text of The Iron Leviathan"
   },
   {
@@ -7467,7 +8071,7 @@
    "note": "rules text of The Archwright of Cogspire"
   },
   {
-   "key": "Every machine in the city was drawn by his hand or by a hand he taught.",
+   "key": "\"...the enlarging of the bounds of human empire, to the effecting of all things possible.\" (Francis Bacon, New Atlantis)",
    "note": "flavour text of The Archwright of Cogspire"
   },
   {

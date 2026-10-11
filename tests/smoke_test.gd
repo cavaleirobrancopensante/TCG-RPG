@@ -212,6 +212,7 @@ func _ready() -> void:
 	await _frames(2)
 	assert(GameState.load_game(2), "load slot 2")
 	print("save/load ok")
+	await _feast_errand()
 	# Draft tournament: enter, draft, build, one match, prize.
 	GameState.add_gold(400)
 	main.open_tournament("cogspire")
@@ -236,6 +237,76 @@ func _ready() -> void:
 	print("tournament ok")
 	print("SMOKE TEST PASSED")
 	get_tree().quit(0)
+
+
+## A feast errand in the real scenes: the city asks, the goods are picked up, a thief waits
+## on the road back and is bought off with them, more are fetched, and they are delivered.
+func _feast_errand() -> void:
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	GameState.errand = {}
+	GameState.feast_log = []
+	GameState.gold = 500
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 9, 20)
+	var offer := GameState.feast_errand_offer("santa_lucerna")
+	assert(not offer.is_empty() and String(offer["feast"]).contains("Michael"), "Santa Lucerna asks for Michaelmas")
+	main._on_city_entered("santa_lucerna")
+	await _frames(3)
+	assert(main.screen is CityScreen, "the city opens")
+	GameState.accept_feast_errand(offer)
+	(main.screen as CityScreen)._show()
+	await _frames(2)
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	main._on_city_entered(offer["source"])
+	await _frames(3)
+	assert(GameState.errand["state"] == "carry", "the goods are picked up at %s" % offer["source"])
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	# well out on the road back, the thief waits ahead
+	var w: Overworld = main.world
+	var sp := Vector2(GameState.city(offer["source"])["x"], GameState.city(offer["source"])["y"])
+	var dp := Vector2(GameState.city("santa_lucerna")["x"], GameState.city("santa_lucerna")["y"])
+	for t in [0.5, 0.45, 0.55, 0.4, 0.6, 0.35, 0.65]:
+		w.player_pos = w.nearest_walkable(sp.lerp(dp, t))
+		if not w._in_safe_zone(w.player_pos):
+			break
+	w.move_target = w.player_pos
+	w.inside_city = ""
+	w.active = true
+	main._feast_tick()
+	var thief := {}
+	for e in w.enemies:
+		if e.get("thief", false):
+			thief = e
+	assert(not thief.is_empty() and GameState.errand["ambushed"], "a thief spawns on the road back")
+	print("feast errand: %s from %s; %s (%s) waits at %s" % [offer["goods"], offer["source"], thief["name"], thief["faction"], thief["pos"]])
+	main._on_enemy_engaged(thief)
+	await _frames(3)
+	assert(main.screen is EncounterScreen, "the thief speaks first")
+	assert((main.screen as EncounterScreen).choose("Bribe"), "bribe him with the goods")
+	await _frames(3)
+	assert(GameState.errand["state"] == "fetch" and not w.enemies.has(thief), "the thief takes the goods and goes")
+	main._set_screen(null)
+	main._pause_world(false)
+	main._on_city_entered(offer["source"])
+	await _frames(3)
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	var g0 := GameState.gold
+	main._on_city_entered("santa_lucerna")
+	await _frames(3)
+	assert(GameState.errand.is_empty() and GameState.gold > g0 - 20, "the goods are delivered")
+	main.show_journal()
+	await _frames(2)
+	_close_dialogs()
+	main._set_screen(null)
+	main._pause_world(false)
+	print("feast errand ok")
 
 
 func _close_dialogs() -> void:

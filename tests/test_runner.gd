@@ -21,6 +21,8 @@ func _ready() -> void:
 	test_save_slots()
 	test_decks()
 	test_translations()
+	test_calendar()
+	test_feast_errands()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -1194,3 +1196,193 @@ func test_translations() -> void:
 	check(I18n.t("Load game") != "Load game", "Spanish active")
 	I18n.setup("en")
 	check(I18n.t("New game") == "New game", "back to English")
+
+
+func _on(y: int, m: int, d: int) -> Dictionary:
+	return LiturgicalCalendar.of_date(LiturgicalCalendar.days_from_civil(y, m, d))
+
+
+func test_calendar() -> void:
+	print("-- the liturgical calendar")
+	var known := {2000: Vector3i(2000, 4, 23), 2019: Vector3i(2019, 4, 21), 2024: Vector3i(2024, 3, 31),
+		2025: Vector3i(2025, 4, 20), 2026: Vector3i(2026, 4, 5)}
+	for y in known:
+		check(LiturgicalCalendar.easter(y) == known[y], "Easter %d: %s" % [y, LiturgicalCalendar.easter(y)])
+	var e2500 := LiturgicalCalendar.easter(2500)
+	print("Easter 2500: ", e2500)
+	check(e2500 == Vector3i(2500, 4, 18), "Easter 2500 is 18 April")
+	# the date of the game
+	var d0 := LiturgicalCalendar.date_of(0)
+	check(d0["year"] == 2500 and d0["month"] == 2 and d0["day"] == 2 and d0["weekday"] == 2, "day 0 is Tuesday 2 February 2500 (%s)" % [d0])
+	check(LiturgicalCalendar.date_text(0) == "Tuesday, 2 February 2500", "date text: %s" % LiturgicalCalendar.date_text(0))
+	var d365 := LiturgicalCalendar.date_of(365)
+	check(d365["year"] == 2501 and d365["month"] == 2 and d365["day"] == 2 and d365["weekday"] == 3, "day 365 is Wednesday 2 February 2501 (%s)" % [d365])
+	check(LiturgicalCalendar.game_day_of(2500, 12, 25) == 326, "Christmas 2500 is day 326")
+	for z in [LiturgicalCalendar.days_from_civil(1970, 1, 1), LiturgicalCalendar.days_from_civil(2500, 3, 1), LiturgicalCalendar.days_from_civil(2400, 2, 29)]:
+		var c := LiturgicalCalendar.civil_from_days(z)
+		check(LiturgicalCalendar.days_from_civil(c.x, c.y, c.z) == z, "civil date round trip %d" % z)
+	check(not LiturgicalCalendar.is_leap(2500) and LiturgicalCalendar.is_leap(2400) and LiturgicalCalendar.is_leap(2504), "leap years")
+	# known feasts
+	var cand := LiturgicalCalendar.of_day(0)
+	check(cand["name"] == "Purification of the Blessed Virgin Mary" and cand["cls"] == "II" and cand["color"] == "white", "2 February: Purification (%s)" % [cand])
+	var mich := _on(2500, 9, 29)
+	check(mich["name"] == "Dedication of St Michael the Archangel" and mich["cls"] == "I", "29 September: St Michael (%s)" % mich["name"])
+	var ic := _on(2500, 12, 8)
+	check(ic["name"] == "Immaculate Conception of the Blessed Virgin Mary" and ic["cls"] == "I", "8 December: Immaculate Conception")
+	var xmas := _on(2500, 12, 25)
+	check(xmas["name"] == "Nativity of Our Lord Jesus Christ" and xmas["cls"] == "I" and xmas["color"] == "white", "25 December: Christmas")
+	# the movable feasts of 2500, from Easter (18 April)
+	check(_on(2500, 3, 3)["name"] == "Ash Wednesday" and _on(2500, 3, 3)["color"] == "violet", "Ash Wednesday 2500 is 3 March")
+	check(_on(2500, 6, 6)["name"] == "Pentecost Sunday" and _on(2500, 6, 6)["color"] == "red", "Pentecost 2500 is 6 June")
+	check(_on(2500, 2, 14)["name"] == "Septuagesima Sunday", "Septuagesima 2500")
+	check(_on(2500, 4, 16)["name"] == "Good Friday" and _on(2500, 4, 16)["color"] == "black", "Good Friday 2500")
+	check(_on(2500, 5, 27)["name"] == "Ascension of Our Lord", "Ascension 2500")
+	check(_on(2500, 6, 17)["name"] == "Corpus Christi" and _on(2500, 6, 25)["name"] == "Most Sacred Heart of Jesus", "Corpus Christi and the Sacred Heart 2500")
+	check(_on(2500, 10, 31)["name"] == "Our Lord Jesus Christ the King", "Christ the King: last Sunday of October")
+	check(_on(2500, 11, 28)["name"] == "%s Sunday of Advent" and int(_on(2500, 11, 28)["n"]) == 1, "Advent begins 28 November 2500")
+	check(_on(2500, 12, 12)["color"] == "rose" and _on(2500, 3, 28)["color"] == "rose", "Gaudete and Laetare are rose")
+	check(LiturgicalCalendar.english(_on(2500, 11, 21)) == "24th and Last Sunday after Pentecost", "the last Sunday after Pentecost")
+	check(_on(2500, 12, 15)["name"] == "Ember Wednesday of Advent" and _on(2500, 9, 22)["name"] == "Ember Wednesday of September", "Ember Days")
+	# precedence: a Sunday over a III class feast, which is commemorated
+	var sun := _on(2500, 1, 17)
+	check(LiturgicalCalendar.english(sun) == "2nd Sunday after Epiphany" and sun["comms"].has("St Anthony"), "a Sunday outranks a III class feast (%s)" % [sun])
+	check(_on(2500, 1, 20)["name"] == "SS Fabian and Sebastian" and _on(2500, 1, 20)["cls"] == "III", "a III class feast on a weekday")
+	check(_on(2500, 3, 4)["name"] == "Feria of Lent" and _on(2500, 3, 4)["comms"].has("St Casimir"), "a feria of Lent outranks a III class feast")
+	check(_on(2500, 8, 22)["comms"].has("Immaculate Heart of the Blessed Virgin Mary"), "a II class Sunday outranks a II class feast")
+	# special cases of the 1960 rubrics
+	for y in range(2500, 2520):
+		if LiturgicalCalendar.weekday_of(LiturgicalCalendar.days_from_civil(y, 12, 8)) == 0:
+			check(_on(y, 12, 8)["name"] == "Immaculate Conception of the Blessed Virgin Mary", "the Immaculate Conception keeps its Sunday (%d)" % y)
+			break
+	check(_on(2025, 11, 3)["name"] == "Commemoration of All the Faithful Departed", "All Souls on a Sunday goes to Monday")
+	check(_on(2008, 3, 31)["name"] == "St Joseph, Spouse of the Blessed Virgin Mary" and _on(2008, 4, 1)["name"] == "Annunciation of the Blessed Virgin Mary", "impeded I class feasts are transferred after Low Sunday")
+	check(_on(2504, 2, 25)["name"] == "St Matthias", "St Matthias on 25 February in a leap year")
+	# the dial's lines
+	check(LiturgicalCalendar.dial_line(cand) == "Candlemas", "the dial shows Candlemas")
+	check(LiturgicalCalendar.dial_line(_on(2500, 2, 3)) == "Comm. of %s" % "St Blaise", "a bare feria shows its commemoration")
+	# the other faiths around the same calendar
+	check(LiturgicalCalendar.faith_feasts("revel", LiturgicalCalendar.game_day_of(2500, 3, 2)).has("Carnival"), "Carnival on Shrove Tuesday")
+	check(LiturgicalCalendar.faith_feasts("revel", LiturgicalCalendar.game_day_of(2500, 3, 3)).is_empty(), "no Carnival on Ash Wednesday")
+	check(LiturgicalCalendar.faith_feasts("lyceum", LiturgicalCalendar.game_day_of(2500, 8, 15)).has("Panathenaea"), "Panathenaea in mid-August")
+	check(LiturgicalCalendar.is_pact_sabbath(LiturgicalCalendar.game_day_of(2500, 10, 31)) and not LiturgicalCalendar.is_pact_sabbath(LiturgicalCalendar.game_day_of(2500, 11, 1)), "the Pact's black night is the eve of All Saints")
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 4, 30)
+	var many := Overworld.nightfall_walkers()
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 5, 3)
+	check(many == 2 * Overworld.nightfall_walkers(), "twice the Pact walkers on a sabbath night")
+	check(LiturgicalCalendar.free_inn("sanctum", LiturgicalCalendar.game_day_of(2500, 9, 29)) and not LiturgicalCalendar.free_inn("sanctum", 0)
+		and not LiturgicalCalendar.free_inn("lyceum", LiturgicalCalendar.game_day_of(2500, 9, 29)), "a free bed in Church inns on I class feasts")
+	var nf := LiturgicalCalendar.next_feast("sanctum", LiturgicalCalendar.game_day_of(2500, 9, 20), 14, 2)
+	check(nf.get("name", "") == "Dedication of St Michael the Archangel", "next Church feast after 20 September (%s)" % [nf])
+	# every name the calendar can show is translated
+	var tables := {}
+	for code in ["pt", "es"]:
+		tables[code] = JSON.parse_string(FileAccess.get_file_as_string("res://data/i18n/%s.json" % code))
+	var names := {}
+	for w in LiturgicalCalendar.WEEKDAYS + LiturgicalCalendar.MONTH_DAYS + LiturgicalCalendar.CLASS_NAMES.values():
+		names[w] = true
+	for y in range(2500, 2536):
+		var z0 := LiturgicalCalendar.days_from_civil(y, 1, 1)
+		for z in range(z0, LiturgicalCalendar.days_from_civil(y + 1, 1, 1)):
+			var c := LiturgicalCalendar.of_date(z)
+			names[c["name"]] = true
+			for k in ["short", "title"]:
+				if String(c.get(k, "")) != "":
+					names[c[k]] = true
+			for cm in c["comms"]:
+				names[cm] = true
+	var cal := LiturgicalCalendar.data()
+	for f in cal["faiths"]:
+		for fe in cal["faiths"][f]:
+			names[fe["name"]] = true
+	for f in cal["errand_goods"]:
+		for g in cal["errand_goods"][f]:
+			names[g["goods"]] = true
+			check(not GameState.city(g["source"]).is_empty(), "errand source %s is a city" % g["source"])
+	for f in cal["thieves"]:
+		names[cal["thieves"][f][1]] = true
+	for code in tables:
+		for n in names:
+			check(tables[code].has(n), "%s: calendar string not translated: %s" % [code, n])
+	var blob := FileAccess.get_file_as_string("res://data/calendar.json") + FileAccess.get_file_as_string("res://scripts/core/calendar.gd")
+	check(not blob.contains("\u2014") and not blob.contains("\u2013"), "no dashes in the calendar")
+	I18n.setup("pt")
+	check(LiturgicalCalendar.date_text(0) == "Terça-feira, 2 de fevereiro de 2500", "Portuguese date: %s" % LiturgicalCalendar.date_text(0))
+	check(LiturgicalCalendar.dial_line(cand) == "Candelária", "Candelária")
+	check(LiturgicalCalendar.label(_on(2500, 1, 24)) == "3º Domingo depois da Epifania", "Portuguese ordinal Sunday: %s" % LiturgicalCalendar.label(_on(2500, 1, 24)))
+	I18n.setup("es")
+	check(LiturgicalCalendar.date_text(0) == "Martes, 2 de febrero de 2500" and LiturgicalCalendar.label(cand) == "Purificación de Nuestra Señora", "Spanish date and feast")
+	I18n.setup("en")
+
+
+func test_feast_errands() -> void:
+	print("-- feast errands")
+	GameState.new_game(6, "sanctum")
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 9, 20)
+	var offer := GameState.feast_errand_offer("santa_lucerna")
+	check(not offer.is_empty() and offer["feast"] == "Dedication of St Michael the Archangel", "Santa Lucerna asks for Michaelmas (%s)" % [offer])
+	check(offer.get("source", "") != "santa_lucerna" and not GameState.city(offer.get("source", "")).is_empty(), "fetched from another city")
+	check(GameState.feast_errand_offer("santa_lucerna") == offer, "the offer is the same on a second look")
+	# take it
+	check(GameState.accept_feast_errand(offer) and GameState.is_feast_errand(), "errand taken")
+	check(not GameState.accept_feast_errand(GameState.feast_errand_offer("vinemere")), "one errand at a time")
+	check(not GameState.feast_pickup("santa_lucerna") or offer["source"] == "santa_lucerna", "nothing to pick up in the wrong city")
+	check(GameState.feast_deliver("santa_lucerna").is_empty(), "nothing to deliver before the pick-up")
+	# pick it up
+	check(GameState.feast_pickup(offer["source"]) and GameState.errand["state"] == "carry", "goods picked up")
+	var th: Array = load("res://scripts/main.gd").thief_for(GameState.errand)
+	check(th[0] == "abyss" and th[1] == "Pact Raider", "Pact raiders come for the Church's goods")
+	# robbed on the road: back to the source
+	GameState.feast_goods_lost()
+	check(GameState.errand["state"] == "fetch" and int(GameState.errand["lost"]) == 1, "the thief takes the goods")
+	check(GameState.feast_pickup(offer["source"]), "fetch more")
+	# save and load in the middle of it
+	GameState.save_game()
+	GameState.errand = {}
+	GameState.feast_log = ["x@1"]
+	check(GameState.load_game(6) and GameState.is_feast_errand() and GameState.errand["state"] == "carry"
+		and typeof(GameState.errand["feast_day"]) == TYPE_INT and GameState.errand["feast_day"] == offer["feast_day"]
+		and GameState.feast_log.is_empty(), "the errand survives save/load")
+	# deliver on time
+	var g0 := GameState.gold
+	var full := GameState.feast_reward(true)
+	var res := GameState.feast_deliver("santa_lucerna")
+	check(res.get("on_time", false) and GameState.gold == g0 + full and int(res["gold"]) == full and full > 0, "delivered on time: the full reward (%d)" % full)
+	check(GameState.errand.is_empty() and GameState.feast_errand_offer("santa_lucerna").is_empty(), "not asked twice for the same feast")
+	GameState.save_game()
+	GameState.feast_log = []
+	check(GameState.load_game(6) and GameState.feast_log.size() == 1, "the feast log survives save/load")
+	# late: half the reward
+	GameState.feast_log = []
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 9, 20)
+	GameState.accept_feast_errand(GameState.feast_errand_offer("santa_lucerna"))
+	GameState.feast_pickup(GameState.errand["source"])
+	GameState.day = int(GameState.errand["feast_day"]) + 2
+	var g1 := GameState.gold
+	var late := GameState.feast_deliver("santa_lucerna")
+	check(not late.get("on_time", true) and int(late["gold"]) < full and GameState.gold == g1 + int(late["gold"]) and late["card"] == "", "late: a smaller reward and no card (%s)" % [late])
+	# a week after the feast it lapses
+	GameState.feast_log = []
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 9, 20)
+	GameState.accept_feast_errand(GameState.feast_errand_offer("santa_lucerna"))
+	GameState.day = int(GameState.errand["feast_day"]) + GameState.FEAST_LATE_DAYS
+	check(not GameState.feast_errand_lapsed(), "still wanted a week after the feast")
+	GameState.day += 1
+	check(GameState.feast_errand_lapsed() and GameState.errand.is_empty(), "lapsed after a week")
+	# the other faiths ask before their own feasts
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 9, 15)
+	var vin := GameState.feast_errand_offer("vinemere")
+	check(vin.get("feast", "") == "The Vintage" and vin.get("source", "") != "vinemere", "Vinemere asks for the Vintage (%s)" % [vin])
+	# the inn on a I class feast
+	GameState.current_city = "santa_lucerna"
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 9, 29)
+	GameState.gold = 3
+	GameState.life = 1
+	check(GameState.inn_cost() == 0 and GameState.rest_at_inn() and GameState.gold == 3, "a free bed on Michaelmas")
+	GameState.current_city = "porticus"
+	check(GameState.inn_cost() == Economy.inn_price(), "the Stoa charges as usual")
+	# an old save without the new fields
+	var f := FileAccess.open(GameState.slot_path(6), FileAccess.WRITE)
+	f.store_string(JSON.stringify({"version": 3, "gold": 5, "errand": {"giver": "Old Friend", "need": 2, "done": 1, "reward": 60}}))
+	f.close()
+	check(GameState.load_game(6) and GameState.feast_log.is_empty() and not GameState.is_feast_errand() and GameState.errand["giver"] == "Old Friend", "old saves load with defaults")
+	GameState.delete_slot(6)

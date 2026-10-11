@@ -141,6 +141,7 @@ func _process(delta: float) -> void:
 		var region: String = world.faction_at(world.player_pos)
 		Music.set_context("world", region)
 		_region_toll(region)
+		_feast_tick()
 
 
 ## Someone who is not hostile: a friend greets you, a neutral traveller may accept a duel.
@@ -256,7 +257,7 @@ func _talk_to_friend(e: Dictionary) -> void:
 
 ## A favour asked on the road: count hostile wanderers beaten, pay when done.
 func _errand_progress() -> void:
-	if GameState.errand.is_empty():
+	if GameState.errand.is_empty() or GameState.is_feast_errand():
 		return
 	GameState.errand["done"] = int(GameState.errand.get("done", 0)) + 1
 	if int(GameState.errand["done"]) >= int(GameState.errand.get("need", 2)):
@@ -264,6 +265,130 @@ func _errand_progress() -> void:
 		GameState.add_gold(reward)
 		_toast(I18n.t("Favour done: %s pays you %d gold.") % [I18n.t(GameState.errand.get("giver", "")), reward])
 		GameState.errand = {}
+
+
+# ================================================================== feast errands
+
+## Lines of a thief who wants the goods.
+const THIEF_LINES := [
+	"\"The %s will never reach the feast. Hand it over.\"",
+	"\"Somebody is paying well for the %s, friend. It might as well be me.\"",
+	"\"Put down the %s and walk on, and nobody gets hurt.\"",
+]
+
+
+## Who comes for the goods of a feast errand: [faction ("" for the land's own), name].
+static func thief_for(er: Dictionary) -> Array:
+	var t: Array = LiturgicalCalendar.data().get("thieves", {}).get(String(er.get("faith", "")), ["", "Road Thief"])
+	return [String(t[0]), String(t[1])]
+
+
+## Once a second on the road: a feast errand lapses a week after its feast, and on the way back
+## with the goods (well out of the source city, not yet at the gates) a thief waits ahead.
+func _feast_tick() -> void:
+	if not GameState.is_feast_errand():
+		return
+	var er: Dictionary = GameState.errand
+	if GameState.feast_errand_lapsed():
+		GameState.save_game()
+		_toast(I18n.t("The feast is long past: %s no longer waits for the %s.") % [GameState.city(er["city"]).get("name", ""), I18n.t(er["goods"])])
+		return
+	if er.get("state", "") != "carry" or er.get("ambushed", false) or world == null or not world.active:
+		return
+	var src := GameState.city(er["source"])
+	var dst := GameState.city(er["city"])
+	var sp := Vector2(src["x"], src["y"])
+	var dp := Vector2(dst["x"], dst["y"])
+	var span := sp.distance_to(dp)
+	var p: Vector2 = world.player_pos
+	if p.distance_to(sp) < maxf(Overworld.SAFE_RADIUS + 150.0, span * 0.3) or p.distance_to(dp) < maxf(Overworld.SAFE_RADIUS + 100.0, span * 0.2) \
+			or world._in_safe_zone(p):
+		return
+	var th := thief_for(er)
+	var e: Dictionary = world.spawn_thief(th[0], th[1], dp)
+	if e.is_empty():
+		return
+	er["ambushed"] = true
+	GameState.save_game()
+	_toast(I18n.t("Someone on the road has an eye on your %s.") % I18n.t(er["goods"]))
+
+
+## The thief bars the way: fight for the goods, buy him off with them, or run.
+func _on_thief(e: Dictionary) -> void:
+	var enc := _open_encounter(e)
+	var goods := I18n.t(String(GameState.errand.get("goods", "")))
+	var chance := Economy.slip_chance()
+	enc.set_line(I18n.t(THIEF_LINES[GameState.rng.randi_range(0, THIEF_LINES.size() - 1)]) % goods)
+	enc.set_options([
+		["Fight", func(): _fight_enemy(e)],
+		[I18n.t("Bribe him with the %s") % goods, func(): _give_up_goods(e)],
+		[I18n.t("Slip away (%d%%)") % int(round(chance * 100.0)), func(): _slip_away(e, chance)],
+	])
+
+
+## The goods buy your way: the thief takes them and goes.
+func _give_up_goods(e: Dictionary) -> void:
+	var goods := I18n.t(String(GameState.errand.get("goods", "")))
+	GameState.feast_goods_lost()
+	_close_encounter()
+	if world:
+		world.remove_enemy(int(e["id"]))
+		world.grace = 4.0
+	GameState.save_game()
+	_toast(I18n.t("%s takes the %s and is gone.") % [I18n.t(e["name"]), goods])
+
+
+## Entering a city: the goods of a feast errand are picked up at the source, delivered at the
+## city that asked.
+func _feast_at_city(city_id: String) -> void:
+	if not GameState.is_feast_errand():
+		return
+	var er: Dictionary = GameState.errand.duplicate()
+	if GameState.feast_pickup(city_id):
+		GameState.save_game()
+		show_dialog("Feast errand", I18n.t("You load the %s for %s. The feast of %s is on %s: be there by then, and keep an eye on the road.") % [
+			I18n.t(er["goods"]), GameState.city(er["city"]).get("name", ""), _errand_feast_name(er), LiturgicalCalendar.short_date_text(int(er["feast_day"]))],
+			[["Onward", Callable()]])
+		return
+	var res := GameState.feast_deliver(city_id)
+	if res.is_empty():
+		return
+	GameState.save_game()
+	_update_hud()
+	var body := I18n.t("You deliver the %s for the feast of %s.") % [I18n.t(er["goods"]), _errand_feast_name(er)] + "\n\n"
+	if res["on_time"]:
+		body += I18n.t("In good time. You are paid %d gold.") % int(res["gold"])
+	else:
+		body += I18n.t("The feast is past, but they take the %s gladly. You are paid %d gold.") % [I18n.t(er["goods"]), int(res["gold"])]
+	var cards: Array = []
+	if String(res.get("card", "")) != "":
+		cards.append(res["card"])
+		body += "\n" + I18n.t("And a card, with their thanks: %s.") % I18n.t(CardDB.get_card(res["card"]).get("name", ""))
+	show_dialog("Feast errand", body, [["Thank you", Callable()]], cards)
+
+
+func _errand_feast_name(er: Dictionary) -> String:
+	return LiturgicalCalendar.feast_label({"name": er.get("feast", ""), "short": er.get("feast_short", "")})
+
+
+## The journal's line for the errand in hand.
+func _errand_journal_line() -> String:
+	var er: Dictionary = GameState.errand
+	if er.is_empty():
+		return ""
+	if not GameState.is_feast_errand():
+		return I18n.t("• Favour for %s: beat hostile wanderers (%d/%d), %d gold.") % [I18n.t(er.get("giver", "")), int(er.get("done", 0)), int(er.get("need", 2)), int(er.get("reward", 0))]
+	var city_name: String = GameState.city(er["city"]).get("name", "")
+	var where: String = GameState.city(er["source"]).get("name", "")
+	var line := I18n.t("• Feast errand for %s: bring the %s from %s by %s (%s).") % [city_name, I18n.t(er["goods"]), where,
+		LiturgicalCalendar.short_date_text(int(er["feast_day"])), _errand_feast_name(er)]
+	if er.get("state", "") == "carry":
+		line += " " + I18n.t("In your pack.")
+	elif int(er.get("lost", 0)) > 0:
+		line += " " + I18n.t("Stolen on the road: fetch more.")
+	if GameState.day > int(er["feast_day"]):
+		line += " " + I18n.t("Late: half the reward.")
+	return line
 
 
 ## The ferryman takes you across for a fare (or for nothing, if you have nothing).
@@ -503,7 +628,7 @@ func _build_hud() -> void:
 		show_menu(), 190))
 	var dial := SkyDial.new()
 	dial.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	dial.position = Vector2(-SkyDial.W * 0.5, UIKit.TOP + 6)
+	dial.position = Vector2(-SkyDial.W * 0.5, UIKit.TOP + 10)     # the gilt rim stands a little above the dial
 	hud.add_child(dial)
 	hud_dial = dial
 	var zoom := HBoxContainer.new()
@@ -521,6 +646,8 @@ func _update_hud() -> void:
 	hud_gold.text = I18n.t("♥ %d/%d   ◉ %d gold   ✦ %d cards") % [GameState.life, GameState.max_life(), GameState.gold, _owned_total()]
 	if hud_dial:
 		hud_dial.set_time(GameState.clock, GameState.day)
+		if world and world.built:
+			hud_dial.set_region(world.faction_at(world.player_pos))
 	hud_boosters.text = I18n.t("Boosters (%d)") % GameState.pending_boosters
 	hud_boosters.disabled = GameState.pending_boosters <= 0
 
@@ -625,8 +752,12 @@ func show_journal() -> void:
 		var giver := _mission_city(id)
 		var detail: String = (I18n.t("Complete! Return to %s.") % giver) if st == "done" else I18n.t(m.get("text", ""))
 		lines.append("• %s%s: %s" % [I18n.t(m.get("title", id)), prog, detail])
+	var el := _errand_journal_line()
+	if el != "":
+		lines.append(el)
 	if lines.is_empty():
 		lines.append(I18n.t("No active missions. Talk to townsfolk in the cities."))
+	lines.append("\n" + I18n.t("Today: %s. %s.") % [LiturgicalCalendar.date_text(GameState.day), LiturgicalCalendar.label(LiturgicalCalendar.of_day(GameState.day))])
 	lines.append(I18n.t("\nLairs cleared: %d / %d") % [GameState.cleared_lairs.size(), GameState.world_data.get("lairs", []).size()])
 	show_dialog("Journal", "\n".join(lines), [["Close", Callable()]])
 
@@ -649,6 +780,7 @@ func _on_city_entered(city_id: String) -> void:
 	_open_city(city_id)
 	if toll > 0:
 		_toast(I18n.t("Gate toll: %d gold.") % toll)
+	_feast_at_city(city_id)
 
 
 func _open_city(city_id: String) -> void:
@@ -711,6 +843,9 @@ func _start_lair(lair_id: String) -> void:
 
 ## A hostile wanderer bars the way: words first, then the duel, a bribe or a dash for it.
 func _on_enemy_engaged(e: Dictionary) -> void:
+	if e.get("thief", false) and GameState.is_feast_errand() and GameState.errand.get("state", "") == "carry":
+		_on_thief(e)
+		return
 	var enc := _open_encounter(e)
 	var price := Economy.bribe_price(int(e["level"]))
 	var chance := Economy.slip_chance()
@@ -727,7 +862,7 @@ func _fight_enemy(e: Dictionary) -> void:
 	var deck := DeckTools.enemy_deck(e["faction"], int(e["level"]), GameState.rng)
 	start_battle({"name": e["name"], "faction": e["faction"], "level": int(e["level"]),
 		"life": maxi(6, 8 + int(e["level"]) * 2 + int(GameState.diff("enemy_life"))), "deck": deck, "enemy_id": e["id"], "look": e.get("look", ""),
-		"disposition": e.get("disposition", "hostile")})
+		"disposition": e.get("disposition", "hostile"), "thief": e.get("thief", false)})
 
 
 ## He takes the gold and goes his way: gone from the road, but no spoils.
@@ -830,23 +965,33 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 			parts.append(I18n.t("%s, taken from the loser's deck") % I18n.t(CardDB.get_card(spoil).get("name", spoil)))
 		if parts.is_empty():
 			parts.append(I18n.t("nothing but the road ahead"))
+		var vtext := I18n.t("You gain: %s") % ", ".join(parts)
+		if info.get("thief", false) and GameState.is_feast_errand() and GameState.errand.get("state", "") == "carry":
+			vtext += "\n\n" + I18n.t("You keep the %s safe in your pack.") % I18n.t(GameState.errand["goods"])
 		GameState.save_game()
-		show_dialog("Victory", I18n.t("You gain: %s") % ", ".join(parts), [["Onward", Callable()]], cards)
+		show_dialog("Victory", vtext, [["Onward", Callable()]], cards)
 	else:
 		GameState.stats["losses"] = int(GameState.stats.get("losses", 0)) + 1
 		var fled: bool = info.get("fled", false)
 		var lost := Economy.defeat_cost(fled)
 		GameState.add_gold(-lost)
+		var robbed := ""
+		if info.get("thief", false) and GameState.is_feast_errand() and GameState.errand.get("state", "") == "carry":
+			# lose the duel, lose the goods: the thief makes off with them
+			robbed = "\n\n" + I18n.t("%s makes off with the %s.") % [I18n.t(info["name"]), I18n.t(GameState.errand["goods"])]
+			GameState.feast_goods_lost()
+			if info.has("enemy_id"):
+				world.remove_enemy(info["enemy_id"])
 		if fled:
 			# fleeing costs less, and you keep your place on the road
 			GameState.save_game()
-			show_dialog("You fled", I18n.t("You drop %d gold as you run.") % lost, [["Onward", Callable()]])
+			show_dialog("You fled", I18n.t("You drop %d gold as you run.") % lost + robbed, [["Onward", Callable()]])
 		else:
 			var city_id := _nearest_visited_city()
 			world.respawn_at_city(city_id)
 			GameState.life = maxi(1, GameState.max_life() / 2)
 			GameState.save_game()
-			show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")], [["Get up", Callable()]])
+			show_dialog("Defeat", I18n.t("You lose %d gold and wake up near %s.") % [lost, GameState.city(city_id).get("name", "a city")] + robbed, [["Get up", Callable()]])
 	_update_hud()
 
 
