@@ -453,6 +453,46 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "That card has left your hand.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "The duel is over.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Wait a moment: the duel is still moving.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the target first, or cancel.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Finish the attack or the blocks first.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You have already played a land this turn.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Lands are played in your own main phase, with the stack empty.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Wait until you have priority: your main phase, or when the duel stops for you to answer.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Only in your own main phase, with the stack empty. Only an Instant can be cast at other times.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Not enough mana.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Use",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -550,6 +590,18 @@
   },
   {
    "key": "You may keep %d cards. Choose one to discard.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You will lose this match.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You will drop %d gold (half your purse) and lose 5 random cards from your deck.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Flee the duel?",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -2077,6 +2129,14 @@
    "note": "scripts/ui/card_database.gd"
   },
   {
+   "key": "Sorcery",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Instant",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
    "key": "Any rarity",
    "note": "scripts/ui/card_database.gd"
   },
@@ -2277,11 +2337,19 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
+   "key": "Rules glossary",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
    "key": "Cost %s",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
    "key": "You own %d",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Actions",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -2725,11 +2793,19 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Tap a card to add it, hold to read it. Tap a deck row to remove.",
+   "key": "Tap a card to read it, or + to add it at once. Tap a deck row to remove.",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Add (%d in deck)",
+   "key": "Add to deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Add to deck (%d in deck)",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "No more copies can go in (%d allowed, %d owned).",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3103,6 +3179,58 @@
   {
    "key": "The game is made to be played in landscape.",
    "note": "scripts/ui/rotate_overlay.gd"
+  },
+  {
+   "key": "Creature: a permanent that fights. It stays on the battlefield, blocks, and can attack from your next turn (at once with haste).",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Sorcery: cast it in your main phase while the stack is empty. It does what it says, then goes to the graveyard.",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Instant: cast it whenever you have priority, in either player's turn and in answer to a spell or ability. Then it goes to the graveyard.",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Relic: a permanent that stays on the battlefield and works for as long as it stays.",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Land: play at most one a turn, in your main phase. Tap your lands for the mana that pays for your cards.",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Token: a creature made by an effect, not a card. When it leaves the battlefield it is gone.",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "{1} {2} {X}: generic mana, paid with mana of any kind.",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "The stack: cast cards and used abilities wait on the stack, and when both players pass, the last one added resolves first.",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Card types",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Mana",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Keywords",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "Conditions and mechanics",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
+   "key": "The stack",
+   "note": "scripts/ui/rules_glossary.gd"
   },
   {
    "key": "Normal",
@@ -4187,7 +4315,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Your Knight creature cards cost 1 less to play (1 less generic mana).",
+   "key": "Your Knight creature cards cost {1} less to play (1 less generic mana).",
    "note": "rules text of Preceptor of the Commandery"
   },
   {
@@ -4483,10 +4611,6 @@
    "note": "card subtype"
   },
   {
-   "key": "Dread (can only be blocked by Pact creatures and Constructs).",
-   "note": "rules text of Pit Imp"
-  },
-  {
    "key": "It is small, it is spiteful, and it is never where you swing.",
    "note": "flavour text of Pit Imp"
   },
@@ -4543,6 +4667,10 @@
    "note": "card subtype"
   },
   {
+   "key": "Dread (can only be blocked by Pact creatures and Constructs).",
+   "note": "rules text of Hellmaw Hound"
+  },
+  {
    "key": "Honest dogs bolt at its scent. Only the damned dare stand in its path.",
    "note": "flavour text of Hellmaw Hound"
   },
@@ -4587,7 +4715,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this dies, create a 1/1 Restless Dead Zombie token.",
+   "key": "When this dies, create a 1/1 Risen Bones Skeleton token.",
    "note": "rules text of Ossuary Bone-Walker"
   },
   {
@@ -4595,7 +4723,7 @@
    "note": "flavour text of Ossuary Bone-Walker"
   },
   {
-   "key": "Restless Dead",
+   "key": "Risen Bones",
    "note": "token creature name"
   },
   {
@@ -4719,7 +4847,7 @@
    "note": "rules text of Gibbet of the Forsworn"
   },
   {
-   "key": "\"Swear by everything. Then nothing can hold you to anything.\" (a Pact notary)",
+   "key": "\"An oath is a rope. A wise man ties it round other men's necks.\" (a Pact notary)",
    "note": "flavour text of Gibbet of the Forsworn"
   },
   {
@@ -4979,7 +5107,7 @@
    "note": "card name (abyss, relic)"
   },
   {
-   "key": "Tap, pay 2 and 2 life: the enemy discards a card at random.",
+   "key": "Tap, pay {2} and 2 life: the enemy discards a card at random.",
    "note": "rules text of Censer of Bitter Ash"
   },
   {
@@ -5059,6 +5187,10 @@
    "note": "flavour text of Plague-Cart Drover"
   },
   {
+   "key": "Restless Dead",
+   "note": "token creature name"
+  },
+  {
    "key": "Hunger of the Grave",
    "note": "card name (abyss, spell)"
   },
@@ -5087,7 +5219,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Dread. Whenever this attacks, the enemy discards a card at random.",
+   "key": "Flying. Whenever this attacks, the enemy discards a card at random.",
    "note": "rules text of Dream-Thief Fiend"
   },
   {
@@ -5123,7 +5255,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Other Skeletons you control get +1/+1. Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
+   "key": "Other Skeletons you control get +1/+1. {B}, sacrifice another creature: create a 1/1 Risen Bones Skeleton token.",
    "note": "rules text of Bone-Lord of the Ossuary"
   },
   {
@@ -5131,7 +5263,7 @@
    "note": "flavour text of Bone-Lord of the Ossuary"
   },
   {
-   "key": "Pay B, sacrifice another creature: create a 2/2 Restless Dead Zombie token.",
+   "key": "{B}, sacrifice another creature: create a 1/1 Risen Bones Skeleton token.",
    "note": "activated ability text of Bone-Lord of the Ossuary"
   },
   {
@@ -5155,7 +5287,7 @@
    "note": "rules text of Night of Unmaking"
   },
   {
-   "key": "\"When no one is left to accuse you, you are innocent.\" (the Black Synod, Canon of Silence)",
+   "key": "\"Leave no witness, and the deed was never done.\" (the Black Synod, Canon of Silence)",
    "note": "flavour text of Night of Unmaking"
   },
   {
@@ -5231,7 +5363,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Dread. When this enters, destroy target enemy creature and you lose 3 life.",
+   "key": "Flying. When this enters, destroy target enemy creature and you lose 3 life.",
    "note": "rules text of Belzareth, Prince of Cinders"
   },
   {
@@ -5271,7 +5403,7 @@
    "note": "rules text of Azgaroth, Duke of the Ninth Pit"
   },
   {
-   "key": "\"In my court there is perfect freedom: every man is free to pay.\" (Azgaroth, Duke of the Ninth Pit)",
+   "key": "\"Every man in my court is free. He is free to pay, and free to pay again.\" (Azgaroth, Duke of the Ninth Pit)",
    "note": "flavour text of Azgaroth, Duke of the Ninth Pit"
   },
   {
@@ -5295,7 +5427,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Tap: add G.",
+   "key": "Tap: add {G}.",
    "note": "rules text of Hedgerow Druid"
   },
   {
@@ -5431,7 +5563,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Add GG.",
+   "key": "Add {G}{G}.",
    "note": "rules text of Greening Rite"
   },
   {
@@ -5503,7 +5635,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Tap, pay G: target creature you control gets +1/+1 until end of turn.",
+   "key": "Tap, pay {G}: target creature you control gets +1/+1 until end of turn.",
    "note": "rules text of Rowan Charm"
   },
   {
@@ -5515,7 +5647,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Tap, pay 1G: create a 1/1 Sapling token.",
+   "key": "Tap, pay {1}{G}: create a 1/1 Sapling token.",
    "note": "rules text of Sower's Basket"
   },
   {
@@ -5771,7 +5903,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Tap, pay 2G: create a 2/2 Wolf token.",
+   "key": "Tap, pay {2}{G}: create a 2/2 Wolf token.",
    "note": "rules text of Horn of the Wild Hunt"
   },
   {
@@ -5819,7 +5951,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Your Treefolk creature cards cost 1 less.",
+   "key": "Your Treefolk creature cards cost {1} less.",
    "note": "rules text of Acorn of the Elder Oak"
   },
   {
@@ -5855,7 +5987,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Your relic cards cost 1 less. As long as you control a relic, this gets +1/+1.",
+   "key": "Your relic cards cost {1} less. As long as you control a relic, this gets +1/+1.",
    "note": "rules text of Mantle-Keeper of the Circle"
   },
   {
@@ -5867,7 +5999,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "At the beginning of your upkeep, add G. Tap, pay G: target creature you control gets +1/+1 permanently.",
+   "key": "At the beginning of your upkeep, add {G}. Tap, pay {G}: target creature you control gets +1/+1 permanently.",
    "note": "rules text of Mistletoe Archdruid"
   },
   {
@@ -5875,7 +6007,7 @@
    "note": "flavour text of Mistletoe Archdruid"
   },
   {
-   "key": "Tap, pay G: target creature you control gets +1/+1 permanently.",
+   "key": "Tap, pay {G}: target creature you control gets +1/+1 permanently.",
    "note": "activated ability text of Mistletoe Archdruid"
   },
   {
@@ -5975,7 +6107,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, add GG.",
+   "key": "At the beginning of your upkeep, add {G}{G}.",
    "note": "rules text of Circle of Standing Stones"
   },
   {
@@ -6227,7 +6359,7 @@
    "note": "rules text of Garlanded Festival Bull"
   },
   {
-   "key": "Let us crown ourselves with roses, before they be withered: let no meadow escape our riot. (Wisdom 2:8)",
+   "key": "Gild his horns, hang him with roses, and point him at the enemy. The procession will sort itself out. (a steward of the Feast)",
    "note": "flavour text of Garlanded Festival Bull"
   },
   {
@@ -6323,7 +6455,7 @@
    "note": "card name (revel, relic)"
   },
   {
-   "key": "R, Tap: creatures you control get +1/+0 until end of turn.",
+   "key": "{R}, Tap: creatures you control get +1/+0 until end of turn.",
    "note": "rules text of Festival Drum"
   },
   {
@@ -6599,7 +6731,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Your Performer creature cards cost 1 less to play (this reduces only generic mana).",
+   "key": "Your Performer creature cards cost {1} less to play (this reduces only generic mana).",
    "note": "rules text of Master of the Revels"
   },
   {
@@ -6723,7 +6855,7 @@
    "note": "rules text of Archduke of the Endless Feast"
   },
   {
-   "key": "Let us eat and drink; for to morrow we shall die. (Isaias 22:13)",
+   "key": "Ah, make the most of what we yet may spend, / Before we too into the Dust descend. (Omar Khayyam, tr. FitzGerald)",
    "note": "flavour text of Archduke of the Endless Feast"
   },
   {
@@ -6951,7 +7083,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Tap, pay U: tap target enemy creature.",
+   "key": "Tap, pay {U}: tap target enemy creature.",
    "note": "rules text of Logician of the Porch"
   },
   {
@@ -7095,7 +7227,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Tax 2 (the enemy's next non-land card costs 2 more). Draw a card.",
+   "key": "Tax 2 (the enemy's next non-land card costs {2} more). Draw a card.",
    "note": "rules text of Question of First Principles"
   },
   {
@@ -7107,7 +7239,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs 1 more).",
+   "key": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs {1} more).",
    "note": "rules text of Sent Back to the Gate"
   },
   {
@@ -7131,7 +7263,7 @@
    "note": "card name (lyceum, relic)"
   },
   {
-   "key": "Tap, pay 2: tap target enemy creature.",
+   "key": "Tap, pay {2}: tap target enemy creature.",
    "note": "rules text of Harbour Chain"
   },
   {
@@ -7175,7 +7307,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "When this enters, tax 1 (the enemy's next non-land card costs 1 more).",
+   "key": "When this enters, tax 1 (the enemy's next non-land card costs {1} more).",
    "note": "rules text of Questioner in the Agora"
   },
   {
@@ -7255,7 +7387,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs 1 more).",
+   "key": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs {1} more).",
    "note": "rules text of Agora Inspector"
   },
   {
@@ -7399,7 +7531,7 @@
    "note": "card name (lyceum, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs 1 more).",
+   "key": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs {1} more).",
    "note": "rules text of Sumptuary Tablet"
   },
   {
@@ -7447,7 +7579,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Your Philosopher creature cards cost 1 less to play.",
+   "key": "Your Philosopher creature cards cost {1} less to play.",
    "note": "rules text of Scholarch of the Porch"
   },
   {
@@ -7495,7 +7627,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Defender. Tap, pay 2: draw a card.",
+   "key": "Defender. Tap, pay {2}: draw a card.",
    "note": "rules text of Keeper of the Stacks"
   },
   {
@@ -7503,7 +7635,7 @@
    "note": "flavour text of Keeper of the Stacks"
   },
   {
-   "key": "Tap, pay 2: draw a card.",
+   "key": "Tap, pay {2}: draw a card.",
    "note": "activated ability text of Keeper of the Stacks"
   },
   {
@@ -7675,7 +7807,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs 2 more).",
+   "key": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs {2} more).",
    "note": "rules text of The View from Above"
   },
   {
@@ -7743,7 +7875,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Overclock 2 (you may pay 2 more as you play this). If overclocked, it enters with two +1/+1 counters.",
+   "key": "Overclock {2} (you may pay {2} more as you play this). If overclocked, it enters with two +1/+1 counters.",
    "note": "rules text of Clockwork Hound"
   },
   {
@@ -7755,7 +7887,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+   "key": "Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
    "note": "rules text of Steam Hauler"
   },
   {
@@ -7795,7 +7927,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
+   "key": "Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
    "note": "rules text of Gearwright Journeyman"
   },
   {
@@ -7847,7 +7979,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Create a 1/1 Servo Construct token. Overclock 2 (you may pay 2 more as you play this). If overclocked, create another Servo.",
+   "key": "Create a 1/1 Servo Construct token. Overclock {2} (you may pay {2} more as you play this). If overclocked, create another Servo.",
    "note": "rules text of Spare Parts"
   },
   {
@@ -7887,7 +8019,7 @@
    "note": "card name (machine, spell)"
   },
   {
-   "key": "Put a +1/+1 counter on target Construct you control. Overclock 1C (you may pay 1C more as you play this). If overclocked, also deal 2 damage to target enemy creature.",
+   "key": "Put a +1/+1 counter on target Construct you control. Overclock {1}{C} (you may pay {1}{C} more as you play this). If overclocked, also deal 2 damage to target enemy creature.",
    "note": "rules text of Calibrated Discharge"
   },
   {
@@ -7927,7 +8059,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Tap, pay 1C: put a +1/+1 counter on target Construct you control.",
+   "key": "Tap, pay {1}{C}: put a +1/+1 counter on target Construct you control.",
    "note": "rules text of Calibration Bench"
   },
   {
@@ -7963,7 +8095,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.",
+   "key": "Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.",
    "note": "rules text of Workshop Draughtsman"
   },
   {
@@ -8027,7 +8159,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Equipped creature gets +1/+0 and has first strike. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)",
+   "key": "Equipped creature gets +1/+0 and has first strike. Equip {2} (pay {2}: attach this to a creature you control. Equip only as a sorcery.)",
    "note": "rules text of Spring-Loaded Lance"
   },
   {
@@ -8051,7 +8183,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Upkeep 2 (at the beginning of your upkeep, pay 2 or sacrifice this).",
+   "key": "Upkeep {2} (at the beginning of your upkeep, pay {2} or sacrifice this).",
    "note": "rules text of Siege Automaton"
   },
   {
@@ -8063,7 +8195,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Tap, pay 2: create a 1/1 Servo Construct token.",
+   "key": "Tap, pay {2}: create a 1/1 Servo Construct token.",
    "note": "rules text of Cogspire Foreman"
   },
   {
@@ -8075,7 +8207,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Assembly (this gets +1/+1 for each other Construct you control). Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
+   "key": "Assembly (this gets +1/+1 for each other Construct you control). Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
    "note": "rules text of Linked Automaton"
   },
   {
@@ -8119,7 +8251,7 @@
    "note": "card name (machine, spell)"
   },
   {
-   "key": "Put a +1/+1 counter on each creature you control. Overclock 2 (you may pay 2 more as you play this). If overclocked, put another +1/+1 counter on each creature you control.",
+   "key": "Put a +1/+1 counter on each creature you control. Overclock {2} (you may pay {2} more as you play this). If overclocked, put another +1/+1 counter on each creature you control.",
    "note": "rules text of Mass Retooling"
   },
   {
@@ -8183,7 +8315,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "Your Technocracy cards cost 1 less to play. This reduces only generic mana.",
+   "key": "Your Technocracy cards cost {1} less to play. This reduces only generic mana.",
    "note": "rules text of Foundry Ledger"
   },
   {
@@ -8207,7 +8339,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
+   "key": "Your Construct creature cards cost {1} less to play. This reduces only generic mana.",
    "note": "rules text of Guild Fitter"
   },
   {
@@ -8231,7 +8363,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Overclock 1C (you may pay 1C more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.",
+   "key": "Overclock {1}{C} (you may pay {1}{C} more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.",
    "note": "rules text of Arc-Lamp Galvanist"
   },
   {
@@ -8267,7 +8399,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)",
+   "key": "When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip {2} (pay {2}: attach this to a creature you control. Equip only as a sorcery.)",
    "note": "rules text of Riveted Pauldron"
   },
   {
@@ -8279,7 +8411,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Your relic cards cost 1 less to play. This reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on this.",
+   "key": "Your relic cards cost {1} less to play. This reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on this.",
    "note": "rules text of Guild Armourer"
   },
   {
@@ -8303,7 +8435,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Upkeep 3.",
+   "key": "Upkeep {3}.",
    "note": "rules text of Grand Foundry Colossus"
   },
   {
@@ -8327,7 +8459,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Overclock 2. If overclocked, when this enters, deal 3 damage to target enemy creature.",
+   "key": "Overclock {2}. If overclocked, when this enters, deal 3 damage to target enemy creature.",
    "note": "rules text of Arc-Welder Construct"
   },
   {
@@ -8339,7 +8471,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Upkeep 1. At the beginning of your upkeep, put a +1/+1 counter on this.",
+   "key": "Upkeep {1}. At the beginning of your upkeep, put a +1/+1 counter on this.",
    "note": "rules text of Mainspring Juggernaut"
   },
   {
@@ -8387,7 +8519,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "Your Technocracy cards cost 2 less to play. This reduces only generic mana. Upkeep 1.",
+   "key": "Your Technocracy cards cost {2} less to play. This reduces only generic mana. Upkeep {1}.",
    "note": "rules text of Perpetual Engine"
   },
   {
@@ -8399,7 +8531,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Other Artificers you control get +1/+1. Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
+   "key": "Other Artificers you control get +1/+1. Your Construct creature cards cost {1} less to play. This reduces only generic mana.",
    "note": "rules text of Master Horologist"
   },
   {
@@ -8451,7 +8583,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Assembly. Upkeep 2.",
+   "key": "Assembly. Upkeep {2}.",
    "note": "rules text of The Iron Leviathan"
   },
   {
@@ -8463,7 +8595,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "Your Technocracy cards cost 1 less to play. This reduces only generic mana. At the beginning of your upkeep, create a 1/1 Servo Construct token.",
+   "key": "Your Technocracy cards cost {1} less to play. This reduces only generic mana. At the beginning of your upkeep, create a 1/1 Servo Construct token.",
    "note": "rules text of The Grand Tabulator"
   },
   {
@@ -8475,7 +8607,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock 3 (you may pay 3 more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.",
+   "key": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock {3} (you may pay {3} more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.",
    "note": "rules text of The Archwright of Cogspire"
   },
   {
@@ -8511,10 +8643,6 @@
    "note": "flavour text of Rogationtide Friar"
   },
   {
-   "key": "Plant",
-   "note": "token subtype"
-  },
-  {
    "key": "Lord of the Last Pew",
    "note": "card name (gold, creature)"
   },
@@ -8543,7 +8671,7 @@
    "note": "card name (gold, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, gain 2 life. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+   "key": "At the beginning of your upkeep, gain 2 life. Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
    "note": "rules text of Abbot's Astronomical Clock"
   },
   {
@@ -8651,7 +8779,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): tax 1 (the enemy's next non-land card costs 1 more).",
+   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): tax 1 (the enemy's next non-land card costs {1} more).",
    "note": "rules text of Epicurean on the Porch Steps"
   },
   {
@@ -8663,7 +8791,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Haste. Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, deal 2 damage to any enemy creature or the enemy player.",
+   "key": "Haste. Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, deal 2 damage to any enemy creature or the enemy player.",
    "note": "rules text of Pyrotechnic Automaton"
   },
   {
@@ -8675,7 +8803,7 @@
    "note": "card name (gold, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, draw a card, then foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom). Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+   "key": "At the beginning of your upkeep, draw a card, then foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom). Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
    "note": "rules text of Reckoning Engine of Rhodes"
   },
   {

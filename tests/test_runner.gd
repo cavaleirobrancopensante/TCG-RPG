@@ -26,6 +26,7 @@ func _ready() -> void:
 	test_levels()
 	test_npc_clashes()
 	test_villages()
+	test_card_ui()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -1727,3 +1728,60 @@ func test_villages() -> void:
 		rumour_of_foe = rumour_of_foe or (String(l).contains("Pact Cultist") and String(l).contains("north"))
 	check(rumour_of_foe, "gossip points at a wanderer near by")
 	check(VillageScreen.direction(Vector2.ZERO, Vector2(0, -10)) == "north" and VillageScreen.direction(Vector2.ZERO, Vector2(10, 10)) == "south-east", "compass words")
+
+
+func test_card_ui() -> void:
+	print("-- card text: mana tokens, types, glossary")
+	# tokens become plain text where only text can be shown
+	check(CardView.plain_text("Tap, pay {2}{G}: add {X} or {C}.") == "Tap, pay (2)(G): add (X) or (C).", "plain text of tokens: %s" % CardView.plain_text("Tap, pay {2}{G}: add {X} or {C}."))
+	check(CardView.plain_text("No tokens {here}.") == "No tokens {here}.", "only mana tokens are replaced")
+	check(CardView.cost_tokens({"generic": 2, "W": 2}) == "{2}{W}{W}" and CardView.cost_tokens({}) == "{0}" and CardView.cost_tokens({"G": 1, "C": 1}) == "{G}{C}", "cost as tokens")
+	check(CardView._word_runs("{2}{G}:") == [["2", true], ["G", true], [":", false]], "a word splits into pips and text")
+	check(CardView._word_runs("({W})") == [["(", false], ["W", true], [")", false]], "pips inside brackets")
+	check(CardView._word_runs("{10}") == [["10", true]], "two-digit generic")
+	# wrapping counts a pip as one symbol's width, never splits a word with pips, keeps line breaks
+	var font := Tapestry.font("book")
+	var lines := CardView.layout_text(font, "Pay {2}{G}{G}{G}{G}: draw a card.\nSecond line.", 14, 90.0, 90.0, 0)
+	var pips := 0
+	for line in lines:
+		for run in line:
+			if run[2]:
+				pips += 1
+		var last: Array = line[line.size() - 1] if not line.is_empty() else []
+		if not last.is_empty():
+			var w: float = last[0] + (CardView.pip_advance(14) if last[2] else font.get_string_size(last[1], HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x)
+			check(w <= 90.5, "line fits its width (%s)" % [line])
+	check(pips == 5, "five pips laid out (%d)" % pips)
+	check(lines.size() >= 3 and String(lines[lines.size() - 1][0][1]) == "Second", "a line break starts a new line")
+	var narrow := CardView.layout_text(font, "one two three four five six seven", 14, 40.0, 400.0, 2)
+	check(narrow.size() == 3, "the first lines are narrow (drop capital), the rest full width (%d)" % narrow.size())
+	# type lines: spells are Sorceries or Instants, subtypes in parentheses
+	check(CardView.type_line({"type": "spell", "subtype": "Curse", "speed": "instant"}) == "Instant (Curse)", "instant type line")
+	check(CardView.type_line({"type": "spell", "subtype": "Revelry"}) == "Sorcery (Revelry)", "sorcery type line")
+	check(CardView.type_line({"type": "relic", "subtype": "Charm"}) == "Relic (Charm)", "relic type line")
+	check(CardView.type_line({"type": "creature", "subtype": "Human Cleric"}) == "Creature · Human Cleric", "creature type line as before")
+	check(CardView.type_line({"type": "spell"}) == "Sorcery" and CardView.type_line({"type": "land", "subtype": "Land"}) == "Land", "bare type lines")
+	for id in CardDB.all_set_ids():
+		var c := CardDB.get_card(id)
+		var k := CardView.kind(c)
+		check(k in ["creature", "sorcery", "instant", "relic", "land"], "%s has a known kind (%s)" % [id, k])
+		if c.get("type") == "spell":
+			check((k == "instant") == BattleState.is_instant(c), "%s: Instant exactly when the engine casts it at instant speed" % id)
+	check(DeckBuilder.TYPES == ["Any type", "Creature", "Sorcery", "Instant", "Relic", "Land"] and CardDatabase.TYPES == DeckBuilder.TYPES, "type filters")
+	# the glossary explains every keyword of the card spec
+	var spec := FileAccess.get_file_as_string("res://docs/CARD_SPEC.md")
+	var sec := spec.substr(spec.find("## Keywords"))
+	sec = sec.substr(0, sec.find("## Effects"))
+	var re := RegEx.create_from_string("\\n\\| `([a-z_]+)` \\|")
+	var n := 0
+	for m in re.search_all(sec):
+		n += 1
+		var kw := m.get_string(1)
+		check(CardViewer.KEYWORDS.has(kw) and RulesGlossary.KEYWORD_ORDER.has(kw), "glossary explains keyword %s" % kw)
+	check(n >= 14, "keywords read from the card spec (%d)" % n)
+	for kw in CardViewer.KEYWORDS:
+		check(RulesGlossary.KEYWORD_ORDER.has(kw), "glossary lists %s" % kw)
+	# no dashes in the new strings
+	for t in RulesGlossary.TYPES + [RulesGlossary.GENERIC, RulesGlossary.STACK]:
+		check(not t.contains("\u2014") and not t.contains("\u2013"), "dash in glossary: %s" % t)
+

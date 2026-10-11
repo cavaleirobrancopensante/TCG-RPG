@@ -4,14 +4,16 @@ extends Control
 ##  • Decks: choose, New, Copy, Rename, Delete, "Use in duels" (the active deck).
 ##  • Filters: faiths (any combination), type, cost, rarity, ability, name/text search,
 ##    "only cards in this deck"; sorting by faith, cost, name, rarity or power.
-##  • Tap a card to add it, hold to read it; tap a deck row to remove one copy.
+##  • Tap a card to read it up close, with Add to deck / Remove (the viewer stays open, so
+##    several copies or cards can be added); the small "+" on a card adds one at once.
+##    Tap a deck row to remove one copy.
 ##  • Both lists scroll by dragging (finger or mouse) as well as with the wheel.
 
 signal closed
 
 const SCALE := 0.52
 const COSTS := ["Any cost", "Cost 0-1", "Cost 2", "Cost 3", "Cost 4", "Cost 5", "Cost 6+"]
-const TYPES := ["Any type", "Creature", "Spell", "Relic", "Land"]
+const TYPES := ["Any type", "Creature", "Sorcery", "Instant", "Relic", "Land"]
 const RARITIES := ["Any rarity", "Common", "Uncommon", "Rare", "Mythic"]
 const KEYWORDS := ["Any ability", "Flying", "Guardian", "Lifelink", "Sanctified", "Deathtouch", "Dread",
 	"Trample", "Reach", "Regenerate", "Haste", "First strike", "Vigilance", "Defender", "Steadfast",
@@ -365,7 +367,7 @@ func _done() -> void:
 func _passes(c: Dictionary, in_deck: int) -> bool:
 	if not faiths.is_empty() and not faiths.has(c["faction"]) and not faiths.has(c.get("faction2", "")):
 		return false
-	if f_type > 0 and c["type"] != TYPES[f_type].to_lower():
+	if f_type > 0 and CardView.kind(c) != TYPES[f_type].to_lower():
 		return false
 	if f_cost > 0:
 		var mv := int(c["mana_value"])
@@ -452,10 +454,11 @@ func _refresh_now() -> void:
 		var cid: String = id
 		cv.tapped.connect(func(_v):
 			if not grid_drag.dragged:
-				_change(cid, 1))
+				_view(cid))
 		cv.long_pressed.connect(func(_v):
 			if not grid_drag.dragged:
 				_view(cid))
+		_add_plus(cv, cid, in_deck < mini(_copy_limit(), _count_owned(cid)))
 		grid.add_child(cv)
 	shown_label.text = I18n.t("Showing %d of the %d different cards you own") % [ids.size(), total]
 
@@ -483,12 +486,27 @@ func _refresh_now() -> void:
 	count_label.text = I18n.t("%d cards · %d lands") % [DeckTools.count(d), DeckTools.land_count(d)]
 	curve.set_deck(d)
 	var problem := DeckTools.validate(d, owned)
-	warn_label.text = problem if problem != "" else "Tap a card to add it, hold to read it. Tap a deck row to remove."
+	warn_label.text = problem if problem != "" else I18n.t("Tap a card to read it, or + to add it at once. Tap a deck row to remove.")
 	warn_label.add_theme_color_override("font_color", UIKit.RED if problem != "" else UIKit.DIM)
 
 
-## Hold a card: read it and leaf through the cards currently shown.
-func _view(start_id: String) -> void:
+## The quick-add "+" in a thumbnail's lower left corner: one more copy without opening the card.
+func _add_plus(cv: CardView, id: String, can_add: bool) -> Button:
+	var b := _PlusButton.new()
+	b.name = "QuickAdd"
+	b.tooltip_text = I18n.t("Add to deck")
+	b.position = Vector2(3, cv.size.y - 41)
+	b.visible = can_add
+	b.pressed.connect(func():
+		if not grid_drag.dragged:
+			_change(id, 1))
+	cv.add_child(b)
+	return b
+
+
+## Tap a card: read it, with Add to deck and Remove, and leaf through the cards shown.
+## The viewer stays open, so several cards (or copies) can be added in a row.
+func _view(start_id: String) -> CardViewer:
 	var listing := []
 	for c in grid.get_children():
 		if c is CardView:
@@ -496,11 +514,32 @@ func _view(start_id: String) -> void:
 	var v := CardViewer.open(self, listing, maxi(0, listing.find(start_id)), func(e, _i):
 		var id: String = e["id"]
 		var n := int(_deck().get(id, 0))
-		return [
-			[I18n.t("Add (%d in deck)") % n, func(): _change(id, 1), n < mini(_copy_limit(), _count_owned(id)), false],
-			["Remove", func(): _change(id, -1), n > 0, false],
-		])
+		var cap := mini(_copy_limit(), _count_owned(id))
+		var out := [[I18n.t("Add to deck (%d in deck)") % n, func(): _change(id, 1), n < cap, false,
+			I18n.t("No more copies can go in (%d allowed, %d owned).") % [_copy_limit(), _count_owned(id)]]]
+		if n > 0:
+			out.append(["Remove", func(): _change(id, -1), true, false])
+		return out)
 	v.closed.connect(_refresh)
+	return v
+
+
+## A round gilt "+" drawn by hand (a themed Button would grow to its font's height).
+class _PlusButton extends Button:
+	func _init() -> void:
+		focus_mode = Control.FOCUS_NONE
+		custom_minimum_size = Vector2(38, 38)
+		size = Vector2(38, 38)
+		for st in ["normal", "hover", "pressed", "disabled", "focus"]:
+			add_theme_stylebox_override(st, StyleBoxEmpty.new())
+
+	func _draw() -> void:
+		var c := size * 0.5
+		var r := minf(size.x, size.y) * 0.5 - 1.5
+		var fill := Tapestry.GILT.lightened(0.25) if (is_hovered() or button_pressed) else Tapestry.GILT
+		Tapestry.ink_circle(self, c, r, fill, 2.0)
+		draw_line(c - Vector2(r * 0.5, 0), c + Vector2(r * 0.5, 0), Tapestry.INK, 3.5)
+		draw_line(c - Vector2(0, r * 0.5), c + Vector2(0, r * 0.5), Tapestry.INK, 3.5)
 
 
 ## Mana curve: how many non-land cards at each cost.

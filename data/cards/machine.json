@@ -116,7 +116,7 @@
         }
       ]
     },
-    "text": "Overclock 2 (you may pay 2 more as you play this). If overclocked, it enters with two +1/+1 counters.",
+    "text": "Overclock {2} (you may pay {2} more as you play this). If overclocked, it enters with two +1/+1 counters.",
     "flavor": "Loyal to whoever holds the key, which is the most honest loyalty there is.",
     "art": "res://art/cards/machine_c_004.webp"
   },
@@ -141,7 +141,7 @@
         "amount": 1
       }
     ],
-    "text": "Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).",
+    "text": "Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
     "flavor": "It pulls ore carts up the Cogspire ramps and burns a shovel of coal every hour for the privilege.",
     "art": "res://art/cards/machine_c_005.webp"
   },
@@ -252,7 +252,7 @@
         }
       ]
     },
-    "text": "Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
+    "text": "Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
     "flavor": "\"Do not ask whether the work is good. Ask whether it is within tolerance.\" (the guild examination, first article)",
     "art": "res://art/cards/machine_c_009.webp"
   },
@@ -310,7 +310,7 @@
         }
       ]
     },
-    "text": "Overclock 2 (you may pay 2 more as you play this). If overclocked, it enters with two +1/+1 counters.",
+    "text": "Overclock {2} (you may pay {2} more as you play this). If overclocked, it enters with two +1/+1 counters.",
     "flavor": "\"Nature to be commanded must be obeyed.\" (Francis Bacon, Novum Organum)",
     "art": "res://art/cards/machine_c_011.webp"
   },
@@ -406,7 +406,7 @@
         }
       ]
     },
-    "text": "Create a 1/1 Servo Construct token. Overclock 2 (you may pay 2 more as you play this). If overclocked, create another Servo.",
+    "text": "Create a 1/1 Servo Construct token. Overclock {2} (you may pay {2} more as you play this). If overclocked, create another Servo.",
     "flavor": "\"Every man is a spare part. The wise ones keep themselves well oiled.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_c_014.webp"
   },
@@ -504,7 +504,7 @@
         }
       ]
     },
-    "text": "Put a +1/+1 counter on target Construct you control. Overclock 1C (you may pay 1C more as you play this). If overclocked, also deal 2 damage to target enemy creature.",
+    "text": "Put a +1/+1 counter on target Construct you control. Overclock {1}{C} (you may pay {1}{C} more as you play this). If overclocked, also deal 2 damage to target enemy creature.",
     "flavor": "\"When you can measure what you are speaking about, and express it in numbers, you know something about it.\" (Lord Kelvin)",
     "art": "res://art/cards/machine_c_017.webp"
   },
@@ -585,10 +585,10 @@
             "subtype": "Construct"
           }
         ],
-        "text": "Tap, pay 1C: put a +1/+1 counter on target Construct you control."
+        "text": "Tap, pay {1}{C}: put a +1/+1 counter on target Construct you control."
       }
     ],
-    "text": "Tap, pay 1C: put a +1/+1 counter on target Construct you control.",
+    "text": "Tap, pay {1}{C}: put a +1/+1 counter on target Construct you control.",
     "flavor": "\"Progress is the only prayer that is always answered.\" (from the Charter of Cogspire)",
     "art": "res://art/cards/machine_c_020.webp"
   },
@@ -678,7 +678,7 @@
         }
       ]
     },
-    "text": "Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.",
+    "text": "Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.",
     "flavor": "\"The plan is wiser than the men who follow it, and wiser than the man who drew it.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_c_023.webp"
   },
@@ -816,7 +816,7 @@
         "first_strike"
       ]
     },
-    "text": "Equipped creature gets +1/+0 and has first strike. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)",
+    "text": "Equipped creature gets +1/+0 and has first strike. Equip {2} (pay {2}: attach this to a creature you control. Equip only as a sorcery.)",
     "flavor": "A coiled spring, a brass catch, and a point that arrives before the enemy has finished deciding.",
     "art": "res://art/cards/machine_c_028.webp"
   },
@@ -867,7 +867,7 @@
         "amount": 2
       }
     ],
-    "text": "Upkeep 2 (at the beginning of your upkeep, pay 2 or sacrifice this).",
+    "text": "Upkeep {2} (at the beginning of your upkeep, pay {2} or sacrifice this).",
     "flavor": "The wall was rated for catapults. No one had rated it for patience.",
     "art": "res://art/cards/machine_u_001.webp"
   },
@@ -906,10 +906,10 @@
             "count": 1
           }
         ],
-        "text": "Tap, pay 2: create a 1/1 Servo Construct token."
+        "text": "Tap, pay {2}: create a 1/1 Servo Construct token."
       }
     ],
-    "text": "Tap, pay 2: create a 1/1 Servo Construct token.",
+    "text": "Tap, pay {2}: create a 1/1 Servo Construct token.",
     "flavor": "\"In the past the man has been first; in the future the system must be first.\" (Frederick W. Taylor, The Principles of Scientific Management)",
     "art": "res://art/cards/machine_u_002.webp"
   },
@@ -950,7 +950,7 @@
         }
       ]
     },
-    "text": "Assembly (this gets +1/+1 for each other Construct you control). Overclock 2 (you may pay 2 more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
+    "text": "Assembly (this gets +1/+1 for each other Construct you control). Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
     "flavor": "Each link answers to the next, and the last answers to the first.",
     "art": "res://art/cards/machine_u_003.webp"
   },
@@ -1076,7 +1076,7 @@
         }
       ]
     },
-    "text": "Put a +1/+1 counter on each creature you control. Overclock 2 (you may pay 2 more as you play this). If overclocked, put another +1/+1 counter on each creature you control.",
+    "text": "Put a +1/+1 counter on each creature you control. Overclock {2} (you may pay {2} more as you play this). If overclocked, put another +1/+1 counter on each creature you control.",
     "flavor": "\"Yesterday's standard is today's scrap. So it is with machines, and so it will be with men.\" (the Archwright of Cogspire)",
     "art": "res://art/cards/machine_u_007.webp"
   },
@@ -1233,7 +1233,7 @@
         "amount": 1
       }
     ],
-    "text": "Your Technocracy cards cost 1 less to play. This reduces only generic mana.",
+    "text": "Your Technocracy cards cost {1} less to play. This reduces only generic mana.",
     "flavor": "\"What is not in the ledger did not happen. What is in the ledger cannot be undone.\" (from the Charter of Cogspire)",
     "art": "res://art/cards/machine_u_012.webp"
   },
@@ -1281,7 +1281,7 @@
         "amount": 1
       }
     ],
-    "text": "Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
+    "text": "Your Construct creature cards cost {1} less to play. This reduces only generic mana.",
     "flavor": "\"Waste is the only sin the guild recognises, and it is never forgiven.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_u_014.webp"
   },
@@ -1340,7 +1340,7 @@
         }
       ]
     },
-    "text": "Overclock 1C (you may pay 1C more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.",
+    "text": "Overclock {1}{C} (you may pay {1}{C} more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.",
     "flavor": "\"...and thus render ourselves the lords and possessors of nature.\" (René Descartes, Discourse on Method)",
     "art": "res://art/cards/machine_u_016.webp"
   },
@@ -1428,7 +1428,7 @@
         "vigilance"
       ]
     },
-    "text": "When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)",
+    "text": "When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip {2} (pay {2}: attach this to a creature you control. Equip only as a sorcery.)",
     "flavor": "Forty rivets, each one counted, each one entered in the ledger.",
     "art": "res://art/cards/machine_u_019.webp"
   },
@@ -1464,7 +1464,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Your relic cards cost 1 less to play. This reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on this.",
+    "text": "Your relic cards cost {1} less to play. This reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on this.",
     "flavor": "He fits a man for armour the way a clerk fits a column of figures: by measurement, never by trust.",
     "art": "res://art/cards/machine_u_020.webp"
   },
@@ -1488,7 +1488,7 @@
         "amount": 1
       }
     ],
-    "text": "Your Technocracy cards cost 1 less to play. This reduces only generic mana.",
+    "text": "Your Technocracy cards cost {1} less to play. This reduces only generic mana.",
     "flavor": "\"Sentiment cannot be audited. Therefore, in Cogspire, it does not exist.\" (the Comptroller's standing order)",
     "art": "res://art/cards/machine_r_001.webp"
   },
@@ -1513,7 +1513,7 @@
         "amount": 3
       }
     ],
-    "text": "Upkeep 3.",
+    "text": "Upkeep {3}.",
     "flavor": "Its footfalls are measured in tremors, and its upkeep in whole coal seams.",
     "art": "res://art/cards/machine_r_002.webp"
   },
@@ -1580,7 +1580,7 @@
         }
       ]
     },
-    "text": "Overclock 2. If overclocked, when this enters, deal 3 damage to target enemy creature.",
+    "text": "Overclock {2}. If overclocked, when this enters, deal 3 damage to target enemy creature.",
     "flavor": "It joins steel to steel, and enemies to the floor.",
     "art": "res://art/cards/machine_r_004.webp"
   },
@@ -1613,7 +1613,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Upkeep 1. At the beginning of your upkeep, put a +1/+1 counter on this.",
+    "text": "Upkeep {1}. At the beginning of your upkeep, put a +1/+1 counter on this.",
     "flavor": "Wind it every morning and it grows a little more dangerous. Forget once and it simply stops.",
     "art": "res://art/cards/machine_r_005.webp"
   },
@@ -1743,7 +1743,7 @@
         "amount": 2
       }
     ],
-    "text": "Your Technocracy cards cost 2 less to play. This reduces only generic mana. Upkeep 1.",
+    "text": "Your Technocracy cards cost {2} less to play. This reduces only generic mana. Upkeep {1}.",
     "flavor": "\"Do not ask where progress leads. To ask is to slow it.\" (a Foundry maxim)",
     "art": "res://art/cards/machine_r_009.webp"
   },
@@ -1775,7 +1775,7 @@
         "amount": 1
       }
     ],
-    "text": "Other Artificers you control get +1/+1. Your Construct creature cards cost 1 less to play. This reduces only generic mana.",
+    "text": "Other Artificers you control get +1/+1. Your Construct creature cards cost {1} less to play. This reduces only generic mana.",
     "flavor": "\"In Cogspire the bell does not ring for prayer. It rings for the shift.\" (a Foundry saying)",
     "art": "res://art/cards/machine_r_010.webp"
   },
@@ -1921,7 +1921,7 @@
         "static": "assembly"
       }
     ],
-    "text": "Assembly. Upkeep 2.",
+    "text": "Assembly. Upkeep {2}.",
     "flavor": "\"For what is the heart, but a spring; and the nerves, but so many strings; and the joints, but so many wheels?\" (Thomas Hobbes, Leviathan)",
     "art": "res://art/cards/machine_m_002.webp"
   },
@@ -1957,7 +1957,7 @@
         "amount": 1
       }
     ],
-    "text": "Your Technocracy cards cost 1 less to play. This reduces only generic mana. At the beginning of your upkeep, create a 1/1 Servo Construct token.",
+    "text": "Your Technocracy cards cost {1} less to play. This reduces only generic mana. At the beginning of your upkeep, create a 1/1 Servo Construct token.",
     "flavor": "It calculates the yield of every mine, the output of every furnace, and the worth of every man. The last sum is always small.",
     "art": "res://art/cards/machine_m_003.webp"
   },
@@ -2005,7 +2005,7 @@
         }
       ]
     },
-    "text": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock 3 (you may pay 3 more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.",
+    "text": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock {3} (you may pay {3} more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.",
     "flavor": "\"...the enlarging of the bounds of human empire, to the effecting of all things possible.\" (Francis Bacon, New Atlantis)",
     "art": "res://art/cards/machine_m_004.webp"
   }

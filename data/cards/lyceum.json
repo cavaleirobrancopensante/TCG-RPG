@@ -146,10 +146,10 @@
             "target": "enemy_creature"
           }
         ],
-        "text": "Tap, pay U: tap target enemy creature."
+        "text": "Tap, pay {U}: tap target enemy creature."
       }
     ],
-    "text": "Tap, pay U: tap target enemy creature.",
+    "text": "Tap, pay {U}: tap target enemy creature.",
     "flavor": "\"If it is day, it is light. It is day. Therefore, sir, you may stand still.\"",
     "art": "res://art/cards/lyceum_c_006.webp"
   },
@@ -425,7 +425,7 @@
         "amount": 1
       }
     ],
-    "text": "Tax 2 (the enemy's next non-land card costs 2 more). Draw a card.",
+    "text": "Tax 2 (the enemy's next non-land card costs {2} more). Draw a card.",
     "flavor": "\"Before we march,\" said the logician, \"define victory.\"",
     "art": "res://art/cards/lyceum_c_017.webp"
   },
@@ -453,7 +453,7 @@
         "amount": 1
       }
     ],
-    "text": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs 1 more).",
+    "text": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs {1} more).",
     "flavor": "\"The greatest remedy for anger is delay.\" (Seneca, On Anger)",
     "art": "res://art/cards/lyceum_c_018.webp"
   },
@@ -506,10 +506,10 @@
             "target": "enemy_creature"
           }
         ],
-        "text": "Tap, pay 2: tap target enemy creature."
+        "text": "Tap, pay {2}: tap target enemy creature."
       }
     ],
-    "text": "Tap, pay 2: tap target enemy creature.",
+    "text": "Tap, pay {2}: tap target enemy creature.",
     "flavor": "Stretched across the harbour mouth at dusk, it teaches impatient captains to wait.",
     "art": "res://art/cards/lyceum_c_020.webp"
   },
@@ -607,7 +607,7 @@
         "amount": 1
       }
     ],
-    "text": "When this enters, tax 1 (the enemy's next non-land card costs 1 more).",
+    "text": "When this enters, tax 1 (the enemy's next non-land card costs {1} more).",
     "flavor": "\"The life which is unexamined is not worth living.\" (Socrates, in Plato's Apology)",
     "art": "res://art/cards/lyceum_c_024.webp"
   },
@@ -766,7 +766,7 @@
         "amount": 1
       }
     ],
-    "text": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs 1 more).",
+    "text": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs {1} more).",
     "flavor": "\"Man is by nature a political animal.\" (Aristotle, Politics)",
     "art": "res://art/cards/lyceum_u_001.webp"
   },
@@ -1089,7 +1089,7 @@
         "amount": 1
       }
     ],
-    "text": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs 1 more).",
+    "text": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs {1} more).",
     "flavor": "\"It is not the man who has too little, but the man who craves more, that is poor.\" (Seneca)",
     "art": "res://art/cards/lyceum_u_013.webp"
   },
@@ -1199,7 +1199,7 @@
         "subtype": "Philosopher"
       }
     ],
-    "text": "Your Philosopher creature cards cost 1 less to play.",
+    "text": "Your Philosopher creature cards cost {1} less to play.",
     "flavor": "The school passed from Zeno to Cleanthes and from Cleanthes to Chrysippus, like a lamp handed on in the dark.",
     "art": "res://art/cards/lyceum_u_017.webp"
   },
@@ -1322,10 +1322,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap, pay 2: draw a card."
+        "text": "Tap, pay {2}: draw a card."
       }
     ],
-    "text": "Defender. Tap, pay 2: draw a card.",
+    "text": "Defender. Tap, pay {2}: draw a card.",
     "flavor": "\"I have written my work, not as an essay which is to win the applause of the moment, but as a possession for all time.\" (Thucydides)",
     "art": "res://art/cards/lyceum_r_001.webp"
   },
@@ -1717,7 +1717,7 @@
         "amount": 2
       }
     ],
-    "text": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs 2 more).",
+    "text": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs {2} more).",
     "flavor": "\"Look down from above on the countless herds of men and their countless solemnities.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_m_003.webp"
   },

@@ -1,7 +1,8 @@
 class_name DraftScreen
 extends Control
 ## The draft table: take one card from the booster in hand, pass the rest on.
-## Tap a card to choose it, hold to read it, then press Take.
+## Tap a card to read it up close, with Take (leaf through the pack there); the card last
+## looked at stays chosen, so Take at the top takes it too.
 
 signal finished
 signal picked             # after every pick (the event is saved, so quitting loses nothing)
@@ -87,7 +88,7 @@ func _refresh() -> void:
 		var idx := i
 		cv.tapped.connect(func(_c):
 			if not drag.dragged:
-				_choose(idx))
+				_read(idx))
 		cv.long_pressed.connect(func(_c):
 			if not drag.dragged:
 				_read(idx))
@@ -104,10 +105,16 @@ func _choose(i: int) -> void:
 	take_btn.disabled = false
 
 
-func _read(i: int) -> void:
+func _read(i: int) -> CardViewer:
+	_choose(i)
 	var pack: Array = draft.holding[0]
-	CardViewer.open(self, pack.duplicate(), i, func(_e, idx):
+	var v := CardViewer.open(self, pack.duplicate(), i, func(_e, idx):
 		return [["Take", func(): _take_index(idx), true, true]])
+	# leafing to another card makes that the chosen one
+	v.closed.connect(func():
+		if is_instance_valid(v) and chosen >= 0 and v.index < grid.get_child_count() and draft.is_drafting():
+			_choose(v.index))
+	return v
 
 
 func _take() -> void:

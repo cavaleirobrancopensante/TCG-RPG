@@ -134,6 +134,8 @@ def check_effect(cid, faith, e, where, owners):
             st = tok.get("subtype", "")
             if not ("Angel" in st or "Knight" in st) or tok.get("power", 1) > 1:
                 bad(cid, "Church tokens: only Angel or Knight tokens with power 1 or less")
+        if owners == ["abyss"] and not any(t in tok.get("subtype", "") for t in TRIBES["abyss"]):
+            bad(cid, "Pact tokens: only its own dead and fiends (Skeleton, Zombie or Demon tokens)")
         if e.get("count_per") is not None:
             if not tribe_ok(e["count_per"], owners):
                 bad(cid, "count_per %s: not a tribe or relic kind of its faith" % e["count_per"])
@@ -172,7 +174,9 @@ def check_card(c, owners_override=None):
     for k in c.get("keywords", []):
         if k not in KEYWORD_OWNER:
             bad(cid, "unknown keyword %s" % k)
-        elif KEYWORD_OWNER[k] not in owners and not (k == "flying" and "lyceum" in owners and "Bird" in c.get("subtype", "")):
+        elif KEYWORD_OWNER[k] not in owners and not (k == "flying" and "lyceum" in owners and "Bird" in c.get("subtype", "")) \
+                and not (k == "flying" and "abyss" in owners and "Demon" in c.get("subtype", "") and c.get("type") == "creature"):
+            # narrow exceptions: Stoa Birds, and winged Pact Demons (printed keyword only, never granted)
             bad(cid, "keyword %s belongs to %s" % (k, KEYWORD_OWNER[k]))
     if "flying" in c.get("keywords", []) and "sanctum" not in owners and "lyceum" in owners and c.get("power", 0) > 2:
         bad(cid, "Stoa birds fly small (power 2 at most)")

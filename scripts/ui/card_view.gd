@@ -58,7 +58,11 @@ func _process(delta: float) -> void:
 		if _press_t >= 0.45 and not _long_fired:
 			_long_fired = true
 			_holding = false
-			long_pressed.emit(self)
+			# a screen that gives a long press no meaning of its own treats it as a tap
+			if long_pressed.get_connections().is_empty():
+				tapped.emit(self)
+			else:
+				long_pressed.emit(self)
 	if foil or highlight or selected:
 		_t += delta
 		_acc += delta
@@ -146,40 +150,58 @@ func _draw() -> void:
 	# type line (rubricated)
 	var type_y := art_r.end.y + 14 * k
 	Tapestry.ink_rect(self, Rect2(inner.position.x + 3 * k, art_r.end.y + 3 * k, inner.size.x - 6 * k, 15 * k), Tapestry.PARCHMENT_LIGHT, lw * 0.6)
-	var type_txt := I18n.type_line(card)
-	draw_string(book, Vector2(inner.position.x + 6 * k, type_y), type_txt, HORIZONTAL_ALIGNMENT_LEFT, inner.size.x - 28 * k, int(11 * k), Tapestry.RUBRIC)
+	var type_txt := type_line(card)
+	var type_fs := int(11 * k)
+	var type_w := inner.size.x - 28 * k
+	while type_fs > 6 and book.get_string_size(type_txt, HORIZONTAL_ALIGNMENT_LEFT, -1, type_fs).x > type_w:
+		type_fs -= 1
+	draw_string(book, Vector2(inner.position.x + 6 * k, type_y), type_txt, HORIZONTAL_ALIGNMENT_LEFT, type_w, type_fs, Tapestry.RUBRIC)
 	var rar: String = card.get("rarity", "common")
 	if Factions.RARITY_COLOR.has(rar):
 		var gp := Vector2(inner.end.x - 10 * k, type_y - 4 * k)
 		var gem := PackedVector2Array([gp + Vector2(0, -5) * k, gp + Vector2(4, 0) * k, gp + Vector2(0, 5) * k, gp + Vector2(-4, 0) * k])
 		Tapestry.ink_poly(self, gem, Factions.RARITY_COLOR[rar], lw * 0.6)
 
-	# rules text with a red drop capital
+	# rules text with a red drop capital; mana tokens ({2}, {W}) are drawn as pips
 	var text_r := Rect2(inner.position.x + 6 * k, type_y + 4 * k, inner.size.x - 12 * k, inner.end.y - type_y - 8 * k)
 	draw_rect(text_r, Tapestry.PARCHMENT_LIGHT)
 	draw_rect(text_r, Color(INK, 0.6), false, lw * 0.6)
 	var body: String = I18n.t(card.get("text", ""))
 	var fs := int(10.5 * k)
-	if body.length() > 100:
+	if plain_text(body).length() > 100:
 		fs = int(9.2 * k)
 	var tx := text_r.position + Vector2(4 * k, 4 * k)
 	if body != "":
-		var cap_size := int(fs * 2.3)
-		var cap := body.substr(0, 1)
-		draw_string(black, tx + Vector2(0, cap_size * 0.8), cap, HORIZONTAL_ALIGNMENT_LEFT, -1, cap_size, Tapestry.VERMILION)
-		var cap_w := black.get_string_size(cap, HORIZONTAL_ALIGNMENT_LEFT, -1, cap_size).x + 2 * k
+		# a text that opens with a mana symbol (e.g. "{2}{G}: ...") gets no drop capital
+		var has_cap := not body.begins_with("{")
+		var cap := body.substr(0, 1) if has_cap else ""
+		var rest := body.substr(1) if has_cap else body
+		var full_w := text_r.size.x - 8 * k
+		var room := text_r.size.y - 6 * k
+		var min_fs := maxi(5, int(7.2 * k))
+		var cap_size := 0
+		var cap_w := 0.0
+		var lines: Array = []
+		# shrink the type until the rules text fits its box (long texts on small leaves)
+		while true:
+			cap_size = int(fs * 2.3)
+			cap_w = black.get_string_size(cap, HORIZONTAL_ALIGNMENT_LEFT, -1, cap_size).x + 2 * k if has_cap else 0.0
+			lines = layout_text(book, rest, fs, full_w - cap_w, full_w, 2 if has_cap else 0)
+			if lines.size() * fs * 1.12 <= room or fs <= min_fs:
+				break
+			fs -= 1
+		if has_cap:
+			draw_string(black, tx + Vector2(0, cap_size * 0.8), cap, HORIZONTAL_ALIGNMENT_LEFT, -1, cap_size, Tapestry.VERMILION)
 		# first two lines beside the capital, the rest full width
-		var rest := body.substr(1)
-		var lines := _wrap(book, rest, fs, text_r.size.x - 8 * k - cap_w, text_r.size.x - 8 * k, 2)
 		var y := tx.y + fs
 		for i in lines.size():
 			var x := tx.x + (cap_w if i < 2 else 0.0)
-			draw_string(book, Vector2(x, y), lines[i], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, INK)
+			draw_runs(self, book, Vector2(x, y), lines[i], fs, INK)
 			y += fs * 1.12
 		var flavor: String = I18n.t(card.get("flavor", ""))
 		if flavor != "" and k >= 0.9 and y + fs * 2.2 < text_r.end.y:
 			var it := Tapestry.font("italic")
-			for line in _wrap(it, flavor, int(fs * 0.9), text_r.size.x - 8 * k, text_r.size.x - 8 * k, 0):
+			for line in _wrap(it, flavor, int(fs * 0.9), full_w, full_w, 0):
 				y += fs * 1.02
 				if y > text_r.end.y - 3 * k:
 					break
@@ -345,31 +367,170 @@ func _draw_cost(right_center: Vector2, k: float) -> float:
 		return 0.0
 	var pips: Array = []
 	if int(cost.get("generic", 0)) > 0 or cost.is_empty():
-		pips.append(["generic", str(int(cost.get("generic", 0)))])
+		pips.append(str(int(cost.get("generic", 0))))
 	for m in Factions.MANA_ORDER:
 		for n in int(cost.get(m, 0)):
-			pips.append([m, ""])
+			pips.append(m)
 	var rad := 8.5 * k
 	var x := right_center.x - rad
-	var book := Tapestry.font("book")
 	for i in range(pips.size() - 1, -1, -1):
-		var m: String = pips[i][0]
-		var c := Vector2(x, right_center.y)
-		if m == "generic":
-			Tapestry.ink_circle(self, c, rad, Tapestry.PARCHMENT_DARK, maxf(1.0, k))
-			draw_string(book, c + Vector2(-rad, 4.5 * k), pips[i][1], HORIZONTAL_ALIGNMENT_CENTER, rad * 2, int(13 * k), INK)
-		else:
-			var fac: String = Factions.MANA_TO_FACTION[m]
-			var col: Color = Tapestry.colors(fac)[0] if fac != "lyceum" else Tapestry.ULTRAMARINE
-			if fac == "sanctum":
-				col = Tapestry.GILT
-			Tapestry.ink_circle(self, c, rad, col, maxf(1.0, k))
+		draw_pip(self, Vector2(x, right_center.y), rad, pips[i], maxf(1.0, k))
+		x -= rad * 2.15
+	return right_center.x - x
+
+
+# ------------------------------------------------------------------ mana symbols in text
+
+## A mana token in rules text: {1} {2} ... {X} (generic) and {W} {U} {B} {R} {G} {C} (coloured).
+const TOKEN_PATTERN := "\\{([0-9]+|[WUBRGCX])\\}"
+static var _token_re: RegEx
+
+
+static func token_re() -> RegEx:
+	if _token_re == null:
+		_token_re = RegEx.create_from_string(TOKEN_PATTERN)
+	return _token_re
+
+
+## Rules text for places that only show plain text (logs, buttons, lists): {2} becomes (2),
+## {W} becomes (W).
+static func plain_text(s: String) -> String:
+	if not s.contains("{"):
+		return s
+	return token_re().sub(s, "($1)", true)
+
+
+## A cost dictionary as mana tokens, e.g. {"generic": 2, "W": 1} -> "{2}{W}".
+static func cost_tokens(cost: Dictionary) -> String:
+	var s := ""
+	if int(cost.get("generic", 0)) > 0 or cost.is_empty():
+		s += "{%d}" % int(cost.get("generic", 0))
+	for m in Factions.MANA_ORDER:
+		for n in int(cost.get(m, 0)):
+			s += "{%s}" % m
+	return s
+
+
+## One mana pip, exactly as in a card's corner: a faith-coloured roundel with its sigil, or a
+## vellum roundel with the generic amount (or X). `w` is the outline width.
+static func draw_pip(ci: CanvasItem, c: Vector2, rad: float, sym: String, w: float = 1.0) -> void:
+	if Factions.MANA_TO_FACTION.has(sym):
+		var fac: String = Factions.MANA_TO_FACTION[sym]
+		var col: Color = Tapestry.colors(fac)[0] if fac != "lyceum" else Tapestry.ULTRAMARINE
+		if fac == "sanctum":
+			col = Tapestry.GILT
+		Tapestry.ink_circle(ci, c, rad, col, w)
+		if rad >= 3.5:
 			var sig := Tapestry.WHITE if fac in ["abyss", "revel", "lyceum", "wild"] else INK
 			if fac == "abyss":
 				sig = Tapestry.VERMILION.lightened(0.2)
-			UIKit.draw_sigil(self, fac, c, rad * 0.62, sig, maxf(1.0, k))
-		x -= rad * 2.15
-	return right_center.x - x
+			UIKit.draw_sigil(ci, fac, c, rad * 0.62, sig, w)
+	else:
+		Tapestry.ink_circle(ci, c, rad, Tapestry.PARCHMENT_DARK, w)
+		var book := Tapestry.font("book")
+		var fsz := int(rad * 1.53)
+		if sym.length() > 1:
+			fsz = int(rad * 1.15)
+		if fsz >= 4:
+			ci.draw_string(book, c + Vector2(-rad, rad * 0.53), sym, HORIZONTAL_ALIGNMENT_CENTER, rad * 2, fsz, INK)
+
+
+## Room a pip takes in a line of text of font size `size` (its own width plus a hair of space).
+static func pip_advance(size: int) -> float:
+	return size * 1.0
+
+
+## Word-wrap rules text that may hold mana tokens. Returns the lines; a line is an Array of
+## runs [x, text, is_pip] (for a pip, text is its symbol). The first `narrow_lines` lines are
+## `first_w` wide, the others `full_w`. Line breaks ("\n") are kept.
+static func layout_text(font: Font, text: String, size: int, first_w: float, full_w: float, narrow_lines: int) -> Array:
+	var out: Array = []
+	var space := font.get_string_size(" ", HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+	var paras := text.split("\n")
+	for pi in paras.size():
+		var line: Array = []
+		var x := 0.0
+		for word in paras[pi].split(" ", false):
+			var runs := _word_runs(word)
+			var widths: Array = []
+			var ww := 0.0
+			for r in runs:
+				var rw: float = pip_advance(size) if r[1] else font.get_string_size(r[0], HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+				widths.append(rw)
+				ww += rw
+			var limit := first_w if out.size() < narrow_lines else full_w
+			var start := x + space if not line.is_empty() else 0.0
+			if not line.is_empty() and start + ww > limit:
+				out.append(line)
+				line = []
+				start = 0.0
+			for j in runs.size():
+				line.append([start, runs[j][0], runs[j][1]])
+				start += widths[j]
+			x = start
+		if not line.is_empty() or pi < paras.size() - 1:
+			out.append(line)
+	return out
+
+
+## A word split into text and pip runs: "{2}{G}:" -> [["2", true], ["G", true], [":", false]].
+static func _word_runs(word: String) -> Array:
+	if not word.contains("{"):
+		return [[word, false]]
+	var runs: Array = []
+	var at := 0
+	for m in token_re().search_all(word):
+		if m.get_start() > at:
+			runs.append([word.substr(at, m.get_start() - at), false])
+		runs.append([m.get_string(1), true])
+		at = m.get_end()
+	if at < word.length():
+		runs.append([word.substr(at), false])
+	return runs
+
+
+## Draw one laid-out line with its baseline at `pos`.
+static func draw_runs(ci: CanvasItem, font: Font, pos: Vector2, line: Array, size: int, color: Color) -> void:
+	var rad := size * 0.44
+	for it in line:
+		if it[2]:
+			draw_pip(ci, Vector2(pos.x + it[0] + size * 0.48, pos.y - size * 0.33), rad, it[1], maxf(0.7, size / 13.0))
+		else:
+			ci.draw_string(font, Vector2(pos.x + it[0], pos.y), it[1], HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
+
+
+## Height of laid-out text: `lines` lines of font size `size` at line height `lh` (times size).
+static func text_height(lines: int, size: int, lh: float = 1.12) -> float:
+	return lines * size * lh
+
+
+# ------------------------------------------------------------------ card types
+
+## The card's type in English: Creature, Sorcery, Instant, Relic or Land. A spell is a
+## Sorcery (your main phase, then the graveyard) unless it has "speed": "instant".
+static func type_name(c: Dictionary) -> String:
+	match String(c.get("type", "")):
+		"creature": return "Creature"
+		"spell": return "Instant" if String(c.get("speed", "")) == "instant" else "Sorcery"
+		"relic": return "Relic"
+		"land": return "Land"
+	return String(c.get("type", "")).capitalize()
+
+
+## creature, sorcery, instant, relic or land (the deck builder's and database's type filter).
+static func kind(c: Dictionary) -> String:
+	return type_name(c).to_lower()
+
+
+## The type line: "Creature · Human Cleric", "Instant (Curse)", "Sorcery (Revelry)", "Relic (Charm)".
+static func type_line(c: Dictionary) -> String:
+	var tl := I18n.t(type_name(c))
+	var sub := String(c.get("subtype", ""))
+	if sub == "" or sub == type_name(c):
+		return tl
+	if c.get("type") == "creature":
+		return tl + " · " + I18n.t(sub)
+	return "%s (%s)" % [tl, I18n.t(sub)]
 
 
 ## Greedy word wrap. The first `narrow_lines` lines use `first_w`.
@@ -407,3 +568,53 @@ func _draw_back() -> void:
 		UIKit.draw_sigil(self, fac, pos, 8 * k, sc, 1.3 * k)
 	Tapestry.ink_circle(self, c, 18 * k, Tapestry.GILT, 1.5 * k)
 	draw_string(Tapestry.font("black"), c + Vector2(-18, 7) * k, "T", HORIZONTAL_ALIGNMENT_CENTER, 36 * k, int(24 * k), Tapestry.INK)
+
+
+## A block of rules text with mana pips, wrapped to its own width, for panels and lists (the
+## card viewer, the glossary). Its minimum height follows the text.
+class RulesText extends Control:
+	var text := ""
+	var font_size := 18
+	var color := Color(0.16, 0.10, 0.06)
+	var font: Font
+	var _lines: Array = []
+	var _w := -1.0
+
+	func _init(p_text: String = "", p_size: int = 18, p_color: Color = Color(0.16, 0.10, 0.06)) -> void:
+		text = p_text
+		font_size = p_size
+		color = p_color
+		font = Tapestry.font("book")
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		resized.connect(_relayout)
+
+	func set_text(t: String) -> void:
+		text = t
+		_w = -1.0
+		_relayout()
+
+	func line_height() -> float:
+		return font_size * 1.32
+
+	func lines() -> Array:
+		return _lines
+
+	func _relayout() -> void:
+		var w := maxf(size.x, custom_minimum_size.x)
+		if w <= 1.0 or absf(w - _w) < 0.5:
+			return
+		_w = w
+		_lines = CardView.layout_text(font, text, font_size, w, w, 0)
+		custom_minimum_size.y = ceilf(maxf(1, _lines.size()) * line_height() + font_size * 0.25)
+		queue_redraw()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_READY or what == NOTIFICATION_THEME_CHANGED:
+			_relayout()
+
+	func _draw() -> void:
+		var y := font_size * 1.02
+		for line in _lines:
+			CardView.draw_runs(self, font, Vector2(0, y), line, font_size, color)
+			y += line_height()

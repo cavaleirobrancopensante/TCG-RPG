@@ -59,7 +59,7 @@ The faith's common removal for midsize threats: 4 damage for three mana, creatur
 **Carnival Brazier** · Common · Relic (Relic) · 1R · Tap, pay 1 life: deal 1 damage to the enemy player.
 A two-mana relic that trades your life for the enemy's, one point a turn. In a race the Revel is usually ahead, so an even trade favours it, and it is a cheap card for turning on Carouse. The brazier that warms and burns at once is the faith's whole bargain.
 
-**Festival Drum** · Common · Relic (Relic) · 2R · R, Tap: creatures you control get +1/+0 until end of turn.
+**Festival Drum** · Common · Relic (Relic) · 2R · {R}, Tap: creatures you control get +1/+0 until end of turn.
 A repeatable team pump: three mana down, then one mana each turn for +1/+0 across the board before combat. It does nothing alone, which keeps it honest at common, but with a wide board it adds real damage every turn. The festival drum calling the revellers to march is the sound of the faith.
 
 **Duelist of the Velvet Court** · Uncommon · Creature (Human Noble Duelist) · 2R · 2/2 · First strike. Whenever this attacks, it gets +1/+1 until end of turn.
@@ -162,7 +162,7 @@ The troupe's combat trick: one mana, power only, one turn, as the Revel's team b
 **Toast to the Peerage** · Common · Spell (Revelry) · 2R · Deal 1 damage to the enemy player for each Noble you control.
 The Noble finisher at common: three mana for as much face damage as you have lords, usually two or three. It never touches creatures, so it is reach, not removal, and it rewards the slow Noble board for having stayed alive. The round of toasts at a lord's table, each peer rising in turn, is the image.
 
-**Master of the Revels** · Uncommon · Creature (Human Noble) · 2R · 2/3 · Your Performer creature cards cost 1 less to play (this reduces only generic mana).
+**Master of the Revels** · Uncommon · Creature (Human Noble) · 2R · 2/3 · Your Performer creature cards cost {1} less to play (this reduces only generic mana).
 The troupe's enabler and the bridge between the tribes: a Noble body who makes every Performer cheaper. It lets a Performer deck dump its hand by the fourth turn. The Master of the Revels was a real officer of the English court who hired and paid the players, and his account book is on the desk beside him.
 
 **Master of the Pageant Wagon** · Uncommon · Creature (Human Performer) · 2R · 2/2 · Other Performers you control get +1/+0 and have haste (they can attack the turn they come into play).

@@ -17,7 +17,7 @@ The classic two-drop that replaces itself, kept from set 1 because it is exactly
 **Bronze-Shield Hoplite** · Common · Creature (Human Hoplite) · 1U · 2/4 · Defender (can't attack).
 The faith's cheap wall: a 2/4 defender for two stops most early attackers cold and kills the small ones. Defender is a real drawback, so the extra stats are earned. The headland line is from the Meditations (4.49), the Stoic image of steadiness under constant assault.
 
-**Logician of the Porch** · Common · Creature (Human Philosopher) · 1U · 1/3 · Tap, pay U: tap target enemy creature.
+**Logician of the Porch** · Common · Creature (Human Philosopher) · 1U · 1/3 · Tap, pay {U}: tap target enemy creature.
 The common tapper. A modest 1/3 for two whose ability removes a blocker every turn, at the price of mana and its own attack. Because abilities work in your main phase, it is an offensive tool that helps your vigilant bodies get through. "If it is day, it is light" is the standard example in Chrysippus's logic.
 
 **Disciplined Phalanx** · Common · Creature (Human Hoplite) · 2U · 2/4 · Vigilance (doesn't tap to attack).
@@ -50,19 +50,19 @@ Card selection for one mana: draw, then set the next three cards in order. It re
 **Hour of Contemplation** · Common · Spell (Meditation) · 2U · Draw two cards.
 Plain draw two for three, the standard rate from the spec. It is the faith's simplest way to reach four cards in hand. Kept from set 1.
 
-**Question of First Principles** · Common · Spell (Discourse) · 1U · Tax 2 (the enemy's next non-land card costs 2 more). Draw a card.
+**Question of First Principles** · Common · Spell (Discourse) · 1U · Tax 2 (the enemy's next non-land card costs {2} more). Draw a card.
 The common tax spell. It replaces itself and slows the enemy's next play by two mana, which can push a big creature back a whole turn. Stoic logic began every argument by fixing its terms, a habit that maddens men in a hurry.
 
-**Sent Back to the Gate** · Common · Spell (Discourse) · 2U · Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs 1 more).
+**Sent Back to the Gate** · Common · Spell (Discourse) · 2U · Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs {1} more).
 Bounce with a sting: the enemy has to recast the creature and pay one more for it. At three mana it costs more than the Rebuke but gains a real extra turn of tempo. The quotation is from On Anger, and delay is exactly what this card sells.
 
 **Scholar's Lamp** · Common · Relic (Relic) · U · At the beginning of your upkeep, foresight 1 (look at the top card of your library; you may put it on the bottom).
 A tiny engine: it improves every draw for the rest of the duel. It does nothing to the board, so one mana is right. Lamps and night study are the faith's quiet imagery.
 
-**Harbour Chain** · Common · Relic (Relic) · 1U · Tap, pay 2: tap target enemy creature.
+**Harbour Chain** · Common · Relic (Relic) · 1U · Tap, pay {2}: tap target enemy creature.
 A cheap relic with an expensive ability, so it costs you tempo every time you use it. It gives decks without a Logician a repeatable way to clear a blocker. Greek harbours really were closed with chains.
 
-**Agora Inspector** · Uncommon · Creature (Human Official) · 1U · 1/3 · Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs 1 more).
+**Agora Inspector** · Uncommon · Creature (Human Official) · 1U · 1/3 · Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs {1} more).
 A two-drop that taxes the enemy each time it attacks, and vigilance lets it do so without leaving you open. A 1/3 is hard to block profitably early but never a real threat. The agoranomoi were the officials who checked weights and measures in Greek markets.
 
 **Dialectician of the Porch** · Uncommon · Creature (Human Philosopher) · 2U · 2/2 · Whenever this attacks, tap target enemy creature.
@@ -98,10 +98,10 @@ The finishing blow for a patient deck: every blocker taps and your vigilant line
 **Orrery of Fixed Stars** · Uncommon · Relic (Relic) · 3U · At the beginning of your upkeep, tap target enemy creature.
 A repeatable tap that clears one blocker every turn without costing mana after it lands. It is slow and does nothing on defence, which keeps it at uncommon. Stoic cosmology saw the turning heavens as reason made visible.
 
-**Sumptuary Tablet** · Uncommon · Relic (Relic) · 2U · At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs 1 more).
+**Sumptuary Tablet** · Uncommon · Relic (Relic) · 2U · At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs {1} more).
 A steady drag on the enemy's development: every turn, the first card the enemy plays costs one more. It never wins alone, but it buys the slow deck time. Sumptuary laws limited luxury and display, a very Stoic kind of statute.
 
-**Keeper of the Stacks** · Rare · Creature (Human Scholar) · 2U · 1/4 · Defender. Tap, pay 2: draw a card.
+**Keeper of the Stacks** · Rare · Creature (Human Scholar) · 2U · 1/4 · Defender. Tap, pay {2}: draw a card.
 The faith's repeatable draw engine on a body, slow on purpose: three mana and a tap for each card. A 1/4 defender also holds the ground while it works. Rare, as the spec asks for repeatable engines.
 
 **Epictetus, the Unbroken** · Rare · Creature (Human Philosopher) · 1UU · 3/3 · Unmoved. As long as you have four or more cards in hand, other creatures you control have unmoved.
@@ -134,7 +134,7 @@ The founder as a Philosopher lord. A vigilant 3/4 that draws a card is already g
 **Marcus Aurelius** · Mythic · Creature (Human Noble Philosopher) · 4UU · 5/6 · Vigilance, unmoved. Whenever this attacks, freeze target enemy creature.
 The emperor who wrote the Meditations in camp on the Danube. A 5/6 with vigilance and unmoved is a wall that attacks and that no trick can tap, bounce or shrink, and each attack takes an enemy creature of your choice out of two turns. It is splashy, but it is still one creature that destroy effects and chump blocks can answer. The line is Meditations 10.16.
 
-**The View from Above** · Mythic · Spell (Meditation) · 3UU · Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs 2 more).
+**The View from Above** · Mythic · Spell (Meditation) · 3UU · Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs {2} more).
 The Stoa's great sorcery: the deepest foresight in the faith, three cards, and a tax that slows the enemy's answer. It touches no creature, so it cannot win alone, but it fills the hand for every Composure payoff. The view from above is a meditation Marcus returns to again and again (9.30).
 
 ### Tribal cards (1.23)
@@ -150,7 +150,7 @@ A one-drop that pays off over the whole game: every later Philosopher smooths a 
 **Hoplite of Plataea** · Common · Creature (Human Hoplite) · 3U · 3/4 · Vigilance (doesn't tap to attack).
 A plain top-end Hoplite on rate (a 4/4 for four, with a point traded for vigilance). It gives the tribe a common body that can finish a game. Herodotus tells how the Spartans at Plataea stood under the Persian arrows until the sacrifices were favourable, then advanced.
 
-**Questioner in the Agora** · Common · Creature (Human Philosopher) · 2U · 2/3 · When this enters, tax 1 (the enemy's next non-land card costs 1 more).
+**Questioner in the Agora** · Common · Creature (Human Philosopher) · 2U · 2/3 · When this enters, tax 1 (the enemy's next non-land card costs {1} more).
 A fair three-drop Philosopher with a small sting, so the tribe has a common body that also slows the enemy. It triggers every Philosopher payoff on arrival. Socrates's habit of asking generals to define courage (the Laches) is the model.
 
 **Farmer Called to the Muster** · Common · Creature (Human Hoplite) · 1U · 2/2 · Vigilance (doesn't tap to attack).
@@ -171,7 +171,7 @@ A Hoplite payoff in the faith's own currency: each new man in the line clears a 
 **Lecture at the Painted Porch** · Uncommon · Spell (Meditation) · 2U · Draw a card for each Philosopher you control.
 The Philosopher draw spell: on rate with two, a bargain with three or more, nothing with none. It asks for a board of thinkers before it pays. The painted battles of the Stoa Poikile are behind the master, as on the Zeno card.
 
-**Scholarch of the Porch** · Uncommon · Creature (Human Philosopher) · 2U · 2/3 · Your Philosopher creature cards cost 1 less to play.
+**Scholarch of the Porch** · Uncommon · Creature (Human Philosopher) · 2U · 2/3 · Your Philosopher creature cards cost {1} less to play.
 The tribal cost cutter, fair on a 2/3 body that does nothing else. It lets the school arrive a turn early and fuels the Pupil, Socrates and Lecture. The scholarch was the head of a school; the Stoa's passed from Zeno to Cleanthes to Chrysippus.
 
 **Othismos** · Uncommon · Spell (Discipline) · 2U · Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). Hoplite creatures you control get +0/+2 until end of turn.

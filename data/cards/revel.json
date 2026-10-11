@@ -292,7 +292,7 @@
       }
     ],
     "text": "When this enters, creatures you control get +1/+0 until end of turn.",
-    "flavor": "Let us crown ourselves with roses, before they be withered: let no meadow escape our riot. (Wisdom 2:8)",
+    "flavor": "Gild his horns, hang him with roses, and point him at the enemy. The procession will sort itself out. (a steward of the Feast)",
     "art": "res://art/cards/revel_c_012.webp"
   },
   {
@@ -524,10 +524,10 @@
             "duration": "turn"
           }
         ],
-        "text": "R, Tap: creatures you control get +1/+0 until end of turn."
+        "text": "{R}, Tap: creatures you control get +1/+0 until end of turn."
       }
     ],
-    "text": "R, Tap: creatures you control get +1/+0 until end of turn.",
+    "text": "{R}, Tap: creatures you control get +1/+0 until end of turn.",
     "flavor": "When the drum begins, even the sleepiest baron finds his feet.",
     "art": "res://art/cards/revel_c_020.webp"
   },
@@ -1158,7 +1158,7 @@
         "amount": 1
       }
     ],
-    "text": "Your Performer creature cards cost 1 less to play (this reduces only generic mana).",
+    "text": "Your Performer creature cards cost {1} less to play (this reduces only generic mana).",
     "flavor": "He hires the jugglers, pays the fire-eaters, and sends the bill for both to the Crown.",
     "art": "res://art/cards/revel_u_014.webp"
   },
@@ -1439,7 +1439,7 @@
       }
     ],
     "text": "Haste. At the beginning of your upkeep, you lose 1 life.",
-    "flavor": "Let us eat and drink; for to morrow we shall die. (Isaias 22:13)",
+    "flavor": "Ah, make the most of what we yet may spend, / Before we too into the Dust descend. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_r_004.webp"
   },
   {
