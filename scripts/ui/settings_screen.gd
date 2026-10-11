@@ -42,15 +42,7 @@ func _ready() -> void:
 
 	# --- music volume
 	g.add_child(_name("Music volume"))
-	var vol := HSlider.new()
-	vol.min_value = 0
-	vol.max_value = 1
-	vol.step = 0.05
-	vol.value = Music.volume
-	vol.custom_minimum_size = Vector2(320, UIKit.TARGET)
-	vol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vol.value_changed.connect(func(x): Music.set_volume(x))
-	g.add_child(vol)
+	g.add_child(UIKit.volume_stepper())
 
 	# --- music follows the game
 	g.add_child(_name("Music follows the game"))

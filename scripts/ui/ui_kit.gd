@@ -345,6 +345,34 @@ static func set_selected(b: Button, on: bool) -> void:
 		b.add_theme_color_override(c, ink)
 
 
+## Music volume as − 80% + buttons: a slider jumps to wherever a finger lands, so a swipe
+## through a page could silence the music without anyone meaning to.
+static func volume_stepper() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.name = "Volume"
+	row.add_theme_constant_override("separation", 6)
+	var val := label("", FS_BODY, TEXT)
+	val.name = "Value"
+	val.custom_minimum_size.x = 64
+	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	val.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var show := func(): val.text = "%d%%" % roundi(Music.volume * 100.0)
+	var down := button("−", func():
+		Music.set_volume(snappedf(Music.volume - 0.1, 0.1))
+		show.call(), TARGET_W)
+	down.name = "Down"
+	var up := button("+", func():
+		Music.set_volume(snappedf(Music.volume + 0.1, 0.1))
+		show.call(), TARGET_W)
+	up.name = "Up"
+	row.add_child(down)
+	row.add_child(val)
+	row.add_child(up)
+	show.call()
+	row.set_meta("refresh", show)
+	return row
+
+
 ## Text no smaller than FS_MIN.
 static func label(text: String, size: int = 20, color: Color = TEXT, wrap: bool = false) -> Label:
 	var l := Label.new()
