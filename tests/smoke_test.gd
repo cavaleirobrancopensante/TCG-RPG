@@ -290,9 +290,36 @@ func _ready() -> void:
 	await _frames(3)
 	var db: DeckBuilder = main.screen
 	assert(db is DeckBuilder and db.draft_deck >= 0, "draft deck builder")
+	assert(db._deck().is_empty(), "the draft deck starts empty")
+	db._done()
+	await _frames(3)
+	assert(main.screen == db, "an empty draft deck can't be played")
+	db._on_menu(4)                       # Auto build, from the Deck menu
+	await _frames(2)
+	assert(DeckTools.validate(db._deck(), db.pool, DeckTools.DRAFT_COPIES) == "", "auto built draft deck is legal")
+	db._new_deck()                       # a second list from the same pool
+	await _frames(2)
+	assert(main._tour_decks.size() == 2, "two lists from one pool")
+	db._on_menu(4)
 	db._done()
 	await _frames(3)
 	assert(main.screen is TournamentScreen, "bracket shown")
+	var tsc: TournamentScreen = main.screen
+	assert(tsc.deck_pick != null and tsc.deck_pick.item_count == 2, "the bracket offers both lists")
+	tsc.deck_pick.select(0)
+	tsc.deck_pick.item_selected.emit(0)
+	assert(main._tour_deck == main._tour_decks[0], "the first list is chosen")
+	tsc.play_match.emit(main.tournament.player_opponent())
+	await _frames(3)
+	assert(main.screen is BattleScene and GameState.active_deck == main._tour_decks[0], "the match uses the chosen list")
+	var bs: BattleScene = main.screen
+	var nonland := 0
+	for dc in bs.st.side(0).deck + bs.st.side(0).hand:
+		if not CardDB.is_land(String(dc)):
+			nonland += 1
+	assert(nonland >= DeckTools.MIN_SPELLS, "the tournament duel's deck is not a pile of lands")
+	main._set_screen(null)
+	await _frames(2)
 	main._tournament_match_done(false)
 	await _frames(3)
 	(main.screen as TournamentScreen).done.emit()

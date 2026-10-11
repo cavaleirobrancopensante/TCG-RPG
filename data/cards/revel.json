@@ -13,7 +13,7 @@
     "toughness": 1,
     "keywords": [],
     "effects": [],
-    "text": "No abilities.",
+    "text": "",
     "flavor": "Ira furor brevis est: anger is a brief madness. (Horace, Epistles 1.2)",
     "art": "res://art/cards/revel_c_001.webp"
   },
@@ -34,7 +34,7 @@
       "haste"
     ],
     "effects": [],
-    "text": "Haste (this can attack the turn it comes into play).",
+    "text": "Haste (This creature can attack and use Tap abilities the turn it enters.)",
     "flavor": "Nunc est bibendum: now is the time for drinking, now the time to beat the earth with unfettered foot. (Horace, Odes 1.37)",
     "art": "res://art/cards/revel_c_002.webp"
   },
@@ -55,7 +55,7 @@
       "first_strike"
     ],
     "effects": [],
-    "text": "First strike (this deals combat damage before creatures without first strike).",
+    "text": "First strike (This creature deals combat damage before creatures without first strike.)",
     "flavor": "Behind the gilded mask, a smile; behind the smile, a blade.",
     "art": "res://art/cards/revel_c_003.webp"
   },
@@ -81,7 +81,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
+    "text": "Idle: At the end of your turn, if Courtier on the Chaise is untapped and didn't attack this turn, it deals 1 damage to the enemy player.",
     "flavor": "Men ought either to be well treated or crushed. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_c_004.webp"
   },
@@ -106,7 +106,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
+    "text": "Idle: At the end of your turn, if Loafer of the Arbour is untapped and didn't attack this turn, rummage. (Draw a card, then discard a card.)",
     "flavor": "A Book of Verses underneath the Bough, a Jug of Wine, a Loaf of Bread, and Thou. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_c_005.webp"
   },
@@ -134,7 +134,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+    "text": "Idle: At the end of your turn, if Sleepy Baronet is untapped and didn't attack this turn, put a +1/+1 counter on it.",
     "flavor": "When you want a laugh, come and see me, fat and sleek and well cared for, a hog from Epicurus' herd. (Horace, Epistles 1.4)",
     "art": "res://art/cards/revel_c_006.webp"
   },
@@ -160,7 +160,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "When this enters, deal 1 damage to any enemy creature or the enemy player.",
+    "text": "When Fire-Eater of the Feast enters, it deals 1 damage to any enemy creature or the enemy player.",
     "flavor": "The guests applaud. The guest nearest the stage stops applauding.",
     "art": "res://art/cards/revel_c_007.webp"
   },
@@ -185,7 +185,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "When this enters, you lose 2 life.",
+    "text": "When Gluttonous Baron enters, you lose 2 life.",
     "flavor": "Nothing is enough for the man to whom enough is too little. (Epicurus, Vatican Sayings)",
     "art": "res://art/cards/revel_c_008.webp"
   },
@@ -212,7 +212,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "Carouse (if you already played another non-land card this turn): this has haste.",
+    "text": "Carouse: As long as you've played another non-land card this turn, Masked Reveller has haste.",
     "flavor": "Behind a mask, every man is braver and none of them is sober.",
     "art": "res://art/cards/revel_c_009.webp"
   },
@@ -233,7 +233,7 @@
       "haste"
     ],
     "effects": [],
-    "text": "Haste (this can attack the turn it comes into play).",
+    "text": "Haste (This creature can attack and use Tap abilities the turn it enters.)",
     "flavor": "He charged the enemy line still holding his goblet, and never spilled a drop.",
     "art": "res://art/cards/revel_c_010.webp"
   },
@@ -263,7 +263,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Haste (this can attack the turn it comes into play). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+    "text": "Haste (This creature can attack and use Tap abilities the turn it enters.) Idle: At the end of your turn, if Satyr of the Drowsy Vineyard is untapped and didn't attack this turn, put a +1/+1 counter on it.",
     "flavor": "He meant to join the raid. Then the afternoon grew warm.",
     "art": "res://art/cards/revel_c_011.webp"
   },
@@ -291,7 +291,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "When this enters, creatures you control get +1/+0 until end of turn.",
+    "text": "When Garlanded Festival Bull enters, creatures you control get +1/+0 until end of turn.",
     "flavor": "Gild his horns, hang him with roses, and point him at the enemy. The procession will sort itself out. (a steward of the Feast)",
     "art": "res://art/cards/revel_c_012.webp"
   },
@@ -314,7 +314,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 2 damage to any enemy creature or the enemy player.",
+    "text": "Toast of Fire deals 2 damage to any enemy creature or the enemy player.",
     "flavor": "Come, fill the Cup, and in the fire of Spring / Your Winter-garment of Repentance fling. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_c_013.webp"
   },
@@ -344,7 +344,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "Deal 1 damage to target enemy creature. Carouse (if you already played another non-land card this turn): also deal 1 damage to the enemy player.",
+    "text": "Firecracker Garland deals 1 damage to target enemy creature. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.",
     "flavor": "Strung across the square for the feast day, lit one at a time, aimed carelessly.",
     "art": "res://art/cards/revel_c_014.webp"
   },
@@ -374,7 +374,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 1 damage to any enemy creature or the enemy player, then rummage (draw a card, then discard a card).",
+    "text": "Spilled Brandy deals 1 damage to any enemy creature or the enemy player. Then rummage. (Draw a card, then discard a card.)",
     "flavor": "One clumsy elbow, one candle, and the evening became memorable.",
     "art": "res://art/cards/revel_c_015.webp"
   },
@@ -409,7 +409,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "Creatures you control get +1/+0 until end of turn. Carouse (if you already played another non-land card this turn): they get an additional +1/+0 until end of turn.",
+    "text": "Creatures you control get +1/+0 until end of turn. Carouse: If you've played another non-land card this turn, they get an additional +1/+0 until end of turn.",
     "flavor": "Nobody remembers the second verse, so they sing the first one louder.",
     "art": "res://art/cards/revel_c_016.webp"
   },
@@ -433,7 +433,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 3 damage to the enemy player.",
+    "text": "Flaming Flagon deals 3 damage to the enemy player.",
     "flavor": "It was poured for him. It simply arrived faster than he expected.",
     "art": "res://art/cards/revel_c_017.webp"
   },
@@ -457,7 +457,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 4 damage to target enemy creature.",
+    "text": "Banquet Flambe deals 4 damage to target enemy creature.",
     "flavor": "The chef insists it is meant to burn that brightly.",
     "art": "res://art/cards/revel_c_018.webp"
   },
@@ -487,10 +487,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap, pay 1 life: deal 1 damage to the enemy player."
+        "text": "Tap, Pay 1 life: Carnival Brazier deals 1 damage to the enemy player."
       }
     ],
-    "text": "Tap, pay 1 life: deal 1 damage to the enemy player.",
+    "text": "Tap, Pay 1 life: Carnival Brazier deals 1 damage to the enemy player.",
     "flavor": "The things which produce certain pleasures entail annoyances many times greater than the pleasures themselves. (Epicurus, Principal Doctrines)",
     "art": "res://art/cards/revel_c_019.webp"
   },
@@ -524,10 +524,10 @@
             "duration": "turn"
           }
         ],
-        "text": "{R}, Tap: creatures you control get +1/+0 until end of turn."
+        "text": "{R}, Tap: Creatures you control get +1/+0 until end of turn."
       }
     ],
-    "text": "{R}, Tap: creatures you control get +1/+0 until end of turn.",
+    "text": "{R}, Tap: Creatures you control get +1/+0 until end of turn.",
     "flavor": "When the drum begins, even the sleepiest baron finds his feet.",
     "art": "res://art/cards/revel_c_020.webp"
   },
@@ -547,7 +547,7 @@
       "haste"
     ],
     "effects": [],
-    "text": "Haste (this can attack the turn it comes into play).",
+    "text": "Haste (This creature can attack and use Tap abilities the turn it enters.)",
     "flavor": "Carpe diem: seize the day, trusting as little as possible in tomorrow. (Horace, Odes 1.11)",
     "art": "res://art/cards/revel_c_021.webp"
   },
@@ -574,7 +574,7 @@
         "toughness": 0
       }
     ],
-    "text": "This gets +1/+0 for each other Performer you control.",
+    "text": "Tumbler of the Fair gets +1/+0 for each other Performer you control.",
     "flavor": "He lands every somersault, and every somersault lands on someone.",
     "art": "res://art/cards/revel_c_022.webp"
   },
@@ -595,7 +595,7 @@
       "first_strike"
     ],
     "effects": [],
-    "text": "First strike (this deals combat damage before creatures without first strike).",
+    "text": "First strike (This creature deals combat damage before creatures without first strike.)",
     "flavor": "Every Twelfth Night he slays the paper dragon with a wooden sword. The dragon has never once won.",
     "art": "res://art/cards/revel_c_023.webp"
   },
@@ -621,7 +621,7 @@
         "condition": "control:Noble"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): if you control another Noble, deal 1 damage to the enemy player.",
+    "text": "Idle: At the end of your turn, if Perfumed Lordling is untapped and didn't attack this turn and you control another Noble, it deals 1 damage to the enemy player.",
     "flavor": "Odi profanum vulgus et arceo: I hate the uninitiated crowd and keep it far from me. (Horace, Odes 3.1)",
     "art": "res://art/cards/revel_c_024.webp"
   },
@@ -651,7 +651,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "First strike (this deals combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+    "text": "First strike (This creature deals combat damage before creatures without first strike.) Idle: At the end of your turn, if Count of the Velvet Glove is untapped and didn't attack this turn, put a +1/+1 counter on it.",
     "flavor": "A wise lord cannot, nor ought he to, keep faith when such observance may be turned against him. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_c_025.webp"
   },
@@ -703,7 +703,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 1 damage to the enemy player for each Noble you control.",
+    "text": "Toast to the Peerage deals 1 damage to the enemy player for each Noble you control.",
     "flavor": "It is much safer to be feared than loved, when, of the two, either must be dispensed with. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_c_027.webp"
   },
@@ -731,7 +731,7 @@
         "duration": "turn"
       }
     ],
-    "text": "When this enters, Satyrs you control gain haste until end of turn (they can attack this turn).",
+    "text": "When Satyr Piper of the Pines enters, Satyrs you control gain haste until end of turn.",
     "flavor": "His tune has no words, but every goat-footed rascal on the hill knows it means \"charge\".",
     "art": "res://art/cards/revel_c_028.webp"
   },
@@ -755,7 +755,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
+    "text": "Idle: At the end of your turn, if Wineskin Satyr is untapped and didn't attack this turn, rummage. (Draw a card, then discard a card.)",
     "flavor": "Now drive away your cares with wine; tomorrow we sail the vast sea again. (Horace, Odes 1.7)",
     "art": "res://art/cards/revel_c_029.webp"
   },
@@ -785,7 +785,7 @@
         "trigger": "attack"
       }
     ],
-    "text": "First strike. Whenever this attacks, it gets +1/+1 until end of turn.",
+    "text": "First strike. Whenever Duelist of the Velvet Court attacks, it gets +1/+1 until end of turn.",
     "flavor": "He has never lost a duel, nor an argument about wine.",
     "art": "res://art/cards/revel_u_001.webp"
   },
@@ -811,7 +811,7 @@
         "trigger": "attack"
       }
     ],
-    "text": "Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
+    "text": "Whenever Masked Firebreather attacks, it deals 1 damage to any enemy creature or the enemy player.",
     "flavor": "Every performance ends with a bow and a scorched front row.",
     "art": "res://art/cards/revel_u_002.webp"
   },
@@ -837,7 +837,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player.",
+    "text": "Idle: At the end of your turn, if Jester of the Lazy Court is untapped and didn't attack this turn, it deals 1 damage to any enemy creature or the enemy player.",
     "flavor": "Mix a little folly with your plans: it is sweet to play the fool in season. (Horace, Odes 4.12)",
     "art": "res://art/cards/revel_u_003.webp"
   },
@@ -865,7 +865,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+0 counter on target creature you control.",
+    "text": "Idle: At the end of your turn, if Host of the Lantern Garden is untapped and didn't attack this turn, put a +1/+0 counter on target creature you control.",
     "flavor": "We call pleasure the beginning and end of the blessed life. (Epicurus, Letter to Menoeceus)",
     "art": "res://art/cards/revel_u_004.webp"
   },
@@ -894,7 +894,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "First strike. Carouse (if you already played another non-land card this turn): this has haste.",
+    "text": "First strike. Carouse: As long as you've played another non-land card this turn, Fencing Master of the Masque has haste.",
     "flavor": "He teaches only at night, and only to students who arrive already drunk.",
     "art": "res://art/cards/revel_u_005.webp"
   },
@@ -924,7 +924,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "Haste. When this enters, creatures you control get +1/+0 until end of turn.",
+    "text": "Haste. When Hierophant of the Bacchanal enters, creatures you control get +1/+0 until end of turn.",
     "flavor": "\"Tonight there is no tomorrow. Drink, and charge!\"",
     "art": "res://art/cards/revel_u_006.webp"
   },
@@ -957,7 +957,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put two +1/+1 counters on this and you lose 2 life.",
+    "text": "Idle: At the end of your turn, if Margrave of the Long Table is untapped and didn't attack this turn, put two +1/+1 counters on it and you lose 2 life.",
     "flavor": "It is not an unbroken succession of drinking-bouts and of revelry... which produce a pleasant life. (Epicurus, Letter to Menoeceus)",
     "art": "res://art/cards/revel_u_007.webp"
   },
@@ -987,7 +987,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "Deal 1 damage to any enemy creature or the enemy player. Carouse (if you already played another non-land card this turn): also deal 2 damage to the enemy player.",
+    "text": "Second Bottle deals 1 damage to any enemy creature or the enemy player. Carouse: If you've played another non-land card this turn, it also deals 2 damage to the enemy player.",
     "flavor": "The first bottle is for the guests. The second is for the host's enemies.",
     "art": "res://art/cards/revel_u_008.webp"
   },
@@ -1021,7 +1021,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "Deal 3 damage to target enemy creature. Carouse (if you already played another non-land card this turn): creatures you control get +1/+0 until end of turn.",
+    "text": "Satisfaction at Dawn deals 3 damage to target enemy creature. Carouse: If you've played another non-land card this turn, creatures you control get +1/+0 until end of turn.",
     "flavor": "Insulted at supper, challenged at midnight, buried by breakfast.",
     "art": "res://art/cards/revel_u_009.webp"
   },
@@ -1050,7 +1050,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 2 damage to each enemy creature. You lose 2 life.",
+    "text": "Pyre-Dancer's Whirl deals 2 damage to each enemy creature. You lose 2 life.",
     "flavor": "Death is nothing to us. (Epicurus, Principal Doctrines)",
     "art": "res://art/cards/revel_u_010.webp"
   },
@@ -1084,7 +1084,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Rummage twice (each time, draw a card, then discard a card). Then deal 2 damage to the enemy player.",
+    "text": "Rummage twice. (Each time, draw a card, then discard a card.) Then Empty the Cellar deals 2 damage to the enemy player.",
     "flavor": "Drink! for you know not whence you came, nor why: / Drink! for you know not why you go, nor where. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_u_011.webp"
   },
@@ -1107,7 +1107,7 @@
         "trigger": "upkeep"
       }
     ],
-    "text": "At the beginning of your upkeep, rummage (draw a card, then discard a card).",
+    "text": "At the beginning of your upkeep, rummage. (Draw a card, then discard a card.)",
     "flavor": "The Wine of Life keeps oozing drop by drop, / The Leaves of Life keep falling one by one. (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_u_012.webp"
   },
@@ -1132,7 +1132,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "Carouse (if you already played another non-land card this turn): creatures you control have first strike.",
+    "text": "Carouse: As long as you've played another non-land card this turn, creatures you control have first strike.",
     "flavor": "Every one sees what you appear to be, few really know what you are. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_u_013.webp"
   },
@@ -1158,7 +1158,7 @@
         "amount": 1
       }
     ],
-    "text": "Your Performer creature cards cost {1} less to play (this reduces only generic mana).",
+    "text": "Your Performer creature cards cost {1} less to play. This effect reduces only generic mana.",
     "flavor": "He hires the jugglers, pays the fire-eaters, and sends the bill for both to the Crown.",
     "art": "res://art/cards/revel_u_014.webp"
   },
@@ -1192,7 +1192,7 @@
         "subtype": "Performer"
       }
     ],
-    "text": "Other Performers you control get +1/+0 and have haste (they can attack the turn they come into play).",
+    "text": "Other Performers you control get +1/+0 and have haste. (They can attack and use Tap abilities the turn they enter.)",
     "flavor": "When his wagon rolls into town, the whole company leaps down already performing.",
     "art": "res://art/cards/revel_u_015.webp"
   },
@@ -1219,7 +1219,7 @@
         "toughness": 1
       }
     ],
-    "text": "This gets +1/+1 for each other Noble you control.",
+    "text": "Gossiping Marquis gets +1/+1 for each other Noble you control.",
     "flavor": "Men judge generally more by the eye than by the hand. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_u_016.webp"
   },
@@ -1246,7 +1246,7 @@
         "ally_subtype": "Performer"
       }
     ],
-    "text": "Whenever another Performer enters under your control, deal 1 damage to the enemy player.",
+    "text": "Whenever another Performer enters under your control, Lord of Misrule deals 1 damage to the enemy player.",
     "flavor": "In all their rule there was but this one clause to be observed: Do what thou wilt. (Rabelais, Gargantua)",
     "art": "res://art/cards/revel_u_017.webp"
   },
@@ -1271,7 +1271,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 1 damage to any enemy creature or the enemy player for each Performer you control.",
+    "text": "Royal Command Performance deals 1 damage to any enemy creature or the enemy player for each Performer you control.",
     "flavor": "The king asked for something with fire in it. The players were happy to oblige.",
     "art": "res://art/cards/revel_u_018.webp"
   },
@@ -1300,7 +1300,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on target Satyr you control.",
+    "text": "Idle: At the end of your turn, if Old Satyr on the Wine-Cask is untapped and didn't attack this turn, put a +1/+1 counter on target Satyr you control.",
     "flavor": "Eheu fugaces, Postume, Postume: alas, Postumus, Postumus, the fleeting years slip by. (Horace, Odes 2.14)",
     "art": "res://art/cards/revel_u_019.webp"
   },
@@ -1326,7 +1326,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 1 damage to target enemy creature for each Satyr you control.",
+    "text": "Panic in the Thicket deals 1 damage to target enemy creature for each Satyr you control.",
     "flavor": "Out of the dark wood came a skirl of pipes and a clatter of hooves, and the sentries forgot their courage.",
     "art": "res://art/cards/revel_u_020.webp"
   },
@@ -1354,7 +1354,7 @@
         "trigger": "attack"
       }
     ],
-    "text": "Haste. Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
+    "text": "Haste. Whenever Salamander Juggler attacks, it deals 1 damage to any enemy creature or the enemy player.",
     "flavor": "Three living flames in the air, and not one of them is happy about it.",
     "art": "res://art/cards/revel_r_001.webp"
   },
@@ -1380,7 +1380,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 2 damage to any enemy creature or the enemy player.",
+    "text": "Idle: At the end of your turn, if Prince of Idle Hours is untapped and didn't attack this turn, it deals 2 damage to any enemy creature or the enemy player.",
     "flavor": "He has not lifted a finger in years. He has never needed to.",
     "art": "res://art/cards/revel_r_002.webp"
   },
@@ -1411,7 +1411,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "First strike, haste. Carouse (if you already played another non-land card this turn): this gets +2/+0.",
+    "text": "First strike, haste. Carouse: As long as you've played another non-land card this turn, Master of the Midnight Duel gets +2/+0.",
     "flavor": "He fights only after the last dance, when the candles gutter and the witnesses are asleep.",
     "art": "res://art/cards/revel_r_003.webp"
   },
@@ -1471,7 +1471,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this, then rummage (draw a card, then discard a card).",
+    "text": "Idle: At the end of your turn, if Giant of the Groaning Board is untapped and didn't attack this turn, put a +1/+1 counter on it, then rummage. (Draw a card, then discard a card.)",
     "flavor": "He sat down to dinner a year ago. The table has since been rebuilt around him twice.",
     "art": "res://art/cards/revel_r_005.webp"
   },
@@ -1495,7 +1495,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 5 damage to any enemy creature or the enemy player.",
+    "text": "Grand Conflagration deals 5 damage to any enemy creature or the enemy player.",
     "flavor": "Pulvis et umbra sumus: we are dust and shadow. (Horace, Odes 4.7)",
     "art": "res://art/cards/revel_r_006.webp"
   },
@@ -1561,7 +1561,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Deal 3 damage to each creature and 3 damage to the enemy player. You lose 1 life.",
+    "text": "Carnival of Cinders deals 3 damage to each creature and 3 damage to the enemy player. You lose 1 life.",
     "flavor": "The carnival ended as all carnivals end: in ashes, and someone else's house.",
     "art": "res://art/cards/revel_r_008.webp"
   },
@@ -1615,7 +1615,7 @@
         "subtype": "Performer"
       }
     ],
-    "text": "Haste (this can attack the turn it comes into play). Other Performers you control get +1/+1.",
+    "text": "Haste (This creature can attack and use Tap abilities the turn it enters.) Other Performers you control get +1/+1.",
     "flavor": "Rex ministrallorum, the rolls call him, and every fiddler in the shire owes him a penny a year.",
     "art": "res://art/cards/revel_r_010.webp"
   },
@@ -1644,7 +1644,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on each Noble you control.",
+    "text": "Idle: At the end of your turn, if Elector of the Endless Banquet is untapped and didn't attack this turn, put a +1/+1 counter on each Noble you control.",
     "flavor": "Men are ungrateful, fickle, false, cowardly, covetous. (Machiavelli, The Prince)",
     "art": "res://art/cards/revel_r_011.webp"
   },
@@ -1679,7 +1679,7 @@
         "subtype": "Satyr"
       }
     ],
-    "text": "Other Satyrs you control have haste (they can attack the turn they come into play). Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player for each Satyr you control.",
+    "text": "Other Satyrs you control have haste. (They can attack and use Tap abilities the turn they enter.) Idle: At the end of your turn, if Horned Lord of the Rout is untapped and didn't attack this turn, it deals 1 damage to the enemy player for each Satyr you control.",
     "flavor": "He sends the herd down the hill at a gallop and follows at his own pace, which is to say not at all.",
     "art": "res://art/cards/revel_r_012.webp"
   },
@@ -1711,7 +1711,7 @@
         "trigger": "idle"
       }
     ],
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.",
+    "text": "Idle: At the end of your turn, if Vessar is untapped and didn't attack this turn, it deals 1 damage to each enemy creature and 2 damage to the enemy player.",
     "flavor": "Dust into Dust, and under Dust to lie, / Sans Wine, sans Song, sans Singer, and sans End! (Omar Khayyam, tr. FitzGerald)",
     "art": "res://art/cards/revel_m_001.webp"
   },
@@ -1742,7 +1742,7 @@
         "trigger": "attack"
       }
     ],
-    "text": "Haste, first strike. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
+    "text": "Haste, first strike. Whenever Brandimarte attacks, creatures you control get +1/+0 until end of turn.",
     "flavor": "He drinks fire, duels for sport, and has never once been on time for his own wedding.",
     "art": "res://art/cards/revel_m_002.webp"
   },
@@ -1790,10 +1790,10 @@
             "amount": 1
           }
         ],
-        "text": "Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn."
+        "text": "Pay 2 life: The Undying Bonfire deals 1 damage to any enemy creature or the enemy player. Activate only once each turn."
       }
     ],
-    "text": "At the beginning of your upkeep, deal 1 damage to each creature and 1 damage to the enemy player, and you lose 1 life. Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn.",
+    "text": "At the beginning of your upkeep, The Undying Bonfire deals 1 damage to each creature and 1 damage to the enemy player, and you lose 1 life. Pay 2 life: The Undying Bonfire deals 1 damage to any enemy creature or the enemy player. Activate only once each turn.",
     "flavor": "It was lit for one feast day. Nobody remembers which, and nobody can put it out.",
     "art": "res://art/cards/revel_m_003.webp"
   },
@@ -1828,7 +1828,7 @@
         "subtype": "Performer"
       }
     ],
-    "text": "Performers you control have first strike (they deal combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player for each Performer you control.",
+    "text": "Performers you control have first strike. (They deal combat damage before creatures without first strike.) Idle: At the end of your turn, if Ruggiero is untapped and didn't attack this turn, it deals 1 damage to any enemy creature or the enemy player for each Performer you control.",
     "flavor": "He has never drawn a sword. He keeps forty players who throw fire on cue.",
     "art": "res://art/cards/revel_m_004.webp"
   }

@@ -14,7 +14,11 @@ func _on_node_added(n: Node) -> void:
 		_attach.call_deferred(n)
 
 
-func _attach(sc: ScrollContainer) -> void:
+func _attach(node) -> void:
+	# the node may be gone by the time the deferred call runs
+	if not is_instance_valid(node) or not (node is ScrollContainer):
+		return
+	var sc: ScrollContainer = node
 	if not is_instance_valid(sc) or not sc.is_inside_tree() or sc.has_meta("drag_scroll"):
 		return
 	var p := sc.get_parent()

@@ -258,7 +258,10 @@ static func _ability_value(st: BattleState, i: int, p, ab: Dictionary) -> float:
 					v += 0.9 * (pw + tg) * 0.5
 					helps_attack = true
 			"foresight":
-				v += 0.5
+				# worth it with mana to spare: after the main plays (second main phase, or the
+				# end of the enemy's turn), not when the mana could still cast a card
+				var spare: bool = st.phase == "main2" or (st.active != i and st.step == "end")
+				v += 0.8 if spare else 0.4
 			"tax":
 				v += 0.6
 			"heal":

@@ -116,3 +116,9 @@ Most of the gap comes from the move to 10 starting life. Life gain (the Church),
 - The Technocracy at 57% in faith decks and 32% to 45% in themed decks. The gap is mostly deck building and AI (see the notes below), so it was not chased with card changes.
 - The Pact Skeletons (41%), the Old Ways Treefolk (42%) and the Technocracy Relics (32%) are still under the 40 to 60% band or at its edge.
 - Bloodied is true at 10 life or less, which since the move to 10 starting life means always. The Bloodied cards (Oathbreaker Knight above all, a 5/5 with dread and deathtouch for three in practice) are therefore always on; this needs a rule decision (for example half the starting life) rather than a card change.
+
+## Wording and splash pass
+
+- Every card's rules text now follows Magic templating (counters instead of "permanently", cards named instead of "this", sourced damage, capitalised reminder text). The rules did not change. See CARD_SPEC "Rules wording".
+- Nineteen modest Technocracy cards lost the C symbol and cost the same mana value in generic, so other faiths can splash them: Tinkerer's Apprentice, Scrap Collector, Bronze Phalanx Automaton, Smelter Automaton, Foundry Requisition, Tempered Plating, Bellows Boy, Journeyman Riveter, Tended Automaton, Emergency Shoring, Mule-Frame Automaton, Tool-Rack Automaton, Furnace Stoker, Trip-Hammer Automaton, Expedited Patent, Bulk Order, Field Repair, Masterwork Automaton and Guild Armourer. With the twelve that were already generic, 31 of 65 Technocracy cards are now generic-only. Assembly, Overclock, Snares, cost reducers, the cheap upkeep bodies (Steam Hauler, Siege Automaton), the vanilla 3/3 Piston Laborer and every rare and mythic keep the C.
+- **Scholar's Lamp** no longer foresees 1 for free each upkeep; it is now "{1}, Tap: Foresight 1." and stays a common.

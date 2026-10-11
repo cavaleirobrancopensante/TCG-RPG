@@ -3,6 +3,7 @@ extends RefCounted
 ## Deck validation, auto-building (player starter + enemies) and helpers.
 
 const MIN_DECK := 40
+const MIN_SPELLS := 15           # a deck needs this many non-land cards (no pile of lands)
 const MAX_COPIES := 4            # enemies at the highest level; the hero has 1 + Industry
 const DRAFT_COPIES := 99         # a draft deck may use every card drafted
 
@@ -21,6 +22,10 @@ static func count(deck: Dictionary) -> int:
 	return n
 
 
+static func spell_count(deck: Dictionary) -> int:
+	return count(deck) - land_count(deck)
+
+
 static func land_count(deck: Dictionary) -> int:
 	var n := 0
 	for id in deck:
@@ -35,6 +40,9 @@ static func validate(deck: Dictionary, owned: Dictionary, copies: int = -1) -> S
 	var n := count(deck)
 	if n < MIN_DECK:
 		return I18n.t("Deck needs at least %d cards (has %d).") % [MIN_DECK, n]
+	var spells := spell_count(deck)
+	if spells < MIN_SPELLS:
+		return I18n.t("Deck needs at least %d cards that are not lands (has %d).") % [MIN_SPELLS, spells]
 	for id in deck:
 		if CardDB.is_basic_land(id):
 			continue
@@ -133,6 +141,8 @@ static func auto_build(owned: Dictionary, factions: Array = [], copies: int = -1
 			while picked < TARGET_SPELLS and int(deck.get(id, 0)) < mini(int(owned[id]), limit):
 				deck[id] = int(deck.get(id, 0)) + 1
 				picked += 1
+	if picked == 0:
+		return {}            # nothing to play: never a deck of lands alone
 	var duals := add_dual_lands(deck, owned, limit)
 	add_lands(deck, TARGET_LANDS + (TARGET_SPELLS - picked) - duals)
 	return deck

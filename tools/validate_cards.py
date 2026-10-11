@@ -141,6 +141,24 @@ def check_effect(cid, faith, e, where, owners):
                 bad(cid, "count_per %s: not a tribe or relic kind of its faith" % e["count_per"])
 
 
+BANNED_WORDING = ["for good", "permanently", "for the rest of the duel", "no abilities", "use this only"]
+SELF_REF = re.compile(r"\bthis\b(?! (spell|turn|creature|relic|card|effect)\b)", re.I)
+
+
+def check_wording(cid, c):
+    """Magic-style rules wording (CARD_SPEC 'Rules wording'): counters, card names, no 'this'."""
+    texts = [str(c.get("text", ""))] + [str(ab.get("text", "")) for ab in c.get("abilities", [])]
+    for t in texts:
+        low = t.lower()
+        for w in BANNED_WORDING:
+            # "for the rest of the duel" stays legal inside pacify reminder text
+            if w in low and not (w == "for the rest of the duel" and "(it can't attack for the rest of the duel.)" in low):
+                bad(cid, "wording: %r is not rules language (use counters, see CARD_SPEC Rules wording)" % w)
+        outside = re.sub(r"\([^)]*\)", "", t)
+        if SELF_REF.search(outside):
+            bad(cid, "wording: a card refers to itself by name, not 'this' (%s)" % t)
+
+
 def check_card(c, owners_override=None):
     cid = c.get("id", "?")
     faith = c.get("faction")
@@ -154,9 +172,13 @@ def check_card(c, owners_override=None):
         if not c.get("text") or not c.get("flavor"):
             bad(cid, "land needs text and flavour")
         return
-    for k in ["name", "rarity", "type", "text", "flavor"]:
+    for k in ["name", "rarity", "type", "flavor"]:
         if not c.get(k):
             bad(cid, "missing " + k)
+    vanilla = c.get("type") == "creature" and not any(c.get(k) for k in ["keywords", "effects", "abilities", "statics", "overclock"])
+    if "text" not in c or (not c.get("text") and not vanilla):
+        bad(cid, "missing text (only a vanilla creature has empty text)")
+    check_wording(cid, c)
     if c.get("type") not in ["creature", "spell", "relic"]:
         bad(cid, "bad type")
     if c.get("rarity") not in COUNTS:

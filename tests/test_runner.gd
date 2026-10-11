@@ -342,8 +342,24 @@ func _test_attachments() -> void:
 	check(st.side(0).relics.has(blade) and blade.attached_to == -1, "equipment stays when its creature dies")
 
 
+func _test_ai_foresight() -> void:
+	# Scholar's Lamp ({1}, Tap: Foresight 1): the AI uses it with mana to spare, not before its plays
+	var st := _duel()
+	var lamp := st._make_perm(0, "lyceum_c_019", CardDB.get_card("lyceum_c_019"))
+	lamp.sick = false
+	st.side(0).relics.append(lamp)
+	st.active = 0
+	st.phase = "main1"
+	var early := BattleAI._best_ability(st, 0)
+	st.phase = "main2"
+	var late := BattleAI._best_ability(st, 0)
+	check(early.is_empty(), "the AI keeps its mana in main 1 rather than using the Lamp")
+	check(not late.is_empty() and int(late[0]) == lamp.uid, "the AI uses the Lamp with spare mana in main 2")
+
+
 func _test_tribes() -> void:
 	_test_attachments()
+	_test_ai_foresight()
 	var st := _duel()
 	var w1 := _put(st, 0, "Packwolf")
 	check(w1.power() == 2, "kinship alone: no bonus")
@@ -976,6 +992,12 @@ func test_draft() -> void:
 	var opp := d.player_opponent()
 	check(opp > 0, "player has an opponent")
 	var mine := DeckTools.auto_build(d.pool(0), DeckTools.best_factions(d.pool(0), 2))
+	var drafted := DeckTools.auto_build(d.pool(0), [], DeckTools.DRAFT_COPIES)
+	check(DeckTools.validate(drafted, d.pool(0), DeckTools.DRAFT_COPIES) == "" and DeckTools.spell_count(drafted) >= DeckTools.MIN_SPELLS,
+		"auto build from a draft pool: legal, %d cards that are not lands" % DeckTools.spell_count(drafted))
+	check(DeckTools.validate({"land_machine": 40}, {}) != "", "a deck of 40 lands is not legal")
+	check(DeckTools.validate({"land_machine": 26, "machine_c_004": 14}, {"machine_c_004": 14}, DeckTools.DRAFT_COPIES).contains(str(DeckTools.MIN_SPELLS)), "14 cards that are not lands are too few")
+	check(DeckTools.auto_build({}).is_empty(), "auto build with no cards makes no deck of lands")
 	d.resolve_stage(true, mine)
 	check(d.player_stage == 1 and d.bracket.size() == 4 and not d.player_out, "won the quarter-final")
 	d.resolve_stage(false, mine)

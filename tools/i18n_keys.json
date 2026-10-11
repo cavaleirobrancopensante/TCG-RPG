@@ -341,6 +341,14 @@
    "note": "scripts/battle/battle_ai.gd"
   },
   {
+   "key": "Grave Chill",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Pit Imp's ability",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Foe",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -377,6 +385,10 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Glow",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Attack! (%d)",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -402,6 +414,18 @@
   },
   {
    "key": "⚔ Attack",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s blocks %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You attack with %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s attacks with %s.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -441,7 +465,23 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "You play %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "%s plays %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You cast %s on %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You cast %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s casts %s on %s.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -449,11 +489,23 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "(overclocked)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "a creature",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s's ability fizzles: its target is gone.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "%s fizzles: its target is gone.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "The ability fizzles: its target is gone.",
+   "key": "You raise %s.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -461,7 +513,15 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "You summon %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "%s summons %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You set out %s.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -470,6 +530,86 @@
   },
   {
    "key": "%s resolves.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s deals %d damage to %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You take %d damage.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s takes %d damage.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You gain %d life.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s gains %d life.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You lose %d life.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s loses %d life.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is sacrificed.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is destroyed.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s dies.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s returns to its owner's hand.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Martyr: a +1/+1 counter on %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s gets %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s gains %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is attached to %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s returns to your hand.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s returns to %s's hand.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is frozen.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is tapped.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You discard %s.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -485,7 +625,19 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "%s regenerates.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Regenerates",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is pacified: it can't attack.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is snared by %s.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -497,7 +649,15 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "%s is unaffected.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Prevented",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Idle: %s rested this turn.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -505,15 +665,23 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "%s fights!",
+   "key": "%s fights %s.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Overclocked!",
+   "key": "%s is overclocked!",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "%s uses: %s",
+   "key": "%s's ability on %s: %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s's ability: %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s's ability",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -522,6 +690,34 @@
   },
   {
    "key": "Foresight: %d kept on top, %d sent to the bottom.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You pay %d to keep %s running.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s pays %d to keep %s running.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "your relic %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "your %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s from the graveyard",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Duel log",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Nothing has happened yet.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -637,6 +833,18 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Cancelled: %s stays in your hand.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cancelled: %s's ability is not used.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cancelled.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "your creature that will fight",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -678,10 +886,6 @@
   },
   {
    "key": "All your ready creatures will attack. Tap any you want to hold back, then confirm.",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
-   "key": "Cancelled.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -1262,6 +1466,10 @@
   },
   {
    "key": "Deck needs at least %d cards (has %d).",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "Deck needs at least %d cards that are not lands (has %d).",
    "note": "scripts/core/deck_tools.gd"
   },
   {
@@ -2385,7 +2593,7 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "Draft: %s",
+   "key": "Your deck starts empty: add cards from your pool (at least 40 cards, %d of them not lands; basic lands are free). Auto build in the Deck menu makes one for you. You can make more than one list from the same pool and choose one before each match.",
    "note": "scripts/main.gd"
   },
   {
@@ -2393,7 +2601,7 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "You opened %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.",
+   "key": "You opened %d cards; they are now in your collection.",
    "note": "scripts/main.gd"
   },
   {
@@ -2405,7 +2613,27 @@
    "note": "scripts/main.gd"
   },
   {
-   "key": "You drafted %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.",
+   "key": "You drafted %d cards; they are now in your collection.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Draft: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Your deck slots are full: \"%s\" was kept, %d other list(s) from the draft were not.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Deck not ready",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "\"%s\" can't be played yet: %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Edit deck",
    "note": "scripts/main.gd"
   },
   {
@@ -2569,6 +2797,22 @@
    "note": "scripts/ui/card_view.gd"
   },
   {
+   "key": "No abilities.",
+   "note": "scripts/ui/card_view.gd"
+  },
+  {
+   "key": "%s or %s",
+   "note": "scripts/ui/card_view.gd"
+  },
+  {
+   "key": "Tap: add %s.",
+   "note": "scripts/ui/card_view.gd"
+  },
+  {
+   "key": "Land (Basic Land)",
+   "note": "scripts/ui/card_view.gd"
+  },
+  {
    "key": "Flying: can only be blocked by creatures with flying or reach.",
    "note": "scripts/ui/card_viewer.gd"
   },
@@ -2577,7 +2821,7 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Haste: can attack the turn it arrives.",
+   "key": "Haste: can attack and use Tap abilities the turn it enters.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -2601,7 +2845,7 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Martyr: when this dies, another creature you control gets +1/+1 for good.",
+   "key": "Martyr: when this creature dies, put a +1/+1 counter on another target creature you control.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -2637,7 +2881,7 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Bloodied: you have 10 or less life.",
+   "key": "Bloodied: you have 5 or less life.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -2665,7 +2909,7 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Idle: at the end of your turn, if this is untapped and didn't attack.",
+   "key": "Idle: at the end of your turn, if this creature is untapped and didn't attack this turn.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -2677,7 +2921,7 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
-   "key": "Assembly: +1/+1 for each other Construct you control.",
+   "key": "Assembly: this creature gets +1/+1 for each other Construct you control.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -2738,6 +2982,10 @@
   },
   {
    "key": "Cost %s",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Flavor",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -3133,15 +3381,15 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "<draft_base> 1",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
    "key": "Search name or text",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
    "key": "Filters",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Draft deck",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3162,6 +3410,18 @@
   },
   {
    "key": "In this deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "List %s",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Draft deck",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "You can make up to %d lists from one draft.",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3197,7 +3457,19 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "The deck for your next match (\"%s\") isn't ready: %s",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
    "key": "The deck used in duels (\"%s\") isn't ready: %s",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Played in the next match",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Play this deck in the next match",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3213,7 +3485,7 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Tap to remove one",
+   "key": "This deck is empty. Tap + on a card to add it, or tap the card to read it first. Auto build in the Deck menu makes a deck for you.",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3225,7 +3497,7 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Tap a card to read it, or + to add it at once. Tap a deck row to remove.",
+   "key": "Tap a card to read it, or + to add it at once. Tap a deck row to read it; - and + change the count.",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3245,11 +3517,59 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "Row",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Tap to read the card",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Minus",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Remove one",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Plus",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Add one",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Creatures",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Sorceries",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Instants",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Relics",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
    "key": "Take",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
+   "key": "Picks",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
    "key": "Your picks",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Curve",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
@@ -3262,6 +3582,14 @@
   },
   {
    "key": "Nothing yet.",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Group_",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Pick_",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
@@ -4033,6 +4361,10 @@
    "note": "scripts/ui/tournament_screen.gd"
   },
   {
+   "key": "The deck you play in the next match",
+   "note": "scripts/ui/tournament_screen.gd"
+  },
+  {
    "key": "You are the champion!",
    "note": "scripts/ui/tournament_screen.gd"
   },
@@ -4339,7 +4671,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Martyr (when this dies, another creature you control gets +1/+1).",
+   "key": "Martyr (When this creature dies, put a +1/+1 counter on another target creature you control.)",
    "note": "rules text of Lantern-Bearer Acolyte"
   },
   {
@@ -4355,7 +4687,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Flying (can only be blocked by creatures with flying or reach).",
+   "key": "Flying (This creature can't be blocked except by creatures with flying or reach.)",
    "note": "rules text of Cloister Dove"
   },
   {
@@ -4371,7 +4703,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, gain 2 life.",
+   "key": "When Novice of the Choir enters, you gain 2 life.",
    "note": "rules text of Novice of the Choir"
   },
   {
@@ -4391,7 +4723,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "When this dies, gain 3 life.",
+   "key": "When Martyr of the Pilgrim Road dies, you gain 3 life.",
    "note": "rules text of Martyr of the Pilgrim Road"
   },
   {
@@ -4407,7 +4739,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Lifelink (damage this deals also gains you that much life).",
+   "key": "Lifelink (Damage dealt by this creature also causes you to gain that much life.)",
    "note": "rules text of Barefoot Friar"
   },
   {
@@ -4431,7 +4763,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "As long as you have more life than you started with, this gets +1/+1.",
+   "key": "Grace: As long as you have more life than you started with, Knight of the Pilgrim Way gets +1/+1.",
    "note": "rules text of Knight of the Pilgrim Way"
   },
   {
@@ -4443,7 +4775,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "When this dies, target creature you control gets +1/+1 permanently.",
+   "key": "When Thurifer of the Procession dies, put a +1/+1 counter on target creature you control.",
    "note": "rules text of Thurifer of the Procession"
   },
   {
@@ -4475,7 +4807,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "When this enters, gain 4 life.",
+   "key": "When Almoner of the Great Abbey enters, you gain 4 life.",
    "note": "rules text of Almoner of the Great Abbey"
   },
   {
@@ -4491,7 +4823,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Gain 4 life.",
+   "key": "You gain 4 life.",
    "note": "rules text of Asperges"
   },
   {
@@ -4523,7 +4855,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Pacify target enemy creature (it can't attack for the rest of the duel).",
+   "key": "Pacify target enemy creature. (It can't attack for the rest of the duel.)",
    "note": "rules text of Sign of Peace"
   },
   {
@@ -4539,7 +4871,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Target creature you control gets +1/+1 permanently. Gain 2 life.",
+   "key": "Put a +1/+1 counter on target creature you control. You gain 2 life.",
    "note": "rules text of Sacrament of Confirmation"
   },
   {
@@ -4563,7 +4895,7 @@
    "note": "card name (sanctum, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, gain 1 life.",
+   "key": "At the beginning of your upkeep, you gain 1 life.",
    "note": "rules text of Votive Candles"
   },
   {
@@ -4575,7 +4907,7 @@
    "note": "card name (sanctum, relic)"
   },
   {
-   "key": "2, Tap: target creature you control gets +0/+1 permanently.",
+   "key": "{2}, Tap: Put a +0/+1 counter on target creature you control.",
    "note": "rules text of Holy Water Stoup"
   },
   {
@@ -4599,7 +4931,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "When this enters, gain 1 life for each Knight you control.",
+   "key": "When Knight of Saint Lazarus enters, you gain 1 life for each Knight you control.",
    "note": "rules text of Knight of Saint Lazarus"
   },
   {
@@ -4611,7 +4943,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "This gets +1/+0 for each other Knight you control.",
+   "key": "Teutonic Knight-Brother gets +1/+0 for each other Knight you control.",
    "note": "rules text of Teutonic Knight-Brother"
   },
   {
@@ -4639,7 +4971,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Target Knight you control gets +2/+2 permanently.",
+   "key": "Put two +1/+1 counters on target Knight you control.",
    "note": "rules text of Accolade"
   },
   {
@@ -4651,7 +4983,7 @@
    "note": "card name (sanctum, relic)"
   },
   {
-   "key": "Whenever a Knight enters under your control, gain 2 life.",
+   "key": "Whenever a Knight enters under your control, you gain 2 life.",
    "note": "rules text of Hospital of Saint John"
   },
   {
@@ -4667,7 +4999,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Gain 2 life for each Angel you control.",
+   "key": "You gain 2 life for each Angel you control.",
    "note": "rules text of Gloria in Excelsis"
   },
   {
@@ -4683,7 +5015,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, target creature you control gets +1/+1 permanently.",
+   "key": "When Parish Priest of the Valley enters, put a +1/+1 counter on target creature you control.",
    "note": "rules text of Parish Priest of the Valley"
   },
   {
@@ -4695,7 +5027,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Target creature you control gets +0/+2 and gains sanctified until end of turn (protection from the Pact). Gain 1 life for each Priest you control.",
+   "key": "Target creature you control gets +0/+2 and gains sanctified until end of turn. (It has protection from the Pact.) You gain 1 life for each Priest you control.",
    "note": "rules text of Absolution Before Battle"
   },
   {
@@ -4707,7 +5039,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Lifelink. When this enters, gain 2 life.",
+   "key": "Lifelink. When Brother of Mercy enters, you gain 2 life.",
    "note": "rules text of Brother of Mercy"
   },
   {
@@ -4719,7 +5051,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "When this dies, pacify target enemy creature (it can't attack for the rest of the duel).",
+   "key": "When Martyr of the Far Mission dies, pacify target enemy creature. (It can't attack for the rest of the duel.)",
    "note": "rules text of Martyr of the Far Mission"
   },
   {
@@ -4731,7 +5063,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Sanctified (protection from the Pact). Whenever this attacks, gain 1 life.",
+   "key": "Sanctified (This creature has protection from the Pact.) Whenever Templar of the Red Cross attacks, you gain 1 life.",
    "note": "rules text of Templar of the Red Cross"
   },
   {
@@ -4747,7 +5079,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Other creatures you control get +0/+1. As long as you have more life than you started with, they get +1/+1 instead.",
+   "key": "Other creatures you control get +0/+1. Grace: As long as you have more life than you started with, they get +1/+1 instead.",
    "note": "rules text of Cistercian Abbot"
   },
   {
@@ -4763,7 +5095,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, destroy target tapped enemy creature.",
+   "key": "When Inquisitor of the Pale Flame enters, destroy target tapped enemy creature.",
    "note": "rules text of Inquisitor of the Pale Flame"
   },
   {
@@ -4787,7 +5119,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Flying. As long as you have more life than you started with, this has lifelink.",
+   "key": "Flying. Grace: As long as you have more life than you started with, Angel of Compline has lifelink.",
    "note": "rules text of Angel of Compline"
   },
   {
@@ -4811,7 +5143,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Pacify target enemy creature (it can't attack for the rest of the duel). Gain 3 life.",
+   "key": "Pacify target enemy creature. (It can't attack for the rest of the duel.) You gain 3 life.",
    "note": "rules text of Truce of God"
   },
   {
@@ -4823,7 +5155,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Gain 3 life. Then, if you have more life than you started with, creatures you control get +1/+1 permanently.",
+   "key": "You gain 3 life. Grace: If you have more life than you started with, put a +1/+1 counter on each creature you control.",
    "note": "rules text of Te Deum"
   },
   {
@@ -4835,7 +5167,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Creatures you control get +0/+2 permanently.",
+   "key": "Put two +0/+1 counters on each creature you control.",
    "note": "rules text of Litany of the Saints"
   },
   {
@@ -4859,7 +5191,7 @@
    "note": "card name (sanctum, relic)"
   },
   {
-   "key": "As long as you have more life than you started with, creatures you control have lifelink.",
+   "key": "Grace: As long as you have more life than you started with, creatures you control have lifelink.",
    "note": "rules text of Monstrance of the Blessed Sacrament"
   },
   {
@@ -4871,7 +5203,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Your Knight creature cards cost {1} less to play (1 less generic mana).",
+   "key": "Your Knight creature cards cost {1} less to play. This effect reduces only generic mana.",
    "note": "rules text of Preceptor of the Commandery"
   },
   {
@@ -4895,7 +5227,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Flying (can only be blocked by creatures with flying or reach). This gets +1/+1 for each other Angel you control.",
+   "key": "Flying (This creature can't be blocked except by creatures with flying or reach.) Angel of the Choir of Virtues gets +1/+1 for each other Angel you control.",
    "note": "rules text of Angel of the Choir of Virtues"
   },
   {
@@ -4907,7 +5239,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Flying (can only be blocked by creatures with flying or reach). Whenever another Angel enters under your control, gain 2 life.",
+   "key": "Flying (This creature can't be blocked except by creatures with flying or reach.) Whenever another Angel enters under your control, you gain 2 life.",
    "note": "rules text of Angel of the Dominions"
   },
   {
@@ -4919,7 +5251,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Creatures you control get +0/+2 until end of turn. Gain 1 life for each Angel you control.",
+   "key": "Creatures you control get +0/+2 until end of turn. You gain 1 life for each Angel you control.",
    "note": "rules text of Angelic Intercession"
   },
   {
@@ -4931,7 +5263,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Sanctified (protection from the Pact). When this enters, gain 2 life.",
+   "key": "Sanctified (This creature has protection from the Pact.) When Confessor of the Cathedral enters, you gain 2 life.",
    "note": "rules text of Confessor of the Cathedral"
   },
   {
@@ -4943,7 +5275,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Whenever another Priest enters under your control, target creature you control gets +1/+1 permanently.",
+   "key": "Whenever another Priest enters under your control, put a +1/+1 counter on target creature you control.",
    "note": "rules text of Celebrant of the Dawn Mass"
   },
   {
@@ -4955,7 +5287,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "When this enters, gain 2 life. When this dies, other creatures you control get +1/+1 permanently.",
+   "key": "When Abbot of the Silent Order enters, you gain 2 life. When Abbot of the Silent Order dies, put a +1/+1 counter on each other creature you control.",
    "note": "rules text of Abbot of the Silent Order"
   },
   {
@@ -4979,7 +5311,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "As long as you have more life than you started with, this gets +2/+2 and has lifelink.",
+   "key": "Grace: As long as you have more life than you started with, Knight of the Holy Grail gets +2/+2 and has lifelink.",
    "note": "rules text of Knight of the Holy Grail"
   },
   {
@@ -4991,7 +5323,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Other creatures you control have martyr. When this enters, create a 1/1 Human Knight token.",
+   "key": "Other creatures you control have martyr. When Castellan of the Krak enters, create a 1/1 Human Knight token.",
    "note": "rules text of Castellan of the Krak"
   },
   {
@@ -5019,7 +5351,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Destroy target tapped enemy creature. Then pacify target enemy creature (it can't attack for the rest of the duel).",
+   "key": "Destroy target tapped enemy creature. Then pacify target enemy creature. (It can't attack for the rest of the duel.)",
    "note": "rules text of Rite of Exorcism"
   },
   {
@@ -5031,7 +5363,7 @@
    "note": "card name (sanctum, spell)"
   },
   {
-   "key": "Gain 10 life.",
+   "key": "You gain 10 life.",
    "note": "rules text of Year of Jubilee"
   },
   {
@@ -5055,7 +5387,7 @@
    "note": "card name (sanctum, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, if you have more life than you started with, target creature you control gets +1/+1 permanently.",
+   "key": "Grace: At the beginning of your upkeep, if you have more life than you started with, put a +1/+1 counter on target creature you control.",
    "note": "rules text of Reliquary of the First Martyr"
   },
   {
@@ -5067,7 +5399,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Sanctified (protection from the Pact). Other Knights you control get +1/+1 and have sanctified.",
+   "key": "Sanctified (This creature has protection from the Pact.) Other Knights you control get +1/+1 and have sanctified.",
    "note": "rules text of Grand Master of the Temple"
   },
   {
@@ -5079,7 +5411,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 1 life for each Angel you control.",
+   "key": "Flying (This creature can't be blocked except by creatures with flying or reach.) When Saint Raphael enters, you gain 1 life for each Angel you control.",
    "note": "rules text of Saint Raphael, Medicine of God"
   },
   {
@@ -5091,7 +5423,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Other Priests you control get +1/+1. At the beginning of your upkeep, gain 1 life for each Priest you control.",
+   "key": "Other Priests you control get +1/+1. At the beginning of your upkeep, you gain 1 life for each Priest you control.",
    "note": "rules text of Bishop of the Mountain See"
   },
   {
@@ -5103,7 +5435,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Flying, lifelink. When this enters, destroy target tapped enemy creature.",
+   "key": "Flying, lifelink. When Archangel of the Last Vigil enters, destroy target tapped enemy creature.",
    "note": "rules text of Archangel of the Last Vigil"
   },
   {
@@ -5139,7 +5471,7 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Flying, sanctified (protection from the Pact). Other Angels and Knights you control get +1/+1.",
+   "key": "Flying, sanctified. Other Angels and Knights you control get +1/+1.",
    "note": "rules text of Saint Michael the Archangel"
   },
   {
@@ -5151,7 +5483,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this dies, the enemy player loses 1 life and you gain 1 life.",
+   "key": "When Pact Initiate dies, the enemy player loses 1 life and you gain 1 life.",
    "note": "rules text of Pact Initiate"
   },
   {
@@ -5175,7 +5507,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this enters, you lose 1 life.",
+   "key": "When Blood-Oath Thrall enters, you lose 1 life.",
    "note": "rules text of Blood-Oath Thrall"
   },
   {
@@ -5191,7 +5523,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Deathtouch (any damage this deals to a creature destroys it).",
+   "key": "Deathtouch (Any damage this creature deals to a creature destroys it.)",
    "note": "rules text of Tomb Crawler"
   },
   {
@@ -5207,7 +5539,7 @@
    "note": "card subtype"
   },
   {
-   "key": "As long as you have 5 or less life (Bloodied), this gets +1/+1.",
+   "key": "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +1/+1.",
    "note": "rules text of Famished Ghoul"
   },
   {
@@ -5223,7 +5555,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Dread (can only be blocked by Pact creatures and Constructs).",
+   "key": "Dread (This creature can't be blocked except by Pact creatures and Constructs.)",
    "note": "rules text of Hellmaw Hound"
   },
   {
@@ -5235,7 +5567,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this enters, the enemy player loses 1 life and you gain 1 life.",
+   "key": "When Grave Chanter enters, the enemy player loses 1 life and you gain 1 life.",
    "note": "rules text of Grave Chanter"
   },
   {
@@ -5247,7 +5579,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Sacrifice another Zombie: this gets +3/+3 until end of turn.",
+   "key": "Sacrifice another Zombie: Charnel Glutton gets +3/+3 until end of turn.",
    "note": "rules text of Charnel Glutton"
   },
   {
@@ -5259,7 +5591,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this enters, target enemy creature gets -2/-2 until end of turn.",
+   "key": "When Blight-Sower Cultist enters, target enemy creature gets -2/-2 until end of turn.",
    "note": "rules text of Blight-Sower Cultist"
   },
   {
@@ -5271,7 +5603,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this dies, create a 1/1 Risen Bones Skeleton token.",
+   "key": "When Ossuary Bone-Walker dies, create a 1/1 Risen Bones Skeleton token.",
    "note": "rules text of Ossuary Bone-Walker"
   },
   {
@@ -5291,7 +5623,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, you lose 2 life.",
+   "key": "When Pit-Chained Fiend enters, you lose 2 life.",
    "note": "rules text of Pit-Chained Fiend"
   },
   {
@@ -5305,10 +5637,6 @@
   {
    "key": "It still wears the gold it was buried with, and it wants yours.",
    "note": "flavour text of Barrow Wight"
-  },
-  {
-   "key": "Grave Chill",
-   "note": "card name (abyss, spell)"
   },
   {
    "key": "Curse",
@@ -5363,7 +5691,7 @@
    "note": "card name (abyss, spell)"
   },
   {
-   "key": "The enemy discards two cards at random.",
+   "key": "The enemy player discards two cards at random.",
    "note": "rules text of Dread Whisper"
   },
   {
@@ -5391,7 +5719,7 @@
    "note": "card name (abyss, relic)"
   },
   {
-   "key": "Sacrifice a creature: the enemy player loses 1 life and you gain 1 life.",
+   "key": "Sacrifice a creature: The enemy player loses 1 life and you gain 1 life.",
    "note": "rules text of Black Altar"
   },
   {
@@ -5403,7 +5731,7 @@
    "note": "card name (abyss, relic)"
   },
   {
-   "key": "Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.",
+   "key": "Tap, Pay 1 life: Target enemy creature gets -1/-1 until end of turn.",
    "note": "rules text of Gibbet of the Forsworn"
   },
   {
@@ -5415,7 +5743,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "This gets +1/+0 for each other Zombie you control.",
+   "key": "Lych-Gate Shambler gets +1/+0 for each other Zombie you control.",
    "note": "rules text of Lych-Gate Shambler"
   },
   {
@@ -5439,12 +5767,20 @@
    "note": "card name (abyss, creature)"
   },
   {
+   "key": "When Bone-Rattle Picket dies, create a 1/1 Risen Bones Skeleton token.",
+   "note": "rules text of Bone-Rattle Picket"
+  },
+  {
    "key": "Knock it down and something else climbs out of the same grave.",
    "note": "flavour text of Bone-Rattle Picket"
   },
   {
    "key": "Sulphur Brute",
    "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When Sulphur Brute enters, you lose 1 life.",
+   "note": "rules text of Sulphur Brute"
   },
   {
    "key": "It comes up through the cellar floor, and the whole house smells of the pit for a week.",
@@ -5491,6 +5827,10 @@
    "note": "card name (abyss, creature)"
   },
   {
+   "key": "When Plague-Pit Shambler dies, the enemy player loses 1 life and you gain 1 life.",
+   "note": "rules text of Plague-Pit Shambler"
+  },
+  {
    "key": "They tipped him into the plague pit with the others. He did not stay with them.",
    "note": "flavour text of Plague-Pit Shambler"
   },
@@ -5499,7 +5839,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this enters, return target creature card from your graveyard to your hand.",
+   "key": "When Gravepit Ghoul enters, return target creature card from your graveyard to your hand.",
    "note": "rules text of Gravepit Ghoul"
   },
   {
@@ -5511,7 +5851,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Sacrifice another creature: draw a card and you lose 1 life.",
+   "key": "Sacrifice another creature: You draw a card and you lose 1 life.",
    "note": "rules text of Bone-Priest of the Pact"
   },
   {
@@ -5523,7 +5863,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Whenever this attacks, target enemy creature gets -1/-1 until end of turn.",
+   "key": "Whenever Wailing Wraith attacks, target enemy creature gets -1/-1 until end of turn.",
    "note": "rules text of Wailing Wraith"
   },
   {
@@ -5563,7 +5903,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this enters, the enemy discards a card at random. When this dies, the enemy discards a card at random.",
+   "key": "When Tempter of Broken Vows enters or dies, the enemy player discards a card at random.",
    "note": "rules text of Tempter of Broken Vows"
   },
   {
@@ -5579,7 +5919,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Pay 2 life: this gets +1/+1 until end of turn.",
+   "key": "Pay 2 life: Blood-Bound Reaver gets +1/+1 until end of turn.",
    "note": "rules text of Blood-Bound Reaver"
   },
   {
@@ -5595,7 +5935,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, return target creature card with mana value 4 or less from your graveyard to play.",
+   "key": "When Grave Summoner enters, return target creature card with mana value 4 or less from your graveyard to play.",
    "note": "rules text of Grave Summoner"
   },
   {
@@ -5631,7 +5971,7 @@
    "note": "card name (abyss, spell)"
   },
   {
-   "key": "If you have 5 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
+   "key": "Bloodied: If you have 5 or less life, the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
    "note": "rules text of The Debt Comes Due"
   },
   {
@@ -5655,7 +5995,7 @@
    "note": "card name (abyss, relic)"
   },
   {
-   "key": "Sacrifice a creature: target enemy creature gets -2/-2 until end of turn.",
+   "key": "Sacrifice a creature: Target enemy creature gets -2/-2 until end of turn.",
    "note": "rules text of Knife of the Black Tithe"
   },
   {
@@ -5667,7 +6007,7 @@
    "note": "card name (abyss, relic)"
   },
   {
-   "key": "Tap, pay {2} and 2 life: the enemy discards a card at random.",
+   "key": "{2}, Tap, Pay 2 life: The enemy player discards a card at random.",
    "note": "rules text of Censer of Bitter Ash"
   },
   {
@@ -5691,7 +6031,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Your Demon creature cards cost 1 less to play.",
+   "key": "Your Demon creature cards cost {1} less to play. This effect reduces only generic mana.",
    "note": "rules text of Herald of the Burning Gate"
   },
   {
@@ -5703,7 +6043,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Whenever another Skeleton enters under your control, this gets +1/+1 for the rest of the duel.",
+   "key": "Whenever another Skeleton enters under your control, put a +1/+1 counter on Gravecaller Bone-Warden.",
    "note": "rules text of Gravecaller Bone-Warden"
   },
   {
@@ -5739,7 +6079,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this dies, create two 1/1 Restless Dead Zombie tokens.",
+   "key": "When Plague-Cart Drover dies, create two 1/1 Restless Dead Zombie tokens.",
    "note": "rules text of Plague-Cart Drover"
   },
   {
@@ -5767,7 +6107,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
+   "key": "Bloodied: As long as you have 5 or less life, Oathbreaker Knight gets +2/+2 and has dread and deathtouch.",
    "note": "rules text of Oathbreaker Knight"
   },
   {
@@ -5779,7 +6119,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Flying. Whenever this attacks, the enemy discards a card at random.",
+   "key": "Flying. Whenever Dream-Thief Fiend attacks, the enemy player discards a card at random.",
    "note": "rules text of Dream-Thief Fiend"
   },
   {
@@ -5791,7 +6131,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Dread. When this enters, you lose 3 life.",
+   "key": "Dread. When Marquis of the Wailing Pit enters, you lose 3 life.",
    "note": "rules text of Marquis of the Wailing Pit"
   },
   {
@@ -5815,7 +6155,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Other Skeletons you control get +1/+1. {B}, sacrifice another creature: create a 1/1 Risen Bones Skeleton token.",
+   "key": "Other Skeletons you control get +1/+1. {B}, Sacrifice another creature: Create a 1/1 Risen Bones Skeleton token.",
    "note": "rules text of Bone-Lord of the Ossuary"
   },
   {
@@ -5823,7 +6163,7 @@
    "note": "flavour text of Bone-Lord of the Ossuary"
   },
   {
-   "key": "{B}, sacrifice another creature: create a 1/1 Risen Bones Skeleton token.",
+   "key": "{B}, Sacrifice another creature: Create a 1/1 Risen Bones Skeleton token.",
    "note": "activated ability text of Bone-Lord of the Ossuary"
   },
   {
@@ -5855,7 +6195,7 @@
    "note": "card name (abyss, spell)"
   },
   {
-   "key": "The enemy discards three cards at random. You lose 3 life.",
+   "key": "The enemy player discards three cards at random. You lose 3 life.",
    "note": "rules text of Rite of the Emptied Mind"
   },
   {
@@ -5867,7 +6207,7 @@
    "note": "card name (abyss, relic)"
   },
   {
-   "key": "Tap: draw a card and you lose 1 life.",
+   "key": "Tap: You draw a card and you lose 1 life.",
    "note": "rules text of Ledger of the Damned"
   },
   {
@@ -5883,7 +6223,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Other Skeletons you control have dread (they can only be blocked by Pact creatures and Constructs).",
+   "key": "Other Skeletons you control have dread. (They can't be blocked except by Pact creatures and Constructs.)",
    "note": "rules text of Barrow-King of the Hollow Hills"
   },
   {
@@ -5895,7 +6235,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Other Demons you control get +1/+1. When this enters, you lose 1 life for each Demon you control.",
+   "key": "Other Demons you control get +1/+1. When Brimstone Marshal enters, you lose 1 life for each Demon you control.",
    "note": "rules text of Brimstone Marshal"
   },
   {
@@ -5907,7 +6247,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Other Zombies you control get +1/+1. When this dies, create a 1/1 Restless Dead Zombie token.",
+   "key": "Other Zombies you control get +1/+1. When Ghoul-Master of the Plague Pits dies, create a 1/1 Restless Dead Zombie token.",
    "note": "rules text of Ghoul-Master of the Plague Pits"
   },
   {
@@ -5923,7 +6263,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Flying. When this enters, destroy target enemy creature and you lose 3 life.",
+   "key": "Flying. When Belzareth enters, destroy target enemy creature and you lose 3 life.",
    "note": "rules text of Belzareth, Prince of Cinders"
   },
   {
@@ -5935,7 +6275,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "When this enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
+   "key": "When Malgrith enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, you draw a card and you lose 1 life.",
    "note": "rules text of Malgrith, Lich of the Black Ledger"
   },
   {
@@ -5959,7 +6299,7 @@
    "note": "card name (abyss, creature)"
   },
   {
-   "key": "Dread. Other Demons you control have deathtouch (any damage they deal to a creature destroys it). Whenever another Demon enters under your control, the enemy discards a card at random. When this enters, you lose 3 life.",
+   "key": "Dread. Other Demons you control have deathtouch. (Any damage they deal to a creature destroys it.) Whenever another Demon enters under your control, the enemy player discards a card at random. When Azgaroth enters, you lose 3 life.",
    "note": "rules text of Azgaroth, Duke of the Ninth Pit"
   },
   {
@@ -5975,7 +6315,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Trample (excess combat damage goes to the player).",
+   "key": "Trample (This creature can deal excess combat damage to the enemy player.)",
    "note": "rules text of Briar Fox"
   },
   {
@@ -5987,7 +6327,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Tap: add {G}.",
+   "key": "Tap: Add {G}.",
    "note": "rules text of Hedgerow Druid"
   },
   {
@@ -5999,7 +6339,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Whenever this attacks, it gets +1/+0 until end of turn.",
+   "key": "Whenever Thornback Boar attacks, it gets +1/+0 until end of turn.",
    "note": "rules text of Thornback Boar"
   },
   {
@@ -6015,7 +6355,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Reach (can block creatures with flying).",
+   "key": "Reach (This creature can block creatures with flying.)",
    "note": "rules text of Bramble Spider"
   },
   {
@@ -6027,7 +6367,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "When this enters, create a 1/1 Sapling token.",
+   "key": "When Acorn Gatherer enters, create a 1/1 Sapling token.",
    "note": "rules text of Acorn Gatherer"
   },
   {
@@ -6063,7 +6403,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+   "key": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
    "note": "rules text of Sett Badger"
   },
   {
@@ -6075,7 +6415,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Rooted: as long as you control six or more lands, this gets +1/+1.",
+   "key": "Rooted: As long as you control six or more lands, Barrowland Bear gets +1/+1.",
    "note": "rules text of Barrowland Bear"
   },
   {
@@ -6091,7 +6431,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, create a 2/2 Wolf token.",
+   "key": "When Huntsman of the Weald enters, create a 2/2 Wolf token.",
    "note": "rules text of Huntsman of the Weald"
   },
   {
@@ -6147,7 +6487,7 @@
    "note": "card name (wild, spell)"
   },
   {
-   "key": "Target creature you control fights target enemy creature (each deals damage equal to its power to the other).",
+   "key": "Target creature you control fights target enemy creature. (Each deals damage equal to its power to the other.)",
    "note": "rules text of Test of Antlers"
   },
   {
@@ -6195,7 +6535,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Tap, pay {G}: target creature you control gets +1/+1 until end of turn.",
+   "key": "{G}, Tap: Target creature you control gets +1/+1 until end of turn.",
    "note": "rules text of Rowan Charm"
   },
   {
@@ -6207,7 +6547,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Tap, pay {1}{G}: create a 1/1 Sapling token.",
+   "key": "{1}{G}, Tap: Create a 1/1 Sapling token.",
    "note": "rules text of Sower's Basket"
   },
   {
@@ -6219,7 +6559,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "This gets +1/+0 for each other Wolf you control.",
+   "key": "Moorland Wolf gets +1/+0 for each other Wolf you control.",
    "note": "rules text of Moorland Wolf"
   },
   {
@@ -6231,7 +6571,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Whenever another Wolf enters under your control, this gets +1/+1 until end of turn.",
+   "key": "Whenever another Wolf enters under your control, Ridge-Runner Wolf gets +1/+1 until end of turn.",
    "note": "rules text of Ridge-Runner Wolf"
   },
   {
@@ -6263,7 +6603,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "This gets +1/+0 for each other Treefolk you control.",
+   "key": "Hedge-Elm of the Moot gets +1/+0 for each other Treefolk you control.",
    "note": "rules text of Hedge-Elm of the Moot"
   },
   {
@@ -6295,7 +6635,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "When this enters, target creature you control gets +0/+2 and gains regenerate (the first time each turn it would be destroyed, it is tapped and healed instead) for good.",
+   "key": "When Bark-Skin enters, put two +0/+1 counters on target creature you control. That creature gains regenerate. (The first time each turn it would be destroyed, instead tap it and remove all damage from it.)",
    "note": "rules text of Bark-Skin"
   },
   {
@@ -6307,7 +6647,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Whenever a relic enters under your control, this gets +1/+1 permanently.",
+   "key": "Whenever a relic enters under your control, put a +1/+1 counter on Wreath-Weaver Druid.",
    "note": "rules text of Wreath-Weaver Druid"
   },
   {
@@ -6319,6 +6659,10 @@
    "note": "card name (wild, creature)"
   },
   {
+   "key": "When Wolfsire of the Fen enters, create a 2/2 Wolf token.",
+   "note": "rules text of Wolfsire of the Fen"
+  },
+  {
    "key": "Where he runs, he never runs alone.",
    "note": "flavour text of Wolfsire of the Fen"
   },
@@ -6327,7 +6671,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Reach. When this enters, destroy target enemy creature with flying.",
+   "key": "Reach. When Fowler of the Fens enters, destroy target enemy creature with flying.",
    "note": "rules text of Fowler of the Fens"
   },
   {
@@ -6351,7 +6695,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "When this enters, target creature you control fights target enemy creature.",
+   "key": "When Spearman of the Greenwood enters, target creature you control fights target enemy creature.",
    "note": "rules text of Spearman of the Greenwood"
   },
   {
@@ -6363,7 +6707,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "When this enters, create a 1/1 Sapling token for each Druid you control (at most five).",
+   "key": "When Elder of the Oak Circle enters, create a 1/1 Sapling token for each Druid you control (at most five).",
    "note": "rules text of Elder of the Oak Circle"
   },
   {
@@ -6379,7 +6723,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Tap: target creature you control gets +2/+2 until end of turn.",
+   "key": "Tap: Target creature you control gets +2/+2 until end of turn.",
    "note": "rules text of Green Man of the Hedgerow"
   },
   {
@@ -6391,7 +6735,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Trample. When this enters, destroy target enemy relic.",
+   "key": "Trample. When Rootbreaker Tusker enters, destroy target enemy relic.",
    "note": "rules text of Rootbreaker Tusker"
   },
   {
@@ -6407,7 +6751,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Rooted: as long as you control six or more lands, this gets +2/+2 and has trample.",
+   "key": "Rooted: As long as you control six or more lands, Woodwose of the Fells gets +2/+2 and has trample.",
    "note": "rules text of Woodwose of the Fells"
   },
   {
@@ -6419,7 +6763,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "When this enters, target creature you control gets +2/+2 for good.",
+   "key": "When Gift of the Greenwood enters, put two +1/+1 counters on target creature you control.",
    "note": "rules text of Gift of the Greenwood"
   },
   {
@@ -6443,7 +6787,7 @@
    "note": "card name (wild, spell)"
   },
   {
-   "key": "Create two 1/1 Sapling tokens. Rooted: if you control six or more lands, create two more.",
+   "key": "Create two 1/1 Sapling tokens. Rooted: If you control six or more lands, create two more.",
    "note": "rules text of Wassail the Orchard"
   },
   {
@@ -6463,7 +6807,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Tap, pay {2}{G}: create a 2/2 Wolf token.",
+   "key": "{2}{G}, Tap: Create a 2/2 Wolf token.",
    "note": "rules text of Horn of the Wild Hunt"
   },
   {
@@ -6487,7 +6831,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Whenever another Wolf enters under your control, this gets +1/+1 permanently.",
+   "key": "Whenever another Wolf enters under your control, put a +1/+1 counter on Old Grey Wolf.",
    "note": "rules text of Old Grey Wolf"
   },
   {
@@ -6511,7 +6855,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Your Treefolk creature cards cost {1} less.",
+   "key": "Your Treefolk creature cards cost {1} less to play. This effect reduces only generic mana.",
    "note": "rules text of Acorn of the Elder Oak"
   },
   {
@@ -6535,7 +6879,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "When this enters, target creature you control gets +1/+1 and gains trample for good, and you create a 2/2 Wolf token.",
+   "key": "When Wolf-Pelt Mantle enters, put a +1/+1 counter on target creature you control. That creature gains trample. Create a 2/2 Wolf token.",
    "note": "rules text of Wolf-Pelt Mantle"
   },
   {
@@ -6547,7 +6891,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Your relic cards cost {1} less. As long as you control a relic, this gets +1/+1.",
+   "key": "Your relic cards cost {1} less to play. This effect reduces only generic mana. As long as you control a relic, Mantle-Keeper of the Circle gets +1/+1.",
    "note": "rules text of Mantle-Keeper of the Circle"
   },
   {
@@ -6559,7 +6903,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "At the beginning of your upkeep, add {G}. Tap, pay {G}: target creature you control gets +1/+1 permanently.",
+   "key": "At the beginning of your upkeep, add {G}. {G}, Tap: Put a +1/+1 counter on target creature you control.",
    "note": "rules text of Mistletoe Archdruid"
   },
   {
@@ -6567,7 +6911,7 @@
    "note": "flavour text of Mistletoe Archdruid"
   },
   {
-   "key": "Tap, pay {G}: target creature you control gets +1/+1 permanently.",
+   "key": "{G}, Tap: Put a +1/+1 counter on target creature you control.",
    "note": "activated ability text of Mistletoe Archdruid"
   },
   {
@@ -6575,7 +6919,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Regenerate. Whenever this attacks, target creature you control gets +1/+1 permanently.",
+   "key": "Regenerate. Whenever White Hart of the Greenwood attacks, put a +1/+1 counter on target creature you control.",
    "note": "rules text of White Hart of the Greenwood"
   },
   {
@@ -6599,7 +6943,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Reach, regenerate. Rooted: as long as you control six or more lands, this gets +3/+0.",
+   "key": "Reach, regenerate. Rooted: As long as you control six or more lands, Yew of a Thousand Winters gets +3/+0.",
    "note": "rules text of Yew of a Thousand Winters"
   },
   {
@@ -6639,7 +6983,7 @@
    "note": "card name (wild, spell)"
   },
   {
-   "key": "Target creature you control fights target enemy creature. Rooted: if you control six or more lands, target creature you control then fights another target enemy creature.",
+   "key": "Target creature you control fights target enemy creature. Rooted: If you control six or more lands, target creature you control then fights another target enemy creature.",
    "note": "rules text of Hunter's Moon"
   },
   {
@@ -6679,7 +7023,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Trample. This gets +1/+1 for each other Wolf you control.",
+   "key": "Trample. Grey Sire of the Long Winter gets +1/+1 for each other Wolf you control.",
    "note": "rules text of Grey Sire of the Long Winter"
   },
   {
@@ -6703,7 +7047,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "This gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.",
+   "key": "Grey Elder of the Henge gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.",
    "note": "rules text of Grey Elder of the Henge"
   },
   {
@@ -6719,7 +7063,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Trample. Whenever this attacks, create a 2/2 Wolf token.",
+   "key": "Trample. Whenever Herne attacks, create a 2/2 Wolf token.",
    "note": "rules text of Herne, Lord of the Wild Hunt"
   },
   {
@@ -6731,7 +7075,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Trample, reach. When this enters, create two 2/2 Oakling tokens.",
+   "key": "Trample, reach. When Cernoth enters, create two 2/2 Oakling tokens.",
    "note": "rules text of Cernoth, the Thousand-Year Oak"
   },
   {
@@ -6743,7 +7087,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, create a 1/1 Sapling token. Rooted: if you control six or more lands, also create a 3/3 Stag token.",
+   "key": "At the beginning of your upkeep, create a 1/1 Sapling token. Rooted: If you control six or more lands, also create a 3/3 Stag token.",
    "note": "rules text of Wheel of the Year"
   },
   {
@@ -6771,10 +7115,6 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "No abilities.",
-   "note": "rules text of Tavern Brawler"
-  },
-  {
    "key": "Ira furor brevis est: anger is a brief madness. (Horace, Epistles 1.2)",
    "note": "flavour text of Tavern Brawler"
   },
@@ -6787,7 +7127,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Haste (this can attack the turn it comes into play).",
+   "key": "Haste (This creature can attack and use Tap abilities the turn it enters.)",
    "note": "rules text of Vine-Crowned Bacchant"
   },
   {
@@ -6803,7 +7143,7 @@
    "note": "card subtype"
   },
   {
-   "key": "First strike (this deals combat damage before creatures without first strike).",
+   "key": "First strike (This creature deals combat damage before creatures without first strike.)",
    "note": "rules text of Masquerade Duelist"
   },
   {
@@ -6815,7 +7155,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player.",
+   "key": "Idle: At the end of your turn, if Courtier on the Chaise is untapped and didn't attack this turn, it deals 1 damage to the enemy player.",
    "note": "rules text of Courtier on the Chaise"
   },
   {
@@ -6831,7 +7171,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): rummage (draw a card, then discard a card).",
+   "key": "Idle: At the end of your turn, if Loafer of the Arbour is untapped and didn't attack this turn, rummage. (Draw a card, then discard a card.)",
    "note": "rules text of Loafer of the Arbour"
   },
   {
@@ -6843,7 +7183,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+   "key": "Idle: At the end of your turn, if Sleepy Baronet is untapped and didn't attack this turn, put a +1/+1 counter on it.",
    "note": "rules text of Sleepy Baronet"
   },
   {
@@ -6855,7 +7195,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "When this enters, deal 1 damage to any enemy creature or the enemy player.",
+   "key": "When Fire-Eater of the Feast enters, it deals 1 damage to any enemy creature or the enemy player.",
    "note": "rules text of Fire-Eater of the Feast"
   },
   {
@@ -6865,6 +7205,10 @@
   {
    "key": "Gluttonous Baron",
    "note": "card name (revel, creature)"
+  },
+  {
+   "key": "When Gluttonous Baron enters, you lose 2 life.",
+   "note": "rules text of Gluttonous Baron"
   },
   {
    "key": "Nothing is enough for the man to whom enough is too little. (Epicurus, Vatican Sayings)",
@@ -6879,7 +7223,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Carouse (if you already played another non-land card this turn): this has haste.",
+   "key": "Carouse: As long as you've played another non-land card this turn, Masked Reveller has haste.",
    "note": "rules text of Masked Reveller"
   },
   {
@@ -6903,7 +7247,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Haste (this can attack the turn it comes into play). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+   "key": "Haste (This creature can attack and use Tap abilities the turn it enters.) Idle: At the end of your turn, if Satyr of the Drowsy Vineyard is untapped and didn't attack this turn, put a +1/+1 counter on it.",
    "note": "rules text of Satyr of the Drowsy Vineyard"
   },
   {
@@ -6915,7 +7259,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "When this enters, creatures you control get +1/+0 until end of turn.",
+   "key": "When Garlanded Festival Bull enters, creatures you control get +1/+0 until end of turn.",
    "note": "rules text of Garlanded Festival Bull"
   },
   {
@@ -6931,7 +7275,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Deal 2 damage to any enemy creature or the enemy player.",
+   "key": "Toast of Fire deals 2 damage to any enemy creature or the enemy player.",
    "note": "rules text of Toast of Fire"
   },
   {
@@ -6943,7 +7287,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 1 damage to target enemy creature. Carouse (if you already played another non-land card this turn): also deal 1 damage to the enemy player.",
+   "key": "Firecracker Garland deals 1 damage to target enemy creature. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.",
    "note": "rules text of Firecracker Garland"
   },
   {
@@ -6955,7 +7299,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 1 damage to any enemy creature or the enemy player, then rummage (draw a card, then discard a card).",
+   "key": "Spilled Brandy deals 1 damage to any enemy creature or the enemy player. Then rummage. (Draw a card, then discard a card.)",
    "note": "rules text of Spilled Brandy"
   },
   {
@@ -6967,7 +7311,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Creatures you control get +1/+0 until end of turn. Carouse (if you already played another non-land card this turn): they get an additional +1/+0 until end of turn.",
+   "key": "Creatures you control get +1/+0 until end of turn. Carouse: If you've played another non-land card this turn, they get an additional +1/+0 until end of turn.",
    "note": "rules text of Rowdy Chorus"
   },
   {
@@ -6979,7 +7323,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 3 damage to the enemy player.",
+   "key": "Flaming Flagon deals 3 damage to the enemy player.",
    "note": "rules text of Flaming Flagon"
   },
   {
@@ -6991,7 +7335,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 4 damage to target enemy creature.",
+   "key": "Banquet Flambe deals 4 damage to target enemy creature.",
    "note": "rules text of Banquet Flambe"
   },
   {
@@ -7003,7 +7347,7 @@
    "note": "card name (revel, relic)"
   },
   {
-   "key": "Tap, pay 1 life: deal 1 damage to the enemy player.",
+   "key": "Tap, Pay 1 life: Carnival Brazier deals 1 damage to the enemy player.",
    "note": "rules text of Carnival Brazier"
   },
   {
@@ -7015,7 +7359,7 @@
    "note": "card name (revel, relic)"
   },
   {
-   "key": "{R}, Tap: creatures you control get +1/+0 until end of turn.",
+   "key": "{R}, Tap: Creatures you control get +1/+0 until end of turn.",
    "note": "rules text of Festival Drum"
   },
   {
@@ -7035,7 +7379,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "This gets +1/+0 for each other Performer you control.",
+   "key": "Tumbler of the Fair gets +1/+0 for each other Performer you control.",
    "note": "rules text of Tumbler of the Fair"
   },
   {
@@ -7055,7 +7399,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): if you control another Noble, deal 1 damage to the enemy player.",
+   "key": "Idle: At the end of your turn, if Perfumed Lordling is untapped and didn't attack this turn and you control another Noble, it deals 1 damage to the enemy player.",
    "note": "rules text of Perfumed Lordling"
   },
   {
@@ -7071,7 +7415,7 @@
    "note": "card subtype"
   },
   {
-   "key": "First strike (this deals combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this.",
+   "key": "First strike (This creature deals combat damage before creatures without first strike.) Idle: At the end of your turn, if Count of the Velvet Glove is untapped and didn't attack this turn, put a +1/+1 counter on it.",
    "note": "rules text of Count of the Velvet Glove"
   },
   {
@@ -7095,7 +7439,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 1 damage to the enemy player for each Noble you control.",
+   "key": "Toast to the Peerage deals 1 damage to the enemy player for each Noble you control.",
    "note": "rules text of Toast to the Peerage"
   },
   {
@@ -7107,7 +7451,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "When this enters, Satyrs you control gain haste until end of turn (they can attack this turn).",
+   "key": "When Satyr Piper of the Pines enters, Satyrs you control gain haste until end of turn.",
    "note": "rules text of Satyr Piper of the Pines"
   },
   {
@@ -7119,6 +7463,10 @@
    "note": "card name (revel, creature)"
   },
   {
+   "key": "Idle: At the end of your turn, if Wineskin Satyr is untapped and didn't attack this turn, rummage. (Draw a card, then discard a card.)",
+   "note": "rules text of Wineskin Satyr"
+  },
+  {
    "key": "Now drive away your cares with wine; tomorrow we sail the vast sea again. (Horace, Odes 1.7)",
    "note": "flavour text of Wineskin Satyr"
   },
@@ -7127,7 +7475,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "First strike. Whenever this attacks, it gets +1/+1 until end of turn.",
+   "key": "First strike. Whenever Duelist of the Velvet Court attacks, it gets +1/+1 until end of turn.",
    "note": "rules text of Duelist of the Velvet Court"
   },
   {
@@ -7139,7 +7487,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
+   "key": "Whenever Masked Firebreather attacks, it deals 1 damage to any enemy creature or the enemy player.",
    "note": "rules text of Masked Firebreather"
   },
   {
@@ -7155,7 +7503,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player.",
+   "key": "Idle: At the end of your turn, if Jester of the Lazy Court is untapped and didn't attack this turn, it deals 1 damage to any enemy creature or the enemy player.",
    "note": "rules text of Jester of the Lazy Court"
   },
   {
@@ -7167,7 +7515,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+0 counter on target creature you control.",
+   "key": "Idle: At the end of your turn, if Host of the Lantern Garden is untapped and didn't attack this turn, put a +1/+0 counter on target creature you control.",
    "note": "rules text of Host of the Lantern Garden"
   },
   {
@@ -7179,7 +7527,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "First strike. Carouse (if you already played another non-land card this turn): this has haste.",
+   "key": "First strike. Carouse: As long as you've played another non-land card this turn, Fencing Master of the Masque has haste.",
    "note": "rules text of Fencing Master of the Masque"
   },
   {
@@ -7195,7 +7543,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Haste. When this enters, creatures you control get +1/+0 until end of turn.",
+   "key": "Haste. When Hierophant of the Bacchanal enters, creatures you control get +1/+0 until end of turn.",
    "note": "rules text of Hierophant of the Bacchanal"
   },
   {
@@ -7207,7 +7555,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put two +1/+1 counters on this and you lose 2 life.",
+   "key": "Idle: At the end of your turn, if Margrave of the Long Table is untapped and didn't attack this turn, put two +1/+1 counters on it and you lose 2 life.",
    "note": "rules text of Margrave of the Long Table"
   },
   {
@@ -7219,7 +7567,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 1 damage to any enemy creature or the enemy player. Carouse (if you already played another non-land card this turn): also deal 2 damage to the enemy player.",
+   "key": "Second Bottle deals 1 damage to any enemy creature or the enemy player. Carouse: If you've played another non-land card this turn, it also deals 2 damage to the enemy player.",
    "note": "rules text of Second Bottle"
   },
   {
@@ -7231,7 +7579,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 3 damage to target enemy creature. Carouse (if you already played another non-land card this turn): creatures you control get +1/+0 until end of turn.",
+   "key": "Satisfaction at Dawn deals 3 damage to target enemy creature. Carouse: If you've played another non-land card this turn, creatures you control get +1/+0 until end of turn.",
    "note": "rules text of Satisfaction at Dawn"
   },
   {
@@ -7243,7 +7591,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 2 damage to each enemy creature. You lose 2 life.",
+   "key": "Pyre-Dancer's Whirl deals 2 damage to each enemy creature. You lose 2 life.",
    "note": "rules text of Pyre-Dancer's Whirl"
   },
   {
@@ -7255,7 +7603,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Rummage twice (each time, draw a card, then discard a card). Then deal 2 damage to the enemy player.",
+   "key": "Rummage twice. (Each time, draw a card, then discard a card.) Then Empty the Cellar deals 2 damage to the enemy player.",
    "note": "rules text of Empty the Cellar"
   },
   {
@@ -7267,7 +7615,7 @@
    "note": "card name (revel, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, rummage (draw a card, then discard a card).",
+   "key": "At the beginning of your upkeep, rummage. (Draw a card, then discard a card.)",
    "note": "rules text of Bottomless Wine Cask"
   },
   {
@@ -7279,7 +7627,7 @@
    "note": "card name (revel, relic)"
   },
   {
-   "key": "Carouse (if you already played another non-land card this turn): creatures you control have first strike.",
+   "key": "Carouse: As long as you've played another non-land card this turn, creatures you control have first strike.",
    "note": "rules text of Carnival Masks"
   },
   {
@@ -7291,7 +7639,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Your Performer creature cards cost {1} less to play (this reduces only generic mana).",
+   "key": "Your Performer creature cards cost {1} less to play. This effect reduces only generic mana.",
    "note": "rules text of Master of the Revels"
   },
   {
@@ -7303,7 +7651,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Other Performers you control get +1/+0 and have haste (they can attack the turn they come into play).",
+   "key": "Other Performers you control get +1/+0 and have haste. (They can attack and use Tap abilities the turn they enter.)",
    "note": "rules text of Master of the Pageant Wagon"
   },
   {
@@ -7315,7 +7663,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "This gets +1/+1 for each other Noble you control.",
+   "key": "Gossiping Marquis gets +1/+1 for each other Noble you control.",
    "note": "rules text of Gossiping Marquis"
   },
   {
@@ -7327,7 +7675,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Whenever another Performer enters under your control, deal 1 damage to the enemy player.",
+   "key": "Whenever another Performer enters under your control, Lord of Misrule deals 1 damage to the enemy player.",
    "note": "rules text of Lord of Misrule"
   },
   {
@@ -7339,7 +7687,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 1 damage to any enemy creature or the enemy player for each Performer you control.",
+   "key": "Royal Command Performance deals 1 damage to any enemy creature or the enemy player for each Performer you control.",
    "note": "rules text of Royal Command Performance"
   },
   {
@@ -7351,7 +7699,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on target Satyr you control.",
+   "key": "Idle: At the end of your turn, if Old Satyr on the Wine-Cask is untapped and didn't attack this turn, put a +1/+1 counter on target Satyr you control.",
    "note": "rules text of Old Satyr on the Wine-Cask"
   },
   {
@@ -7363,7 +7711,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 1 damage to target enemy creature for each Satyr you control.",
+   "key": "Panic in the Thicket deals 1 damage to target enemy creature for each Satyr you control.",
    "note": "rules text of Panic in the Thicket"
   },
   {
@@ -7375,7 +7723,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Haste. Whenever this attacks, deal 1 damage to any enemy creature or the enemy player.",
+   "key": "Haste. Whenever Salamander Juggler attacks, it deals 1 damage to any enemy creature or the enemy player.",
    "note": "rules text of Salamander Juggler"
   },
   {
@@ -7387,7 +7735,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 2 damage to any enemy creature or the enemy player.",
+   "key": "Idle: At the end of your turn, if Prince of Idle Hours is untapped and didn't attack this turn, it deals 2 damage to any enemy creature or the enemy player.",
    "note": "rules text of Prince of Idle Hours"
   },
   {
@@ -7399,7 +7747,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "First strike, haste. Carouse (if you already played another non-land card this turn): this gets +2/+0.",
+   "key": "First strike, haste. Carouse: As long as you've played another non-land card this turn, Master of the Midnight Duel gets +2/+0.",
    "note": "rules text of Master of the Midnight Duel"
   },
   {
@@ -7427,7 +7775,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on this, then rummage (draw a card, then discard a card).",
+   "key": "Idle: At the end of your turn, if Giant of the Groaning Board is untapped and didn't attack this turn, put a +1/+1 counter on it, then rummage. (Draw a card, then discard a card.)",
    "note": "rules text of Giant of the Groaning Board"
   },
   {
@@ -7439,7 +7787,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 5 damage to any enemy creature or the enemy player.",
+   "key": "Grand Conflagration deals 5 damage to any enemy creature or the enemy player.",
    "note": "rules text of Grand Conflagration"
   },
   {
@@ -7463,7 +7811,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Deal 3 damage to each creature and 3 damage to the enemy player. You lose 1 life.",
+   "key": "Carnival of Cinders deals 3 damage to each creature and 3 damage to the enemy player. You lose 1 life.",
    "note": "rules text of Carnival of Cinders"
   },
   {
@@ -7487,7 +7835,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Haste (this can attack the turn it comes into play). Other Performers you control get +1/+1.",
+   "key": "Haste (This creature can attack and use Tap abilities the turn it enters.) Other Performers you control get +1/+1.",
    "note": "rules text of King of the Minstrels"
   },
   {
@@ -7499,7 +7847,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): put a +1/+1 counter on each Noble you control.",
+   "key": "Idle: At the end of your turn, if Elector of the Endless Banquet is untapped and didn't attack this turn, put a +1/+1 counter on each Noble you control.",
    "note": "rules text of Elector of the Endless Banquet"
   },
   {
@@ -7511,7 +7859,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Other Satyrs you control have haste (they can attack the turn they come into play). Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to the enemy player for each Satyr you control.",
+   "key": "Other Satyrs you control have haste. (They can attack and use Tap abilities the turn they enter.) Idle: At the end of your turn, if Horned Lord of the Rout is untapped and didn't attack this turn, it deals 1 damage to the enemy player for each Satyr you control.",
    "note": "rules text of Horned Lord of the Rout"
   },
   {
@@ -7523,7 +7871,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to each enemy creature and 2 damage to the enemy player.",
+   "key": "Idle: At the end of your turn, if Vessar is untapped and didn't attack this turn, it deals 1 damage to each enemy creature and 2 damage to the enemy player.",
    "note": "rules text of Vessar, Master of the Undying Feast"
   },
   {
@@ -7535,7 +7883,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Haste, first strike. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
+   "key": "Haste, first strike. Whenever Brandimarte attacks, creatures you control get +1/+0 until end of turn.",
    "note": "rules text of Brandimarte, Prince of Fire-Eaters"
   },
   {
@@ -7547,7 +7895,7 @@
    "note": "card name (revel, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, deal 1 damage to each creature and 1 damage to the enemy player, and you lose 1 life. Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn.",
+   "key": "At the beginning of your upkeep, The Undying Bonfire deals 1 damage to each creature and 1 damage to the enemy player, and you lose 1 life. Pay 2 life: The Undying Bonfire deals 1 damage to any enemy creature or the enemy player. Activate only once each turn.",
    "note": "rules text of The Undying Bonfire"
   },
   {
@@ -7555,7 +7903,7 @@
    "note": "flavour text of The Undying Bonfire"
   },
   {
-   "key": "Pay 2 life: deal 1 damage to any enemy creature or the enemy player. Use this only once each turn.",
+   "key": "Pay 2 life: The Undying Bonfire deals 1 damage to any enemy creature or the enemy player. Activate only once each turn.",
    "note": "activated ability text of The Undying Bonfire"
   },
   {
@@ -7563,7 +7911,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Performers you control have first strike (they deal combat damage before creatures without first strike). Idle (at the end of your turn, if this is untapped and didn't attack): deal 1 damage to any enemy creature or the enemy player for each Performer you control.",
+   "key": "Performers you control have first strike. (They deal combat damage before creatures without first strike.) Idle: At the end of your turn, if Ruggiero is untapped and didn't attack this turn, it deals 1 damage to any enemy creature or the enemy player for each Performer you control.",
    "note": "rules text of Ruggiero, Patron of the Players"
   },
   {
@@ -7575,7 +7923,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "When this enters, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom).",
+   "key": "When Owl of the Archive enters, foresight 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
    "note": "rules text of Owl of the Archive"
   },
   {
@@ -7591,7 +7939,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
+   "key": "Unmoved (Enemy spells and abilities can't tap this creature, return it to its owner's hand or shrink it.)",
    "note": "rules text of Ephebe of the Phalanx"
   },
   {
@@ -7603,7 +7951,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "As long as you have four or more cards in hand (composure), this gets +1/+1.",
+   "key": "Composure: As long as you have four or more cards in hand, Water-Carrier Pupil gets +1/+1.",
    "note": "rules text of Water-Carrier Pupil"
   },
   {
@@ -7619,7 +7967,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, draw a card.",
+   "key": "When Lamp-Lit Scribe enters, draw a card.",
    "note": "rules text of Lamp-Lit Scribe"
   },
   {
@@ -7631,7 +7979,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Defender (can't attack).",
+   "key": "Defender (This creature can't attack.)",
    "note": "rules text of Bronze-Shield Hoplite"
   },
   {
@@ -7643,7 +7991,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Tap, pay {U}: tap target enemy creature.",
+   "key": "{U}, Tap: Tap target enemy creature.",
    "note": "rules text of Logician of the Porch"
   },
   {
@@ -7655,7 +8003,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Vigilance (doesn't tap to attack).",
+   "key": "Vigilance (Attacking doesn't cause this creature to tap.)",
    "note": "rules text of Disciplined Phalanx"
   },
   {
@@ -7671,7 +8019,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom).",
+   "key": "When Tower Stargazer enters, foresight 3. (Look at the top three cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
    "note": "rules text of Tower Stargazer"
   },
   {
@@ -7683,7 +8031,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "When this enters, return target enemy creature to its owner's hand.",
+   "key": "When Wandering Cynic enters, return target enemy creature to its owner's hand.",
    "note": "rules text of Wandering Cynic"
   },
   {
@@ -7699,7 +8047,7 @@
    "note": "card subtype"
   },
   {
-   "key": "When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+   "key": "When Shipwrecked Merchant enters, freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.)",
    "note": "rules text of Shipwrecked Merchant"
   },
   {
@@ -7747,7 +8095,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). If you control a Sailor, draw a card.",
+   "key": "Freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.) If you control a Sailor, draw a card.",
    "note": "rules text of Grip of the Cold Sea"
   },
   {
@@ -7763,7 +8111,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Draw a card, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
+   "key": "Draw a card, then foresight 3. (Look at the top three cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
    "note": "rules text of Reading by Lamplight"
   },
   {
@@ -7787,7 +8135,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Tax 2 (the enemy's next non-land card costs {2} more). Draw a card.",
+   "key": "Tax 2. (The enemy player's next non-land card costs {2} more.) Draw a card.",
    "note": "rules text of Question of First Principles"
   },
   {
@@ -7799,7 +8147,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs {1} more).",
+   "key": "Return target enemy creature to its owner's hand. Tax 1. (The enemy player's next non-land card costs {1} more.)",
    "note": "rules text of Sent Back to the Gate"
   },
   {
@@ -7811,7 +8159,7 @@
    "note": "card name (lyceum, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+   "key": "{1}, Tap: Foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
    "note": "rules text of Scholar's Lamp"
   },
   {
@@ -7819,11 +8167,15 @@
    "note": "flavour text of Scholar's Lamp"
   },
   {
+   "key": "{1}, Tap: Foresight 1.",
+   "note": "activated ability text of Scholar's Lamp"
+  },
+  {
    "key": "Harbour Chain",
    "note": "card name (lyceum, relic)"
   },
   {
-   "key": "Tap, pay {2}: tap target enemy creature.",
+   "key": "{2}, Tap: Tap target enemy creature.",
    "note": "rules text of Harbour Chain"
   },
   {
@@ -7835,7 +8187,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "This gets +1/+0 for each other Hoplite you control.",
+   "key": "Spear of the Second Rank gets +1/+0 for each other Hoplite you control.",
    "note": "rules text of Spear of the Second Rank"
   },
   {
@@ -7847,7 +8199,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Whenever another Philosopher enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+   "key": "Whenever another Philosopher enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
    "note": "rules text of Pupil of the Painted Porch"
   },
   {
@@ -7867,7 +8219,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "When this enters, tax 1 (the enemy's next non-land card costs {1} more).",
+   "key": "When Questioner in the Agora enters, tax 1. (The enemy player's next non-land card costs {1} more.)",
    "note": "rules text of Questioner in the Agora"
   },
   {
@@ -7891,7 +8243,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Hoplite creatures you control get +0/+2 and gain unmoved until end of turn (enemy spells and abilities can't tap them, return them to hand or shrink them).",
+   "key": "Hoplite creatures you control get +0/+2 and gain unmoved until end of turn. (Enemy spells and abilities can't tap them, return them to their owners' hands or shrink them.)",
    "note": "rules text of Lock Shields"
   },
   {
@@ -7903,7 +8255,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Foresight 2 for each Philosopher you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom), then draw a card.",
+   "key": "Foresight 2 for each Philosopher you control, then draw a card. (Look at that many cards from the top of your library, then put any number of them on the bottom and the rest on top in any order.)",
    "note": "rules text of Morning Lecture"
   },
   {
@@ -7919,7 +8271,7 @@
    "note": "card subtype"
   },
   {
-   "key": "This gets +1/+0 for each other Sailor you control.",
+   "key": "Oarsman of the Thranite Bench gets +1/+0 for each other Sailor you control.",
    "note": "rules text of Oarsman of the Thranite Bench"
   },
   {
@@ -7931,7 +8283,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Flying. Whenever a Sailor enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+   "key": "Flying. Whenever a Sailor enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
    "note": "rules text of Gull of the Sea Lanes"
   },
   {
@@ -7947,7 +8299,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs {1} more).",
+   "key": "Vigilance. Whenever Agora Inspector attacks, tax 1. (The enemy player's next non-land card costs {1} more.)",
    "note": "rules text of Agora Inspector"
   },
   {
@@ -7959,7 +8311,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Whenever this attacks, tap target enemy creature.",
+   "key": "Whenever Dialectician of the Porch attacks, tap target enemy creature.",
    "note": "rules text of Dialectician of the Porch"
   },
   {
@@ -7971,7 +8323,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "As long as you have four or more cards in hand, this gets +1/+1 and has unmoved.",
+   "key": "Composure: As long as you have four or more cards in hand, Disciple of Chrysippus gets +1/+1 and has unmoved.",
    "note": "rules text of Disciple of Chrysippus"
   },
   {
@@ -8019,7 +8371,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "When this enters, freeze target enemy creature.",
+   "key": "When Navarch of the Cold Sea enters, freeze target enemy creature.",
    "note": "rules text of Navarch of the Cold Sea"
   },
   {
@@ -8031,7 +8383,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Return target enemy creature to its owner's hand. Then, if you have four or more cards in hand, draw a card.",
+   "key": "Return target enemy creature to its owner's hand. Composure: If you have four or more cards in hand, draw a card.",
    "note": "rules text of Considered Reply"
   },
   {
@@ -8055,7 +8407,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Draw two cards, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
+   "key": "Draw two cards, then foresight 3. (Look at the top three cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
    "note": "rules text of Letters to Lucilius"
   },
   {
@@ -8091,7 +8443,7 @@
    "note": "card name (lyceum, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs {1} more).",
+   "key": "At the beginning of your upkeep, tax 1. (The enemy player's next non-land card costs {1} more.)",
    "note": "rules text of Sumptuary Tablet"
   },
   {
@@ -8103,7 +8455,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Other Hoplite creatures you control get +1/+0 and have vigilance (they don't tap to attack).",
+   "key": "Other Hoplite creatures you control get +1/+0 and have vigilance. (Attacking doesn't cause them to tap.)",
    "note": "rules text of Polemarch of the Phalanx"
   },
   {
@@ -8139,7 +8491,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Your Philosopher creature cards cost {1} less to play.",
+   "key": "Your Philosopher creature cards cost {1} less to play. This effect reduces only generic mana.",
    "note": "rules text of Scholarch of the Porch"
   },
   {
@@ -8151,7 +8503,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). Hoplite creatures you control get +0/+2 until end of turn.",
+   "key": "Freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.) Hoplite creatures you control get +0/+2 until end of turn.",
    "note": "rules text of Othismos"
   },
   {
@@ -8163,7 +8515,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Vigilance. Other Sailor creatures you control have vigilance (they don't tap to attack).",
+   "key": "Vigilance. Other Sailor creatures you control have vigilance. (Attacking doesn't cause them to tap.)",
    "note": "rules text of Helmsman of the Paralos"
   },
   {
@@ -8175,7 +8527,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "When this enters, foresight 2 for each Sailor you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom).",
+   "key": "When Pilot of the Long Swell enters, foresight 2 for each Sailor you control. (Look at that many cards from the top of your library, then put any number of them on the bottom and the rest on top in any order.)",
    "note": "rules text of Pilot of the Long Swell"
   },
   {
@@ -8187,7 +8539,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Defender. Tap, pay {2}: draw a card.",
+   "key": "Defender. {2}, Tap: Draw a card.",
    "note": "rules text of Keeper of the Stacks"
   },
   {
@@ -8195,7 +8547,7 @@
    "note": "flavour text of Keeper of the Stacks"
   },
   {
-   "key": "Tap, pay {2}: draw a card.",
+   "key": "{2}, Tap: Draw a card.",
    "note": "activated ability text of Keeper of the Stacks"
   },
   {
@@ -8203,7 +8555,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Unmoved. As long as you have four or more cards in hand, other creatures you control have unmoved.",
+   "key": "Unmoved. Composure: As long as you have four or more cards in hand, other creatures you control have unmoved.",
    "note": "rules text of Epictetus, the Unbroken"
   },
   {
@@ -8215,7 +8567,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Vigilance. When this enters, draw two cards.",
+   "key": "Vigilance. When Sage of the Long Patience enters, draw two cards.",
    "note": "rules text of Sage of the Long Patience"
   },
   {
@@ -8227,7 +8579,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "At the beginning of your upkeep, if you have four or more cards in hand, draw a card.",
+   "key": "Composure: At the beginning of your upkeep, if you have four or more cards in hand, draw a card.",
    "note": "rules text of Seneca, Tutor of the Prince"
   },
   {
@@ -8239,7 +8591,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Vigilance. When this enters, return target enemy creature to its owner's hand and draw two cards.",
+   "key": "Vigilance. When Aristeon enters, return target enemy creature to its owner's hand and draw two cards.",
    "note": "rules text of Aristeon, the Unmoved Sage"
   },
   {
@@ -8251,7 +8603,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Freeze all enemy creatures (tap them; they don't untap during their controller's next untap step).",
+   "key": "Freeze all enemy creatures. (Tap them. They don't untap during their controller's next untap step.)",
    "note": "rules text of Apatheia"
   },
   {
@@ -8303,7 +8655,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it). Whenever another Philosopher enters under your control, draw a card.",
+   "key": "Unmoved (Enemy spells and abilities can't tap this creature, return it to its owner's hand or shrink it.) Whenever another Philosopher enters under your control, draw a card.",
    "note": "rules text of Socrates at Delium"
   },
   {
@@ -8327,7 +8679,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Other Sailor creatures you control get +1/+1. When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+   "key": "Other Sailor creatures you control get +1/+1. When Phormio enters, freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.)",
    "note": "rules text of Phormio of Naupactus"
   },
   {
@@ -8339,7 +8691,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Vigilance. Other Philosopher creatures you control get +1/+1. When this enters, draw a card.",
+   "key": "Vigilance. Other Philosopher creatures you control get +1/+1. When Zeno enters, draw a card.",
    "note": "rules text of Zeno of Citium"
   },
   {
@@ -8355,7 +8707,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Vigilance, unmoved. Whenever this attacks, freeze target enemy creature.",
+   "key": "Vigilance, unmoved. Whenever Marcus Aurelius attacks, freeze target enemy creature.",
    "note": "rules text of Marcus Aurelius"
   },
   {
@@ -8367,7 +8719,7 @@
    "note": "card name (lyceum, spell)"
   },
   {
-   "key": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs {2} more).",
+   "key": "Draw three cards, then foresight 5. Tax 2. (The enemy player's next non-land card costs {2} more.)",
    "note": "rules text of The View from Above"
   },
   {
@@ -8379,7 +8731,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Vigilance (doesn't tap to attack). Other Hoplite creatures you control get +1/+1. When this enters, draw a card for each Philosopher you control.",
+   "key": "Vigilance (Attacking doesn't cause this creature to tap.) Other Hoplite creatures you control get +1/+1. When Xenophon enters, draw a card for each Philosopher you control.",
    "note": "rules text of Xenophon of the Ten Thousand"
   },
   {
@@ -8391,7 +8743,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Sacrifice this: put a +1/+1 counter on target Construct you control.",
+   "key": "Sacrifice Brass Scuttler: Put a +1/+1 counter on target Construct you control.",
    "note": "rules text of Brass Scuttler"
   },
   {
@@ -8403,7 +8755,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Assembly (this gets +1/+1 for each other Construct you control).",
+   "key": "Assembly (This creature gets +1/+1 for each other Construct you control.)",
    "note": "rules text of Cog Drone"
   },
   {
@@ -8415,7 +8767,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "When this enters, create a 1/1 Servo Construct token.",
+   "key": "When Tinkerer's Apprentice enters, create a 1/1 Servo Construct token.",
    "note": "rules text of Tinkerer's Apprentice"
   },
   {
@@ -8435,7 +8787,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Overclock {2} (you may pay {2} more as you play this). If overclocked, it enters with two +1/+1 counters.",
+   "key": "Overclock {2} (You may pay an additional {2} as you play this card.) If Clockwork Hound was overclocked, it enters with two +1/+1 counters.",
    "note": "rules text of Clockwork Hound"
   },
   {
@@ -8447,7 +8799,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
+   "key": "Upkeep {1} (At the beginning of your upkeep, sacrifice this creature unless you pay {1}.)",
    "note": "rules text of Steam Hauler"
   },
   {
@@ -8475,7 +8827,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Sacrifice a Servo: put a +1/+1 counter on this.",
+   "key": "Sacrifice a Servo: Put a +1/+1 counter on Scrap Collector.",
    "note": "rules text of Scrap Collector"
   },
   {
@@ -8487,7 +8839,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
+   "key": "Overclock {2} (You may pay an additional {2} as you play this card.) When Gearwright Journeyman enters, if it was overclocked, create two 1/1 Servo Construct tokens.",
    "note": "rules text of Gearwright Journeyman"
   },
   {
@@ -8499,7 +8851,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "As long as you control an Equipment, this gets +1/+1.",
+   "key": "As long as you control an Equipment, Bronze Phalanx Automaton gets +1/+1.",
    "note": "rules text of Bronze Phalanx Automaton"
   },
   {
@@ -8511,12 +8863,20 @@
    "note": "card name (machine, creature)"
   },
   {
+   "key": "Overclock {2} (You may pay an additional {2} as you play this card.) If Foundry Golem was overclocked, it enters with two +1/+1 counters.",
+   "note": "rules text of Foundry Golem"
+  },
+  {
    "key": "\"Nature to be commanded must be obeyed.\" (Francis Bacon, Novum Organum)",
    "note": "flavour text of Foundry Golem"
   },
   {
    "key": "Smelter Automaton",
    "note": "card name (machine, creature)"
+  },
+  {
+   "key": "When Smelter Automaton enters, create a 1/1 Servo Construct token.",
+   "note": "rules text of Smelter Automaton"
   },
   {
    "key": "Ore goes in at the top. Iron comes out at the bottom. What comes out of the side is best not asked about.",
@@ -8539,7 +8899,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Create a 1/1 Servo Construct token. Overclock {2} (you may pay {2} more as you play this). If overclocked, create another Servo.",
+   "key": "Overclock {2} (You may pay an additional {2} as you play this card.) Create a 1/1 Servo Construct token. If this spell was overclocked, create another 1/1 Servo Construct token.",
    "note": "rules text of Spare Parts"
   },
   {
@@ -8579,7 +8939,7 @@
    "note": "card name (machine, spell)"
   },
   {
-   "key": "Put a +1/+1 counter on target Construct you control. Overclock {1}{C} (you may pay {1}{C} more as you play this). If overclocked, also deal 2 damage to target enemy creature.",
+   "key": "Overclock {1}{C} (You may pay an additional {1}{C} as you play this card.) Put a +1/+1 counter on target Construct you control. If this spell was overclocked, it also deals 2 damage to target enemy creature.",
    "note": "rules text of Calibrated Discharge"
   },
   {
@@ -8591,7 +8951,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "When this enters, choose target enemy creature with power 3 or less. It can't attack or block while this stays in play.",
+   "key": "When Gear Trap enters, target enemy creature with power 3 or less can't attack or block until Gear Trap leaves play.",
    "note": "rules text of Gear Trap"
   },
   {
@@ -8603,7 +8963,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "When this enters, choose target enemy creature. It can't attack or block while this stays in play.",
+   "key": "When Brass Manacles enters, target enemy creature can't attack or block until Brass Manacles leaves play.",
    "note": "rules text of Brass Manacles"
   },
   {
@@ -8619,7 +8979,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Tap, pay {1}{C}: put a +1/+1 counter on target Construct you control.",
+   "key": "{1}{C}, Tap: Put a +1/+1 counter on target Construct you control.",
    "note": "rules text of Calibration Bench"
   },
   {
@@ -8631,7 +8991,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Whenever a Construct enters under your control, this gets +1/+0 until end of turn.",
+   "key": "Whenever a Construct enters under your control, Bellows Boy gets +1/+0 until end of turn.",
    "note": "rules text of Bellows Boy"
   },
   {
@@ -8643,7 +9003,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "When this enters, put a +1/+1 counter on target Construct you control.",
+   "key": "When Journeyman Riveter enters, put a +1/+1 counter on target Construct you control.",
    "note": "rules text of Journeyman Riveter"
   },
   {
@@ -8655,7 +9015,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, put a +1/+1 counter on each Artificer you control.",
+   "key": "Overclock {2} (You may pay an additional {2} as you play this card.) When Workshop Draughtsman enters, if it was overclocked, put a +1/+1 counter on each Artificer you control.",
    "note": "rules text of Workshop Draughtsman"
   },
   {
@@ -8667,7 +9027,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "This gets +1/+0 for each Artificer you control.",
+   "key": "Tended Automaton gets +1/+0 for each Artificer you control.",
    "note": "rules text of Tended Automaton"
   },
   {
@@ -8679,7 +9039,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Whenever another Construct enters under your control, put a +1/+1 counter on this.",
+   "key": "Whenever another Construct enters under your control, put a +1/+1 counter on Coupling Automaton.",
    "note": "rules text of Coupling Automaton"
   },
   {
@@ -8703,7 +9063,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "When this enters, put a +1/+1 counter on each Artificer you control.",
+   "key": "When Mule-Frame Automaton enters, put a +1/+1 counter on each Artificer you control.",
    "note": "rules text of Mule-Frame Automaton"
   },
   {
@@ -8719,7 +9079,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Equipped creature gets +1/+0 and has first strike. Equip {2} (pay {2}: attach this to a creature you control. Equip only as a sorcery.)",
+   "key": "Equipped creature gets +1/+0 and has first strike. Equip {2} ({2}: Attach to target creature you control. Equip only as a sorcery.)",
    "note": "rules text of Spring-Loaded Lance"
   },
   {
@@ -8731,7 +9091,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "This gets +1/+1 for each relic you control.",
+   "key": "Tool-Rack Automaton gets +1/+1 for each relic you control.",
    "note": "rules text of Tool-Rack Automaton"
   },
   {
@@ -8743,7 +9103,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Upkeep {2} (at the beginning of your upkeep, pay {2} or sacrifice this).",
+   "key": "Upkeep {2} (At the beginning of your upkeep, sacrifice this creature unless you pay {2}.)",
    "note": "rules text of Siege Automaton"
   },
   {
@@ -8755,7 +9115,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Tap, pay {2}: create a 1/1 Servo Construct token.",
+   "key": "{2}, Tap: Create a 1/1 Servo Construct token.",
    "note": "rules text of Cogspire Foreman"
   },
   {
@@ -8767,7 +9127,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Assembly (this gets +1/+1 for each other Construct you control). Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, create two 1/1 Servo Construct tokens.",
+   "key": "Assembly (This creature gets +1/+1 for each other Construct you control.) Overclock {2} (You may pay an additional {2} as you play this card.) When Linked Automaton enters, if it was overclocked, create two 1/1 Servo Construct tokens.",
    "note": "rules text of Linked Automaton"
   },
   {
@@ -8779,7 +9139,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Sacrifice a Servo: put a +1/+1 counter on target Construct you control.",
+   "key": "Sacrifice a Servo: Put a +1/+1 counter on target Construct you control.",
    "note": "rules text of Furnace Stoker"
   },
   {
@@ -8791,7 +9151,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Whenever this attacks, put a +1/+1 counter on it.",
+   "key": "Whenever Trip-Hammer Automaton attacks, put a +1/+1 counter on it.",
    "note": "rules text of Trip-Hammer Automaton"
   },
   {
@@ -8811,7 +9171,7 @@
    "note": "card name (machine, spell)"
   },
   {
-   "key": "Put a +1/+1 counter on each creature you control. Overclock {2} (you may pay {2} more as you play this). If overclocked, put another +1/+1 counter on each creature you control.",
+   "key": "Overclock {2} (You may pay an additional {2} as you play this card.) Put a +1/+1 counter on each creature you control. If this spell was overclocked, put another +1/+1 counter on each creature you control.",
    "note": "rules text of Mass Retooling"
   },
   {
@@ -8851,7 +9211,7 @@
    "note": "card subtype"
   },
   {
-   "key": "At the beginning of your upkeep, deal 1 damage to target enemy creature.",
+   "key": "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature.",
    "note": "rules text of Galvanic Coil"
   },
   {
@@ -8875,7 +9235,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "Your Technocracy cards cost {1} less to play. This reduces only generic mana.",
+   "key": "Your Technocracy cards cost {1} less to play. This effect reduces only generic mana.",
    "note": "rules text of Foundry Ledger"
   },
   {
@@ -8887,7 +9247,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "When this enters, choose target enemy creature with power 2 or less. It can't attack or block while this stays in play.",
+   "key": "When Clockwork Gaol enters, target enemy creature with power 2 or less can't attack or block until Clockwork Gaol leaves play.",
    "note": "rules text of Clockwork Gaol"
   },
   {
@@ -8899,7 +9259,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Your Construct creature cards cost {1} less to play. This reduces only generic mana.",
+   "key": "Your Construct creature cards cost {1} less to play. This effect reduces only generic mana.",
    "note": "rules text of Guild Fitter"
   },
   {
@@ -8923,7 +9283,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Overclock {1}{C} (you may pay {1}{C} more as you play this). If overclocked, when this enters, deal 1 damage to target enemy creature for each Artificer you control.",
+   "key": "Overclock {1}{C} (You may pay an additional {1}{C} as you play this card.) When Arc-Lamp Galvanist enters, if it was overclocked, it deals 1 damage to target enemy creature for each Artificer you control.",
    "note": "rules text of Arc-Lamp Galvanist"
   },
   {
@@ -8947,7 +9307,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "This gets +1/+1 for each Artificer you control.",
+   "key": "Masterwork Automaton gets +1/+1 for each Artificer you control.",
    "note": "rules text of Masterwork Automaton"
   },
   {
@@ -8959,7 +9319,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip {2} (pay {2}: attach this to a creature you control. Equip only as a sorcery.)",
+   "key": "When Riveted Pauldron enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip {2} ({2}: Attach to target creature you control. Equip only as a sorcery.)",
    "note": "rules text of Riveted Pauldron"
   },
   {
@@ -8971,7 +9331,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Your relic cards cost {1} less to play. This reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on this.",
+   "key": "Your relic cards cost {1} less to play. This effect reduces only generic mana. Whenever a relic enters under your control, put a +1/+1 counter on Guild Armourer.",
    "note": "rules text of Guild Armourer"
   },
   {
@@ -9019,7 +9379,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Overclock {2}. If overclocked, when this enters, deal 3 damage to target enemy creature.",
+   "key": "Overclock {2}. When Arc-Welder Construct enters, if it was overclocked, it deals 3 damage to target enemy creature.",
    "note": "rules text of Arc-Welder Construct"
   },
   {
@@ -9031,7 +9391,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Upkeep {1}. At the beginning of your upkeep, put a +1/+1 counter on this.",
+   "key": "Upkeep {1}. At the beginning of your upkeep, put a +1/+1 counter on Mainspring Juggernaut.",
    "note": "rules text of Mainspring Juggernaut"
   },
   {
@@ -9043,7 +9403,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Sacrifice a Servo: put a +1/+1 counter on each other creature you control. Activate only once each turn.",
+   "key": "Sacrifice a Servo: Put a +1/+1 counter on each other creature you control. Activate only once each turn.",
    "note": "rules text of Boilerhouse Overseer"
   },
   {
@@ -9067,7 +9427,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "When this enters, choose two target enemy creatures. They can't attack or block while this stays in play.",
+   "key": "When Cogspire Lockworks enters, two target enemy creatures can't attack or block until Cogspire Lockworks leaves play.",
    "note": "rules text of Cogspire Lockworks"
   },
   {
@@ -9079,7 +9439,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "Your Technocracy cards cost {2} less to play. This reduces only generic mana. Upkeep {1}.",
+   "key": "Your Technocracy cards cost {2} less to play. This effect reduces only generic mana. Upkeep {1}.",
    "note": "rules text of Perpetual Engine"
   },
   {
@@ -9091,7 +9451,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Other Artificers you control get +1/+1. Your Construct creature cards cost {1} less to play. This reduces only generic mana.",
+   "key": "Other Artificers you control get +1/+1. Your Construct creature cards cost {1} less to play. This effect reduces only generic mana.",
    "note": "rules text of Master Horologist"
   },
   {
@@ -9107,7 +9467,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Assembly (this gets +1/+1 for each other Construct you control). Whenever another Artificer enters under your control, create a 1/1 Servo Construct token.",
+   "key": "Assembly (This creature gets +1/+1 for each other Construct you control.) Whenever another Artificer enters under your control, create a 1/1 Servo Construct token.",
    "note": "rules text of Self-Winding Wright"
   },
   {
@@ -9119,7 +9479,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "This gets +1/+1 for each relic you control. Whenever a relic enters under your control, create a 1/1 Servo Construct token.",
+   "key": "Arsenal Automaton gets +1/+1 for each relic you control. Whenever a relic enters under your control, create a 1/1 Servo Construct token.",
    "note": "rules text of Arsenal Automaton"
   },
   {
@@ -9131,7 +9491,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Assembly. When this enters, create two 1/1 Servo Construct tokens.",
+   "key": "Assembly. When The Prime Engine enters, create two 1/1 Servo Construct tokens.",
    "note": "rules text of The Prime Engine"
   },
   {
@@ -9155,7 +9515,7 @@
    "note": "card name (machine, relic)"
   },
   {
-   "key": "Your Technocracy cards cost {1} less to play. This reduces only generic mana. At the beginning of your upkeep, create a 1/1 Servo Construct token.",
+   "key": "Your Technocracy cards cost {1} less to play. This effect reduces only generic mana. At the beginning of your upkeep, create a 1/1 Servo Construct token.",
    "note": "rules text of The Grand Tabulator"
   },
   {
@@ -9167,7 +9527,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock {3} (you may pay {3} more as you play this). If overclocked, when this enters, create three 1/1 Servo Construct tokens.",
+   "key": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock {3} (You may pay an additional {3} as you play this card.) When The Archwright of Cogspire enters, if it was overclocked, create three 1/1 Servo Construct tokens.",
    "note": "rules text of The Archwright of Cogspire"
   },
   {
@@ -9183,7 +9543,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Lifelink. When this enters, you lose 3 life. As long as you have more life than you started with, this gets +2/+2 and has sanctified (protection from the Pact).",
+   "key": "Lifelink. When Penitent of the Broken Pact enters, you lose 3 life. Grace: As long as you have more life than you started with, Penitent of the Broken Pact gets +2/+2 and has sanctified.",
    "note": "rules text of Penitent of the Broken Pact"
   },
   {
@@ -9195,7 +9555,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "When this enters, create a 1/1 Sapling token and gain 2 life.",
+   "key": "When Rogationtide Friar enters, create a 1/1 Sapling token and you gain 2 life.",
    "note": "rules text of Rogationtide Friar"
   },
   {
@@ -9207,7 +9567,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): gain 2 life.",
+   "key": "Idle: At the end of your turn, if Lord of the Last Pew is untapped and didn't attack this turn, you gain 2 life.",
    "note": "rules text of Lord of the Last Pew"
   },
   {
@@ -9219,7 +9579,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Unmoved. As long as you have more life than you started with, other creatures you control have unmoved. When this dies, draw two cards and gain 3 life.",
+   "key": "Unmoved. Grace: As long as you have more life than you started with, other creatures you control have unmoved. When Boethius dies, you draw two cards and you gain 3 life.",
    "note": "rules text of Boethius in the Tower"
   },
   {
@@ -9231,7 +9591,7 @@
    "note": "card name (gold, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, gain 2 life. Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
+   "key": "At the beginning of your upkeep, you gain 2 life. Upkeep {1} (At the beginning of your upkeep, sacrifice this relic unless you pay {1}.)",
    "note": "rules text of Abbot's Astronomical Clock"
   },
   {
@@ -9243,7 +9603,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Deathtouch (any damage this deals to a creature destroys it). Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+   "key": "Deathtouch (Any damage this creature deals to a creature destroys it.) Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
    "note": "rules text of Gallows Oak"
   },
   {
@@ -9255,7 +9615,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Haste. Dread (can only be blocked by Pact creatures and Constructs). When this enters, you lose 2 life.",
+   "key": "Haste. Dread (This creature can't be blocked except by Pact creatures and Constructs.) When Demon at the Masked Ball enters, you lose 2 life.",
    "note": "rules text of Demon at the Masked Ball"
   },
   {
@@ -9267,7 +9627,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "When this enters, draw two cards and you lose 2 life. As long as you have four or more cards in hand, this has deathtouch.",
+   "key": "When Apostate of the Porch enters, you draw two cards and you lose 2 life. Composure: As long as you have four or more cards in hand, Apostate of the Porch has deathtouch.",
    "note": "rules text of Apostate of the Porch"
   },
   {
@@ -9279,7 +9639,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Dread (can only be blocked by Pact creatures and Constructs). Assembly (this gets +1/+1 for each other Construct you control). Sacrifice another creature: put a +1/+1 counter on this.",
+   "key": "Dread (This creature can't be blocked except by Pact creatures and Constructs.) Assembly (This creature gets +1/+1 for each other Construct you control.) Sacrifice another creature: Put a +1/+1 counter on Bone Mill Engine.",
    "note": "rules text of Bone Mill Engine"
   },
   {
@@ -9287,7 +9647,7 @@
    "note": "flavour text of Bone Mill Engine"
   },
   {
-   "key": "Sacrifice another creature: put a +1/+1 counter on this.",
+   "key": "Sacrifice another creature: Put a +1/+1 counter on Bone Mill Engine.",
    "note": "activated ability text of Bone Mill Engine"
   },
   {
@@ -9295,7 +9655,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Trample. When this enters, create two 1/1 Satyr tokens with haste. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
+   "key": "Trample. When Satyr-King of the Vintage enters, create two 1/1 Satyr tokens with haste. Whenever Satyr-King of the Vintage attacks, creatures you control get +1/+0 until end of turn.",
    "note": "rules text of Satyr-King of the Vintage"
   },
   {
@@ -9307,7 +9667,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "At the beginning of your upkeep, if you have four or more cards in hand, create a 1/1 Sapling token.",
+   "key": "Composure: At the beginning of your upkeep, if you have four or more cards in hand, create a 1/1 Sapling token.",
    "note": "rules text of Planter of Slow Oaks"
   },
   {
@@ -9319,7 +9679,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead). Assembly (this gets +1/+1 for each other Construct you control).",
+   "key": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.) Assembly (This creature gets +1/+1 for each other Construct you control.)",
    "note": "rules text of Moss-Grown Sentry"
   },
   {
@@ -9331,7 +9691,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Idle (at the end of your turn, if this is untapped and didn't attack): tax 1 (the enemy's next non-land card costs {1} more).",
+   "key": "Idle: At the end of your turn, if Epicurean on the Porch Steps is untapped and didn't attack this turn, tax 1. (The enemy player's next non-land card costs {1} more.)",
    "note": "rules text of Epicurean on the Porch Steps"
   },
   {
@@ -9343,7 +9703,7 @@
    "note": "card name (gold, creature)"
   },
   {
-   "key": "Haste. Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, deal 2 damage to any enemy creature or the enemy player.",
+   "key": "Haste. Overclock {2} (You may pay an additional {2} as you play this card.) When Pyrotechnic Automaton enters, if it was overclocked, it deals 2 damage to any enemy creature or the enemy player.",
    "note": "rules text of Pyrotechnic Automaton"
   },
   {
@@ -9355,7 +9715,7 @@
    "note": "card name (gold, relic)"
   },
   {
-   "key": "At the beginning of your upkeep, draw a card, then foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom). Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
+   "key": "At the beginning of your upkeep, draw a card, then foresight 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.) Upkeep {1} (At the beginning of your upkeep, sacrifice this relic unless you pay {1}.)",
    "note": "rules text of Reckoning Engine of Rhodes"
   },
   {
@@ -9367,7 +9727,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Pact mana.",
+   "key": "Penitents' Crossroads enters tapped. When Penitents' Crossroads enters, you gain 1 life. Tap: Add {W} or {B}.",
    "note": "rules text of Penitents' Crossroads"
   },
   {
@@ -9379,7 +9739,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Old Ways mana.",
+   "key": "Hermitage Spring enters tapped. When Hermitage Spring enters, you gain 1 life. Tap: Add {W} or {G}.",
    "note": "rules text of Hermitage Spring"
   },
   {
@@ -9391,7 +9751,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Revel mana.",
+   "key": "Feast-Day Square enters tapped. When Feast-Day Square enters, you gain 1 life. Tap: Add {W} or {R}.",
    "note": "rules text of Feast-Day Square"
   },
   {
@@ -9403,7 +9763,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Stoa mana.",
+   "key": "Cloister Library enters tapped. When Cloister Library enters, you gain 1 life. Tap: Add {W} or {U}.",
    "note": "rules text of Cloister Library"
   },
   {
@@ -9415,7 +9775,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Technocracy mana.",
+   "key": "Bell Foundry enters tapped. When Bell Foundry enters, you gain 1 life. Tap: Add {W} or {C}.",
    "note": "rules text of Bell Foundry"
   },
   {
@@ -9427,7 +9787,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Old Ways mana.",
+   "key": "Gallows Heath enters tapped. When Gallows Heath enters, you gain 1 life. Tap: Add {B} or {G}.",
    "note": "rules text of Gallows Heath"
   },
   {
@@ -9439,7 +9799,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Revel mana.",
+   "key": "Masque of Ashes enters tapped. When Masque of Ashes enters, you gain 1 life. Tap: Add {B} or {R}.",
    "note": "rules text of Masque of Ashes"
   },
   {
@@ -9451,7 +9811,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Stoa mana.",
+   "key": "Forbidden Stacks enters tapped. When Forbidden Stacks enters, you gain 1 life. Tap: Add {B} or {U}.",
    "note": "rules text of Forbidden Stacks"
   },
   {
@@ -9463,7 +9823,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Technocracy mana.",
+   "key": "Charnel Works enters tapped. When Charnel Works enters, you gain 1 life. Tap: Add {B} or {C}.",
    "note": "rules text of Charnel Works"
   },
   {
@@ -9475,7 +9835,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Revel mana.",
+   "key": "Vineyard Terraces enters tapped. When Vineyard Terraces enters, you gain 1 life. Tap: Add {G} or {R}.",
    "note": "rules text of Vineyard Terraces"
   },
   {
@@ -9487,7 +9847,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Stoa mana.",
+   "key": "Philosophers' Grove enters tapped. When Philosophers' Grove enters, you gain 1 life. Tap: Add {G} or {U}.",
    "note": "rules text of Philosophers' Grove"
   },
   {
@@ -9499,7 +9859,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Technocracy mana.",
+   "key": "Mill Weir enters tapped. When Mill Weir enters, you gain 1 life. Tap: Add {G} or {C}.",
    "note": "rules text of Mill Weir"
   },
   {
@@ -9511,7 +9871,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Revel or Stoa mana.",
+   "key": "Garden of Epicurus enters tapped. When Garden of Epicurus enters, you gain 1 life. Tap: Add {R} or {U}.",
    "note": "rules text of Garden of Epicurus"
   },
   {
@@ -9523,7 +9883,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Revel or Technocracy mana.",
+   "key": "Fireworks Workshop enters tapped. When Fireworks Workshop enters, you gain 1 life. Tap: Add {R} or {C}.",
    "note": "rules text of Fireworks Workshop"
   },
   {
@@ -9535,7 +9895,7 @@
    "note": "card name (lands, land)"
   },
   {
-   "key": "Enters tapped. When it enters, gain 1 life. Tap: add one Stoa or Technocracy mana.",
+   "key": "Observatory Tower enters tapped. When Observatory Tower enters, you gain 1 life. Tap: Add {U} or {C}.",
    "note": "rules text of Observatory Tower"
   },
   {

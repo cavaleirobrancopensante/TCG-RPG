@@ -41,7 +41,7 @@
       }
     ],
     "overclock": {},
-    "text": "Lifelink. When this enters, you lose 3 life. As long as you have more life than you started with, this gets +2/+2 and has sanctified (protection from the Pact).",
+    "text": "Lifelink. When Penitent of the Broken Pact enters, you lose 3 life. Grace: As long as you have more life than you started with, Penitent of the Broken Pact gets +2/+2 and has sanctified.",
     "flavor": "He signed the pact in blood. He tore it up on his knees, and the long road home began with a single Confiteor.",
     "art": "res://art/cards/gold_sanctum_abyss.webp"
   },
@@ -84,7 +84,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "When this enters, create a 1/1 Sapling token and gain 2 life.",
+    "text": "When Rogationtide Friar enters, create a 1/1 Sapling token and you gain 2 life.",
     "flavor": "He walks the bounds of the parish with cross and banner, and every sapling in the hedgerow hears the Litany before the spring rain.",
     "art": "res://art/cards/gold_sanctum_wild.webp"
   },
@@ -115,7 +115,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): gain 2 life.",
+    "text": "Idle: At the end of your turn, if Lord of the Last Pew is untapped and didn't attack this turn, you gain 2 life.",
     "flavor": "He sleeps through every sermon of Lent, and the old friar prays for him through every one.",
     "art": "res://art/cards/gold_sanctum_revel.webp"
   },
@@ -160,7 +160,7 @@
       }
     ],
     "overclock": {},
-    "text": "Unmoved. As long as you have more life than you started with, other creatures you control have unmoved. When this dies, draw two cards and gain 3 life.",
+    "text": "Unmoved. Grace: As long as you have more life than you started with, other creatures you control have unmoved. When Boethius dies, you draw two cards and you gain 3 life.",
     "flavor": "In his cell he wrote that Philosophy came to console him. Then he went out to his death a Christian, and Pavia keeps his feast.",
     "art": "res://art/cards/gold_sanctum_lyceum.webp"
   },
@@ -193,7 +193,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "At the beginning of your upkeep, gain 2 life. Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
+    "text": "At the beginning of your upkeep, you gain 2 life. Upkeep {1} (At the beginning of your upkeep, sacrifice this relic unless you pay {1}.)",
     "flavor": "The abbot built it to ring the Hours. The brothers still rise to pray them, for a clock can count the Office but never say it.",
     "art": "res://art/cards/gold_sanctum_machine.webp"
   },
@@ -220,7 +220,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Deathtouch (any damage this deals to a creature destroys it). Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+    "text": "Deathtouch (Any damage this creature deals to a creature destroys it.) Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
     "flavor": "The Pact hanged its oathbreakers from the oldest oak in the wood, and the oak learned the wrong lesson.",
     "art": "res://art/cards/gold_abyss_wild.webp"
   },
@@ -253,7 +253,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Haste. Dread (can only be blocked by Pact creatures and Constructs). When this enters, you lose 2 life.",
+    "text": "Haste. Dread (This creature can't be blocked except by Pact creatures and Constructs.) When Demon at the Masked Ball enters, you lose 2 life.",
     "flavor": "Every guest wore a mask, so no one remarked on his until the music stopped.",
     "art": "res://art/cards/gold_abyss_revel.webp"
   },
@@ -295,7 +295,7 @@
       }
     ],
     "overclock": {},
-    "text": "When this enters, draw two cards and you lose 2 life. As long as you have four or more cards in hand, this has deathtouch.",
+    "text": "When Apostate of the Porch enters, you draw two cards and you lose 2 life. Composure: As long as you have four or more cards in hand, Apostate of the Porch has deathtouch.",
     "flavor": "He left the Porch for the sealed books. The Pact taught him gladly, and named the fee only afterwards.",
     "art": "res://art/cards/gold_abyss_lyceum.webp"
   },
@@ -332,7 +332,7 @@
             "duration": "permanent"
           }
         ],
-        "text": "Sacrifice another creature: put a +1/+1 counter on this."
+        "text": "Sacrifice another creature: Put a +1/+1 counter on Bone Mill Engine."
       }
     ],
     "statics": [
@@ -341,7 +341,7 @@
       }
     ],
     "overclock": {},
-    "text": "Dread (can only be blocked by Pact creatures and Constructs). Assembly (this gets +1/+1 for each other Construct you control). Sacrifice another creature: put a +1/+1 counter on this.",
+    "text": "Dread (This creature can't be blocked except by Pact creatures and Constructs.) Assembly (This creature gets +1/+1 for each other Construct you control.) Sacrifice another creature: Put a +1/+1 counter on Bone Mill Engine.",
     "flavor": "The guild bought bones by the cartload and asked no questions. The Pact sold them by the cartload and answered none.",
     "art": "res://art/cards/gold_abyss_machine.webp"
   },
@@ -390,7 +390,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Trample. When this enters, create two 1/1 Satyr tokens with haste. Whenever this attacks, creatures you control get +1/+0 until end of turn.",
+    "text": "Trample. When Satyr-King of the Vintage enters, create two 1/1 Satyr tokens with haste. Whenever Satyr-King of the Vintage attacks, creatures you control get +1/+0 until end of turn.",
     "flavor": "By the end of the vintage the grapes were trampled, the wine was drunk, and the vineyard was gone.",
     "art": "res://art/cards/gold_wild_revel.webp"
   },
@@ -428,7 +428,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "At the beginning of your upkeep, if you have four or more cards in hand, create a 1/1 Sapling token.",
+    "text": "Composure: At the beginning of your upkeep, if you have four or more cards in hand, create a 1/1 Sapling token.",
     "flavor": "Asked why an old man plants oaks, he said that Nature asks him only to plant, not to sit in the shade.",
     "art": "res://art/cards/gold_wild_lyceum.webp"
   },
@@ -458,7 +458,7 @@
       }
     ],
     "overclock": {},
-    "text": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead). Assembly (this gets +1/+1 for each other Construct you control).",
+    "text": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.) Assembly (This creature gets +1/+1 for each other Construct you control.)",
     "flavor": "Its guild was dissolved a century ago. The ivy holds its joints together now, and it guards the grove instead of the gate.",
     "art": "res://art/cards/gold_wild_machine.webp"
   },
@@ -488,7 +488,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "Idle (at the end of your turn, if this is untapped and didn't attack): tax 1 (the enemy's next non-land card costs {1} more).",
+    "text": "Idle: At the end of your turn, if Epicurean on the Porch Steps is untapped and didn't attack this turn, tax 1. (The enemy player's next non-land card costs {1} more.)",
     "flavor": "\"Pleasure is the highest good,\" he says from his cushion. The Stoics have been refuting him since noon, and the enemy envoy is still waiting for a hearing.",
     "art": "res://art/cards/gold_revel_lyceum.webp"
   },
@@ -525,7 +525,7 @@
         }
       ]
     },
-    "text": "Haste. Overclock {2} (you may pay {2} more as you play this). If overclocked, when this enters, deal 2 damage to any enemy creature or the enemy player.",
+    "text": "Haste. Overclock {2} (You may pay an additional {2} as you play this card.) When Pyrotechnic Automaton enters, if it was overclocked, it deals 2 damage to any enemy creature or the enemy player.",
     "flavor": "The Revel ordered a spectacle. The guild delivered one, itemised, with a surcharge for the burns.",
     "art": "res://art/cards/gold_revel_machine.webp"
   },
@@ -563,7 +563,7 @@
     "abilities": [],
     "statics": [],
     "overclock": {},
-    "text": "At the beginning of your upkeep, draw a card, then foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom). Upkeep {1} (at the beginning of your upkeep, pay {1} or sacrifice this).",
+    "text": "At the beginning of your upkeep, draw a card, then foresight 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.) Upkeep {1} (At the beginning of your upkeep, sacrifice this relic unless you pay {1}.)",
     "flavor": "The Stoics called the cosmos a perfect mechanism. The guild took them at their word and built one.",
     "art": "res://art/cards/gold_lyceum_machine.webp"
   }

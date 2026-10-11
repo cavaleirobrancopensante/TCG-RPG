@@ -16,13 +16,13 @@ signal closed
 const KEYWORDS := {
 	"flying": "Flying: can only be blocked by creatures with flying or reach.",
 	"reach": "Reach: can block creatures with flying.",
-	"haste": "Haste: can attack the turn it arrives.",
+	"haste": "Haste: can attack and use Tap abilities the turn it enters.",
 	"lifelink": "Lifelink: damage it deals also heals you.",
 	"deathtouch": "Deathtouch: any damage it deals to a creature is lethal.",
 	"vigilance": "Vigilance: does not tap when it attacks.",
 	"trample": "Trample: damage beyond what kills its blocker hits the player.",
 	"defender": "Defender: cannot attack.",
-	"martyr": "Martyr: when this dies, another creature you control gets +1/+1 for good.",
+	"martyr": "Martyr: when this creature dies, put a +1/+1 counter on another target creature you control.",
 	"sanctified": "Sanctified: Pact cards can't target it, Pact creatures can't block it, and damage from the Pact is prevented.",
 	"dread": "Dread: can only be blocked by Pact creatures and Constructs.",
 	"regenerate": "Regenerate: the first time each turn it would be destroyed, it is tapped and healed instead.",
@@ -32,13 +32,13 @@ const KEYWORDS := {
 ## Mechanics named in rules text, explained under the card.
 const MECHANICS := {
 	"Grace": "Grace: you have more life than you started the duel with.",
-	"Bloodied": "Bloodied: you have 10 or less life.",
+	"Bloodied": "Bloodied: you have 5 or less life.",
 	"Rooted": "Rooted: you control six or more lands.",
 	"Carouse": "Carouse: you already played another card this turn.",
 	"Composure": "Composure: you hold four or more cards.",
-	"Idle": "Idle: at the end of your turn, if this is untapped and didn't attack.",
+	"Idle": "Idle: at the end of your turn, if this creature is untapped and didn't attack this turn.",
 	"Overclock": "Overclock: you may pay more as you play it for the bonus.",
-	"Assembly": "Assembly: +1/+1 for each other Construct you control.",
+	"Assembly": "Assembly: this creature gets +1/+1 for each other Construct you control.",
 	"Upkeep": "Upkeep N: at the start of your turn pay N, or it is sacrificed.",
 	"Foresight": "Foresight N: look at the top N cards, choose which stay on top and which go to the bottom.",
 	"Freeze": "Freeze: tap it; it doesn't untap next turn.",
@@ -262,11 +262,19 @@ func _fill_info(e: Dictionary) -> void:
 	tline.name = "TypeLine"
 	tline.custom_minimum_size.x = 300
 	info_box.add_child(tline)
-	if c.get("text", "") != "":
-		var rules := CardView.RulesText.new(I18n.t(c["text"]), UIKit.FS_BODY, UIKit.TEXT)
+	var shown_text := CardView.display_text(c)
+	if shown_text != "":
+		var rules := CardView.RulesText.new(shown_text, UIKit.FS_BODY, UIKit.TEXT)
 		rules.name = "RulesText"
 		rules.custom_minimum_size.x = 300
 		info_box.add_child(rules)
+	elif String(c.get("flavor", "")) != "":
+		# a vanilla creature: its flavour stands in for the rules text
+		var fl := UIKit.label(I18n.t(c["flavor"]), UIKit.FS_BODY - 1, UIKit.DIM, true)
+		fl.name = "Flavor"
+		fl.custom_minimum_size.x = 300
+		fl.add_theme_font_override("font", Tapestry.font("italic"))
+		info_box.add_child(fl)
 	for kw in c.get("keywords", []):
 		if KEYWORDS.has(kw):
 			info_box.add_child(UIKit.label(I18n.t(KEYWORDS[kw]), UIKit.FS_SECONDARY, UIKit.DIM, true))

@@ -25,7 +25,8 @@ var screen: Control          # current full-screen UI (menu, city, battle, ...)
 var ui_theme: Theme
 var debug_auto_battles := false   # tests: AI plays the player's side
 var tournament: Draft = null       # the city draft in progress
-var _tour_deck := -1               # index of the draft deck in GameState.decks
+var _tour_deck := -1               # index in GameState.decks of the draft list played next
+var _tour_decks: Array = []        # every list built from the draft pool (GameState.decks indices)
 var _tour_prev_deck := 0
 
 
@@ -1364,7 +1365,10 @@ func _slip_away(e: Dictionary, chance: float) -> void:
 
 func start_battle(info: Dictionary) -> void:
 	Music.set_context("lair" if info.has("lair") else "battle", info.get("faction", "abyss"))
-	GameState.ensure_deck()
+	# a tournament bout is played with the chosen draft list, checked against the draft pool;
+	# ensure_deck would judge it by the hero's copy limit and swap in another deck
+	if not info.get("tournament", false):
+		GameState.ensure_deck()
 	_pause_world(true)
 	var b := BattleScene.new()
 	b.auto_play = debug_auto_battles
@@ -1550,7 +1554,7 @@ func _save_tour(phase: String) -> void:
 	if tournament == null:
 		return
 	GameState.tour_save = {"draft": tournament.to_dict(), "phase": phase, "intro": _tour_intro,
-		"deck": _tour_deck, "prev": _tour_prev_deck}
+		"deck": _tour_deck, "decks": _tour_decks.duplicate(), "prev": _tour_prev_deck}
 	GameState.save_game()
 
 
@@ -1563,18 +1567,24 @@ func _resume_tournament() -> bool:
 	_tour_intro = bool(ts.get("intro", false))
 	_tour_deck = int(ts.get("deck", -1))
 	_tour_prev_deck = int(ts.get("prev", 0))
+	_tour_decks = []
+	for i in ts.get("decks", [_tour_deck]):
+		if int(i) >= 0 and int(i) < GameState.decks.size() and not _tour_decks.has(int(i)):
+			_tour_decks.append(int(i))
 	_pause_world(true)
-	match String(ts.get("phase", "draft")):
+	var phase := String(ts.get("phase", "draft"))
+	if phase != "draft" and _tour_decks.is_empty():
+		_new_tour_list()           # the lists went missing: start a fresh one (the cards are already yours)
+	if phase != "draft" and not _tour_decks.has(_tour_deck):
+		_tour_deck = int(_tour_decks[0])
+	match phase:
 		"draft":
 			if tournament.is_drafting():
 				_open_draft_screen()
 			else:
 				_draft_finished()
 		"deck":
-			if _tour_deck < 0 or _tour_deck >= GameState.decks.size():
-				_draft_finished()
-			else:
-				_tournament_deck()
+			_tournament_deck()
 		_:
 			if tournament.stage >= 3 or (tournament.player_out and tournament.stage >= 3):
 				_tournament_prize()
@@ -1588,28 +1598,89 @@ func _draft_finished() -> void:
 	d.finish_draft()
 	for e in d.picks[0]:
 		GameState.add_card(e["id"], e.get("foil", false))      # the drafted cards are yours to keep
-	var pool := d.pool(0)
-	var deck_name := GameState.unique_deck_name(I18n.t("Draft: %s") % GameState.city(d.city).get("name", ""))
-	var cards := DeckTools.auto_build(pool, DeckTools.best_factions(pool, 2), DeckTools.DRAFT_COPIES)
-	_tour_deck = GameState.new_deck(deck_name, cards)
-	if _tour_deck < 0:      # all deck slots used: the draft deck still gets one
-		GameState.decks.append({"name": deck_name, "cards": cards})
-		_tour_deck = GameState.decks.size() - 1
+	# the player builds his own deck: an empty list, every drafted card in the pool beside it
+	_tour_decks = []
 	_tour_prev_deck = GameState.active_deck
+	_tour_deck = _new_tour_list()
 	_save_tour("deck")
+	var how := I18n.t("Your deck starts empty: add cards from your pool (at least 40 cards, %d of them not lands; basic lands are free). Auto build in the Deck menu makes one for you. You can make more than one list from the same pool and choose one before each match.") % DeckTools.MIN_SPELLS
 	if d.sealed:
-		show_dialog("Your sealed pool", I18n.t("You opened %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.") % d.picks[0].size(),
+		show_dialog("Your sealed pool", I18n.t("You opened %d cards; they are now in your collection.") % d.picks[0].size() + "\n\n" + how,
 			[["Build my deck", _tournament_deck]], [])
 		return
-	show_dialog("The draft is over", I18n.t("You drafted %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.") % d.picks[0].size(),
+	show_dialog("The draft is over", I18n.t("You drafted %d cards; they are now in your collection.") % d.picks[0].size() + "\n\n" + how,
 		[["Build my deck", _tournament_deck]])
+
+
+## "Draft: <city>": the draft lists are named after it, "Draft: <city> 1", "2"...
+func _tour_base_name() -> String:
+	return I18n.t("Draft: %s") % GameState.city(tournament.city).get("name", "")
+
+
+## A new list from the draft pool. During the tournament the lists may go past the deck slots;
+## _keep_tour_decks fits them back in at the end.
+func _new_tour_list(cards: Dictionary = {}) -> int:
+	var base := _tour_base_name()
+	var names := {}
+	for dk in GameState.decks:
+		names[dk["name"]] = true
+	var n := 1
+	while names.has("%s %d" % [base, n]):
+		n += 1
+	GameState.decks.append({"name": "%s %d" % [base, n], "cards": cards.duplicate()})
+	var i := GameState.decks.size() - 1
+	_tour_decks.append(i)
+	return i
+
+
+## The tournament is over: the draft lists become the player's decks, within the deck slots.
+## Empty lists are dropped; if the slots are full, the list played last is kept first.
+## Returns a line for the player when lists had to be left out ("" otherwise).
+func _keep_tour_decks() -> String:
+	var lists: Array = []          # the deck dictionaries themselves (indices move as decks go)
+	for i in _tour_decks:
+		if i >= 0 and i < GameState.decks.size():
+			lists.append(GameState.decks[i])
+	var last: Dictionary = GameState.decks[_tour_deck] if _tour_deck >= 0 and _tour_deck < GameState.decks.size() else {}
+	var prev: Dictionary = GameState.decks[_tour_prev_deck] if _tour_prev_deck >= 0 and _tour_prev_deck < GameState.decks.size() else {}
+	var others := GameState.decks.size() - lists.size()
+	var room := maxi(1, GameState.MAX_DECKS - others)
+	var keep: Array = []
+	if not last.is_empty() and lists.has(last):
+		keep.append(last)
+	for dk in lists:
+		if keep.size() >= room:
+			break
+		if not keep.has(dk) and not dk["cards"].is_empty():
+			keep.append(dk)
+	var dropped := 0
+	for dk in lists:
+		if not keep.has(dk):
+			if not dk["cards"].is_empty():
+				dropped += 1
+			GameState.decks.erase(dk)
+	_tour_decks = []
+	for dk in keep:
+		_tour_decks.append(GameState.decks.find(dk))
+	_tour_deck = GameState.decks.find(last) if not last.is_empty() else -1
+	if _tour_deck < 0 and not _tour_decks.is_empty():
+		_tour_deck = int(_tour_decks[0])
+	var p := GameState.decks.find(prev)
+	_tour_prev_deck = p if p >= 0 else 0
+	if dropped == 0:
+		return ""
+	return I18n.t("Your deck slots are full: \"%s\" was kept, %d other list(s) from the draft were not.") % [I18n.t(last.get("name", "")), dropped]
 
 
 func _tournament_deck() -> void:
 	var db := DeckBuilder.new()
 	db.pool = tournament.pool(0)
+	db.draft_decks = _tour_decks          # shared: lists made or deleted there show up here
 	db.draft_deck = _tour_deck
-	db.closed.connect(_show_bracket)
+	db.draft_base = _tour_base_name()
+	db.closed.connect(func():
+		_tour_deck = db.draft_deck
+		_show_bracket())
 	_set_screen(db)
 
 
@@ -1617,15 +1688,32 @@ func _show_bracket() -> void:
 	_save_tour("bracket")
 	var ts := TournamentScreen.new()
 	ts.draft = tournament
-	ts.play_match.connect(func(opp: int):
-		GameState.active_deck = _tour_deck
-		var d := tournament
-		var mf := d.main_faith(opp)
-		start_battle({"name": d.names[opp], "faction": mf, "level": 3, "life": 10,
-			"deck": d.decks[opp], "tournament": true, "look": {"faction": mf, "subtype": GameState.HEROES.get(mf, {}).get("subtype", "Human"), "name": d.names[opp]}}))
+	ts.lists = _tour_decks
+	ts.chosen = _tour_deck
+	ts.pool = tournament.pool(0)
+	ts.deck_chosen.connect(func(i: int):
+		_tour_deck = i
+		_save_tour("bracket"))
+	ts.play_match.connect(_play_tour_match)
 	ts.edit_deck.connect(_tournament_deck)
 	ts.done.connect(_tournament_prize)
 	_set_screen(ts)
+
+
+## Play the next match with the chosen list (it must be a legal deck from the draft pool).
+func _play_tour_match(opp: int) -> void:
+	var d := tournament
+	if _tour_deck < 0 or _tour_deck >= GameState.decks.size():
+		_tour_deck = int(_tour_decks[0]) if not _tour_decks.is_empty() else _new_tour_list()
+	var problem := DeckTools.validate(GameState.decks[_tour_deck]["cards"], d.pool(0), DeckTools.DRAFT_COPIES)
+	if problem != "":
+		show_dialog("Deck not ready", I18n.t("\"%s\" can't be played yet: %s") % [I18n.t(GameState.decks[_tour_deck]["name"]), problem],
+			[["Edit deck", _tournament_deck]])
+		return
+	GameState.active_deck = _tour_deck
+	var mf := d.main_faith(opp)
+	start_battle({"name": d.names[opp], "faction": mf, "level": 3, "life": 10,
+		"deck": d.decks[opp], "tournament": true, "look": {"faction": mf, "subtype": GameState.HEROES.get(mf, {}).get("subtype", "Human"), "name": d.names[opp]}})
 
 
 func _tournament_match_done(won: bool) -> void:
@@ -1666,11 +1754,15 @@ func _tournament_prize() -> void:
 		GameState.stats["tournaments_won"] = int(GameState.stats.get("tournaments_won", 0)) + 1
 	var wins := d.player_stage
 	var city_id := d.city
+	var kept := _keep_tour_decks()
+	GameState.active_deck = _tour_prev_deck
 	tournament = null
 	GameState.tour_save = {}
 	GameState.save_game()
 	var body := I18n.t("You won %d match(es).") % wins
 	body += "\n\n" + (I18n.t("Prize: %s") % ", ".join(parts) if not parts.is_empty() else I18n.t("No prize this time, but the drafted cards and the deck are yours to keep."))
+	if kept != "":
+		body += "\n\n" + kept
 	_open_city(city_id)
 	show_dialog("Tournament over", body, [["OK", Callable()]], cards)
 
@@ -1688,7 +1780,8 @@ func _intro_prize() -> void:
 		GameState.faction_packs.append(GameState.hero)
 	if d.champion() == 0:
 		GameState.stats["tournaments_won"] = int(GameState.stats.get("tournaments_won", 0)) + 1
-	GameState.active_deck = _tour_deck
+	var kept := _keep_tour_decks()
+	GameState.active_deck = maxi(0, _tour_deck)
 	GameState.ensure_deck()
 	var city_id := d.city
 	tournament = null
@@ -1702,6 +1795,8 @@ func _intro_prize() -> void:
 	else:
 		body += I18n.t("No prize this time, but the drafted cards and the deck are yours to keep.")
 	body += "\n\n" + I18n.t("Your draft deck is now your deck. The road is open.")
+	if kept != "":
+		body += "\n\n" + kept
 	_open_city(city_id)
 	show_dialog("Tournament over", body, [["OK", Callable()]])
 

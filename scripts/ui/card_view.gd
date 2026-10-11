@@ -166,12 +166,24 @@ func _draw() -> void:
 	var text_r := Rect2(inner.position.x + 6 * k, type_y + 4 * k, inner.size.x - 12 * k, inner.end.y - type_y - 8 * k)
 	draw_rect(text_r, Tapestry.PARCHMENT_LIGHT)
 	draw_rect(text_r, Color(INK, 0.6), false, lw * 0.6)
-	var body: String = I18n.t(card.get("text", ""))
+	var body: String = display_text(card)
 	var fs := int(10.5 * k)
 	if plain_text(body).length() > 100:
 		fs = int(9.2 * k)
+	elif is_land and plain_text(body).length() < 80:
+		fs = int(11.5 * k)     # a land's few words get a little more room
 	var tx := text_r.position + Vector2(4 * k, 4 * k)
-	if body != "":
+	if is_basic(card):
+		# a basic land: one great mana symbol of its faith fills the box, no words
+		var prod := produced(card)
+		if not prod.is_empty():
+			var rad := minf(text_r.size.y * 0.40, text_r.size.x * 0.3)
+			var pc := text_r.get_center()
+			draw_circle(pc + Vector2(1.5, 2.0) * k, rad, Color(INK, 0.25))
+			draw_pip(self, pc, rad, prod[0], maxf(1.2, 2.2 * k))
+	elif body == "":
+		_draw_vanilla_flavor(text_r, k, card.get("type") == "creature")
+	elif body != "":
 		# a text that opens with a mana symbol (e.g. "{2}{G}: ...") gets no drop capital
 		var has_cap := not body.begins_with("{")
 		var cap := body.substr(0, 1) if has_cap else ""
@@ -241,6 +253,43 @@ func _draw() -> void:
 
 	if dimmed:
 		draw_rect(r, Color(0.2, 0.15, 0.1, 0.55))
+
+
+## A card with no rules text: its flavour, larger and centred in the box (clear of the
+## power/toughness shield); with no flavour either, a small red fleuron.
+func _draw_vanilla_flavor(text_r: Rect2, k: float, has_shield: bool) -> void:
+	var flavor: String = I18n.t(card.get("flavor", ""))
+	var it := Tapestry.font("italic")
+	var box := text_r.grow(-5 * k)
+	if has_shield:
+		box.size.y -= 14 * k      # the shield's top edge reaches into the box
+	if flavor == "":
+		_fleuron(box.get_center(), 7 * k)
+		return
+	var fs := int(12 * k)
+	var min_fs := maxi(4, int(6.5 * k))
+	var lines: Array = []
+	while true:
+		lines = _wrap(it, flavor, fs, box.size.x, box.size.x, 0)
+		if lines.size() * fs * 1.15 <= box.size.y or fs <= min_fs:
+			break
+		fs -= 1
+	var lh := fs * 1.15
+	var y := box.position.y + (box.size.y - lines.size() * lh) * 0.5 + fs * 0.85
+	var col := Color(0.32, 0.22, 0.14)
+	for line in lines:
+		draw_string(it, Vector2(box.position.x, y), line, HORIZONTAL_ALIGNMENT_CENTER, box.size.x, fs, col)
+		y += lh
+
+
+## A small four-petalled ornament in vermilion.
+func _fleuron(c: Vector2, s: float) -> void:
+	for i in 4:
+		var a := TAU * i / 4.0
+		var d := Vector2(cos(a), sin(a))
+		var n := Vector2(-d.y, d.x)
+		draw_colored_polygon(PackedVector2Array([c, c + d * s * 0.5 + n * s * 0.35, c + d * s, c + d * s * 0.5 - n * s * 0.35]), Tapestry.VERMILION)
+	draw_circle(c, s * 0.18, Tapestry.GILT)
 
 
 ## Arched picture: diapered field, ground, and the painted subject.
@@ -400,6 +449,50 @@ static func plain_text(s: String) -> String:
 	return token_re().sub(s, "($1)", true)
 
 
+## The mana a land makes, as symbols: ["W"] or ["W", "B"] ("produces" may be one letter or a list).
+static func produced(c: Dictionary) -> Array:
+	var p = c.get("produces", [])
+	if typeof(p) == TYPE_STRING:
+		return [p] if p != "" else []
+	var out: Array = []
+	for m in p:
+		out.append(String(m))
+	return out
+
+
+## A basic land (one great faith symbol on its face, no rules text).
+static func is_basic(c: Dictionary) -> bool:
+	return c.get("type") == "land" and c.get("rarity", "") == "basic"
+
+
+## The rules text as shown, translated. A land's "Tap: add one Church or Pact mana." becomes
+## "Tap: add {W} or {B}." (drawn as pips) from its "produces" field, whatever the wording in
+## the card data; "No abilities." counts as no text at all.
+static func display_text(c: Dictionary) -> String:
+	var raw := String(c.get("text", ""))
+	if raw.strip_edges() == "No abilities.":
+		return ""
+	var txt := I18n.t(raw)
+	if c.get("type") != "land":
+		return txt
+	var prod := produced(c)
+	if prod.is_empty():
+		return txt
+	var syms: Array = []
+	for m in prod:
+		syms.append("{%s}" % m)
+	var mana: String = syms[0]
+	if syms.size() > 1:
+		mana = I18n.t("%s or %s") % [", ".join(syms.slice(0, syms.size() - 1)), syms[-1]]
+	var clause := I18n.t("Tap: add %s.") % mana
+	for word in [I18n.t("Tap"), "Tap"]:
+		var at := txt.rfind(word + ":")
+		if at >= 0:
+			var head := txt.substr(0, at).strip_edges()
+			return clause if head == "" else head + "\n" + clause
+	return clause if txt == "" else txt + "\n" + clause
+
+
 ## A cost dictionary as mana tokens, e.g. {"generic": 2, "W": 1} -> "{2}{W}".
 static func cost_tokens(cost: Dictionary) -> String:
 	var s := ""
@@ -528,6 +621,8 @@ static func type_line(c: Dictionary) -> String:
 	var sub := String(c.get("subtype", ""))
 	if sub == "" or sub == type_name(c):
 		return tl
+	if sub.ends_with(" " + type_name(c)):
+		return I18n.t(sub)     # "Basic Land", not "Land (Basic Land)"
 	if c.get("type") == "creature":
 		return tl + " · " + I18n.t(sub)
 	return "%s (%s)" % [tl, I18n.t(sub)]
