@@ -586,3 +586,14 @@ under *Export → Resources → Filters to export non-resource files*.
 - The picks panel has tabs: All (chosen at first), Creatures, Sorceries, Instants, Relics and
   Lands, each with its count. Choosing a type shows only those cards in both piles, and the faith
   counts and mana curve count only that type. All shows everything again.
+
+## Seven-card hands, a smarter AI (1.43)
+
+- Everyone draws a hand of 7, whatever the stats. Reason now only raises how many cards you may
+  keep at the end of your turn (7 + Reason).
+- The AI: keeps mana open for an instant when it has a good one in hand; pays upkeep only when the
+  permanent is worth the mana; sacrifices tokens and cheap creatures before its payoffs; puts
+  equipment on its best attacker; swarms when it has more attackers than you have blockers; blocks
+  sooner when a hit would leave it at 2 life or less. Technocracy decks are built with more
+  creatures and fewer self-defeating relics.
+- Herne's hunt is now wolves. The Revel mask lost its plume.

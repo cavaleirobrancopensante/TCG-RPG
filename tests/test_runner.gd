@@ -390,10 +390,51 @@ func _test_ai_regenerate() -> void:
 	check(not st2.regen_threatened(1, troll2) and not BattleAI.respond(st2, 1), "no Regenerate when the blocker lives anyway")
 
 
+func _test_ai_choices() -> void:
+	# holding mana: with Doom in hand and a real target, the AI keeps {B} open over a weak play
+	var st := _duel()
+	_lands(st, 0, "BG")
+	_put(st, 1, "Ogre")
+	st.active = 0
+	st.phase = "main1"
+	_hand(st, 0, ["Doom"])
+	var hold := BattleAI.held_instant(st, 0)
+	check(not hold.is_empty() and int(hold["mana"]) == 1, "the AI holds mana for removal when there is a target")
+	var st_b := _duel()
+	_lands(st_b, 0, "BG")
+	st_b.active = 0
+	st_b.phase = "main1"
+	_hand(st_b, 0, ["Doom"])
+	check(BattleAI.held_instant(st_b, 0).is_empty(), "nothing to hold for with no enemy creature")
+	# sacrifice: the token goes before a real creature
+	var st2 := _duel()
+	var altar := _put(st2, 0, "Altar")
+	var bear := _put(st2, 0, "Bear")
+	var tok := st2._make_perm(0, "token:Goat", {"name": "Goat", "type": "creature", "power": 0, "toughness": 1})
+	tok.is_token = true
+	st2.side(0).creatures.append(tok)
+	var victim = BattleAI.sacrifice_victim(st2, 0, altar, "other")
+	check(victim == tok, "the AI sacrifices the token, not the Bear")
+	# equipment goes on the creature that hits hardest
+	var st3 := _duel()
+	_put(st3, 0, "Spider")
+	var ogre := _put(st3, 0, "Ogre")
+	var tgt = BattleAI.equip_target(st3, 0, CardDB.get_card(_id("Blade")))
+	check(tgt != null and int(tgt["uid"]) == ogre.uid, "equipment goes on the best attacker")
+	# upkeep: a snared creature is let go, a useful one is kept
+	var st4 := _duel()
+	var hauler := _put(st4, 0, "Hauler")
+	check(BattleAI.keep_upkeep(st4, 0, hauler, 1), "the AI pays upkeep for a 4/3 with mana to spare")
+	var free_v := BattleAI.upkeep_keep_value(st4, 0, hauler)
+	hauler.pacified = true
+	check(BattleAI.upkeep_keep_value(st4, 0, hauler) < free_v, "a creature that can't attack is worth less to keep")
+
+
 func _test_tribes() -> void:
 	_test_attachments()
 	_test_ai_foresight()
 	_test_ai_regenerate()
+	_test_ai_choices()
 	var st := _duel()
 	var w1 := _put(st, 0, "Packwolf")
 	check(w1.power() == 2, "kinship alone: no bonus")
@@ -426,19 +467,26 @@ func test_mulligan() -> void:
 	var st := BattleState.new()
 	st.setup(deck.duplicate(), deck.duplicate(), ["A", "B"], [20, 20], 0, 77, true)
 	check(st.phase == "mulligan", "starts in mulligan phase")
-	check(st.side(0).hand.size() == 5 and st.side(1).hand.size() == 5, "five cards each")
+	check(st.side(0).hand.size() == 7 and st.side(1).hand.size() == 7, "seven cards each")
+	var st7 := BattleState.new()
+	var fill7: Array = []
+	for n in 30:
+		fill7.append(Factions.land_id("machine"))
+	st7.setup(fill7.duplicate(), fill7.duplicate(), ["A", "B"], [20, 20], 0, 99, false, [9, 5])
+	check(st7.side(0).hand.size() == 7 and st7.side(1).hand.size() == 7 and st7.side(0).max_hand == 9,
+		"the opening hand is 7 whatever the hand limit (Reason only raises the limit)")
 	st.mulligan(0)
 	st.mulligan(0)
-	check(st.side(0).hand.size() == 5, "mulligan redraws five")
+	check(st.side(0).hand.size() == 7, "mulligan redraws seven")
 	check(st.to_bottom(0) == 2, "two to the bottom after two mulligans")
 	var a: String = st.side(0).hand[0]
 	var b: String = st.side(0).hand[1]
 	st.keep(0, [0, 1])
-	check(st.side(0).hand.size() == 3, "kept hand of three")
-	check(st.side(0).deck.size() == 37 and st.side(0).deck.slice(0, 2).has(a) and st.side(0).deck.slice(0, 2).has(b), "chosen cards on the bottom")
+	check(st.side(0).hand.size() == 5, "kept hand of five")
+	check(st.side(0).deck.size() == 35 and st.side(0).deck.slice(0, 2).has(a) and st.side(0).deck.slice(0, 2).has(b), "chosen cards on the bottom")
 	check(st.phase == "mulligan", "waits for the other player")
 	st.keep(1)
-	check(st.side(1).hand.size() == 5, "keeping five puts none on the bottom")
+	check(st.side(1).hand.size() == 7, "keeping seven puts none on the bottom")
 	check(st.phase == "main1" and st.turn == 1, "turn one begins after both keep")
 	# AI: a hand with no lands is sent back.
 	var st2 := BattleState.new()
@@ -451,7 +499,7 @@ func test_mulligan() -> void:
 	BattleAI.resolve_mulligan(st2, 0)
 	BattleAI.resolve_mulligan(st2, 1)
 	check(st2.phase == "main1", "AI mulligans resolve")
-	check(st2.side(0).hand.size() == 5 - st2.mulligans[0] + (0 if st2.first_player == 0 else 1), "AI hand size matches mulligans")
+	check(st2.side(0).hand.size() == 7 - st2.mulligans[0] + (0 if st2.first_player == 0 else 1), "AI hand size matches mulligans")
 
 
 ## Every rule a card can use, checked on a small board.

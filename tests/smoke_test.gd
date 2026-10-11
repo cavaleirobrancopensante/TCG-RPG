@@ -759,7 +759,7 @@ func _until_my_main(b: BattleScene) -> void:
 
 
 func check_mull(st: BattleState) -> void:
-	assert(st.side(0).hand.size() == st.side(0).max_hand and st.to_bottom(0) == 1, "mulligan in the duel screen")
+	assert(st.side(0).hand.size() == BattleState.OPENING_HAND and st.to_bottom(0) == 1, "mulligan in the duel screen")
 
 
 func _press_first_dialog_button() -> void:

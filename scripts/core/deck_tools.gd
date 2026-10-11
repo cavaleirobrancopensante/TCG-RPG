@@ -175,7 +175,16 @@ static func _build_value(c: Dictionary) -> float:
 	if mv >= 6:
 		v -= 1.2
 	if c.get("type") == "creature":
-		v += 0.4
+		v += 0.6
+	# card_score counts every effect as a plus; for building, an upkeep is a price (not a
+	# bonus), and a relic that only makes the faith's cards cheaper does nothing by itself
+	for e in c.get("effects", []):
+		if e.get("action") == "upkeep_cost":
+			v -= 0.5 + 0.4 * int(e.get("amount", 1))
+	if c.get("type") != "creature":
+		for stc in c.get("statics", []):
+			if stc.get("static", "") == "cost_reduce" and String(stc.get("subtype", "")) == "":
+				v -= 0.8
 	return v
 
 
@@ -231,12 +240,15 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 	}
 	# mostly its own faith with a splash: the Technocracy for everyone else, and a
 	# random other faith for the Technocracy, so every deck has the same two-faith mana
-	var factions := [faction, faction, faction, "machine"]
+	# (a fifth of the picks: a quarter made the Technocracy's splash outweigh the faiths' own)
+	var factions := [faction, faction, faction, faction, "machine"]
 	if faction == "machine":
 		var others: Array = Factions.ORDER.filter(func(x): return x != "machine")
 		factions = [faction, faction, faction, others[rng.randi_range(0, others.size() - 1)]]
 	var owned := {}
 	var spells := 0
+	var creatures := 0
+	var top := 0               # cards of five mana or more
 	var guard := 0
 	while spells < TARGET_SPELLS and guard < 500:
 		guard += 1
@@ -250,10 +262,41 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 		# a two-faith card only when both of its faiths are in this deck
 		if c2 != "" and not (factions.has(c2) and factions.has(cd.get("faction", ""))):
 			continue
+		var strict := guard < 350            # the limits give way rather than leave the deck short
+		var is_creature: bool = cd["type"] == "creature"
+		if strict:
+			# a splash card must work on its own: no cost reducers, tribe payoffs or upkeep
+			if f != faction and _needs_its_faith(cd):
+				continue
+			# enough creatures (14 of 23) and a sane top of the curve
+			if not is_creature and (spells - creatures) >= TARGET_SPELLS - MIN_CREATURES:
+				continue
+			if int(cd.get("mana_value", 0)) >= 5 and top >= 4:
+				continue
 		owned[id] = int(owned.get(id, 0)) + 1
 		spells += 1
+		if is_creature:
+			creatures += 1
+		if int(cd.get("mana_value", 0)) >= 5:
+			top += 1
 	add_lands(owned, TARGET_LANDS)
 	return owned
+
+
+## Cards that only pay off among their own faith's cards: cost reducers, tribe payoffs
+## (statics or effects that name a subtype or count one), Assembly and upkeep creatures.
+static func _needs_its_faith(c: Dictionary) -> bool:
+	for stc in c.get("statics", []):
+		if stc.get("static", "") in ["cost_reduce", "kinship", "assembly"] or String(stc.get("subtype", "")) != "":
+			return true
+	for e in c.get("effects", []):
+		if e.get("action") == "upkeep_cost" or e.has("subtype") or e.has("ally_subtype") \
+				or e.has("count_per") or e.has("amount_per"):
+			return true
+	for ab in c.get("abilities", []):
+		if String(ab.get("cost", {}).get("sacrifice", "")) in ["servo"]:
+			return true
+	return false
 
 
 # ------------------------------------------------------------------ themed wanderer decks
@@ -261,7 +304,7 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 const THEMES_PATH := "res://data/themes.json"
 ## Wanted spells at each mana value (6 means six or more) for a 23-card non-land part.
 const CURVE := {1: 3, 2: 6, 3: 6, 4: 4, 5: 2, 6: 2}
-const MIN_CREATURES := 13
+const MIN_CREATURES := 14         # relic themes too: equipment needs bodies to carry it
 const THEME_MAX := 17            # on-theme cards at most, so the curve can be filled
 const SPLASH_MAX := 4            # single-faith splash cards at most
 
@@ -390,7 +433,7 @@ static func themed_deck(theme_id: String, level: int, rng: RandomNumberGenerator
 						sym += int(c["cost"][k])
 				if sym > 1 or int(c["mana_value"]) > 4:
 					continue
-			var entry := [id, _build_value(c) + rng.randf() * 1.5]
+			var entry := [id, _theme_value(c, th) + rng.randf() * 1.5]
 			if is_on_theme(id, theme_id):
 				theme_pool.append(entry)
 			elif own:
@@ -420,6 +463,8 @@ static func themed_deck(theme_id: String, level: int, rng: RandomNumberGenerator
 		if c["type"] != "creature" and int(st["noncreature"]) >= TARGET_SPELLS - MIN_CREATURES:
 			continue
 		var n := mini(copies, THEME_MAX - theme_n)
+		if c["type"] != "creature":
+			n = mini(n, TARGET_SPELLS - MIN_CREATURES - int(st["noncreature"]))
 		if slot >= 5:
 			n = mini(n, int(CURVE[5]) + int(CURVE[6]) - int(st["slots"][5]) - int(st["slots"][6]))
 		if slot >= 2 and slot <= 4:
@@ -467,6 +512,20 @@ static func themed_deck(theme_id: String, level: int, rng: RandomNumberGenerator
 	# a faith too thin to fill 23 (never with the current cards): top up with more lands
 	add_lands(deck, TARGET_LANDS + maxi(0, TARGET_SPELLS - int(st["picked"])))
 	return deck
+
+
+## Pick value inside a theme: _build_value plus, in relic themes, a bonus for equipment and
+## for the creatures that grow with relics, the cards that turn relics into damage.
+static func _theme_value(c: Dictionary, th: Dictionary) -> float:
+	var v := _build_value(c)
+	if th.get("tribe", "") == "Relic":
+		if c.get("attach", "") == "equipment":
+			v += 1.0
+		if c.get("type") == "creature":
+			for stc in c.get("statics", []):
+				if stc.get("static", "") == "kinship" and stc.get("subtype", "") == "Relic":
+					v += 1.0
+	return v
 
 
 ## Add up to `n` copies of a card, honouring the rarity and splash limits. Returns how many.

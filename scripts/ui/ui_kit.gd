@@ -489,8 +489,9 @@ static func _sigil_shape(ci: CanvasItem, faction: String, c: Vector2, r: float, 
 			_fill(ci, pts, _k(Color(col, col.a * 0.55)))
 			ci.draw_polyline(pts + PackedVector2Array([pts[0]]), col, width * 0.6, true)
 			ci.draw_line(c + Vector2(0, -r * 0.8), c + Vector2(0, r * 0.95), col, width * 0.7, true)
-		"revel":     # masquerade half-mask with ribbons and a plume
+		"revel":     # masquerade half-mask with ribbons
 			var dark := _k(Color(0.10, 0.06, 0.04, col.a))
+			c += Vector2(0, r * 0.07)        # sit the mask in the middle of the roundel
 			var mask := PackedVector2Array([
 				c + Vector2(-r * 0.95, -r * 0.42), c + Vector2(-r * 0.45, -r * 0.30), c + Vector2(0, -r * 0.36),
 				c + Vector2(r * 0.45, -r * 0.30), c + Vector2(r * 0.95, -r * 0.42), c + Vector2(r * 0.80, r * 0.05),
@@ -507,14 +508,6 @@ static func _sigil_shape(ci: CanvasItem, faction: String, c: Vector2, r: float, 
 					var t := k / 6.0
 					rb.append(c + Vector2(sgn * r * (0.88 + 0.22 * t), -r * 0.18 + r * 0.42 * t + sin(t * 5.0) * r * 0.06))
 				ci.draw_polyline(rb, col, maxf(1.0, width * 0.6), true)
-			# plume rising from one corner
-			var pl := PackedVector2Array()
-			for k in 9:
-				var t := k / 8.0
-				pl.append(c + Vector2(r * (0.70 + 0.10 * sin(t * 3.0)), -r * (0.42 + 0.55 * t)))
-			ci.draw_polyline(pl, col, maxf(1.0, width * 0.9), true)
-			_fill(ci, PackedVector2Array([c + Vector2(r * 0.72, -r * 0.55), c + Vector2(r * 1.0, -r * 0.85),
-				c + Vector2(r * 0.86, -r * 1.0), c + Vector2(r * 0.66, -r * 0.80)]), col)
 		"lyceum":    # a column with an open book resting on top
 			var dark := _k(Color(0.10, 0.06, 0.04, col.a))
 			ci.draw_rect(Rect2(c.x - r * 0.50, c.y + r * 0.78, r * 1.0, r * 0.14), col)     # base

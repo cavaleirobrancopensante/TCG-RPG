@@ -4,7 +4,8 @@ extends RefCounted
 ## plays back `events` as animations. Sides are 0 (player) and 1 (enemy).
 ## The card format it understands is documented in docs/CARD_SPEC.md.
 
-const START_HAND := 5           # everyone keeps five cards; Reason lets the hero keep more
+const OPENING_HAND := 7         # everyone draws seven, whatever the stats
+const START_HAND := 7           # the most cards kept at the end of a turn; Reason lets the hero keep more
 const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
 const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature"]
 
@@ -86,7 +87,7 @@ class BattleSide:
 	var cast_count := 0            # non-land cards played this turn
 	var interactive := false       # a person decides this side's choices (discards, foresight)
 	var owed_discards := 0         # interactive: cards still to discard (rummage)
-	var max_hand := 5              # opening hand and the most cards kept at the end of a turn
+	var max_hand := 7              # the most cards kept at the end of a turn (not the opening hand)
 	var martyr_owed := 0           # interactive: martyrs whose blessing the player still has to give
 	var foresight_cards: Array = []  # interactive: cards lifted off the top, waiting for a decision
 
@@ -177,7 +178,7 @@ func setup(deck0: Array, deck1: Array, names: Array, lives: Array, first: int = 
 	mulligans = [0, 0]
 	kept = [false, false]
 	for i in 2:
-		for n in sides[i].max_hand:
+		for n in OPENING_HAND:
 			draw_card(i)
 	if with_mulligan:
 		phase = "mulligan"
@@ -195,7 +196,7 @@ func can_mulligan(i: int) -> bool:
 
 ## Cards that must go to the bottom when this side keeps.
 func to_bottom(i: int) -> int:
-	return mini(int(mulligans[i]), side(i).max_hand - 1)
+	return mini(int(mulligans[i]), OPENING_HAND - 1)
 
 
 func mulligan(i: int) -> void:
@@ -206,7 +207,7 @@ func mulligan(i: int) -> void:
 	s.hand.clear()
 	_shuffle(s.deck)
 	mulligans[i] = int(mulligans[i]) + 1
-	for n in side(i).max_hand:
+	for n in OPENING_HAND:
 		var id: String = s.deck.pop_back()
 		s.hand.append(id)
 	emit({"type": "mulligan", "side": i, "count": mulligans[i]})
@@ -1732,7 +1733,8 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 		"upkeep_cost":
 			if source and find_perm(source.uid):
 				var cost := {"generic": amount}
-				if can_pay(i, cost):
+				# a person always pays when able; the AI pays only when keeping it is worth the mana
+				if can_pay(i, cost) and (side(i).interactive or BattleAI.keep_upkeep(self, i, source, amount)):
 					pay(i, cost)
 					emit({"type": "upkeep_paid", "uid": source.uid, "amount": amount})
 				else:
