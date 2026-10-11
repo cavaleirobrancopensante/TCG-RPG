@@ -214,6 +214,21 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Villages, themed wanderers, and smoother hands (1.30)
+
+- 27 named villages you can enter, 4 or 5 in each faith's lands (San Benedetto, Gallows Cross,
+  Hollin Dell, Montevino, Dafni, Sixmills ...): a cheap inn, a pedlar with three cards of the
+  faith, a well (or for Church hamlets a chapel that heals once a day), and local gossip that
+  points at lairs, feasts and wanderers. Feast errands now send you to the village that makes
+  the goods: wine from a vineyard town, candles from a monastery hamlet.
+- Wanderers' names promise their decks: a Templar plays Knights, a Plague Cart Zombies, a Moot
+  Druid auras, a Phalanx Captain Hoplites, a Guild Armourer equipment (18 themes, 3 per faith).
+- Drag with a finger to scroll every card list (deck builder, shop, boosters, draft, card
+  database); a tap still picks the card.
+- New setting "Respond to every spell" (off by default): the duel only stops for answers at
+  your marked stops and in combat, so the enemy's main phase flows without pauses.
+- Design notes brought up to date with the cards; the Satyr of the Drowsy Vineyard redrawn.
+
 ## A gentler start (1.28, 1.29)
 
 - After making your hero, a new Road screen sets the difficulty and how the road begins:

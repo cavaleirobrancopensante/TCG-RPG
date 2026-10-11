@@ -23,8 +23,18 @@ func _ready() -> void:
 	head.add_child(UIKit.button("Card database", open_card_database, 220))
 	head.add_child(UIKit.button("Back", _back, 140))
 
+	# the options scroll (drag or wheel) when the screen is too short for them all
+	var sc := ScrollContainer.new()
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	v.add_child(sc)
+	var body := VBoxContainer.new()
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.add_theme_constant_override("separation", 14)
+	sc.add_child(body)
+	DragScroll.attach(self, sc)
 	var plate := PanelContainer.new()
-	v.add_child(plate)
+	body.add_child(plate)
 	var g := GridContainer.new()
 	g.columns = 2
 	g.add_theme_constant_override("h_separation", 30)
@@ -88,6 +98,15 @@ func _ready() -> void:
 		b.pressed.connect(func(): GameState.set_setting("duel_speed", val))
 		sp.add_child(b)
 
+	# --- stop for every spell the enemy casts, or only at the phase bar's stops
+	g.add_child(_name("Respond to every spell"))
+	var ra := CheckButton.new()
+	ra.button_pressed = BattleScene.respond_to_every_spell()
+	ra.text = "Off: only at your stops and in combat"
+	ra.tooltip_text = "On: the duel stops whenever the enemy casts something you could answer."
+	ra.toggled.connect(func(on): GameState.set_setting(BattleScene.RESPOND_ALL_KEY, on))
+	g.add_child(ra)
+
 	# --- fullscreen
 	g.add_child(_name("Full screen"))
 	var fs := CheckButton.new()
@@ -109,7 +128,7 @@ func _ready() -> void:
 		GameState.set_setting("player_name", GameState.player_name))
 	g.add_child(nm)
 
-	v.add_child(UIKit.label("Settings apply to every save slot.", 17, UIKit.DIM))
+	body.add_child(UIKit.label("Settings apply to every save slot.", 17, UIKit.DIM))
 
 
 func _name(t: String) -> Label:

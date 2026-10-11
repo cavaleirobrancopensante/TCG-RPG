@@ -2338,6 +2338,10 @@ STOCK.setdefault('sa_pipe', ((13.0, -64.5), (14.8, -82.6), (-3.0, -65), (6.4, -8
 STOCK.setdefault('sa_swig', ((14, -64.5), (14.5, -84), (-19, -66), (-10, -56), False))
 # seated: cup lifted in the near hand, the far hand resting on the knee in front
 STOCK.setdefault('sa_seat_cup', ((12.5, -63), (21, -76), (-4, -63), (11, -51), True))
+# lounging on the ground (seat='lounge'): the near upper arm hangs from the shoulder and
+# the forearm rests along the drawn-up far thigh, the hand on top of its knee; the far arm
+# drops behind the hip, the hand propped on the ground or a cask.
+STOCK.setdefault('sa_lounge', ((12.5, -62.5), (26.0, -69.5), (-12.0, -64.0), (-16.5, -48.5), False))
 
 
 def _goat_joints(a, f, lift=False):
@@ -2354,9 +2358,11 @@ def _goat_joints(a, f, lift=False):
     return st, hk, fl
 
 
-def goat_leg(p, a, f, near=True, lift=False, fur=None, joints=None):
+def goat_leg(p, a, f, near=True, lift=False, fur=None, joints=None, under=False, split=False):
     """A proper reverse-jointed goat leg: shaggy thigh to the stifle, gaskin down and back
-    to the hock, slim cannon forward to the fetlock, cloven hoof."""
+    to the hock, slim cannon forward to the fetlock, cloven hoof. under=True hangs the
+    thigh's shaggy fringe off its underside wherever the thigh points (for lying legs);
+    split=True draws a lifted hoof larger, with its two toes parted, so it reads at a distance."""
     fur = fur or (GOAT_FUR if near else GOAT_FUR_DARK)
     st, hk, fl = joints or _goat_joints(a, f, lift)
     # thigh and gaskin, one tapering ribbon
@@ -2366,8 +2372,15 @@ def goat_leg(p, a, f, near=True, lift=False, fur=None, joints=None):
     # cannon and pastern
     p.taper([hk, v_lerp(hk, fl, 0.5), fl], 1.9, 1.4, fur.dark(0.08), width=1.5, shade=0.7)
     # shaggy fringe hanging off the back of the thigh and the gaskin
+    if under:
+        dn = v_norm(v_sub(st, a))
+        n1, n2 = (-dn[1], dn[0]), (dn[1], -dn[0])
+        nrm = n1 if (n1[1] - n1[0]) > (n2[1] - n2[0]) else n2
     for t in (0.3, 0.55, 0.8):
-        q = v_add(v_lerp(a, st, t), (-6.6 + 2.6 * t, 0.0))
+        if under:
+            q = v_add(v_lerp(a, st, t), v_mul(nrm, 6.2 - 2.6 * t))
+        else:
+            q = v_add(v_lerp(a, st, t), (-6.6 + 2.6 * t, 0.0))
         p.shape([v_add(q, (2.4, -2.2)), v_add(q, (-1.0, 1.2), ) + (0,), v_add(q, (2.6, 0.8))], fur, width=0.7)
     q = v_add(v_lerp(st, hk, 0.75), (-2.4, 0.4))
     p.shape([v_add(q, (1.4, -1.8)), v_add(q, (-1.2, 1.6), ) + (0,), v_add(q, (1.6, 0.6))], fur, width=0.7)
@@ -2382,6 +2395,14 @@ def goat_leg(p, a, f, near=True, lift=False, fur=None, joints=None):
     if lift:
         base = v_add(fl, v_mul(hd, 1.0))
         p.push(base[0], base[1], 1.0, rot=math.atan2(hd[1], hd[0]) - math.pi / 2)
+        if split:
+            for pts in (((-2.9, 0), (-0.25, -0.2), (-0.55, 4.6, 0), (-3.4, 4.0, 0)),
+                        ((0.25, -0.2), (3.0, -0.4), (3.7, 4.0, 0), (0.75, 4.6, 0))):
+                p.shape(list(pts), HOOF.light(0.12), width=1.1, shade=0.6)
+            p.line([(-2.0, 0.8), (-1.6, 3.8)], LEAD_WHITE.alpha(0.35), 0.6)
+            p.line([(1.4, 0.6), (1.9, 3.8)], LEAD_WHITE.alpha(0.35), 0.6)
+            p.pop()
+            return
         p.shape([(-2.2, 0), (2.4, -0.3), (3.0, 3.4, 0), (-2.4, 3.4, 0)], HOOF, width=1.1, shade=0.6)
         p.line([(0.4, 0.6), (0.6, 3.3)], LEAD_WHITE.alpha(0.35), 0.6)
         p.pop()
@@ -2422,7 +2443,11 @@ def goat_horns(horn=HORN, big=0.8, ears=True, wreath=None, hair_col=None):
 
 class SatyrFig(RFig):
     """A satyr: man above the waist, goat below, with proper reverse-jointed legs.
-    stance: stand, stride, dance (near leg lifted), prance (far leg lifted), seat='chair'."""
+    stance: stand, stride, dance (near leg lifted), prance (far leg lifted), seat='chair',
+    or seat='lounge': sprawled on the ground (the ground line is at y = -17, so draw with
+    feet_y 17 units below the real ground), the near leg stretched out in full profile with
+    its hock resting on the grass and the hoof tipped up, the far leg drawn up behind it
+    with the knee high. Pair with pose 'sa_lounge'."""
 
     def __init__(self, goat_col=None, tail=True, **kw):
         kw.setdefault('goat', True)
@@ -2435,6 +2460,17 @@ class SatyrFig(RFig):
         p = self.p
         k = j['k']
         fur = self.goat_fur
+        if self.seat == 'lounge':
+            # far leg drawn up behind: thigh rising to a high knee, gaskin back down to the
+            # hock, the hoof planted behind the near thigh
+            goat_leg(p, (2.0, -25.0), (28.0, -19.6), near=False, fur=fur.dark(0.12), under=True,
+                     joints=((24.0, -45.0), (16.5, -25.5), (26.4, -21.0)))
+            # near leg stretched along the grass in full profile: thigh to a low stifle, gaskin
+            # down and back to the hock resting on the ground, cannon rising forward to a
+            # hoof tipped up
+            goat_leg(p, (4.0, -23.0), (49.8, -25.4), near=True, lift=True, fur=fur, under=True, split=True,
+                     joints=((21.0, -31.0), (34.0, -18.6), (47.2, -22.2)))
+            return
         if self.seat:
             # thighs forward along the seat, gaskins down and back to the hock, cannons forward
             for i, dx in enumerate((-3.0, 2.5)):
@@ -2467,6 +2503,12 @@ class SatyrFig(RFig):
         p = self.p
         k = j['k']
         hem = (-28.0 if self.garb in ('surcoat', 'tunic') else -34.0) if not self.seat else -18.0
+        if self.seat == 'lounge' and self.garb in SHORT_GARB:
+            # goat hair spilling from under the skirt where the haunches leave the lap
+            for i, (x, y, dx, dy) in enumerate(((3.0, -17.6, 1.0, 2.6), (6.6, -17.8, 1.2, 2.8), (10.2, -18.2, 1.4, 2.6),
+                                                (13.2, -18.8, 2.0, 2.2), (15.0, -21.0, 2.8, 1.2), (15.6, -24.0, 3.0, 0.4))):
+                p.shape([(x - 1.6, y - 0.6), (x + 1.6, y - 0.6), (x + dx, y + dy, 0)], self.goat_fur.dark(0.05), width=0.7)
+            return
         if self.seat:
             return
         for i in range(9):

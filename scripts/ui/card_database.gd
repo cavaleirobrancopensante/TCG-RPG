@@ -17,7 +17,6 @@ const RARITY_ORDER := ["basic", "common", "uncommon", "rare", "mythic"]
 const FRAME_MS := 8               # time spent making thumbnails per frame
 const AHEAD := 40                 # pictures loaded ahead of the thumbnails being made
 const GAP := 14
-const DRAG_START := 10.0          # finger travel before a press becomes a scroll
 
 var f_group := "all"
 var f_type := 0
@@ -39,14 +38,7 @@ var rarity_opt: OptionButton
 var _gen := 0                     # bumps on every refilter, so a stale fill loop stops
 var _sort_cache := {}
 var _requested := {}              # art paths asked of the threaded loader
-# drag scrolling (works with a finger or a mouse, over the cards or the gaps between them)
-var _press := false
-var _dragging := false
-var _press_pos := Vector2.ZERO
-var _press_scroll := 0.0
-var _fling := 0.0                 # px per second, decays after a drag ends
-var _last_y := 0.0
-var _last_t := 0
+var drag: DragScroll              # finger or mouse drag scrolling over the cards, with a glide
 
 
 func _ready() -> void:
@@ -139,6 +131,7 @@ func _ready() -> void:
 	grid.add_theme_constant_override("v_separation", GAP)
 	scroll.add_child(grid)
 	scroll.resized.connect(_fit_columns)
+	drag = DragScroll.attach(self, scroll, _popup_open)
 
 	var vp := get_viewport_rect().size
 	scale_k = clampf((vp.y - 300.0) / (CardView.BASE.y * 2.5), 0.5, 0.8)
@@ -262,7 +255,7 @@ func _refilter() -> void:
 		if not keep.has(id):
 			views[id].visible = false
 	scroll.scroll_vertical = 0
-	_fling = 0.0
+	drag.stop()
 	var t0 := Time.get_ticks_msec()
 	for i in shown.size():
 		var id: String = shown[i]
@@ -314,8 +307,12 @@ func _art_path(id: String) -> String:
 
 func _make(id: String) -> CardView:
 	var cv := CardView.create(id, scale_k)
-	cv.tapped.connect(func(_v): open_card(id))
-	cv.long_pressed.connect(func(_v): open_card(id))
+	cv.tapped.connect(func(_v):
+		if not drag.dragged:
+			open_card(id))
+	cv.long_pressed.connect(func(_v):
+		if not drag.dragged:
+			open_card(id))
 	views[id] = cv
 	grid.add_child(cv)
 	return cv
@@ -324,54 +321,6 @@ func _make(id: String) -> CardView:
 ## Read a card and leaf through the cards currently shown.
 func open_card(id: String) -> CardViewer:
 	return CardViewer.open(self, shown.duplicate(), maxi(0, shown.find(id)))
-
-
-## Drag anywhere over the cards to scroll, with a little glide after letting go.
-## Read here, before the cards, so a drag that starts on a card still scrolls.
-func _input(event: InputEvent) -> void:
-	if not is_visible_in_tree() or _viewer_open() or _popup_open():
-		_press = false
-		return
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			_press = scroll.get_global_rect().has_point(event.position)
-			_dragging = false
-			_fling = 0.0
-			_press_pos = event.position
-			_press_scroll = scroll.scroll_vertical
-			_last_y = event.position.y
-			_last_t = Time.get_ticks_usec()
-		elif _press:
-			_press = false
-			_dragging = false
-			if Time.get_ticks_usec() - _last_t > 80000:
-				_fling = 0.0                              # the finger stopped before lifting
-	elif event is InputEventMouseMotion and _press:
-		var dy: float = event.position.y - _press_pos.y
-		if not _dragging and absf(dy) > DRAG_START:
-			_dragging = true
-			for id in views:
-				views[id]._holding = false               # no long press while scrolling
-		if _dragging:
-			scroll.scroll_vertical = int(_press_scroll - dy)
-			var now := Time.get_ticks_usec()
-			var dt := maxf(0.001, (now - _last_t) / 1000000.0)
-			_fling = lerpf(_fling, -(event.position.y - _last_y) / dt, 0.5)
-			_last_y = event.position.y
-			_last_t = now
-			get_viewport().set_input_as_handled()
-	elif event is InputEventScreenDrag and _dragging:
-		get_viewport().set_input_as_handled()
-
-
-func _process(delta: float) -> void:
-	if _press or absf(_fling) < 20.0:
-		return
-	var before := scroll.scroll_vertical
-	scroll.scroll_vertical = int(before + _fling * delta)
-	_fling *= pow(0.03, delta)
-	if scroll.scroll_vertical == before:
-		_fling = 0.0                                      # reached the top or the bottom
 
 
 func _viewer_open() -> bool:

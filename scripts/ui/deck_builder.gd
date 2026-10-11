@@ -5,6 +5,7 @@ extends Control
 ##  • Filters: faiths (any combination), type, cost, rarity, ability, name/text search,
 ##    "only cards in this deck"; sorting by faith, cost, name, rarity or power.
 ##  • Tap a card to add it, hold to read it; tap a deck row to remove one copy.
+##  • Both lists scroll by dragging (finger or mouse) as well as with the wheel.
 
 signal closed
 
@@ -42,6 +43,11 @@ var in_deck_toggle: CheckButton
 var filter_opts: Array = []       # the four filter OptionButtons (not the sort)
 var land_labels := {}
 var faith_btns := {}
+var options: Array = []           # every OptionButton (their popups pause drag scrolling)
+var grid_scroll: ScrollContainer
+var deck_scroll: ScrollContainer
+var grid_drag: DragScroll
+var deck_drag: DragScroll
 
 
 func _ready() -> void:
@@ -115,15 +121,16 @@ func _ready() -> void:
 	shown_label = UIKit.label("", 15, UIKit.DIM)
 	left.add_child(shown_label)
 
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	left.add_child(scroll)
+	grid_scroll = ScrollContainer.new()
+	grid_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	grid_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	left.add_child(grid_scroll)
 	grid = GridContainer.new()
 	grid.columns = 6
 	grid.add_theme_constant_override("h_separation", 18)
 	grid.add_theme_constant_override("v_separation", 18)
-	scroll.add_child(grid)
+	grid_scroll.add_child(grid)
+	grid_drag = DragScroll.attach(self, grid_scroll, _popup_open)
 
 	# ======================= right: deck management + contents
 	var right := VBoxContainer.new()
@@ -139,6 +146,7 @@ func _ready() -> void:
 	deck_pick.custom_minimum_size.y = 44
 	deck_pick.clip_text = true
 	deck_pick.add_theme_font_size_override("font_size", 17)
+	options.append(deck_pick)
 	deck_pick.item_selected.connect(func(i):
 		editing = i
 		_refresh())
@@ -186,13 +194,14 @@ func _ready() -> void:
 		row.add_child(_tiny("+", func(): _change(lid, 1)))
 		lands_box.add_child(row)
 
-	var dscroll := ScrollContainer.new()
-	dscroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	dscroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	right.add_child(dscroll)
+	deck_scroll = ScrollContainer.new()
+	deck_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	deck_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	right.add_child(deck_scroll)
 	deck_list = VBoxContainer.new()
 	deck_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	dscroll.add_child(deck_list)
+	deck_scroll.add_child(deck_list)
+	deck_drag = DragScroll.attach(self, deck_scroll, _popup_open)
 	right.add_child(UIKit.button("Done", _done, 150))
 	_refresh()
 
@@ -211,7 +220,12 @@ func _option(parent: Control, items: Array, cb: Callable) -> OptionButton:
 		cb.call(i)
 		_refresh())
 	parent.add_child(o)
+	options.append(o)
 	return o
+
+
+func _popup_open() -> bool:
+	return options.any(func(o): return o.get_popup().visible)
 
 
 func _small(t: String, cb: Callable, expand: bool = true) -> Button:
@@ -436,8 +450,12 @@ func _refresh_now() -> void:
 		cv.count_badge = int(owned[id]) - in_deck
 		cv.dimmed = cv.count_badge <= 0 or in_deck >= _copy_limit()
 		var cid: String = id
-		cv.tapped.connect(func(_v): _change(cid, 1))
-		cv.long_pressed.connect(func(_v): _view(cid))
+		cv.tapped.connect(func(_v):
+			if not grid_drag.dragged:
+				_change(cid, 1))
+		cv.long_pressed.connect(func(_v):
+			if not grid_drag.dragged:
+				_view(cid))
 		grid.add_child(cv)
 	shown_label.text = I18n.t("Showing %d of the %d different cards you own") % [ids.size(), total]
 
@@ -456,7 +474,9 @@ func _refresh_now() -> void:
 		b.add_theme_color_override("font_color", UIKit.faction_ink(c["faction"]))
 		b.custom_minimum_size.y = 38
 		var cid: String = id
-		b.pressed.connect(func(): _change(cid, -1))
+		b.pressed.connect(func():
+			if not deck_drag.dragged:         # the finger was scrolling the list, not tapping
+				_change(cid, -1))
 		deck_list.add_child(b)
 	for f in Factions.ORDER:
 		land_labels[f].text = "%s: %d" % [Factions.info(f)["land_name"], int(d.get(Factions.land_id(f), 0))]

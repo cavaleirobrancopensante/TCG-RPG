@@ -1592,6 +1592,32 @@ func _stop_on(key: String) -> bool:
 	return phase_bar.is_stop(key, st.active == 0)
 
 
+## Setting "Respond to every spell": on, the game stops for you whenever the other side puts
+## something on the stack you could answer; off (the default), only at the steps with a stop
+## on the phase bar and in combat.
+const RESPOND_ALL_KEY := "respond_every_spell"
+const RESPOND_ALL_DEFAULT := false
+const COMBAT_STEPS := ["attackers", "blockers", "damage"]
+
+
+static func respond_to_every_spell() -> bool:
+	return bool(GameState.settings.get(RESPOND_ALL_KEY, RESPOND_ALL_DEFAULT))
+
+
+## Should side 0 be offered priority now (before asking whether it can answer at all)?
+## `stop`: the phase bar has a stop on this step. A step with a stop always asks; otherwise
+## only something on the stack does, and then only in combat (you are attacked or blocking,
+## or your attack is being answered) unless `respond_all` is on.
+static func wants_response(state: BattleState, key: String, stop: bool, respond_all: bool) -> bool:
+	if stop:
+		return true
+	if state.stack.is_empty():
+		return false
+	if respond_all:
+		return true
+	return key in COMBAT_STEPS            # combat steps exist only once attackers are declared
+
+
 ## Can you cast or use anything right now (mana abilities don't count)?
 func _can_respond() -> bool:
 	var me := st.side(0)
@@ -1619,7 +1645,8 @@ func _can_act_main(with_attack: bool) -> bool:
 
 
 ## Play out priority until the step's window closes and the stack is empty. You are asked
-## only when it's a stop or something is on the stack, and only if you can answer at all;
+## only when it's a stop or something is on the stack (see wants_response: with "Respond to
+## every spell" off, the stack only asks in combat), and only if you can answer at all;
 ## otherwise you pass at once.
 func _run_priority(key: String) -> void:
 	var guard := 0
@@ -1639,7 +1666,7 @@ func _run_priority(key: String) -> void:
 			if st.priority == p and st.ai_controls(p) and (st.window_open or not st.stack.is_empty()):
 				st._pass(p)       # cannot happen; never hang on it
 			continue
-		var asked := (_stop_on(key) or not st.stack.is_empty()) and _can_respond()
+		var asked := wants_response(st, key, _stop_on(key), respond_to_every_spell()) and _can_respond()
 		if asked:
 			await _wait_for_player()
 		else:

@@ -499,6 +499,29 @@ static func feast_label(f: Dictionary) -> String:
 	return I18n.t(String(f.get("name", "")))
 
 
+## Where the goods of a feast errand are fetched: a village whose wares match them (wine from a
+## vineyard town, candles from a monastery hamlet), not too near the city that asks; failing
+## that, the city named in data/calendar.json. `pick` chooses among several matches.
+const ERRAND_MIN_DIST := 700.0
+
+
+static func errand_source(goods: String, asking: Dictionary, fallback_city: String, villages: Array, pick: int) -> String:
+	var g := goods.to_lower()
+	var here := Vector2(float(asking.get("x", 0)), float(asking.get("y", 0)))
+	var found: Array = []
+	for v in villages:
+		if here.distance_to(Vector2(float(v["x"]), float(v["y"]))) < ERRAND_MIN_DIST:
+			continue
+		for w in v.get("wares", []):
+			if g.contains(String(w).to_lower()):
+				found.append(String(v["id"]))
+				break
+	if found.is_empty():
+		return fallback_city
+	found.sort()
+	return found[absi(pick) % found.size()]
+
+
 ## On a I class feast the Church's inns give the bed for charity.
 static func free_inn(city_faith: String, game_day: int) -> bool:
 	return city_faith == "sanctum" and of_day(game_day)["cls"] == "I"

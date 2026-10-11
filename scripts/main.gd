@@ -302,7 +302,7 @@ func _feast_tick() -> void:
 		return
 	if er.get("state", "") != "carry" or er.get("ambushed", false) or world == null or not world.active:
 		return
-	var src := GameState.city(er["source"])
+	var src := GameState.place(er["source"])
 	var dst := GameState.city(er["city"])
 	var sp := Vector2(src["x"], src["y"])
 	var dp := Vector2(dst["x"], dst["y"])
@@ -345,8 +345,8 @@ func _give_up_goods(e: Dictionary) -> void:
 	_toast(I18n.t("%s takes the %s and is gone.") % [I18n.t(e["name"]), goods])
 
 
-## Entering a city: the goods of a feast errand are picked up at the source, delivered at the
-## city that asked.
+## Entering a city or a village: the goods of a feast errand are picked up at the source,
+## delivered at the city that asked.
 func _feast_at_city(city_id: String) -> void:
 	if not GameState.is_feast_errand():
 		return
@@ -387,7 +387,7 @@ func _errand_journal_line() -> String:
 	if not GameState.is_feast_errand():
 		return I18n.t("• Favour for %s: beat hostile wanderers (%d/%d), %d gold.") % [I18n.t(er.get("giver", "")), int(er.get("done", 0)), int(er.get("need", 2)), int(er.get("reward", 0))]
 	var city_name: String = GameState.city(er["city"]).get("name", "")
-	var where: String = GameState.city(er["source"]).get("name", "")
+	var where: String = GameState.place(er["source"]).get("name", "")
 	var line := I18n.t("• Feast errand for %s: bring the %s from %s by %s (%s).") % [city_name, I18n.t(er["goods"]), where,
 		LiturgicalCalendar.short_date_text(int(er["feast_day"])), _errand_feast_name(er)]
 	if er.get("state", "") == "carry":
@@ -613,6 +613,7 @@ func start_world() -> void:
 	world = Overworld.new()
 	add_child(world)
 	world.city_entered.connect(_on_city_entered)
+	world.village_entered.connect(_on_village_entered)
 	world.lair_reached.connect(_on_lair_reached)
 	world.enemy_engaged.connect(_on_enemy_engaged)
 	world.ferry_reached.connect(_on_ferry)
@@ -821,7 +822,21 @@ func show_journal() -> void:
 		lines.append(I18n.t("No active missions. Talk to townsfolk in the cities."))
 	lines.append("\n" + I18n.t("Today: %s. %s.") % [LiturgicalCalendar.date_text(GameState.day), LiturgicalCalendar.label(LiturgicalCalendar.of_day(GameState.day))])
 	lines.append(I18n.t("\nLairs cleared: %d / %d") % [GameState.cleared_lairs.size(), GameState.world_data.get("lairs", []).size()])
+	lines.append(_villages_journal_line())
 	show_dialog("Journal", "\n".join(lines), [["Close", Callable()]])
+
+
+## The villages walked into, by name.
+func _villages_journal_line() -> String:
+	var all: Array = GameState.world_data.get("villages", [])
+	var names: Array = []
+	for v in all:
+		if GameState.visited_villages.has(v["id"]):
+			names.append(String(v["name"]))
+	var line := I18n.t("Villages visited: %d / %d") % [names.size(), all.size()]
+	if not names.is_empty():
+		line += " (" + ", ".join(names) + ")"
+	return line
 
 
 func _mission_city(mid: String) -> String:
@@ -862,6 +877,31 @@ func _open_city(city_id: String) -> void:
 			_open_city(city_id))
 		_set_screen(b))
 	_set_screen(c)
+
+
+## Walking into a village: it goes into the journal and onto the map as visited, the goods of
+## a feast errand may be waiting here, and the village screen opens.
+func _on_village_entered(village_id: String) -> void:
+	var v := GameState.village(village_id)
+	if v.is_empty():
+		return
+	if GameState.record_village_visit(village_id) and world:
+		world.refresh_decor()
+	GameState.save_game()
+	_open_village(village_id)
+	_feast_at_city(village_id)
+
+
+func _open_village(village_id: String) -> void:
+	var v := GameState.village(village_id)
+	Music.set_context("city", v.get("faction", "machine"))
+	_pause_world(true)
+	var vs := VillageScreen.new()
+	vs.setup(village_id, VillageScreen.gossip_lines(v, GameState.day, world.enemies if world else [], ADVICE))
+	vs.closed.connect(func():
+		_set_screen(null)
+		_pause_world(false))
+	_set_screen(vs)
 
 
 func _on_lair_reached(lair_id: String) -> void:
@@ -921,7 +961,8 @@ func _on_enemy_engaged(e: Dictionary) -> void:
 
 ## The duel itself, with whoever was met on the road.
 func _fight_enemy(e: Dictionary) -> void:
-	var deck := DeckTools.enemy_deck(e["faction"], int(e["level"]), GameState.rng)
+	var theme: String = e.get("theme", WorldEntities.theme_for_name(String(e["name"])))
+	var deck := DeckTools.themed_deck(theme, int(e["level"]), GameState.rng) if theme != "" else DeckTools.enemy_deck(e["faction"], int(e["level"]), GameState.rng)
 	start_battle({"name": e["name"], "faction": e["faction"], "level": int(e["level"]),
 		"life": maxi(6, 8 + int(e["level"]) * 2 + int(GameState.diff("enemy_life"))), "deck": deck, "enemy_id": e["id"], "look": e.get("look", ""),
 		"disposition": e.get("disposition", "hostile"), "thief": e.get("thief", false)})

@@ -4,6 +4,7 @@ extends Node2D
 ## roaming enemies that wander and give chase. Tap / drag to walk.
 
 signal city_entered(city_id: String)
+signal village_entered(village_id: String)
 signal lair_reached(lair_id: String)
 signal enemy_engaged(enemy: Dictionary)
 signal stranger_met(enemy: Dictionary)
@@ -19,6 +20,8 @@ const ENGAGE_RADIUS := 58.0
 const CITY_RADIUS := 120.0
 const SAFE_RADIUS := 480.0
 const LAIR_RADIUS := 110.0
+const VILLAGE_RADIUS := 80.0     # walk this close to a village and you are in it
+const VILLAGE_SAFE := 230.0      # a village keeps the peace for a smaller ring than a city
 const ENEMY_COUNT := 28
 const RESPAWN_TIME := 40.0
 const LEASH := 520.0            # how far a roaming enemy strays from home
@@ -54,7 +57,9 @@ var enemies: Array = []
 var respawn_queue: Array = []   # timers until new enemies appear
 var cities: Array = []
 var lairs: Array = []
+var villages: Array = []
 var inside_city := ""
+var inside_village := ""
 var near_lair := ""
 var camera: Camera2D
 var _t := 0.0
@@ -165,6 +170,7 @@ func _ready() -> void:
 	world_size = Vector2(sz[0], sz[1])
 	cities = wd.get("cities", [])
 	lairs = wd.get("lairs", [])
+	villages = wd.get("villages", [])
 	camera = Camera2D.new()
 	camera.zoom = Vector2(0.75, 0.75)
 	camera.position_smoothing_enabled = true
@@ -200,6 +206,7 @@ func build(ls: LoadingScreen = null, first: int = 0) -> void:
 		_spawn_enemy()
 		await _tick(ls, float(i + 1) / ENEMY_COUNT)
 	inside_city = _city_at(player_pos)   # don't re-open a city we start inside
+	inside_village = village_at(player_pos)
 	built = true
 	active = true
 
@@ -476,6 +483,13 @@ func _draw_items(ci: CanvasItem, y0: float, y1: float) -> void:
 
 
 func _draw_places(ci: CanvasItem) -> void:
+	# villages: the houses are painted on the map; a small label names them (rubric once visited)
+	for v in villages:
+		var vp := Vector2(v["x"], v["y"])
+		if GameState.visited_villages.has(v["id"]):
+			Tapestry.draw_scroll_label(ci, vp + Vector2(0, 50), v["name"], 22, Tapestry.RUBRIC)
+		else:
+			Tapestry.draw_scroll_label(ci, vp + Vector2(0, 50), v["name"], 21, Tapestry.INK, Color(Tapestry.PARCHMENT_LIGHT, 0.85))
 	for l in lairs:
 		var lp := Vector2(l["x"], l["y"])
 		Tapestry.draw_lair(ci, lp, 1.3, l["faction"], GameState.cleared_lairs.has(l["id"]), 0.0)
@@ -548,9 +562,12 @@ func _spawn_enemy(force_night: bool = false) -> void:
 		if disposition == "hostile" and not night_walker and not force_night and _rng.randf() < civil_calm(p):
 			continue
 		var lvl := clampi(1 + int(p.distance_to(start) / 800.0), 1, 5)
+		# a themed wanderer: his name promises his deck (a Templar plays Knights)
+		var pick: Array = WorldEntities.themed_name(f, _rng)
+		var tlook := DeckTools.theme_look(pick[1], _rng)
 		var e := {
-			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": _look_for(f),
-			"name": WorldEntities.enemy_name(f, _rng), "wander": p, "chasing": false, "xp": 0,
+			"id": _next_enemy_id, "pos": p, "home": p, "faction": f, "level": lvl, "look": tlook if tlook != "" else _look_for(f),
+			"name": pick[0], "theme": pick[1], "wander": p, "chasing": false, "xp": 0,
 			"region": region, "disposition": disposition, "night": night_walker, "extra": force_night,
 		}
 		_add_enemy(e)
@@ -634,6 +651,9 @@ func _in_safe_zone(p: Vector2) -> bool:
 	for c in cities:
 		if p.distance_to(Vector2(c["x"], c["y"])) < SAFE_RADIUS:
 			return true
+	for v in villages:
+		if p.distance_to(Vector2(v["x"], v["y"])) < VILLAGE_SAFE:
+			return true
 	return false
 
 
@@ -690,6 +710,14 @@ func _build_night() -> void:
 		l.position = Vector2(c["x"], c["y"]) + Vector2(0, 20)
 		add_child(l)
 		_place_lights.append([l, 0.9])
+	for v in villages:
+		var l := PointLight2D.new()
+		l.texture = tex
+		l.texture_scale = 1.8
+		l.color = Color(1.0, 0.76, 0.42)
+		l.position = Vector2(v["x"], v["y"]) + Vector2(0, -10)
+		add_child(l)
+		_place_lights.append([l, 0.6])
 	for lr in lairs:
 		var l := PointLight2D.new()
 		l.texture = tex
@@ -1014,6 +1042,13 @@ func _city_at(p: Vector2) -> String:
 	return ""
 
 
+func village_at(p: Vector2) -> String:
+	for v in villages:
+		if p.distance_to(Vector2(v["x"], v["y"])) < VILLAGE_RADIUS:
+			return v["id"]
+	return ""
+
+
 func _check_places() -> void:
 	var c := _city_at(player_pos)
 	if c != "" and c != inside_city:
@@ -1027,6 +1062,17 @@ func _check_places() -> void:
 		var ci := GameState.city(inside_city)
 		if player_pos.distance_to(Vector2(ci["x"], ci["y"])) > CITY_RADIUS * 1.6:
 			inside_city = ""
+	var vid := village_at(player_pos)
+	if vid != "" and vid != inside_village:
+		inside_village = vid
+		moving = false
+		move_target = player_pos
+		village_entered.emit(vid)
+		return
+	if vid == "" and inside_village != "":
+		var vi := GameState.village(inside_village)
+		if vi.is_empty() or player_pos.distance_to(Vector2(vi["x"], vi["y"])) > VILLAGE_RADIUS * 1.6:
+			inside_village = ""
 	for l in lairs:
 		var lp := Vector2(l["x"], l["y"])
 		var d := player_pos.distance_to(lp)

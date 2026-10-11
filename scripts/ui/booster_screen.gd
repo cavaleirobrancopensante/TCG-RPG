@@ -14,6 +14,7 @@ var views: Array = []
 var pack: Array = []
 var revealed := 0
 var _fx: Control
+var drag: DragScroll              # drag the cards to scroll when a pack overflows the screen
 
 
 func _ready() -> void:
@@ -45,6 +46,7 @@ func _ready() -> void:
 	grid.add_theme_constant_override("h_separation", 8)
 	grid.add_theme_constant_override("v_separation", 8)
 	center.add_child(grid)
+	drag = DragScroll.attach(self, scroll)
 	_fx = Control.new()
 	_fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	UIKit.full_rect(_fx)
@@ -76,6 +78,8 @@ func _next_pack() -> void:
 
 
 func _on_card_tapped(cv: CardView) -> void:
+	if drag.dragged:
+		return
 	if cv.face_down:
 		_flip(cv)
 	else:

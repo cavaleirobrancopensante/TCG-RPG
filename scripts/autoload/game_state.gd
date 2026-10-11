@@ -36,6 +36,9 @@ var player_pos: Vector2 = Vector2.ZERO
 var current_city: String = ""
 var cleared_lairs: Array = []
 var visited_cities: Array = []
+var visited_villages: Array = []   # ids of the villages walked into
+var village_wells: Dictionary = {} # village id -> the day its well (or chapel) was last used
+var pedlars: Dictionary = {}       # village id -> {"day": day, "sold": [card ids bought that day]}
 var defeated: Dictionary = {}     # faction -> wins counted while missions are active
 var missions: Dictionary = {}     # mission_id -> {"state": "active"/"done"/"claimed", "progress": int}
 var pending_boosters: int = 0     # boosters earned but not opened yet
@@ -91,6 +94,9 @@ func _ready() -> void:
 		world_data = parsed
 	else:
 		push_warning("GameState: could not read data/world.json")
+	# the named villages live in their own file, beside the cities
+	var vp = JSON.parse_string(FileAccess.get_file_as_string("res://data/villages.json"))
+	world_data["villages"] = vp.get("villages", []) if typeof(vp) == TYPE_DICTIONARY else []
 
 
 # ---------------------------------------------------------------- new / save / load
@@ -121,6 +127,9 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Diction
 	active_deck = 0
 	cleared_lairs.clear()
 	visited_cities.clear()
+	visited_villages = []
+	village_wells = {}
+	pedlars = {}
 	defeated.clear()
 	missions.clear()
 	stats = {"wins": 0, "losses": 0, "boosters_opened": 0}
@@ -242,6 +251,7 @@ func save_game(n: int = 0) -> void:
 		"decks": decks, "active_deck": active_deck,
 		"player_name": player_name, "player_pos": [player_pos.x, player_pos.y],
 		"cleared_lairs": cleared_lairs, "visited_cities": visited_cities,
+		"visited_villages": visited_villages, "village_wells": village_wells, "pedlars": pedlars,
 		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters, "start_mode": start_mode,
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
@@ -271,6 +281,11 @@ func _meta() -> Dictionary:
 			city_name = String(c["name"])
 			near = d >= 160
 			place = ("In " if not near else "Near ") + city_name
+	for v in world_data.get("villages", []):
+		if player_pos.distance_to(Vector2(v["x"], v["y"])) < 160:
+			city_name = String(v["name"])
+			near = false
+			place = "In " + city_name
 	var t := Time.get_datetime_dict_from_system()
 	var months := ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 	return {
@@ -319,6 +334,19 @@ func load_game(n: int = 0) -> bool:
 	player_pos = Vector2(p[0], p[1])
 	cleared_lairs = data.get("cleared_lairs", [])
 	visited_cities = data.get("visited_cities", [])
+	# villages came in 1.x: older saves have walked into none yet
+	visited_villages = Array(data.get("visited_villages", [])).filter(func(v): return not village(String(v)).is_empty())
+	village_wells = {}
+	var vw = data.get("village_wells", {})
+	if typeof(vw) == TYPE_DICTIONARY:
+		for k in vw:
+			village_wells[String(k)] = int(vw[k])
+	pedlars = {}
+	var pd = data.get("pedlars", {})
+	if typeof(pd) == TYPE_DICTIONARY:
+		for k in pd:
+			if typeof(pd[k]) == TYPE_DICTIONARY:
+				pedlars[String(k)] = {"day": int(pd[k].get("day", -1)), "sold": Array(pd[k].get("sold", []))}
 	defeated = _int_dict(data.get("defeated", {}))
 	missions = data.get("missions", {})
 	for m in missions.keys():
@@ -481,8 +509,8 @@ func make_camp() -> float:
 	return hours
 
 
-func rest_at_inn() -> bool:
-	if not spend_gold(inn_cost()):
+func rest_at_inn(place_id: String = "") -> bool:
+	if not spend_gold(inn_cost(place_id)):
 		return false
 	life = max_life()
 	day += 1
@@ -490,13 +518,115 @@ func rest_at_inn() -> bool:
 	return true
 
 
-## A bed at the inn of a city (the current one by default): on a I class feast the Church's
-## inns give it for charity.
-func inn_cost(city_id: String = "") -> int:
-	var cid := city_id if city_id != "" else current_city
-	if LiturgicalCalendar.free_inn(String(city(cid).get("faction", "")), day):
+## A bed at the inn of a city or a village (the current city by default): on a I class feast
+## the Church's inns give it for charity. A village inn is plainer, and cheaper.
+func inn_cost(place_id: String = "") -> int:
+	var cid := place_id if place_id != "" else current_city
+	if LiturgicalCalendar.free_inn(String(place(cid).get("faction", "")), day):
 		return 0
+	if not village(cid).is_empty():
+		return maxi(3, int(round(Economy.inn_price() * VILLAGE_INN)))
 	return Economy.inn_price()
+
+
+# ------------------------------------------------------------------ villages
+## Small safe places off the cities: a cheap inn, a pedlar with three cards of the village's
+## faith, a well (or in a Church hamlet a chapel) and a word of gossip.
+
+const VILLAGE_INN := 0.6          # a village bed costs this much of a city's
+const PEDLAR_CARDS := 3
+const BLESSING_XP := 15           # a prayer in a Church chapel when there is nothing to heal
+
+
+func village(id: String) -> Dictionary:
+	for v in world_data.get("villages", []):
+		if v["id"] == id:
+			return v
+	return {}
+
+
+## A city or a village by id ({} if neither).
+func place(id: String) -> Dictionary:
+	var c := city(id)
+	return c if not c.is_empty() else village(id)
+
+
+func record_village_visit(id: String) -> bool:
+	if village(id).is_empty() or visited_villages.has(id):
+		return false
+	visited_villages.append(id)
+	return true
+
+
+## The pedlar's cards today: three commons and uncommons of the village's faith, the same all
+## day (less what you have bought from him), new ones tomorrow.
+func pedlar_stock(id: String) -> Array:
+	var v := village(id)
+	if v.is_empty():
+		return []
+	var f := String(v.get("faction", "machine"))
+	var pool: Array = []
+	for r in ["common", "uncommon"]:
+		for cid in CardDB.pools.get(f, {}).get(r, []):
+			if not CardDB.is_basic_land(cid) and not pool.has(cid):
+				pool.append(cid)
+	pool.sort()
+	var r := RandomNumberGenerator.new()
+	r.seed = hash("%s:%d" % [id, day])
+	var out: Array = []
+	while out.size() < PEDLAR_CARDS and not pool.is_empty():
+		out.append(pool.pop_at(r.randi_range(0, pool.size() - 1)))
+	var p: Dictionary = pedlars.get(id, {})
+	if int(p.get("day", -1)) == day:
+		for cid in p.get("sold", []):
+			out.erase(cid)
+	return out
+
+
+func pedlar_price(id: String, card_id: String) -> int:
+	return Economy.buy_price(id, card_id)
+
+
+## Buy one of the pedlar's cards (at the Economy's price for this village). True if bought.
+func pedlar_buy(id: String, card_id: String) -> bool:
+	if not pedlar_stock(id).has(card_id) or not buy_card(card_id, id):
+		return false
+	var p: Dictionary = pedlars.get(id, {})
+	if int(p.get("day", -1)) != day:
+		p = {"day": day, "sold": []}
+	p["sold"].append(card_id)
+	pedlars[id] = p
+	return true
+
+
+## Has the well (or the chapel) of this village been used today?
+func well_used(id: String) -> bool:
+	return int(village_wells.get(id, -1)) == day
+
+
+## Drink at the well: one point of life, once a day. Returns the life gained (0 or 1), or -1
+## when the well has already been drunk from today.
+func drink_well(id: String) -> int:
+	if village(id).is_empty() or well_used(id):
+		return -1
+	village_wells[id] = day
+	var before := life
+	life = mini(max_life(), life + 1)
+	return life - before
+
+
+## Pray in the chapel of a Church hamlet, once a day: the wounded are made whole; the whole
+## receive a blessing (a little experience). Returns {"healed": n, "xp": n}, or {} if not today.
+func pray_chapel(id: String) -> Dictionary:
+	if String(village(id).get("faction", "")) != "sanctum" or well_used(id):
+		return {}
+	village_wells[id] = day
+	if life < max_life():
+		var n := max_life() - life
+		life = max_life()
+		return {"healed": n, "xp": 0}
+	gain_xp(BLESSING_XP)
+	return {"healed": 0, "xp": BLESSING_XP}
 
 
 # ------------------------------------------------------------------ feast errands
@@ -530,11 +660,14 @@ func feast_errand_offer(city_id: String) -> Dictionary:
 	if choices.is_empty():
 		return {}
 	var g: Dictionary = choices[absi(hash(city_id + ":" + str(int(f["day"])))) % choices.size()]
-	var src := city(String(g["source"]))
+	# the goods come from a village that makes them when there is one, else from the city
+	var source := LiturgicalCalendar.errand_source(String(g["goods"]), c, String(g["source"]), world_data.get("villages", []),
+		absi(hash(city_id + "@" + str(int(f["day"])))))
+	var src := place(source)
 	var dist := Vector2(c["x"], c["y"]).distance_to(Vector2(src["x"], src["y"]))
 	return {
 		"kind": "feast", "city": city_id, "faith": faith, "feast": String(f["name"]), "feast_short": String(f.get("short", "")),
-		"feast_day": int(f["day"]), "goods": String(g["goods"]), "source": String(g["source"]),
+		"feast_day": int(f["day"]), "goods": String(g["goods"]), "source": source,
 		"reward": Economy.income(40 + int(dist / 80.0)), "state": "fetch", "ambushed": false, "lost": 0,
 	}
 
@@ -546,7 +679,7 @@ func accept_feast_errand(offer: Dictionary) -> bool:
 	return true
 
 
-## Entering the source city with the errand in hand: the goods go into the pack.
+## Entering the source (a village or a city) with the errand in hand: the goods go into the pack.
 func feast_pickup(city_id: String) -> bool:
 	if not is_feast_errand() or errand.get("state", "") != "fetch" or errand.get("source", "") != city_id:
 		return false

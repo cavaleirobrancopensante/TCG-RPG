@@ -25,6 +25,7 @@ func _ready() -> void:
 	test_feast_errands()
 	test_levels()
 	test_npc_clashes()
+	test_villages()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -1318,7 +1319,7 @@ func test_feast_errands() -> void:
 	GameState.day = LiturgicalCalendar.game_day_of(2500, 9, 20)
 	var offer := GameState.feast_errand_offer("santa_lucerna")
 	check(not offer.is_empty() and offer["feast"] == "Dedication of St Michael the Archangel", "Santa Lucerna asks for Michaelmas (%s)" % [offer])
-	check(offer.get("source", "") != "santa_lucerna" and not GameState.city(offer.get("source", "")).is_empty(), "fetched from another city")
+	check(offer.get("source", "") != "santa_lucerna" and not GameState.place(offer.get("source", "")).is_empty(), "fetched from another city or a village")
 	check(GameState.feast_errand_offer("santa_lucerna") == offer, "the offer is the same on a second look")
 	# take it
 	check(GameState.accept_feast_errand(offer) and GameState.is_feast_errand(), "errand taken")
@@ -1526,3 +1527,203 @@ func test_npc_clashes() -> void:
 	ow._npc_clashes()
 	check(ow.enemies.size() == 2, "two of the same faith do not fight")
 	ow.queue_free()
+
+
+func test_villages() -> void:
+	print("-- villages")
+	var vs: Array = GameState.world_data.get("villages", [])
+	check(vs.size() >= 24 and vs.size() <= 30, "24 to 30 villages (%d)" % vs.size())
+	var ids := {}
+	var names := {}
+	var per := {}
+	for v in vs:
+		check(not ids.has(v["id"]) and GameState.city(v["id"]).is_empty() and GameState.lair(v["id"]).is_empty(), "village id unique: %s" % v["id"])
+		check(not names.has(v["name"]), "village name unique: %s" % v["name"])
+		ids[v["id"]] = true
+		names[v["name"]] = true
+		per[v["faction"]] = int(per.get(v["faction"], 0)) + 1
+		var text := JSON.stringify(v)
+		check(not text.contains("\u2014") and not text.contains("\u2013"), "no dashes in %s" % v["id"])
+		check(not v.get("gossip", []).is_empty() and String(v.get("description", "")) != "", "%s has a description and gossip" % v["id"])
+		check(ResourceLoader.exists(VillageScreen.backdrop_path(v["faction"])), "backdrop for %s villages" % v["faction"])
+	for f in Factions.ORDER:
+		check(int(per.get(f, 0)) >= 3 and int(per.get(f, 0)) <= 5, "%s has 3 to 5 villages (%d)" % [f, int(per.get(f, 0))])
+	# on walkable ground, in its own faith's lands, clear of the cities' and lairs' rings, and reachable
+	var md = JSON.parse_string(FileAccess.get_file_as_string("res://data/map.json"))
+	var cell := float(md["cell"])
+	var gw := int(md["grid"][0])
+	var gh := int(md["grid"][1])
+	var rows: Array = md["walk"]
+	var code := func(p: Vector2) -> int:
+		return String(rows[int(p.y / cell)]).unicode_at(int(p.x / cell)) - 48
+	var seen := PackedByteArray()
+	seen.resize(gw * gh)
+	var cog := GameState.city("cogspire")
+	var queue: Array = [Vector2i(int(cog["x"] / cell), int(cog["y"] / cell))]
+	seen[queue[0].y * gw + queue[0].x] = 1
+	var ferries: Array = md.get("ferries", [])
+	var grew := true
+	while grew:
+		grew = false
+		while not queue.is_empty():
+			var c: Vector2i = queue.pop_back()
+			for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+				var n: Vector2i = c + d
+				if n.x < 0 or n.y < 0 or n.x >= gw or n.y >= gh or seen[n.y * gw + n.x] != 0:
+					continue
+				if String(rows[n.y]).unicode_at(n.x) == 48:
+					continue
+				seen[n.y * gw + n.x] = 1
+				queue.append(n)
+		for fe in ferries:
+			for pair in [[fe["a"], fe["b"]], [fe["b"], fe["a"]]]:
+				var a := Vector2i(int(pair[0][0] / cell), int(pair[0][1] / cell))
+				var b := Vector2i(int(pair[1][0] / cell), int(pair[1][1] / cell))
+				if seen[a.y * gw + a.x] != 0 and seen[b.y * gw + b.x] == 0:
+					seen[b.y * gw + b.x] = 1
+					queue.append(b)
+					grew = true
+	var ow := Overworld.new()
+	add_child(ow)
+	for v in vs:
+		var vp := Vector2(v["x"], v["y"])
+		check(code.call(vp) in [Overworld.OPEN, Overworld.SLOW, Overworld.ROAD], "%s stands on walkable ground" % v["id"])
+		check(seen[int(vp.y / cell) * gw + int(vp.x / cell)] != 0, "%s is reachable from Cogspire" % v["id"])
+		check(ow.faction_at(vp) == v["faction"], "%s lies in its own faith's lands" % v["id"])
+		for c in GameState.world_data["cities"]:
+			check(vp.distance_to(Vector2(c["x"], c["y"])) >= Overworld.SAFE_RADIUS + Overworld.VILLAGE_SAFE * 0.5, "%s is outside the safe ring of %s" % [v["id"], c["id"]])
+		for l in GameState.world_data["lairs"]:
+			check(vp.distance_to(Vector2(l["x"], l["y"])) >= 400.0, "%s is not at the door of %s" % [v["id"], l["id"]])
+		for w in vs:
+			if w != v:
+				check(vp.distance_to(Vector2(w["x"], w["y"])) >= 2.0 * Overworld.VILLAGE_RADIUS + 200.0, "%s and %s are apart" % [v["id"], w["id"]])
+	# walking in opens it once, a safe zone smaller than a city's
+	var v0: Dictionary = vs[0]
+	var v0p := Vector2(v0["x"], v0["y"])
+	var entered := []
+	ow.village_entered.connect(func(id): entered.append(id))
+	ow.player_pos = v0p + Vector2(20, 0)
+	ow._check_places()
+	ow._check_places()
+	check(entered == [v0["id"]], "walking into a village opens it once (%s)" % [entered])
+	var away := Vector2.ZERO
+	for c in GameState.world_data["cities"]:
+		away += (v0p - Vector2(c["x"], c["y"])).normalized() / maxf(1.0, v0p.distance_to(Vector2(c["x"], c["y"])))
+	away = away.normalized()
+	check(ow._in_safe_zone(v0p + away * (Overworld.VILLAGE_SAFE - 20)) and not ow._in_safe_zone(v0p + away * (Overworld.VILLAGE_SAFE + 40)), "a village keeps a small safe ring")
+	ow.player_pos = v0p + Vector2(0, 300)
+	ow._check_places()
+	check(ow.inside_village == "", "walking away leaves the village")
+	ow.player_pos = v0p
+	ow._check_places()
+	check(entered.size() == 2, "and coming back opens it again")
+	ow.queue_free()
+	# visits, the inn, the pedlar, the well and the chapel
+	GameState.new_game(1, "lyceum")
+	GameState.day = LiturgicalCalendar.game_day_of(2500, 7, 7)   # a plain weekday
+	var rv := ""
+	var church := ""
+	for v in vs:
+		if v["faction"] == "revel" and rv == "":
+			rv = v["id"]
+		if v["faction"] == "sanctum" and church == "":
+			church = v["id"]
+	check(GameState.record_village_visit(rv) and not GameState.record_village_visit(rv) and GameState.visited_villages == [rv], "a visit is recorded once")
+	check(GameState.inn_cost(rv) < GameState.inn_cost("vinemere"), "a village inn is cheaper than a city's (%d < %d)" % [GameState.inn_cost(rv), GameState.inn_cost("vinemere")])
+	GameState.gold = 100
+	GameState.life = 2
+	var d0 := GameState.day
+	var cost := GameState.inn_cost(rv)
+	check(GameState.rest_at_inn(rv) and GameState.life == GameState.max_life() and GameState.gold == 100 - cost and GameState.day == d0 + 1, "the village inn heals fully")
+	var stock := GameState.pedlar_stock(rv)
+	check(stock.size() == GameState.PEDLAR_CARDS and stock == GameState.pedlar_stock(rv), "the pedlar has three cards, the same all day")
+	for cid in stock:
+		var cc := CardDB.get_card(cid)
+		check((cc["faction"] == "revel" or cc.get("faction2", "") == "revel") and cc["rarity"] in ["common", "uncommon"], "pedlar card %s is a common or uncommon of the village's faith" % cid)
+	GameState.gold = 1000
+	var pick: String = stock[0]
+	var price := GameState.pedlar_price(rv, pick)
+	var have := GameState.owned_count(pick)
+	check(price == Economy.buy_price(rv, pick), "pedlar prices are the Economy's")
+	check(GameState.pedlar_buy(rv, pick) and GameState.gold == 1000 - price and GameState.owned_count(pick) == have + 1, "buy from the pedlar")
+	check(not GameState.pedlar_stock(rv).has(pick) and GameState.pedlar_stock(rv).size() == stock.size() - 1, "a bought card leaves his pack")
+	check(not GameState.pedlar_buy(rv, pick), "and cannot be bought twice")
+	GameState.gold = 0
+	check(not GameState.pedlar_buy(rv, GameState.pedlar_stock(rv)[0]), "no card without the gold")
+	GameState.life = GameState.max_life() - 3
+	check(GameState.drink_well(rv) == 1 and GameState.life == GameState.max_life() - 2, "the well heals one")
+	check(GameState.drink_well(rv) == -1 and GameState.well_used(rv), "once a day")
+	check(GameState.pray_chapel(rv).is_empty(), "no chapel outside the Church's hamlets")
+	var r := GameState.pray_chapel(church)
+	check(int(r.get("healed", 0)) == 2 and GameState.life == GameState.max_life(), "prayer in a chapel makes the wounded whole")
+	check(GameState.pray_chapel(church).is_empty(), "the chapel once a day")
+	# save and load
+	var saved_day := GameState.day
+	GameState.save_game(6)
+	GameState.visited_villages = []
+	GameState.village_wells = {}
+	GameState.pedlars = {}
+	check(GameState.load_game(6) and GameState.visited_villages == [rv] and GameState.well_used(rv) and GameState.well_used(church)
+		and not GameState.pedlar_stock(rv).has(pick), "villages survive save/load")
+	GameState.day = saved_day + 1
+	check(GameState.drink_well(rv) == 1 or GameState.life == GameState.max_life(), "the well is fresh the next day")
+	check(not GameState.well_used(church), "the chapel is open again the next day")
+	var xp0 := GameState.xp + GameState.level * 100000
+	GameState.life = GameState.max_life()
+	check(int(GameState.pray_chapel(church).get("xp", 0)) == GameState.BLESSING_XP and GameState.xp + GameState.level * 100000 > xp0, "the whole go blessed")
+	check(GameState.pedlar_stock(rv).size() == GameState.PEDLAR_CARDS, "a full pack the next day")
+	var f := FileAccess.open(GameState.slot_path(6), FileAccess.WRITE)
+	f.store_string(JSON.stringify({"version": 3, "gold": 5}))
+	f.close()
+	check(GameState.load_game(6) and GameState.visited_villages.is_empty() and GameState.village_wells.is_empty() and GameState.pedlars.is_empty(), "old saves have no villages visited")
+	GameState.delete_slot(6)
+	# feast errands fetch their goods from a village that makes them
+	var sl := GameState.city("santa_lucerna")
+	var wine := LiturgicalCalendar.errand_source("wine for the Mass", sl, "vinemere", vs, 0)
+	var wv := GameState.village(wine)
+	check(not wv.is_empty() and wv["wares"].has("wine"), "wine for the Mass comes from a vineyard village (%s)" % wine)
+	var candles := LiturgicalCalendar.errand_source("beeswax candles", sl, "elderholt", vs, 3)
+	check(GameState.village(candles).get("wares", []).has("candles") or GameState.village(candles).get("wares", []).has("beeswax"), "candles from a hamlet that makes them (%s)" % candles)
+	check(LiturgicalCalendar.errand_source("a unicorn", sl, "porticus", vs, 0) == "porticus", "goods no village makes come from the city")
+	for v in vs:
+		check(Vector2(sl["x"], sl["y"]).distance_to(Vector2(v["x"], v["y"])) >= LiturgicalCalendar.ERRAND_MIN_DIST or LiturgicalCalendar.errand_source(" ".join(v["wares"]), sl, "x", [v], 0) == "x", "never a village at the asking city's gates")
+	var from_villages := 0
+	var offers := 0
+	for c in GameState.world_data["cities"]:
+		for dd in range(0, 360, 9):
+			GameState.errand = {}
+			GameState.feast_log = []
+			GameState.day = dd
+			var o := GameState.feast_errand_offer(c["id"])
+			if o.is_empty():
+				continue
+			offers += 1
+			check(not GameState.place(o["source"]).is_empty() and o["source"] != c["id"], "errand source %s is a place" % o["source"])
+			var sv := GameState.village(o["source"])
+			if not sv.is_empty():
+				from_villages += 1
+				var ok := false
+				for w in sv["wares"]:
+					ok = ok or String(o["goods"]).to_lower().contains(String(w))
+				check(ok, "%s makes the %s" % [sv["id"], o["goods"]])
+	check(offers > 10 and from_villages * 2 > offers, "feast errands mostly send you to villages (%d of %d)" % [from_villages, offers])
+	# picked up at a village
+	GameState.errand = {}
+	var vo := {}
+	for dd in range(0, 360, 3):
+		GameState.feast_log = []
+		GameState.day = dd
+		var o := GameState.feast_errand_offer("santa_lucerna")
+		if not o.is_empty() and not GameState.village(o["source"]).is_empty():
+			vo = o
+			break
+	check(not vo.is_empty() and GameState.accept_feast_errand(vo) and GameState.feast_pickup(vo["source"]) and GameState.errand["state"] == "carry", "the goods are picked up at the village")
+	GameState.errand = {}
+	# gossip
+	var lines := VillageScreen.gossip_lines(vs[0], 0, [{"pos": Vector2(vs[0]["x"], vs[0]["y"] - 600), "name": "Pact Cultist", "disposition": "hostile"}], ["Advice one."])
+	check(lines.size() >= vs[0]["gossip"].size() + 2, "gossip: the village's own talk, rumours and road wisdom (%d)" % lines.size())
+	var rumour_of_foe := false
+	for l in lines:
+		rumour_of_foe = rumour_of_foe or (String(l).contains("Pact Cultist") and String(l).contains("north"))
+	check(rumour_of_foe, "gossip points at a wanderer near by")
+	check(VillageScreen.direction(Vector2.ZERO, Vector2(0, -10)) == "north" and VillageScreen.direction(Vector2.ZERO, Vector2(10, 10)) == "south-east", "compass words")

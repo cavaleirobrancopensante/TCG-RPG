@@ -18,15 +18,15 @@ Two bodies for two mana, which feeds Assembly, Servo sacrifice and snare defence
 
 The faith's clean introduction to Overclock: a 2/2 on turn two or a 4/4 on turn four, both at full rate because of the C symbol. A flexible common like this smooths the curve without adding complexity. The flavour line about honest loyalty is kept from set 1 because it sums up the guild's transactional ethic.
 
-**Steam Hauler** · Common · Creature (Construct) · 1C · 4/3 · Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).
+**Steam Hauler** · Common · Creature (Construct) · 1C · 3/3 · Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).
 
-The common face of the upkeep mechanic: a 4/3 for two that costs a mana every turn. Early it trades far above its cost, but later it taxes your development, which is the point. It costs C so that other faiths cannot borrow a cheap fatty, and its coal bill is the guild's ledger made flesh, or rather brass.
+The common face of the upkeep mechanic: a 3/3 for two that costs a mana every turn. Early it trades far above its cost, but later it taxes your development, which is the point. It costs C so that other faiths cannot borrow a cheap fatty, and its coal bill is the guild's ledger made flesh, or rather brass.
 
 **Rivetwall Sentry** · Common · Creature (Construct) · 1C · 0/3 · Assembly (this gets +1/+1 for each other Construct you control).
 
 A wall that becomes an attacker. Alone it is a 0/3 blocker for two; with two other Constructs it is a 2/5. It replaces the set 1 defender version, since defender belongs to the Stoa, and gives the faith early defence that rewards building out. The doorway flavour is kept from set 1.
 
-**Piston Laborer** · Common · Creature (Construct) · 2C · 3/3 · No abilities.
+**Piston Laborer** · Common · Creature (Construct) · 2C · 3/3 · (No abilities.)
 
 A vanilla 3/3 for three at full rate, the reliable body every faith needs at common. The C symbol is what earns full stats. Its tireless work is the faith's efficiency over passion in one line.
 
@@ -38,19 +38,19 @@ The common payoff for spare Servos: it eats them to grow, turning a board of chu
 
 An Overclock card whose extra payment buys bodies instead of counters. As a generic card it is modest: a 2/3 for three, or three small bodies for five. Other faiths can play it, but Servos give them nothing they lack, while a Technocracy deck turns the tokens into Assembly and sacrifice fuel.
 
-**Bronze Phalanx Automaton** · Common · Creature (Construct) · 3C · 3/5 · No abilities.
+**Bronze Phalanx Automaton** · Common · Creature (Construct) · 3C · 3/4 · (No abilities.)
 
-A plain 3/5 for four, the defensive rate body, with vigilance removed because vigilance belongs to the Stoa. It holds the ground while the engine assembles. The flavour keeps its pointed contrast between virtue and mechanism.
+A plain 3/4 for four, a point under rate as the faith's sturdy filler, with vigilance removed because vigilance belongs to the Stoa. It holds the ground while the engine assembles. The flavour keeps its pointed contrast between virtue and mechanism.
 
 **Foundry Golem** · Common · Creature (Construct) · 4 · 3/4 · Overclock 2 (you may pay 2 more as you play this). If overclocked, it enters with two +1/+1 counters.
 
 A generic Overclock body: a 3/4 for four or a 5/6 for six, both a point under rate as befits a card any deck can play. It gives the faith a late game sink at common. 'Animated by arithmetic' is the Technocracy in three words.
 
-**Smelter Automaton** · Common · Creature (Construct) · 4C · 4/4 · When this enters, create a 1/1 Servo Construct token.
+**Smelter Automaton** · Common · Creature (Construct) · 4C · 4/3 · When this enters, create a 1/1 Servo Construct token.
 
-A five-drop that brings a helper: 4/4 plus a 1/1, five points of stats for five mana at full rate. Two Constructs in one card is exactly what Assembly wants. The side vent that spits out a Servo is the comic, slightly sinister edge of the foundry.
+A five-drop that brings a helper: a 4/3 plus a 1/1, a point of toughness under full rate in exchange for the second body. Two Constructs in one card is exactly what Assembly wants. The side vent that spits out a Servo is the comic, slightly sinister edge of the foundry.
 
-**Cogspire Hulk** · Common · Creature (Construct) · 6 · 5/6 · No abilities.
+**Cogspire Hulk** · Common · Creature (Construct) · 6 · 5/6 · (No abilities.)
 
 The common top end: a generic 5/6 for six, a stat point under rate. Any deck can run it, but a big vanilla body takes nothing away from another faith's identity. The invoice joke is the guild's accounts in miniature.
 
@@ -62,11 +62,11 @@ A cheap token spell that scales: one Servo for one mana, two for three. It is ge
 
 Two bodies for two mana at full rate, the committed version of Spare Parts. It is the plainest way to widen the board for Assembly. The requisition slip, stamped and billed, is how the Technocracy wages war.
 
-**Tempered Plating** · Common · Spell (Device, instant) · 2C · Put two +1/+1 counters on target Construct you control.
+**Tempered Plating** · Common · Spell (Device) · 2C · Put two +1/+1 counters on target Construct you control.
 
 A permanent upgrade instead of a temporary pump, so it stays clear of the Old Ways' combat tricks. In 1.23 it became an instant and its cost rose by one generic: two permanent counters in the middle of combat are worth three mana, not two. The Construct restriction keeps it inside the faith, and the guild stamp makes even armour a matter of paperwork.
 
-**Calibrated Discharge** · Common · Spell (Device, instant) · 1 · Put a +1/+1 counter on target Construct you control. Overclock 1C (you may pay 1C more as you play this). If overclocked, also deal 2 damage to target enemy creature.
+**Calibrated Discharge** · Common · Spell (Device) · 1 · Put a +1/+1 counter on target Construct you control. Overclock 1C (you may pay 1C more as you play this). If overclocked, also deal 2 damage to target enemy creature.
 
 The faith's common creature damage, kept behind an Overclock that needs a Foundry, so other faiths cannot treat it as cheap removal. Base mode is a small permanent upgrade for one; overclocked it is three mana for a counter and two damage, below the Revel's rate. In 1.23 it became an instant at the same cost, since a single counter, or two damage behind a Foundry overclock, is modest enough to answer an attack without a surcharge. The precise flavour keeps the cold, measured tone of set 1.
 
@@ -98,9 +98,9 @@ Overclock and Assembly in one card: overclocked for five, it brings two Servos a
 
 The flexible Servo outlet: unlike Scrap Collector, it moves the counters to whichever Construct needs them. A 2/1 for two is at rate with a useful ability. The stoker who feeds small machines to big ones shows the faith's cold sums.
 
-**Trip-Hammer Automaton** · Uncommon · Creature (Construct) · 3C · 3/4 · Whenever this attacks, put a +1/+1 counter on it.
+**Trip-Hammer Automaton** · Uncommon · Creature (Construct) · 3C · 2/4 · Whenever this attacks, put a +1/+1 counter on it.
 
-A machine that warms up: a 3/4 for four that grows every time it swings. It is slightly under rate at first and well above it after two attacks, so it rewards keeping it alive. The steam hammer gaining force with each stroke is the faith's relentless efficiency.
+A machine that warms up: a 2/4 for four that grows every time it swings. It is under rate at first and well above it after two attacks, so it rewards keeping it alive. The steam hammer gaining force with each stroke is the faith's relentless efficiency.
 
 **Gearwork Phalanx** · Uncommon · Creature (Construct) · 4 · 2/3 · Assembly (this gets +1/+1 for each other Construct you control).
 
@@ -110,9 +110,9 @@ A generic Assembly creature, priced well under rate because alone it is a 2/3 fo
 
 A one-time upgrade for a wide board, permanent counters rather than a static anthem, which the Church owns. It is strongest after a turn of Servos, and Overclock doubles it for five mana. A guild order that retools the whole line in a morning shows efficiency at scale.
 
-**Expedited Patent** · Uncommon · Spell (Order) · CC · Create a 1/1 Servo Construct token, then put two +1/+1 counters on target Construct you control.
+**Expedited Patent** · Uncommon · Spell (Order) · 1C · Create a 1/1 Servo Construct token, then put two +1/+1 counters on target Construct you control.
 
-Two C symbols make this a card for committed decks only. It adds a body and two counters for two mana, four points of stats at rate, and the counters can land on the fresh Servo or on a better Construct. The fee that buys speed is the guild's commerce in a sentence.
+The C symbol makes this a card for committed decks. It adds a body and two counters for two mana, four points of stats at rate, and the counters can land on the fresh Servo or on a better Construct. The fee that buys speed is the guild's commerce in a sentence.
 
 **Bulk Order** · Uncommon · Spell (Order) · 3C · Create three 1/1 Servo Construct tokens.
 
@@ -132,19 +132,19 @@ The plain cost reducer that replaces the old mana rocks: it speeds up only Techn
 
 **Clockwork Gaol** · Uncommon · Relic (Snare) · C · When this enters, choose target enemy creature. It can't attack or block while this stays in play. Upkeep 1 (at the beginning of your upkeep, pay 1 or sacrifice this).
 
-A one-mana snare that you must keep paying for, combining two of the faith's mechanics. It can shut down the best creature on turn one, but every mana spent on it is a mana not spent building. When the payments stop, the prisoner walks free.
+A one-mana snare that you must keep paying for, combining two of the faith's mechanics. It can shut down a dangerous creature of your choice on turn one, but every mana spent on it is a mana not spent building. When the payments stop, the prisoner walks free.
 
 **Guild Comptroller** · Rare · Creature (Human Clerk) · 1C · 1/3 · Your Technocracy cards cost 1 less to play. This reduces only generic mana.
 
 A cost reducer on a body, the faith's answer to mana creatures without giving any other faith ramp. On turn two it makes a three-drop cost two, and it stacks with Foundry Ledger for a fast engine. A clerk as the most powerful man in the room is the Technocracy's whole character.
 
-**Grand Foundry Colossus** · Rare · Creature (Construct) · 3C · 7/7 · Upkeep 3.
+**Grand Foundry Colossus** · Rare · Creature (Construct) · 3C · 6/6 · Upkeep 3.
 
-A 7/7 for four is enormous, and three mana every upkeep is a heavy price that can starve the rest of your turn. It is the build-around for decks with reducers and cheap Constructs, since those leave mana free to feed it. The colossus that eats coal seams shows the faith's scale and its cost.
+A 6/6 for four is enormous, and three mana every upkeep is a heavy price that can starve the rest of your turn. It is the build-around for decks with reducers and cheap Constructs, since those leave mana free to feed it. The colossus that eats coal seams shows the faith's scale and its cost.
 
-**Cogspire Assembler** · Rare · Creature (Construct) · 3C · 2/2 · Assembly. At the beginning of your upkeep, create a 1/1 Servo Construct token.
+**Cogspire Assembler** · Rare · Creature (Construct) · 4C · 2/2 · Assembly. At the beginning of your upkeep, create a 1/1 Servo Construct token.
 
-A self-feeding engine: every upkeep it makes a Servo, and every Servo adds to its Assembly bonus. A 2/2 for four is weak at first, so it must survive a turn to matter, which keeps it answerable. It is the purest picture of the faith's loop of making and growing.
+A self-feeding engine: every upkeep it makes a Servo, and every Servo adds to its Assembly bonus. A 2/2 for five is weak at first, so it must survive a turn to matter, which keeps it answerable. It is the purest picture of the faith's loop of making and growing.
 
 **Arc-Welder Construct** · Rare · Creature (Construct) · 3C · 3/3 · Overclock 2. If overclocked, when this enters, deal 3 damage to target enemy creature.
 
@@ -158,21 +158,21 @@ A clock that must be wound: each upkeep you pay one and it grows. It starts as a
 
 The rare Servo payoff: each turn one Servo becomes a counter on every other creature. Limited to once a turn so it cannot snowball in a single main phase. It rewards a steady Servo supply from Cogspire Foreman or Self-Mending Forge, and the furnace image shows sacrifice as sheer arithmetic.
 
-**Cogspire Exhibition** · Rare · Spell (Order) · 3CC · Create two 1/1 Servo Construct tokens, then put two +1/+1 counters on each creature you control.
+**Cogspire Exhibition** · Rare · Spell (Order) · 3CC · Create two 1/1 Servo Construct tokens, then put a +1/+1 counter on each creature you control.
 
-The faith's rare finisher: on a board of a few Constructs it adds two bodies and grows everything by two. Two C symbols keep it for committed decks. It is a single big turn, not a lasting anthem, and the exhibition hall of gleaming machines is the Technocracy showing off.
+The faith's rare finisher: on a board of a few Constructs it adds two bodies and grows everything by one, Servos included, for good. Two C symbols keep it for committed decks. It is a single big turn, not a lasting anthem, and the exhibition hall of gleaming machines is the Technocracy showing off.
 
 **Cogspire Lockworks** · Rare · Relic (Snare) · 2CC · When this enters, choose two target enemy creatures. They can't attack or block while this stays in play.
 
-A two-for-one snare at four mana, the rare version of Brass Manacles. It can stop an opponent's two best creatures, but a single relic answer frees both, which keeps it fair. The clerk who loses the key on purpose is the faith's bureaucratic menace.
+A two-for-one snare at four mana, the rare version of Brass Manacles. It can stop the two enemy creatures you most fear, but a single relic answer frees both, which keeps it fair. The clerk who loses the key on purpose is the faith's bureaucratic menace.
 
 **Perpetual Engine** · Rare · Relic (Engine) · 2 · Your Technocracy cards cost 2 less to play. This reduces only generic mana. Upkeep 1.
 
 Set 1's Perpetual Engine was ramp for any deck; now it reduces only Technocracy costs, so it is useless elsewhere. Two off every Technocracy card is powerful, so it charges one mana each upkeep, which pays for itself only when you play two or more cards a turn. The name is ironic: nothing in the guild runs for free.
 
-**The Prime Engine** · Mythic · Creature (Construct) · 5CC · 4/4 · Assembly. When this enters, create three 1/1 Servo Construct tokens.
+**The Prime Engine** · Mythic · Creature (Construct) · 5CC · 4/4 · Assembly. When this enters, create two 1/1 Servo Construct tokens.
 
-The faith's showpiece: seven mana for a 4/4 that arrives with three Servos and is at least a 7/7 at once. It is a single creature at the centre of the board, so removal on it still leaves the opponent facing only 1/1s. Vigilance and trample are gone as off-faith keywords, and the 'echo' flavour is kept from set 1.
+The faith's showpiece: seven mana for a 4/4 that arrives with two Servos and is at least a 6/6 at once. It is a single creature at the centre of the board, so removal on it still leaves the opponent facing only 1/1s. Vigilance and trample are gone as off-faith keywords, and the 'echo' flavour is kept from set 1.
 
 **The Iron Leviathan** · Mythic · Creature (Construct) · 3CC · 6/6 · Assembly. Upkeep 2.
 
@@ -206,7 +206,7 @@ A Construct that wants its makers nearby, the mirror of Assembly: instead of cou
 
 A permanent version of Assembly: it starts under rate as a 2/2 for three but keeps every counter it earns, even if the Servos later die or are sacrificed. That makes it a good partner for Scrap Collector and Furnace Stoker, which consume the tokens it has already counted. The chain of coupled machines is the Cogspire line in miniature.
 
-**Emergency Shoring** · Common · Spell (Order, instant) · 2C · Put a +1/+1 counter on each Construct you control.
+**Emergency Shoring** · Common · Spell (Order) · 2C · Put a +1/+1 counter on each Construct you control.
 
 A team-wide combat trick for machines, priced a mana above sorcery-speed effects as instants are, and limited to Constructs so it never becomes an anthem for other creatures. Cast during the enemy's attack it turns a row of Servos into 2/2 blockers for good. A guild order issued mid-battle, with the bill to follow, is the Technocracy at war.
 
@@ -226,7 +226,7 @@ The Construct lord, held by an Artificer so that the anthem dies with the man, n
 
 One of the faith's rare damage cards, kept behind an Overclock that needs a Foundry and scaling with the tribe, so other faiths gain nothing from it. With two other Artificers out it is five mana for a 2/2 and three damage, in line with Arc-Welder Construct. The galvanist is natural philosophy turned into an invoice.
 
-**Field Repair** · Uncommon · Spell (Device, instant) · 1C · Put a +1/+1 counter on target Construct you control for each Artificer you control.
+**Field Repair** · Uncommon · Spell (Device) · 1C · Put a +1/+1 counter on target Construct you control for each Artificer you control.
 
 The Artificers' combat trick: the more craftsmen on the field, the bigger the permanent repair. With one Artificer it is a weak two-mana instant; with three it saves a Construct in combat and keeps the counters afterward. It is permanent, so it stays clear of the Old Ways' temporary pumps.
 
@@ -250,7 +250,7 @@ The faith's tribal showpiece: every machine that enters makes every craftsman st
 
 The Technocracy's third theme is not a creature tribe but its own gear: relics and the new Equipment. The tribe word "Relic" counts every relic you control, so the faith's existing Snares, Workshops and Engines (Gear Trap, Brass Manacles, Calibration Bench, Galvanic Coil, Self-Mending Forge, Foundry Ledger, Clockwork Gaol, Cogspire Lockworks, Perpetual Engine, The Grand Tabulator) already belong to it, together with the two new Equipment: twelve relics in all, and no retagging was needed. The five new cards are two cheap colourless Equipment that feed the count early and three payoffs that count relics or reward each one that enters (a kinship common, a cost cutter with an ally trigger, and a rare engine). Equipment lend first strike and vigilance, which the spec allows on Technocracy Equipment only; the faith still owns no keyword on its creatures. There is no energy or other new resource: everything runs on mana, relics in play and the cards already in the spec.
 
-**Spring-Loaded Lance** · Common · Relic (Equipment) · 1 · Equipped creature gets +1/+0 and has first strike. Equip 2.
+**Spring-Loaded Lance** · Common · Relic (Equipment) · 1 · Equipped creature gets +1/+0 and has first strike. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)
 
 The cheapest relic in the faith, so it turns on the relic payoffs from the first turns and can be played with no creature out. +1/+0 and first strike is a modest bonus at early-2000s rates (Leonin Scimitar gave +1/+1 for 1, Equip 1), paid for with the dearer Equip 2. First strike stays a Revel keyword on creatures; here it is only lent by a machine, which the spec allows for Equipment. A lance that fires its point forward on a spring is the guild's answer to the joust.
 
@@ -258,7 +258,7 @@ The cheapest relic in the faith, so it turns on the relic payoffs from the first
 
 The common relic payoff, shaped like Tended Automaton: a cheap Construct that is a wall on its own and an attacker once the bench is full. With two relics out it is a 3/3 for two, and it counts for Assembly as well, so it fits either Technocracy deck. A machine that carries every tool of the workshop on its back is the faith's idea of a good labourer.
 
-**Riveted Pauldron** · Uncommon · Relic (Equipment) · 3 · When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip 2.
+**Riveted Pauldron** · Uncommon · Relic (Equipment) · 3 · When this enters, attach it to target creature you control. Equipped creature gets +1/+2 and has vigilance. Equip 2 (pay 2: attach this to a creature you control. Equip only as a sorcery.)
 
 The uncommon twist is that it straps itself on as it enters, so it works the turn it is played; afterward it moves for Equip 2 like any Equipment. +1/+2 and vigilance makes any body an attacker that still guards, which suits the faith's slow, sturdy machines. Three mana is a point dear for the bonus, the price of the free first attachment. Vigilance is a Stoa keyword, lent here only through Equipment as the spec allows.
 

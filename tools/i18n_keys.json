@@ -1873,6 +1873,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Villages visited: %d / %d",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "%s in %s",
    "note": "scripts/main.gd"
   },
@@ -2366,6 +2370,10 @@
   },
   {
    "key": "The steward",
+   "note": "scripts/ui/city_screen.gd"
+  },
+  {
+   "key": "(a village to the %s)",
    "note": "scripts/ui/city_screen.gd"
   },
   {
@@ -3041,6 +3049,18 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
+   "key": "Respond to every spell",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Off: only at your stops and in combat",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "On: the duel stops whenever the enemy casts something you could answer.",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
    "key": "Full screen",
    "note": "scripts/ui/settings_screen.gd"
   },
@@ -3275,6 +3295,110 @@
   {
    "key": "HSlider",
    "note": "scripts/ui/ui_kit.gd"
+  },
+  {
+   "key": "south-east",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "south-west",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "north-west",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "north-east",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "Village",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "♥ %d/%d   ◉ %d gold",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "Ask around",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "The inn",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "A plain bed under the eaves heals you fully (life %d of %d).",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "The chapel",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "The well",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "Pray",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "Drink",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "You have prayed here today. Come back tomorrow.",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "Kneel before the altar: the wounded are made whole, the whole go blessed. Once a day.",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "You have drunk here today. Come back tomorrow.",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "Cold, clean water: one point of life, once a day.",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "The water is cold and sweet (+%d life).",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "You rise from prayer made whole (+%d life).",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "You rise from prayer blessed (+%d experience).",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "The pedlar",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "\"Sold out, friend. Come back tomorrow.\"",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "Cards of %s from his pack. New ones tomorrow.",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "\"They say %s waits in %s, to the %s. Go well armed, or not at all.\"",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "\"Folk are making ready for %s, on %s.\"",
+   "note": "scripts/ui/village_screen.gd"
+  },
+  {
+   "key": "\"Travellers warn of trouble to the %s. One calls himself %s.\"",
+   "note": "scripts/ui/village_screen.gd"
   },
   {
    "key": "Painting the land",
