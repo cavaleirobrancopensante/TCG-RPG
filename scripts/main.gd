@@ -612,6 +612,7 @@ func open_save_slots() -> void:
 func _new_game(n: int = 1, hero_faith: String = "sanctum", sheet: Dictionary = {}) -> void:
 	GameState.new_game(n, hero_faith, sheet)
 	await start_world()
+	var story_word := "\n\n" + I18n.t("Your story begins in %s. The gold star on the map shows the way.") % GameState.city(_capital_of(hero_faith)).get("name", "")
 	if GameState.start_mode in ["draft", "sealed"]:
 		var cap := _capital_of(hero_faith)
 		var sealed: bool = GameState.start_mode == "sealed"
@@ -619,12 +620,12 @@ func _new_game(n: int = 1, hero_faith: String = "sanctum", sheet: Dictionary = {
 			else I18n.t("Your road begins at the sealed tournament of %s. Open four boosters, build a deck from what you find, and fight bouts that cannot kill you. The cards are yours to keep, and the faith rewards those who go far with boosters of its own.")
 		show_dialog(I18n.t("Welcome, %s") % GameState.player_name,
 			I18n.t("Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.")
-			+ "\n\n" + how % GameState.city(cap).get("name", ""),
+			+ "\n\n" + how % GameState.city(cap).get("name", "") + story_word,
 			[["To the tournament", func(): open_tournament(cap, true, sealed)]])
 		return
 	show_dialog(I18n.t("Welcome, %s") % GameState.player_name,
 		I18n.t("Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.")
-		+ "\n\n" + _packs_text(hero_faith),
+		+ "\n\n" + _packs_text(hero_faith) + story_word,
 		[["Open my boosters", func(): open_boosters(true)]])
 
 
@@ -668,7 +669,11 @@ func start_world() -> void:
 	world.npc_clash.connect(_on_npc_clash)
 	await world.build(ls, 0)
 	_build_hud()
+	_story_refresh_marker()
 	await ls.close()
+	# a chapter whose intro was left unheard (the game closed mid-story) plays on the road
+	if not Story.next_event("").is_empty() and screen == null:
+		_story_at("")
 
 
 func _build_hud() -> void:
@@ -1053,6 +1058,13 @@ func open_deck_builder(return_to_city: String = "") -> void:
 
 func show_journal() -> void:
 	var lines := []
+	var here: Vector2 = world.player_pos if world else GameState.player_pos
+	# the storyline first: the chapter in hand, what it asks and where to go
+	var story := Story.summary_lines(here)
+	if not story.is_empty():
+		lines.append(I18n.t("Story"))
+		lines.append_array(story)
+		lines.append("")
 	for id in GameState.missions:
 		var st: String = GameState.mission_state(id)
 		if st == "claimed":
@@ -1067,8 +1079,8 @@ func show_journal() -> void:
 	var el := _errand_journal_line()
 	if el != "":
 		lines.append(el)
-	if lines.is_empty():
-		var goals := next_goals()
+	if lines.size() == (0 if story.is_empty() else story.size() + 2):
+		var goals := next_goals().filter(func(g): return not String(g).begins_with(I18n.t("Story: %s").split("%s")[0]))
 		if goals.is_empty():
 			lines.append(I18n.t("No active missions. Talk to townsfolk in the cities."))
 		else:
@@ -1078,7 +1090,18 @@ func show_journal() -> void:
 	lines.append("\n" + I18n.t("Today: %s. %s.") % [LiturgicalCalendar.date_text(GameState.day), LiturgicalCalendar.label(LiturgicalCalendar.of_day(GameState.day))])
 	lines.append(I18n.t("\nLairs cleared: %d / %d") % [GameState.cleared_lairs.size(), GameState.world_data.get("lairs", []).size()])
 	lines.append(_villages_journal_line())
-	show_dialog("Journal", "\n".join(lines), [["Close", Callable()]])
+	var buttons := [["Close", Callable()]]
+	if not Story.st()["arcs"].is_empty():
+		buttons.push_front(["The story so far", show_story_journal])
+	show_dialog("Journal", "\n".join(lines), buttons)
+
+
+## The whole of the story: chapters done, the one in hand, side quests and the persons met.
+func show_story_journal() -> void:
+	var sl := Story.journal_lines(world.player_pos if world else GameState.player_pos)
+	if sl.is_empty():
+		sl.append(I18n.t("No story yet."))
+	show_dialog("The story so far", "\n".join(sl), [["Journal", show_journal], ["Close", Callable()]])
 
 
 ## When no mission is in hand: up to three useful things to do next, nearest first.
@@ -1092,6 +1115,10 @@ func next_goals() -> Array:
 		out.append(I18n.t("Open your %d booster(s) (the Boosters button).") % GameState.pending_boosters)
 	if GameState.stat_points > 0:
 		out.append(I18n.t("Spend your stat point on the hero sheet."))
+	# the hero's own storyline: the next step of the chapter in hand
+	var sg := Story.goal_line(here)
+	if sg != "":
+		out.append(sg)
 	# work offered in a city already known
 	var best_m := ""
 	var best_md := INF
@@ -1187,6 +1214,7 @@ func _on_city_entered(city_id: String) -> void:
 	_open_city(city_id)
 	if toll > 0:
 		_toast(I18n.t("Gate toll: %d gold.") % toll)
+	_story_at(city_id)
 	_feast_at_city(city_id)
 
 
@@ -1196,6 +1224,7 @@ func _open_city(city_id: String) -> void:
 	var c := CityScreen.new()
 	c.setup(city_id)
 	c.closed.connect(func():
+		_story_close(false)
 		_set_screen(null)
 		_pause_world(false))
 	c.open_deck.connect(func(): open_deck_builder(city_id))
@@ -1219,6 +1248,7 @@ func _on_village_entered(village_id: String) -> void:
 		world.refresh_decor()
 	GameState.save_game()
 	_open_village(village_id)
+	_story_at(village_id)
 	_feast_at_city(village_id)
 
 
@@ -1229,12 +1259,17 @@ func _open_village(village_id: String) -> void:
 	var vs := VillageScreen.new()
 	vs.setup(village_id, VillageScreen.gossip_lines(v, GameState.day, world.enemies if world else [], ADVICE))
 	vs.closed.connect(func():
+		_story_close(false)
 		_set_screen(null)
 		_pause_world(false))
 	_set_screen(vs)
 
 
 func _on_lair_reached(lair_id: String) -> void:
+	# a storyline's foe (or its word about a lair already cleared) comes before the lair's master
+	if not Story.next_event(lair_id).is_empty():
+		_story_at(lair_id)
+		return
 	var l := GameState.lair(lair_id)
 	var cleared: bool = GameState.cleared_lairs.has(lair_id)
 	var text := I18n.t("%s awaits within.\nFaith: %s · Level %d · %d life\n\n") % [I18n.t(l["boss"]), Factions.info(l["faction"])["name"], int(l["level"]), int(l["life"])]
@@ -1348,6 +1383,9 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 	if info.get("tournament", false):
 		_tournament_match_done(won)
 		return
+	if info.has("story"):
+		_story_battle_finished(won, info)
+		return
 	_set_screen(null)
 	_pause_world(false)
 	world.grace = 3.0
@@ -1408,7 +1446,11 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 		if info.get("thief", false) and GameState.is_feast_errand() and GameState.errand.get("state", "") == "carry":
 			vtext += "\n\n" + I18n.t("You keep the %s safe in your pack.") % I18n.t(GameState.errand["goods"])
 		GameState.save_game()
-		show_dialog("Victory", vtext, [["Onward", Callable()]], cards)
+		# a storyline waiting on this lair goes on once the spoils have been seen
+		var after := Callable()
+		if lair_id != "" and Story.lair_arc(lair_id) != "":
+			after = func(): _story_at(lair_id)
+		show_dialog("Victory", vtext, [["Onward", after]], cards)
 	elif not info.get("fled", false):
 		# life at nought, or the deck run dry: on the road a lost duel is death
 		_game_over()
@@ -1675,6 +1717,331 @@ func _nearest_visited_city() -> String:
 			best_d = d
 			best = c["id"]
 	return best
+
+
+# ================================================================== the storylines
+
+var story_enc: EncounterScreen = null    # the storyline's meeting on screen (tests look at it)
+
+
+## The painted place of a story meeting: the city, a village of its faith, the lair, or the road.
+func _story_backdrop(place_id: String) -> String:
+	if not GameState.city(place_id).is_empty():
+		return EncounterScreen.city_path(place_id)
+	var v := GameState.village(place_id)
+	if not v.is_empty():
+		return VillageScreen.backdrop_path(String(v.get("faction", "machine")))
+	if not GameState.lair(place_id).is_empty():
+		return EncounterScreen.lair_path(place_id)
+	return EncounterScreen.terrain_path(world, world.player_pos if world else GameState.player_pos)
+
+
+## How someone is ribboned when he only talks: friends in green, rivals and foes in white.
+func _story_mood(char_id: String) -> String:
+	return "neutral" if String(Story.character(char_id).get("role", "")) in ["foe", "rival"] else "friendly"
+
+
+## A story meeting, opened over whatever is on screen (a city or a village stays beneath it).
+func _story_open(place_id: String, look: Dictionary, who: String, sub: String, mood: String) -> EncounterScreen:
+	_story_close(false)
+	var enc := EncounterScreen.create(_story_backdrop(place_id), look, who, sub, mood)
+	story_enc = enc
+	if screen == null:
+		_pause_world(true)
+	ui_layer.add_child(enc)
+	return enc
+
+
+func _story_open_char(place_id: String, char_id: String, mood: String = "") -> EncounterScreen:
+	var c := Story.character(char_id)
+	return _story_open(place_id, Story.look(char_id), I18n.t(String(c.get("name", ""))), I18n.t(String(c.get("title", ""))),
+		mood if mood != "" else _story_mood(char_id))
+
+
+## Close the story meeting; on the road the world moves again.
+func _story_close(resume: bool = true) -> void:
+	if story_enc and is_instance_valid(story_enc):
+		story_enc.queue_free()
+	story_enc = null
+	if resume and screen == null and world:
+		_pause_world(false)
+
+
+## Another speaker steps up in the same meeting.
+func _story_speaker(enc: EncounterScreen, char_id: String) -> void:
+	var c := Story.character(char_id)
+	if c.is_empty():
+		return
+	enc.npc = Story.look(char_id)
+	enc.who = I18n.t(String(c.get("name", "")))
+	enc.subtitle = I18n.t(String(c.get("title", "")))
+	enc.disposition = _story_mood(char_id)
+
+
+## Pages translated (a page is a line, or {"by": character, "text": line} for another speaker).
+func _story_tr(pages: Array) -> Array:
+	var out: Array = []
+	for pg in pages:
+		if typeof(pg) == TYPE_DICTIONARY:
+			out.append({"by": String(pg.get("by", "")), "text": I18n.t(String(pg.get("text", "")))})
+		else:
+			out.append(I18n.t(String(pg)))
+	return out
+
+
+## Leaf through pages of talk with "Continue"; the last page carries `tail`, then `last` sets
+## the choices.
+func _story_pages(enc: EncounterScreen, pages: Array, i: int, tail: String, last: Callable) -> void:
+	if not is_instance_valid(enc):
+		return
+	var text := ""
+	if i < pages.size():
+		var pg = pages[i]
+		if typeof(pg) == TYPE_DICTIONARY:
+			_story_speaker(enc, String(pg["by"]))
+			text = String(pg["text"])
+		else:
+			text = String(pg)
+	var final := i >= pages.size() - 1
+	if final and tail != "":
+		text = (text + "\n" + tail) if text != "" else tail
+	enc.set_line(text)
+	if final:
+		last.call()
+	else:
+		enc.set_options([["Continue", func(): _story_pages(enc, pages, i + 1, tail, last)]])
+	_story_relayout(enc)
+
+
+## The talk panel is fitted again once the new line has been measured (a line set just after the
+## meeting opens is first measured at the wrong width).
+func _story_relayout(enc: EncounterScreen) -> void:
+	for k in 2:
+		await get_tree().process_frame
+		if not is_instance_valid(enc):
+			return
+		enc._layout()
+
+
+func _story_saved() -> void:
+	GameState.save_game()
+	_update_hud()
+	_story_refresh_marker()
+
+
+## The gold star on the map follows the hero's own storyline.
+func _story_refresh_marker() -> void:
+	if world:
+		world.set_story_marker(Story.marker_pos())
+
+
+## Whatever the storylines hold at this place ("" on the road) is played, one meeting after another.
+func _story_at(place_id: String) -> void:
+	_story_refresh_marker()
+	var ev := Story.next_event(place_id)
+	if ev.is_empty():
+		return
+	var arc: String = ev["arc"]
+	var o := Story.objective(arc)
+	match String(ev["kind"]):
+		"intro", "offer":
+			_story_intro(arc, place_id, ev["kind"] == "offer")
+		"talk", "deliver":
+			_story_finish(arc, place_id, String(o.get("npc", "")), o.get("done", []))
+		"lair_done":
+			_story_finish(arc, place_id, String(Story.chapter(arc).get("giver", "")), o.get("done", []))
+		"pickup":
+			_story_pickup(arc, place_id)
+		"feast":
+			_story_feast(arc, place_id)
+		"duel", "boss":
+			_story_duel(arc, place_id)
+
+
+## A chapter begins: its giver speaks, and the objective is set. A side quest is offered instead.
+func _story_intro(arc: String, place_id: String, offer: bool) -> void:
+	var a := Story.arc(arc)
+	var c: Dictionary = a["chapters"][0] if offer else Story.chapter(arc)
+	var giver := String(c.get("giver", ""))
+	var enc := _story_open_char(place_id, giver)
+	var pages: Array = []
+	if Story.meet(giver):
+		var greet: Array = Story.character(giver).get("lines", [])
+		if not greet.is_empty():
+			pages.append(greet[0])
+	pages.append_array(c.get("intro", []))
+	pages = _story_tr(pages)
+	var head := I18n.t("Side quest: %s") % I18n.t(String(c["title"])) if a.get("kind", "") == "side" \
+		else I18n.t("Chapter %d: %s") % [int(Story.progress(arc).get("ch", 0)) + 1, I18n.t(String(c["title"]))]
+	if typeof(pages[0]) == TYPE_DICTIONARY:
+		pages[0]["text"] = head + "\n" + String(pages[0]["text"])
+	else:
+		pages[0] = head + "\n" + String(pages[0])
+	var obj := I18n.t(String(c.get("objective", {}).get("text", ""))) if offer else Story.objective_text(arc)
+	_story_pages(enc, pages, 0, I18n.t("Objective: %s") % obj, func():
+		if offer:
+			enc.set_options([["Accept", func():
+				Story.start(arc)
+				Story.begin(arc)
+				_story_saved()
+				_story_close()
+				_story_at(place_id)], ["Not now", func():
+				Story.decline(arc)
+				GameState.save_game()
+				_story_close()]])
+		else:
+			enc.set_options([["Onward", func():
+				Story.begin(arc)
+				_story_saved()
+				_story_close()
+				_story_at(place_id)]]))
+
+
+## The objective is met: the last words, then the reward with the cards won.
+func _story_finish(arc: String, place_id: String, who: String, pages: Array, extra: String = "") -> void:
+	var enc := _story_open_char(place_id, who)
+	_story_pages(enc, _story_tr(pages), 0, "", func():
+		enc.set_options([["Continue", func(): _story_reward(enc, arc, place_id, extra)]]))
+
+
+func _story_reward(enc: EncounterScreen, arc: String, place_id: String, extra: String) -> void:
+	var a := Story.arc(arc)
+	var res := Story.complete(arc)
+	if res.is_empty():
+		_story_close()
+		return
+	var parts: Array = []
+	if int(res["gold"]) > 0:
+		parts.append(I18n.t("%d gold") % int(res["gold"]))
+	if int(res["xp"]) > 0:
+		parts.append(I18n.t("%d experience") % int(res["xp"]))
+	if int(res["boosters"]) > 0:
+		parts.append(I18n.t("%d booster(s) of %s") % [int(res["boosters"]), Factions.info(String(res["faith"]))["name"]])
+	for cid in res["cards"]:
+		parts.append(I18n.t(String(CardDB.get_card(cid).get("name", cid))))
+	var side: bool = a.get("kind", "") == "side"
+	var text := (I18n.t("Side quest complete: %s") if side else I18n.t("Chapter complete: %s")) % I18n.t(String(res["title"]))
+	if extra != "":
+		text += "\n" + extra
+	text += "\n" + I18n.t("You gain: %s") % ", ".join(parts)
+	if res["arc_done"] and not side:
+		text += "\n" + I18n.t("So ends %s.") % I18n.t(String(a["title"]))
+	_story_saved()
+	enc.set_line(text)
+	enc.set_cards(res["cards"])
+	_story_relayout(enc)
+	enc.set_options([["Onward", func():
+		_story_close()
+		_story_at(place_id)]])
+
+
+## The item of a bring objective is handed over where it waits.
+func _story_pickup(arc: String, place_id: String) -> void:
+	var o := Story.objective(arc)
+	var enc: EncounterScreen
+	if o.has("from_npc"):
+		enc = _story_open_char(place_id, String(o["from_npc"]), "friendly")
+	else:
+		var nm := String(o.get("from_name", ""))
+		enc = _story_open(place_id, {"faction": String(Story.place(place_id).get("faction", "machine")), "subtype": "Human", "name": nm},
+			I18n.t(nm), "", "neutral")
+	_story_pages(enc, _story_tr(o.get("pickup", [])), 0, I18n.t("You take %s.") % I18n.t(String(o.get("item", ""))), func():
+		enc.set_options([["Onward", func():
+			Story.pickup(arc)
+			_story_saved()
+			_story_close()
+			_story_at(place_id)]]))
+
+
+## A feast day: kept at once if it is today, or waited for (the days pass, the hero rests).
+func _story_feast(arc: String, place_id: String) -> void:
+	var o := Story.objective(arc)
+	var fd := Story.feast_day(arc)
+	var npc := String(o.get("npc", ""))
+	if fd <= GameState.day:
+		_story_finish(arc, place_id, npc, o.get("done", []))
+		return
+	var n := fd - GameState.day
+	var nm := I18n.t(String(o.get("feast", {}).get("name", "")))
+	var enc := _story_open_char(place_id, npc)
+	enc.set_line(I18n.t("%s falls on %s, %d day(s) from now. You may wait here for it, or go about your business and come back in time.") % [
+		nm, LiturgicalCalendar.short_date_text(fd), n])
+	_story_relayout(enc)
+	enc.set_options([[I18n.t("Wait for the feast (%d days)") % n, func():
+		GameState.day = fd
+		GameState.clock = 8.0
+		GameState.life = GameState.max_life()
+		_update_hud()
+		_story_finish(arc, place_id, npc, o.get("done", []))], ["Later", _story_close]])
+
+
+## A named foe of the storyline bars the way: his words, then the duel (or not yet).
+func _story_duel(arc: String, place_id: String) -> void:
+	var o := Story.objective(arc)
+	var foe := String(o.get("foe", ""))
+	var c := Story.character(foe)
+	Story.meet(foe)
+	var enc := _story_open(place_id, Story.look(foe), I18n.t(String(c.get("name", ""))),
+		I18n.t("%s · Level %d") % [Factions.info(String(c.get("faith", "abyss")))["short"], int(o.get("level", 1))], "hostile")
+	_story_pages(enc, _story_tr(o.get("challenge", [])), 0, I18n.t("Objective: %s") % Story.objective_text(arc), func():
+		enc.set_options([["Fight", func():
+			_story_close(false)
+			_story_battle(arc, place_id)], ["Not yet", _story_close]]))
+
+
+func _story_battle(arc: String, place_id: String) -> void:
+	var o := Story.objective(arc)
+	var foe := String(o.get("foe", ""))
+	var c := Story.character(foe)
+	var lvl := int(o.get("level", 1))
+	var life := maxi(6, 8 + lvl * 2 + int(GameState.diff("enemy_life")))
+	if o.has("life"):      # a lair's master: as strong as its own master would be, or more
+		life = maxi(life, maxi(8, int(round(int(o["life"]) * 0.5)) + int(GameState.diff("enemy_life"))))
+	var info := {"name": String(c.get("name", "")), "faction": String(c.get("faith", "abyss")), "level": lvl, "life": life,
+		"deck": DeckTools.themed_deck(String(o.get("theme", "")), lvl, GameState.rng), "look": Story.look(foe),
+		"story": arc, "story_place": place_id}
+	if o.get("type", "") == "boss":
+		info["lair"] = place_id
+	start_battle(info)
+
+
+## After a story duel: the foe's last words and the chapter's reward, or death, or flight.
+func _story_battle_finished(won: bool, info: Dictionary) -> void:
+	_set_screen(null)
+	_pause_world(false)
+	world.grace = 3.0
+	GameState.day += 1
+	GameState.life = clampi(int(info.get("life_left", GameState.life)), 1, GameState.max_life())
+	var arc := String(info["story"])
+	if won:
+		var lair_id := String(info.get("lair", ""))
+		var first := lair_id != "" and not GameState.cleared_lairs.has(lair_id)
+		GameState.record_victory(String(info["faction"]), lair_id)
+		if first:
+			world.refresh_decor()
+		var gained := Hero.duel_xp(int(info.get("level", 1)), lair_id != "")
+		GameState.gain_xp(gained)
+		GameState.save_game()
+		_update_hud()
+		var o := Story.objective(arc)
+		_story_finish(arc, String(info.get("story_place", "")), String(o.get("foe", "")), o.get("done", []),
+			I18n.t("You gain %d experience for the duel.") % gained)
+	elif not info.get("fled", false):
+		_game_over()
+		return
+	else:
+		GameState.stats["losses"] = int(GameState.stats.get("losses", 0)) + 1
+		var pen := GameState.flee_penalty()
+		var lost_cards: Array = pen["cards"]
+		var body := I18n.t("You drop %d gold as you run.") % int(pen["gold"])
+		if not lost_cards.is_empty():
+			body += "\n" + I18n.t("%d cards of your deck are lost in the flight:") % lost_cards.size()
+		if DeckTools.validate(GameState.deck, GameState.owned_all()) != "":
+			body += "\n" + I18n.t("Mend your deck before the next duel.")
+		body += "\n\n" + I18n.t("%s will be waiting when you return.") % I18n.t(String(info["name"]))
+		GameState.save_game()
+		show_dialog("You fled", body, [["Onward", Callable()]], lost_cards)
+	_update_hud()
 
 
 # ================================================================== dialog

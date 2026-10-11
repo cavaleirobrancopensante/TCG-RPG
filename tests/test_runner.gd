@@ -28,6 +28,7 @@ func _ready() -> void:
 	test_villages()
 	test_card_ui()
 	test_journal_goals()
+	test_story()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -1820,3 +1821,180 @@ func test_journal_goals() -> void:
 	for x in g:
 		check(not String(x).contains("\u2014") and not String(x).contains("\u2013"), "no dashes in a goal")
 	m.free()
+
+
+## Walk a storyline's chapters in order through Story's own steps (as main.gd drives them).
+func _story_step(arc: String) -> Dictionary:
+	var c := Story.chapter(arc)
+	var o: Dictionary = c.get("objective", {})
+	var at := String(c.get("at", ""))
+	check(Story.next_event(at)["kind"] == "intro", "%s: intro at %s" % [c["id"], at if at != "" else "the road"])
+	Story.begin(arc)
+	match String(o["type"]):
+		"talk", "duel", "boss":
+			check(Story.next_event(String(o["place"])).get("kind", "") == o["type"], "%s: %s at %s" % [c["id"], o["type"], o["place"]])
+		"bring":
+			check(Story.next_event(String(o["to"])).is_empty(), "%s: nothing to deliver before the pickup" % c["id"])
+			check(Story.next_event(String(o["from"])).get("kind", "") == "pickup", "%s: pickup at %s" % [c["id"], o["from"]])
+			Story.pickup(arc)
+			check(Story.next_event(String(o["to"])).get("kind", "") == "deliver", "%s: deliver at %s" % [c["id"], o["to"]])
+			check(Story.marker_pos() == Vector2(Story.place(String(o["to"]))["x"], Story.place(String(o["to"]))["y"]) or Story.arc(arc)["kind"] == "side", "%s: the star moves to the delivery" % c["id"])
+		"feast":
+			var fd := Story.feast_day(arc)
+			check(fd >= GameState.day and Story.next_event(String(o["place"])).get("kind", "") == "feast", "%s: feast at %s on day %d" % [c["id"], o["place"], fd])
+			GameState.day = fd
+		"lair":
+			check(Story.next_event(String(o["place"])).is_empty() and Story.lair_arc(String(o["lair"])) == arc, "%s: the lair waits to be cleared" % c["id"])
+			GameState.record_victory("abyss", String(o["lair"]))
+			check(Story.next_event(String(o["place"])).get("kind", "") == "lair_done", "%s: the cleared lair ends the chapter" % c["id"])
+	return Story.complete(arc)
+
+
+func test_story() -> void:
+	print("-- storylines")
+	var errs := Story.validate()
+	check(errs.is_empty(), "story data: %s" % [errs])
+	var raw := FileAccess.get_file_as_string("res://data/story.json")
+	for d in ["—", "–"]:
+		check(not raw.contains(d), "dash in story.json")
+	# a main storyline for every faith, and a side quest of every faith for the others
+	for f in Factions.ORDER:
+		var mid := Story.main_arc_id(f)
+		check(mid != "" and Story.chapter_count(mid) >= 5 and Story.chapter_count(mid) <= 7, "%s has a main storyline of 5 to 7 chapters" % f)
+		var leaders := 0
+		var rivals := 0
+		var allies := 0
+		for id in Story.characters():
+			var c := Story.character(id)
+			if c["faith"] == f:
+				leaders += int(c["role"] == "leader")
+				allies += int(c["role"] == "ally")
+				rivals += int(c["role"] == "rival" and String(c.get("rival_of", f)) == f)
+			elif String(c.get("rival_of", "")) == f:
+				rivals += 1
+		check(leaders == 1 and rivals >= 1 and allies >= 2, "%s: a leader, 2 or 3 allies and a rival (%d/%d/%d)" % [f, leaders, allies, rivals])
+		var sides := Story.side_arc_ids(f)
+		check(sides.size() == 5, "%s heroes are offered the other five faiths' side quests" % f)
+		var mf := Story.arc(mid)
+		check(GameState.city(String(mf["chapters"][0]["at"])).get("faction", "") == f, "%s's storyline begins in its capital" % f)
+	# all men, but the abbess (who never fights)
+	var fem := [" she ", " her ", " hers ", "woman", "lady", "maiden", "mother", "sister", "abbess", "nun "]
+	for id in Story.characters():
+		var c := Story.character(id)
+		var words := (" " + String(c["name"]) + " " + String(c["title"]) + " " + String(c["description"]) + " ").to_lower()
+		var is_fem := false
+		for w in fem:
+			is_fem = is_fem or words.contains(w)
+		if id == "mother_scholastica":
+			check(c["faith"] == "sanctum" and c["role"] == "ally", "the abbess is the Church's counsellor")
+			continue
+		check(not is_fem, "%s is a man" % id)
+	for aid in Story.arcs():
+		for ch in Story.arc(aid)["chapters"]:
+			var foe := String(ch["objective"].get("foe", ""))
+			check(foe != "mother_scholastica", "the abbess never fights")
+	# the Church's storyline keeps a real feast of the 1962 calendar: Michaelmas
+	var church_feast := ""
+	for ch in Story.arc("church")["chapters"]:
+		if ch["objective"]["type"] == "feast":
+			var fd := Story.next_feast_day(ch["objective"]["feast"], 0)
+			church_feast = String(LiturgicalCalendar.of_day(fd)["name"])
+			check(fd == LiturgicalCalendar.game_day_of(2500, 9, 29), "Michaelmas falls on 29 September 2500")
+	check(church_feast.contains("Michael"), "the Church keeps Michaelmas (%s)" % church_feast)
+	check(Story.next_feast_day({"date": "09-29"}, LiturgicalCalendar.game_day_of(2500, 9, 30)) == LiturgicalCalendar.game_day_of(2501, 9, 29), "a missed feast waits for next year")
+
+	# a Church hero walks his storyline from the first chapter to the last
+	GameState.new_game(5, "sanctum")
+	GameState.day = 0
+	check(Story.progress("church").get("ch", -1) == 0 and Story.progress("church")["state"] == "wait", "a new Church hero begins chapter 1")
+	check(Story.next_event("cogspire").is_empty() and Story.next_event("").is_empty(), "nothing happens away from the capital")
+	var cap := Story.place("santa_lucerna")
+	check(Story.marker_pos() == Vector2(cap["x"], cap["y"]), "the gold star points at the capital")
+	check(Story.journal_lines(Vector2.ZERO).size() >= 3, "the journal shows the story")
+	check(Story.summary_lines(Vector2.ZERO).size() >= 2 and String(Story.summary_lines(Vector2.ZERO)[0]).contains("chapter 1 of 6"), "the journal's Story section names the chapter: %s" % [Story.summary_lines(Vector2.ZERO)])
+	check(Story.goal_line(Vector2.ZERO).contains("Santa Lucerna"), "the story goal says where to go: %s" % Story.goal_line(Vector2.ZERO))
+	var mm = load("res://scripts/main.gd").new()
+	GameState.pending_boosters = 0
+	GameState.stat_points = 0
+	check(String(mm.next_goals()[0]).begins_with("Story: "), "the next goals lead with the story: %s" % [mm.next_goals()])
+	mm.free()
+	var got_mythic := false
+	var boosters0 := GameState.pending_boosters
+	var steps := 0
+	while not Story.is_done("church") and steps < 10:
+		steps += 1
+		var g0 := GameState.gold
+		var xp0 := GameState.xp + 1000 * GameState.level
+		var owned0 := _owned_total()
+		var r: Dictionary = Story.chapter("church").get("reward", {})
+		var res := _story_step("church")
+		check(GameState.gold > g0 and GameState.xp + 1000 * GameState.level > xp0, "chapter %d pays gold and experience" % steps)
+		if r.has("card") or r.has("card_rarity"):
+			check(_owned_total() > owned0 and not res["cards"].is_empty(), "chapter %d gives a card" % steps)
+		got_mythic = got_mythic or GameState.owned_count("sanctum_m_004") > 0
+	check(steps == 6 and Story.is_done("church") and got_mythic, "the storyline ends with Saint Michael the Archangel (%d chapters)" % steps)
+	check(GameState.pending_boosters > boosters0 and GameState.faction_packs.has("sanctum"), "chapters give boosters of the faith")
+	check(Story.marker_pos() == Vector2.INF and Story.next_event("santa_lucerna").is_empty(), "no star when the story is done")
+	check(Story.progress("church")["done"].size() == 6, "completed chapters are kept")
+	# every other storyline can be walked through as well
+	for f in ["abyss", "wild", "revel", "lyceum", "machine"]:
+		GameState.new_game(5, f)
+		GameState.day = 0
+		var aid := Story.main_arc_id(f)
+		var n := 0
+		var last := {}
+		while not Story.is_done(aid) and n < 10:
+			n += 1
+			last = _story_step(aid)
+		var mythic: String = Story.arc(aid)["chapters"][n - 1]["reward"]["card"]
+		check(Story.is_done(aid) and last.get("arc_done", false) and GameState.owned_count(mythic) > 0, "%s's storyline runs to its end and its mythic" % f)
+	# side quests: offered to other faiths only, declined for the day, walked through
+	GameState.new_game(5, "lyceum")
+	GameState.day = 3
+	check(Story.next_event("san_benedetto").get("kind", "") == "offer", "the abbess offers a Stoa hero her side quest")
+	Story.decline("side_church")
+	check(Story.next_event("san_benedetto").is_empty(), "a declined offer waits until tomorrow")
+	GameState.day += 1
+	check(Story.next_event("san_benedetto").get("kind", "") == "offer", "and comes again the next day")
+	Story.start("side_church")
+	var sres := _story_step("side_church")
+	check(Story.is_done("side_church") and sres.get("arc_done", false), "the side quest is done in one chapter")
+	check(Story.next_event("san_benedetto").is_empty(), "a finished side quest is not offered again")
+	check(Story.next_event("elaia").is_empty(), "a hero is not offered his own faith's side quest")
+	# save and load keep the story; an old save without it begins at chapter 1
+	GameState.new_game(5, "machine")
+	GameState.day = 0
+	Story.begin("technocracy")
+	Story.complete("technocracy")
+	Story.meet("octavian_pell")
+	Story.start("side_church")
+	GameState.save_game(5)
+	GameState.story = {}
+	check(GameState.load_game(5), "load the story save")
+	check(Story.progress("technocracy").get("ch", -1) == 1 and Story.progress("technocracy")["state"] == "wait"
+		and Story.st()["met"].has("octavian_pell") and not Story.progress("side_church").is_empty(), "story progress survives a save and a load")
+	var data = JSON.parse_string(FileAccess.get_file_as_string(GameState.slot_path(5)))
+	data.erase("story")
+	data["story"] = {"arcs": {"no_such_arc": {"ch": 3}}, "met": ["nobody"]}
+	var fw := FileAccess.open(GameState.slot_path(5), FileAccess.WRITE)
+	fw.store_string(JSON.stringify(data))
+	fw.close()
+	check(GameState.load_game(5) and Story.progress("technocracy").get("ch", -1) == 0 and not Story.st()["arcs"].has("no_such_arc")
+		and Story.st()["met"].is_empty(), "an old or strange save starts the storyline at chapter 1")
+	GameState.delete_slot(5)
+	# every text of the storylines is plain, and every chapter speaks in pages the encounter can hold
+	for t in Story.all_texts():
+		check(t.length() <= 420, "a page short enough for the encounter: %s" % t.substr(0, 40))
+	# every story text is in the Portuguese and Spanish tables
+	for code in ["pt", "es"]:
+		var tb = JSON.parse_string(FileAccess.get_file_as_string("res://data/i18n/%s.json" % code))
+		for t in Story.all_texts():
+			check(typeof(tb) == TYPE_DICTIONARY and tb.has(t), "%s: missing story translation of %s" % [code, t.substr(0, 50)])
+
+
+func _owned_total() -> int:
+	var n := 0
+	var o := GameState.owned_all()
+	for k in o:
+		n += int(o[k])
+	return n

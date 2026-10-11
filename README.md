@@ -214,6 +214,16 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Storylines and keyboard shortcuts (1.37)
+
+- Each faith has a main storyline of six chapters with its leader, allies and rival (the
+  Church's runs from the stolen relic of Saint Lucy to Michaelmas and the Ninth Pit), and one
+  side quest for heroes of the other faiths. The journal opens with the story's next step,
+  and a gold star marks it on the map.
+- Desktop shortcuts: Space or Enter for the main action (End turn, Take, Done, Begin), Escape
+  to go back or close, D, J, H for Deck, Journal and Hero, M for the music player.
+- Settings are grouped under Sound, Display, Duel, Language and Game.
+
 ## Taps that work on phones, and a quieter top of the screen (1.36)
 
 - Tapping cards works on phones again: a fingertip wobbles 2 to 3 mm during a tap, which the

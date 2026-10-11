@@ -76,6 +76,7 @@ var level := 1                    # the hero's level (see Hero.xp_to_next)
 var xp := 0                       # experience towards the next level
 var stat_points := 0              # earned at every even level, waiting to be spent
 var feast_log: Array = []         # feast errands delivered, as "city@day", so none is offered twice
+var story: Dictionary = {}        # the storylines' progress (see Story, data/story.json)
 var slot := 1                     # the slot this run auto-saves into
 var play_time := 0.0              # seconds played in this run
 var _session_start := 0
@@ -163,6 +164,9 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Diction
 			visited_cities.append(c["id"])
 			break
 	current_city = ""
+	# the hero's faith has its own storyline: it begins at the first chapter, in the capital
+	story = {}
+	Story.ensure_main()
 
 
 # ---------------------------------------------------------------- settings
@@ -258,7 +262,7 @@ func save_game(n: int = 0) -> void:
 		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters, "start_mode": start_mode, "tour": tour_save,
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
-		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand, "feast_log": feast_log,
+		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand, "feast_log": feast_log, "story": story,
 		"attrs": attrs, "level": level, "xp": xp, "stat_points": stat_points, "difficulty": difficulty, "look": Hero.look_to_save(look), "life": life, "clock": clock,
 		"explored": Marshalls.raw_to_base64(explored),
 		"meta": _meta(),
@@ -392,6 +396,9 @@ func load_game(n: int = 0) -> bool:
 	life = clampi(int(data.get("life", max_life())), 1, max_life())
 	clock = float(data.get("clock", 8.0))
 	explored = Marshalls.base64_to_raw(String(data.get("explored", "")))
+	# the storylines came in 1.x: an older hero begins his faith's storyline at the first chapter
+	story = Story.sanitize(data.get("story", {}))
+	Story.ensure_main()
 	_extra_load(data)
 	# Drop cards that no longer exist in the database (set revisions).
 	var dicts: Array = [collection, foils]

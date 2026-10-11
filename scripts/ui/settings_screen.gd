@@ -35,44 +35,10 @@ func _ready() -> void:
 	body.add_theme_constant_override("separation", 14)
 	sc.add_child(body)
 	DragScroll.attach(self, sc)
-	var plate := PanelContainer.new()
-	body.add_child(plate)
-	var g := GridContainer.new()
-	g.columns = 2
-	g.add_theme_constant_override("h_separation", UIKit.SP_3)
-	g.add_theme_constant_override("v_separation", UIKit.SP_2)
-	plate.add_child(g)
+	var g: GridContainer
 
-	# --- language
-	g.add_child(_name("Language"))
-	g.add_child(UIKit.flag_row(func(code):
-		var main := get_tree().root.get_node_or_null("Main")
-		if main:
-			main.set_language(code)
-		else:
-			I18n.setup(code)
-			GameState.set_setting("lang", code)
-		_rebuild()))
-
-	# --- interface size: Normal follows the device (larger on phones)
-	g.add_child(_name("Interface size"))
-	var sz := VBoxContainer.new()
-	sz.add_theme_constant_override("separation", 4)
-	g.add_child(sz)
-	var szr := HBoxContainer.new()
-	szr.add_theme_constant_override("separation", UIKit.SP_1)
-	sz.add_child(szr)
-	var sz_group := ButtonGroup.new()
-	for c in UIScale.SIZES:
-		var cc: String = c
-		var b := _toggle(UIScale.SIZE_NAMES[c], sz_group, UIScale.choice() == c)
-		b.name = "Size_" + c
-		b.pressed.connect(func():
-			if UIScale.choice() != cc:
-				UIScale.set_choice(cc)
-				_rebuild())
-		szr.add_child(b)
-	sz.add_child(UIKit.label("Normal picks the size for your device: larger on a phone.", UIKit.FS_MIN, UIKit.DIM, true))
+	# ================= sound
+	g = _section(body, "Sound")
 
 	# --- music volume
 	g.add_child(_name("Music volume"))
@@ -102,6 +68,42 @@ func _ready() -> void:
 	sh.toggled.connect(func(on): Music.set_shuffle(on))
 	g.add_child(sh)
 
+	# ================= display
+	g = _section(body, "Display")
+
+	# --- interface size: Normal follows the device (larger on phones)
+	g.add_child(_name("Interface size"))
+	var sz := VBoxContainer.new()
+	sz.add_theme_constant_override("separation", 4)
+	g.add_child(sz)
+	var szr := HBoxContainer.new()
+	szr.add_theme_constant_override("separation", UIKit.SP_1)
+	sz.add_child(szr)
+	var sz_group := ButtonGroup.new()
+	for c in UIScale.SIZES:
+		var cc: String = c
+		var b := _toggle(UIScale.SIZE_NAMES[c], sz_group, UIScale.choice() == c)
+		b.name = "Size_" + c
+		b.pressed.connect(func():
+			if UIScale.choice() != cc:
+				UIScale.set_choice(cc)
+				_rebuild())
+		szr.add_child(b)
+	sz.add_child(UIKit.label("Normal picks the size for your device: larger on a phone.", UIKit.FS_MIN, UIKit.DIM, true))
+
+	# --- fullscreen
+	g.add_child(_name("Full screen"))
+	var fs := _check()
+	fs.button_pressed = GameState.settings.get("fullscreen", false)
+	fs.text = "Fill the whole screen"
+	fs.toggled.connect(func(on):
+		GameState.set_setting("fullscreen", on)
+		GameState.apply_display())
+	g.add_child(fs)
+
+	# ================= duel
+	g = _section(body, "Duel")
+
 	# --- duel speed
 	g.add_child(_name("Duel animation speed"))
 	var sp := HBoxContainer.new()
@@ -123,15 +125,22 @@ func _ready() -> void:
 	ra.toggled.connect(func(on): GameState.set_setting(BattleScene.RESPOND_ALL_KEY, on))
 	g.add_child(ra)
 
-	# --- fullscreen
-	g.add_child(_name("Full screen"))
-	var fs := _check()
-	fs.button_pressed = GameState.settings.get("fullscreen", false)
-	fs.text = "Fill the whole screen"
-	fs.toggled.connect(func(on):
-		GameState.set_setting("fullscreen", on)
-		GameState.apply_display())
-	g.add_child(fs)
+	# ================= language and text
+	g = _section(body, "Language and Text")
+
+	# --- language
+	g.add_child(_name("Language"))
+	g.add_child(UIKit.flag_row(func(code):
+		var main := get_tree().root.get_node_or_null("Main")
+		if main:
+			main.set_language(code)
+		else:
+			I18n.setup(code)
+			GameState.set_setting("lang", code)
+		_rebuild()))
+
+	# ================= game
+	g = _section(body, "Game")
 
 	# --- player name
 	g.add_child(_name("Your name"))
@@ -145,6 +154,34 @@ func _ready() -> void:
 	g.add_child(nm)
 
 	body.add_child(UIKit.label("Settings apply to every save slot.", UIKit.FS_SECONDARY, UIKit.DIM))
+
+	# ================= keyboard shortcuts (desktop only: a phone has no keys)
+	if not UIScale.is_phone():
+		var keys := _section(body, "Keyboard shortcuts")
+		keys.name = "Shortcuts"
+		for row in Shortcuts.HELP:
+			var kl := UIKit.label(I18n.t(row[0]), UIKit.FS_BODY, UIKit.GOLD)
+			kl.custom_minimum_size.x = 250
+			keys.add_child(kl)
+			var dl := UIKit.label(row[1], UIKit.FS_SECONDARY + 1, UIKit.TEXT, true)
+			dl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			dl.custom_minimum_size.x = 200
+			keys.add_child(dl)
+
+
+## A heading and the plate of options under it; returns the plate's two-column grid.
+func _section(body: VBoxContainer, heading: String) -> GridContainer:
+	var h := UIKit.title(heading, UIKit.FS_HEADING)
+	h.name = "Head_" + heading.replace(" ", "")
+	body.add_child(h)
+	var plate := PanelContainer.new()
+	body.add_child(plate)
+	var g := GridContainer.new()
+	g.columns = 2
+	g.add_theme_constant_override("h_separation", UIKit.SP_3)
+	g.add_theme_constant_override("v_separation", UIKit.SP_2)
+	plate.add_child(g)
+	return g
 
 
 func _name(t: String) -> Label:
