@@ -1221,6 +1221,22 @@
    "note": "scripts/core/hero.gd"
   },
   {
+   "key": "Begin with a draft",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Enter the introductory tournament of your capital: draft your first cards, build a deck, and fight bouts that cannot kill you.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Begin with boosters",
+   "note": "scripts/core/hero.gd"
+  },
+  {
+   "key": "Set out with sealed booster packs and a deck built from them.",
+   "note": "scripts/core/hero.gd"
+  },
+  {
    "key": "Aldric",
    "note": "scripts/core/hero.gd"
   },
@@ -1701,6 +1717,14 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "To the tournament",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Open my boosters",
    "note": "scripts/main.gd"
   },
@@ -1974,6 +1998,14 @@
   },
   {
    "key": "Tournament over",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "For your showing, %s gives you %d booster(s) of its own cards.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Your draft deck is now your deck. The road is open.",
    "note": "scripts/main.gd"
   },
   {

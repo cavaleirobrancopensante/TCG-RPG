@@ -3246,5 +3246,13 @@
  "Lands": "Tierras",
  "Search name, subtype or text": "Buscar nombre, subtipo o texto",
  "Showing %d of %d cards": "Mostrando %d de %d cartas",
- "Plus_": "Plus_"
+ "Plus_": "Plus_",
+ "Begin with a draft": "Empezar con un draft",
+ "Begin with boosters": "Empezar con sobres",
+ "Enter the introductory tournament of your capital: draft your first cards, build a deck, and fight bouts that cannot kill you.": "Entra en el torneo de iniciación de tu capital: haz el draft de tus primeras cartas, arma un mazo y lucha en combates que no pueden matarte.",
+ "Set out with sealed booster packs and a deck built from them.": "Parte con sobres sellados y un mazo armado con ellos.",
+ "Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.": "Tu camino empieza en el torneo de iniciación de %s. Elige tus primeras cartas de los sobres que pasan por la mesa, arma un mazo y lucha en combates que no pueden matarte. Las cartas elegidas son tuyas, y la fe recompensa a quien llega lejos con sobres propios.",
+ "To the tournament": "Al torneo",
+ "For your showing, %s gives you %d booster(s) of its own cards.": "Por tu actuación, %s te da %d sobre(s) de sus propias cartas.",
+ "Your draft deck is now your deck. The road is open.": "Tu mazo del draft es ahora tu mazo. El camino está abierto."
 }

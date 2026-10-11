@@ -39,6 +39,7 @@ var visited_cities: Array = []
 var defeated: Dictionary = {}     # faction -> wins counted while missions are active
 var missions: Dictionary = {}     # mission_id -> {"state": "active"/"done"/"claimed", "progress": int}
 var pending_boosters: int = 0     # boosters earned but not opened yet
+var start_mode := "boosters"       # how this hero began: "draft" (introductory tournament) or "boosters"
 var faction_packs: Array = []     # faiths of special boosters among the pending ones (opened first)
 var hero := ""                    # the faith of the hero chosen at New game
 
@@ -99,8 +100,10 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Diction
 	hero = hero_faith if HEROES.has(hero_faith) else "sanctum"
 	player_name = settings.get("player_name", "Wanderer")
 	if sheet.is_empty():
+		# a game started without the creation screen (tests, quick starts) opens boosters
 		sheet = Hero.random_sheet(rng)
 		sheet["faith"] = hero
+		sheet["start"] = "boosters"
 	player_name = String(sheet.get("name", player_name))
 	attrs = Dictionary(sheet.get("stats", Hero.random_stats(rng, hero))).duplicate()
 	look = Dictionary(sheet.get("look", Hero.random_look(rng, hero))).duplicate()
@@ -132,10 +135,12 @@ func new_game(into_slot: int = 1, hero_faith: String = "sanctum", sheet: Diction
 	stat_points = 0
 	# the boosters a hero sets out with depend on the difficulty
 	var packs: Array = Hero.START_PACKS.get(difficulty, [2, 1])
-	pending_boosters = int(packs[0]) + int(packs[1])
+	start_mode = String(sheet.get("start", "boosters"))
+	pending_boosters = 0 if start_mode == "draft" else int(packs[0]) + int(packs[1])
 	faction_packs = []
-	for k in int(packs[1]):
-		faction_packs.append(hero)
+	if start_mode != "draft":
+		for k in int(packs[1]):
+			faction_packs.append(hero)
 	var start: Dictionary = world_data.get("start", {})
 	player_pos = Vector2(start.get("x", 0), start.get("y", 0))
 	# a hero sets out from the capital of his own faith
@@ -236,7 +241,7 @@ func save_game(n: int = 0) -> void:
 		"decks": decks, "active_deck": active_deck,
 		"player_name": player_name, "player_pos": [player_pos.x, player_pos.y],
 		"cleared_lairs": cleared_lairs, "visited_cities": visited_cities,
-		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters,
+		"defeated": defeated, "missions": missions, "pending_boosters": pending_boosters, "start_mode": start_mode,
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
 		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand, "feast_log": feast_log,
@@ -321,6 +326,7 @@ func load_game(n: int = 0) -> bool:
 			continue
 		missions[m]["progress"] = int(missions[m].get("progress", 0))
 	pending_boosters = int(data.get("pending_boosters", 0))
+	start_mode = String(data.get("start_mode", "boosters"))
 	faction_packs = Array(data.get("faction_packs", [])).filter(func(x): return Factions.DATA.has(x))
 	hero = String(data.get("hero", ""))
 	if hero == "":      # saves from before heroes: the faith the player plays most

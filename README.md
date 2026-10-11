@@ -214,6 +214,17 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## A gentler start (1.28)
+
+- New heroes can begin with a draft: the free introductory tournament of their capital.
+  Draft your first cards, build a deck, and fight bouts that cannot kill you; the cards are
+  yours. Instead of starting boosters, your faith rewards how far you got: 3 boosters of its
+  cards for the champion, 2 for the finalist, 1 for a semi-final (Pilgrims get one more).
+  Beginning with sealed boosters is still an option on the creation screen.
+- Civilised country is safer: near towns and on the roads hostile wanderers seldom appear
+  and give up the chase sooner; the wilds are as dangerous as ever.
+- Tournament opponents now start with 10 life like everyone else.
+
 ## Levels, death, and a card database (1.27)
 
 - Your hero gains experience from duels (more for stronger foes, double in a lair),

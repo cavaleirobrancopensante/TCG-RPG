@@ -15,6 +15,7 @@ var _faith_box: HBoxContainer
 var _looks_box: VBoxContainer
 var _stats_box: VBoxContainer
 var _diff_box: HBoxContainer
+var _start_box: HBoxContainer
 var _points_label: Label
 var _faith_label: Label
 
@@ -72,6 +73,9 @@ func _ready() -> void:
 	_diff_box = HBoxContainer.new()
 	_diff_box.add_theme_constant_override("separation", 4)
 	left.add_child(_diff_box)
+	_start_box = HBoxContainer.new()
+	_start_box.add_theme_constant_override("separation", 4)
+	left.add_child(_start_box)
 	_faith_label = UIKit.label("", 15, UIKit.DIM, true)
 	left.add_child(_faith_label)
 
@@ -209,6 +213,17 @@ func _refresh() -> void:
 		b.button_pressed = sheet["difficulty"] == d
 		b.tooltip_text = I18n.t(Hero.DIFFICULTY[d]["text"])
 		_diff_box.add_child(b)
+	# how the hero begins: an introductory draft (the default) or sealed boosters
+	UIKit.clear(_start_box)
+	for st in Hero.START_ORDER:
+		var sx: String = st
+		var sb := UIKit.button(Hero.START[st]["name"], func():
+			sheet["start"] = sx
+			_refresh(), 145)
+		sb.toggle_mode = true
+		sb.button_pressed = sheet.get("start", "draft") == st
+		sb.tooltip_text = I18n.t(Hero.START[st]["text"])
+		_start_box.add_child(sb)
 	# stats
 	UIKit.clear(_stats_box)
 	var left := _points_left()

@@ -560,6 +560,13 @@ func open_save_slots() -> void:
 func _new_game(n: int = 1, hero_faith: String = "sanctum", sheet: Dictionary = {}) -> void:
 	GameState.new_game(n, hero_faith, sheet)
 	await start_world()
+	if GameState.start_mode == "draft":
+		var cap := _capital_of(hero_faith)
+		show_dialog(I18n.t("Welcome, %s") % GameState.player_name,
+			I18n.t("Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.")
+			+ "\n\n" + I18n.t("Your road begins at the introductory tournament of %s. Draft your first cards from the packs passed around the table, build a deck, and fight bouts that cannot kill you. The cards you draft are yours to keep, and the faith rewards those who go far with boosters of its own.") % GameState.city(cap).get("name", ""),
+			[["To the tournament", func(): open_tournament(cap, true)]])
+		return
 	show_dialog(I18n.t("Welcome, %s") % GameState.player_name,
 		I18n.t("Six faiths contend for the land: the Holy Church, the Black Pact, the Old Ways, the Revel, the Stoa and the Technocracy.")
 		+ "\n\n" + _packs_text(hero_faith),
@@ -1080,8 +1087,20 @@ func _spoils(info: Dictionary) -> String:
 # ================================================================== draft tournaments
 
 ## Pay the entry, draft with seven others, build a deck, then play the bracket.
-func open_tournament(city_id: String) -> void:
-	if not GameState.spend_gold(Draft.ENTRY_FEE):
+## The capital city of a faith (where its heroes set out from).
+func _capital_of(faith: String) -> String:
+	for c in GameState.world_data.get("cities", []):
+		if c.get("faction", "") == faith:
+			return c["id"]
+	return "cogspire"
+
+
+var _tour_intro := false      # the free introductory tournament a drafting hero begins with
+
+
+func open_tournament(city_id: String, intro: bool = false) -> void:
+	_tour_intro = intro
+	if not intro and not GameState.spend_gold(Draft.ENTRY_FEE):
 		show_dialog("Tournament", I18n.t("The entry fee is %d gold.") % Draft.ENTRY_FEE, [["OK", Callable()]])
 		return
 	tournament = Draft.new()
@@ -1126,7 +1145,7 @@ func _show_bracket() -> void:
 		GameState.active_deck = _tour_deck
 		var d := tournament
 		var mf := d.main_faith(opp)
-		start_battle({"name": d.names[opp], "faction": mf, "level": 3, "life": 20,
+		start_battle({"name": d.names[opp], "faction": mf, "level": 3, "life": 10,
 			"deck": d.decks[opp], "tournament": true, "look": {"faction": mf, "subtype": GameState.HEROES.get(mf, {}).get("subtype", "Human"), "name": d.names[opp]}}))
 	ts.edit_deck.connect(_tournament_deck)
 	ts.done.connect(_tournament_prize)
@@ -1136,7 +1155,8 @@ func _show_bracket() -> void:
 func _tournament_match_done(won: bool) -> void:
 	var d := tournament
 	var deck: Dictionary = GameState.decks[_tour_deck]["cards"]
-	GameState.active_deck = _tour_prev_deck
+	# a hero who began with the draft has no other deck: the draft deck becomes his own
+	GameState.active_deck = _tour_deck if _tour_intro else _tour_prev_deck
 	d.resolve_stage(won, deck)
 	while d.player_out and d.stage < 3:
 		d.resolve_stage(false, deck)      # the rest of the bracket plays on without you
@@ -1147,6 +1167,9 @@ func _tournament_match_done(won: bool) -> void:
 
 
 func _tournament_prize() -> void:
+	if _tour_intro:
+		_intro_prize()
+		return
 	var d := tournament
 	var pz := d.prize()
 	var parts: Array = []
@@ -1173,6 +1196,35 @@ func _tournament_prize() -> void:
 	body += "\n\n" + (I18n.t("Prize: %s") % ", ".join(parts) if not parts.is_empty() else I18n.t("No prize this time, but the drafted cards and the deck are yours to keep."))
 	_open_city(city_id)
 	show_dialog("Tournament over", body, [["OK", Callable()]], cards)
+
+
+## The end of the introductory tournament: boosters of the hero's faith by how far he got.
+func _intro_prize() -> void:
+	var d := tournament
+	var wins := d.player_stage
+	var n: int = Hero.INTRO_PRIZE[clampi(wins, 0, Hero.INTRO_PRIZE.size() - 1)]
+	if GameState.difficulty == "pilgrim":
+		n += 1
+	GameState.pending_boosters += n
+	for k in n:
+		GameState.faction_packs.append(GameState.hero)
+	if d.champion() == 0:
+		GameState.stats["tournaments_won"] = int(GameState.stats.get("tournaments_won", 0)) + 1
+	GameState.active_deck = _tour_deck
+	GameState.ensure_deck()
+	var city_id := d.city
+	tournament = null
+	_tour_intro = false
+	GameState.save_game()
+	var faith_name: String = Factions.info(GameState.hero)["name"]
+	var body := I18n.t("You won %d match(es).") % wins + "\n\n"
+	if n > 0:
+		body += I18n.t("For your showing, %s gives you %d booster(s) of its own cards.") % [faith_name, n]
+	else:
+		body += I18n.t("No prize this time, but the drafted cards and the deck are yours to keep.")
+	body += "\n\n" + I18n.t("Your draft deck is now your deck. The road is open.")
+	_open_city(city_id)
+	show_dialog("Tournament over", body, [["OK", Callable()]])
 
 
 func _nearest_visited_city() -> String:

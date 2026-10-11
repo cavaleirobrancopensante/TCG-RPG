@@ -75,6 +75,7 @@ static func random_sheet(rng: RandomNumberGenerator) -> Dictionary:
 		"look": random_look(rng, faith),
 		"stats": random_stats(rng, faith),
 		"difficulty": "knight",
+		"start": "draft",
 	}
 
 
@@ -127,13 +128,27 @@ static func classic_sheet(faith: String) -> Dictionary:
 	var c: Dictionary = CLASSIC[faith]
 	var lk: Dictionary = c["look"]
 	return {
-		"faith": faith, "name": c["name"], "stats": Dictionary(c["stats"]).duplicate(), "difficulty": "knight",
+		"faith": faith, "name": c["name"], "stats": Dictionary(c["stats"]).duplicate(), "difficulty": "knight", "start": "draft",
 		"look": {"skin": SKINS[int(lk["skin"])], "hair": lk["hair"], "hair_col": HAIR_COLS[int(lk["hair_col"])], "beard": lk["beard"],
 			"main": CLOTHES[int(lk["main"])], "second": CLOTHES[int(lk["second"])], "head": lk["head"]},
 	}
 
 
+## How a new hero begins: an introductory draft tournament in his capital (free, no death,
+## the drafted cards are his first collection) or sealed boosters.
+const START := {
+	"draft": {"name": "Begin with a draft", "text": "Enter the introductory tournament of your capital: draft your first cards, build a deck, and fight bouts that cannot kill you."},
+	"boosters": {"name": "Begin with boosters", "text": "Set out with sealed booster packs and a deck built from them."},
+}
+const START_ORDER := ["draft", "boosters"]
+## Faith boosters won in the introductory tournament, by matches won (0 = out in the first
+## round, 1 = semi-final, 2 = final, 3 = champion). Pilgrims get one more at any placing.
+const INTRO_PRIZE := [0, 1, 2, 3]
+
+
 ## Starting boosters by difficulty: [random boosters, boosters of the hero's faith].
+## A hero who begins with a draft gets none: his boosters are the introductory tournament's
+## prize instead (INTRO_PRIZE: boosters of his faith by how far he got).
 const START_PACKS := {"pilgrim": [3, 1], "knight": [2, 1], "crusader": [3, 0]}
 
 
