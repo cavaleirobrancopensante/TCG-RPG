@@ -8,7 +8,8 @@ extends Node
 ## Prints a summary per screen and quits with 1 when anything fails.
 ##
 ##   godot --headless --path . res://tests/ui_check.tscn
-##   UI_LANGS=en UI_SCREENS=settings,hero ...        (a subset)
+##   UI_LANGS=en UI_SCREENS=settings,hero ...        (a subset; the draft screens are
+##       draft, draft_deck (the deck builder in draft mode, two lists) and tournament)
 ##   UI_WINDOW=1200x540 ...                          (a wide phone, headless)
 ##   UI_SHOTS=1 xvfb-run godot --path . --resolution 1200x540 res://tests/ui_check.tscn
 ##       (also saves user://shots/ui_<screen>_<lang>_<WxH>.png; needs a real renderer)
@@ -68,7 +69,7 @@ func _wants(n: String) -> bool:
 
 
 func _wants_world() -> bool:
-	for n in ["hud", "hero_sheet", "city", "village", "deck", "booster", "journal", "world_settings", "save"]:
+	for n in ["hud", "hero_sheet", "city", "village", "deck", "booster", "journal", "world_settings", "save", "draft", "draft_deck", "tournament"]:
 		if _wants(n):
 			return true
 	return false
@@ -159,6 +160,8 @@ func _world_screens(lang: String) -> void:
 		main.open_deck_builder()
 		await _settle()
 		await _check_top("deck", lang)
+	if _wants("draft") or _wants("draft_deck") or _wants("tournament"):
+		await _draft_screens(lang)
 	if _wants("booster"):
 		GameState.pending_boosters = maxi(GameState.pending_boosters, 1)
 		main.open_boosters(false)
@@ -177,6 +180,43 @@ func _world_screens(lang: String) -> void:
 			main._open_village(vid)
 			await _settle()
 			await _check_top("village", lang)
+
+
+## The draft table mid-draft, the deck builder in draft mode (two lists, one built) and the
+## bracket with its deck chooser.
+func _draft_screens(lang: String) -> void:
+	var dr := Draft.new()
+	dr.start(main._capital_of("sanctum"), "Wanderer", 77)
+	for i in 20:
+		dr.player_pick(0)
+	if _wants("draft"):
+		var ds := DraftScreen.new()
+		ds.draft = dr
+		await _open_check("draft", lang, ds)
+	while dr.is_drafting():
+		dr.player_pick(0)
+	dr.finish_draft()
+	var pool := dr.pool(0)
+	var base := I18n.t("Draft: %s") % GameState.city(dr.city).get("name", "")
+	var a := GameState.decks.size()
+	GameState.decks.append({"name": base + " 1", "cards": DeckTools.auto_build(pool, [], DeckTools.DRAFT_COPIES)})
+	GameState.decks.append({"name": base + " 2", "cards": {}})
+	var lists := [a, a + 1]
+	if _wants("draft_deck"):
+		var db := DeckBuilder.new()
+		db.pool = pool
+		db.draft_decks = lists
+		db.draft_deck = a
+		db.draft_base = base
+		await _open_check("draft_deck", lang, db)
+	if _wants("tournament"):
+		var ts := TournamentScreen.new()
+		ts.draft = dr
+		ts.lists = lists
+		ts.chosen = a
+		ts.pool = pool
+		await _open_check("tournament", lang, ts)
+	GameState.decks.resize(a)
 
 
 func _open_check(n: String, lang: String, c: Control) -> void:

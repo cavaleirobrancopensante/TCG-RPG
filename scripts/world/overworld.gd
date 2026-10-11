@@ -12,9 +12,9 @@ signal ferry_reached(index: int, from_a: bool)
 ## Two wanderers of hostile faiths met and fought; `in_sight` when the hero could see it.
 signal npc_clash(winner: Dictionary, loser: Dictionary, leveled: bool, in_sight: bool)
 
-const PLAYER_SPEED := 430.0
-const ENEMY_SPEED := 150.0
-const CHASE_SPEED := 300.0
+const PLAYER_SPEED := 260.0
+const ENEMY_SPEED := 90.0
+const CHASE_SPEED := 180.0
 const CHASE_RADIUS := 520.0
 const ENGAGE_RADIUS := 58.0
 const CITY_RADIUS := 120.0
@@ -44,7 +44,7 @@ const ROAD := 3
 const BRIDGE := 4
 const LANDING := 5
 const SPEED_BY_CODE := {OPEN: 1.0, SLOW: 0.6, ROAD: 1.3, BRIDGE: 1.1, LANDING: 1.0}
-const HOURS_PER_SECOND := 1.0 / 20.0     # twenty seconds on the road make an hour
+const HOURS_PER_SECOND := 1.0 / 2.0      # two seconds on the road make an hour: crossing the map takes about half a day
 const FOG_ALPHA := 0.9
 
 var world_size := Vector2(6000, 4000)

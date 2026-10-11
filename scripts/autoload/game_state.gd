@@ -7,6 +7,7 @@ signal gold_changed(value: int)
 signal collection_changed
 signal mission_updated(mission_id: String)
 signal leveled_up(new_level: int, points_gained: int)
+const ROAD_HOURS_PER_LIFE := 4.0
 signal saved                           # after every save (the HUD shows a short "Saved" mark)
 
 const LEGACY_SAVE := "user://save.json"
@@ -843,14 +844,15 @@ func diff(key: String):
 
 
 ## Time passes on the road: the clock turns, new days begin, wounds heal.
-## One hour mends one point of life.
+## Four hours on the road mend one point of life (ROAD_HOURS_PER_LIFE).
 func advance_clock(hours: float) -> void:
 	clock += hours
 	while clock >= 24.0:
 		clock -= 24.0
 		day += 1
 	if life < max_life():
-		_regen += hours
+		# on the road a wound mends slowly: one point every four hours
+		_regen += hours / ROAD_HOURS_PER_LIFE
 		while _regen >= 1.0 and life < max_life():
 			_regen -= 1.0
 			life += 1

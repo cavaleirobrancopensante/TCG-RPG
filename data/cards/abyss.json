@@ -19,7 +19,7 @@
         "amount": 1
       }
     ],
-    "text": "When this dies, the enemy player loses 1 life and you gain 1 life.",
+    "text": "When Pact Initiate dies, the enemy player loses 1 life and you gain 1 life.",
     "flavor": "\"Your soul is only a coin. Spend it while it still buys something.\" (a Pact recruiting sermon)",
     "art": "res://art/cards/abyss_c_001.webp"
   },
@@ -38,7 +38,7 @@
     "keywords": [
       "flying"
     ],
-    "text": "Flying (can only be blocked by creatures with flying or reach).",
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.)",
     "flavor": "It is small, it is spiteful, and it is never where you swing.",
     "art": "res://art/cards/abyss_c_002.webp"
   },
@@ -63,7 +63,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "When this enters, you lose 1 life.",
+    "text": "When Blood-Oath Thrall enters, you lose 1 life.",
     "flavor": "\"Read the contract? Only the weak read. The strong sign.\" (a Pact notary)",
     "art": "res://art/cards/abyss_c_003.webp"
   },
@@ -83,7 +83,7 @@
     "keywords": [
       "deathtouch"
     ],
-    "text": "Deathtouch (any damage this deals to a creature destroys it).",
+    "text": "Deathtouch (Any damage this creature deals to a creature destroys it.)",
     "flavor": "Its touch carries the cold of every grave it has crawled from.",
     "art": "res://art/cards/abyss_c_004.webp"
   },
@@ -110,7 +110,7 @@
         "condition": "bloodied"
       }
     ],
-    "text": "As long as you have 5 or less life (Bloodied), this gets +1/+1.",
+    "text": "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +1/+1.",
     "flavor": "The closer you come to the grave, the better it can smell you.",
     "art": "res://art/cards/abyss_c_005.webp"
   },
@@ -130,7 +130,7 @@
     "keywords": [
       "dread"
     ],
-    "text": "Dread (can only be blocked by Pact creatures and Constructs).",
+    "text": "Dread (This creature can't be blocked except by Pact creatures and Constructs.)",
     "flavor": "Honest dogs bolt at its scent. Only the damned dare stand in its path.",
     "art": "res://art/cards/abyss_c_006.webp"
   },
@@ -155,7 +155,7 @@
         "amount": 1
       }
     ],
-    "text": "When this enters, the enemy player loses 1 life and you gain 1 life.",
+    "text": "When Grave Chanter enters, the enemy player loses 1 life and you gain 1 life.",
     "flavor": "His hymns are sung backwards, and every note takes something.",
     "art": "res://art/cards/abyss_c_007.webp"
   },
@@ -187,10 +187,10 @@
             "duration": "turn"
           }
         ],
-        "text": "Sacrifice another Zombie: this gets +3/+3 until end of turn."
+        "text": "Sacrifice another Zombie: Charnel Glutton gets +3/+3 until end of turn."
       }
     ],
-    "text": "Sacrifice another Zombie: this gets +3/+3 until end of turn.",
+    "text": "Sacrifice another Zombie: Charnel Glutton gets +3/+3 until end of turn.",
     "flavor": "\"Enough is a word invented by men who already have too much.\" (a Pact preacher)",
     "art": "res://art/cards/abyss_c_008.webp"
   },
@@ -218,7 +218,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "When this enters, target enemy creature gets -2/-2 until end of turn.",
+    "text": "When Blight-Sower Cultist enters, target enemy creature gets -2/-2 until end of turn.",
     "flavor": "\"A ruined harvest is still a harvest, if you are the one selling the bread.\" (the Blight-Sower's creed)",
     "art": "res://art/cards/abyss_c_009.webp"
   },
@@ -250,7 +250,7 @@
         "count": 1
       }
     ],
-    "text": "When this dies, create a 1/1 Risen Bones Skeleton token.",
+    "text": "When Ossuary Bone-Walker dies, create a 1/1 Risen Bones Skeleton token.",
     "flavor": "Break it apart and the pieces keep walking.",
     "art": "res://art/cards/abyss_c_010.webp"
   },
@@ -275,7 +275,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "When this enters, you lose 2 life.",
+    "text": "When Pit-Chained Fiend enters, you lose 2 life.",
     "flavor": "The chain holds the fiend. Nothing holds the price.",
     "art": "res://art/cards/abyss_c_011.webp"
   },
@@ -295,7 +295,7 @@
     "keywords": [
       "dread"
     ],
-    "text": "Dread (can only be blocked by Pact creatures and Constructs).",
+    "text": "Dread (This creature can't be blocked except by Pact creatures and Constructs.)",
     "flavor": "It still wears the gold it was buried with, and it wants yours.",
     "art": "res://art/cards/abyss_c_012.webp"
   },
@@ -419,7 +419,7 @@
         "amount": 2
       }
     ],
-    "text": "The enemy discards two cards at random.",
+    "text": "The enemy player discards two cards at random.",
     "flavor": "\"A lie told at the right hour is worth a hundred truths told too late.\" (Malgrith, Lich of the Black Ledger)",
     "art": "res://art/cards/abyss_c_017.webp"
   },
@@ -470,10 +470,10 @@
             "amount": 1
           }
         ],
-        "text": "Sacrifice a creature: the enemy player loses 1 life and you gain 1 life."
+        "text": "Sacrifice a creature: The enemy player loses 1 life and you gain 1 life."
       }
     ],
-    "text": "Sacrifice a creature: the enemy player loses 1 life and you gain 1 life.",
+    "text": "Sacrifice a creature: The enemy player loses 1 life and you gain 1 life.",
     "flavor": "\"Sacrifice is a holy thing, provided it is always someone else's.\" (the Pact catechism)",
     "art": "res://art/cards/abyss_c_019.webp"
   },
@@ -504,10 +504,10 @@
             "duration": "turn"
           }
         ],
-        "text": "Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn."
+        "text": "Tap, Pay 1 life: Target enemy creature gets -1/-1 until end of turn."
       }
     ],
-    "text": "Tap, pay 1 life: target enemy creature gets -1/-1 until end of turn.",
+    "text": "Tap, Pay 1 life: Target enemy creature gets -1/-1 until end of turn.",
     "flavor": "\"An oath is a rope. A wise man ties it round other men's necks.\" (a Pact notary)",
     "art": "res://art/cards/abyss_c_020.webp"
   },
@@ -532,7 +532,7 @@
         "toughness": 0
       }
     ],
-    "text": "This gets +1/+0 for each other Zombie you control.",
+    "text": "Lych-Gate Shambler gets +1/+0 for each other Zombie you control.",
     "flavor": "It waits by the lych-gate for the next funeral, and it is never alone for long.",
     "art": "res://art/cards/abyss_c_021.webp"
   },
@@ -593,7 +593,7 @@
         "count": 1
       }
     ],
-    "text": "When this dies, create a 1/1 Risen Bones Skeleton token.",
+    "text": "When Bone-Rattle Picket dies, create a 1/1 Risen Bones Skeleton token.",
     "flavor": "Knock it down and something else climbs out of the same grave.",
     "art": "res://art/cards/abyss_c_023.webp"
   },
@@ -618,7 +618,7 @@
         "amount": 1
       }
     ],
-    "text": "When this enters, you lose 1 life.",
+    "text": "When Sulphur Brute enters, you lose 1 life.",
     "flavor": "It comes up through the cellar floor, and the whole house smells of the pit for a week.",
     "art": "res://art/cards/abyss_c_024.webp"
   },
@@ -696,7 +696,7 @@
     "keywords": [
       "dread"
     ],
-    "text": "Dread (can only be blocked by Pact creatures and Constructs).",
+    "text": "Dread (This creature can't be blocked except by Pact creatures and Constructs.)",
     "flavor": "Travellers follow its pale lantern off the causeway, and the fen keeps them.",
     "art": "res://art/cards/abyss_c_027.webp"
   },
@@ -721,7 +721,7 @@
         "amount": 1
       }
     ],
-    "text": "When this dies, the enemy player loses 1 life and you gain 1 life.",
+    "text": "When Plague-Pit Shambler dies, the enemy player loses 1 life and you gain 1 life.",
     "flavor": "They tipped him into the plague pit with the others. He did not stay with them.",
     "art": "res://art/cards/abyss_c_028.webp"
   },
@@ -746,7 +746,7 @@
         "target": "own_grave_creature"
       }
     ],
-    "text": "When this enters, return target creature card from your graveyard to your hand.",
+    "text": "When Gravepit Ghoul enters, return target creature card from your graveyard to your hand.",
     "flavor": "It digs all night in the churchyard, and what it digs up follows it home.",
     "art": "res://art/cards/abyss_c_029.webp"
   },
@@ -779,10 +779,10 @@
             "amount": 1
           }
         ],
-        "text": "Sacrifice another creature: draw a card and you lose 1 life."
+        "text": "Sacrifice another creature: You draw a card and you lose 1 life."
       }
     ],
-    "text": "Sacrifice another creature: draw a card and you lose 1 life.",
+    "text": "Sacrifice another creature: You draw a card and you lose 1 life.",
     "flavor": "\"Conscience is a fever of the young. Bleed it out early.\" (Bone-Priest of the Pact)",
     "art": "res://art/cards/abyss_u_001.webp"
   },
@@ -810,7 +810,7 @@
         "trigger": "attack"
       }
     ],
-    "text": "Whenever this attacks, target enemy creature gets -1/-1 until end of turn.",
+    "text": "Whenever Wailing Wraith attacks, target enemy creature gets -1/-1 until end of turn.",
     "flavor": "Its cry finds the weak place in every heart and widens it.",
     "art": "res://art/cards/abyss_u_002.webp"
   },
@@ -888,7 +888,7 @@
         "amount": 1
       }
     ],
-    "text": "When this enters, the enemy discards a card at random. When this dies, the enemy discards a card at random.",
+    "text": "When Tempter of Broken Vows enters or dies, the enemy player discards a card at random.",
     "flavor": "\"Repent tomorrow. Tomorrow is always such a convenient day.\" (Tempter of Broken Vows)",
     "art": "res://art/cards/abyss_u_005.webp"
   },
@@ -920,10 +920,10 @@
             "duration": "turn"
           }
         ],
-        "text": "Pay 2 life: this gets +1/+1 until end of turn."
+        "text": "Pay 2 life: Blood-Bound Reaver gets +1/+1 until end of turn."
       }
     ],
-    "text": "Pay 2 life: this gets +1/+1 until end of turn.",
+    "text": "Pay 2 life: Blood-Bound Reaver gets +1/+1 until end of turn.",
     "flavor": "Every wound he takes, he takes on credit.",
     "art": "res://art/cards/abyss_u_006.webp"
   },
@@ -949,7 +949,7 @@
         "target": "own_grave_creature"
       }
     ],
-    "text": "When this enters, return target creature card with mana value 4 or less from your graveyard to play.",
+    "text": "When Grave Summoner enters, return target creature card with mana value 4 or less from your graveyard to play.",
     "flavor": "\"Rise. Your rest was never part of the bargain.\"",
     "art": "res://art/cards/abyss_u_007.webp"
   },
@@ -1033,7 +1033,7 @@
         "amount": 2
       }
     ],
-    "text": "If you have 5 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
+    "text": "Bloodied: If you have 5 or less life, the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.",
     "flavor": "The contract was always clear. It was only written very small.",
     "art": "res://art/cards/abyss_u_010.webp"
   },
@@ -1086,10 +1086,10 @@
             "duration": "turn"
           }
         ],
-        "text": "Sacrifice a creature: target enemy creature gets -2/-2 until end of turn."
+        "text": "Sacrifice a creature: Target enemy creature gets -2/-2 until end of turn."
       }
     ],
-    "text": "Sacrifice a creature: target enemy creature gets -2/-2 until end of turn.",
+    "text": "Sacrifice a creature: Target enemy creature gets -2/-2 until end of turn.",
     "flavor": "One life for the knife, one for the curse. The arithmetic of the pit is simple.",
     "art": "res://art/cards/abyss_u_012.webp"
   },
@@ -1120,10 +1120,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap, pay {2} and 2 life: the enemy discards a card at random."
+        "text": "{2}, Tap, Pay 2 life: The enemy player discards a card at random."
       }
     ],
-    "text": "Tap, pay {2} and 2 life: the enemy discards a card at random.",
+    "text": "{2}, Tap, Pay 2 life: The enemy player discards a card at random.",
     "flavor": "Its smoke mocks the incense of the sanctuary. It carries no prayers up, only thoughts away.",
     "art": "res://art/cards/abyss_u_013.webp"
   },
@@ -1175,7 +1175,7 @@
         "subtype": "Demon"
       }
     ],
-    "text": "Your Demon creature cards cost 1 less to play.",
+    "text": "Your Demon creature cards cost {1} less to play. This effect reduces only generic mana.",
     "flavor": "\"Every man serves someone. Serve the one with the bigger fire.\" (Herald of the Burning Gate)",
     "art": "res://art/cards/abyss_u_015.webp"
   },
@@ -1204,7 +1204,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Whenever another Skeleton enters under your control, this gets +1/+1 for the rest of the duel.",
+    "text": "Whenever another Skeleton enters under your control, put a +1/+1 counter on Gravecaller Bone-Warden.",
     "flavor": "Every skeleton that climbs out of the earth lends him a little more of its cold.",
     "art": "res://art/cards/abyss_u_016.webp"
   },
@@ -1287,7 +1287,7 @@
         "count": 2
       }
     ],
-    "text": "When this dies, create two 1/1 Restless Dead Zombie tokens.",
+    "text": "When Plague-Cart Drover dies, create two 1/1 Restless Dead Zombie tokens.",
     "flavor": "\"Bring out your dead,\" he croaks, and the dead in his cart climb down to help.",
     "art": "res://art/cards/abyss_u_019.webp"
   },
@@ -1350,7 +1350,7 @@
         "condition": "bloodied"
       }
     ],
-    "text": "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.",
+    "text": "Bloodied: As long as you have 5 or less life, Oathbreaker Knight gets +2/+2 and has dread and deathtouch.",
     "flavor": "\"Honour was a fine horse. I sold it and bought ten mercenaries.\" (Oathbreaker Knight)",
     "art": "res://art/cards/abyss_r_001.webp"
   },
@@ -1377,7 +1377,7 @@
         "amount": 1
       }
     ],
-    "text": "Flying. Whenever this attacks, the enemy discards a card at random.",
+    "text": "Flying. Whenever Dream-Thief Fiend attacks, the enemy player discards a card at random.",
     "flavor": "In the morning you remember that you had a plan. You cannot remember what it was.",
     "art": "res://art/cards/abyss_r_002.webp"
   },
@@ -1404,7 +1404,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "Dread. When this enters, you lose 3 life.",
+    "text": "Dread. When Marquis of the Wailing Pit enters, you lose 3 life.",
     "flavor": "\"Better feared than loved, and better paid than feared.\" (Marquis of the Wailing Pit)",
     "art": "res://art/cards/abyss_r_003.webp"
   },
@@ -1470,7 +1470,7 @@
             "count": 1
           }
         ],
-        "text": "{B}, sacrifice another creature: create a 1/1 Risen Bones Skeleton token."
+        "text": "{B}, Sacrifice another creature: Create a 1/1 Risen Bones Skeleton token."
       }
     ],
     "statics": [
@@ -1482,7 +1482,7 @@
         "subtype": "Skeleton"
       }
     ],
-    "text": "Other Skeletons you control get +1/+1. {B}, sacrifice another creature: create a 1/1 Risen Bones Skeleton token.",
+    "text": "Other Skeletons you control get +1/+1. {B}, Sacrifice another creature: Create a 1/1 Risen Bones Skeleton token.",
     "flavor": "Every skull on his walls once knelt to him. Most of them still do.",
     "art": "res://art/cards/abyss_r_005.webp"
   },
@@ -1561,7 +1561,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "The enemy discards three cards at random. You lose 3 life.",
+    "text": "The enemy player discards three cards at random. You lose 3 life.",
     "flavor": "\"An empty mind is a free mind. An empty soul is freer still.\" (the Pact catechism)",
     "art": "res://art/cards/abyss_r_008.webp"
   },
@@ -1592,10 +1592,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap: draw a card and you lose 1 life."
+        "text": "Tap: You draw a card and you lose 1 life."
       }
     ],
-    "text": "Tap: draw a card and you lose 1 life.",
+    "text": "Tap: You draw a card and you lose 1 life.",
     "flavor": "\"Every soul has its price. The trick is to buy before he learns it.\" (Malgrith, Lich of the Black Ledger)",
     "art": "res://art/cards/abyss_r_009.webp"
   },
@@ -1621,7 +1621,7 @@
         "subtype": "Skeleton"
       }
     ],
-    "text": "Other Skeletons you control have dread (they can only be blocked by Pact creatures and Constructs).",
+    "text": "Other Skeletons you control have dread. (They can't be blocked except by Pact creatures and Constructs.)",
     "flavor": "When he rides out of the hill at midnight, his host walks where no living man can stop it.",
     "art": "res://art/cards/abyss_r_010.webp"
   },
@@ -1656,7 +1656,7 @@
         "amount_per": "Demon"
       }
     ],
-    "text": "Other Demons you control get +1/+1. When this enters, you lose 1 life for each Demon you control.",
+    "text": "Other Demons you control get +1/+1. When Brimstone Marshal enters, you lose 1 life for each Demon you control.",
     "flavor": "\"Never ask a recruit why he joined. Ask him what he still owes.\" (Brimstone Marshal)",
     "art": "res://art/cards/abyss_r_011.webp"
   },
@@ -1697,7 +1697,7 @@
         "count": 1
       }
     ],
-    "text": "Other Zombies you control get +1/+1. When this dies, create a 1/1 Restless Dead Zombie token.",
+    "text": "Other Zombies you control get +1/+1. When Ghoul-Master of the Plague Pits dies, create a 1/1 Restless Dead Zombie token.",
     "flavor": "He was the parish gravedigger in the year of the plague. He still keeps the pits, and the pits keep him.",
     "art": "res://art/cards/abyss_r_012.webp"
   },
@@ -1729,7 +1729,7 @@
         "trigger": "enter"
       }
     ],
-    "text": "Flying. When this enters, destroy target enemy creature and you lose 3 life.",
+    "text": "Flying. When Belzareth enters, destroy target enemy creature and you lose 3 life.",
     "flavor": "\"I did not fall. I merely went into business for myself.\" (Belzareth, Prince of Cinders)",
     "art": "res://art/cards/abyss_m_001.webp"
   },
@@ -1765,7 +1765,7 @@
         "trigger": "upkeep"
       }
     ],
-    "text": "When this enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, draw a card and you lose 1 life.",
+    "text": "When Malgrith enters, return target creature card with mana value 4 or less from your graveyard to play. At the beginning of your upkeep, you draw a card and you lose 1 life.",
     "flavor": "\"Death is only a creditor, and I have never paid a creditor in my life.\" (Malgrith, Lich of the Black Ledger)",
     "art": "res://art/cards/abyss_m_002.webp"
   },
@@ -1837,7 +1837,7 @@
         "amount": 3
       }
     ],
-    "text": "Dread. Other Demons you control have deathtouch (any damage they deal to a creature destroys it). Whenever another Demon enters under your control, the enemy discards a card at random. When this enters, you lose 3 life.",
+    "text": "Dread. Other Demons you control have deathtouch. (Any damage they deal to a creature destroys it.) Whenever another Demon enters under your control, the enemy player discards a card at random. When Azgaroth enters, you lose 3 life.",
     "flavor": "\"Every man in my court is free. He is free to pay, and free to pay again.\" (Azgaroth, Duke of the Ninth Pit)",
     "art": "res://art/cards/abyss_m_004.webp"
   }

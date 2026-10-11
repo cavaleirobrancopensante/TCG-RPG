@@ -1,6 +1,7 @@
 extends Node
 ## Drag scrolling in the deck builder (finger and mouse; a tap on a card opens it, a tap on its
-## "+" adds it, a tap on a deck row removes one; the wheel still scrolls), the land pips (tap
+## "+" adds it, a tap on a deck row reads the card and its "-" / "+" change the count; the
+## wheel still scrolls), the land pips (tap
 ## adds, hold removes), Undo, the Filters drawer, and the "Respond to every spell" setting
 ## (whether the duel waits for you when the enemy casts in its main phase). Prints PASS/FAIL
 ## lines; screenshots in user://shots/.
@@ -215,7 +216,8 @@ func _deck_builder_tests() -> void:
 	d._close_filters()
 	await _frames(4)
 
-	# the deck list: drag scrolls it without removing a card, a tap removes one
+	# the deck list: drag scrolls it without changing a card; a tap on a row reads the card,
+	# its "-" takes one away
 	await _frames(6)
 	var ds := d.deck_scroll
 	var n1 := DeckTools.count(d._deck())
@@ -224,8 +226,8 @@ func _deck_builder_tests() -> void:
 	before = ds.scroll_vertical
 	var presses := [0]
 	for c in d.deck_list.get_children():
-		if c is Button:
-			c.pressed.connect(func(): presses[0] += 1)
+		for b in c.find_children("*", "Button", true, false):
+			b.pressed.connect(func(): presses[0] += 1)
 	await _finger_drag(q, Vector2(0, -120))
 	await _frames(30)
 	_check(ds.scroll_vertical > before + 60, "finger drag scrolls the deck list (%d -> %d)" % [before, ds.scroll_vertical])
@@ -241,11 +243,36 @@ func _deck_builder_tests() -> void:
 	await _frames(40)
 	var row := _visible_row(d)
 	if row:
-		_mouse_button(row.get_global_rect().get_center(), true)
+		var body: Control = row.get_node("Row")
+		_mouse_button(body.get_global_rect().get_center(), true)
 		await _frames(2)
-		_mouse_button(row.get_global_rect().get_center(), false)
+		_mouse_button(body.get_global_rect().get_center(), false)
 		await _frames(4)
-		_check(DeckTools.count(d._deck()) == n1 - 1, "a tap on a deck row removes one copy")
+		_check(DeckTools.count(d._deck()) == n1 and _viewer_open(d), "a tap on a deck row reads the card (no copy removed)")
+		await _close_viewer(d)
+		row = _visible_row(d)
+		var minus: Control = row.get_node("Minus")
+		_mouse_button(minus.get_global_rect().get_center(), true)
+		await _frames(2)
+		_mouse_button(minus.get_global_rect().get_center(), false)
+		await _frames(4)
+		_check(DeckTools.count(d._deck()) == n1 - 1, "a tap on a row's - removes one copy")
+		row = _visible_row(d)
+		var plus: Control = row.get_node("Plus")
+		var n2 := DeckTools.count(d._deck())
+		_mouse_button(plus.get_global_rect().get_center(), true)
+		await _frames(2)
+		_mouse_button(plus.get_global_rect().get_center(), false)
+		await _frames(4)
+		var plus_ok: bool = (plus as Button).disabled or DeckTools.count(d._deck()) == n2 + 1
+		_check(plus_ok, "a tap on a row's + adds one copy (unless the limit is reached)")
+		# a drag that starts on a "-" scrolls and removes nothing
+		await _frames(40)
+		row = _visible_row(d)
+		var n3 := DeckTools.count(d._deck())
+		await _finger_drag(row.get_node("Minus").get_global_rect().get_center(), Vector2(0, -100))
+		await _frames(30)
+		_check(DeckTools.count(d._deck()) == n3, "a drag that starts on a - removes nothing")
 	else:
 		_check(false, "a deck row is on screen")
 	d.queue_free()
@@ -294,11 +321,11 @@ func _show_addable(d: DeckBuilder) -> void:
 	await _frames(4)
 
 
-func _visible_row(d: DeckBuilder) -> Button:
+func _visible_row(d: DeckBuilder) -> HBoxContainer:
 	var r := d.deck_scroll.get_global_rect()
 	for c in d.deck_list.get_children():
 		var cr: Rect2 = c.get_global_rect()
-		if c is Button and cr.position.y >= r.position.y and cr.end.y <= r.end.y:
+		if c is HBoxContainer and cr.position.y >= r.position.y and cr.end.y <= r.end.y:
 			return c
 	return null
 

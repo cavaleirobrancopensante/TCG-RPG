@@ -9,7 +9,11 @@ extends Control
 ##    take one away); the mana curve; the deck's cards; the card count and Done.
 ##  • Tap a card to read it up close, with Add to deck / Remove (the viewer stays open, so
 ##    several copies or cards can be added); the "+" on a card adds one at once.
-##    Tap a deck row to remove one copy. Undo takes back the last change to a deck.
+##    Tap a deck row to read the card (Add / Remove there too); its "-" and "+" take one copy
+##    away or add one. Undo takes back the last change to a deck.
+##  • Draft mode (pool + draft_decks): only the drafted cards, each up to the pool's count in
+##    every list; several lists can be made from the same pool (New, Copy, Rename, Delete), and
+##    ★ marks the one played in the next match (draft_deck).
 ##  • Both lists scroll by dragging (finger or mouse) as well as with the wheel.
 ##  • On a phone (a canvas under 600 px tall) the thumbnails are larger and fewer per row.
 
@@ -28,10 +32,13 @@ const PHONE_SCALE := 0.75             # 150 px wide thumbnails at the phone base
 const DESK_SCALE := 0.6
 const RIGHT_MIN := 404.0              # the deck column: room for six land pips (6 x 64 + gaps)
 const MENU := ["New deck", "Copy deck", "Rename deck", "Delete deck", "Auto build"]
+const MAX_LISTS := 6                  # draft mode: lists from one pool at most
 
 var editing := 0                  # index of the deck being edited
 var pool := {}                    # draft mode: build only from these cards ({id: n})
-var draft_deck := -1              # draft mode: the deck being built (no deck management)
+var draft_deck := -1              # draft mode: the list played in the next match (★)
+var draft_decks: Array = []       # draft mode: GameState.decks indices of the lists from this pool (shared)
+var draft_base := ""              # draft mode: lists are named "<draft_base> 1", "2"...
 var faiths := {}                  # selected faith filters (none = all)
 var f_type := 0
 var f_cost := 0
@@ -55,7 +62,7 @@ var count_label: Label
 var warn_label: Label
 var shown_label: Label
 var drawer_shown: Label
-var curve: _Curve
+var curve: ManaCurve
 var search: LineEdit
 var in_deck_toggle: CheckButton
 var filter_opts: Array = []       # the four filter OptionButtons (type, cost, rarity, ability)
@@ -74,6 +81,8 @@ var _undo: Array = []             # [{"deck": int, "cards": Dictionary}], newest
 func _ready() -> void:
 	UIKit.full_rect(self)
 	theme = UIKit.make_theme()
+	if draft_deck >= 0 and not draft_decks.has(draft_deck):
+		draft_decks.append(draft_deck)
 	editing = GameState.active_deck if draft_deck < 0 else draft_deck
 	var vp := get_viewport_rect().size
 	compact = vp.y < 600.0
@@ -168,7 +177,10 @@ func _ready() -> void:
 	drow.add_theme_constant_override("separation", 6)
 	right.add_child(drow)
 	active_btn = _button("★", func():
-		GameState.active_deck = editing
+		if draft_deck >= 0:
+			draft_deck = editing
+		else:
+			GameState.active_deck = editing
 		_refresh(), UIKit.TARGET_W)
 	active_btn.name = "UseInDuels"
 	active_btn.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
@@ -180,16 +192,9 @@ func _ready() -> void:
 	deck_pick.add_theme_font_size_override("font_size", UIKit.FS_BODY)
 	options.append(deck_pick)
 	deck_pick.item_selected.connect(func(i):
-		editing = i
+		editing = _deck_indices()[clampi(i, 0, _deck_indices().size() - 1)]
 		_refresh())
 	drow.add_child(deck_pick)
-	if draft_deck >= 0:
-		active_btn.visible = false
-		deck_pick.visible = false
-		var dl := UIKit.title("Draft deck", UIKit.FS_HEADING)
-		dl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		dl.clip_text = true
-		drow.add_child(dl)
 	deck_menu = MenuButton.new()
 	deck_menu.name = "DeckMenu"
 	deck_menu.text = "Deck"
@@ -200,8 +205,6 @@ func _ready() -> void:
 		deck_menu.add_theme_stylebox_override(st, Tapestry.stylebox({"normal": "button", "hover": "hover", "pressed": "pressed", "focus": "hover", "disabled": "disabled"}[st]))
 	var pm := deck_menu.get_popup()
 	for i in MENU.size():
-		if draft_deck >= 0 and i < 4:
-			continue
 		pm.add_item(MENU[i], i)
 	pm.id_pressed.connect(_on_menu)
 	options.append(deck_menu)
@@ -225,7 +228,7 @@ func _ready() -> void:
 		land_pips[f] = pip
 		lands_row.add_child(pip)
 
-	curve = _Curve.new()
+	curve = ManaCurve.new()
 	curve.custom_minimum_size = Vector2(0, 50 if compact else 64)
 	right.add_child(curve)
 	warn_label = UIKit.label("", UIKit.FS_SECONDARY, UIKit.RED, true)
@@ -448,6 +451,43 @@ func _deck() -> Dictionary:
 	return GameState.decks[editing]["cards"]
 
 
+## The decks shown in the picker: every deck, or in draft mode the lists from this pool.
+func _deck_indices() -> Array:
+	if draft_deck >= 0:
+		return draft_decks
+	return range(GameState.decks.size())
+
+
+## A deck's name for the picker; draft lists "<draft_base> 2" show as "List 2" (room is short).
+func _short_name(nm: String) -> String:
+	if draft_deck >= 0 and draft_base != "" and nm.begins_with(draft_base + " "):
+		return I18n.t("List %s") % nm.substr(draft_base.length() + 1)
+	return I18n.t(nm)
+
+
+## A fresh name for a list from the draft pool: "<draft_base> 1", "2"...
+func _list_name() -> String:
+	var base := draft_base if draft_base != "" else I18n.t("Draft deck")
+	var names := {}
+	for d in GameState.decks:
+		names[d["name"]] = true
+	var n := 1
+	while names.has("%s %d" % [base, n]):
+		n += 1
+	return "%s %d" % [base, n]
+
+
+## Draft mode: a new list from the same pool (outside the deck slots until the tournament ends).
+func _new_list(cards: Dictionary) -> int:
+	if draft_decks.size() >= MAX_LISTS:
+		_warn(I18n.t("You can make up to %d lists from one draft.") % MAX_LISTS)
+		return -1
+	GameState.decks.append({"name": _list_name(), "cards": cards.duplicate()})
+	var i := GameState.decks.size() - 1
+	draft_decks.append(i)
+	return i
+
+
 ## Remember the deck as it is now, so Undo can bring it back.
 func _push_undo() -> void:
 	_undo.append({"deck": editing, "cards": _deck().duplicate()})
@@ -499,6 +539,12 @@ func _on_menu(id: int) -> void:
 
 
 func _new_deck() -> void:
+	if draft_deck >= 0:
+		var j := _new_list({})
+		if j >= 0:
+			editing = j
+		_refresh()
+		return
 	UIKit.prompt(self, "New deck", GameState.unique_deck_name(I18n.t("New deck")), "Create", func(nm):
 		var i := GameState.new_deck(nm)
 		if i >= 0:
@@ -510,6 +556,12 @@ func _new_deck() -> void:
 
 func _copy_deck() -> void:
 	var src: Dictionary = GameState.decks[editing]
+	if draft_deck >= 0:
+		var j := _new_list(src["cards"])
+		if j >= 0:
+			editing = j
+		_refresh()
+		return
 	var i := GameState.new_deck(GameState.unique_deck_name(I18n.t(src["name"]) + " " + I18n.t("(copy)")), src["cards"])
 	if i >= 0:
 		editing = i
@@ -523,12 +575,24 @@ func _rename_deck() -> void:
 
 
 func _delete_deck() -> void:
-	if GameState.decks.size() <= 1:
+	if GameState.decks.size() <= 1 or (draft_deck >= 0 and draft_decks.size() <= 1):
 		warn_label.text = "You need at least one deck."
 		warn_label.visible = true
 		return
 	UIKit.confirm(self, I18n.t("Delete \"%s\"?") % I18n.t(GameState.decks[editing]["name"]), "The cards stay in your collection.", "Delete", func():
-		GameState.delete_deck(editing)
+		var gone := editing
+		GameState.delete_deck(gone)
+		if draft_deck >= 0:
+			# the lists after the deleted one move down a place
+			draft_decks.erase(gone)
+			for k in draft_decks.size():
+				if int(draft_decks[k]) > gone:
+					draft_decks[k] = int(draft_decks[k]) - 1
+			if draft_deck == gone:
+				draft_deck = int(draft_decks[0])
+			elif draft_deck > gone:
+				draft_deck -= 1
+			editing = draft_deck
 		editing = clampi(editing, 0, GameState.decks.size() - 1)
 		_undo.clear()                       # the indices no longer match
 		_refresh())
@@ -540,7 +604,7 @@ func _auto() -> void:
 	if draft_deck >= 0 and focus.is_empty():
 		focus = DeckTools.best_factions(_owned(), 2)
 	_push_undo()
-	GameState.decks[editing]["cards"] = DeckTools.auto_build(_owned(), focus)
+	GameState.decks[editing]["cards"] = DeckTools.auto_build(_owned(), focus, _copy_limit())
 	_refresh()
 
 
@@ -560,9 +624,13 @@ func _count_owned(id: String) -> int:
 
 func _done() -> void:
 	if draft_deck >= 0:
+		# the list for the next match must be ready; if it is not but this one is, play this one
 		var dp := DeckTools.validate(GameState.decks[draft_deck]["cards"], pool, DeckTools.DRAFT_COPIES)
+		if dp != "" and DeckTools.validate(_deck(), pool, DeckTools.DRAFT_COPIES) == "":
+			draft_deck = editing
+			dp = ""
 		if dp != "":
-			_warn(dp)
+			_warn(dp if draft_deck == editing else I18n.t("The deck for your next match (\"%s\") isn't ready: %s") % [GameState.decks[draft_deck]["name"], dp])
 			return
 		GameState.save_game()
 		closed.emit()
@@ -651,13 +719,18 @@ func _refresh_now() -> void:
 	var owned := _owned()
 	# deck picker: ★ = used in duels, ✗ = not legal yet
 	deck_pick.clear()
-	for i in GameState.decks.size():
+	var star := GameState.active_deck if draft_deck < 0 else draft_deck
+	var shown := _deck_indices()
+	for i in shown:
 		var dk: Dictionary = GameState.decks[i]
-		var ok := DeckTools.validate(dk["cards"], owned) == ""
-		deck_pick.add_item("%s%s  (%d)%s" % ["★ " if i == GameState.active_deck else "", I18n.t(dk["name"]), DeckTools.count(dk["cards"]), "" if ok else "  ✗"])
-	deck_pick.select(editing)
-	var is_active := editing == GameState.active_deck
-	active_btn.tooltip_text = I18n.t("Used in duels") if is_active else I18n.t("Use in duels")
+		var ok := DeckTools.validate(dk["cards"], owned, _copy_limit()) == ""
+		deck_pick.add_item("%s%s  (%d)%s" % ["★ " if i == star else "", _short_name(dk["name"]), DeckTools.count(dk["cards"]), "" if ok else "  ✗"])
+	deck_pick.select(maxi(0, shown.find(editing)))
+	var is_active := editing == star
+	if draft_deck >= 0:
+		active_btn.tooltip_text = I18n.t("Played in the next match") if is_active else I18n.t("Play this deck in the next match")
+	else:
+		active_btn.tooltip_text = I18n.t("Used in duels") if is_active else I18n.t("Use in duels")
 	UIKit.set_selected(active_btn, is_active)
 	undo_btn.disabled = _undo.is_empty()
 	var nf := active_filter_count()
@@ -698,34 +771,23 @@ func _refresh_now() -> void:
 	UIKit.clear(deck_list)
 	var dids := d.keys()
 	dids.sort_custom(func(a, b): return _sort_key(CardDB.get_card(a)) < _sort_key(CardDB.get_card(b)))
-	for id in dids:
-		if CardDB.is_basic_land(id):
-			continue
-		var c := CardDB.get_card(id)
-		var b := Button.new()
-		b.text = "%d× %s  (%s)" % [d[id], I18n.t(c["name"]), UIKit.cost_text(c["cost"])]
-		b.tooltip_text = I18n.t("Tap to remove one")
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		b.clip_text = true
-		b.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY)
-		b.add_theme_color_override("font_color", UIKit.faction_ink(c["faction"]))
-		b.custom_minimum_size.y = UIKit.TARGET
-		var cid: String = id
-		b.pressed.connect(func():
-			if not deck_drag.dragged:         # the finger was scrolling the list, not tapping
-				_change(cid, -1))
-		deck_list.add_child(b)
+	var row_ids := dids.filter(func(x): return not CardDB.is_basic_land(x))
+	for id in row_ids:
+		deck_list.add_child(_deck_row(id, int(d[id]), row_ids))
+	if row_ids.is_empty():
+		var empty := UIKit.label(I18n.t("This deck is empty. Tap + on a card to add it, or tap the card to read it first. Auto build in the Deck menu makes a deck for you."), UIKit.FS_SECONDARY, UIKit.DIM, true)
+		empty.name = "EmptyHint"
+		deck_list.add_child(empty)
 	for f in Factions.ORDER:
 		land_pips[f].count = int(d.get(Factions.land_id(f), 0))
 		land_pips[f].queue_redraw()
 	count_label.text = I18n.t("%d cards · %d lands") % [DeckTools.count(d), DeckTools.land_count(d)]
 	curve.set_deck(d)
-	var problem := DeckTools.validate(d, owned)
+	var problem := DeckTools.validate(d, owned, _copy_limit())
 	var hint := ""
 	if not compact:
 		hint = I18n.t("Draft deck: only the cards you drafted, plus basic lands.") if draft_deck >= 0 \
-			else I18n.t("Tap a card to read it, or + to add it at once. Tap a deck row to remove.")
+			else I18n.t("Tap a card to read it, or + to add it at once. Tap a deck row to read it; - and + change the count.")
 	warn_label.text = problem if problem != "" else hint
 	warn_label.visible = warn_label.text != ""
 	warn_label.add_theme_color_override("font_color", UIKit.RED if problem != "" else UIKit.DIM)
@@ -748,11 +810,11 @@ func _add_plus(cv: CardView, id: String, can_add: bool) -> Button:
 
 ## Tap a card: read it, with Add to deck and Remove, and leaf through the cards shown.
 ## The viewer stays open, so several cards (or copies) can be added in a row.
-func _view(start_id: String) -> CardViewer:
-	var listing := []
-	for c in grid.get_children():
-		if c is CardView:
-			listing.append(c.card_id)
+func _view(start_id: String, listing: Array = []) -> CardViewer:
+	if listing.is_empty():
+		for c in grid.get_children():
+			if c is CardView:
+				listing.append(c.card_id)
 	var v := CardViewer.open(self, listing, maxi(0, listing.find(start_id)), func(e, _i):
 		var id: String = e["id"]
 		var n := int(_deck().get(id, 0))
@@ -764,6 +826,100 @@ func _view(start_id: String) -> CardViewer:
 		return out)
 	v.closed.connect(_refresh)
 	return v
+
+
+## One row of the deck list: the card (tap to read it, with Add / Remove), then "-" and "+".
+## The row is an HBox named "DeckRow_<id>" holding the CardRow ("Row"), "Minus" and "Plus".
+func _deck_row(id: String, n: int, listing: Array) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	h.name = "DeckRow_" + id
+	h.add_theme_constant_override("separation", 4)
+	var r := CardRow.create(id, n)
+	r.name = "Row"
+	r.tooltip_text = I18n.t("Tap to read the card")
+	r.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	r.pressed.connect(func():
+		if not deck_drag.dragged:         # the finger was scrolling the list, not tapping
+			_view(id, listing.duplicate()))
+	h.add_child(r)
+	var minus := _button("-", func():
+		if not deck_drag.dragged:
+			_change(id, -1), UIKit.TARGET_W)
+	minus.name = "Minus"
+	minus.tooltip_text = I18n.t("Remove one")
+	minus.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
+	h.add_child(minus)
+	var plus := _button("+", func():
+		if not deck_drag.dragged:
+			_change(id, 1), UIKit.TARGET_W)
+	plus.name = "Plus"
+	plus.tooltip_text = I18n.t("Add one")
+	plus.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
+	plus.disabled = n >= mini(_copy_limit(), _count_owned(id))
+	h.add_child(plus)
+	return h
+
+
+## A tappable card line: "2×", the name in its faith's ink, and the cost as mana pips at the
+## right. Used by the deck list and the draft's picks panel.
+class CardRow extends Button:
+	var card_id := ""
+	var count := 0              # 0: no "n×" before the name
+	var card: Dictionary
+
+	static func create(id: String, n: int = 0) -> CardRow:
+		var r := CardRow.new()
+		r.card_id = id
+		r.count = n
+		r.card = CardDB.get_card(id)
+		return r
+
+	func _init() -> void:
+		focus_mode = Control.FOCUS_NONE
+		custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
+		clip_contents = true
+
+	func pips() -> Array:
+		var out: Array = []
+		if card.get("type") == "land":
+			return out
+		var cost: Dictionary = card.get("cost", {})
+		if int(cost.get("generic", 0)) > 0 or cost.is_empty():
+			out.append(str(int(cost.get("generic", 0))))
+		for m in Factions.MANA_ORDER:
+			for k in int(cost.get(m, 0)):
+				out.append(m)
+		return out
+
+	func _draw() -> void:
+		var font := Tapestry.font("bold")
+		var book := Tapestry.font("book")
+		var fs := UIKit.FS_SECONDARY
+		var base_y := size.y * 0.5 + fs * 0.36
+		var x := 10.0
+		if count > 0:
+			var ct := "%d×" % count
+			draw_string(font, Vector2(x, base_y), ct, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Tapestry.INK)
+			x += font.get_string_size(ct, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 6.0
+		var p := pips()
+		var rad := 8.5
+		var pw := p.size() * rad * 2.15
+		var px := size.x - 10.0 - rad
+		for i in range(p.size() - 1, -1, -1):
+			CardView.draw_pip(self, Vector2(px, size.y * 0.5), rad, p[i], 1.2)
+			px -= rad * 2.15
+		var name_w := maxf(10.0, size.x - x - pw - 18.0)
+		var nm := I18n.t(card.get("name", card_id))
+		var ink := UIKit.faction_ink(card.get("faction", "machine"))
+		draw_string(book, Vector2(x, base_y), _fit(book, nm, fs, name_w), HORIZONTAL_ALIGNMENT_LEFT, name_w, fs, ink)
+
+	static func _fit(f: Font, t: String, fs: int, w: float) -> String:
+		if f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x <= w:
+			return t
+		var s := t
+		while s.length() > 1 and f.get_string_size(s + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > w:
+			s = s.substr(0, s.length() - 1)
+		return s.strip_edges() + "…"
 
 
 ## A round gilt "+" drawn by hand (a themed Button would grow to its font's height).
@@ -834,7 +990,7 @@ class _LandPip extends Button:
 
 
 ## Mana curve: how many non-land cards at each cost.
-class _Curve extends Control:
+class ManaCurve extends Control:
 	var counts := {}
 
 	func set_deck(d: Dictionary) -> void:

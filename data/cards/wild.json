@@ -15,7 +15,7 @@
       "trample"
     ],
     "effects": [],
-    "text": "Trample (excess combat damage goes to the player).",
+    "text": "Trample (This creature can deal excess combat damage to the enemy player.)",
     "flavor": "Through the thorn-hedge and gone before the hounds catch the scent.",
     "art": "res://art/cards/wild_c_001.webp"
   },
@@ -46,10 +46,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap: add {G}."
+        "text": "Tap: Add {G}."
       }
     ],
-    "text": "Tap: add {G}.",
+    "text": "Tap: Add {G}.",
     "flavor": "The soil is our true mother, and the ploughman owes her an apology every spring. (Hedgerow Druid)",
     "art": "res://art/cards/wild_c_002.webp"
   },
@@ -77,7 +77,7 @@
         "duration": "turn"
       }
     ],
-    "text": "Whenever this attacks, it gets +1/+0 until end of turn.",
+    "text": "Whenever Thornback Boar attacks, it gets +1/+0 until end of turn.",
     "flavor": "Its tusks have uprooted more saplings than any woodsman's axe.",
     "art": "res://art/cards/wild_c_003.webp"
   },
@@ -98,7 +98,7 @@
       "reach"
     ],
     "effects": [],
-    "text": "Reach (can block creatures with flying).",
+    "text": "Reach (This creature can block creatures with flying.)",
     "flavor": "Kill no spider, kill no fly, kill no wolf. Kill only the woodcutter, who is the true pest. (A Moot precept)",
     "art": "res://art/cards/wild_c_004.webp"
   },
@@ -130,7 +130,7 @@
         "count": 1
       }
     ],
-    "text": "When this enters, create a 1/1 Sapling token.",
+    "text": "When Acorn Gatherer enters, create a 1/1 Sapling token.",
     "flavor": "Every acorn has more right to this valley than every child of man. (Acorn Gatherer)",
     "art": "res://art/cards/wild_c_005.webp"
   },
@@ -151,7 +151,7 @@
       "trample"
     ],
     "effects": [],
-    "text": "Trample (excess combat damage goes to the player).",
+    "text": "Trample (This creature can deal excess combat damage to the enemy player.)",
     "flavor": "Our forefathers did not die. They became mushrooms, and one must never be rude to them. (A moot-folk saying)",
     "art": "res://art/cards/wild_c_006.webp"
   },
@@ -172,7 +172,7 @@
       "reach"
     ],
     "effects": [],
-    "text": "Reach (can block creatures with flying).",
+    "text": "Reach (This creature can block creatures with flying.)",
     "flavor": "The trees are the true judges. Men only borrow their shade to hold court. (A saying of the Moot)",
     "art": "res://art/cards/wild_c_007.webp"
   },
@@ -193,7 +193,7 @@
       "regenerate"
     ],
     "effects": [],
-    "text": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+    "text": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
     "flavor": "Dig him out of one hole and he is already snoring in the next.",
     "art": "res://art/cards/wild_c_008.webp"
   },
@@ -221,7 +221,7 @@
         "condition": "rooted"
       }
     ],
-    "text": "Rooted: as long as you control six or more lands, this gets +1/+1.",
+    "text": "Rooted: As long as you control six or more lands, Barrowland Bear gets +1/+1.",
     "flavor": "The druids call him grandfather, and wisely give him the path.",
     "art": "res://art/cards/wild_c_009.webp"
   },
@@ -253,7 +253,7 @@
         "count": 1
       }
     ],
-    "text": "When this enters, create a 2/2 Wolf token.",
+    "text": "When Huntsman of the Weald enters, create a 2/2 Wolf token.",
     "flavor": "He keeps no kennel. The wolves simply come when he whistles.",
     "art": "res://art/cards/wild_c_010.webp"
   },
@@ -274,7 +274,7 @@
       "trample"
     ],
     "effects": [],
-    "text": "Trample (excess combat damage goes to the player).",
+    "text": "Trample (This creature can deal excess combat damage to the enemy player.)",
     "flavor": "Every field is a wound, and every farmer a surgeon who will not stop cutting. (A hedgerow sermon)",
     "art": "res://art/cards/wild_c_011.webp"
   },
@@ -295,7 +295,7 @@
       "regenerate"
     ],
     "effects": [],
-    "text": "Regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+    "text": "Regenerate (The first time each turn this creature would be destroyed, instead tap it and remove all damage from it.)",
     "flavor": "Lightning is the sky's love for the oak, the druids taught. They held this view until it struck them.",
     "art": "res://art/cards/wild_c_012.webp"
   },
@@ -367,7 +367,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Target creature you control fights target enemy creature (each deals damage equal to its power to the other).",
+    "text": "Target creature you control fights target enemy creature. (Each deals damage equal to its power to the other.)",
     "flavor": "The forest knows no right or wrong, only stronger and weaker. The druids call this wisdom.",
     "art": "res://art/cards/wild_c_015.webp"
   },
@@ -478,10 +478,10 @@
             "duration": "turn"
           }
         ],
-        "text": "Tap, pay {G}: target creature you control gets +1/+1 until end of turn."
+        "text": "{G}, Tap: Target creature you control gets +1/+1 until end of turn."
       }
     ],
-    "text": "Tap, pay {G}: target creature you control gets +1/+1 until end of turn.",
+    "text": "{G}, Tap: Target creature you control gets +1/+1 until end of turn.",
     "flavor": "A sprig of rowan over the byre door, and no ill thing crosses.",
     "art": "res://art/cards/wild_c_019.webp"
   },
@@ -520,10 +520,10 @@
             "count": 1
           }
         ],
-        "text": "Tap, pay {1}{G}: create a 1/1 Sapling token."
+        "text": "{1}{G}, Tap: Create a 1/1 Sapling token."
       }
     ],
-    "text": "Tap, pay {1}{G}: create a 1/1 Sapling token.",
+    "text": "{1}{G}, Tap: Create a 1/1 Sapling token.",
     "flavor": "Scattered by hand in spring, gathered by the cartload in autumn.",
     "art": "res://art/cards/wild_c_020.webp"
   },
@@ -549,7 +549,7 @@
         "toughness": 0
       }
     ],
-    "text": "This gets +1/+0 for each other Wolf you control.",
+    "text": "Moorland Wolf gets +1/+0 for each other Wolf you control.",
     "flavor": "Alone he is a thin grey shadow on the heather. He is seldom alone.",
     "art": "res://art/cards/wild_c_021.webp"
   },
@@ -578,7 +578,7 @@
         "duration": "turn"
       }
     ],
-    "text": "Whenever another Wolf enters under your control, this gets +1/+1 until end of turn.",
+    "text": "Whenever another Wolf enters under your control, Ridge-Runner Wolf gets +1/+1 until end of turn.",
     "flavor": "He runs the skyline so the flock below can see him coming, and lose heart.",
     "art": "res://art/cards/wild_c_022.webp"
   },
@@ -637,10 +637,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap: add {G}."
+        "text": "Tap: Add {G}."
       }
     ],
-    "text": "Tap: add {G}.",
+    "text": "Tap: Add {G}.",
     "flavor": "Cut to the stool every seventh year, and every seventh year he comes back thicker.",
     "art": "res://art/cards/wild_c_024.webp"
   },
@@ -667,7 +667,7 @@
         "toughness": 0
       }
     ],
-    "text": "This gets +1/+0 for each other Treefolk you control.",
+    "text": "Hedge-Elm of the Moot gets +1/+0 for each other Treefolk you control.",
     "flavor": "The moot voted that the elm is wiser than the elders. The elm, as usual, abstained. (Records of the Moot)",
     "art": "res://art/cards/wild_c_025.webp"
   },
@@ -716,7 +716,7 @@
       "trample"
     ],
     "effects": [],
-    "text": "Trample (excess combat damage goes to the player).",
+    "text": "Trample (This creature can deal excess combat damage to the enemy player.)",
     "flavor": "Shepherds bar the fold at sunset. He was over the wall at noon.",
     "art": "res://art/cards/wild_c_027.webp"
   },
@@ -743,7 +743,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "When this enters, target creature you control gets +0/+2 and gains regenerate (the first time each turn it would be destroyed, it is tapped and healed instead) for good.",
+    "text": "When Bark-Skin enters, put two +0/+1 counters on target creature you control. That creature gains regenerate. (The first time each turn it would be destroyed, instead tap it and remove all damage from it.)",
     "flavor": "He binds oak bark to a man's arm and calls it a blessing. It turns a blade well enough.",
     "art": "res://art/cards/wild_c_028.webp"
   },
@@ -772,7 +772,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Whenever a relic enters under your control, this gets +1/+1 permanently.",
+    "text": "Whenever a relic enters under your control, put a +1/+1 counter on Wreath-Weaver Druid.",
     "flavor": "Wear one leaf and you are forgiven. Wear two and you are holy. (Wreath-Weaver Druid)",
     "art": "res://art/cards/wild_c_029.webp"
   },
@@ -804,7 +804,7 @@
         "count": 1
       }
     ],
-    "text": "When this enters, create a 2/2 Wolf token.",
+    "text": "When Wolfsire of the Fen enters, create a 2/2 Wolf token.",
     "flavor": "Where he runs, he never runs alone.",
     "art": "res://art/cards/wild_u_001.webp"
   },
@@ -832,7 +832,7 @@
         "flying": true
       }
     ],
-    "text": "Reach. When this enters, destroy target enemy creature with flying.",
+    "text": "Reach. When Fowler of the Fens enters, destroy target enemy creature with flying.",
     "flavor": "He reads the wind over the reed beds and knows where every wing will come down.",
     "art": "res://art/cards/wild_u_002.webp"
   },
@@ -879,7 +879,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "When this enters, target creature you control fights target enemy creature.",
+    "text": "When Spearman of the Greenwood enters, target creature you control fights target enemy creature.",
     "flavor": "He calls the beasts of the wood to his side, and they settle the matter together.",
     "art": "res://art/cards/wild_u_004.webp"
   },
@@ -912,7 +912,7 @@
         "count_per": "Druid"
       }
     ],
-    "text": "When this enters, create a 1/1 Sapling token for each Druid you control (at most five).",
+    "text": "When Elder of the Oak Circle enters, create a 1/1 Sapling token for each Druid you control (at most five).",
     "flavor": "We are not the masters of the wood. We are its weeds, and ought to apologise for it. (Elder of the Oak Circle)",
     "art": "res://art/cards/wild_u_005.webp"
   },
@@ -945,10 +945,10 @@
             "duration": "turn"
           }
         ],
-        "text": "Tap: target creature you control gets +2/+2 until end of turn."
+        "text": "Tap: Target creature you control gets +2/+2 until end of turn."
       }
     ],
-    "text": "Tap: target creature you control gets +2/+2 until end of turn.",
+    "text": "Tap: Target creature you control gets +2/+2 until end of turn.",
     "flavor": "There is no sin but the axe, and no prayer but the rustle of leaves. (The druids' creed of the Green Man)",
     "art": "res://art/cards/wild_u_006.webp"
   },
@@ -975,7 +975,7 @@
         "target": "enemy_relic"
       }
     ],
-    "text": "Trample. When this enters, destroy target enemy relic.",
+    "text": "Trample. When Rootbreaker Tusker enters, destroy target enemy relic.",
     "flavor": "Palisades, siege towers, brass engines: all just more underbrush.",
     "art": "res://art/cards/wild_u_007.webp"
   },
@@ -1009,7 +1009,7 @@
         "condition": "rooted"
       }
     ],
-    "text": "Rooted: as long as you control six or more lands, this gets +2/+2 and has trample.",
+    "text": "Rooted: As long as you control six or more lands, Woodwose of the Fells gets +2/+2 and has trample.",
     "flavor": "Throw off your boots, your plough and your manners, says the wild man. He has no use for any of them, nor for soap.",
     "art": "res://art/cards/wild_u_008.webp"
   },
@@ -1035,7 +1035,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "When this enters, target creature you control gets +2/+2 for good.",
+    "text": "When Gift of the Greenwood enters, put two +1/+1 counters on target creature you control.",
     "flavor": "The forest gives freely, says the Archdruid. He will tell you the price afterwards.",
     "art": "res://art/cards/wild_u_009.webp"
   },
@@ -1109,7 +1109,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Create two 1/1 Sapling tokens. Rooted: if you control six or more lands, create two more.",
+    "text": "Create two 1/1 Sapling tokens. Rooted: If you control six or more lands, create two more.",
     "flavor": "Cider on the roots, toast in the branches, and next year's apples heard every word.",
     "art": "res://art/cards/wild_u_011.webp"
   },
@@ -1138,10 +1138,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap: add {G}."
+        "text": "Tap: Add {G}."
       }
     ],
-    "text": "Tap: add {G}.",
+    "text": "Tap: Add {G}.",
     "flavor": "The river forgives every sin, so long as you confess it downstream of the village. (A dowser's saying)",
     "art": "res://art/cards/wild_u_012.webp"
   },
@@ -1180,10 +1180,10 @@
             "count": 1
           }
         ],
-        "text": "Tap, pay {2}{G}: create a 2/2 Wolf token."
+        "text": "{2}{G}, Tap: Create a 2/2 Wolf token."
       }
     ],
-    "text": "Tap, pay {2}{G}: create a 2/2 Wolf token.",
+    "text": "{2}{G}, Tap: Create a 2/2 Wolf token.",
     "flavor": "Blow it once on a winter night, and something in the hills always answers.",
     "art": "res://art/cards/wild_u_013.webp"
   },
@@ -1240,7 +1240,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Whenever another Wolf enters under your control, this gets +1/+1 permanently.",
+    "text": "Whenever another Wolf enters under your control, put a +1/+1 counter on Old Grey Wolf.",
     "flavor": "Every cub the pack raises makes him a little prouder, and a little more dangerous.",
     "art": "res://art/cards/wild_u_015.webp"
   },
@@ -1291,7 +1291,7 @@
         "subtype": "Treefolk"
       }
     ],
-    "text": "Your Treefolk creature cards cost {1} less.",
+    "text": "Your Treefolk creature cards cost {1} less to play. This effect reduces only generic mana.",
     "flavor": "Plant it, and the wood will owe you a favour for three hundred years.",
     "art": "res://art/cards/wild_u_017.webp"
   },
@@ -1362,7 +1362,7 @@
         "count": 1
       }
     ],
-    "text": "When this enters, target creature you control gets +1/+1 and gains trample for good, and you create a 2/2 Wolf token.",
+    "text": "When Wolf-Pelt Mantle enters, put a +1/+1 counter on target creature you control. That creature gains trample. Create a 2/2 Wolf token.",
     "flavor": "The hill folk say the pack follows the man who wears its grey. The wolves have never said why.",
     "art": "res://art/cards/wild_u_019.webp"
   },
@@ -1394,7 +1394,7 @@
         "condition": "control:Relic"
       }
     ],
-    "text": "Your relic cards cost {1} less. As long as you control a relic, this gets +1/+1.",
+    "text": "Your relic cards cost {1} less to play. This effect reduces only generic mana. As long as you control a relic, Mantle-Keeper of the Circle gets +1/+1.",
     "flavor": "He keeps the pelts, crowns and bark-cloths of the circle in an oak chest, and lends them out more freely than he ought.",
     "art": "res://art/cards/wild_u_020.webp"
   },
@@ -1437,10 +1437,10 @@
             "duration": "permanent"
           }
         ],
-        "text": "Tap, pay {G}: target creature you control gets +1/+1 permanently."
+        "text": "{G}, Tap: Put a +1/+1 counter on target creature you control."
       }
     ],
-    "text": "At the beginning of your upkeep, add {G}. Tap, pay {G}: target creature you control gets +1/+1 permanently.",
+    "text": "At the beginning of your upkeep, add {G}. {G}, Tap: Put a +1/+1 counter on target creature you control.",
     "flavor": "The Earth is our mother and our god, and she has asked me, personally, to collect the tithe. (Mistletoe Archdruid)",
     "art": "res://art/cards/wild_r_001.webp"
   },
@@ -1470,7 +1470,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Regenerate. Whenever this attacks, target creature you control gets +1/+1 permanently.",
+    "text": "Regenerate. Whenever White Hart of the Greenwood attacks, put a +1/+1 counter on target creature you control.",
     "flavor": "To hunt the hart is murder, the druids teach. To hunt the hunter is merely housekeeping.",
     "art": "res://art/cards/wild_r_002.webp"
   },
@@ -1531,7 +1531,7 @@
         "condition": "rooted"
       }
     ],
-    "text": "Reach, regenerate. Rooted: as long as you control six or more lands, this gets +3/+0.",
+    "text": "Reach, regenerate. Rooted: As long as you control six or more lands, Yew of a Thousand Winters gets +3/+0.",
     "flavor": "Bury your dead beneath the yew and they become yew. That is all the heaven anyone needs. (Grey Elder of the Henge)",
     "art": "res://art/cards/wild_r_004.webp"
   },
@@ -1608,7 +1608,7 @@
         "trigger": "cast"
       }
     ],
-    "text": "Target creature you control fights target enemy creature. Rooted: if you control six or more lands, target creature you control then fights another target enemy creature.",
+    "text": "Target creature you control fights target enemy creature. Rooted: If you control six or more lands, target creature you control then fights another target enemy creature.",
     "flavor": "Under the October moon the hunt rides twice before dawn.",
     "art": "res://art/cards/wild_r_007.webp"
   },
@@ -1693,7 +1693,7 @@
         "toughness": 1
       }
     ],
-    "text": "Trample. This gets +1/+1 for each other Wolf you control.",
+    "text": "Trample. Grey Sire of the Long Winter gets +1/+1 for each other Wolf you control.",
     "flavor": "In the hungry year he came down from the fells, and every wolf in the shire followed him.",
     "art": "res://art/cards/wild_r_010.webp"
   },
@@ -1770,7 +1770,7 @@
         "count": 1
       }
     ],
-    "text": "This gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.",
+    "text": "Grey Elder of the Henge gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.",
     "flavor": "His circle has kept its rites since before the first bell rang in the valley. He suspects the bell will outlast them.",
     "art": "res://art/cards/wild_r_012.webp"
   },
@@ -1804,7 +1804,7 @@
         "count": 1
       }
     ],
-    "text": "Trample. Whenever this attacks, create a 2/2 Wolf token.",
+    "text": "Trample. Whenever Herne attacks, create a 2/2 Wolf token.",
     "flavor": "Antlered and silent, he rides out from the old oak at midnight, and the hounds pour after him.",
     "art": "res://art/cards/wild_m_001.webp"
   },
@@ -1839,7 +1839,7 @@
         "count": 2
       }
     ],
-    "text": "Trample, reach. When this enters, create two 2/2 Oakling tokens.",
+    "text": "Trample, reach. When Cernoth enters, create two 2/2 Oakling tokens.",
     "flavor": "The druids worship him as god of the wood. He is a tree, and has never asked for any of it.",
     "art": "res://art/cards/wild_m_002.webp"
   },
@@ -1882,7 +1882,7 @@
         "condition": "rooted"
       }
     ],
-    "text": "At the beginning of your upkeep, create a 1/1 Sapling token. Rooted: if you control six or more lands, also create a 3/3 Stag token.",
+    "text": "At the beginning of your upkeep, create a 1/1 Sapling token. Rooted: If you control six or more lands, also create a 3/3 Stag token.",
     "flavor": "Nothing is born, nothing dies, nothing is judged. Only the wheel turns, and the druid takes his cut. (Archdruid of the Moot)",
     "art": "res://art/cards/wild_m_003.webp"
   },

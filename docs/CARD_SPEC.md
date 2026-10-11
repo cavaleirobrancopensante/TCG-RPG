@@ -40,7 +40,7 @@ creatures through its own mechanics, and its basic land.
 | **Old Ways** (G) | `trample`, `reach`, `regenerate`; mana creatures and rituals (`add_mana` with G); tokens (beasts, wolves, oaklings, saplings); +X/+X pumps on its own creatures (`buff` own_creature); `fight`; `regrow` (graveyard to hand); destroying fliers (`destroy` with `flying: true`); destroying relics (`destroy_relic`); **Rooted** condition | flying, card draw, life gain, burn, tapping |
 | **Revel** (R) | `haste`, `first_strike`; `damage` (burn, the only faith that hits players directly); temporary team attack bonuses (`buff` all_own_creatures with duration turn, power only); **Carouse** condition; **Idle** trigger (laziness: rewards creatures that stay untapped and did not attack); `rummage` (discard then draw); paying its own life for excess | flying, life gain, destroy, card draw without discarding first |
 | **Stoa** (U) | `vigilance`, `defender`, `unmoved`; plain card draw (`draw`); `foresight`; `tap`; `freeze`; `bounce`; `tax`; **Composure** condition | flying (no birds that fly), damage, destroy, life gain, haste |
-| **Technocracy** (C) | colourless costs (`generic`, and `C` from the Foundry for committed cards); **Overclock** (`overclock` kicker); **Assembly** (`static` assembly); upkeep costs (`upkeep_cost`); cost reducers for Technocracy cards only (`static` cost_reduce); `snare` relics; Construct and Servo subtypes (Servo tokens allowed only for Technocracy) | flying, life gain, burn to players, destroy, card draw |
+| **Technocracy** (C) | colourless costs (`generic` for modest utility that other faiths may splash: Servo makers, small Constructs, tools, plain relics and equipment, about 30% of the faith; `C` from the Foundry for the faith-defining cards: Assembly, Overclock, Snares, cost reducers, cheap upkeep bodies, every rare and mythic); **Overclock** (`overclock` kicker); **Assembly** (`static` assembly); upkeep costs (`upkeep_cost`); cost reducers for Technocracy cards only (`static` cost_reduce); `snare` relics; Construct and Servo subtypes (Servo tokens allowed only for Technocracy) | flying, life gain, burn to players, destroy, card draw |
 
 ## Card fields
 
@@ -59,7 +59,7 @@ creatures through its own mechanics, and its basic land.
   "abilities": [],
   "statics": [],
   "overclock": {},
-  "text": "Guardian (blocks as if it had +0/+2).",
+  "text": "Martyr (When this creature dies, put a +1/+1 counter on another target creature you control.)",
   "flavor": "He carries the light so that others may walk without stumbling."
 }
 ```
@@ -73,13 +73,16 @@ creatures through its own mechanics, and its basic land.
 - `power`, `toughness`: creatures only.
 - `faction2`: only on dual-faith (gold) cards.
 - `effects`, `abilities`, `statics`, `overclock` may be omitted when empty.
+- `text`: the rules text, written to the templates in **Rules wording** below. A vanilla creature
+  (no keywords, effects, abilities, statics or overclock) has an empty `text` (`""`): no
+  "No abilities." line; the card display uses the empty box for flavour or a taller picture.
 
 ## Keywords
 
 | keyword | meaning | owner |
 |---|---|---|
 | `flying` | can only be blocked by flying or reach | Church (narrow exceptions: Stoa Birds; winged Pact Demons, printed only) |
-| `martyr` | when it dies, another creature you control gets +1/+1 (the player chooses) | Church |
+| `martyr` | when it dies, put a +1/+1 counter on another target creature you control (the player chooses) | Church |
 | `lifelink` | damage it deals also gains you that much life | Church |
 | `sanctified` | protection from the Pact: Pact cards can't target it, Pact creatures can't block it, damage from Pact sources is prevented | Church |
 | `deathtouch` | any damage it deals to a creature destroys it | Pact |
@@ -140,13 +143,13 @@ if it holds when it would happen.
 | `draw` | amount | draw cards (Stoa; Pact only with a lose_life in the same card or ability) |
 | `discard_enemy` | amount | enemy discards at random (Pact) |
 | `rummage` | amount | draw a card, then discard a card of your choice; `amount` times (Revel) |
-| `buff` | power, toughness, duration `turn` or `permanent`, target | +X/+Y (negative on enemies = shrink, Pact) |
+| `buff` | power, toughness, duration `turn` or `permanent`, target | +X/+Y until end of turn, or with `permanent` +1/+1 counters (written as counters: "put a +1/+1 counter on", "put two +0/+1 counters on"); negative on enemies = shrink, Pact |
 | `destroy` | target, filters | destroy (regenerate can save it) |
 | `bounce` | target | return to owner's hand (tokens vanish) (Stoa) |
 | `tap` | target | tap it (Stoa) |
 | `freeze` | target | tap it; it doesn't untap during its controller's next untap (Stoa) |
 | `summon` | token {name, power, toughness, subtype, keywords}, count, optional `count_per` | create tokens; with `count_per` (a tribe word, `Relic`, `Aura` or `Equipment`) it makes `count` tokens for each such permanent you control (the source counts), at most 5 |
-| `grant` | keyword, duration `turn` or `permanent`, target `own_creature`, `all_own_creatures`, `other_own_creatures` (optional `subtype` filter) or `self`; optional positive `power`/`toughness` | the creature gains the keyword (and +P/+T) until end of turn, cleared in the cleanup like temporary buffs, or for good. A faith may only grant keywords it owns |
+| `grant` | keyword, duration `turn` or `permanent`, target `own_creature`, `all_own_creatures`, `other_own_creatures` (optional `subtype` filter) or `self`; optional positive `power`/`toughness` | the creature gains the keyword (and +P/+T) until end of turn, cleared in the cleanup like temporary buffs, or with `permanent` with no end (written without a duration, "That creature gains trample.", and the +P/+T as counters). A faith may only grant keywords it owns |
 | `regrow` | target own_grave_creature, optional max_mv, optional subtype | return the chosen creature card from your graveyard to your hand (Pact, Old Ways) |
 | `add_mana` | color, amount | add mana until end of turn (Old Ways G, Technocracy C) |
 | `reanimate` | target own_grave_creature, max_mv (optional) | return the chosen creature card from your graveyard to play (Pact) |
@@ -296,14 +299,16 @@ in your own main phase, with an empty stack.
 ```json
 "overclock": {"cost": {"generic": 2}, "effects": [{"action": "buff", "target": "self", "power": 2, "toughness": 2, "duration": "permanent"}]}
 ```
-Text: "Overclock {2} (you may pay {2} more as you play this). If overclocked, it enters with
-two +1/+1 counters."
+Text: "Overclock {2} (You may pay an additional {2} as you play this card.) If Foundry Golem was
+overclocked, it enters with two +1/+1 counters." An enter effect reads "When Gearwright Journeyman
+enters, if it was overclocked, ..." and a spell reads "If this spell was overclocked, ...".
 
 ## Balance guide (early-2000s rates)
 
 - Vanilla: 1 mana 2/1 or 1/2; 2 mana 2/2; 3 mana 3/3 (Old Ways 3/3 plus a small bonus or
   2/4); 4 mana 4/4 or 3/5; 5 mana 5/5; 6 mana 6/6. Each keyword costs about a point of
-  stats; Technocracy colourless cards are one stat point under, C-cost cards at rate.
+  stats; Technocracy generic-only cards are modest utility (a body above the colourless rate,
+  such as a cheap upkeep fatty, keeps its C), C-cost cards at rate.
 - Removal: conditional at 2 to 3 mana, unconditional at 4 or with a real life or
   sacrifice price. Burn: 1 mana 2 damage to a creature or player at common is the ceiling.
 - Card draw: draw 2 for 3 mana. A repeatable engine is rare and slow.
@@ -336,3 +341,71 @@ best" or "your worst" card or "your strongest" creature.
 - **Summon scaling**: `count_per` on `summon`, at most 5 tokens.
 - **Church tokens**: `summon` is allowed for the Church only for Angel or Knight tokens with
   power 1 or less.
+
+## Rules wording
+
+Card and ability text follows Magic templating (the validator checks the main points):
+
+- **Counters, not "permanently"**: a permanent buff is a counter. "Put a +1/+1 counter on target
+  creature you control." / "Put two +1/+1 counters on it." / "Put a +1/+1 counter on each creature
+  you control." Uneven ones use the matching counter ("put a +0/+1 counter", "put two +0/+1
+  counters"); a permanent shrink is a -1/-1 counter. Temporary changes say "gets +X/+Y until end
+  of turn". Never "for good", "permanently" or "for the rest of the duel" (except in the Pacify
+  reminder).
+- **A card names itself**: "When Parish Priest of the Valley enters, ...", "Hedge-Elm of the Moot
+  gets +1/+0 for each other Treefolk you control.", "Whenever another Construct enters under your
+  control, put a +1/+1 counter on Coupling Automaton." Legendary characters use the short name
+  ("Belzareth", "Saint Raphael", "Zeno", "Marcus Aurelius", "Vessar", "Herne"). Later in the same
+  sentence "it" is fine ("Whenever Thornback Boar attacks, it gets +1/+0 until end of turn.").
+  "this" appears only in reminder text ("this creature", "this relic", "this card"), in "this spell
+  was overclocked", "this turn" and "This effect reduces only generic mana."
+- **Damage has a source**: "Toast of Fire deals 2 damage to any enemy creature or the enemy player.",
+  "When Fire-Eater of the Feast enters, it deals 1 damage to ...", "Tap, Pay 1 life: Carnival Brazier
+  deals 1 damage to the enemy player."
+- **Life and cards have a subject in triggers**: "you gain 2 life", "you draw a card and you lose 1
+  life"; spells start with the verb ("You gain 4 life.", "Draw two cards.").
+- **Activated abilities**: costs first, mana before Tap: "{U}, Tap: Tap target enemy creature.",
+  "{2}, Tap, Pay 2 life: ...", "Sacrifice a Servo: Put a +1/+1 counter on ...". The effect after the
+  colon starts with a capital letter. "Activate only once each turn."
+- **Ability words** (conditions and Idle) lead the sentence with a colon: "Grace: As long as you have
+  more life than you started with, ...", "Bloodied: As long as you have 5 or less life, ...",
+  "Composure: ...", "Rooted: ...", "Carouse: If you've played another non-land card this turn, ...",
+  "Idle: At the end of your turn, if Sleepy Baronet is untapped and didn't attack this turn, put a
+  +1/+1 counter on it."
+- **Keywords and reminder text**: reminder text is a capitalised sentence in parentheses after the
+  keyword, usually only on commons and uncommons; keyword actions put it after the sentence's full
+  stop. Templates:
+  - Flying (This creature can't be blocked except by creatures with flying or reach.)
+  - Martyr (When this creature dies, put a +1/+1 counter on another target creature you control.)
+  - Lifelink (Damage dealt by this creature also causes you to gain that much life.)
+  - Sanctified (This creature has protection from the Pact.)
+  - Deathtouch (Any damage this creature deals to a creature destroys it.)
+  - Dread (This creature can't be blocked except by Pact creatures and Constructs.)
+  - Trample (This creature can deal excess combat damage to the enemy player.)
+  - Reach (This creature can block creatures with flying.)
+  - Regenerate (The first time each turn this creature would be destroyed, instead tap it and
+    remove all damage from it.)
+  - Haste (This creature can attack and use Tap abilities the turn it enters.)
+  - First strike (This creature deals combat damage before creatures without first strike.)
+  - Vigilance (Attacking doesn't cause this creature to tap.)
+  - Defender (This creature can't attack.)
+  - Unmoved (Enemy spells and abilities can't tap this creature, return it to its owner's hand or
+    shrink it.)
+  - Assembly (This creature gets +1/+1 for each other Construct you control.)
+  - Upkeep {1} (At the beginning of your upkeep, sacrifice this creature unless you pay {1}.)
+  - Overclock {2} (You may pay an additional {2} as you play this card.)
+  - Equip {2} ({2}: Attach to target creature you control. Equip only as a sorcery.)
+  - "foresight 2. (Look at the top two cards of your library, then put any number of them on the
+    bottom and the rest on top in any order.)"; foresight 1: "(Look at the top card of your
+    library. You may put that card on the bottom.)"
+  - "freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap
+    step.)"; "Pacify target enemy creature. (It can't attack for the rest of the duel.)";
+    "tax 1. (The enemy player's next non-land card costs {1} more.)"; "rummage. (Draw a card,
+    then discard a card.)"
+- **Snares**: "When Gear Trap enters, target enemy creature with power 3 or less can't attack or
+  block until Gear Trap leaves play."
+- **Set terms**: "enters" (never "enters the battlefield"), "enters under your control", "to play"
+  (the battlefield), "the enemy player" (never "the enemy" alone), "target creature you control",
+  "until end of turn", "Your Knight creature cards cost {1} less to play. This effect reduces only
+  generic mana.", mana as tokens ({1}{G}, {C}), "Tap" for the tap symbol.
+- Lands: "Mill Weir enters tapped. When Mill Weir enters, you gain 1 life. Tap: Add {G} or {C}."

@@ -1,13 +1,19 @@
 class_name TournamentScreen
 extends Control
 ## The bracket of a city's draft tournament: who plays whom, results so far, and the
-## button to play your next match (or collect your prize).
+## button to play your next match (or collect your prize). With more than one list built from
+## the draft pool, the chooser beside the status line picks the one played next.
 
 signal play_match(opponent: int)
 signal edit_deck
+signal deck_chosen(deck_index: int)     # a GameState.decks index, one of `lists`
 signal done
 
 var draft: Draft
+var lists: Array = []           # GameState.decks indices of the lists built from the draft pool
+var chosen := -1                # the list played in the next match
+var pool := {}                  # the draft pool, to mark lists that are not legal yet
+var deck_pick: OptionButton
 
 
 func _ready() -> void:
@@ -31,7 +37,7 @@ func _ready() -> void:
 	head.add_child(t)
 	var opp := draft.player_opponent()
 	if opp >= 0:
-		var deck := UIKit.button("Deck", func(): edit_deck.emit(), 120)
+		var deck := UIKit.button("Edit deck", func(): edit_deck.emit(), 160)
 		deck.name = "Deck"
 		deck.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		head.add_child(deck)
@@ -43,7 +49,30 @@ func _ready() -> void:
 		prize.name = "CollectPrize"
 		head.add_child(prize)
 	var stage_names := ["Quarter-finals", "Semi-finals", "Final", "Finished"]
-	v.add_child(UIKit.label(I18n.t(stage_names[draft.stage]) + "   ·   " + _status(), UIKit.FS_BODY, UIKit.TEXT, true))
+	var srow := HBoxContainer.new()
+	srow.add_theme_constant_override("separation", UIKit.GAP)
+	v.add_child(srow)
+	var st := UIKit.label(I18n.t(stage_names[draft.stage]) + "   ·   " + _status(), UIKit.FS_BODY, UIKit.TEXT, true)
+	st.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	st.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	st.max_lines_visible = 2
+	srow.add_child(st)
+	if opp >= 0 and not lists.is_empty():
+		deck_pick = OptionButton.new()
+		deck_pick.name = "ChooseDeck"
+		deck_pick.tooltip_text = I18n.t("The deck you play in the next match")
+		deck_pick.custom_minimum_size = Vector2(minf(300.0, get_viewport_rect().size.x * 0.32), UIKit.TARGET)
+		deck_pick.clip_text = true
+		deck_pick.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY)
+		for i in lists:
+			var dk: Dictionary = GameState.decks[i]
+			var ok := DeckTools.validate(dk["cards"], pool, DeckTools.DRAFT_COPIES) == ""
+			deck_pick.add_item("%s  (%d)%s" % [I18n.t(dk["name"]), DeckTools.count(dk["cards"]), "" if ok else "  ✗"])
+		deck_pick.select(maxi(0, lists.find(chosen)))
+		deck_pick.item_selected.connect(func(k):
+			chosen = int(lists[k])
+			deck_chosen.emit(chosen))
+		srow.add_child(deck_pick)
 	var b := _Bracket.new()
 	b.draft = draft
 	b.size_flags_vertical = Control.SIZE_EXPAND_FILL

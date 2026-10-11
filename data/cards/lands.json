@@ -22,7 +22,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Pact mana.",
+    "text": "Penitents' Crossroads enters tapped. When Penitents' Crossroads enters, you gain 1 life. Tap: Add {W} or {B}.",
     "flavor": "A wayside cross where the road forks: one path to the chapel, one to the pit.",
     "art": "res://art/cards/land_sanctum_abyss.webp"
   },
@@ -49,7 +49,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Old Ways mana.",
+    "text": "Hermitage Spring enters tapped. When Hermitage Spring enters, you gain 1 life. Tap: Add {W} or {G}.",
     "flavor": "The hermit blessed the spring, and the spring has never failed him.",
     "art": "res://art/cards/land_sanctum_wild.webp"
   },
@@ -76,7 +76,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Revel mana.",
+    "text": "Feast-Day Square enters tapped. When Feast-Day Square enters, you gain 1 life. Tap: Add {W} or {R}.",
     "flavor": "On the saint's day the bells ring first and the taverns open after.",
     "art": "res://art/cards/land_sanctum_revel.webp"
   },
@@ -103,7 +103,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Stoa mana.",
+    "text": "Cloister Library enters tapped. When Cloister Library enters, you gain 1 life. Tap: Add {W} or {U}.",
     "flavor": "The monks copied the old philosophers and kept what was true.",
     "art": "res://art/cards/land_sanctum_lyceum.webp"
   },
@@ -130,7 +130,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Church or Technocracy mana.",
+    "text": "Bell Foundry enters tapped. When Bell Foundry enters, you gain 1 life. Tap: Add {W} or {C}.",
     "flavor": "Every bell cast here is blessed before it is hung.",
     "art": "res://art/cards/land_sanctum_machine.webp"
   },
@@ -157,7 +157,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Old Ways mana.",
+    "text": "Gallows Heath enters tapped. When Gallows Heath enters, you gain 1 life. Tap: Add {B} or {G}.",
     "flavor": "Nothing grows on the heath but thorn and the ravens' patience.",
     "art": "res://art/cards/land_abyss_wild.webp"
   },
@@ -184,7 +184,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Revel mana.",
+    "text": "Masque of Ashes enters tapped. When Masque of Ashes enters, you gain 1 life. Tap: Add {B} or {R}.",
     "flavor": "The music never stops, and some of the dancers never leave.",
     "art": "res://art/cards/land_abyss_revel.webp"
   },
@@ -211,7 +211,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Stoa mana.",
+    "text": "Forbidden Stacks enters tapped. When Forbidden Stacks enters, you gain 1 life. Tap: Add {B} or {U}.",
     "flavor": "Behind the locked grille are the books the scholars swore never to open.",
     "art": "res://art/cards/land_abyss_lyceum.webp"
   },
@@ -238,7 +238,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Pact or Technocracy mana.",
+    "text": "Charnel Works enters tapped. When Charnel Works enters, you gain 1 life. Tap: Add {B} or {C}.",
     "flavor": "The furnaces burn day and night, and no one asks what feeds them.",
     "art": "res://art/cards/land_abyss_machine.webp"
   },
@@ -265,7 +265,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Revel mana.",
+    "text": "Vineyard Terraces enters tapped. When Vineyard Terraces enters, you gain 1 life. Tap: Add {G} or {R}.",
     "flavor": "The vines were planted by the old druids and are harvested by the Revel.",
     "art": "res://art/cards/land_wild_revel.webp"
   },
@@ -292,7 +292,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Stoa mana.",
+    "text": "Philosophers' Grove enters tapped. When Philosophers' Grove enters, you gain 1 life. Tap: Add {G} or {U}.",
     "flavor": "Under the plane trees the students walk and argue until dusk.",
     "art": "res://art/cards/land_wild_lyceum.webp"
   },
@@ -319,7 +319,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Old Ways or Technocracy mana.",
+    "text": "Mill Weir enters tapped. When Mill Weir enters, you gain 1 life. Tap: Add {G} or {C}.",
     "flavor": "The river turns the wheel and the wheel grinds the grain.",
     "art": "res://art/cards/land_wild_machine.webp"
   },
@@ -346,7 +346,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Revel or Stoa mana.",
+    "text": "Garden of Epicurus enters tapped. When Garden of Epicurus enters, you gain 1 life. Tap: Add {R} or {U}.",
     "flavor": "A quiet garden for pleasant conversation, if the guests stay quiet.",
     "art": "res://art/cards/land_revel_lyceum.webp"
   },
@@ -373,7 +373,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Revel or Technocracy mana.",
+    "text": "Fireworks Workshop enters tapped. When Fireworks Workshop enters, you gain 1 life. Tap: Add {R} or {C}.",
     "flavor": "Brass tubes, black powder and a guild licence signed in haste.",
     "art": "res://art/cards/land_revel_machine.webp"
   },
@@ -400,7 +400,7 @@
       }
     ],
     "keywords": [],
-    "text": "Enters tapped. When it enters, gain 1 life. Tap: add one Stoa or Technocracy mana.",
+    "text": "Observatory Tower enters tapped. When Observatory Tower enters, you gain 1 life. Tap: Add {U} or {C}.",
     "flavor": "The great orrery turns, and the astronomers write down what it says.",
     "art": "res://art/cards/land_lyceum_machine.webp"
   }

@@ -15,7 +15,7 @@
       "martyr"
     ],
     "effects": [],
-    "text": "Martyr (when this dies, another creature you control gets +1/+1).",
+    "text": "Martyr (When this creature dies, put a +1/+1 counter on another target creature you control.)",
     "flavor": "Thy word is a lamp to my feet, and a light to my paths. (Psalm 118:105)",
     "art": "res://art/cards/sanctum_c_001.webp"
   },
@@ -35,7 +35,7 @@
       "flying"
     ],
     "effects": [],
-    "text": "Flying (can only be blocked by creatures with flying or reach).",
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.)",
     "flavor": "Who will give me wings like a dove, and I will fly and be at rest? (Psalm 54:7)",
     "art": "res://art/cards/sanctum_c_002.webp"
   },
@@ -61,7 +61,7 @@
         "amount": 2
       }
     ],
-    "text": "When this enters, gain 2 life.",
+    "text": "When Novice of the Choir enters, you gain 2 life.",
     "flavor": "Sing ye to the Lord a new canticle: sing to the Lord, all the earth. (Psalm 95:1)",
     "art": "res://art/cards/sanctum_c_003.webp"
   },
@@ -82,7 +82,7 @@
       "martyr"
     ],
     "effects": [],
-    "text": "Martyr (when this dies, another creature you control gets +1/+1).",
+    "text": "Martyr (When this creature dies, put a +1/+1 counter on another target creature you control.)",
     "flavor": "No one passes the cloister gate unless the bell has rung for him.",
     "art": "res://art/cards/sanctum_c_004.webp"
   },
@@ -108,7 +108,7 @@
         "amount": 3
       }
     ],
-    "text": "When this dies, gain 3 life.",
+    "text": "When Martyr of the Pilgrim Road dies, you gain 3 life.",
     "flavor": "Thou hast made us for Thyself, O Lord, and our heart is restless until it rest in Thee. (St. Augustine, Confessions)",
     "art": "res://art/cards/sanctum_c_005.webp"
   },
@@ -129,7 +129,7 @@
       "lifelink"
     ],
     "effects": [],
-    "text": "Lifelink (damage this deals also gains you that much life).",
+    "text": "Lifelink (Damage dealt by this creature also causes you to gain that much life.)",
     "flavor": "Blessed are the poor in spirit: for theirs is the kingdom of heaven. (Matthew 5:3)",
     "art": "res://art/cards/sanctum_c_006.webp"
   },
@@ -150,7 +150,7 @@
       "flying"
     ],
     "effects": [],
-    "text": "Flying (can only be blocked by creatures with flying or reach).",
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.)",
     "flavor": "'Angel' is the name of their office, not of their nature. (St. Augustine)",
     "art": "res://art/cards/sanctum_c_007.webp"
   },
@@ -178,7 +178,7 @@
         "condition": "grace"
       }
     ],
-    "text": "As long as you have more life than you started with, this gets +1/+1.",
+    "text": "Grace: As long as you have more life than you started with, Knight of the Pilgrim Way gets +1/+1.",
     "flavor": "Sworn to keep the roads open from Lent to Pentecost, he rides bolder with every pilgrim who comes home.",
     "art": "res://art/cards/sanctum_c_008.webp"
   },
@@ -206,7 +206,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "When this dies, target creature you control gets +1/+1 permanently.",
+    "text": "When Thurifer of the Procession dies, put a +1/+1 counter on target creature you control.",
     "flavor": "Let my prayer be directed as incense in thy sight; the lifting up of my hands, as evening sacrifice. (Psalm 140:2)",
     "art": "res://art/cards/sanctum_c_009.webp"
   },
@@ -227,7 +227,7 @@
       "martyr"
     ],
     "effects": [],
-    "text": "Martyr (when this dies, another creature you control gets +1/+1).",
+    "text": "Martyr (When this creature dies, put a +1/+1 counter on another target creature you control.)",
     "flavor": "Behind his shield sleep the orphans of three burned villages.",
     "art": "res://art/cards/sanctum_c_010.webp"
   },
@@ -248,7 +248,7 @@
       "lifelink"
     ],
     "effects": [],
-    "text": "Lifelink (damage this deals also gains you that much life).",
+    "text": "Lifelink (Damage dealt by this creature also causes you to gain that much life.)",
     "flavor": "He nurses the sick by day and stands guard over their beds by night.",
     "art": "res://art/cards/sanctum_c_011.webp"
   },
@@ -274,7 +274,7 @@
         "amount": 4
       }
     ],
-    "text": "When this enters, gain 4 life.",
+    "text": "When Almoner of the Great Abbey enters, you gain 4 life.",
     "flavor": "For I was hungry, and you gave me to eat; I was thirsty, and you gave me to drink. (Matthew 25:35)",
     "art": "res://art/cards/sanctum_c_012.webp"
   },
@@ -297,7 +297,7 @@
         "amount": 4
       }
     ],
-    "text": "Gain 4 life.",
+    "text": "You gain 4 life.",
     "flavor": "Thou shalt sprinkle me with hyssop, O Lord, and I shall be cleansed.",
     "art": "res://art/cards/sanctum_c_013.webp"
   },
@@ -344,7 +344,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "Pacify target enemy creature (it can't attack for the rest of the duel).",
+    "text": "Pacify target enemy creature. (It can't attack for the rest of the duel.)",
     "flavor": "\"Peace be with you.\" The brute lowered his axe and could not remember why he had raised it.",
     "art": "res://art/cards/sanctum_c_015.webp"
   },
@@ -376,7 +376,7 @@
         "amount": 2
       }
     ],
-    "text": "Target creature you control gets +1/+1 permanently. Gain 2 life.",
+    "text": "Put a +1/+1 counter on target creature you control. You gain 2 life.",
     "flavor": "Grace does not destroy nature, but perfects it. (St. Thomas Aquinas, Summa Theologiae)",
     "art": "res://art/cards/sanctum_c_016.webp"
   },
@@ -423,7 +423,7 @@
         "amount": 1
       }
     ],
-    "text": "At the beginning of your upkeep, gain 1 life.",
+    "text": "At the beginning of your upkeep, you gain 1 life.",
     "flavor": "Each flame is a prayer that keeps burning after the pilgrim has gone home.",
     "art": "res://art/cards/sanctum_c_018.webp"
   },
@@ -457,10 +457,10 @@
             "duration": "permanent"
           }
         ],
-        "text": "2, Tap: target creature you control gets +0/+1 permanently."
+        "text": "{2}, Tap: Put a +0/+1 counter on target creature you control."
       }
     ],
-    "text": "2, Tap: target creature you control gets +0/+1 permanently.",
+    "text": "{2}, Tap: Put a +0/+1 counter on target creature you control.",
     "flavor": "Every brother signs himself on the way in, and goes out a little stronger than he came.",
     "art": "res://art/cards/sanctum_c_019.webp"
   },
@@ -512,7 +512,7 @@
         "amount_per": "Knight"
       }
     ],
-    "text": "When this enters, gain 1 life for each Knight you control.",
+    "text": "When Knight of Saint Lazarus enters, you gain 1 life for each Knight you control.",
     "flavor": "Fear is not in charity: but perfect charity casteth out fear. (1 John 4:18)",
     "art": "res://art/cards/sanctum_c_021.webp"
   },
@@ -539,7 +539,7 @@
         "toughness": 0
       }
     ],
-    "text": "This gets +1/+0 for each other Knight you control.",
+    "text": "Teutonic Knight-Brother gets +1/+0 for each other Knight you control.",
     "flavor": "Behold how good and how pleasant it is for brethren to dwell together in unity. (Psalm 132:1)",
     "art": "res://art/cards/sanctum_c_022.webp"
   },
@@ -560,7 +560,7 @@
       "flying"
     ],
     "effects": [],
-    "text": "Flying (can only be blocked by creatures with flying or reach).",
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.)",
     "flavor": "For he hath given his angels charge over thee; to keep thee in all thy ways. (Psalm 90:11)",
     "art": "res://art/cards/sanctum_c_023.webp"
   },
@@ -581,7 +581,7 @@
       "flying"
     ],
     "effects": [],
-    "text": "Flying (can only be blocked by creatures with flying or reach).",
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.)",
     "flavor": "He was set at the east of the garden, with a flaming sword turning every way, to keep the way of the tree of life.",
     "art": "res://art/cards/sanctum_c_024.webp"
   },
@@ -608,7 +608,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Target Knight you control gets +2/+2 permanently.",
+    "text": "Put two +1/+1 counters on target Knight you control.",
     "flavor": "Be thou a good knight, in the name of God. The blow upon his shoulder is the last he shall take without answer.",
     "art": "res://art/cards/sanctum_c_025.webp"
   },
@@ -633,7 +633,7 @@
         "amount": 2
       }
     ],
-    "text": "Whenever a Knight enters under your control, gain 2 life.",
+    "text": "Whenever a Knight enters under your control, you gain 2 life.",
     "flavor": "Here the sick are our lords. The knights come in from the field and kneel to serve them.",
     "art": "res://art/cards/sanctum_c_026.webp"
   },
@@ -659,7 +659,7 @@
       }
     ],
     "speed": "instant",
-    "text": "Gain 2 life for each Angel you control.",
+    "text": "You gain 2 life for each Angel you control.",
     "flavor": "Glory to God in the highest; and on earth peace to men of good will. (Luke 2:14)",
     "art": "res://art/cards/sanctum_c_027.webp"
   },
@@ -687,7 +687,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "When this enters, target creature you control gets +1/+1 permanently.",
+    "text": "When Parish Priest of the Valley enters, put a +1/+1 counter on target creature you control.",
     "flavor": "The priesthood is the love of the Heart of Jesus. (St. John Vianney, the Cure of Ars)",
     "art": "res://art/cards/sanctum_c_028.webp"
   },
@@ -722,7 +722,7 @@
       }
     ],
     "speed": "instant",
-    "text": "Target creature you control gets +0/+2 and gains sanctified until end of turn (protection from the Pact). Gain 1 life for each Priest you control.",
+    "text": "Target creature you control gets +0/+2 and gains sanctified until end of turn. (It has protection from the Pact.) You gain 1 life for each Priest you control.",
     "flavor": "Ego te absolvo. The men rose from their knees lighter than they had knelt, and the line held.",
     "art": "res://art/cards/sanctum_c_029.webp"
   },
@@ -750,7 +750,7 @@
         "amount": 2
       }
     ],
-    "text": "Lifelink. When this enters, gain 2 life.",
+    "text": "Lifelink. When Brother of Mercy enters, you gain 2 life.",
     "flavor": "Go, and do thou in like manner. (Luke 10:37)",
     "art": "res://art/cards/sanctum_u_001.webp"
   },
@@ -775,7 +775,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "When this dies, pacify target enemy creature (it can't attack for the rest of the duel).",
+    "text": "When Martyr of the Far Mission dies, pacify target enemy creature. (It can't attack for the rest of the duel.)",
     "flavor": "The oftener we are mown down by you, the more in number we grow; the blood of Christians is seed. (Tertullian, Apology)",
     "art": "res://art/cards/sanctum_u_002.webp"
   },
@@ -803,7 +803,7 @@
         "amount": 1
       }
     ],
-    "text": "Sanctified (protection from the Pact). Whenever this attacks, gain 1 life.",
+    "text": "Sanctified (This creature has protection from the Pact.) Whenever Templar of the Red Cross attacks, you gain 1 life.",
     "flavor": "Non nobis, Domine, non nobis, sed nomini tuo da gloriam.",
     "art": "res://art/cards/sanctum_u_003.webp"
   },
@@ -837,7 +837,7 @@
         "condition": "grace"
       }
     ],
-    "text": "Other creatures you control get +0/+1. As long as you have more life than you started with, they get +1/+1 instead.",
+    "text": "Other creatures you control get +0/+1. Grace: As long as you have more life than you started with, they get +1/+1 instead.",
     "flavor": "Idleness is the enemy of the soul. (Rule of St. Benedict, ch. 48)",
     "art": "res://art/cards/sanctum_u_004.webp"
   },
@@ -863,7 +863,7 @@
         "tapped": true
       }
     ],
-    "text": "When this enters, destroy target tapped enemy creature.",
+    "text": "When Inquisitor of the Pale Flame enters, destroy target tapped enemy creature.",
     "flavor": "Outside the Church there is no salvation. (St. Cyprian of Carthage)",
     "art": "res://art/cards/sanctum_u_005.webp"
   },
@@ -914,7 +914,7 @@
         "condition": "grace"
       }
     ],
-    "text": "Flying. As long as you have more life than you started with, this has lifelink.",
+    "text": "Flying. Grace: As long as you have more life than you started with, Angel of Compline has lifelink.",
     "flavor": "May Thy holy angels dwell herein, to keep us in peace.",
     "art": "res://art/cards/sanctum_u_007.webp"
   },
@@ -969,7 +969,7 @@
         "amount": 3
       }
     ],
-    "text": "Pacify target enemy creature (it can't attack for the rest of the duel). Gain 3 life.",
+    "text": "Pacify target enemy creature. (It can't attack for the rest of the duel.) You gain 3 life.",
     "flavor": "From Thursday evening until Monday dawn, no lord may lift his sword. The bishops have spoken.",
     "art": "res://art/cards/sanctum_u_009.webp"
   },
@@ -1002,7 +1002,7 @@
         "condition": "grace"
       }
     ],
-    "text": "Gain 3 life. Then, if you have more life than you started with, creatures you control get +1/+1 permanently.",
+    "text": "You gain 3 life. Grace: If you have more life than you started with, put a +1/+1 counter on each creature you control.",
     "flavor": "We praise Thee, O God; we acknowledge Thee to be the Lord.",
     "art": "res://art/cards/sanctum_u_010.webp"
   },
@@ -1028,7 +1028,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Creatures you control get +0/+2 permanently.",
+    "text": "Put two +0/+1 counters on each creature you control.",
     "flavor": "Holy Mary, pray for us. Saint Michael, pray for us. And the whole host answers.",
     "art": "res://art/cards/sanctum_u_011.webp",
     "speed": "instant"
@@ -1080,7 +1080,7 @@
         "condition": "grace"
       }
     ],
-    "text": "As long as you have more life than you started with, creatures you control have lifelink.",
+    "text": "Grace: As long as you have more life than you started with, creatures you control have lifelink.",
     "flavor": "O saving Victim, opening wide the gate of Heaven to man below.",
     "art": "res://art/cards/sanctum_u_013.webp"
   },
@@ -1106,7 +1106,7 @@
         "amount": 1
       }
     ],
-    "text": "Your Knight creature cards cost {1} less to play (1 less generic mana).",
+    "text": "Your Knight creature cards cost {1} less to play. This effect reduces only generic mana.",
     "flavor": "He keeps the accounts, the horses and the novices, and every spring he sends the ready ones East.",
     "art": "res://art/cards/sanctum_u_014.webp"
   },
@@ -1161,7 +1161,7 @@
         "toughness": 1
       }
     ],
-    "text": "Flying (can only be blocked by creatures with flying or reach). This gets +1/+1 for each other Angel you control.",
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.) Angel of the Choir of Virtues gets +1/+1 for each other Angel you control.",
     "flavor": "The Virtues work the wonders of Heaven, and they never work them alone.",
     "art": "res://art/cards/sanctum_u_016.webp"
   },
@@ -1190,7 +1190,7 @@
         "amount": 2
       }
     ],
-    "text": "Flying (can only be blocked by creatures with flying or reach). Whenever another Angel enters under your control, gain 2 life.",
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.) Whenever another Angel enters under your control, you gain 2 life.",
     "flavor": "The Dominions govern the lesser choirs, and greet each one sent down with a hymn.",
     "art": "res://art/cards/sanctum_u_017.webp"
   },
@@ -1224,7 +1224,7 @@
       }
     ],
     "speed": "instant",
-    "text": "Creatures you control get +0/+2 until end of turn. Gain 1 life for each Angel you control.",
+    "text": "Creatures you control get +0/+2 until end of turn. You gain 1 life for each Angel you control.",
     "flavor": "A thousand shall fall at thy side, and ten thousand at thy right hand: but it shall not come nigh thee. (Psalm 90:7)",
     "art": "res://art/cards/sanctum_u_018.webp"
   },
@@ -1252,7 +1252,7 @@
         "amount": 2
       }
     ],
-    "text": "Sanctified (protection from the Pact). When this enters, gain 2 life.",
+    "text": "Sanctified (This creature has protection from the Pact.) When Confessor of the Cathedral enters, you gain 2 life.",
     "flavor": "What is told him in the box he carries to the grave, and the devil, who wanted it, never learns a word.",
     "art": "res://art/cards/sanctum_u_019.webp"
   },
@@ -1281,7 +1281,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Whenever another Priest enters under your control, target creature you control gets +1/+1 permanently.",
+    "text": "Whenever another Priest enters under your control, put a +1/+1 counter on target creature you control.",
     "flavor": "Introibo ad altare Dei, ad Deum qui laetificat juventutem meam.",
     "art": "res://art/cards/sanctum_u_020.webp"
   },
@@ -1315,7 +1315,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "When this enters, gain 2 life. When this dies, other creatures you control get +1/+1 permanently.",
+    "text": "When Abbot of the Silent Order enters, you gain 2 life. When Abbot of the Silent Order dies, put a +1/+1 counter on each other creature you control.",
     "flavor": "Forty years without a word; at his death, his brothers heard everything.",
     "art": "res://art/cards/sanctum_r_001.webp"
   },
@@ -1371,7 +1371,7 @@
         "condition": "grace"
       }
     ],
-    "text": "As long as you have more life than you started with, this gets +2/+2 and has lifelink.",
+    "text": "Grace: As long as you have more life than you started with, Knight of the Holy Grail gets +2/+2 and has lifelink.",
     "flavor": "Blessed are the clean of heart: for they shall see God. (Matthew 5:8)",
     "art": "res://art/cards/sanctum_r_003.webp"
   },
@@ -1410,7 +1410,7 @@
         "scope": "other_own_creatures"
       }
     ],
-    "text": "Other creatures you control have martyr. When this enters, create a 1/1 Human Knight token.",
+    "text": "Other creatures you control have martyr. When Castellan of the Krak enters, create a 1/1 Human Knight token.",
     "flavor": "Two thousand men held the Krak for a hundred years, because each man held the one beside him.",
     "art": "res://art/cards/sanctum_r_004.webp"
   },
@@ -1461,7 +1461,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "Destroy target tapped enemy creature. Then pacify target enemy creature (it can't attack for the rest of the duel).",
+    "text": "Destroy target tapped enemy creature. Then pacify target enemy creature. (It can't attack for the rest of the duel.)",
     "flavor": "Exorcizo te, immundissime spiritus. The words are old, and the thing that hears them is older, and still it must obey.",
     "art": "res://art/cards/sanctum_r_006.webp"
   },
@@ -1485,7 +1485,7 @@
         "amount": 10
       }
     ],
-    "text": "Gain 10 life.",
+    "text": "You gain 10 life.",
     "flavor": "Thou shalt sanctify the fiftieth year, and shalt proclaim remission to all the inhabitants of thy land. (Leviticus 25:10)",
     "art": "res://art/cards/sanctum_r_007.webp"
   },
@@ -1537,7 +1537,7 @@
         "condition": "grace"
       }
     ],
-    "text": "At the beginning of your upkeep, if you have more life than you started with, target creature you control gets +1/+1 permanently.",
+    "text": "Grace: At the beginning of your upkeep, if you have more life than you started with, put a +1/+1 counter on target creature you control.",
     "flavor": "Lord, lay not this sin to their charge. (Acts 7:59, the last words of St. Stephen)",
     "art": "res://art/cards/sanctum_r_009.webp"
   },
@@ -1573,7 +1573,7 @@
         "subtype": "Knight"
       }
     ],
-    "text": "Sanctified (protection from the Pact). Other Knights you control get +1/+1 and have sanctified.",
+    "text": "Sanctified (This creature has protection from the Pact.) Other Knights you control get +1/+1 and have sanctified.",
     "flavor": "Blessed be the Lord my God, who teacheth my hands to fight, and my fingers to war. (Psalm 143:1)",
     "art": "res://art/cards/sanctum_r_010.webp"
   },
@@ -1602,7 +1602,7 @@
         "amount_per": "Angel"
       }
     ],
-    "text": "Flying (can only be blocked by creatures with flying or reach). When this enters, gain 1 life for each Angel you control.",
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.) When Saint Raphael enters, you gain 1 life for each Angel you control.",
     "flavor": "I am the angel Raphael, one of the seven who stand before the Lord.",
     "art": "res://art/cards/sanctum_r_011.webp"
   },
@@ -1638,7 +1638,7 @@
         "subtype": "Priest"
       }
     ],
-    "text": "Other Priests you control get +1/+1. At the beginning of your upkeep, gain 1 life for each Priest you control.",
+    "text": "Other Priests you control get +1/+1. At the beginning of your upkeep, you gain 1 life for each Priest you control.",
     "flavor": "See that ye all follow the bishop, even as Jesus Christ does the Father. (St. Ignatius of Antioch, to the Smyrnaeans)",
     "art": "res://art/cards/sanctum_r_012.webp"
   },
@@ -1667,7 +1667,7 @@
         "tapped": true
       }
     ],
-    "text": "Flying, lifelink. When this enters, destroy target tapped enemy creature.",
+    "text": "Flying, lifelink. When Archangel of the Last Vigil enters, destroy target tapped enemy creature.",
     "flavor": "When the last candle gutters, he is the light that remains.",
     "art": "res://art/cards/sanctum_m_001.webp"
   },
@@ -1775,7 +1775,7 @@
         "subtype": "Knight"
       }
     ],
-    "text": "Flying, sanctified (protection from the Pact). Other Angels and Knights you control get +1/+1.",
+    "text": "Flying, sanctified. Other Angels and Knights you control get +1/+1.",
     "flavor": "Saint Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. (Pope Leo XIII)",
     "art": "res://art/cards/sanctum_m_004.webp"
   }

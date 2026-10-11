@@ -7,6 +7,8 @@ extends Control
 signal tapped(fig: SummonFigure)
 
 const SIZE := Vector2(118, 158)
+## "Ready to act" (can attack, has an ability to use): the same pulsing green as playable cards in hand.
+const SELECT_COLOR := Color(0.45, 0.95, 0.3)
 const KW_ICONS := {"flying": "✈", "reach": "R", "haste": "»", "lifelink": "♥", "deathtouch": "☠",
 	"vigilance": "◉", "trample": "T", "defender": "▣", "martyr": "✝", "sanctified": "✚",
 	"dread": "☾", "regenerate": "↻", "first_strike": "‼", "unmoved": "◆"}
@@ -203,7 +205,7 @@ func _draw() -> void:
 		"attack": mark_col = Tapestry.VERMILION
 		"block": mark_col = Tapestry.ULTRAMARINE.lightened(0.3)
 		"target": mark_col = Tapestry.GILT
-		"select": mark_col = Color(0.35, 0.8, 0.3)
+		"select": mark_col = SELECT_COLOR
 	if mark_col.a > 0:
 		var pulse := 0.6 + 0.4 * sin(_bob * 3.0)
 		var fr := Rect2(Vector2(3, 3), SIZE - Vector2(6, 6))

@@ -214,6 +214,26 @@ Hospice) are open to most heroes.
   a friend for advice, a card from his satchel, or a favour that pays.
 
 
+## Playtest round two (1.38)
+
+- Rules text reads like Magic: +1/+1 counters instead of "for good" or "permanently", cards
+  name themselves ("put a +1/+1 counter on Coupling Automaton"), Martyr's reminder text,
+  ability words with a colon, and no more "No abilities." (those cards show their flavour).
+- 19 Technocracy cards now cost only generic mana, so any deck can use them; the strongest
+  keep their Foundry symbol. Scholar's Lamp now costs {1} to use, and the AI uses it when it
+  has mana to spare.
+- Lands show their mana as symbols; basic lands carry one big faith symbol.
+- Duels: playable cards in hand pulse green; the hand and battlefield are centred and no longer
+  cover each other; every line of the narration names the card, ability and target (tap the
+  banner for the whole duel log); a Cancel button while choosing targets returns the card with
+  nothing spent.
+- Draft: the picks panel shows counts by type and faith and a mana curve; the deck builder starts
+  empty after a draft or sealed (Auto build is in the Deck menu); deck list rows open the card
+  on tap and have - and + buttons; several lists can be built from one draft pool.
+- Fixed: a draft match could deal a deck made only of colourless lands after a reload.
+- The map is slower and the day longer: crossing the map takes about half a day, and wounds
+  mend at one point every four hours on the road.
+
 ## Storylines and keyboard shortcuts (1.37)
 
 - Each faith has a main storyline of six chapters with its leader, allies and rival (the

@@ -30,12 +30,18 @@ var auto_play := false          # tests: AI plays the player's side too
 var waiting_priority := false   # the game waits for you to answer (cast) or pass
 var idle_main := false          # your main phase: End turn / Attack take it on
 var view_stack: Array = []      # the stack as far as the animations have shown it
+var log_history: Array = []     # every narrated line of this duel, oldest first (tap the log to read it)
+var _known := {}                # uid -> {"name", "owner", "card"}: names outlive their permanents
+var _ctx := ""                  # what is resolving now ("Grave Chill", "Pit Imp's ability"), for effect lines
+var _martyr_pending := 0        # martyrs died: their +1/+1 is the next such buff
+var _last_resolved := {}        # the stack entry that resolved last (names a fizzle)
+var _sac_ok := false            # an ability was just used: a "sacrifice" death is its cost
 
 signal _priority_action
 
 # UI
-var enemy_field: HBoxContainer
-var player_field: HBoxContainer
+var enemy_field: _Field
+var player_field: _Field
 var enemy_lands: LandStrip
 var player_lands: LandStrip
 var enemy_life: Button
@@ -43,14 +49,15 @@ var player_life: Button
 var enemy_info: RichTextLabel
 var player_info: RichTextLabel
 var enemy_relics: HBoxContainer
-var player_relics: BoxContainer
-var hand_box: HBoxContainer
+var player_relics: GridContainer
+var hand_box: _HandRow
 var phase_bar: PhaseBar
 var stack_view: StackView
 var _mid_bar: Control
 var log_label: Label
 var btn_main: Button
 var btn_alt: Button
+var btn_cancel: Button          # while choosing targets: back out, nothing is paid
 var fx: Control
 var preview: Control
 var enemy_portrait: _Portrait
@@ -122,6 +129,10 @@ func _build_ui() -> void:
 	ebar.add_child(enemy_life)
 	enemy_info = _rich(UIKit.FS_SECONDARY)
 	enemy_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# a long name must never make the bar (and with it the whole duel) wider than the screen
+	enemy_info.fit_content = false
+	enemy_info.clip_contents = true
+	enemy_info.custom_minimum_size = Vector2(60, UIKit.FS_SECONDARY + 10)
 	ebar.add_child(enemy_info)
 	enemy_relics = HBoxContainer.new()
 	ebar.add_child(enemy_relics)
@@ -146,18 +157,25 @@ func _build_ui() -> void:
 	_log_band.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	mid.add_child(_log_band)
 	log_label = _log_band.label
+	_log_band.tapped.connect(_show_log_history)
 	btn_alt = _btn("", _on_alt, 150)
 	mid.add_child(btn_alt)
 	btn_main = UIKit.primary_button("", _on_main, 190)
 	btn_main.custom_minimum_size.y = maxf(btn_main.custom_minimum_size.y, UIKit.TARGET)
 	mid.add_child(btn_main)
+	btn_cancel = _btn("Cancel", _cancel_targeting, 190)
+	btn_cancel.name = "Cancel"          # Escape presses it (see _unhandled_input and Shortcuts)
+	btn_cancel.visible = false
+	mid.add_child(btn_cancel)
 
 	player_field = _field()
 	player_lands = _land_strip(0)
 	_player_row = _field_row(player_lands, player_field)
-	player_relics = VBoxContainer.new()
-	player_relics.alignment = BoxContainer.ALIGNMENT_END
-	player_relics.add_theme_constant_override("separation", 4)
+	player_relics = GridContainer.new()
+	player_relics.columns = 1
+	player_relics.size_flags_vertical = Control.SIZE_SHRINK_END
+	player_relics.add_theme_constant_override("h_separation", 4)
+	player_relics.add_theme_constant_override("v_separation", 4)
 	_player_row.add_child(player_relics)
 	root.add_child(_player_row)
 	_strips.append(mid)
@@ -191,16 +209,12 @@ func _build_ui() -> void:
 	player_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	col.add_child(player_info)
 
-	hand_scroll = ScrollContainer.new()
-	hand_scroll.custom_minimum_size.y = CardView.BASE.y * HAND_SCALE + 8
-	hand_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	hand_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bottom.add_child(hand_scroll)
-	_strips.append(bottom)
-	hand_box = HBoxContainer.new()
+	hand_box = _HandRow.new()
+	hand_box.scene = self
+	hand_box.custom_minimum_size.y = CardView.BASE.y * HAND_SCALE + 8
 	hand_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hand_box.alignment = BoxContainer.ALIGNMENT_CENTER
-	hand_scroll.add_child(hand_box)
+	bottom.add_child(hand_box)
+	_strips.append(bottom)
 
 	stack_view = StackView.new()
 	stack_view.visible = false
@@ -230,7 +244,6 @@ const FIG_MIN := 0.5
 const LOG_MIN_W := 220.0         # the log keeps at least this much of the middle bar
 var fig_zoom := 1.0              # battlefield figures, fitted to the screen's height
 var hand_scale := HAND_SCALE
-var hand_scroll: ScrollContainer
 var _enemy_bar: HBoxContainer
 var _enemy_row: HBoxContainer
 var _player_row: HBoxContainer
@@ -252,16 +265,22 @@ func _relayout(rebuild: bool) -> void:
 	if _mid_bar == null:
 		return
 	var vp := get_viewport_rect().size
+	# a narrow column for who you are: the hand gets the rest of the width
+	_player_col.custom_minimum_size.x = clampf(vp.x * 0.19, 200.0, 250.0)
+	# phones, or a strip that would squeeze the log out: chip and current step only
+	var buttons := btn_main.get_combined_minimum_size().x + (btn_alt.get_combined_minimum_size().x if btn_alt.visible else 0.0)
+	phase_bar.set_compact(_is_phone() or phase_bar.full_width() + buttons + LOG_MIN_W + 40.0 > vp.x)
+	# the bars are measured (not assumed), so the two ranks and the hand never overlap
 	var avail := vp.y - UIKit.TOP - ROW_SEP * 4
-	var bar_h := float(UIKit.TARGET)
-	var mid_h := float(UIKit.TARGET + 4)
+	var bar_h := maxf(UIKit.TARGET, _enemy_bar.get_combined_minimum_size().y)
+	var mid_h := maxf(UIKit.TARGET + 4, _mid_bar.get_combined_minimum_size().y)
 	hand_scale = clampf((avail * 0.28 - 14.0) / CardView.BASE.y, HAND_MIN, HAND_SCALE)
 	var hand_h := CardView.BASE.y * hand_scale + 14.0
-	var field_h := floorf((avail - bar_h - mid_h - hand_h) / 2.0)
+	var bottom_h := maxf(hand_h, _player_col.get_combined_minimum_size().y)
+	var field_h := floorf((avail - bar_h - mid_h - bottom_h) / 2.0)
 	fig_zoom = clampf(field_h / SummonFigure.SIZE.y, FIG_MIN, 1.0)
 	var land_zoom := clampf(field_h / LandStrip.BASE_H, FIG_MIN, 1.0)
-	hand_scroll.custom_minimum_size.y = hand_h
-	_player_col.custom_minimum_size.x = clampf(vp.x * 0.24, 230.0, 320.0)
+	hand_box.custom_minimum_size.y = hand_h
 	for row in [_enemy_row, _player_row]:
 		row.custom_minimum_size.y = minf(field_h, SummonFigure.SIZE.y * fig_zoom + 8.0)
 		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -271,9 +290,6 @@ func _relayout(rebuild: bool) -> void:
 		ls.set_zoom(land_zoom)
 	for uid in figures:
 		figures[uid].set_zoom(fig_zoom)
-	# phones, or a strip that would squeeze the log out: chip and current step only
-	var buttons := btn_main.get_combined_minimum_size().x + (btn_alt.get_combined_minimum_size().x if btn_alt.visible else 0.0)
-	phase_bar.set_compact(_is_phone() or phase_bar.full_width() + buttons + LOG_MIN_W + 40.0 > vp.x)
 	if rebuild and vp != _last_vp and st != null:
 		_last_vp = vp
 		for i in 2:
@@ -307,16 +323,19 @@ func _btn(text: String, cb: Callable, min_w: int = 120) -> Button:
 
 
 ## The middle bar's last event: the newest line lights up gold and fades, so it is noticed.
+## A tap opens the whole log of the duel.
 class _LogBand extends Control:
+	signal tapped
 	var label: Label
 	var glow := 0.0:
 		set(v):
 			glow = v
 			queue_redraw()
 	var _tw: Tween
+	var _down := Vector2(-1, -1)
 
 	func _init() -> void:
-		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		mouse_filter = Control.MOUSE_FILTER_STOP
 		clip_contents = true
 		label = UIKit.label("", UIKit.FS_SECONDARY, UIKit.TEXT, true)
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -326,8 +345,17 @@ class _LogBand extends Control:
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		UIKit.full_rect(label)
 		label.offset_left = 8
-		label.offset_right = -8
+		label.offset_right = -18
 		add_child(label)
+
+	func _gui_input(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.button_index == MOUSE_BUTTON_LEFT:
+			if ev.pressed:
+				_down = ev.position
+			elif _down.x >= 0.0:
+				if ev.position.distance_to(_down) < UIKit.tap_slop():
+					tapped.emit()
+				_down = Vector2(-1, -1)
 
 	func flash() -> void:
 		if _tw:
@@ -345,6 +373,10 @@ class _LogBand extends Control:
 			draw_rect(r, Color(Tapestry.GILT, 0.75 * glow))
 			draw_rect(r, Color(Tapestry.RUBRIC, glow), false, 2.0)
 		draw_rect(r, Color(Tapestry.INK, 0.35), false, 1.0)
+		# a small scroll mark at the right: the whole log is a tap away
+		var c := Vector2(r.end.x - 9, r.position.y + 9)
+		for k in 3:
+			draw_line(c + Vector2(-4, -3 + k * 3), c + Vector2(4, -3 + k * 3), Color(Tapestry.INK, 0.45), 1.0)
 
 
 ## The stack sits at the right, just above the middle bar (clear of its buttons).
@@ -383,6 +415,8 @@ func _sync_view_stack() -> void:
 	for it in st.stack:
 		view_stack.append(_view_entry(it["sid"], it["side"], it["id"], it.get("kind") == "ability", String(it.get("text", "")),
 			st._event_targets(it), it.get("token", {}), String(it.get("name", ""))))
+		if it.get("kind") == "ability":
+			view_stack.back()["uid"] = int(it.get("uid", -1))
 	_refresh_stack_view()
 
 
@@ -406,12 +440,71 @@ func _show_stack_card(e: Dictionary) -> void:
 	preview = CardViewer.open(self, [entry], 0)
 
 
-func _field() -> HBoxContainer:
-	var f := HBoxContainer.new()
+func _field() -> _Field:
+	var f := _Field.new()
+	f.scene = self
 	f.custom_minimum_size.y = SummonFigure.SIZE.y * fig_zoom
-	f.alignment = BoxContainer.ALIGNMENT_CENTER
-	f.add_theme_constant_override("separation", 6)
 	return f
+
+
+## Where the middle of the screen falls inside `c` (local x): ranks and hand centre on it.
+func _screen_mid_in(c: Control) -> float:
+	return size.x * 0.5 - (c.global_position.x - global_position.x)
+
+
+## Lay out items of the given widths in a strip `avail` wide: centred on `mid` (pushed
+## inside the strip if need be) with a small gap when they fit; spread over the whole strip,
+## overlapping evenly, only when they don't. Returns each item's x.
+static func spread(widths: Array, avail: float, mid: float, gap: float = 6.0) -> Array:
+	var n := widths.size()
+	var out: Array = []
+	if n == 0:
+		return out
+	var total := 0.0
+	for w in widths:
+		total += float(w)
+	var sep := gap
+	var x := 0.0
+	if total + gap * (n - 1) <= avail:
+		var span := total + gap * (n - 1)
+		x = clampf(mid - span * 0.5, 0.0, maxf(0.0, avail - span))
+	elif n > 1:
+		sep = (avail - total) / float(n - 1)
+	for w in widths:
+		out.append(x)
+		x += float(w) + sep
+	return out
+
+
+## One rank of figures: the stacks stand on the ground line, centred on the screen when they
+## fit, closing up like a hand of cards when they don't (never running off the screen).
+class _Field extends Container:
+	var scene: BattleScene
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_PASS
+		item_rect_changed.connect(queue_sort)      # it centres on the screen: moving counts too
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_SORT_CHILDREN:
+			arrange()
+
+	func stacks() -> Array:
+		var out: Array = []
+		for ch in get_children():
+			if ch is BattleScene._Stack and not ch.is_queued_for_deletion():
+				out.append(ch)
+		return out
+
+	func arrange() -> void:
+		var list := stacks()
+		var widths: Array = list.map(func(c): return c.custom_minimum_size.x)
+		var mid := scene._screen_mid_in(self) if scene else size.x * 0.5
+		var xs := BattleScene.spread(widths, size.x, mid)
+		for k in list.size():
+			var c: Control = list[k]
+			var h: float = c.custom_minimum_size.y
+			fit_child_in_rect(c, Rect2(Vector2(xs[k], size.y - h), Vector2(widths[k], h)))
 
 
 func _land_strip(side_i: int) -> LandStrip:
@@ -421,7 +514,7 @@ func _land_strip(side_i: int) -> LandStrip:
 	return ls
 
 
-func _field_row(lands: LandStrip, field: HBoxContainer) -> HBoxContainer:
+func _field_row(lands: LandStrip, field: _Field) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 	field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -649,8 +742,11 @@ func refresh() -> void:
 	for i in 2:
 		var s := st.side(i)
 		var alive := {}
+		for r in s.relics:
+			_remember(r)
 		for p in s.creatures:
 			alive[p.uid] = true
+			_remember(p)
 			if not figures.has(p.uid):
 				if busy:
 					continue   # its summon animation is still queued
@@ -664,8 +760,8 @@ func refresh() -> void:
 		_refresh_relics(i)
 		_restack(i)
 	_refresh_bars()
-	_fit_field(player_field)
-	_fit_field(enemy_field)
+	player_field.queue_sort()
+	enemy_field.queue_sort()
 	_rebuild_hand()
 	_update_marks()
 	_update_controls()
@@ -703,10 +799,7 @@ func _restack(i: int) -> void:
 		if not placed:
 			groups.append([key, [p.uid]])
 	# reuse slot controls in order, add or drop as needed
-	var slots: Array = []
-	for ch in field.get_children():
-		if ch is _Stack and not ch.is_queued_for_deletion():
-			slots.append(ch)
+	var slots: Array = field.stacks()
 	while slots.size() < groups.size():
 		var sl := _Stack.new()
 		field.add_child(sl)
@@ -718,7 +811,7 @@ func _restack(i: int) -> void:
 		var uids: Array = groups[k][1]
 		var tok: bool = st.find_perm(uids[0]).is_token
 		slots[k].arrange(uids.map(func(u): return figures[u]), (TOKEN_STEP if tok else STACK_STEP) * fig_zoom, fig_zoom)
-	_fit_field(field)
+	field.queue_sort()
 
 
 class _Stack extends Control:
@@ -746,27 +839,6 @@ class _Stack extends Control:
 				f.queue_redraw()
 
 
-## A crowded rank closes up: stacks overlap like a hand of cards instead of running off
-## the screen.
-func _fit_field(field: HBoxContainer) -> void:
-	var widths: Array = []
-	for ch in field.get_children():
-		if ch is _Stack and not ch.is_queued_for_deletion():
-			widths.append(ch.custom_minimum_size.x)
-	var n := widths.size()
-	var total := 0.0
-	for w in widths:
-		total += w
-	var strip: LandStrip = player_lands if field == player_field else enemy_lands
-	var avail := get_viewport_rect().size.x - maxf(strip.size.x, strip.custom_minimum_size.x) - 12.0
-	if field == player_field and player_relics.get_child_count() > 0:
-		avail -= player_relics.get_combined_minimum_size().x + 4.0
-	var sep := 6.0
-	if n > 1 and total + sep * (n - 1) > avail:
-		sep = floorf((avail - total) / float(n - 1))
-	field.add_theme_constant_override("separation", int(sep))
-
-
 func _spawn_figure(p, animate: bool) -> SummonFigure:
 	var fig := SummonFigure.new()
 	fig.setup(p.uid, p.card, p.owner == 1)
@@ -783,18 +855,25 @@ func _spawn_figure(p, animate: bool) -> SummonFigure:
 
 
 func _refresh_relics(i: int) -> void:
-	var box := player_relics if i == 0 else enemy_relics
+	var box: Container = player_relics if i == 0 else enemy_relics
 	UIKit.clear(box)
 	var list: Array = st.side(i).relics
-	# ours stand in a column at the end of our rank: as tall as a touch target when they fit
+	# ours stand in a column at the end of our rank: as tall as a touch target when they fit,
+	# two narrower columns when there are too many for one (the rank never grows taller)
 	var bh := float(UIKit.TARGET)
+	var bw := 150.0
 	if i == 0 and not list.is_empty():
-		bh = clampf((SummonFigure.SIZE.y * fig_zoom + 8.0) / list.size() - 4.0, 44.0, UIKit.TARGET)
+		var room := minf(_player_row.custom_minimum_size.y, SummonFigure.SIZE.y * fig_zoom + 8.0)
+		var cols := 1 if list.size() * 48.0 - 4.0 <= room else 2
+		player_relics.columns = cols
+		var per_col := ceili(list.size() / float(cols))
+		bh = clampf(room / per_col - 4.0, 44.0, UIKit.TARGET)
+		bw = 150.0 if cols == 1 else 118.0
 	for r in list:
 		var b := Button.new()
 		b.set_meta("uid", r.uid)
 		b.text = "✧ " + I18n.t(r.name)
-		b.custom_minimum_size = Vector2(150 if i == 0 else 0, bh)
+		b.custom_minimum_size = Vector2(bw if i == 0 else 0, bh)
 		b.add_theme_font_size_override("font_size", UIKit.FS_MIN)
 		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		b.clip_text = true
@@ -856,20 +935,110 @@ func _refresh_bars() -> void:
 func _rebuild_hand() -> void:
 	UIKit.clear(hand_box)
 	var hand: Array = st.side(0).hand
-	var w := CardView.BASE.x * hand_scale
-	var avail := get_viewport_rect().size.x - _player_col.custom_minimum_size.x - 28.0
-	var sep := 6.0
-	if hand.size() > 1 and hand.size() * (w + 6) > avail:
-		sep = (avail - w) / float(hand.size() - 1) - w
-	hand_box.add_theme_constant_override("separation", int(sep))
-	hand_box.custom_minimum_size.x = avail
 	for idx in hand.size():
 		var cv := CardView.create(hand[idx], hand_scale)
-		cv.highlight = st.can_play(0, idx) and mode == "idle" and not busy
 		var i2 := idx
 		cv.tapped.connect(func(_v): _on_hand_tapped(i2))
 		cv.long_pressed.connect(func(_v): _on_hand_tapped(i2))
+		var g := _Glow.new()
+		g.name = "Glow"
+		cv.add_child(g)
 		hand_box.add_child(cv)
+	hand_box.arrange()
+	_update_hand_glow()
+
+
+## Can the hand card at `idx` be played right now? The same test as the preview's Play button.
+func hand_playable(idx: int) -> bool:
+	return play_block_reason(idx) == ""
+
+
+## Does the hand card at `idx` glow (playable now)?
+func hand_glow(idx: int) -> bool:
+	if idx < 0 or idx >= hand_box.get_child_count():
+		return false
+	var g = hand_box.get_child(idx).get_node_or_null("Glow")
+	return g != null and g.visible
+
+
+## Playable cards in hand pulse green, like creatures that can attack or use an ability; the
+## card being cast (while you choose its targets) is lifted in gold.
+func _update_hand_glow() -> void:
+	if hand_box == null or st == null:
+		return
+	for idx in hand_box.get_child_count():
+		var cv := hand_box.get_child(idx) as CardView
+		if cv == null:
+			continue
+		var g = cv.get_node_or_null("Glow")
+		var pending := mode == "target" and idx == pending_hand_idx
+		if g:
+			g.visible = hand_playable(idx) and not pending
+		if cv.selected != pending:
+			cv.selected = pending
+			cv.queue_redraw()
+
+
+## The green pulse drawn over a playable card in hand (inside its edge, so neighbours and the
+## bottom of the screen never hide it).
+const GLOW_COLOR := SummonFigure.SELECT_COLOR
+
+
+class _Glow extends Control:
+	var _t := 0.0
+	var _acc := 0.0
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		visible = false
+
+	func _ready() -> void:
+		UIKit.full_rect(self)
+
+	func _process(delta: float) -> void:
+		if not visible:
+			return
+		_t += delta
+		_acc += delta
+		if _acc >= 0.05:
+			_acc = 0.0
+			queue_redraw()
+
+	func _draw() -> void:
+		# a halo just outside the card (it shows on cards of any colour, green ones too) and a
+		# thin line inside its edge
+		var pulse := 0.5 + 0.5 * sin(_t * 6.6)      # the figures' "select" mark beats the same
+		var r := Rect2(Vector2.ZERO, size)
+		var col := BattleScene.GLOW_COLOR
+		var deep := Color(0.12, 0.55, 0.1)
+		draw_rect(r.grow(4.0), Color(deep, 0.75 + 0.25 * pulse), false, 6.0)
+		draw_rect(r.grow(4.0), Color(col, 0.35 + 0.65 * pulse), false, 3.0)
+		draw_rect(r.grow(7.5), Color(Tapestry.INK, 0.6), false, 1.5)
+		draw_rect(r.grow(-3.0), Color(col, 0.5 + 0.5 * pulse), false, 2.0)
+
+
+## The hand: centred on the screen when it fits, pushed right only as far as the column beside
+## it needs; spread over the whole row, overlapping evenly, when there are too many cards.
+class _HandRow extends Control:
+	var scene: BattleScene
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_PASS
+		item_rect_changed.connect(arrange)
+
+	func arrange() -> void:
+		var cards: Array = []
+		for c in get_children():
+			if c is Control and not c.is_queued_for_deletion():
+				cards.append(c)
+		if cards.is_empty():
+			return
+		var widths: Array = cards.map(func(c): return (c as Control).size.x)
+		var mid := scene._screen_mid_in(self) if scene else size.x * 0.5
+		var xs := BattleScene.spread(widths, size.x - 16.0, mid - 8.0, 16.0)   # room for the glow between cards
+		for k in cards.size():
+			var c: Control = cards[k]
+			c.position = Vector2(xs[k] + 8.0, maxf(0.0, (size.y - c.size.y) * 0.5))
 
 
 func _update_marks() -> void:
@@ -910,8 +1079,12 @@ func _update_controls() -> void:
 	var mine := st.active == 0
 	phase_bar.set_state(_bar_key(), mine)
 	btn_alt.visible = false
+	btn_main.visible = mode != "target"
+	btn_cancel.visible = mode == "target"
+	btn_cancel.disabled = busy
 	btn_main.disabled = busy
 	btn_alt.disabled = busy
+	_update_hand_glow()
 	match mode:
 		"attack":
 			btn_main.text = I18n.t("Attack! (%d)") % sel_attackers.size() if not sel_attackers.is_empty() else I18n.t("No attack")
@@ -920,7 +1093,7 @@ func _update_controls() -> void:
 		"block":
 			btn_main.text = "Confirm blocks"
 		"target":
-			btn_main.text = "Cancel"
+			pass                       # only Cancel shows: tap a target, or back out
 		_:
 			if st.phase == "over":
 				btn_main.text = "..."
@@ -961,14 +1134,11 @@ func _bar_key() -> String:
 func play_events() -> void:
 	busy = true
 	_update_controls()
-	var evs := st.take_events()
-	for e in evs:
-		await _animate(e)
+	await _play_batch(st.take_events())
 	# choices the rules left to you: discards from rummage, foresight
 	while st.phase != "over" and st.has_owed(0):
 		await _resolve_owed()
-		for e in st.take_events():
-			await _animate(e)
+		await _play_batch(st.take_events())
 	busy = false
 	_sync_view_stack()
 	refresh()
@@ -976,12 +1146,43 @@ func play_events() -> void:
 		_show_result()
 
 
+## Animate and narrate one batch of events. Attacks declared together are told in one line,
+## blocks too; a life loss that comes with a damage event is told by the damage line.
+func _play_batch(evs: Array) -> void:
+	_learn(evs)
+	_ctx = ""
+	var k := 0
+	while k < evs.size():
+		var e: Dictionary = evs[k]
+		if e.get("type") in ["attack", "block"]:
+			var j := k
+			var parts: Array = []
+			while j < evs.size() and evs[j].get("type") == e["type"]:
+				var ej: Dictionary = evs[j]
+				if e["type"] == "attack":
+					parts.append(I18n.t(String(_known_of(int(ej["uid"])).get("name", ""))))
+				else:
+					parts.append(_cap(I18n.t("%s blocks %s.") % [_obj(int(ej["uid"])), _obj(int(ej.get("attacker", -1)))]))
+				j += 1
+			if e["type"] == "attack":
+				var names := ", ".join(parts)
+				_log(I18n.t("You attack with %s.") % names if int(e.get("side", 0)) == 0 else I18n.t("%s attacks with %s.") % [st.side(1).name, names])
+			else:
+				_log(" ".join(parts))
+			for m in range(k, j):
+				await _animate(evs[m])
+			k = j
+			continue
+		await _animate(e, evs[k - 1] if k > 0 else {}, evs[k + 1] if k + 1 < evs.size() else {})
+		k += 1
+
+
 signal _picked(result)
 
 
 ## Ask the player to choose among cards. mode "one": returns an index. mode "foresight":
 ## returns the ids to keep on top in order (tap cards to send them to the bottom).
-func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "one"):
+func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "one", can_cancel: bool = false):
 	var dim := ColorRect.new()
 	dim.color = Color(0, 0, 0, 0.55)
 	UIKit.full_rect(dim)
@@ -1022,6 +1223,12 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 		cv.long_pressed.connect(func(_c): CardViewer.open(self, ids.duplicate(), kk))
 		row.add_child(cv)
 		views.append(cv)
+	if can_cancel:
+		var cancel := _btn("Cancel", func():
+			dim.queue_free()
+			_picked.emit(-1), 200)
+		cancel.name = "Cancel"
+		v.add_child(cancel)
 	if mode == "foresight":
 		v.add_child(_btn("Confirm", func():
 			var keep_ids: Array = []
@@ -1056,21 +1263,34 @@ func _resolve_owed() -> void:
 		st.resolve_foresight(0, keep_ids)
 
 
-func _animate(e: Dictionary) -> void:
+func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> void:
+	if e["type"] != "die":
+		_sac_ok = e["type"] == "ability"      # a sacrifice cost dies right after its ability
 	match e["type"]:
 		"turn":
+			_ctx = ""
 			refresh()
 			await _banner("Your turn" if e["side"] == 0 else I18n.t("%s's turn") % st.side(1).name)
 		"land":
 			_refresh_bars()
+			var ln := _card_name(e["id"])
+			_log(I18n.t("You play %s.") % ln if e["side"] == 0 else I18n.t("%s plays %s.") % [st.side(1).name, ln])
 			if e["side"] == 1:
-				_log(I18n.t("%s plays %s.") % [st.side(1).name, I18n.t(CardDB.get_card(e["id"]).get("name", ""))])
 				await _wait(0.25)
 			else:
 				_rebuild_hand()
 		"cast":
-			var cc := CardDB.get_card(e["id"])
-			_log(I18n.t("%s casts %s.") % [st.side(e["side"]).name, I18n.t(cc.get("name", ""))])
+			_ctx = ""
+			var nm := _card_name(e["id"])
+			var tg := _refs_text(e.get("targets", []))
+			var line := ""
+			if int(e["side"]) == 0:
+				line = I18n.t("You cast %s on %s.") % [nm, tg] if tg != "" else I18n.t("You cast %s.") % nm
+			else:
+				line = I18n.t("%s casts %s on %s.") % [st.side(1).name, nm, tg] if tg != "" else I18n.t("%s casts %s.") % [st.side(1).name, nm]
+			if e.get("overclock", false):
+				line += " " + I18n.t("(overclocked)")
+			_log(line)
 			_rebuild_hand()
 			_refresh_bars()
 			view_stack.append(_view_entry(int(e["sid"]), int(e["side"]), e["id"], false, "", e.get("targets", [])))
@@ -1080,21 +1300,32 @@ func _animate(e: Dictionary) -> void:
 		"resolve":
 			for k in view_stack.size():
 				if int(view_stack[k]["sid"]) == int(e["sid"]):
+					_last_resolved = view_stack[k]
 					view_stack.remove_at(k)
 					break
+			if int(_last_resolved.get("sid", -1)) == int(e["sid"]):
+				_ctx = _entry_source(_last_resolved)
 			_refresh_stack_view()
 		"fizzle":
-			var fc := CardDB.get_card(String(e.get("id", "")))
-			_log(I18n.t("%s fizzles: its target is gone.") % I18n.t(String(fc.get("name", ""))) if not e.get("ability", false) \
-				else I18n.t("The ability fizzles: its target is gone."))
+			if e.get("ability", false):
+				var src := _entry_name(_last_resolved) if int(_last_resolved.get("sid", -1)) == int(e.get("sid", -2)) else I18n.t("a creature")
+				_log(_cap(I18n.t("%s's ability fizzles: its target is gone.") % src))
+			else:
+				_log(I18n.t("%s fizzles: its target is gone.") % _card_name(String(e.get("id", ""))))
 			await _wait(0.35)
 		"summon":
 			var p = st.find_perm(e["uid"])
+			var sname := I18n.t(String(_known_of(int(e["uid"])).get("name", "")))
+			_ctx = _obj(int(e["uid"]))           # what it does as it enters follows
+			var is_you := int(e["side"]) == 0
+			if e.get("reanimated", false):
+				_log(I18n.t("You raise %s.") % sname if is_you else I18n.t("%s raises %s.") % [st.side(1).name, sname])
+			else:
+				_log(I18n.t("You summon %s.") % sname if is_you else I18n.t("%s summons %s.") % [st.side(1).name, sname])
 			if p == null:
 				return
 			if e.get("id") != "token" and not e.get("from_stack", false):
 				await _show_cast(e["id"], e["side"])
-			_log(I18n.t("%s raises %s." if e.get("reanimated") else "%s summons %s.") % [st.side(e["side"]).name, I18n.t(p.name)])
 			_rebuild_hand()
 			_refresh_bars()
 			var fig: SummonFigure = figures[p.uid] if figures.has(p.uid) else _spawn_figure(p, true)
@@ -1105,25 +1336,30 @@ func _animate(e: Dictionary) -> void:
 		"relic":
 			if not e.get("from_stack", false):
 				await _show_cast(e["id"], e["side"])
-			_log(I18n.t("%s sets out %s.") % [st.side(e["side"]).name, I18n.t(CardDB.get_card(e["id"]).get("name", ""))])
+			var rn := _card_name(e["id"])
+			_ctx = _obj(int(e.get("uid", -1)))
+			_log(I18n.t("You set out %s.") % rn if int(e["side"]) == 0 else I18n.t("%s sets out %s.") % [st.side(1).name, rn])
 			_refresh_relics(e["side"])
 			_rebuild_hand()
 		"spell":
 			var c := CardDB.get_card(e["id"])
 			_rebuild_hand()
 			_flash(Factions.color(c.get("faction", "machine")))
+			_ctx = _card_name(e["id"])
 			if e.get("from_stack", false):
-				_log(I18n.t("%s resolves.") % I18n.t(c.get("name", "")))
+				_log(I18n.t("%s resolves.") % _card_name(e["id"]))
 				await _wait(0.25)
 			else:
-				_log(I18n.t("%s casts %s.") % [st.side(e["side"]).name, I18n.t(c.get("name", ""))])
+				_log(I18n.t("You cast %s.") % _card_name(e["id"]) if int(e["side"]) == 0 else I18n.t("%s casts %s.") % [st.side(1).name, _card_name(e["id"])])
 				await _show_cast(e["id"], e["side"], 0.9)
 		"attack":
+			_ctx = _obj(int(e["uid"]))           # its attack trigger follows
 			if figures.has(e["uid"]):
 				figures[e["uid"]].mark = "attack"
 				arrows.flash(_fig_center(figures[e["uid"]]), portrait_pos(1 - int(e["side"])), Color(Tapestry.VERMILION, 0.9), 1.6)
 			await _wait(0.12)
 		"block":
+			_ctx = ""
 			if figures.has(e["uid"]):
 				figures[e["uid"]].mark = "block"
 				if figures.has(e.get("attacker", -1)):
@@ -1150,8 +1386,17 @@ func _animate(e: Dictionary) -> void:
 				await _wait(0.35)
 		"damage":
 			var tgt: Dictionary = e["target"]
-			var tpos := _ref_pos(tgt)
 			var src: int = e.get("source", -1)
+			var by := _obj(src) if src >= 0 else _ctx
+			var whom := _ref_text(tgt)
+			var amt := int(e["amount"])
+			if by != "":
+				_log(_cap(I18n.t("%s deals %d damage to %s.") % [by, amt, whom]))
+			elif tgt.get("kind") == "player" and int(tgt.get("side", 0)) == 0:
+				_log(I18n.t("You take %d damage.") % amt)
+			else:
+				_log(_cap(I18n.t("%s takes %d damage.") % [whom, amt]))
+			var tpos := _ref_pos(tgt)
 			if src >= 0 and figures.has(src):
 				await figures[src].play_lunge(tpos)
 			else:
@@ -1170,9 +1415,34 @@ func _animate(e: Dictionary) -> void:
 			var lb := player_life if e["side"] == 0 else enemy_life
 			lb.text = "♥ %d" % e["value"]
 			var d: int = e["delta"]
+			var you := int(e["side"]) == 0
+			# a loss that comes with a damage event is told by that event
+			var told: bool = nxt.get("type") == "damage" and nxt.get("target", {}).get("kind") == "player" \
+				and int(nxt.get("target", {}).get("side", -1)) == int(e["side"])
+			var why := _ctx
+			if prev.get("type") == "damage" and int(prev.get("source", -1)) >= 0:
+				why = _obj(int(prev["source"]))      # lifelink: the creature that dealt the damage
+			if d > 0:
+				_log(_with_ctx(I18n.t("You gain %d life.") % d if you else I18n.t("%s gains %d life.") % [st.side(1).name, d], why))
+			elif d < 0 and not told:
+				_log(_with_ctx(I18n.t("You lose %d life.") % -d if you else I18n.t("%s loses %d life.") % [st.side(1).name, -d], why))
 			_float_text(("+%d" % d) if d > 0 else str(d), lb.global_position + lb.size * 0.5, UIKit.GREEN if d > 0 else UIKit.RED)
 			await _wait(0.12)
 		"die":
+			var k := _known_of(int(e["uid"]))
+			var who := _obj(int(e["uid"]))
+			var is_relic := String(k.get("card", {}).get("type", "creature")) != "creature"
+			# the engine also flags a death at toughness 0 as a "sacrifice" (it can't regenerate):
+			# only a cost paid for an ability just used is told as one
+			if e.get("sacrifice", false) and _sac_ok:
+				_log(_cap(I18n.t("%s is sacrificed.") % who))
+			elif is_relic:
+				_log(_cap(I18n.t("%s is destroyed.") % who))
+			else:
+				_log(_cap(I18n.t("%s dies.") % who))
+			_ctx = who                          # its death trigger follows
+			if not is_relic and k.get("card", {}).get("keywords", []).has("martyr"):
+				_martyr_pending += 1
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
 				_burst(f.global_position + _fsz() * 0.5, Factions.color(f.faction), 24)
@@ -1180,6 +1450,7 @@ func _animate(e: Dictionary) -> void:
 				await f.play_death()
 				f.queue_free()
 		"bounce":
+			_log(_with_ctx(I18n.t("%s returns to its owner's hand.") % _obj(int(e["uid"])), _ctx))
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
 				figures.erase(e["uid"])
@@ -1187,20 +1458,46 @@ func _animate(e: Dictionary) -> void:
 				f.queue_free()
 			_rebuild_hand()
 		"buff":
+			var bp := int(e["p"])
+			var bt := int(e["t"])
+			if _martyr_pending > 0 and bp == 1 and bt == 1:
+				_martyr_pending -= 1
+				_log(I18n.t("Martyr: a +1/+1 counter on %s.") % _obj(int(e["uid"])))
+			else:
+				_log(_with_ctx(I18n.t("%s gets %s.") % [_obj(int(e["uid"])), "%+d/%+d" % [bp, bt]], _ctx))
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
 				var p = st.find_perm(e["uid"])
 				if p:
 					f.sync(p)
-				_float_text("+%d/+%d" % [e["p"], e["t"]], f.global_position + _fsz() * 0.5, UIKit.GREEN)
+				_float_text("%+d/%+d" % [bp, bt], f.global_position + _fsz() * 0.5, UIKit.GREEN if bp >= 0 and bt >= 0 else UIKit.RED)
 				await f.play_buff()
+		"grant":
+			var kw := I18n.t(_kw_name(String(e.get("keyword", ""))))
+			_log(_with_ctx(I18n.t("%s gains %s.") % [_obj(int(e["uid"])), kw], _ctx))
+			if figures.has(e["uid"]):
+				var p = st.find_perm(e["uid"])
+				if p:
+					figures[e["uid"]].sync(p)
+				_float_text(kw, figures[e["uid"]].global_position + _fsz() * 0.5, Tapestry.GILT)
+				await _wait(0.25)
+		"attach":
+			_log(_cap(I18n.t("%s is attached to %s.") % [_obj(int(e["uid"])), _obj(int(e.get("host", -1)))]))
+			_refresh_relics(int(e.get("side", 0)))
+		"regrow":
+			var gn := _card_name(String(e.get("id", "")))
+			_log(_with_ctx(I18n.t("%s returns to your hand.") % gn if int(e["side"]) == 0 else I18n.t("%s returns to %s's hand.") % [gn, st.side(1).name], _ctx))
+			_rebuild_hand()
 		"tap":
+			var tn := _obj(int(e["uid"]))
+			_log(_with_ctx((I18n.t("%s is frozen.") if e.get("freeze", false) else I18n.t("%s is tapped.")) % tn, _ctx))
 			var p = st.find_perm(e["uid"])
 			if p and figures.has(e["uid"]):
 				figures[e["uid"]].sync(p)
 			await _wait(0.1)
 		"discard":
-			_log(I18n.t("%s discards %s.") % [st.side(e["side"]).name, I18n.t(CardDB.get_card(e["id"]).get("name", ""))])
+			var dn := _card_name(e["id"])
+			_log(I18n.t("You discard %s.") % dn if int(e["side"]) == 0 else I18n.t("%s discards %s.") % [st.side(1).name, dn])
 			_rebuild_hand()
 		"draw":
 			if e["side"] == 0 and st.turn > 1:
@@ -1218,6 +1515,7 @@ func _animate(e: Dictionary) -> void:
 				_log(I18n.t("%s keeps and puts %d card(s) on the bottom.") % [st.side(1).name, int(e["bottom"])])
 				await _wait(0.4)
 		"regenerate":
+			_log(_cap(I18n.t("%s regenerates.") % _obj(int(e["uid"]))))
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
 				var p = st.find_perm(e["uid"])
@@ -1226,6 +1524,11 @@ func _animate(e: Dictionary) -> void:
 				_float_text(I18n.t("Regenerates"), f.global_position + _fsz() * 0.5, UIKit.GREEN)
 				await f.play_buff()
 		"pacify", "snare":
+			var pn := _obj(int(e["uid"]))
+			if e["type"] == "pacify":
+				_log(_with_ctx(I18n.t("%s is pacified: it can't attack.") % pn, _ctx))
+			else:
+				_log(_cap(I18n.t("%s is snared by %s.") % [pn, _obj(int(e.get("by", -1)))]))
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
 				_float_text(I18n.t("Pacified") if e["type"] == "pacify" else I18n.t("Snared"), f.global_position + _fsz() * 0.5, Tapestry.GILT)
@@ -1234,27 +1537,37 @@ func _animate(e: Dictionary) -> void:
 					f.sync(p)
 				await _wait(0.3)
 		"prevented":
+			_log(_with_ctx(I18n.t("%s is unaffected.") % _obj(int(e["uid"])), _ctx))
 			if figures.has(e["uid"]):
 				_float_text(I18n.t("Prevented"), figures[e["uid"]].global_position + _fsz() * 0.5, UIKit.DIM)
 				await _wait(0.15)
 		"idle":
+			_ctx = _obj(int(e["uid"]))
+			_log(_cap(I18n.t("Idle: %s rested this turn.") % _ctx))
 			if figures.has(e["uid"]):
 				_float_text(I18n.t("Idle"), figures[e["uid"]].global_position + Vector2(_fsz().x * 0.5, 20), Tapestry.GILT)
 				await _wait(0.25)
 		"fight":
-			var fp = st.find_perm(e["uid"])
-			_log(I18n.t("%s fights!") % (I18n.t(fp.name) if fp else ""))
+			_log(_cap(I18n.t("%s fights %s.") % [_obj(int(e["uid"])), _obj(int(e.get("target", -1)))]))
 		"overclock":
 			if figures.has(e["uid"]):
 				_burst(figures[e["uid"]].global_position + _fsz() * 0.5, Tapestry.GILT, 30)
-			_log(I18n.t("Overclocked!"))
+			_log(_cap(I18n.t("%s is overclocked!") % _obj(int(e["uid"]))))
 		"ability":
-			_log(I18n.t("%s uses: %s") % [st.side(e["side"]).name, I18n.t(String(e.get("text", "")))])
+			var src_txt := _obj(int(e["uid"]))
+			var tx := CardView.plain_text(I18n.t(String(e.get("text", ""))))
+			var atg := _refs_text(e.get("targets", []))
+			if atg != "":
+				_log(_cap(I18n.t("%s's ability on %s: %s") % [src_txt, atg, tx]))
+			else:
+				_log(_cap(I18n.t("%s's ability: %s") % [src_txt, tx]))
+			_ctx = I18n.t("%s's ability") % src_txt      # a mana ability's effect follows at once
 			if int(e.get("sid", -1)) >= 0:
 				var src = st.find_perm(int(e["uid"]))
 				var tok: Dictionary = src.card if src != null and src.is_token else {}
 				view_stack.append(_view_entry(int(e["sid"]), int(e["side"]), String(e.get("id", "")), true, String(e.get("text", "")), e.get("targets", []), tok,
-					String(src.name) if src != null else ""))
+					String(src.name) if src != null else String(_known_of(int(e["uid"])).get("name", ""))))
+				view_stack.back()["uid"] = int(e["uid"])
 				_refresh_stack_view()
 			_refresh_relics(e["side"])
 			_refresh_bars()
@@ -1265,9 +1578,150 @@ func _animate(e: Dictionary) -> void:
 			if e["side"] == 0:
 				_log(I18n.t("Foresight: %d kept on top, %d sent to the bottom.") % [int(e["kept"]), int(e["bottom"])])
 		"upkeep_paid":
+			var un := _obj(int(e.get("uid", -1)))
+			var amt_u := int(e.get("amount", 0))
+			var owner := int(_known_of(int(e.get("uid", -1))).get("owner", 0))
+			_log(I18n.t("You pay %d to keep %s running.") % [amt_u, un] if owner == 0 else I18n.t("%s pays %d to keep %s running.") % [st.side(1).name, amt_u, un])
 			_refresh_bars()
 		"game_over":
 			pass
+
+
+# =================================================================== narration
+
+## Who did what, with which card or ability, to which target: every line names them.
+
+func _card_name(id: String) -> String:
+	if id == "" or id == "token":
+		return ""
+	return I18n.t(String(CardDB.get_card(id).get("name", id)))
+
+
+func _remember(p) -> void:
+	_known[p.uid] = {"name": String(p.name), "owner": int(p.owner), "card": p.card}
+
+
+## Learn the names of the permanents an event batch brings in (they may be gone by the time
+## their line is told: summoned and killed in the same exchange).
+func _learn(evs: Array) -> void:
+	for e in evs:
+		if e.get("type") in ["summon", "relic"] and e.has("uid"):
+			var tok: Dictionary = e.get("token", {})
+			var c: Dictionary = tok if not tok.is_empty() else CardDB.get_card(String(e.get("id", "")))
+			if not _known.has(int(e["uid"])):
+				_known[int(e["uid"])] = {"name": String(c.get("name", "")), "owner": int(e.get("side", 0)), "card": c}
+
+
+func _known_of(uid: int) -> Dictionary:
+	if st != null:
+		var p = st.find_perm(uid)
+		if p != null:
+			_remember(p)
+	return _known.get(uid, {})
+
+
+## A permanent as named in a sentence: "your Barefoot Friar" when it is yours, "Pit Imp" when
+## it is the enemy's.
+func _obj(uid: int) -> String:
+	var k := _known_of(uid)
+	if k.is_empty():
+		return I18n.t("a creature")
+	var n := I18n.t(String(k["name"]))
+	if int(k["owner"]) != 0:
+		return n
+	var relic := String(k.get("card", {}).get("type", "creature")) != "creature"
+	if relic and I18n.lang != "en":
+		return I18n.t("your relic %s") % n
+	return I18n.t("your %s") % n
+
+
+## A target as named in a sentence: you, the enemy, a permanent, a card in a graveyard.
+func _ref_text(ref) -> String:
+	if typeof(ref) != TYPE_DICTIONARY:
+		return ""
+	match String(ref.get("kind", "")):
+		"player":
+			return I18n.t("you") if int(ref.get("side", 0)) == 0 else st.side(1).name
+		"creature", "relic":
+			return _obj(int(ref.get("uid", -1)))
+		"grave":
+			return I18n.t("%s from the graveyard") % _card_name(String(ref.get("id", "")))
+	return ""
+
+
+func _refs_text(refs: Array) -> String:
+	var parts: Array = []
+	for r in refs:
+		var t := _ref_text(r)
+		if t != "" and not parts.has(t):
+			parts.append(t)
+	return ", ".join(parts)
+
+
+## A stack entry's name in a sentence ("your Pit Imp", "Grave Chill").
+func _entry_name(e: Dictionary) -> String:
+	if e.has("uid"):
+		return _obj(int(e["uid"]))
+	var n := I18n.t(String(e.get("name", "")))
+	return I18n.t("your %s") % n if int(e.get("side", 1)) == 0 and e.get("ability", false) else n
+
+
+## What a resolving stack entry is called in the lines of its effects.
+func _entry_source(e: Dictionary) -> String:
+	if e.get("ability", false):
+		return I18n.t("%s's ability") % _entry_name(e)
+	return I18n.t(String(e.get("name", "")))
+
+
+func _with_ctx(line: String, ctx: String) -> String:
+	return _cap(ctx + ": " + line) if ctx != "" else _cap(line)
+
+
+func _kw_name(kw: String) -> String:
+	var t := kw.replace("_", " ")
+	return t.substr(0, 1).to_upper() + t.substr(1)
+
+
+static func _cap(s: String) -> String:
+	return s.substr(0, 1).to_upper() + s.substr(1) if s != "" else s
+
+
+## The whole narration of the duel, newest at the bottom (a tap on the log band opens it).
+func _show_log_history() -> void:
+	if has_node("LogHistory"):
+		return
+	var dim := ColorRect.new()
+	dim.name = "LogHistory"
+	dim.color = Color(0, 0, 0, 0.55)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	var panel := _centered_panel(dim)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 8)
+	panel.add_child(v)
+	v.add_child(UIKit.title("Duel log", UIKit.FS_HEADING))
+	var vp := get_viewport_rect().size
+	var sc := ScrollContainer.new()
+	sc.custom_minimum_size = Vector2(minf(720.0, vp.x - 80.0), maxf(160.0, vp.y - 220.0))
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	v.add_child(sc)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 4)
+	sc.add_child(list)
+	for k in log_history.size():
+		var l := UIKit.label(log_history[k], UIKit.FS_SECONDARY, UIKit.TEXT if k < log_history.size() - 1 else UIKit.accent(), true)
+		l.custom_minimum_size.x = sc.custom_minimum_size.x - 24.0
+		list.add_child(l)
+	if log_history.is_empty():
+		list.add_child(UIKit.label(I18n.t("Nothing has happened yet."), UIKit.FS_SECONDARY, UIKit.DIM))
+	var close := _btn("Close", dim.queue_free, 200)
+	close.name = "Close"
+	v.add_child(close)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if is_instance_valid(sc):
+		sc.scroll_vertical = int(sc.get_v_scroll_bar().max_value)
 
 
 func _ref_pos(ref: Dictionary) -> Vector2:
@@ -1283,8 +1737,17 @@ func _wait(t: float) -> void:
 	await get_tree().create_timer(t).timeout
 
 
-func _log(t: String) -> void:
+const LOG_KEEP := 200
+
+
+## Show a line in the middle bar. `history`: an event (kept in the duel log) rather than an
+## instruction ("Choose a target").
+func _log(t: String, history: bool = true) -> void:
 	t = CardView.plain_text(I18n.t(t))
+	if history and t != "":
+		log_history.append(t)
+		if log_history.size() > LOG_KEEP:
+			log_history.pop_front()
 	if log_label.text != t:
 		log_label.text = t
 		_log_band.flash()
@@ -1561,7 +2024,7 @@ func _begin_play(idx: int) -> void:
 		var extra := UIKit.cost_text(c["overclock"].get("cost", {}))
 		_ask(I18n.t("Overclock"), I18n.t("Pay %s more to overclock it?") % extra, I18n.t("Overclock"), I18n.t("Play normally"), func(yes: bool):
 			pending_overclock = yes
-			_start_targets(c))
+			_start_targets(c), _cancel_targeting)
 		return
 	_start_targets(c)
 
@@ -1590,8 +2053,8 @@ func _begin_ability(uid: int, idx: int) -> void:
 	_advance_targeting()
 
 
-## A two-button question over the duel.
-func _ask(head: String, body: String, yes_label: String, no_label: String, cb: Callable) -> void:
+## A two-button question over the duel (with a Cancel on the left when `cancel_cb` is given).
+func _ask(head: String, body: String, yes_label: String, no_label: String, cb: Callable, cancel_cb: Callable = Callable()) -> void:
 	var dim := ColorRect.new()
 	dim.color = Color(0, 0, 0, 0.5)
 	UIKit.full_rect(dim)
@@ -1607,6 +2070,12 @@ func _ask(head: String, body: String, yes_label: String, no_label: String, cb: C
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
 	v.add_child(row)
+	if cancel_cb.is_valid():
+		var cb_cancel := _btn("Cancel", func():
+			dim.queue_free()
+			cancel_cb.call(), 150)
+		cb_cancel.name = "Cancel"
+		row.add_child(cb_cancel)
 	row.add_child(_btn(yes_label, func():
 		dim.queue_free()
 		cb.call(true), 180))
@@ -1625,11 +2094,14 @@ func _advance_targeting() -> void:
 			continue
 		if spec.get("target") == "own_grave_creature":
 			var gids: Array = opts.map(func(o): return o["id"])
-			var gi = await _pick_cards(I18n.t("Return a creature"), I18n.t("Choose a creature card from your graveyard."), gids)
+			var gi = await _pick_cards(I18n.t("Return a creature"), I18n.t("Choose a creature card from your graveyard."), gids, "one", true)
+			if int(gi) < 0:
+				_cancel_targeting()
+				return
 			chosen_targets.append(opts[int(gi)])
 			continue
 		mode = "target"
-		_log(I18n.t("Choose a target: %s") % _spec_prompt(spec))
+		_log(I18n.t("Choose a target: %s") % _spec_prompt(spec), false)
 		refresh()
 		return
 	mode = "idle"
@@ -1653,6 +2125,34 @@ func _advance_targeting() -> void:
 	pending_overclock = false
 	await play_events()
 	await _after_player_action()
+
+
+## Back out of casting a card or using an ability before its targets are chosen. Nothing has
+## been paid yet (BattleState.play() and activate() pay the mana, life, taps and sacrifices only
+## once the targets are given), so the card simply stays in hand and nothing goes on the stack.
+func _cancel_targeting() -> void:
+	if busy:
+		return
+	var what := ""
+	if pending_hand_idx >= 0 and pending_hand_idx < st.side(0).hand.size():
+		what = I18n.t("Cancelled: %s stays in your hand.") % _card_name(st.side(0).hand[pending_hand_idx])
+	elif not pending_ability.is_empty():
+		what = I18n.t("Cancelled: %s's ability is not used.") % _obj(int(pending_ability[0]))
+	mode = "idle"
+	pending_hand_idx = -1
+	pending_ability = []
+	pending_overclock = false
+	target_specs = []
+	chosen_targets = []
+	_log(_cap(what) if what != "" else I18n.t("Cancelled."), false)
+	refresh()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if mode == "target" and not busy and event is InputEventKey and event.pressed and not event.echo \
+			and (event as InputEventKey).keycode == KEY_ESCAPE:
+		get_viewport().set_input_as_handled()
+		_cancel_targeting()
 
 
 ## You cast something or used an ability: if the game was waiting for you, it goes on;
@@ -1728,16 +2228,16 @@ func _on_figure_tapped(fig: SummonFigure) -> void:
 						refresh()
 						return
 				block_pick = fig.uid if not p.tapped else -1
-				_log("Now tap the attacker it should block." if block_pick >= 0 else "That creature is tapped.")
+				_log("Now tap the attacker it should block." if block_pick >= 0 else "That creature is tapped.", false)
 				refresh()
 			elif st.attackers.has(fig.uid) and block_pick >= 0:
 				var b = st.find_perm(block_pick)
 				if b and st.can_block(b, p):
 					pending_blocks[fig.uid] = block_pick
 					block_pick = -1
-					_log("Blocker assigned.")
+					_log("Blocker assigned.", false)
 				else:
-					_log("That creature can't block this attacker (flying?).")
+					_log("That creature can't block this attacker (flying?).", false)
 				refresh()
 		_:
 			_show_board(p.owner, p.uid)
@@ -1803,7 +2303,7 @@ func _enter_attack_mode() -> void:
 	sel_attackers.clear()
 	for p in st.attack_candidates(0):
 		sel_attackers.append(p.uid)      # everyone charges unless you hold them back
-	_log("All your ready creatures will attack. Tap any you want to hold back, then confirm.")
+	_log("All your ready creatures will attack. Tap any you want to hold back, then confirm.", false)
 	refresh()
 
 
@@ -1812,12 +2312,7 @@ func _on_main() -> void:
 		return
 	match mode:
 		"target":
-			mode = "idle"
-			pending_hand_idx = -1
-			pending_ability = []
-			pending_overclock = false
-			_log("Cancelled.")
-			refresh()
+			_cancel_targeting()
 		"attack":
 			mode = "idle"
 			idle_main = false
@@ -2025,9 +2520,9 @@ func _wait_for_player() -> void:
 	if not st.stack.is_empty():
 		var top: Dictionary = st.stack.back()
 		var nm: String = I18n.t(String(top.get("name", CardDB.get_card(top["id"]).get("name", ""))))
-		_log(I18n.t("%s waits on the stack: answer it, or let it resolve.") % nm)
+		_log(I18n.t("%s waits on the stack: answer it, or let it resolve.") % nm, false)
 	else:
-		_log(I18n.t("You may act now, or pass."))
+		_log(I18n.t("You may act now, or pass."), false)
 	refresh()
 	await _priority_action
 	waiting_priority = false
@@ -2137,7 +2632,7 @@ func _player_blocks() -> void:
 	if can_any:
 		mode = "block"
 		busy = false
-		_log("You are attacked! Tap your creature, then the attacker it blocks.")
+		_log("You are attacked! Tap your creature, then the attacker it blocks.", false)
 		refresh()
 		await _blocks_done
 		busy = true

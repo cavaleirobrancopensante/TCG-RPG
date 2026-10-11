@@ -19,7 +19,7 @@
         "amount": 2
       }
     ],
-    "text": "When this enters, foresight 2 (look at the top two cards of your library, put any of them back on top and the rest on the bottom).",
+    "text": "When Owl of the Archive enters, foresight 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
     "flavor": "It has read every book in the archive, mostly by sitting on them.",
     "art": "res://art/cards/lyceum_c_001.webp"
   },
@@ -39,7 +39,7 @@
       "unmoved"
     ],
     "effects": [],
-    "text": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
+    "text": "Unmoved (Enemy spells and abilities can't tap this creature, return it to its owner's hand or shrink it.)",
     "flavor": "\"It is difficulties that show what men are.\" (Epictetus, Discourses)",
     "art": "res://art/cards/lyceum_c_002.webp"
   },
@@ -67,7 +67,7 @@
         "condition": "composure"
       }
     ],
-    "text": "As long as you have four or more cards in hand (composure), this gets +1/+1.",
+    "text": "Composure: As long as you have four or more cards in hand, Water-Carrier Pupil gets +1/+1.",
     "flavor": "Like Cleanthes before him, he hauls water by night so that he may sit at the Porch by day.",
     "art": "res://art/cards/lyceum_c_003.webp"
   },
@@ -92,7 +92,7 @@
         "amount": 1
       }
     ],
-    "text": "When this enters, draw a card.",
+    "text": "When Lamp-Lit Scribe enters, draw a card.",
     "flavor": "\"Such as are thy habitual thoughts, such also will be the character of thy mind; for the soul is dyed by the thoughts.\" (Marcus Aurelius)",
     "art": "res://art/cards/lyceum_c_004.webp"
   },
@@ -113,7 +113,7 @@
       "defender"
     ],
     "effects": [],
-    "text": "Defender (can't attack).",
+    "text": "Defender (This creature can't attack.)",
     "flavor": "\"Be like the promontory against which the waves continually break, but it stands firm.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_c_005.webp"
   },
@@ -146,10 +146,10 @@
             "target": "enemy_creature"
           }
         ],
-        "text": "Tap, pay {U}: tap target enemy creature."
+        "text": "{U}, Tap: Tap target enemy creature."
       }
     ],
-    "text": "Tap, pay {U}: tap target enemy creature.",
+    "text": "{U}, Tap: Tap target enemy creature.",
     "flavor": "\"If it is day, it is light. It is day. Therefore, sir, you may stand still.\"",
     "art": "res://art/cards/lyceum_c_006.webp"
   },
@@ -170,7 +170,7 @@
       "vigilance"
     ],
     "effects": [],
-    "text": "Vigilance (doesn't tap to attack).",
+    "text": "Vigilance (Attacking doesn't cause this creature to tap.)",
     "flavor": "\"We become just by doing just acts, temperate by doing temperate acts, brave by doing brave acts.\" (Aristotle, Ethics)",
     "art": "res://art/cards/lyceum_c_007.webp"
   },
@@ -195,7 +195,7 @@
         "amount": 3
       }
     ],
-    "text": "When this enters, foresight 3 (look at the top three cards of your library, put any of them back on top and the rest on the bottom).",
+    "text": "When Tower Stargazer enters, foresight 3. (Look at the top three cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
     "flavor": "\"Demand not that events should happen as you wish; but wish them to happen as they do happen, and you will go on well.\" (Epictetus)",
     "art": "res://art/cards/lyceum_c_008.webp"
   },
@@ -220,7 +220,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "When this enters, return target enemy creature to its owner's hand.",
+    "text": "When Wandering Cynic enters, return target enemy creature to its owner's hand.",
     "flavor": "\"Stand out of my light.\" (Diogenes the Cynic, to Alexander)",
     "art": "res://art/cards/lyceum_c_009.webp"
   },
@@ -245,7 +245,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+    "text": "When Shipwrecked Merchant enters, freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.)",
     "flavor": "\"I made a prosperous voyage when I suffered shipwreck.\" (Zeno of Citium, in Diogenes Laertius)",
     "art": "res://art/cards/lyceum_c_010.webp"
   },
@@ -266,7 +266,7 @@
       "unmoved"
     ],
     "effects": [],
-    "text": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it).",
+    "text": "Unmoved (Enemy spells and abilities can't tap this creature, return it to its owner's hand or shrink it.)",
     "flavor": "\"For men make the city and not walls or ships without men in them.\" (Nicias, in Thucydides)",
     "art": "res://art/cards/lyceum_c_011.webp"
   },
@@ -346,7 +346,7 @@
         "condition": "control:Sailor"
       }
     ],
-    "text": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). If you control a Sailor, draw a card.",
+    "text": "Freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.) If you control a Sailor, draw a card.",
     "flavor": "The northern sea does not hurry, and it does not let go.",
     "art": "res://art/cards/lyceum_c_014.webp",
     "speed": "instant"
@@ -374,7 +374,7 @@
         "amount": 3
       }
     ],
-    "text": "Draw a card, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
+    "text": "Draw a card, then foresight 3. (Look at the top three cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
     "flavor": "\"Everywhere means nowhere.\" (Seneca, Letters to Lucilius, on reading too many books)",
     "art": "res://art/cards/lyceum_c_015.webp"
   },
@@ -425,7 +425,7 @@
         "amount": 1
       }
     ],
-    "text": "Tax 2 (the enemy's next non-land card costs {2} more). Draw a card.",
+    "text": "Tax 2. (The enemy player's next non-land card costs {2} more.) Draw a card.",
     "flavor": "\"Before we march,\" said the logician, \"define victory.\"",
     "art": "res://art/cards/lyceum_c_017.webp"
   },
@@ -453,7 +453,7 @@
         "amount": 1
       }
     ],
-    "text": "Return target enemy creature to its owner's hand. Tax 1 (the enemy's next non-land card costs {1} more).",
+    "text": "Return target enemy creature to its owner's hand. Tax 1. (The enemy player's next non-land card costs {1} more.)",
     "flavor": "\"The greatest remedy for anger is delay.\" (Seneca, On Anger)",
     "art": "res://art/cards/lyceum_c_018.webp"
   },
@@ -468,16 +468,27 @@
       "U": 1
     },
     "keywords": [],
-    "effects": [
-      {
-        "trigger": "upkeep",
-        "action": "foresight",
-        "amount": 1
-      }
-    ],
-    "text": "At the beginning of your upkeep, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+    "effects": [],
+    "text": "{1}, Tap: Foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
     "flavor": "A little oil, a little wick, and the whole night given to Chrysippus.",
-    "art": "res://art/cards/lyceum_c_019.webp"
+    "art": "res://art/cards/lyceum_c_019.webp",
+    "abilities": [
+      {
+        "cost": {
+          "mana": {
+            "generic": 1
+          },
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "foresight",
+            "amount": 1
+          }
+        ],
+        "text": "{1}, Tap: Foresight 1."
+      }
+    ]
   },
   {
     "id": "lyceum_c_020",
@@ -506,10 +517,10 @@
             "target": "enemy_creature"
           }
         ],
-        "text": "Tap, pay {2}: tap target enemy creature."
+        "text": "{2}, Tap: Tap target enemy creature."
       }
     ],
-    "text": "Tap, pay {2}: tap target enemy creature.",
+    "text": "{2}, Tap: Tap target enemy creature.",
     "flavor": "Stretched across the harbour mouth at dusk, it teaches impatient captains to wait.",
     "art": "res://art/cards/lyceum_c_020.webp"
   },
@@ -536,7 +547,7 @@
         "toughness": 0
       }
     ],
-    "text": "This gets +1/+0 for each other Hoplite you control.",
+    "text": "Spear of the Second Rank gets +1/+0 for each other Hoplite you control.",
     "flavor": "He cannot see the enemy past the shield in front of him. He does not need to.",
     "art": "res://art/cards/lyceum_c_021.webp"
   },
@@ -561,7 +572,7 @@
         "amount": 1
       }
     ],
-    "text": "Whenever another Philosopher enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+    "text": "Whenever another Philosopher enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
     "flavor": "\"I feel, my dear Lucilius, that I am being not only reformed, but transformed.\" (Seneca)",
     "art": "res://art/cards/lyceum_c_022.webp"
   },
@@ -582,7 +593,7 @@
       "vigilance"
     ],
     "effects": [],
-    "text": "Vigilance (doesn't tap to attack).",
+    "text": "Vigilance (Attacking doesn't cause this creature to tap.)",
     "flavor": "At Plataea the arrows fell like hail, and the line stood and waited for the omens. Then it came on.",
     "art": "res://art/cards/lyceum_c_023.webp"
   },
@@ -607,7 +618,7 @@
         "amount": 1
       }
     ],
-    "text": "When this enters, tax 1 (the enemy's next non-land card costs {1} more).",
+    "text": "When Questioner in the Agora enters, tax 1. (The enemy player's next non-land card costs {1} more.)",
     "flavor": "\"The life which is unexamined is not worth living.\" (Socrates, in Plato's Apology)",
     "art": "res://art/cards/lyceum_c_024.webp"
   },
@@ -628,7 +639,7 @@
       "vigilance"
     ],
     "effects": [],
-    "text": "Vigilance (doesn't tap to attack).",
+    "text": "Vigilance (Attacking doesn't cause this creature to tap.)",
     "flavor": "\"Houses and land do not gain men, but men them.\" (Pericles, in Thucydides)",
     "art": "res://art/cards/lyceum_c_025.webp"
   },
@@ -657,7 +668,7 @@
         "duration": "turn"
       }
     ],
-    "text": "Hoplite creatures you control get +0/+2 and gain unmoved until end of turn (enemy spells and abilities can't tap them, return them to hand or shrink them).",
+    "text": "Hoplite creatures you control get +0/+2 and gain unmoved until end of turn. (Enemy spells and abilities can't tap them, return them to their owners' hands or shrink them.)",
     "flavor": "Each man's shield covers his own left side and the right side of the man beside him.",
     "art": "res://art/cards/lyceum_c_026.webp"
   },
@@ -685,7 +696,7 @@
         "amount": 1
       }
     ],
-    "text": "Foresight 2 for each Philosopher you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom), then draw a card.",
+    "text": "Foresight 2 for each Philosopher you control, then draw a card. (Look at that many cards from the top of your library, then put any number of them on the bottom and the rest on top in any order.)",
     "flavor": "\"Begin the morning by saying to thyself, I shall meet with the busy-body, the ungrateful, arrogant, deceitful, envious, unsocial.\" (Marcus Aurelius)",
     "art": "res://art/cards/lyceum_c_027.webp"
   },
@@ -711,7 +722,7 @@
         "toughness": 0
       }
     ],
-    "text": "This gets +1/+0 for each other Sailor you control.",
+    "text": "Oarsman of the Thranite Bench gets +1/+0 for each other Sailor you control.",
     "flavor": "A hundred and seventy oars and one stroke. There is no room on the benches for a man who keeps his own time.",
     "art": "res://art/cards/lyceum_c_028.webp"
   },
@@ -739,7 +750,7 @@
         "amount": 1
       }
     ],
-    "text": "Flying. Whenever a Sailor enters under your control, foresight 1 (look at the top card of your library; you may put it on the bottom).",
+    "text": "Flying. Whenever a Sailor enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
     "flavor": "Where the gulls wheel, there is land. The helmsman watches them before he trusts the stars.",
     "art": "res://art/cards/lyceum_c_029.webp"
   },
@@ -766,7 +777,7 @@
         "amount": 1
       }
     ],
-    "text": "Vigilance. Whenever this attacks, tax 1 (the enemy's next non-land card costs {1} more).",
+    "text": "Vigilance. Whenever Agora Inspector attacks, tax 1. (The enemy player's next non-land card costs {1} more.)",
     "flavor": "\"Man is by nature a political animal.\" (Aristotle, Politics)",
     "art": "res://art/cards/lyceum_u_001.webp"
   },
@@ -791,7 +802,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "Whenever this attacks, tap target enemy creature.",
+    "text": "Whenever Dialectician of the Porch attacks, tap target enemy creature.",
     "flavor": "\"The universe is transformation: life is opinion.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_u_002.webp"
   },
@@ -825,7 +836,7 @@
         "condition": "composure"
       }
     ],
-    "text": "As long as you have four or more cards in hand, this gets +1/+1 and has unmoved.",
+    "text": "Composure: As long as you have four or more cards in hand, Disciple of Chrysippus gets +1/+1 and has unmoved.",
     "flavor": "\"But for Chrysippus, there had been no Porch.\" (Diogenes Laertius)",
     "art": "res://art/cards/lyceum_u_003.webp"
   },
@@ -929,7 +940,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "When this enters, freeze target enemy creature.",
+    "text": "When Navarch of the Cold Sea enters, freeze target enemy creature.",
     "flavor": "\"When a man does not know what harbour he is making for, no wind is the right wind.\" (Seneca)",
     "art": "res://art/cards/lyceum_u_007.webp"
   },
@@ -958,7 +969,7 @@
         "condition": "composure"
       }
     ],
-    "text": "Return target enemy creature to its owner's hand. Then, if you have four or more cards in hand, draw a card.",
+    "text": "Return target enemy creature to its owner's hand. Composure: If you have four or more cards in hand, draw a card.",
     "flavor": "\"Take away thy opinion, and then there is taken away the complaint, 'I have been harmed.'\" (Marcus Aurelius)",
     "art": "res://art/cards/lyceum_u_008.webp"
   },
@@ -1015,7 +1026,7 @@
         "amount": 3
       }
     ],
-    "text": "Draw two cards, then foresight 3 (look at the top three cards of your library, put any of them back on top in any order and the rest on the bottom).",
+    "text": "Draw two cards, then foresight 3. (Look at the top three cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
     "flavor": "\"Hold every hour in your grasp.\" (Seneca, to his friend Lucilius)",
     "art": "res://art/cards/lyceum_u_010.webp"
   },
@@ -1089,7 +1100,7 @@
         "amount": 1
       }
     ],
-    "text": "At the beginning of your upkeep, tax 1 (the enemy's next non-land card costs {1} more).",
+    "text": "At the beginning of your upkeep, tax 1. (The enemy player's next non-land card costs {1} more.)",
     "flavor": "\"It is not the man who has too little, but the man who craves more, that is poor.\" (Seneca)",
     "art": "res://art/cards/lyceum_u_013.webp"
   },
@@ -1123,7 +1134,7 @@
         "subtype": "Hoplite"
       }
     ],
-    "text": "Other Hoplite creatures you control get +1/+0 and have vigilance (they don't tap to attack).",
+    "text": "Other Hoplite creatures you control get +1/+0 and have vigilance. (Attacking doesn't cause them to tap.)",
     "flavor": "He takes his place on the right of the line, where the honour is, and the danger.",
     "art": "res://art/cards/lyceum_u_014.webp"
   },
@@ -1199,7 +1210,7 @@
         "subtype": "Philosopher"
       }
     ],
-    "text": "Your Philosopher creature cards cost {1} less to play.",
+    "text": "Your Philosopher creature cards cost {1} less to play. This effect reduces only generic mana.",
     "flavor": "The school passed from Zeno to Cleanthes and from Cleanthes to Chrysippus, like a lamp handed on in the dark.",
     "art": "res://art/cards/lyceum_u_017.webp"
   },
@@ -1232,7 +1243,7 @@
         "duration": "turn"
       }
     ],
-    "text": "Freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step). Hoplite creatures you control get +0/+2 until end of turn.",
+    "text": "Freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.) Hoplite creatures you control get +0/+2 until end of turn.",
     "flavor": "When the spears break, each rank sets its shields to the backs before it, and the whole phalanx pushes as one man.",
     "art": "res://art/cards/lyceum_u_018.webp"
   },
@@ -1261,7 +1272,7 @@
         "subtype": "Sailor"
       }
     ],
-    "text": "Vigilance. Other Sailor creatures you control have vigilance (they don't tap to attack).",
+    "text": "Vigilance. Other Sailor creatures you control have vigilance. (Attacking doesn't cause them to tap.)",
     "flavor": "One hand on the steering oar, both eyes on the sea, and not a word wasted.",
     "art": "res://art/cards/lyceum_u_019.webp"
   },
@@ -1287,7 +1298,7 @@
         "amount_per": "Sailor"
       }
     ],
-    "text": "When this enters, foresight 2 for each Sailor you control (look at that many cards from the top of your library, put any of them back on top and the rest on the bottom).",
+    "text": "When Pilot of the Long Swell enters, foresight 2 for each Sailor you control. (Look at that many cards from the top of your library, then put any number of them on the bottom and the rest on top in any order.)",
     "flavor": "The storm is written in the swell a day before it comes. He reads it as a scholar reads a scroll.",
     "art": "res://art/cards/lyceum_u_020.webp"
   },
@@ -1322,10 +1333,10 @@
             "amount": 1
           }
         ],
-        "text": "Tap, pay {2}: draw a card."
+        "text": "{2}, Tap: Draw a card."
       }
     ],
-    "text": "Defender. Tap, pay {2}: draw a card.",
+    "text": "Defender. {2}, Tap: Draw a card.",
     "flavor": "\"I have written my work, not as an essay which is to win the applause of the moment, but as a possession for all time.\" (Thucydides)",
     "art": "res://art/cards/lyceum_r_001.webp"
   },
@@ -1354,7 +1365,7 @@
         "condition": "composure"
       }
     ],
-    "text": "Unmoved. As long as you have four or more cards in hand, other creatures you control have unmoved.",
+    "text": "Unmoved. Composure: As long as you have four or more cards in hand, other creatures you control have unmoved.",
     "flavor": "\"You will break it,\" he said, as his master twisted his leg. When it broke: \"Did I not tell you?\"",
     "art": "res://art/cards/lyceum_r_002.webp"
   },
@@ -1381,7 +1392,7 @@
         "amount": 2
       }
     ],
-    "text": "Vigilance. When this enters, draw two cards.",
+    "text": "Vigilance. When Sage of the Long Patience enters, draw two cards.",
     "flavor": "\"The impediment to action advances action. What stands in the way becomes the way.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_r_003.webp"
   },
@@ -1407,7 +1418,7 @@
         "condition": "composure"
       }
     ],
-    "text": "At the beginning of your upkeep, if you have four or more cards in hand, draw a card.",
+    "text": "Composure: At the beginning of your upkeep, if you have four or more cards in hand, draw a card.",
     "flavor": "\"While we are postponing, life speeds by.\" (Seneca, Letters to Lucilius)",
     "art": "res://art/cards/lyceum_r_004.webp"
   },
@@ -1439,7 +1450,7 @@
         "amount": 2
       }
     ],
-    "text": "Vigilance. When this enters, return target enemy creature to its owner's hand and draw two cards.",
+    "text": "Vigilance. When Aristeon enters, return target enemy creature to its owner's hand and draw two cards.",
     "flavor": "Kings came to the Porch to move him. They went home moved.",
     "art": "res://art/cards/lyceum_r_005.webp"
   },
@@ -1462,7 +1473,7 @@
         "target": "all_enemy_creatures"
       }
     ],
-    "text": "Freeze all enemy creatures (tap them; they don't untap during their controller's next untap step).",
+    "text": "Freeze all enemy creatures. (Tap them. They don't untap during their controller's next untap step.)",
     "flavor": "Freedom from passion, the Stoics called it. The enemy called it a long winter.",
     "art": "res://art/cards/lyceum_r_006.webp"
   },
@@ -1560,7 +1571,7 @@
         "amount": 1
       }
     ],
-    "text": "Unmoved (enemy spells and abilities can't tap it, return it to hand or shrink it). Whenever another Philosopher enters under your control, draw a card.",
+    "text": "Unmoved (Enemy spells and abilities can't tap this creature, return it to its owner's hand or shrink it.) Whenever another Philosopher enters under your control, draw a card.",
     "flavor": "In the rout he walked from the field as calmly as he crossed the agora, and no enemy cared to touch him.",
     "art": "res://art/cards/lyceum_r_010.webp"
   },
@@ -1620,7 +1631,7 @@
         "subtype": "Sailor"
       }
     ],
-    "text": "Other Sailor creatures you control get +1/+1. When this enters, freeze target enemy creature (tap it; it doesn't untap during its controller's next untap step).",
+    "text": "Other Sailor creatures you control get +1/+1. When Phormio enters, freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.)",
     "flavor": "He circled the enemy fleet and waited for the dawn wind. It came, as he knew it would, and broke their ring for him.",
     "art": "res://art/cards/lyceum_r_012.webp"
   },
@@ -1656,7 +1667,7 @@
         "subtype": "Philosopher"
       }
     ],
-    "text": "Vigilance. Other Philosopher creatures you control get +1/+1. When this enters, draw a card.",
+    "text": "Vigilance. Other Philosopher creatures you control get +1/+1. When Zeno enters, draw a card.",
     "flavor": "\"The reason why we have two ears and only one mouth is that we may listen the more and talk the less.\"",
     "art": "res://art/cards/lyceum_m_001.webp"
   },
@@ -1684,7 +1695,7 @@
         "target": "enemy_creature"
       }
     ],
-    "text": "Vigilance, unmoved. Whenever this attacks, freeze target enemy creature.",
+    "text": "Vigilance, unmoved. Whenever Marcus Aurelius attacks, freeze target enemy creature.",
     "flavor": "\"No longer talk at all about the kind of man that a good man ought to be, but be such.\" (Meditations)",
     "art": "res://art/cards/lyceum_m_002.webp"
   },
@@ -1717,7 +1728,7 @@
         "amount": 2
       }
     ],
-    "text": "Draw three cards, then foresight 5. Tax 2 (the enemy's next non-land card costs {2} more).",
+    "text": "Draw three cards, then foresight 5. Tax 2. (The enemy player's next non-land card costs {2} more.)",
     "flavor": "\"Look down from above on the countless herds of men and their countless solemnities.\" (Marcus Aurelius, Meditations)",
     "art": "res://art/cards/lyceum_m_003.webp"
   },
@@ -1754,7 +1765,7 @@
         "subtype": "Hoplite"
       }
     ],
-    "text": "Vigilance (doesn't tap to attack). Other Hoplite creatures you control get +1/+1. When this enters, draw a card for each Philosopher you control.",
+    "text": "Vigilance (Attacking doesn't cause this creature to tap.) Other Hoplite creatures you control get +1/+1. When Xenophon enters, draw a card for each Philosopher you control.",
     "flavor": "Their generals murdered, ten thousand Greeks far from home chose a pupil of Socrates, and he led them to the sea.",
     "art": "res://art/cards/lyceum_m_004.webp"
   }
