@@ -235,14 +235,14 @@ Tribal tools (any faith, always with its own tribes):
 
 Each faith also has a smaller third tribe with a few synergies (about five cards, plus
 retagged older cards): Church **Priest**, Black Pact **Zombie** (the Pact's main tribes are now
-**Skeleton** and Demon; "Undead" is no longer a tribe word), Old Ways **Druid** (with auras),
+**Skeleton** and Demon; "Undead" is no longer a tribe word), Old Ways **Druid** (rewarding relics, e.g. Charms),
 Revel **Satyr**, Stoa **Sailor**, Technocracy **relics and equipment** (artifact synergy).
 
 ## Auras and equipment
 
 Both are relics that sit on a creature and give it `grants`
 (`{"power": 1, "toughness": 1, "keywords": ["trample"]}`); the bonus counts as a static.
-- **Aura** (Old Ways only): `"attach": "aura"`, subtype "Aura", and an enter effect
+- **Aura**: retired in 1.33 (the Old Ways' auras became Charm relics with a permanent blessing; the validator rejects new auras). It was: `"attach": "aura"`, subtype "Aura", and an enter effect
   `{"trigger": "enter", "action": "attach", "target": "own_creature"}`. It goes to the
   graveyard when its creature leaves play, or if there is no creature to enchant.
 - **Equipment** (Technocracy only, usually colourless generic cost): `"attach": "equipment"`,

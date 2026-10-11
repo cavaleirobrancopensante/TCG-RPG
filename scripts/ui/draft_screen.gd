@@ -4,6 +4,7 @@ extends Control
 ## Tap a card to choose it, hold to read it, then press Take.
 
 signal finished
+signal picked             # after every pick (the event is saved, so quitting loses nothing)
 
 const SCALE := 0.56
 
@@ -116,6 +117,7 @@ func _take() -> void:
 
 func _take_index(i: int) -> void:
 	draft.player_pick(i)
+	picked.emit()
 	if not draft.is_drafting():
 		finished.emit()
 		return

@@ -3492,5 +3492,11 @@
  "This gets +1/+1 for each relic you control.": "Esta criatura obtiene +1/+1 por cada reliquia que controlas.",
  "As long as you have 5 or less life (Bloodied), this gets +1/+1.": "Mientras tengas 5 o menos de vida (Ensangrentado), obtiene +1/+1.",
  "If you have 5 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.": "Si tienes 5 o menos de vida (Ensangrentado), el jugador enemigo pierde 2 vidas y tú ganas 2 vidas. Luego el jugador enemigo pierde 2 vidas y tú ganas 2 vidas.",
- "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.": "Mientras tengas 5 o menos de vida (Ensangrentado), obtiene +2/+2 y tiene pavor y toque mortal."
+ "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.": "Mientras tengas 5 o menos de vida (Ensangrentado), obtiene +2/+2 y tiene pavor y toque mortal.",
+ "When this enters, target creature you control gets +0/+2 and gains regenerate (the first time each turn it would be destroyed, it is tapped and healed instead) for good.": "Cuando esto entra, la criatura objetivo que controlas obtiene +0/+2 y gana regenerar (la primera vez en cada turno que fuera a ser destruida, se gira y se cura) para siempre.",
+ "When this enters, target creature you control gets +2/+2 for good.": "Cuando esto entra, la criatura objetivo que controlas obtiene +2/+2 para siempre.",
+ "When this enters, target creature you control gets +1/+1 and gains trample for good, and you create a 2/2 Wolf token.": "Cuando esto entra, la criatura objetivo que controlas obtiene +1/+1 y gana arrollar para siempre, y creas una ficha de Lobo 2/2.",
+ "Whenever a relic enters under your control, this gets +1/+1 permanently.": "Siempre que una reliquia entre bajo tu control, esta criatura obtiene +1/+1 permanentemente.",
+ "Your relic cards cost 1 less. As long as you control a relic, this gets +1/+1.": "Tus cartas de reliquia cuestan 1 menos. Mientras controles una reliquia, esta criatura obtiene +1/+1.",
+ "This gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.": "Esta criatura obtiene +1/+1 por cada otro Druida que controles. Siempre que una reliquia entre bajo tu control, crea una ficha de Retoño 1/1."
 }

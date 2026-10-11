@@ -5603,11 +5603,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "Aura",
-   "note": "card subtype"
-  },
-  {
-   "key": "When this enters, attach it to target creature you control. That creature gets +0/+2 and has regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+   "key": "When this enters, target creature you control gets +0/+2 and gains regenerate (the first time each turn it would be destroyed, it is tapped and healed instead) for good.",
    "note": "rules text of Bark-Skin"
   },
   {
@@ -5619,7 +5615,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Whenever an Aura enters under your control, this gets +1/+1 permanently.",
+   "key": "Whenever a relic enters under your control, this gets +1/+1 permanently.",
    "note": "rules text of Wreath-Weaver Druid"
   },
   {
@@ -5731,7 +5727,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "When this enters, attach it to target creature you control. That creature gets +2/+2.",
+   "key": "When this enters, target creature you control gets +2/+2 for good.",
    "note": "rules text of Gift of the Greenwood"
   },
   {
@@ -5847,7 +5843,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "When this enters, attach it to target creature you control and create a 2/2 Wolf token. That creature gets +1/+1 and has trample.",
+   "key": "When this enters, target creature you control gets +1/+1 and gains trample for good, and you create a 2/2 Wolf token.",
    "note": "rules text of Wolf-Pelt Mantle"
   },
   {
@@ -5859,7 +5855,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "Your Aura cards cost 1 less. As long as you control an Aura, this gets +1/+1.",
+   "key": "Your relic cards cost 1 less. As long as you control a relic, this gets +1/+1.",
    "note": "rules text of Mantle-Keeper of the Circle"
   },
   {
@@ -6015,7 +6011,7 @@
    "note": "card name (wild, creature)"
   },
   {
-   "key": "This gets +1/+1 for each other Druid you control. Whenever an Aura enters under your control, create a 1/1 Sapling token.",
+   "key": "This gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.",
    "note": "rules text of Grey Elder of the Henge"
   },
   {

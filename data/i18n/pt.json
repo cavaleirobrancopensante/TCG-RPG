@@ -3492,5 +3492,11 @@
  "This gets +1/+1 for each relic you control.": "Esta criatura recebe +1/+1 para cada relíquia que você controla.",
  "As long as you have 5 or less life (Bloodied), this gets +1/+1.": "Enquanto você tiver 5 ou menos de vida (Ensanguentado), esta criatura recebe +1/+1.",
  "If you have 5 or less life (Bloodied), the enemy player loses 2 life and you gain 2 life. Then the enemy player loses 2 life and you gain 2 life.": "Se você tiver 5 ou menos de vida (Ensanguentado), o jogador inimigo perde 2 de vida e você ganha 2 de vida. Depois o jogador inimigo perde 2 de vida e você ganha 2 de vida.",
- "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.": "Enquanto você tiver 5 ou menos de vida (Ensanguentado), esta criatura recebe +2/+2 e tem pavor e toque mortal."
+ "As long as you have 5 or less life (Bloodied), this gets +2/+2 and has dread and deathtouch.": "Enquanto você tiver 5 ou menos de vida (Ensanguentado), esta criatura recebe +2/+2 e tem pavor e toque mortal.",
+ "When this enters, target creature you control gets +0/+2 and gains regenerate (the first time each turn it would be destroyed, it is tapped and healed instead) for good.": "Quando isto entra, a criatura alvo que você controla recebe +0/+2 e ganha regenerar (na primeira vez em cada turno em que seria destruída, ela é virada e curada) para sempre.",
+ "When this enters, target creature you control gets +2/+2 for good.": "Quando isto entra, a criatura alvo que você controla recebe +2/+2 para sempre.",
+ "When this enters, target creature you control gets +1/+1 and gains trample for good, and you create a 2/2 Wolf token.": "Quando isto entra, a criatura alvo que você controla recebe +1/+1 e ganha atropelar para sempre, e você cria uma ficha de Lobo 2/2.",
+ "Whenever a relic enters under your control, this gets +1/+1 permanently.": "Sempre que uma relíquia entrar sob seu controle, esta criatura recebe +1/+1 permanentemente.",
+ "Your relic cards cost 1 less. As long as you control a relic, this gets +1/+1.": "Suas cartas de relíquia custam 1 a menos. Enquanto você controlar uma relíquia, esta criatura recebe +1/+1.",
+ "This gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.": "Esta criatura recebe +1/+1 para cada outro Druida que você controla. Sempre que uma relíquia entrar sob seu controle, crie uma ficha de Muda 1/1."
 }

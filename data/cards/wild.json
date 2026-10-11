@@ -726,28 +726,24 @@
     "faction": "wild",
     "rarity": "common",
     "type": "relic",
-    "subtype": "Aura",
+    "subtype": "Charm",
     "cost": {
       "G": 1,
       "generic": 1
     },
     "keywords": [],
-    "attach": "aura",
-    "grants": {
-      "power": 0,
-      "toughness": 2,
-      "keywords": [
-        "regenerate"
-      ]
-    },
     "effects": [
       {
         "trigger": "enter",
-        "action": "attach",
-        "target": "own_creature"
+        "action": "grant",
+        "target": "own_creature",
+        "keyword": "regenerate",
+        "power": 0,
+        "toughness": 2,
+        "duration": "permanent"
       }
     ],
-    "text": "When this enters, attach it to target creature you control. That creature gets +0/+2 and has regenerate (the first time each turn it would be destroyed, it is tapped and healed instead).",
+    "text": "When this enters, target creature you control gets +0/+2 and gains regenerate (the first time each turn it would be destroyed, it is tapped and healed instead) for good.",
     "flavor": "He binds oak bark to a man's arm and calls it a blessing. It turns a blade well enough.",
     "art": "res://art/cards/wild_c_028.webp"
   },
@@ -768,7 +764,7 @@
     "effects": [
       {
         "trigger": "ally_enter",
-        "ally_subtype": "Aura",
+        "ally_subtype": "Relic",
         "action": "buff",
         "target": "self",
         "power": 1,
@@ -776,7 +772,7 @@
         "duration": "permanent"
       }
     ],
-    "text": "Whenever an Aura enters under your control, this gets +1/+1 permanently.",
+    "text": "Whenever a relic enters under your control, this gets +1/+1 permanently.",
     "flavor": "Wear one leaf and you are forgiven. Wear two and you are holy. (Wreath-Weaver Druid)",
     "art": "res://art/cards/wild_c_029.webp"
   },
@@ -1023,7 +1019,7 @@
     "faction": "wild",
     "rarity": "uncommon",
     "type": "relic",
-    "subtype": "Aura",
+    "subtype": "Charm",
     "cost": {
       "G": 1,
       "generic": 2
@@ -1032,19 +1028,16 @@
     "effects": [
       {
         "trigger": "enter",
-        "action": "attach",
-        "target": "own_creature"
+        "action": "buff",
+        "target": "own_creature",
+        "power": 2,
+        "toughness": 2,
+        "duration": "permanent"
       }
     ],
-    "text": "When this enters, attach it to target creature you control. That creature gets +2/+2.",
+    "text": "When this enters, target creature you control gets +2/+2 for good.",
     "flavor": "The forest gives freely, says the Archdruid. He will tell you the price afterwards.",
-    "art": "res://art/cards/wild_u_009.webp",
-    "attach": "aura",
-    "grants": {
-      "power": 2,
-      "toughness": 2,
-      "keywords": []
-    }
+    "art": "res://art/cards/wild_u_009.webp"
   },
   {
     "id": "wild_u_010",
@@ -1340,25 +1333,21 @@
     "faction": "wild",
     "rarity": "uncommon",
     "type": "relic",
-    "subtype": "Aura",
+    "subtype": "Charm",
     "cost": {
       "G": 1,
       "generic": 2
     },
     "keywords": [],
-    "attach": "aura",
-    "grants": {
-      "power": 1,
-      "toughness": 1,
-      "keywords": [
-        "trample"
-      ]
-    },
     "effects": [
       {
         "trigger": "enter",
-        "action": "attach",
-        "target": "own_creature"
+        "action": "grant",
+        "target": "own_creature",
+        "keyword": "trample",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
       },
       {
         "trigger": "enter",
@@ -1373,7 +1362,7 @@
         "count": 1
       }
     ],
-    "text": "When this enters, attach it to target creature you control and create a 2/2 Wolf token. That creature gets +1/+1 and has trample.",
+    "text": "When this enters, target creature you control gets +1/+1 and gains trample for good, and you create a 2/2 Wolf token.",
     "flavor": "The hill folk say the pack follows the man who wears its grey. The wolves have never said why.",
     "art": "res://art/cards/wild_u_019.webp"
   },
@@ -1395,17 +1384,17 @@
       {
         "static": "cost_reduce",
         "amount": 1,
-        "subtype": "Aura"
+        "subtype": "Relic"
       },
       {
         "static": "anthem",
         "scope": "self",
         "power": 1,
         "toughness": 1,
-        "condition": "control:Aura"
+        "condition": "control:Relic"
       }
     ],
-    "text": "Your Aura cards cost 1 less. As long as you control an Aura, this gets +1/+1.",
+    "text": "Your relic cards cost 1 less. As long as you control a relic, this gets +1/+1.",
     "flavor": "He keeps the pelts, crowns and bark-cloths of the circle in an oak chest, and lends them out more freely than he ought.",
     "art": "res://art/cards/wild_u_020.webp"
   },
@@ -1769,7 +1758,7 @@
     "effects": [
       {
         "trigger": "ally_enter",
-        "ally_subtype": "Aura",
+        "ally_subtype": "Relic",
         "action": "summon",
         "token": {
           "name": "Sapling",
@@ -1781,7 +1770,7 @@
         "count": 1
       }
     ],
-    "text": "This gets +1/+1 for each other Druid you control. Whenever an Aura enters under your control, create a 1/1 Sapling token.",
+    "text": "This gets +1/+1 for each other Druid you control. Whenever a relic enters under your control, create a 1/1 Sapling token.",
     "flavor": "His circle has kept its rites since before the first bell rang in the valley. He suspects the bell will outlast them.",
     "art": "res://art/cards/wild_r_012.webp"
   },

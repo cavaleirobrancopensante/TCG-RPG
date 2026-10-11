@@ -594,6 +594,7 @@ func _continue_game(n: int = 0) -> void:
 	if GameState.load_game(n):
 		GameState.ensure_deck()
 		await start_world()
+		_resume_tournament()
 	else:
 		show_dialog("Oops", "The save file could not be read.", [["OK", Callable()]])
 
@@ -1156,15 +1157,58 @@ func open_tournament(city_id: String, intro: bool = false, sealed: bool = false)
 	tournament = Draft.new()
 	if sealed:
 		tournament.start_sealed(city_id, GameState.player_name, Hero.SEALED_PACKS)
-		GameState.save_game()
 		_draft_finished()
 		return
 	tournament.start(city_id, GameState.player_name)
-	GameState.save_game()
+	_save_tour("draft")
+	_open_draft_screen()
+
+
+func _open_draft_screen() -> void:
 	var ds := DraftScreen.new()
 	ds.draft = tournament
+	ds.picked.connect(func(): _save_tour("draft"))
 	ds.finished.connect(_draft_finished)
 	_set_screen(ds)
+
+
+## Save a tournament in progress with the game, so quitting mid-event loses nothing.
+## phase: "draft" (still picking), "deck" (drafted, building the deck), "bracket" (playing).
+func _save_tour(phase: String) -> void:
+	if tournament == null:
+		return
+	GameState.tour_save = {"draft": tournament.to_dict(), "phase": phase, "intro": _tour_intro,
+		"deck": _tour_deck, "prev": _tour_prev_deck}
+	GameState.save_game()
+
+
+## On loading a save: back to the tournament exactly where the player left it.
+func _resume_tournament() -> bool:
+	var ts: Dictionary = GameState.tour_save
+	if ts.is_empty() or not ts.has("draft"):
+		return false
+	tournament = Draft.from_dict(ts["draft"])
+	_tour_intro = bool(ts.get("intro", false))
+	_tour_deck = int(ts.get("deck", -1))
+	_tour_prev_deck = int(ts.get("prev", 0))
+	_pause_world(true)
+	match String(ts.get("phase", "draft")):
+		"draft":
+			if tournament.is_drafting():
+				_open_draft_screen()
+			else:
+				_draft_finished()
+		"deck":
+			if _tour_deck < 0 or _tour_deck >= GameState.decks.size():
+				_draft_finished()
+			else:
+				_tournament_deck()
+		_:
+			if tournament.stage >= 3 or (tournament.player_out and tournament.stage >= 3):
+				_tournament_prize()
+			else:
+				_show_bracket()
+	return true
 
 
 func _draft_finished() -> void:
@@ -1180,7 +1224,7 @@ func _draft_finished() -> void:
 		GameState.decks.append({"name": deck_name, "cards": cards})
 		_tour_deck = GameState.decks.size() - 1
 	_tour_prev_deck = GameState.active_deck
-	GameState.save_game()
+	_save_tour("deck")
 	if d.sealed:
 		show_dialog("Your sealed pool", I18n.t("You opened %d cards; they are now in your collection. Build your deck from them (at least 40 cards, basic lands are free), then the tournament begins.") % d.picks[0].size(),
 			[["Build my deck", _tournament_deck]], [])
@@ -1198,6 +1242,7 @@ func _tournament_deck() -> void:
 
 
 func _show_bracket() -> void:
+	_save_tour("bracket")
 	var ts := TournamentScreen.new()
 	ts.draft = tournament
 	ts.play_match.connect(func(opp: int):
@@ -1250,6 +1295,7 @@ func _tournament_prize() -> void:
 	var wins := d.player_stage
 	var city_id := d.city
 	tournament = null
+	GameState.tour_save = {}
 	GameState.save_game()
 	var body := I18n.t("You won %d match(es).") % wins
 	body += "\n\n" + (I18n.t("Prize: %s") % ", ".join(parts) if not parts.is_empty() else I18n.t("No prize this time, but the drafted cards and the deck are yours to keep."))
@@ -1274,6 +1320,7 @@ func _intro_prize() -> void:
 	GameState.ensure_deck()
 	var city_id := d.city
 	tournament = null
+	GameState.tour_save = {}
 	_tour_intro = false
 	GameState.save_game()
 	var faith_name: String = Factions.info(GameState.hero)["name"]
