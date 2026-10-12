@@ -274,11 +274,12 @@
    {
     "trigger": "cast",
     "action": "destroy",
-    "target": "all_tapped_enemy_demons",
-    "condition": "crusade"
+    "target": "enemy_demon",
+    "condition": "crusade",
+    "distinct": true
    }
   ],
-  "text": "This spell can't be countered. Destroy target Demon an opponent controls. If it's Crusade, also destroy each tapped Demon an opponent controls. (A possession is tapped while its host is.)",
+  "text": "This spell can't be countered. Destroy target Demon an opponent controls. If it's Crusade, also destroy another target Demon an opponent controls.",
   "flavor": "\"In my name they shall cast out devils.\" (Mark 16:17)",
   "art": "res://art/cards/sanctum_c_017.webp",
   "keywords": [],

@@ -731,6 +731,21 @@ live in data/cards/proto.json and are outside every pool (no drafts, shops or ca
   (you choose), or is exiled if there is none. Legion's Hold possesses an enemy creature and takes
   control of it; destroying the Hold frees him.
 - **Exorcisms** can't be countered and destroy Demons: a Demon creature, or a possession (the host
-  stays, freed). On Crusade, Exorcism of the Way also takes every tapped Demon; Great Exorcism
+  stays, freed). On Crusade, Exorcism of the Way also destroys a second target Demon; Great Exorcism
   destroys all Demons.
 - In AI against AI the Church wins about 62% of the duels (tests/proto_duel.tscn).
+
+## Playtest fixes: end-step stop, possession at a glance, sound, the field's colour (1.58)
+
+- The game now stops for you at the opponent's end step whenever you hold something you can cast
+  there (an instant held back for his end of turn). The stop can be cleared on the phase bar
+  (hold the End step on his turn).
+- Exorcism of the Way: on Crusade it destroys a second target Demon (no more "tapped" rule).
+- A possessed creature has a dark red smoke about him, and reading him on the battlefield names
+  the possession, what it gives (+2/+1, dread...), what happens when he dies, his stats now, and
+  who controls him if he was taken. Possession buttons are marked ◈ in dark red.
+- Sound effects for the moments that matter: an attack, steel on steel, a death, a war horn for
+  Crusade, a church bell for Peace, a chime when an exorcism banishes a spirit, a dark breath for a
+  possession. Settings has their own volume. They are synthesised by tools/sfx/make_sfx.py.
+- The battlefield changes with the state: soft morning light at Peace, the red of the banners on
+  Crusade.

@@ -646,6 +646,8 @@ func item_effect_targets(it: Dictionary) -> Array:
 	var targets: Array = it.get("targets", [])
 	var ti := 0
 	for e in list:
+		if not spec_active(e):
+			continue
 		if e.get("action") == "fight":
 			out.append([FIGHTER_SPEC, targets[ti] if ti < targets.size() else null])
 			ti += 1
@@ -768,6 +770,8 @@ func _target_check(i: int, list: Array, targets: Array) -> Array:
 	var ok := 0
 	var ti := 0
 	for e in list:
+		if not spec_active(e):
+			continue
 		if e.get("action") == "fight":
 			if ti < targets.size() and typeof(targets[ti]) == TYPE_DICTIONARY:
 				var fp := find_perm(int(targets[ti].get("uid", -1)))
@@ -1298,6 +1302,8 @@ func target_specs(card: Dictionary, overclock: bool = false) -> Array:
 	if overclock:
 		list.append_array(card.get("overclock", {}).get("effects", []))
 	for e in list:
+		if not spec_active(e):
+			continue
 		if e.get("action") == "fight":
 			specs.append(FIGHTER_SPEC)
 		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
@@ -1433,7 +1439,7 @@ func has_useful_targets(i: int, c: Dictionary) -> bool:
 	var needs := 0
 	var found := 0
 	for e in c.get("effects", []):
-		if e.get("trigger") != "cast":
+		if e.get("trigger") != "cast" or not spec_active(e):
 			continue
 		if TARGET_CHOICE_TYPES.has(e.get("target", "")):
 			needs += 1
@@ -1491,6 +1497,8 @@ func _run_list(i: int, list: Array, source: Perm, targets: Array, strict: bool =
 	var src_card: Dictionary = source.card if source else {"faction": cur_faction, "faction2": cur_faction2}
 	for e0 in list:
 		var e: Dictionary = e0
+		if not spec_active(e):
+			continue            # a Peace or Crusade bonus that does not apply: it takes no target
 		var skip := false
 		_with_source(src_card)      # a death trigger in between may have changed it
 		if e.get("action") == "fight":
@@ -1568,6 +1576,15 @@ func _realm_check(prev: int) -> void:
 				if phase == "over":
 					return
 	check_state()
+
+
+## Is an effect on now? One that needs Peace or Crusade is not there at all in the other state
+## (it asks for no target). The state can't change between casting and resolving.
+func spec_active(e: Dictionary) -> bool:
+	var cnd := String(e.get("condition", ""))
+	if cnd == "peace" or cnd == "crusade":
+		return realm == cnd
+	return true
 
 
 ## Does a two-faced card's face match the state? (front: Peace, back: Crusade)
