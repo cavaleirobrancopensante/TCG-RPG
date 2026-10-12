@@ -64,6 +64,7 @@ var shown_label: Label
 var drawer_shown: Label
 var curve: ManaCurve
 var type_tabs: GridContainer      # All, Creatures, Sorceries...: the same type filter as the drawer's
+var type_pick: OptionButton       # phone: the same as a drop-down (one row instead of two)
 var search: LineEdit
 var in_deck_toggle: CheckButton
 var filter_opts: Array = []       # the four filter OptionButtons (type, cost, rarity, ability)
@@ -235,6 +236,19 @@ func _ready() -> void:
 	type_tabs.add_theme_constant_override("h_separation", 4)
 	type_tabs.add_theme_constant_override("v_separation", 4)
 	right.add_child(type_tabs)
+	if compact:
+		type_tabs.visible = false
+		type_pick = OptionButton.new()
+		type_pick.name = "TypePick"
+		type_pick.custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
+		type_pick.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY)
+		options.append(type_pick)
+		type_pick.item_selected.connect(func(ix):
+			f_type = clampi(ix, 0, TYPES.size() - 1)
+			if not filter_opts.is_empty():
+				filter_opts[0].select(f_type)
+			_filters_changed())
+		right.add_child(type_pick)
 	curve = ManaCurve.new()
 	curve.custom_minimum_size = Vector2(0, 50 if compact else 64)
 	right.add_child(curve)
@@ -725,6 +739,13 @@ func _fill_type_tabs(d: Dictionary) -> void:
 	for id in d:
 		var k := CardView.kind(CardDB.get_card(id))
 		by_kind[k] = int(by_kind.get(k, 0)) + int(d[id])
+	if type_pick:
+		type_pick.clear()
+		for ti in TYPES.size():
+			var nm2: String = I18n.t("All") if ti == 0 else I18n.t(DraftScreen.KIND_NAMES[TYPES[ti].to_lower()])
+			type_pick.add_item("%s %d" % [nm2, DeckTools.count(d) if ti == 0 else int(by_kind.get(TYPES[ti].to_lower(), 0))])
+		type_pick.select(f_type)
+		return
 	for ti in TYPES.size():
 		var t: int = ti
 		var nm: String = I18n.t("All") if ti == 0 else I18n.t(DraftScreen.KIND_NAMES[TYPES[ti].to_lower()])

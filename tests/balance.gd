@@ -11,6 +11,8 @@ extends Node
 ##          copies, a real curve), each against every pair that shares no faith
 ##   SEED   rng seed (default 2026), so several runs can be pooled
 ##   SHOW   comma-separated theme ids: only print one themed deck of each at LEVEL
+##   BAN    comma-separated card ids left out of every deck this run
+##   KW_STRIP comma-separated keywords taken off every card this run
 ##   LIFE   starting life of both sides (default Hero.BASE_LIFE, 15)
 ##   DUMP   "1" also prints machine-readable lines (W a b wins games, C id cast won,
 ##          D deck id cast won: the same per deck faith or theme, to measure each card's lift)
@@ -27,6 +29,22 @@ var total := 0
 
 
 func _ready() -> void:
+	# KW_STRIP=kw,kw: take keywords off every card for this run (what is this keyword worth?)
+	var strip := OS.get_environment("KW_STRIP").split(",", false)
+	if not strip.is_empty():
+		for cid in CardDB.cards:
+			var cd: Dictionary = CardDB.cards[cid]
+			var kws: Array = cd.get("keywords", [])
+			for kw in strip:
+				kws.erase(kw)
+	# BAN=id,id: take cards out of the game for this run (what if this card did not exist?)
+	for bid in OS.get_environment("BAN").split(",", false):
+		CardDB.cards.erase(bid)
+		for f in CardDB.pools:
+			for r in CardDB.pools[f]:
+				CardDB.pools[f][r].erase(bid)
+		for r in CardDB.by_rarity:
+			CardDB.by_rarity[r].erase(bid)
 	var rng := RandomNumberGenerator.new()
 	var seed_env := OS.get_environment("SEED")
 	rng.seed = int(seed_env) if seed_env != "" else 2026
