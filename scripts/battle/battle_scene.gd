@@ -594,7 +594,7 @@ class _Arrows extends Control:
 			live = true
 		flashes = flashes.filter(func(fl): return fl[3] > 0.0)
 		# arrows that stay follow their figures while the layout settles
-		var stays: bool = scene != null and scene.st != null and (scene.mode == "attack" or scene.st.phase in ["block", "combat"] or not scene.view_stack.is_empty())
+		var stays: bool = scene != null and scene.st != null and (scene.mode == "attack" or scene.mode == "confirm" or scene.st.phase in ["block", "combat"] or not scene.view_stack.is_empty())
 		_tick += delta
 		if (live or _redraw or stays) and _tick >= 1.0 / 30.0:
 			_tick = 0.0
@@ -653,6 +653,24 @@ func persistent_arrows() -> Array:
 			var b: int = bl[a]
 			if figures.has(a) and figures.has(b):
 				out.append([_fig_center(figures[b]), _fig_center(figures[a]), blue])
+	# confirming targets: the card (or the creature using its ability) points at its targets
+	if mode == "confirm":
+		var from := Vector2.ZERO
+		if not pending_ability.is_empty() and figures.has(int(pending_ability[0])):
+			from = _fig_center(figures[int(pending_ability[0])])
+		elif pending_hand_idx >= 0 and pending_hand_idx < hand_box.get_child_count():
+			from = (hand_box.get_child(pending_hand_idx) as Control).get_global_rect().get_center()
+		if from != Vector2.ZERO:
+			for ref in chosen_targets:
+				if typeof(ref) != TYPE_DICTIONARY:
+					continue
+				var to := Vector2.ZERO
+				if ref.get("kind") == "player":
+					to = portrait_pos(int(ref["side"]))
+				elif ref.get("kind") == "creature" and figures.has(int(ref["uid"])):
+					to = _fig_center(figures[int(ref["uid"])])
+				if to != Vector2.ZERO:
+					out.append([from, to, Color(UIKit.GREEN, 0.95)])
 	# each spell or ability on the stack points at what it targets
 	if stack_view and stack_view.visible:
 		for e in view_stack:
@@ -1011,19 +1029,10 @@ class _Glow extends Control:
 	func _ready() -> void:
 		UIKit.full_rect(self)
 
-	func _process(delta: float) -> void:
-		if not visible:
-			return
-		_t += delta
-		_acc += delta
-		if _acc >= 0.2:        # a slow beat: five repaints a second is plenty for a glow
-			_acc = 0.0
-			queue_redraw()
-
 	func _draw() -> void:
 		# a halo just outside the card (it shows on cards of any colour, green ones too) and a
-		# thin line inside its edge
-		var pulse := 0.5 + 0.5 * sin(_t * 6.6)      # the figures' "select" mark beats the same
+		# thin line inside its edge; steady, not blinking (a still glow costs nothing to keep)
+		var pulse := 1.0
 		var r := Rect2(Vector2.ZERO, size)
 		var col := BattleScene.GLOW_COLOR
 		var deep := Color(0.12, 0.55, 0.1)
@@ -2184,6 +2193,20 @@ func _advance_targeting() -> void:
 		_log(I18n.t("Choose a target: %s") % _spec_prompt(spec), false)
 		refresh()
 		return
+	# every target chosen: show where it goes and ask before anything is paid or cast
+	if chosen_targets.any(func(t): return t != null):
+		mode = "confirm"
+		refresh()
+		var sure: bool = await _confirm_targets()
+		if not sure:
+			# back to choosing the last target (the earlier ones stay)
+			while not chosen_targets.is_empty():
+				var last = chosen_targets.pop_back()
+				if last != null:
+					break
+			mode = "target"
+			_advance_targeting()
+			return
 	mode = "idle"
 	if not pending_ability.is_empty():
 		var ab: Array = pending_ability
@@ -2205,6 +2228,57 @@ func _advance_targeting() -> void:
 	pending_overclock = false
 	await play_events()
 	await _after_player_action()
+
+
+## "Cast Wildsurge on your Briar Fox?": the arrow already points at it; Change goes back to
+## choosing, Confirm casts. The board stays visible behind a light veil.
+signal _targets_answered(ok: bool)
+func _confirm_targets() -> bool:
+	var veil := ColorRect.new()
+	veil.name = "ConfirmTargets"
+	veil.color = Color(0, 0, 0, 0.12)
+	UIKit.full_rect(veil)
+	add_child(veil)
+	var panel := PanelContainer.new()
+	veil.add_child(panel)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", UIKit.SP_1)
+	panel.add_child(v)
+	var what := ""
+	if not pending_ability.is_empty():
+		what = I18n.t("Use %s's ability on %s?") % [_obj(int(pending_ability[0])), _refs_text(chosen_targets.filter(func(t): return t != null))]
+	elif pending_hand_idx >= 0 and pending_hand_idx < st.side(0).hand.size():
+		what = I18n.t("Cast %s on %s?") % [_card_name(st.side(0).hand[pending_hand_idx]), _refs_text(chosen_targets.filter(func(t): return t != null))]
+	var lb := UIKit.label(_cap(what), UIKit.FS_BODY, UIKit.TEXT, true)
+	lb.custom_minimum_size.x = 420
+	v.add_child(lb)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", UIKit.GAP)
+	v.add_child(row)
+	var back := _btn(I18n.t("Change target"), func():
+		veil.queue_free()
+		_targets_answered.emit(false), 180)
+	back.name = "ChangeTarget"
+	back.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var ok := UIKit.primary_button(I18n.t("Confirm"), func():
+		veil.queue_free()
+		_targets_answered.emit(true), 180)
+	ok.name = "ConfirmTarget"
+	ok.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(back)
+	row.add_child(ok)
+	# at the right edge, half way down: the creatures stand in the middle of the board, so the
+	# arrow and its target stay in view
+	await get_tree().process_frame
+	if is_instance_valid(panel):
+		var vp := get_viewport_rect().size
+		# below the End turn / Attack row, so it never hides those buttons
+		var top := vp.y * 0.5 - panel.size.y * 0.5
+		if is_instance_valid(btn_main):
+			top = btn_main.get_global_rect().end.y + 8.0
+		top = minf(top, vp.y - panel.size.y - 8.0)
+		panel.position = Vector2(vp.x - panel.size.x - 12.0, top)
+	return await _targets_answered
 
 
 ## Back out of casting a card or using an ability before its targets are chosen. Nothing has
