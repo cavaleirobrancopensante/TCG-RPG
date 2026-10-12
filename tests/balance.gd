@@ -6,7 +6,9 @@ extends Node
 ##   GAMES  games per pairing (default 30)
 ##   ROWS   print every card whose id starts with this (e.g. "wild")
 ##   MODE   "faiths" (default) or "themes": every theme of data/themes.json against every
-##          theme of the other faiths, with DeckTools.themed_deck at LEVEL (default 3)
+##          theme of the other faiths, with DeckTools.themed_deck at LEVEL (default 3); or
+##          "pairs": a careful player's two-faith deck for every pair of faiths (any card, 3
+##          copies, a real curve), each against every pair that shares no faith
 ##   SEED   rng seed (default 2026), so several runs can be pooled
 ##   SHOW   comma-separated theme ids: only print one themed deck of each at LEVEL
 ##   LIFE   starting life of both sides (default Hero.BASE_LIFE, 15)
@@ -40,10 +42,23 @@ func _ready() -> void:
 	var games := {}
 	var names: Array = []
 	var group := {}            # name -> faith, so a theme never meets its own faith
+	var pair_decks := {}
 	if mode == "themes":
 		for t in DeckTools.themes():
 			names.append(t)
 			group[t] = DeckTools.theme(t)["faith"]
+	elif mode == "pairs":
+		for ai in Factions.ORDER.size():
+			for bi in range(ai + 1, Factions.ORDER.size()):
+				var nm: String = Factions.ORDER[ai] + "+" + Factions.ORDER[bi]
+				names.append(nm)
+				group[nm] = nm
+				pair_decks[nm] = _pair_deck(Factions.ORDER[ai], Factions.ORDER[bi])
+		if OS.get_environment("SHOWPAIRS") == "1":
+			for nm in names:
+				_print_deck(nm, pair_decks[nm])
+			get_tree().quit()
+			return
 	else:
 		for f in Factions.ORDER:
 			names.append(f)
@@ -54,6 +69,8 @@ func _ready() -> void:
 			var b: String = names[bi]
 			if group[a] == group[b]:
 				continue
+			if mode == "pairs" and (bi < ai or _shares(a, b)):
+				continue
 			# themes: each unordered pair once (the start alternates); faiths: both orders
 			if mode == "themes" and bi < ai:
 				continue
@@ -61,7 +78,10 @@ func _ready() -> void:
 				var lvl := level if mode == "themes" else 2 + (g % 3)
 				var da: Dictionary
 				var db: Dictionary
-				if mode == "themes":
+				if mode == "pairs":
+					da = pair_decks[a]
+					db = pair_decks[b]
+				elif mode == "themes":
 					da = DeckTools.themed_deck(a, lvl, rng)
 					db = DeckTools.themed_deck(b, lvl, rng)
 				else:
@@ -207,3 +227,123 @@ func _print_lengths() -> void:
 	keys.sort_custom(func(a, b): return float(side_rounds[a][0]) / side_rounds[a][1] < float(side_rounds[b][0]) / side_rounds[b][1])
 	for k in keys:
 		print("  %-20s avg %.1f rounds" % [k, float(side_rounds[k][0]) / side_rounds[k][1]])
+
+
+
+# ============================================================ two-faith decks (MODE=pairs)
+
+const PAIR_CURVE := {1: 2, 2: 7, 3: 6, 4: 4, 5: 3, 6: 1}   # 23 spells by mana value (6 = six or more)
+const PAIR_COPIES := 3
+const PAIR_CREATURES := 15
+var _ratings := {}                 # card id -> [times cast, times the caster won] (RATINGS file)
+
+
+## How good a card is for a careful player: the measured win rate of the side that cast it
+## (from a RATINGS file made with DUMP=1), pulled towards a guess from its build value when it
+## was seldom cast.
+func _rating(id: String, c: Dictionary) -> float:
+	if _ratings.is_empty() and OS.get_environment("RATINGS") != "":
+		var d = JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("RATINGS")))
+		if typeof(d) == TYPE_DICTIONARY:
+			_ratings = d
+	# a seldom-cast card is pulled hard towards an even 50% (a few lucky games prove little);
+	# the build value only breaks ties
+	var r: Array = _ratings.get(id, [0, 0])
+	return (float(r[1]) + 60.0 * 0.5) / (float(r[0]) + 60.0) + 0.002 * DeckTools._build_value(c)
+
+
+## Copies a real collection allows: 3 of a common or uncommon, 2 of a rare, 1 of a mythic or a legend.
+func _pair_cap(c: Dictionary) -> int:
+	if c.get("legendary", false) or c.get("rarity", "") == "mythic":
+		return 1
+	if c.get("rarity", "") == "rare":
+		return 2
+	return PAIR_COPIES
+
+
+func _shares(a: String, b: String) -> bool:
+	for f in a.split("+"):
+		if b.split("+").has(f):
+			return true
+	return false
+
+
+## The deck a careful player builds from every card of two faiths (plus the generic-cost
+## Technocracy cards anyone may play): best cards first by DeckTools' build value, 3 copies
+## (1 of a legend), a real mana curve, at least 15 creatures, lands to match the colours.
+func _pair_deck(f1: String, f2: String) -> Dictionary:
+	var allowed := [f1, f2]
+	var cands: Array = []
+	for id in CardDB.all_set_ids():
+		if id.begins_with("t_"):
+			continue
+		var c := CardDB.get_card(id)
+		if c.is_empty() or c.get("type") == "land":
+			continue
+		var fa: String = c.get("faction", "")
+		var fb: String = c.get("faction2", "")
+		var ok: bool = allowed.has(fa) and (fb == "" or allowed.has(fb))
+		# (generic Technocracy cards stay out unless the Technocracy is one of the pair: many only
+		# work with Constructs, and a careful player keeps to his two faiths)
+		if not ok:
+			continue
+		cands.append([id, _rating(id, c)])
+	cands.sort_custom(func(x, y): return x[1] > y[1])
+	var deck := {}
+	var slots := {}
+	var creatures := 0
+	var spells := 0
+	# two passes: creatures first up to the minimum, then everything by value
+	for pass_i in 2:
+		for e in cands:
+			if spells >= 23:
+				break
+			var id: String = e[0]
+			var c := CardDB.get_card(id)
+			var is_cre: bool = c.get("type") == "creature"
+			if pass_i == 0 and not is_cre:
+				continue
+			if pass_i == 0 and creatures >= PAIR_CREATURES:
+				break
+			if pass_i == 1 and is_cre:
+				continue          # second pass: removal, tricks and relics up to the 23
+			var slot := clampi(int(c.get("mana_value", 0)), 1, 6)
+			var cap := _pair_cap(c)
+			while int(deck.get(id, 0)) < cap and int(slots.get(slot, 0)) < int(PAIR_CURVE[slot]) and spells < 23:
+				if pass_i == 0 and creatures >= PAIR_CREATURES:
+					break
+				deck[id] = int(deck.get(id, 0)) + 1
+				slots[slot] = int(slots.get(slot, 0)) + 1
+				spells += 1
+				if is_cre:
+					creatures += 1
+	# a curve too strict for the pool: fill with the best of what is left
+	for e in cands:
+		if spells >= 23:
+			break
+		var id: String = e[0]
+		var cap := _pair_cap(CardDB.get_card(id))
+		while int(deck.get(id, 0)) < cap and spells < 23:
+			deck[id] = int(deck.get(id, 0)) + 1
+			spells += 1
+	# the pair's dual land, if there is one, then basics by colour
+	var duals := 0
+	for id in CardDB.all_set_ids():
+		var c := CardDB.get_card(id)
+		if c.get("type") == "land" and c.has("produces") and not CardDB.is_basic_land(id):
+			var pr: Array = c["produces"]
+			if pr.size() == 2 and pr.has(Factions.info(f1)["mana"]) and pr.has(Factions.info(f2)["mana"]):
+				deck[id] = 3
+				duals += 3
+	DeckTools.add_lands(deck, 17 - duals)
+	return deck
+
+
+func _print_deck(nm: String, d: Dictionary) -> void:
+	var ids := d.keys()
+	ids.sort_custom(func(x, y): return int(CardDB.get_card(x).get("mana_value", 0)) < int(CardDB.get_card(y).get("mana_value", 0)))
+	print("== ", nm)
+	for id in ids:
+		var c := CardDB.get_card(id)
+		var kind := "land" if c.get("type") == "land" else ("%d/%d" % [int(c.get("power", 0)), int(c.get("toughness", 0))] if c.get("type") == "creature" else String(c.get("type")))
+		print("  %d x %s %s (mv %d) %s" % [int(d[id]), id, c.get("name", id), int(c.get("mana_value", 0)), kind])
