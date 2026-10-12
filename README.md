@@ -810,3 +810,17 @@ two-for-one creatures, engines and the graveyard as a resource.
   time instead, so a figure removed mid-animation can't leave the duel stuck.
 - A choice the duel owes you that can't be asked (a target that vanished) is settled
   automatically instead of holding the game.
+
+## Choose one, Reassemble, standard wording (1.65)
+
+- **Choose one** (modal cards): you pick the mode, then its targets. Inquisitor of the Holy Office:
+  destroy a Heretic, or tap up to two creatures. Cleansing of the Temple (Church sideboard,
+  {1}{W} instant): destroy a relic, or create a Testimony.
+- **Reassemble** {cost}: return the card from your graveyard to the battlefield tapped, in your
+  main phase (from the graveyard list). Restless Bones ({B}, 1/1 Skeleton Demon, Reassemble
+  {2}{B}) and Altar of Bones ({1}{B} relic: sacrifice a creature, drain 1) make a combo.
+- New Pact cards: Price of Damnation, Unquiet Grave, Charnel Brute, Desecration, Wings of the Pit.
+  The Possession deck now plays 2 Restless Bones, 1 Altar of Bones and 1 Price of Damnation in
+  place of the Bargains in Blood and a Withering Curse.
+- Wording follows Magic: two-faced cards are Peacebound and Crusadebound and they flip; no "if
+  you can't"; possessions read "Enchant target creature... Enchanted creature gets...".

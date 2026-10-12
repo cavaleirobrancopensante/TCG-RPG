@@ -133,13 +133,23 @@ static func main_action(st: BattleState, i: int) -> bool:
 	var best_v := 0.0
 	var best_targets: Array = []
 	var best_oc := false
+	var best_mode := -1
 	for hi in s.hand.size():
 		if not st.can_play(i, hi):
 			continue
 		var c := CardDB.get_card(s.hand[hi])
 		if c.get("type") == "land" or _is_ramp_spell(c) or BattleState.is_instant(c):
 			continue
+		var mode := -1
 		var plan := _plan(st, i, c)
+		if c.has("modes") and c.get("type") == "spell":
+			# "Choose one": the mode worth most now
+			plan = [0.0, []]
+			for m in c["modes"].size():
+				var pm := _plan(st, i, BattleState.mode_card(c, m))
+				if pm[0] > plan[0]:
+					plan = pm
+					mode = m
 		var v: float = plan[0]
 		var spend := CardDB.mana_value(st.effective_cost(i, c))
 		var oc := false
@@ -156,13 +166,21 @@ static func main_action(st: BattleState, i: int) -> bool:
 			best = hi
 			best_targets = plan[1]
 			best_oc = oc
+			best_mode = mode
 	if best >= 0:
-		return st.play(i, best, best_targets, best_oc)
+		return st.play(i, best, best_targets, best_oc, best_mode)
 	# 3b. Unearth: a creature back from the graveyard for one swing, in main 1.
 	if st.phase == "main1":
 		var gi := best_unearth(st, i, hold)
 		if gi >= 0:
 			return st.unearth(i, gi)
+	# 3c. Reassemble: spare mana brings a returning creature back (main 2, after the plays).
+	if st.phase == "main2":
+		for gi in st.side(i).graveyard.size():
+			if st.can_reassemble(i, gi):
+				var rc: Dictionary = CardDB.get_card(st.side(i).graveyard[gi])["reassemble"]
+				if hold.is_empty() or st.total_available(i) - CardDB.mana_value(rc) >= int(hold["mana"]):
+					return st.reassemble(i, gi)
 	# 4. Abilities.
 	var ab := _best_ability(st, i, hold)
 	if not ab.is_empty():
@@ -1095,11 +1113,18 @@ static func respond(st: BattleState, i: int) -> bool:
 		if not st.can_play(i, hi):
 			continue
 		st._with_source(c)
-		var list: Array = []
-		for e in c.get("effects", []):
-			if e.get("trigger") == "cast":
-				list.append(e)
-		var r := _answer_value(st, i, list, null, c)
+		var r := [0.0, []]
+		var r_mode := -1
+		var variants: Array = [c] if not c.has("modes") else range(c["modes"].size()).map(func(m): return BattleState.mode_card(c, m))
+		for vc in variants:
+			var list: Array = []
+			for e in vc.get("effects", []):
+				if e.get("trigger") == "cast":
+					list.append(e)
+			var rr := _answer_value(st, i, list, null, vc)
+			if rr[0] > r[0]:
+				r = rr
+				r_mode = int(vc.get("mode", -1))
 		var v: float = r[0] - 0.15 * float(c.get("mana_value", 0))
 		var xc: Dictionary = c.get("extra_cost", {})
 		if int(xc.get("life", 0)) > 0:
@@ -1113,7 +1138,7 @@ static func respond(st: BattleState, i: int) -> bool:
 			v -= cheapest
 		if v > best_v:
 			best_v = v
-			best = ["card", hi, r[1]]
+			best = ["card", hi, r[1], r_mode]
 	for p in s.creatures + s.relics:
 		var abl := st.abilities_of(p)
 		for idx in abl.size():
@@ -1153,7 +1178,7 @@ static func respond(st: BattleState, i: int) -> bool:
 	if best.is_empty():
 		return false
 	if best[0] == "card":
-		return st.play(i, best[1], best[2])
+		return st.play(i, best[1], best[2], false, int(best[3]) if best.size() > 3 else -1)
 	return st.activate(i, best[1][0], best[1][1], best[2])
 
 
@@ -1377,6 +1402,8 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 				v += 1.2 if chosen != null else 0.0
 			"draw":
 				v += 1.3 * amount if their_end else 0.0
+			"testimony":
+				v += 1.0 * amount if their_end else 0.0
 			"drain":
 				v += 100.0 if amount >= foe.life else (amount * 0.9 if their_end else 0.0)
 			"discard_enemy":
@@ -1651,6 +1678,11 @@ static func ally_death_bonus(st: BattleState, i: int, dying) -> float:
 		for e in src.card.get("effects", []):
 			if e.get("trigger") == "ally_dies" and dying.subtype_has(String(e.get("ally_subtype", ""))):
 				b += 0.6
+	if dying.card.has("reassemble"):
+		b += dying.value() * 0.8          # it comes back from the graveyard
+	for e in dying.card.get("effects", []):
+		if e.get("trigger") == "death" and e.get("action") == "summon":
+			b += 0.8 * int(e.get("count", 1))    # it leaves a body behind
 	return b
 
 
@@ -2103,3 +2135,30 @@ static func _possession_gain(st: BattleState, i: int, a) -> float:
 	if st.step == "end" and st.active != i and dv >= 2.5:
 		return dv * 0.9
 	return 0.0
+
+
+## Which mode of a "choose one" enter trigger: the one that does most now.
+static func pick_mode(st: BattleState, i: int, c: Dictionary, src) -> int:
+	var best := 0
+	var best_v := -1.0
+	var modes: Array = c.get("modes", [])
+	for m in modes.size():
+		var v := 0.0
+		for e in modes[m].get("effects", []):
+			if not BattleState.TARGET_CHOICE_TYPES.has(e.get("target", "")):
+				v += 0.5
+				continue
+			var opts: Array = st.valid_targets_for(i, src, e) if src else st.valid_targets(i, e)
+			if opts.is_empty():
+				continue
+			var a := String(e.get("action", ""))
+			var top := 0.0
+			for ref in opts:
+				var z = st.find_perm(int(ref.get("uid", -1)))
+				if z:
+					top = maxf(top, z.value())
+			v += top * (1.0 if a in ["destroy", "exorcise"] else 0.35)
+		if v > best_v:
+			best_v = v
+			best = m
+	return best

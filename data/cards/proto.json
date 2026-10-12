@@ -581,7 +581,7 @@
     "target": "own_creature"
    }
   ],
-  "text": "As an additional cost to cast this, pay 1 life. Possess target creature you control. It gets +2/+1. Possess (When the possessed creature dies, attach this to another creature you control. If you can't, exile this.) Immortal.",
+  "text": "As an additional cost to cast this, pay 1 life. Enchant target creature you control. Enchanted creature gets +2/+1. Possess (When the possessed creature dies, attach this to another creature you control, or exile it if you control none.) Immortal (If this card would be put into a graveyard from anywhere, exile it instead.)",
   "flavor": "\"Only a little sin, to begin with. They always say yes to a little.\"",
   "art": "res://art/cards/abyss_c_022.webp",
   "proto": true,
@@ -620,7 +620,7 @@
     "target": "own_creature"
    }
   ],
-  "text": "As an additional cost to cast this, sacrifice another creature. Possess target creature you control. It gets +3/+2 and has dread. Possess (When the possessed creature dies, attach this to another creature you control. If you can't, exile this.) Immortal.",
+  "text": "As an additional cost to cast this, sacrifice another creature. Enchant target creature you control. Enchanted creature gets +3/+2 and has dread. Possess (When the possessed creature dies, attach this to another creature you control, or exile it if you control none.) Immortal (If this card would be put into a graveyard from anywhere, exile it instead.)",
   "flavor": "\"Give me one of your men, and I will make another of them a monster.\"",
   "art": "res://art/cards/abyss_c_024.webp",
   "proto": true,
@@ -658,7 +658,7 @@
     "target": "enemy_creature"
    }
   ],
-  "text": "As an additional cost to cast this, discard a card and pay 2 life. Possess target creature an opponent controls. You control it, and it gets +1/+1. When it dies, exile this. Immortal.",
+  "text": "As an additional cost to cast this, discard a card and pay 2 life. Enchant target creature an opponent controls. You control enchanted creature. It gets +1/+1. When it dies, exile this. Immortal.",
   "flavor": "\"He prayed for strength. We gave him ours, and kept the rest of him.\"",
   "art": "res://art/cards/abyss_r_002.webp",
   "proto": true,
@@ -879,7 +879,7 @@
     "amount": 1
    }
   ],
-  "text": "When this turns back into Pilgrim of the Way, create a Testimony. Two-faced: at Crusade it turns over into Crusader of the Way.",
+  "text": "Peacebound (If a player casts two or more spells during his own turn, it becomes Crusade next turn.) When this flips to Pilgrim of the Way, create a Testimony.",
   "flavor": "\"Unless the Lord build the house, they labour in vain that build it.\" (Psalm 126:1)",
   "art": "res://art/cards/sanctum_c_005.webp",
   "keywords": [],
@@ -908,7 +908,7 @@
     "target": "enemy_creature"
    }
   ],
-  "text": "When this turns over into Crusader of the Way, tap target creature an opponent controls. Two-faced: at Peace it turns back into Pilgrim of the Way.",
+  "text": "Crusadebound (If a player casts no spells during his own turn, it becomes Peace next turn.) When this flips to Crusader of the Way, tap target creature an opponent controls.",
   "flavor": "\"Deus vult.\" (the cry at Clermont, 1095)",
   "art": "res://art/cards/sanctum_c_008.webp",
   "keywords": [],
@@ -982,20 +982,42 @@
   },
   "power": 3,
   "toughness": 3,
-  "effects": [
-   {
-    "trigger": "enter",
-    "action": "inquire",
-    "target": "enemy_creature",
-    "subtype": "Heretic"
-   }
-  ],
-  "text": "When Inquisitor of the Holy Office enters, destroy target Heretic an opponent controls. If he controls no Heretic, tap up to two creatures he controls instead.",
+  "effects": [],
+  "text": "When Inquisitor of the Holy Office enters, choose one: • Destroy target Heretic an opponent controls. • Tap up to two target creatures an opponent controls.",
   "flavor": "\"A man that is a heretic, after the first and second admonition, avoid.\" (Titus 3:10)",
   "art": "res://art/cards/sanctum_u_005.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "modes": [
+   {
+    "text": "Destroy target Heretic an opponent controls.",
+    "effects": [
+     {
+      "trigger": "enter",
+      "action": "destroy",
+      "target": "enemy_creature",
+      "subtype": "Heretic"
+     }
+    ]
+   },
+   {
+    "text": "Tap up to two target creatures an opponent controls.",
+    "effects": [
+     {
+      "trigger": "enter",
+      "action": "tap",
+      "target": "enemy_creature"
+     },
+     {
+      "trigger": "enter",
+      "action": "tap",
+      "target": "enemy_creature",
+      "distinct": true
+     }
+    ]
+   }
+  ]
  },
  {
   "id": "proto_c_angel",
@@ -1195,5 +1217,262 @@
   "art": "res://art/cards/abyss_m_001.webp",
   "proto": true,
   "mana_value": 5
+ },
+ {
+  "id": "proto_c_cleansing",
+  "name": "Cleansing of the Temple",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "spell",
+  "subtype": "Blessing",
+  "speed": "instant",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "modes": [
+   {
+    "text": "Destroy target relic an opponent controls.",
+    "effects": [
+     {
+      "trigger": "cast",
+      "action": "destroy_relic",
+      "target": "enemy_relic"
+     }
+    ]
+   },
+   {
+    "text": "Create a Testimony.",
+    "effects": [
+     {
+      "trigger": "cast",
+      "action": "testimony",
+      "amount": 1
+     }
+    ]
+   }
+  ],
+  "text": "Choose one: • Destroy target relic an opponent controls. • Create a Testimony.",
+  "flavor": "\"Take these things hence, and make not the house of my Father a house of traffic.\" (John 2:16)",
+  "art": "res://art/cards/sanctum_c_013.webp",
+  "keywords": [],
+  "effects": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_p_bones",
+  "name": "Restless Bones",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Skeleton Demon",
+  "cost": {
+   "B": 1
+  },
+  "power": 1,
+  "toughness": 1,
+  "reassemble": {
+   "B": 1,
+   "generic": 2
+  },
+  "text": "Reassemble {2}{B} ({2}{B}: Return this card from your graveyard to the battlefield tapped. Use this only as a sorcery.)",
+  "flavor": "Bury them twice, and they climb out twice.",
+  "art": "res://art/cards/abyss_c_010.webp",
+  "keywords": [],
+  "effects": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_p_altar",
+  "name": "Altar of Bones",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Relic",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "abilities": [
+   {
+    "cost": {
+     "sacrifice": "other"
+    },
+    "effects": [
+     {
+      "action": "drain",
+      "amount": 1
+     }
+    ],
+    "text": "Sacrifice a creature: Each opponent loses 1 life and you gain 1 life."
+   }
+  ],
+  "text": "Sacrifice a creature: Each opponent loses 1 life and you gain 1 life.",
+  "flavor": "\"Every bone a coin. Every coin a year.\"",
+  "art": "res://art/cards/abyss_c_019.webp",
+  "keywords": [],
+  "effects": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_p_price",
+  "name": "Price of Damnation",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Curse",
+  "speed": "instant",
+  "cost": {
+   "B": 2,
+   "generic": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy",
+    "target": "enemy_creature",
+    "not_subtype": "Demon"
+   },
+   {
+    "trigger": "cast",
+    "action": "lose_life",
+    "amount": 2
+   }
+  ],
+  "text": "Destroy target creature an opponent controls that isn't a Demon. You lose 2 life.",
+  "flavor": "\"The Pact always collects. Sometimes from you.\"",
+  "art": "res://art/cards/abyss_u_008.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_p_unquiet",
+  "name": "Unquiet Grave",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Necromancy",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "reanimate",
+    "target": "own_grave_creature",
+    "max_mv": 2,
+    "add_subtype": "Zombie Demon"
+   }
+  ],
+  "text": "Return target creature card with mana value 2 or less from your graveyard to the battlefield. It's a Zombie Demon in addition to its other types.",
+  "flavor": "The body rises. Whatever looks out of its eyes is not the man.",
+  "art": "res://art/cards/abyss_c_018.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_p_brute",
+  "name": "Charnel Brute",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Zombie Demon",
+  "cost": {
+   "B": 1,
+   "generic": 3
+  },
+  "power": 4,
+  "toughness": 3,
+  "effects": [
+   {
+    "trigger": "death",
+    "action": "summon",
+    "token": {
+     "name": "Corpse",
+     "power": 1,
+     "toughness": 1,
+     "subtype": "Zombie Demon",
+     "keywords": []
+    },
+    "count": 2
+   }
+  ],
+  "text": "When Charnel Brute dies, create two 1/1 Zombie Demon creature tokens named Corpse.",
+  "flavor": "Stitched from a dozen graves, and it remembers every one.",
+  "art": "res://art/cards/abyss_c_008.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_p_desecration",
+  "name": "Desecration",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Curse",
+  "speed": "instant",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy_relic",
+    "target": "enemy_relic"
+   }
+  ],
+  "text": "Destroy target relic an opponent controls.",
+  "flavor": "\"Holy things break like any other.\"",
+  "art": "res://art/cards/abyss_c_020.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_p_wings",
+  "name": "Wings of the Pit",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Demon Possession",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "attach": "aura",
+  "possess": true,
+  "keywords": [
+   "immortal"
+  ],
+  "extra_cost": {
+   "life": 2
+  },
+  "grants": {
+   "power": 1,
+   "toughness": 1,
+   "keywords": [
+    "flying"
+   ]
+  },
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "attach",
+    "target": "own_creature"
+   }
+  ],
+  "text": "As an additional cost to cast this, pay 2 life. Enchant target creature you control. Enchanted creature gets +1/+1 and has flying. Possess (When the possessed creature dies, attach this to another creature you control, or exile it if you control none.) Immortal (If this card would be put into a graveyard from anywhere, exile it instead.)",
+  "flavor": "\"You wanted to rise above them. Now you will.\"",
+  "art": "res://art/cards/abyss_u_015.webp",
+  "proto": true,
+  "mana_value": 2
  }
 ]

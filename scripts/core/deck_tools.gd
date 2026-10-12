@@ -695,9 +695,9 @@ const PROTO_DECKS := {
 		"proto_c_pilgrim": 3, "proto_c_exorcism": 4, "proto_c_confessor": 3, "proto_c_inquisitor": 2,
 		"proto_c_angel": 1}},
 	"Prototype: Pact, Possession": {"faith": "abyss", "cards": {
-		"proto_p_cultist": 4, "proto_p_covet": 3, "proto_a_whisper": 3, "proto_p_bargain": 2,
-		"proto_a_robber": 2, "proto_a_curse": 2, "proto_a_wrath": 2, "proto_p_hierophant": 2,
-		"proto_p_summoner": 1, "proto_a_hold": 1, "proto_p_azrakel": 1}},
+		"proto_p_cultist": 4, "proto_p_covet": 3, "proto_a_whisper": 3, "proto_p_bones": 2,
+		"proto_a_robber": 2, "proto_a_curse": 1, "proto_p_price": 1, "proto_a_wrath": 2, "proto_p_hierophant": 2,
+		"proto_p_altar": 1, "proto_p_summoner": 1, "proto_a_hold": 1, "proto_p_azrakel": 1}},
 }
 
 

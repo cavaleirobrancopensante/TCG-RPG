@@ -19,7 +19,8 @@ var figures := {}               # uid -> SummonFigure
 var busy := false
 var mode := "idle"              # idle | attack | block | target
 var sel_attackers: Array = []
-var pending_trigger := -1        # uid of our permanent whose "when it enters/turns over" targets we choose
+var pending_trigger := -1        # uid of our permanent whose "when it enters/flips" targets we choose
+var pending_mode := -1           # "choose one": the mode chosen for the card or trigger being targeted
 signal _trigger_done
 var pending_blocks := {}        # attacker uid -> Array of blocker uids (several may block one)
 var block_pick := -1
@@ -1460,9 +1461,19 @@ func _resolve_owed() -> void:
 	if not me.trigger_owed.is_empty():
 		var t: Dictionary = me.trigger_owed[0]
 		var src = st.find_perm(int(t["uid"]))
-		var e: Dictionary = t["e"]
+		var e: Dictionary = t.get("e", {})
+		pending_mode = -1
+		if t.has("modes"):
+			# "When it enters, choose one": the mode first, then its targets on the board
+			var modes: Array = t["modes"]
+			var second: bool = await _ask_two(I18n.t(src.name) if src else I18n.t("Choose one"), I18n.t("Choose one."),
+				I18n.t(String(modes[0].get("text", ""))), I18n.t(String(modes[1].get("text", ""))))
+			pending_mode = 1 if second else 0
 		# chosen on the board like a spell's targets, then confirmed: your creature first for a fight
-		target_specs = ([BattleState.FIGHTER_SPEC] if e.get("action") == "fight" else []) + [e]
+		if pending_mode >= 0:
+			target_specs = Array(t["modes"][pending_mode].get("effects", [])).filter(func(x): return BattleState.TARGET_CHOICE_TYPES.has(x.get("target", "")))
+		else:
+			target_specs = ([BattleState.FIGHTER_SPEC] if e.get("action") == "fight" else []) + [e]
 		chosen_targets = []
 		pending_trigger = src.uid if src else -2
 		pending_hand_idx = -1
@@ -1587,6 +1598,10 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				if fp:
 					f.sync(fp)
 			await _wait(0.4)
+		"reassemble":
+			var rn2 := _card_name(String(e.get("id", "")))
+			_log(I18n.t("You return %s from your graveyard, tapped.") % rn2 if int(e["side"]) == 0 else I18n.t("%s returns %s from the graveyard.") % [st.side(1).name, rn2])
+			_refresh_bars()
 		"unearth":
 			var un := _card_name(String(e.get("id", "")))
 			_log(I18n.t("You unearth %s: it fights this turn, then it is exiled.") % un if int(e["side"]) == 0 \
@@ -1805,10 +1820,10 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			if e.get("begins", false):
 				_log(I18n.t("Peace begins. Two spells cast in one turn bring Crusade; a turn with none brings Peace back."))
 			elif String(e["realm"]) == "crusade":
-				_log(I18n.t("Two spells were cast last turn: Crusade! The two-faced cards turn over."))
+				_log(I18n.t("Two spells were cast last turn: Crusade! The two-faced cards flip."))
 				await _banner(I18n.t("Crusade"))
 			else:
-				_log(I18n.t("No spell was cast last turn: Peace returns. The two-faced cards turn back."))
+				_log(I18n.t("No spell was cast last turn: Peace returns. The two-faced cards flip back."))
 				await _banner(I18n.t("Peace"))
 		"transform":
 			var old_name := _card_name(String(CardDB.get_card(String(e["id"])).get("transform", "")))
@@ -1821,7 +1836,7 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				_burst(tf.global_position + _fsz() * 0.5, Tapestry.GILT, 16)
 			if tp:
 				_remember(tp)
-			_log(_cap(I18n.t("%s turns over: %s.") % [old_name, _card_name(String(e["id"]))]), false)
+			_log(_cap(I18n.t("%s flips: %s.") % [old_name, _card_name(String(e["id"]))]), false)
 		"banished":
 			var bc := CardDB.get_card(String(e["id"]))
 			var bn := _card_name(String(e["id"]))
@@ -2423,6 +2438,15 @@ func _begin_play(idx: int) -> void:
 	pending_hand_idx = idx
 	pending_ability = []
 	pending_overclock = false
+	pending_mode = -1
+	if c.has("modes") and c.get("type") == "spell":
+		# "Choose one": the mode first, then its targets
+		var modes: Array = c["modes"]
+		var second: bool = await _ask_two(_card_name(String(st.side(0).hand[idx])), I18n.t("Choose one."),
+			I18n.t(String(modes[0].get("text", ""))), I18n.t(String(modes[1].get("text", ""))))
+		pending_mode = 1 if second else 0
+		_start_targets(BattleState.mode_card(c, pending_mode))
+		return
 	if not c.get("overclock", {}).is_empty() and st.can_play(0, idx, true):
 		var extra := UIKit.cost_text(c["overclock"].get("cost", {}))
 		_ask(I18n.t("Overclock"), I18n.t("Pay %s more to overclock it?") % extra, I18n.t("Overclock"), I18n.t("Play normally"), func(yes: bool):
@@ -2540,7 +2564,11 @@ func _advance_targeting() -> void:
 		pending_trigger = -1
 		target_specs = []
 		chosen_targets = []
-		st.trigger_choose(0, ref, fighter)
+		if pending_mode >= 0:
+			st.trigger_choose_mode(0, pending_mode, tg2)
+			pending_mode = -1
+		else:
+			st.trigger_choose(0, ref, fighter)
 		refresh()
 		_trigger_done.emit()
 		return
@@ -2560,8 +2588,9 @@ func _advance_targeting() -> void:
 		return
 	var idx := pending_hand_idx
 	pending_hand_idx = -1
-	st.play(0, idx, chosen_targets, pending_overclock)
+	st.play(0, idx, chosen_targets, pending_overclock, pending_mode)
 	pending_overclock = false
+	pending_mode = -1
 	await play_events()
 	await _after_player_action()
 
@@ -3217,6 +3246,14 @@ func _show_graveyard_card(side_i: int, start: int) -> void:
 		if side_i != 0:
 			return []
 		var c := CardDB.get_card(String(st.side(0).graveyard[gi]) if gi < st.side(0).graveyard.size() else "")
+		if c.has("reassemble"):
+			var rok: bool = st.can_reassemble(0, gi) and not busy and mode == "idle"
+			var rwhy := "" if rok else I18n.t("It returns in your own main phase, with the stack empty and the mana to pay.")
+			return [[I18n.t("Return") + " " + CardView.plain_text(CardView.cost_tokens(c["reassemble"])), func():
+				_close_preview()
+				if st.reassemble(0, gi):
+					await play_events()
+					refresh(), rok, true, rwhy]]
 		if not c.has("unearth"):
 			return []
 		var ok: bool = st.can_unearth(0, gi) and not busy and mode == "idle"

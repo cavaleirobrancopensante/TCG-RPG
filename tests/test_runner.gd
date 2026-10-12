@@ -2506,13 +2506,32 @@ func test_redesign() -> void:
 	var cor: BattleState.Perm = st.side(1).creatures.back()
 	st.resolve_effect(0, exo, null, {"kind": "creature", "uid": cor.uid})
 	check(st.find_perm(cor.uid) == null, "Exorcism destroys a Demon (the Corpse)")
-	var inq: Dictionary = CardDB.get_card("proto_c_inquisitor")["effects"][0]
-	st.resolve_effect(0, inq, null, null)
+	var inq_card: Dictionary = CardDB.get_card("proto_c_inquisitor")
+	check(BattleAI.pick_mode(st, 0, inq_card, null) == 0, "the AI's Inquisitor chooses to destroy a Heretic when there is one")
+	st.resolve_effect(0, inq_card["modes"][0]["effects"][0], null, null)
 	check(st.find_perm(man.uid) == null, "the Inquisitor destroys a Heretic")
 	var plain := st._make_perm(1, "wild_c_001", CardDB.get_card("wild_c_001"))
 	st.side(1).creatures.append(plain)
-	st.resolve_effect(0, inq, null, null)
-	check(plain.tapped and st.find_perm(plain.uid) != null, "with no Heretic, the Inquisitor taps instead")
+	check(BattleAI.pick_mode(st, 0, inq_card, null) == 1, "with no Heretic, the AI chooses to tap")
+	st._run_list(0, inq_card["modes"][1]["effects"], null, [])
+	check(plain.tapped and st.find_perm(plain.uid) != null, "the tap mode taps")
+	# Cleansing of the Temple: choose one, as the mode card
+	var cl: Dictionary = BattleState.mode_card(CardDB.get_card("proto_c_cleansing"), 1)
+	check(cl["effects"][0]["action"] == "testimony" and not cl.has("modes"), "a modal card cast in one mode is that mode alone")
+	# Restless Bones reassembles from the graveyard, tapped; the Altar drains
+	st = _duel()
+	_lands(st, 0, "BBBB")
+	st.side(0).graveyard.append("proto_p_bones")
+	check(st.can_reassemble(0, 0) and st.reassemble(0, 0), "Reassemble from the graveyard")
+	var bones: BattleState.Perm = st.side(0).creatures.back()
+	check(bones.tapped and st.side(0).graveyard.is_empty(), "it returns tapped")
+	var altar := st._make_perm(0, "proto_p_altar", CardDB.get_card("proto_p_altar"))
+	st.side(0).relics.append(altar)
+	var lb := st.side(1).life
+	st.priority = 0
+	check(st.activate(0, altar.uid, 0, [], bones.uid), "sacrifice the bones to the Altar")
+	st._force_resolve()
+	check(st.side(1).life == lb - 1 and st.side(0).graveyard.has("proto_p_bones"), "drain 1, and the bones are back in the graveyard to return again")
 	# Veneration: the Angel costs less for each creature card in the graveyard
 	st = _duel()
 	_lands(st, 0, "WW")
