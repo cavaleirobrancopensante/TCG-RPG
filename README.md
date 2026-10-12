@@ -824,3 +824,10 @@ two-for-one creatures, engines and the graveyard as a resource.
   place of the Bargains in Blood and a Withering Curse.
 - Wording follows Magic: two-faced cards are Peacebound and Crusadebound and they flip; no "if
   you can't"; possessions read "Enchant target creature... Enchanted creature gets...".
+
+## Relics as pictures (1.66)
+
+- Relics on the battlefield are small pictures of their art (a token shows its initial) instead
+  of name buttons. Marks on the picture: ✦ an ability you can use now, ◈ a demon possession, →
+  attached to a creature. Tap or hold one to read it.
+- Identical relics stack diagonally, like creatures (three Testimonies take one place).

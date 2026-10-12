@@ -725,10 +725,10 @@ func persistent_arrows() -> Array:
 
 func _relic_pos(uid: int) -> Vector2:
 	for box in [player_relics, enemy_relics]:
-		for i in box.get_child_count():
-			var b: Control = box.get_child(i)
-			if b.has_meta("uid") and int(b.get_meta("uid")) == uid:
-				return b.global_position + b.size * 0.5
+		for st_node in box.get_children():
+			for b in [st_node] + st_node.get_children():
+				if b is Control and b.has_meta("uid") and int(b.get_meta("uid")) == uid:
+					return b.global_position + b.size * 0.5
 	return Vector2.ZERO
 
 
@@ -931,56 +931,141 @@ func _spawn_figure(p, animate: bool) -> SummonFigure:
 	return fig
 
 
+var _relic_keys := ["", ""]      # the relics last drawn per side: rebuilt only when they change
+
+
 func _refresh_relics(i: int) -> void:
 	var box: Container = player_relics if i == 0 else enemy_relics
-	UIKit.clear(box)
 	var list: Array = st.side(i).relics
-	# ours stand in a column at the end of our rank: as tall as a touch target when they fit,
-	# two narrower columns when there are too many for one (the rank never grows taller)
-	var bh := float(UIKit.TARGET)
-	var bw := 150.0
-	if i == 0 and not list.is_empty():
-		var room := minf(_player_row.custom_minimum_size.y, SummonFigure.SIZE.y * fig_zoom + 8.0)
-		var cols := 1 if list.size() * 48.0 - 4.0 <= room else 2
-		player_relics.columns = cols
-		var per_col := ceili(list.size() / float(cols))
-		bh = clampf(room / per_col - 4.0, 44.0, UIKit.TARGET)
-		bw = 150.0 if cols == 1 else 118.0
+	var parts: Array = [fig_zoom, busy, mode]
 	for r in list:
-		var b := Button.new()
-		b.set_meta("uid", r.uid)
-		b.text = "✧ " + I18n.t(r.name)
-		b.custom_minimum_size = Vector2(bw if i == 0 else 0, bh)
-		b.add_theme_font_size_override("font_size", UIKit.FS_MIN)
-		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		b.clip_text = true
-		if i == 1:
-			b.custom_minimum_size.x = minf(200.0, 40.0 + Tapestry.font("book").get_string_size(b.text, HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.FS_MIN).x)
-		var ruid: int = r.uid
-		var rside := i
-		_watch_hold(b, func():
-			if mode == "target" and not busy:
-				_choose_target({"kind": "relic", "uid": ruid})
-			elif mode == "idle" or busy:
-				_show_board(rside, ruid), func(): _show_board(rside, ruid))
-		if _is_valid_target({"kind": "relic", "uid": ruid}):
-			b.modulate = Color(1.4, 1.2, 0.6)
-		var has_ab := false
-		for k in st.abilities_of(r).size():
-			if rside == 0 and st.can_activate(0, ruid, k):
-				has_ab = true
-		if has_ab:
-			b.text = "✦ " + I18n.t(r.name)
-			b.add_theme_color_override("font_color", UIKit.GREEN)
-		if r.attached_to >= 0:
-			var host = st.find_perm(r.attached_to)
-			if host:
-				b.text += " → " + I18n.t(host.name)
-		if BattleState.is_demon(r):
-			b.text = "◈ " + b.text.substr(2)
-			b.add_theme_color_override("font_color", Color(0.5, 0.02, 0.1))
-			b.tooltip_text = I18n.t("A demon possession: hold to read it")
-		box.add_child(b)
+		parts.append([r.uid, r.attached_to, r.tapped, _is_valid_target({"kind": "relic", "uid": r.uid}),
+			i == 0 and range(st.abilities_of(r).size()).any(func(kk): return st.can_activate(0, r.uid, kk))])
+	var rkey := str(parts)
+	if rkey == _relic_keys[i] and (box.get_child_count() > 0) == (not list.is_empty()):
+		return
+	_relic_keys[i] = rkey
+	UIKit.clear(box)
+	# relics are small pictures (tap one to read it), identical ones stacked like creatures
+	var groups: Array = []          # [key, [Perm]]
+	for r in list:
+		var key: String = ("token:" + r.name) if r.is_token else r.card_id
+		var placed := false
+		for g in groups:
+			if g[0] == key and g[1].size() < RELIC_STACK_MAX:
+				g[1].append(r)
+				placed = true
+				break
+		if not placed:
+			groups.append([key, [r]])
+	var tile := float(UIKit.TARGET) if i == 1 else clampf(SummonFigure.SIZE.y * fig_zoom * 0.42, 48.0, 64.0)
+	if i == 0 and not groups.is_empty():
+		var room := minf(_player_row.custom_minimum_size.y, SummonFigure.SIZE.y * fig_zoom + 8.0)
+		var rows := maxi(1, int(room / (tile + 10.0)))
+		player_relics.columns = ceili(groups.size() / float(rows))
+	for g in groups:
+		var stack := _RelicStack.new()
+		var n: int = g[1].size()
+		stack.custom_minimum_size = Vector2(tile + RELIC_STEP.x * (n - 1), tile + absf(RELIC_STEP.y) * (n - 1))
+		for k in range(n - 1, -1, -1):
+			var r = g[1][k]
+			var t := _RelicTile.new()
+			t.set_meta("uid", r.uid)
+			t.scene = self
+			t.uid = r.uid
+			t.size = Vector2(tile, tile)
+			t.custom_minimum_size = Vector2(tile, tile)
+			# the front relic bottom-right, the rest stepping up and to the left (never off the screen's edge)
+			t.position = Vector2(RELIC_STEP.x * (n - 1 - k), absf(RELIC_STEP.y) * (n - 1) + RELIC_STEP.y * k)
+			t.tooltip_text = I18n.t(r.name)
+			var ruid: int = r.uid
+			var rside := i
+			_watch_hold(t, func():
+				if mode == "target" and not busy:
+					_choose_target({"kind": "relic", "uid": ruid})
+				elif mode == "idle" or busy:
+					_show_board(rside, ruid), func(): _show_board(rside, ruid))
+			stack.add_child(t)
+			t.sync(st, r, rside == 0 and not busy and st.abilities_of(r).size() > 0 \
+				and range(st.abilities_of(r).size()).any(func(kk): return st.can_activate(0, ruid, kk)), _is_valid_target({"kind": "relic", "uid": ruid}))
+		box.add_child(stack)
+
+
+const RELIC_STACK_MAX := 4
+const RELIC_STEP := Vector2(9, -7)
+
+
+class _RelicStack extends Control:
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_PASS
+		size_flags_vertical = Control.SIZE_SHRINK_END
+
+
+## A relic on the battlefield: its picture, with marks for an ability you can use (✦), a demon
+## possession (◈) and what it sits on; tap to read it.
+class _RelicTile extends Control:
+	var scene
+	var uid := -1
+	var tex: Texture2D
+	var faction := "machine"
+	var title := ""
+	var usable := false
+	var demon := false
+	var attached := false
+	var target_ok := false
+	var tapped := false
+	var token := false
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_STOP
+
+	func sync(st, r, can_use: bool, valid_target: bool) -> void:
+		faction = String(r.card.get("faction", "machine"))
+		title = String(r.name)
+		token = r.is_token
+		tex = CardView._art_texture(String(r.card.get("art", ""))) if not token else null
+		usable = can_use
+		demon = BattleState.is_demon(r)
+		attached = r.attached_to >= 0
+		target_ok = valid_target
+		tapped = r.tapped
+		queue_redraw()
+
+	func _draw() -> void:
+		var rr := Rect2(Vector2.ZERO, size)
+		var a := 0.6 if tapped else 1.0
+		draw_rect(rr, Color(Tapestry.PARCHMENT_LIGHT, a))
+		if tex:
+			# the middle of the art, cut square
+			var ts := tex.get_size()
+			var side := minf(ts.x, ts.y * 0.8)
+			var src := Rect2((ts.x - side) * 0.5, ts.y * 0.08, side, side)
+			draw_texture_rect_region(tex, rr.grow(-3), src, Color(1, 1, 1, a))
+		else:
+			# a token: a scroll with its first letter
+			var f := Tapestry.font("book")
+			var fs := int(size.y * 0.5)
+			draw_string(f, Vector2(0, size.y * 0.66), title.left(1), HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, Color(Tapestry.RUBRIC, a))
+		var frame := Color(0.5, 0.02, 0.1) if demon else UIKit.faction_ink(faction)
+		draw_rect(rr, Color(frame, a), false, 2.5)
+		if target_ok:
+			draw_rect(rr.grow(-1), Color(Tapestry.GILT, 0.9), false, 3.5)
+		# marks along the bottom: an ability ready, a possession, attached to a creature
+		var marks := ""
+		if usable:
+			marks += "✦"
+		if demon:
+			marks += "◈"
+		elif attached:
+			marks += "→"
+		if marks != "":
+			var f2 := Tapestry.font("book")
+			var ms := maxi(14, int(size.y * 0.3))
+			var w := f2.get_string_size(marks, HORIZONTAL_ALIGNMENT_LEFT, -1, ms).x + 6
+			var mr := Rect2(size.x - w - 2, size.y - ms - 4, w, ms + 2)
+			draw_rect(mr, Color(Tapestry.PARCHMENT_LIGHT, 0.92))
+			draw_string(f2, mr.position + Vector2(3, ms * 0.85), marks, HORIZONTAL_ALIGNMENT_LEFT, -1, ms,
+				Color(UIKit.GREEN if usable else Tapestry.RUBRIC, 1.0))
 
 
 func _refresh_bars() -> void:
