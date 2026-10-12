@@ -127,7 +127,7 @@ func _flip(cv: CardView) -> void:
 	revealed += 1
 	var rar: String = cv.card.get("rarity", "common")
 	if rar in ["rare", "mythic"] or cv.foil:
-		tw.tween_callback(func(): _burst(cv.global_position + cv.size * 0.5, Factions.RARITY_COLOR.get(rar, UIKit.GOLD)))
+		tw.tween_callback(func(): _burst(cv.global_position + cv.size * 0.5, Factions.RARITY_COLOR.get(rar, UIKit.GOLD) if rar in ["rare", "mythic"] else UIKit.GOLD))
 	if revealed >= views.size():
 		btn.text = I18n.t("Next pack" if GameState.pending_boosters > 0 else "Done")
 
