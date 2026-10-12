@@ -2416,6 +2416,44 @@ func test_redesign() -> void:
 	st.side(0).cast_count = 2
 	st._realm_check(0)
 	check(st.side(0).creatures.is_empty(), "the AI's Inquisitor judges a Heretic at once")
+	# several blockers on one attacker: lethal damage to each in order, the rest to the last
+	st = _duel()
+	st.active = 0
+	st.phase = "main1"
+	var att := st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	att.base_p = 3
+	att.base_t = 3
+	att.sick = false
+	st.side(0).creatures.append(att)
+	var g1 := st._make_perm(1, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	var g2 := st._make_perm(1, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	st.side(1).creatures.append_array([g1, g2])
+	st.declare_attackers([att.uid])
+	st.auto_priority = false
+	st.declare_blocks({att.uid: [g1.uid, g2.uid]})
+	check(st.blockers_of(att.uid).size() == 2 and st.blocks[att.uid] == g1.uid, "two blockers on one attacker")
+	if st.phase == "combat":
+		st.combat_damage()
+	check(st.find_perm(att.uid) == null and st.find_perm(g1.uid) == null and st.find_perm(g2.uid) != null and g2.damage == 1,
+		"the attacker kills the first blocker (2), gives the rest (1) to the second, and dies to both")
+	st = _duel()
+	st.active = 0
+	st.phase = "main1"
+	att = st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	att.base_p = 6
+	att.base_t = 6
+	att.sick = false
+	att.keywords.append("trample")
+	st.side(0).creatures.append(att)
+	g1 = st._make_perm(1, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	g2 = st._make_perm(1, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	st.side(1).creatures.append_array([g1, g2])
+	var l1 := st.side(1).life
+	st.declare_attackers([att.uid])
+	st.declare_blocks({att.uid: [g1.uid, g2.uid]})
+	if st.phase == "combat":
+		st.combat_damage()
+	check(st.side(1).creatures.is_empty() and st.side(1).life == l1 - 2 and st.find_perm(att.uid) != null, "trample over two blockers: 2 + 2, then 2 to the player")
 	# a whole AI duel of the two prototype decks finishes
 	var d := DeckTools.proto_decks()
 	st = BattleState.new()
