@@ -1057,7 +1057,7 @@
     "subtype": "Relic",
     "cost": {
       "W": 1,
-      "generic": 2
+      "generic": 3
     },
     "keywords": [],
     "effects": [],

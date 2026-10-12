@@ -529,6 +529,22 @@ static func _theme_value(c: Dictionary, th: Dictionary) -> float:
 			for stc in c.get("statics", []):
 				if stc.get("static", "") == "kinship" and stc.get("subtype", "") == "Relic":
 					v += 1.0
+	# the tribe's payoffs (lords, "for each", "whenever another ... enters/dies") are what makes
+	# a theme deck work: rank them above plain members so the curve keeps room for them
+	var tribe := String(th.get("tribe", ""))
+	if tribe != "" and tribe != "Relic":
+		# lords and tribal statics (anthems, kinship, cost reduction for the tribe) count most
+		for stc in c.get("statics", []):
+			if String(stc.get("subtype", "")) == tribe and stc.get("static", "") in ["anthem", "keyword", "kinship", "cost_reduce"]:
+				v += 1.2
+				break
+		# "whenever another X enters / dies" payoffs a little
+		for e in c.get("effects", []):
+			if String(e.get("ally_subtype", "")) == tribe:
+				v += 0.5
+				break
+		if c.get("legendary", false):
+			v += 0.8
 	return v
 
 

@@ -4239,7 +4239,6 @@
  "Return target enemy creature to its owner's hand. Tax 1. (The enemy player's next non-land card costs {1} more.)": "Devuelve la criatura enemiga objetivo a la mano de su propietario. Tributo 1. (La próxima carta del jugador enemigo que no sea tierra cuesta {1} más.)",
  "{1}, Tap: Foresight 1.": "{1}, Girar: Previsión 1.",
  "{1}, Tap: Foresight 1. (Look at the top card of your library. You may put that card on the bottom.)": "{1}, Girar: Previsión 1. (Mira la carta superior de tu mazo. Puedes ponerla en el fondo.)",
- "{2}, Tap: Tap target enemy creature.": "{2}, Girar: Gira la criatura enemiga objetivo.",
  "Spear of the Second Rank gets +1/+0 for each other Hoplite you control.": "Lanza de la Segunda Fila obtiene +1/+0 por cada otro Hoplita que controlas.",
  "Whenever another Philosopher enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)": "Siempre que otro Filósofo entre bajo tu control, previsión 1. (Mira la carta superior de tu mazo. Puedes ponerla en el fondo.)",
  "When Questioner in the Agora enters, tax 1. (The enemy player's next non-land card costs {1} more.)": "Cuando Inquisidor del Ágora entre, tributo 1. (La próxima carta del jugador enemigo que no sea tierra cuesta {1} más.)",
@@ -4301,7 +4300,6 @@
  "Sacrifice a Servo: Put a +1/+1 counter on target Construct you control.": "Sacrifica un Servo: Pon un contador +1/+1 sobre el Autómata objetivo que controlas.",
  "Whenever Trip-Hammer Automaton attacks, put a +1/+1 counter on it.": "Siempre que Autómata de Martillo Pilón ataque, pon un contador +1/+1 sobre él.",
  "Overclock {2} (You may pay an additional {2} as you play this card.) Put a +1/+1 counter on each creature you control. If this spell was overclocked, put another +1/+1 counter on each creature you control.": "Sobremarcha {2} (Puedes pagar {2} adicional al jugar esta carta.) Pon un contador +1/+1 sobre cada criatura que controlas. Si este hechizo se jugó con Sobremarcha, pon otro contador +1/+1 sobre cada criatura que controlas.",
- "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature.": "Al comienzo de tu mantenimiento, Bobina Galvánica inflige 1 de daño a la criatura enemiga objetivo.",
  "Your Technocracy cards cost {1} less to play. This effect reduces only generic mana.": "Tus cartas de Tecnocracia cuestan {1} menos de jugar. Este efecto solo reduce el maná genérico.",
  "When Clockwork Gaol enters, target enemy creature with power 2 or less can't attack or block until Clockwork Gaol leaves play.": "Cuando Cárcel de Relojería entre, la criatura enemiga objetivo con fuerza 2 o menos no puede atacar ni bloquear hasta que Cárcel de Relojería salga del juego.",
  "Your Construct creature cards cost {1} less to play. This effect reduces only generic mana.": "Tus cartas de criatura Autómata cuestan {1} menos de jugar. Este efecto solo reduce el maná genérico.",
@@ -4331,7 +4329,6 @@
  "Haste (This creature can attack and use Tap abilities the turn it enters.) Idle: At the end of your turn, if Satyr of the Drowsy Vineyard is untapped and didn't attack this turn, put a +1/+1 counter on it.": "Prisa (Esta criatura puede atacar y usar habilidades de Girar el turno en que entra.) Ocio: Al final de tu turno, si Sátiro del Viñedo Soñoliento está enderezado y no atacó este turno, pon un contador +1/+1 sobre él.",
  "When Garlanded Festival Bull enters, creatures you control get +1/+0 until end of turn.": "Cuando Toro de Fiesta Engalanado entre, las criaturas que controlas obtienen +1/+0 hasta el final del turno.",
  "Toast of Fire deals 2 damage to any enemy creature or the enemy player.": "Brindis de Fuego inflige 2 de daño a una criatura enemiga o al jugador enemigo.",
- "Firecracker Garland deals 1 damage to target enemy creature. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.": "Guirnalda de Petardos inflige 1 de daño a la criatura enemiga objetivo. Jolgorio: Si ya jugaste otra carta que no sea tierra este turno, también inflige 1 de daño al jugador enemigo.",
  "Spilled Brandy deals 1 damage to any enemy creature or the enemy player. Then rummage. (Draw a card, then discard a card.)": "Aguardiente Derramado inflige 1 de daño a una criatura enemiga o al jugador enemigo. Luego rebusca. (Roba una carta y luego descarta una carta.)",
  "Creatures you control get +1/+0 until end of turn. Carouse: If you've played another non-land card this turn, they get an additional +1/+0 until end of turn.": "Las criaturas que controlas obtienen +1/+0 hasta el final del turno. Jolgorio: Si ya jugaste otra carta que no sea tierra este turno, obtienen un +1/+0 adicional hasta el final del turno.",
  "Flaming Flagon deals 3 damage to the enemy player.": "Jarra Flamígera inflige 3 de daño al jugador enemigo.",
@@ -4747,5 +4744,8 @@
  "Everyone starts duels with 15 life (and Devotion adds more to yours) and draws 7 cards.": "Todos empiezan los duelos con 15 de vida (la Devoción aumenta la tuya) y roban 7 cartas.",
  "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.": "Ensangrentado: Mientras tengas 5 o menos de vida, Necrófago Famélico obtiene +2/+1.",
  "%d gold for ending the duel above your full life": "%d de oro por terminar el duelo por encima de tu vida máxima",
- "%d gold for ending the duel above your full life.": "%d de oro por terminar el duelo por encima de tu vida máxima."
+ "%d gold for ending the duel above your full life.": "%d de oro por terminar el duelo por encima de tu vida máxima.",
+ "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature. If that creature has flying, it deals 2 damage instead.": "Al comienzo de tu mantenimiento, Bobina Galvánica inflige 1 de daño a la criatura enemiga objetivo. Si esa criatura tiene vuelo, inflige 2 de daño en su lugar.",
+ "{2}, Tap: Tap target enemy creature. If that creature has flying, freeze it instead. (It doesn't untap during its controller's next untap step.)": "{2}, Girar: Gira la criatura enemiga objetivo. Si esa criatura tiene vuelo, congélala en su lugar. (No se endereza en el siguiente paso de enderezar de su controlador.)",
+ "Firecracker Garland deals 1 damage to target enemy creature. If that creature has flying, it deals 3 damage instead. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.": "Guirnalda de Petardos inflige 1 de daño a la criatura enemiga objetivo. Si esa criatura tiene vuelo, inflige 3 de daño en su lugar. Jolgorio: Si ya jugaste otra carta que no sea tierra este turno, también inflige 1 de daño al jugador enemigo."
 }

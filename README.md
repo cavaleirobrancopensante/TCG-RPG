@@ -642,3 +642,14 @@ under *Export → Resources → Filters to export non-resource files*.
 
 - Win a duel above your full life (lifelink, healing) and the surplus, which never carries to the
   road, pays 2 gold per point over, for at most 10 points (20 gold), scaled by difficulty.
+
+## Balance at 15 life (1.48)
+
+- Answers to fliers, each faith in its own way: Firecracker Garland deals 3 to a flier (Revel
+  burn), Harbour Chain freezes a flier (the Stoa's tapping), Galvanic Coil deals 2 to a flier
+  each upkeep (a Technocracy ballista). Icon of the Heavenly Host costs {3}{W}.
+- Bodies raised to rate: Coppiced Hazel 1/3, Green Man of the Hedgerow 3/4, Elder of the Oak
+  Circle 3/4, Plague-Pit Shambler 2/2, Gravepit Ghoul 3/3.
+- Wanderers' themed decks now rank their tribe's lords and payoffs higher, so a Treefolk deck
+  brings its Treefolk lords.
+- AI-vs-AI themes now run from 44% to 62% (Church Angels 56%); the middle duel ends in round 7.

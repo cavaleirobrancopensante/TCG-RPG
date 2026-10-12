@@ -630,7 +630,7 @@
       "G": 1,
       "generic": 1
     },
-    "power": 0,
+    "power": 1,
     "toughness": 3,
     "keywords": [],
     "effects": [],
@@ -907,7 +907,7 @@
       "G": 1,
       "generic": 3
     },
-    "power": 2,
+    "power": 3,
     "toughness": 4,
     "keywords": [],
     "effects": [
@@ -940,7 +940,7 @@
       "G": 1,
       "generic": 3
     },
-    "power": 2,
+    "power": 3,
     "toughness": 4,
     "keywords": [],
     "effects": [],
