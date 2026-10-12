@@ -21,7 +21,7 @@ const ABILITY_ICONS := {"ability": "⚙", "attack": "⚔", "death": "⚰", "upke
 const ICON_HELP := [["✈", "Flying"], ["R", "Reach"], ["»", "Haste"], ["♥", "Lifelink"], ["☠", "Deathtouch"],
 	["◉", "Vigilance"], ["T", "Trample"], ["▣", "Defender"], ["✝", "Martyr"], ["✚", "Sanctified"], ["☾", "Dread"],
 	["♻", "Regenerate"], ["‼", "First strike"], ["◆", "Unmoved"], ["∞", "Immortal: exiled instead of going to the graveyard"], ["✠", "converted: can't attack or block"],
-	["⟳", "two-faced: turns over with Peace and Crusade"], ["◈", "possessed by a demon"],
+	["⟳", "two-faced: flips with Peace and Crusade"], ["◈", "possessed by a demon"],
 	["⚙", "an ability you can use (tap it to see it)"], ["⚔", "does something when it attacks (Charge too)"],
 	["⚰", "does something when it dies"], ["☀", "does something at the beginning of your upkeep"],
 	["☕", "Idle: does something if it rests at the end of your turn"], ["✦", "does something when another of its kind enters or dies"],

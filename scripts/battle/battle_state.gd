@@ -722,6 +722,14 @@ func _resolve_card(it: Dictionary) -> void:
 				_enter_for_player(i, p, _enter_list(p.card), targets)
 			else:
 				_run_effects(i, p.card, "enter", p, targets, true)
+			if p.card.has("modes") and phase != "over" and find_perm(p.uid):
+				# "When it enters, choose one": the player chooses after it is in play
+				if s.interactive:
+					s.trigger_owed.append({"uid": p.uid, "modes": p.card["modes"]})
+					emit({"type": "owe_trigger", "side": i, "uid": p.uid})
+				else:
+					var m := BattleAI.pick_mode(self, i, p.card, p)
+					_run_list(i, p.card["modes"][m].get("effects", []), p, [], false)
 			if phase != "over":
 				_entered(p)
 			if overclock and phase != "over":
@@ -1315,6 +1323,36 @@ func unearth(i: int, gi: int) -> bool:
 	return true
 
 
+## Reassemble: pay to return this creature card from your graveyard to the battlefield tapped
+## (sorcery speed). Unlike Unearth it stays.
+func can_reassemble(i: int, gi: int) -> bool:
+	var s := side(i)
+	if gi < 0 or gi >= s.graveyard.size() or not sorcery_time(i):
+		return false
+	var c := CardDB.get_card(s.graveyard[gi])
+	return c.has("reassemble") and c.get("type") == "creature" and can_pay(i, c["reassemble"])
+
+
+func reassemble(i: int, gi: int) -> bool:
+	if not can_reassemble(i, gi):
+		return false
+	var s := side(i)
+	var id: String = s.graveyard[gi]
+	var c := CardDB.get_card(id)
+	pay(i, c["reassemble"])
+	s.graveyard.remove_at(gi)
+	var p := _make_perm(i, id, c)
+	p.tapped = true
+	s.creatures.append(p)
+	emit({"type": "reassemble", "side": i, "uid": p.uid, "id": id})
+	emit({"type": "summon", "side": i, "uid": p.uid, "id": id, "from_stack": false})
+	_run_effects(i, c, "enter", p, [], true)
+	if phase != "over":
+		_entered(p)
+	check_state()
+	return true
+
+
 ## Target types the player must pick for this card, in order (one per effect needing it).
 func target_specs(card: Dictionary, overclock: bool = false) -> Array:
 	var specs := []
@@ -1399,6 +1437,8 @@ func _passes_filters(p: Perm, e: Dictionary) -> bool:
 		return false
 	if e.has("subtypes") and not Array(e["subtypes"]).any(func(w): return p.subtype_has(String(w))):
 		return false
+	if e.has("not_subtype") and p.subtype_has(String(e["not_subtype"])):
+		return false
 	if e.has("not_uid") and p.uid == int(e["not_uid"]):
 		return false
 	return true
@@ -1472,12 +1512,14 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 
 ## Play a card from hand. `targets` = one ref per entry of target_specs() (may be shorter;
 ## missing ones are auto-chosen). Returns false if illegal.
-func play(i: int, hand_idx: int, targets: Array = [], overclock: bool = false) -> bool:
+func play(i: int, hand_idx: int, targets: Array = [], overclock: bool = false, mode: int = -1) -> bool:
 	if not can_play(i, hand_idx, overclock):
 		return false
 	var s := side(i)
 	var id: String = s.hand[hand_idx]
 	var c := CardDB.get_card(id)
+	if c.has("modes") and c.get("type") == "spell":
+		c = mode_card(c, maxi(0, mode))      # "Choose one": the chosen mode is the spell
 	var extra: Dictionary = c.get("overclock", {}).get("cost", {}) if overclock else {}
 	if c.get("type") == "land":
 		s.hand.remove_at(hand_idx)
@@ -1536,6 +1578,11 @@ func _event_targets(it: Dictionary) -> Array:
 func has_useful_targets(i: int, c: Dictionary) -> bool:
 	if c.get("type") != "spell":
 		return true
+	if c.has("modes"):
+		for m in c["modes"].size():
+			if has_useful_targets(i, mode_card(c, m)):
+				return true
+		return false
 	_with_source(c)
 	var needs := 0
 	var found := 0
@@ -1677,6 +1724,17 @@ func _realm_check(prev: int) -> void:
 				if phase == "over":
 					return
 	check_state()
+
+
+## A modal card ("Choose one") as the chosen mode alone: its effects are that mode's.
+static func mode_card(c: Dictionary, m: int) -> Dictionary:
+	var d := c.duplicate()
+	var modes: Array = c.get("modes", [])
+	m = clampi(m, 0, maxi(0, modes.size() - 1))
+	d["effects"] = c.get("effects", []) + (modes[m].get("effects", []) if not modes.is_empty() else [])
+	d.erase("modes")
+	d["mode"] = m
+	return d
 
 
 ## Is an effect on now? One that needs Peace or Crusade is not there at all in the other state
@@ -1880,10 +1938,29 @@ func _possessed(host: Perm) -> void:
 				resolve_effect(src.owner, e, src, null)
 
 
+## The player's mode and targets for a waiting "choose one" trigger.
+func trigger_choose_mode(i: int, m: int, refs: Array) -> void:
+	var s := side(i)
+	if s.trigger_owed.is_empty():
+		return
+	var t: Dictionary = s.trigger_owed.pop_front()
+	var src := find_perm(int(t["uid"]))
+	var modes: Array = t.get("modes", [])
+	if modes.is_empty():
+		return
+	if src:
+		_with_source(src.card)
+	_run_list(i, modes[clampi(m, 0, modes.size() - 1)].get("effects", []), src, refs, true)
+	check_state()
+
+
 ## The player's target for a waiting trigger (null: none / let the game pick).
 func trigger_choose(i: int, ref, fighter_uid: int = -1) -> void:
 	var s := side(i)
 	if s.trigger_owed.is_empty():
+		return
+	if s.trigger_owed[0].has("modes"):
+		trigger_choose_mode(i, 0, [ref])
 		return
 	var t: Dictionary = s.trigger_owed.pop_front()
 	var src := find_perm(int(t["uid"]))
@@ -2493,6 +2570,10 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 			if best != "":
 				me.graveyard.erase(best)
 				var rp := _make_perm(i, best, CardDB.get_card(best))
+				if e.has("add_subtype"):
+					# raised by necromancy: a Demon now wears the body
+					rp.card = rp.card.duplicate()
+					rp.card["subtype"] = (String(rp.card.get("subtype", "")) + " " + String(e["add_subtype"])).strip_edges()
 				me.creatures.append(rp)
 				emit({"type": "summon", "side": i, "uid": rp.uid, "id": best, "reanimated": true})
 				_entered(rp)
