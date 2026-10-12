@@ -670,3 +670,8 @@ under *Export → Resources → Filters to export non-resource files*.
   practice decks; they are kept for next time.
 - Nothing of your saved game is touched: no life, gold, cards or death, and leaving a practice
   duel costs nothing.
+
+## Random decks in Quick duel (1.51)
+
+- Each side of Quick duel can be set to Random deck: any of the decks is drawn when the duel
+  starts (the two sides never draw the same one). The duel shows both decks' names.
