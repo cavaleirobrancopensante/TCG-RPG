@@ -58,6 +58,8 @@ func _load_file(path: String) -> void:
 			continue
 		_normalise(c)
 		cards[id] = c
+		if c.get("proto", false):
+			continue          # prototype cards: only in the quick duel's prototype decks
 		var f: String = c["faction"]
 		var r: String = c["rarity"]
 		if pools.has(f) and pools[f].has(r):
@@ -128,7 +130,7 @@ func is_land(id: String) -> bool:
 func all_set_ids() -> Array:
 	var out := []
 	for id in cards:
-		if not is_land(id):
+		if not is_land(id) and not cards[id].get("proto", false):
 			out.append(id)
 	out.sort()
 	return out

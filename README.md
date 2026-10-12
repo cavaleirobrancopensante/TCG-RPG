@@ -710,3 +710,27 @@ under *Export → Resources → Filters to export non-resource files*.
 
 - The rarity gem on each card follows Magic: black for common, silver for uncommon, gold for rare,
   orange for mythic (commons were grey before, easy to mistake for uncommon).
+
+## Redesign prototype: Peace and Crusade, possession (1.57)
+
+Two test decks for the ground-up redesign, in Quick duel under "Prototype decks". Their cards
+live in data/cards/proto.json and are outside every pool (no drafts, shops or campaign decks).
+
+- **Peace and Crusade** (Magic's day and night, renamed): one state for the whole table. Peace
+  begins when the first two-faced card appears. At the start of each turn, at Peace, if the player
+  whose turn just ended cast two or more spells in it, Crusade begins; at Crusade, if he cast none,
+  Peace returns. Every two-faced card turns over with it: defence at Peace (a 1/3), attack on
+  Crusade (a 3/1). Damage, counters and possessions stay. The mark in the middle bar shows the
+  state (an olive branch, a sword). Tap a two-faced card anywhere (hand, board, lists) or ⟳ to
+  read its other face.
+- **Immortal** (angels, demons, possessions): if it would go to a graveyard from anywhere, it is
+  exiled instead. Angels return to Heaven, demons are cast back into Hell.
+- **Demons**: everything fantastical but the angels. Most of the Pact's are **possessions**,
+  relics that sit on a creature and make it stronger, paid for with life, a sacrifice or a
+  discard. **Possess**: when the host dies, the demon moves to another creature of its master
+  (you choose), or is exiled if there is none. Legion's Hold possesses an enemy creature and takes
+  control of it; destroying the Hold frees him.
+- **Exorcisms** can't be countered and destroy Demons: a Demon creature, or a possession (the host
+  stays, freed). On Crusade, Exorcism of the Way also takes every tapped Demon; Great Exorcism
+  destroys all Demons.
+- In AI against AI the Church wins about 62% of the duels (tests/proto_duel.tscn).

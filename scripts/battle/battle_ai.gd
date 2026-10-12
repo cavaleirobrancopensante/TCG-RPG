@@ -436,7 +436,7 @@ static func _face_damage(c: Dictionary) -> int:
 
 
 static func _self_cost_life(c: Dictionary) -> int:
-	var n := 0
+	var n := int(c.get("extra_cost", {}).get("life", 0))
 	var trig := "cast" if c.get("type") == "spell" else "enter"
 	for e in c.get("effects", []):
 		if e.get("trigger") == trig and e.get("action") == "lose_life":
@@ -575,6 +575,13 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 	for e in c.get("effects", []):
 		if e.get("trigger") == "upkeep" and e.get("action") == "lose_life" and me.life <= 4:
 			return [0.0, []]
+	var xc: Dictionary = c.get("extra_cost", {})
+	v -= 1.2 * int(xc.get("discard", 0))
+	if xc.get("sacrifice", false):
+		var cheapest := 99.0
+		for q in me.creatures:
+			cheapest = minf(cheapest, q.value() + (0.0 if q.is_token else 2.0))
+		v -= cheapest * 0.6
 	for e in c.get("effects", []):
 		if e.get("trigger") == "ally_dies":
 			# a small bonus for each ally of that tribe that may die later
@@ -605,6 +612,10 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 					var host = equip_target(st, i, c)
 					if host != null:
 						chosen = host
+				if c.get("steal", false) and chosen != null:
+					var held = st.find_perm(int(chosen.get("uid", -1)))
+					if held:
+						v += held.value() * 1.5
 				targets.append(chosen)
 				continue
 			"damage":
@@ -626,12 +637,23 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 					elif is_spell and foe.life > amount * 3 and not foe.creatures.is_empty():
 						v -= 2.0               # keep burn for a creature unless the player is low
 			"destroy":
-				if chosen != null:
+				if t == "all_demons":
+					# a mass exorcism: worth it when it takes more of theirs than of ours
+					var net := 0.0
+					for k in 2:
+						for q in st.side(k).creatures + st.side(k).relics:
+							if BattleState.is_demon(q):
+								net += demon_value(st, q) * (1.0 if k != i else -1.0)
+					if net < 3.0:
+						return [0.0, []]
+					v += net
+				elif chosen != null:
 					var p := st.find_perm(chosen["uid"])
 					if p:
-						if is_spell and p.value() < 2.5 and me.hand.size() < 6:
+						var pv := demon_value(st, p) if t == "enemy_demon" else p.value()
+						if is_spell and pv < 2.5 and me.hand.size() < 6:
 							return [0.0, []]   # save removal for a real threat
-						v += p.value()
+						v += pv
 			"bounce":
 				if chosen != null:
 					var p := st.find_perm(chosen["uid"])
@@ -1122,7 +1144,9 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 		if t == "own_grave_creature" and a != "regrow":
 			return [0.0, []]
 		if e.has("condition") and not st.cond_ok(i, String(e["condition"]), source):
-			return [0.0, []]
+			if BattleState.TARGET_CHOICE_TYPES.has(t):
+				return [0.0, []]
+			continue            # a bonus that does not apply now; the rest of the card may help
 		var per := 1
 		if e.has("amount_per"):
 			per = st.count_kin(i, String(e["amount_per"]))
@@ -1215,15 +1239,20 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 						if int(BattleState.fly_eff(e, z).get("amount", amount)) >= z.toughness() - z.damage:
 							v += _removal_gain(st, i, z, top, true)
 			"destroy":
-				if t == "enemy_creature":
+				if t == "enemy_creature" or t == "enemy_demon":
 					var best_g := 0.0
 					for ref in st.valid_targets(i, e):
 						var z = st.find_perm(ref["uid"])
-						var g := _removal_gain(st, i, z, top)
+						var g := _removal_gain(st, i, z, top) if z.is_creature() else _possession_gain(st, i, z)
 						if g > best_g:
 							best_g = g
 							chosen = ref
 					v += best_g
+				elif t == "all_tapped_enemy_demons":
+					for ref in st._expand_targets(i, t, null, null):
+						var z = st.find_perm(int(ref.get("uid", -1)))
+						if z != null:
+							v += demon_value(st, z) * 0.8
 				else:
 					return [0.0, []]
 			"bounce":
@@ -1790,15 +1819,18 @@ static func held_instant(st: BattleState, i: int) -> Dictionary:
 				if foe.hand.size() >= 1:
 					v = maxf(v, 1.6 + 0.2 * mini(4, foe.hand.size()))
 				continue
-			if t in ["enemy_creature", "any_enemy"] and a in ["destroy", "damage", "buff", "bounce"]:
+			if t in ["enemy_creature", "any_enemy", "enemy_demon"] and a in ["destroy", "damage", "buff", "bounce"]:
 				if a == "buff" and int(e.get("toughness", 0)) >= 0:
 					continue
 				var top := 0.0
 				for ref in st.valid_targets(i, e):
-					if ref.get("kind") != "creature":
+					if ref.get("kind") != "creature" and t != "enemy_demon":
 						continue
 					var z := st.find_perm(int(ref["uid"]))
 					if z == null:
+						continue
+					if t == "enemy_demon":
+						top = maxf(top, demon_value(st, z))
 						continue
 					var kills := true
 					if a == "damage":
@@ -1980,3 +2012,36 @@ static func _best_fight(st: BattleState, i: int, e: Dictionary) -> Array:
 			if g > float(best[0]):
 				best = [g, {"kind": "creature", "uid": x.uid}, zref]
 	return best
+
+
+# ============================================================ demons and possessions
+
+## What a Demon is worth to its side: a creature's own value; a possession's, what it gives its
+## host (and the whole host, when it stole him).
+static func demon_value(st: BattleState, p) -> float:
+	if p == null:
+		return 0.0
+	if p.is_creature():
+		return p.value()
+	var g: Dictionary = p.card.get("grants", {})
+	var v: float = 1.0 + int(g.get("power", 0)) + int(g.get("toughness", 0)) * 0.5 + g.get("keywords", []).size() * 0.7
+	var host = st.find_perm(p.attached_to)
+	if host != null and p.card.get("steal", false):
+		v += host.value() * 1.5
+	return v
+
+
+## Exorcising a possession now: always when it holds one of ours; otherwise in combat or at the
+## end of their turn, like other removal.
+static func _possession_gain(st: BattleState, i: int, a) -> float:
+	var host = st.find_perm(a.attached_to)
+	if host == null:
+		return 0.0
+	var dv := demon_value(st, a)
+	if a.card.get("steal", false):
+		return dv + 1.0
+	if st.attackers.has(host.uid) or st.blocks.values().has(host.uid) or st.blocks.has(host.uid):
+		return dv + host.power() * 0.3
+	if st.step == "end" and st.active != i and dv >= 2.5:
+		return dv * 0.9
+	return 0.0

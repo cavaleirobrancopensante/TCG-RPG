@@ -177,7 +177,7 @@ func _fill() -> void:
 			var d: Dictionary = a[i]
 			if d["kind"] != last_kind:
 				last_kind = d["kind"]
-				var g: String = {"mine": "Your practice decks", "theme": "Theme decks (the wanderers' decks)", "pair": "Two-faith decks"}[last_kind]
+				var g: String = {"mine": "Your practice decks", "proto": "Prototype decks (the redesign, to try out)", "theme": "Theme decks (the wanderers' decks)", "pair": "Two-faith decks"}[last_kind]
 				box.add_child(UIKit.label(g, UIKit.FS_SECONDARY, UIKit.GOLD))
 			var ix: int = i
 			var sd: int = side

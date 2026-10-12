@@ -7,7 +7,7 @@ extends RefCounted
 const OPENING_HAND := 7         # everyone draws seven, whatever the stats
 const START_HAND := 7           # the most cards kept at the end of a turn; Reason lets the hero keep more
 const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
-const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature"]
+const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "enemy_demon"]
 
 
 class Perm:
@@ -39,6 +39,8 @@ class Perm:
 	var entered_turn := 0
 	var uses := {}             # ability index -> uses this turn
 	var attached_to := -1      # auras and equipment: the uid of the creature they are on
+	var base_owner := 0        # whose card it is (owner is who controls it now: a possession may steal it)
+	var front_id := ""         # a two-faced card's front face: what goes to the graveyard or a hand
 
 	func _state() -> BattleState:
 		return st.get_ref() if st else null
@@ -93,6 +95,8 @@ class BattleSide:
 	var foresight_cards: Array = []  # interactive: cards lifted off the top, waiting for a decision
 	var leak_owed := {}            # interactive: {"item", "amount"}: pay to keep a spell from being countered
 	var charge_owed := {}          # interactive: {"n", "subtype"}: Charge boons still to choose
+	var exile: Array = []          # exiled cards (Immortal spirits, unearthed creatures)
+	var possess_owed: Array = []   # interactive: possessions (uids) whose host died, waiting for a new one
 
 
 var sides: Array = []
@@ -116,6 +120,12 @@ var mulligans := [0, 0]     # how many times each side has redrawn
 var kept := [false, false]  # opening hand accepted
 var cur_faction := ""       # faith of the card or ability now resolving (for sanctified)
 var cur_faction2 := ""
+
+## Peace and Crusade (Magic's day and night, renamed): one state for the whole table. "" until
+## the first two-faced card appears, then "peace". At the start of each turn: at Peace, if the
+## player whose turn just ended cast two or more spells in it, Crusade; at Crusade, if he cast
+## none, Peace. Every two-faced card on the battlefield turns over when it changes.
+var realm := ""
 
 ## The faith a side mostly plays (used for token colours from spells).
 var side_faction := ["machine", "machine"]
@@ -258,6 +268,8 @@ func side(i: int) -> BattleSide:
 
 
 func begin_turn() -> void:
+	if turn > 1 and realm != "":
+		_realm_check(1 - active)
 	var s := side(active)
 	s.land_played = false
 	s.cast_count = 0
@@ -370,7 +382,7 @@ func open_main_window() -> void:
 ## Interactive choices still open for side i (the screen asks for them before going on).
 func has_owed(i: int) -> bool:
 	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty() or side(i).martyr_owed > 0 \
-		or not side(i).leak_owed.is_empty() or not side(i).charge_owed.is_empty()
+		or not side(i).leak_owed.is_empty() or not side(i).charge_owed.is_empty() or not side(i).possess_owed.is_empty()
 
 
 ## The player discards hand card `idx` for a rummage.
@@ -380,7 +392,7 @@ func discard_owed(i: int, idx: int) -> void:
 		return
 	var gone: String = s.hand[idx]
 	s.hand.remove_at(idx)
-	s.graveyard.append(gone)
+	_bury(i, gone)
 	s.owed_discards -= 1
 	emit({"type": "discard", "side": i, "id": gone})
 
@@ -463,7 +475,7 @@ func end_turn() -> void:
 			break
 		var gone: String = me.hand[idx]
 		me.hand.remove_at(idx)
-		me.graveyard.append(gone)
+		_bury(active, gone)
 		emit({"type": "discard", "side": active, "id": gone})
 	for sd in sides:
 		for p in sd.creatures:
@@ -695,8 +707,8 @@ func _resolve_card(it: Dictionary) -> void:
 		"creature":
 			var p := _make_perm(i, id, c)
 			s.creatures.append(p)
-			emit({"type": "summon", "side": i, "uid": p.uid, "id": id, "from_stack": true})
-			_run_effects(i, c, "enter", p, targets, true)
+			emit({"type": "summon", "side": i, "uid": p.uid, "id": p.card_id, "from_stack": true})
+			_run_effects(i, p.card, "enter", p, targets, true)
 			if phase != "over":
 				_entered(p)
 			if overclock and phase != "over":
@@ -712,7 +724,7 @@ func _resolve_card(it: Dictionary) -> void:
 			if c.get("attach", "") == "aura" and r.attached_to < 0 and find_perm(r.uid):
 				# an aura with no creature to enchant falls away
 				s.relics.erase(r)
-				s.graveyard.append(id)
+				_bury(i, id)
 				emit({"type": "die", "uid": r.uid, "side": i, "sacrifice": false})
 			if overclock and phase != "over":
 				emit({"type": "overclock", "side": i, "uid": r.uid})
@@ -732,7 +744,7 @@ func _resolve_card(it: Dictionary) -> void:
 				_run_list(i, cast_list, null, targets, true)
 				if overclock and phase != "over":
 					_run_list(i, oc_list, null, oc_targets, true)
-			s.graveyard.append(id)
+			_bury(i, id)
 	_resolving_cast_side = -1
 
 
@@ -789,6 +801,10 @@ func cond_ok(i: int, cond: String, source = null) -> bool:
 			return s.hand.size() >= 4
 		"rooted":
 			return s.lands.size() >= 6
+		"peace":
+			return realm == "peace"
+		"crusade":
+			return realm == "crusade"
 		"bloodied":
 			# 5 or less life (half of the usual 10 a duel starts with)
 			return s.life <= 5
@@ -1111,6 +1127,8 @@ func can_play(i: int, hand_idx: int, overclock: bool = false) -> bool:
 		return false
 	if legend_in_play(i, c):
 		return false
+	if not extra_cost_ok(i, c):
+		return false
 	return can_pay(i, effective_cost(i, c, extra))
 
 
@@ -1201,7 +1219,7 @@ func counter_target(i: int, c: Dictionary) -> Dictionary:
 			filt = String(e.get("filter", "any"))
 	for k in range(stack.size() - 1, -1, -1):
 		var it: Dictionary = stack[k]
-		if int(it["side"]) != i and counter_fits(it, filt):
+		if int(it["side"]) != i and counter_fits(it, filt) and not it.get("card", {}).get("uncounterable", false):
 			return it
 	return {}
 
@@ -1211,7 +1229,7 @@ func _countered(it: Dictionary) -> void:
 	stack.erase(it)
 	var j := int(it["side"])
 	if not it.has("token"):
-		side(j).graveyard.append(String(it["id"]))
+		_bury(j, String(it["id"]))
 	emit({"type": "counter", "sid": it["sid"], "side": j, "id": it["id"]})
 
 
@@ -1341,6 +1359,14 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 		"enemy_relic":
 			for r in enemy.relics:
 				out.append({"kind": "relic", "uid": r.uid})
+		"enemy_demon":
+			# a Demon creature, or a possession (a Demon on a host)
+			for p in enemy.creatures:
+				if is_demon(p) and _passes_filters(p, e):
+					out.append({"kind": "creature", "uid": p.uid})
+			for r in enemy.relics:
+				if is_demon(r):
+					out.append({"kind": "relic", "uid": r.uid})
 		"own_grave_creature":
 			var cap := int(e.get("max_mv", 99))
 			for gid in me.graveyard:
@@ -1379,6 +1405,7 @@ func play(i: int, hand_idx: int, targets: Array = [], overclock: bool = false) -
 	s.tax = 0
 	s.hand.remove_at(hand_idx)
 	s.cast_count += 1
+	_pay_extra(i, c, targets)
 	var item := {"sid": _next_sid, "kind": "card", "side": i, "id": id, "card": c,
 		"targets": targets.duplicate(), "overclock": overclock}
 	_next_sid += 1
@@ -1418,10 +1445,25 @@ func has_useful_targets(i: int, c: Dictionary) -> bool:
 
 
 func _make_perm(i: int, id: String, c: Dictionary) -> Perm:
+	var front := id
+	if c.has("transform") or c.has("front"):
+		# a two-faced card: the first one to appear begins Peace; it enters on the face of the state
+		if c.has("front"):
+			front = String(c["front"])
+			c = CardDB.get_card(front)
+			id = front
+		if realm == "":
+			realm = "peace"
+			emit({"type": "realm", "realm": realm, "begins": true})
+		if realm == "crusade" and c.has("transform"):
+			id = String(c["transform"])
+			c = CardDB.get_card(id)
 	var p := Perm.new()
 	p.uid = _next_uid
 	_next_uid += 1
 	p.owner = i
+	p.base_owner = i
+	p.front_id = front
 	p.card_id = id
 	p.card = c
 	p.st = weakref(self)
@@ -1486,6 +1528,198 @@ func find_perm(uid: int) -> Perm:
 			if p.uid == uid:
 				return p
 	return null
+
+
+# ============================================================ Peace and Crusade, Immortal, possession
+
+## What goes to a graveyard or a hand for this permanent: a two-faced card's front face.
+func _front_of(p: Perm) -> String:
+	return p.front_id if p.front_id != "" else p.card_id
+
+
+## A card goes to its owner's graveyard, or, Immortal (angels, demons), into exile instead.
+func _bury(owner_i: int, id: String, c: Dictionary = {}) -> void:
+	if c.is_empty():
+		c = CardDB.get_card(id)
+	if c.has("front"):
+		id = String(c["front"])
+	if c.get("keywords", []).has("immortal"):
+		side(owner_i).exile.append(id)
+		emit({"type": "banished", "side": owner_i, "id": id})
+		return
+	side(owner_i).graveyard.append(id)
+
+
+## The state at the start of a turn, looking at the turn that just ended (prev's).
+func _realm_check(prev: int) -> void:
+	var n := side(prev).cast_count
+	var was := realm
+	if realm == "peace" and n >= 2:
+		realm = "crusade"
+	elif realm == "crusade" and n == 0:
+		realm = "peace"
+	if realm == was:
+		return
+	emit({"type": "realm", "realm": realm, "spells": n, "side": prev})
+	for sd in sides:
+		for p in sd.creatures.duplicate() + sd.relics.duplicate():
+			if find_perm(p.uid) != null and p.card.has("transform") and _face_fits(p.card) == false:
+				_transform(p)
+				if phase == "over":
+					return
+	check_state()
+
+
+## Does a two-faced card's face match the state? (front: Peace, back: Crusade)
+func _face_fits(c: Dictionary) -> bool:
+	var face := "crusade" if c.has("front") else "peace"
+	return face == realm
+
+
+## Turn a two-faced permanent over. Damage, counters, auras and summoning sickness stay.
+func _transform(p: Perm) -> void:
+	var new_id := String(p.card["transform"])
+	var nc := CardDB.get_card(new_id)
+	if nc.is_empty():
+		return
+	var kept: Array = []
+	for k in p.keywords:
+		if not p.card.get("keywords", []).has(k):
+			kept.append(k)          # keywords given for good by other cards
+	p.card_id = new_id
+	p.card = nc
+	p.name = nc.get("name", new_id)
+	p.base_p = int(nc.get("power", 0))
+	p.base_t = int(nc.get("toughness", 0))
+	p.keywords = nc.get("keywords", []).duplicate()
+	for k in kept:
+		if not p.keywords.has(k):
+			p.keywords.append(k)
+	emit({"type": "transform", "uid": p.uid, "id": new_id, "side": p.owner})
+	for e in nc.get("effects", []):
+		if e.get("trigger") == "transform":
+			_with_source(nc)
+			resolve_effect(p.owner, e, p, null)
+			if phase == "over":
+				return
+
+
+## A creature changes hands (a possession that steals it, or the possession leaving).
+func _change_control(p: Perm, to: int) -> void:
+	if p.owner == to or find_perm(p.uid) == null:
+		return
+	side(p.owner).creatures.erase(p)
+	attackers.erase(p.uid)
+	blocks.erase(p.uid)
+	for a in blocks.keys():
+		if blocks[a] == p.uid:
+			blocks.erase(a)
+	p.owner = to
+	p.sick = true
+	side(to).creatures.append(p)
+	emit({"type": "control", "uid": p.uid, "side": to})
+
+
+## The creatures a possession may move to when its host dies.
+func possess_hosts(a: Perm) -> Array:
+	var out: Array = []
+	for c in side(a.owner).creatures:
+		if c.uid != a.attached_to:
+			out.append(c)
+	return out
+
+
+## The player gives a wandering possession its new host.
+func possess_choose(i: int, aura_uid: int, host_uid: int) -> void:
+	var s := side(i)
+	if not s.possess_owed.has(aura_uid):
+		return
+	s.possess_owed.erase(aura_uid)
+	var a := find_perm(aura_uid)
+	if a == null:
+		return
+	var h := find_perm(host_uid)
+	if h == null or h.owner != i or not h.is_creature():
+		var opts := possess_hosts(a)
+		h = opts[0] if not opts.is_empty() else null
+	if h == null:
+		side(a.owner).relics.erase(a)
+		_bury(a.base_owner, a.card_id, a.card)
+		emit({"type": "die", "uid": a.uid, "side": a.owner, "sacrifice": false})
+		return
+	a.attached_to = h.uid
+	emit({"type": "attach", "uid": a.uid, "host": h.uid, "side": i, "possess": true})
+	check_state()
+
+
+## Can side i pay a card's additional cost (life, a discard, a sacrifice)?
+func extra_cost_ok(i: int, c: Dictionary) -> bool:
+	var x: Dictionary = c.get("extra_cost", {})
+	if x.is_empty():
+		return true
+	var s := side(i)
+	if int(x.get("life", 0)) > 0 and s.life <= int(x.get("life", 0)):
+		return false
+	if int(x.get("discard", 0)) > s.hand.size() - 1:
+		return false
+	if x.get("sacrifice", false):
+		# a possession on your own creature needs another one to give up
+		var need := 2 if _targets_own(c) else 1
+		if s.creatures.size() < need:
+			return false
+	return true
+
+
+static func _targets_own(c: Dictionary) -> bool:
+	for e in c.get("effects", []):
+		if e.get("target", "") == "own_creature":
+			return true
+	return false
+
+
+## Pay a card's additional cost, after the card has left the hand.
+func _pay_extra(i: int, c: Dictionary, targets: Array) -> void:
+	var x: Dictionary = c.get("extra_cost", {})
+	if x.is_empty():
+		return
+	var s := side(i)
+	if int(x.get("life", 0)) > 0:
+		lose_life(i, int(x["life"]))
+	for n in int(x.get("discard", 0)):
+		var wi := BattleAI.worst_card(self, i)
+		if wi >= 0:
+			var gone: String = s.hand[wi]
+			s.hand.remove_at(wi)
+			_bury(i, gone)
+			emit({"type": "discard", "side": i, "id": gone})
+	if x.get("sacrifice", false):
+		var keep := -1
+		for t in targets:
+			if typeof(t) == TYPE_DICTIONARY and t.get("kind") == "creature":
+				keep = int(t.get("uid", -1))
+		var best: Perm = null
+		var best_v := 1e9
+		for q in s.creatures:
+			if q.uid == keep:
+				continue
+			var v: float = q.value() + (0.0 if q.is_token else 2.0)
+			if v < best_v:
+				best_v = v
+				best = q
+		if best:
+			destroy_perm(best, true)
+
+
+## Is this permanent a Demon (a creature of the type, or a possession)?
+static func is_demon(p) -> bool:
+	return p != null and p.subtype_has("Demon")
+
+
+func _demon_tapped(p: Perm) -> bool:
+	if p.is_creature():
+		return p.tapped
+	var h := find_perm(p.attached_to)
+	return h != null and h.tapped
 
 
 # ============================================================ activated abilities
@@ -1626,7 +1860,7 @@ func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1
 		if wi >= 0:
 			var gone: String = side(i).hand[wi]
 			side(i).hand.remove_at(wi)
-			side(i).graveyard.append(gone)
+			_bury(i, gone)
 			emit({"type": "discard", "side": i, "id": gone})
 	var sac := String(cost.get("sacrifice", ""))
 	p.uses[idx] = int(p.uses.get(idx, 0)) + 1
@@ -1724,7 +1958,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				var idx := rng.randi_range(0, enemy.hand.size() - 1)
 				var gone: String = enemy.hand[idx]
 				enemy.hand.remove_at(idx)
-				enemy.graveyard.append(gone)
+				_bury(1 - i, gone)
 				emit({"type": "discard", "side": 1 - i, "id": gone})
 		"rummage":
 			# draw, then discard a card of your choice
@@ -1740,7 +1974,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 					if wi >= 0:
 						var gone: String = me.hand[wi]
 						me.hand.remove_at(wi)
-						me.graveyard.append(gone)
+						_bury(i, gone)
 						emit({"type": "discard", "side": i, "id": gone})
 		"buff":
 			for ref in _expand_targets(i, t, chosen, source):
@@ -1841,7 +2075,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				elif p:
 					_remove_perm(p)
 					if not p.is_token and not p.unearthed:
-						side(p.owner).hand.append(p.card_id)
+						side(p.base_owner).hand.append(_front_of(p))
 					emit({"type": "bounce", "uid": p.uid, "side": p.owner})
 		"tap", "freeze":
 			for ref in _expand_targets(i, t, chosen, source):
@@ -1943,6 +2177,11 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				if host and host.owner == source.owner:
 					source.attached_to = host.uid
 					emit({"type": "attach", "uid": source.uid, "host": host.uid, "side": i})
+				elif host and source.card.get("steal", false):
+					# a possession that takes an enemy creature: it is yours while it holds him
+					source.attached_to = host.uid
+					emit({"type": "attach", "uid": source.uid, "host": host.uid, "side": i})
+					_change_control(host, source.owner)
 		"tax":
 			enemy.tax += amount
 			emit({"type": "tax", "side": 1 - i, "amount": enemy.tax})
@@ -2032,6 +2271,14 @@ func _expand_targets(i: int, t: String, chosen, source: Perm) -> Array:
 			for s in sides:
 				for p in s.creatures:
 					out.append({"kind": "creature", "uid": p.uid})
+		"all_demons", "all_tapped_enemy_demons":
+			var only_tapped := t == "all_tapped_enemy_demons"
+			for k in 2:
+				if only_tapped and k == i:
+					continue
+				for p in side(k).creatures + side(k).relics:
+					if is_demon(p) and (not only_tapped or _demon_tapped(p)):
+						out.append({"kind": "relic" if not p.is_creature() else "creature", "uid": p.uid})
 		_:
 			if chosen != null:
 				out.append(chosen)
@@ -2088,7 +2335,7 @@ func destroy_perm(p: Perm, sacrifice: bool = false) -> void:
 		return
 	_remove_perm(p)
 	if not p.is_token and not p.unearthed:
-		side(p.owner).graveyard.append(p.card_id)
+		_bury(p.base_owner, p.card_id, p.card)
 	emit({"type": "die", "uid": p.uid, "side": p.owner, "sacrifice": sacrifice})
 	if p.unearthed:
 		emit({"type": "exile", "uid": p.uid, "side": p.owner, "id": p.card_id})
@@ -2150,16 +2397,36 @@ func _unmoved(p: Perm, caster: int, e: Dictionary) -> bool:
 
 func _remove_perm(p: Perm) -> void:
 	var s := side(p.owner)
+	if not p.is_creature() and p.card.get("steal", false) and p.attached_to >= 0:
+		# the possession is gone: the man it held goes back to his own side
+		var held := find_perm(p.attached_to)
+		if held and held.owner != held.base_owner:
+			_change_control(held, held.base_owner)
 	s.creatures.erase(p)
 	s.relics.erase(p)
 	if p.is_creature():
 		for a in attachments_of(p):
 			a.attached_to = -1
+			if a.card.get("possess", false):
+				# Possess: the demon leaves the dead body for another creature of its master
+				var hosts := possess_hosts(a)
+				if hosts.size() > 1 and side(a.owner).interactive:
+					side(a.owner).possess_owed.append(a.uid)
+					emit({"type": "owe_possess", "side": a.owner, "uid": a.uid})
+					continue
+				if not hosts.is_empty():
+					var best: Perm = hosts[0]
+					for h in hosts:
+						if h.value() > best.value():
+							best = h
+					a.attached_to = best.uid
+					emit({"type": "attach", "uid": a.uid, "host": best.uid, "side": a.owner, "possess": true})
+					continue
 			if a.card.get("attach", "") == "aura":
 				# an aura has nothing left to hold on to
 				side(a.owner).relics.erase(a)
 				if not a.is_token:
-					side(a.owner).graveyard.append(a.card_id)
+					_bury(a.base_owner, a.card_id, a.card)
 				emit({"type": "die", "uid": a.uid, "side": a.owner, "sacrifice": false})
 	attackers.erase(p.uid)
 	blocks.erase(p.uid)
