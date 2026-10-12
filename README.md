@@ -749,3 +749,16 @@ live in data/cards/proto.json and are outside every pool (no drafts, shops or ca
   possession. Settings has their own volume. They are synthesised by tools/sfx/make_sfx.py.
 - The battlefield changes with the state: soft morning light at Peace, the red of the banners on
   Crusade.
+
+## Heretics, Pagans and the mission (1.59)
+
+- **Heretic** (the Pact's cultists: those who knew the faith and turned from it) and **Pagan**
+  (the other faiths' people, who never received it) are new tags.
+- **Mission of Conversion** ({2}{W}, relic): attach it to a Heretic or Pagan an opponent controls;
+  he can't attack or block (✠). He stays on his side: the Church converts, it does not take.
+- **The Inquisitors judge Heretics** when Crusade begins: Inquisitor of the Way destroys a
+  Heretic with power 2 or less, the Grand Inquisitor any Heretic. You choose the target.
+  Since the state is shared, the Pact now thinks twice before casting two spells in a turn.
+- The Pact's prototype deck gets **Withering Curse** ({1}{B}, instant, -2/-2), which kills a
+  Crusade face, in place of Black Bargain; Whispers in the Dark (discard two) stays: it is the
+  Pact's best tool against the Church's two-spell turns. AI against AI: Church about 62%.

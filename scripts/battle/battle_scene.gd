@@ -1406,6 +1406,22 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 
 func _resolve_owed() -> void:
 	var me := st.side(0)
+	if not me.trigger_owed.is_empty():
+		var t: Dictionary = me.trigger_owed[0]
+		var src = st.find_perm(int(t["uid"]))
+		var e: Dictionary = t["e"]
+		var opts: Array = st.valid_targets_for(0, src, e) if src else st.valid_targets(0, e)
+		opts = opts.filter(func(o): return o.get("kind") == "creature")
+		if opts.is_empty():
+			st.trigger_choose(0, null)
+			return
+		var ids: Array = []
+		for o in opts:
+			ids.append(st.find_perm(int(o["uid"])).card_id)
+		var head := I18n.t(src.name) if src else I18n.t("Choose a target")
+		var pick = await _pick_cards(head, I18n.t("Choose the target: %s") % _spec_prompt(e), ids)
+		st.trigger_choose(0, opts[clampi(int(pick), 0, opts.size() - 1)])
+		return
 	if not me.possess_owed.is_empty():
 		var auid := int(me.possess_owed[0])
 		var a = st.find_perm(auid)
@@ -1774,7 +1790,7 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 					else _cap(I18n.t("%s goes back to %s.") % [_obj(int(e["uid"])), st.side(1).name]))
 			refresh()
 			await _wait(0.3)
-		"owe_possess":
+		"owe_possess", "owe_trigger":
 			pass
 		"regrow":
 			var gn := _card_name(String(e.get("id", "")))

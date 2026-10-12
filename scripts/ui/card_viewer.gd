@@ -28,6 +28,7 @@ const KEYWORDS := {
 	"regenerate": "Regenerate: pay its cost to shield it; the next time it would be destroyed this turn, it is tapped, healed and taken out of combat instead.",
 	"first_strike": "First strike: deals combat damage before creatures without it.",
 	"unmoved": "Unmoved: enemy spells and abilities can't tap it, return it to its owner's hand or shrink it.",
+	"converted": "Converted: it can't attack or block.",
 	"immortal": "Immortal: if it would be put into a graveyard from anywhere, it is exiled instead. Angels return to Heaven, demons are cast back into Hell; no necromancy can raise them.",
 }
 ## Mechanics named in rules text, explained under the card.
@@ -54,6 +55,8 @@ const MECHANICS := {
 	"Legendary": "Legendary: you may have only one with this name on the battlefield at a time.",
 	"Two-faced": "Two-faced: Peace and Crusade. Peace begins when the first two-faced card appears. At the start of each turn: at Peace, if the player whose turn ended cast two or more spells in it, Crusade begins; at Crusade, if he cast none, Peace returns. Every two-faced card turns over with it. Tap the card to read its other face.",
 	"Possess": "Possess: when the possessed creature dies, the demon moves to another creature its master controls; if there is none, it is exiled.",
+	"Heretic": "Heretic: one who knew the faith and turned from it (the Pact's cultists). Inquisitors judge Heretics.",
+	"Pagan": "Pagan: one who never received the faith (the other faiths' people). The Church's answer is the mission: conversion.",
 	"Demon": "Demon: everything fantastical that is not an angel. Exorcisms destroy Demons; a possession destroyed frees its host.",
 }
 const SWIPE := 70.0

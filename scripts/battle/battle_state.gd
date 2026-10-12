@@ -97,6 +97,7 @@ class BattleSide:
 	var charge_owed := {}          # interactive: {"n", "subtype"}: Charge boons still to choose
 	var exile: Array = []          # exiled cards (Immortal spirits, unearthed creatures)
 	var possess_owed: Array = []   # interactive: possessions (uids) whose host died, waiting for a new one
+	var trigger_owed: Array = []   # interactive: [{"uid", "e"}] triggers (turning over) waiting for a target
 
 
 var sides: Array = []
@@ -382,7 +383,8 @@ func open_main_window() -> void:
 ## Interactive choices still open for side i (the screen asks for them before going on).
 func has_owed(i: int) -> bool:
 	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty() or side(i).martyr_owed > 0 \
-		or not side(i).leak_owed.is_empty() or not side(i).charge_owed.is_empty() or not side(i).possess_owed.is_empty()
+		or not side(i).leak_owed.is_empty() or not side(i).charge_owed.is_empty() or not side(i).possess_owed.is_empty() \
+		or not side(i).trigger_owed.is_empty()
 
 
 ## The player discards hand card `idx` for a rummage.
@@ -1329,6 +1331,8 @@ func _passes_filters(p: Perm, e: Dictionary) -> bool:
 		return false
 	if e.has("subtype") and not p.subtype_has(String(e["subtype"])):
 		return false
+	if e.has("subtypes") and not Array(e["subtypes"]).any(func(w): return p.subtype_has(String(w))):
+		return false
 	if e.has("not_uid") and p.uid == int(e["not_uid"]):
 		return false
 	return true
@@ -1616,9 +1620,28 @@ func _transform(p: Perm) -> void:
 	for e in nc.get("effects", []):
 		if e.get("trigger") == "transform":
 			_with_source(nc)
+			if TARGET_CHOICE_TYPES.has(e.get("target", "")) and side(p.owner).interactive \
+					and not valid_targets_for(p.owner, p, e).is_empty():
+				# the player chooses the target (the screen asks right after this batch)
+				side(p.owner).trigger_owed.append({"uid": p.uid, "e": e})
+				emit({"type": "owe_trigger", "side": p.owner, "uid": p.uid})
+				continue
 			resolve_effect(p.owner, e, p, null)
 			if phase == "over":
 				return
+
+
+## The player's target for a waiting trigger (null: none / let the game pick).
+func trigger_choose(i: int, ref) -> void:
+	var s := side(i)
+	if s.trigger_owed.is_empty():
+		return
+	var t: Dictionary = s.trigger_owed.pop_front()
+	var src := find_perm(int(t["uid"]))
+	var e: Dictionary = t["e"]
+	if src:
+		_with_source(src.card)
+	resolve_effect(i, e, src, ref)
 
 
 ## A creature changes hands (a possession that steals it, or the possession leaving).
@@ -2194,6 +2217,10 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				if host and host.owner == source.owner:
 					source.attached_to = host.uid
 					emit({"type": "attach", "uid": source.uid, "host": host.uid, "side": i})
+				elif host and source.card.get("attach_enemy", false):
+					# laid on an enemy creature (a Conversion): it stays his
+					source.attached_to = host.uid
+					emit({"type": "attach", "uid": source.uid, "host": host.uid, "side": i})
 				elif host and source.card.get("steal", false):
 					# a possession that takes an enemy creature: it is yours while it holds him
 					source.attached_to = host.uid
@@ -2497,7 +2524,7 @@ func _snared(p: Perm) -> bool:
 
 func can_attack(p: Perm) -> bool:
 	return p.owner == active and p.is_creature() and not p.tapped and (not p.sick or p.has_kw("haste")) \
-		and not p.has_kw("defender") and p.power() > 0 and not p.pacified and not _snared(p)
+		and not p.has_kw("defender") and p.power() > 0 and not p.pacified and not _snared(p) and not p.has_kw("converted")
 
 
 func attack_candidates(i: int) -> Array:
@@ -2547,7 +2574,7 @@ func declare_attackers(uids: Array) -> void:
 
 
 func can_block(blocker: Perm, attacker: Perm) -> bool:
-	if blocker.tapped or not blocker.is_creature() or blocker.owner == attacker.owner or _snared(blocker):
+	if blocker.tapped or not blocker.is_creature() or blocker.owner == attacker.owner or _snared(blocker) or blocker.has_kw("converted"):
 		return false
 	if attacker.has_kw("flying") and not (blocker.has_kw("flying") or blocker.has_kw("reach")):
 		return false

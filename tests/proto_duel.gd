@@ -76,7 +76,7 @@ func _count(evs: Array, st: BattleState) -> void:
 					k = "possession moves to a new host"
 			"cast":
 				var nm := String(CardDB.get_card(String(e["id"])).get("name", ""))
-				if nm in ["Exorcism of the Way", "Great Exorcism", "Legion's Hold", "Whisper of the Imp", "Demon of Wrath"]:
+				if nm in ["Exorcism of the Way", "Great Exorcism", "Legion's Hold", "Whisper of the Imp", "Demon of Wrath", "Mission of Conversion", "Withering Curse"]:
 					k = "cast " + nm
 		if k != "":
 			counts[k] = int(counts.get(k, 0)) + 1
