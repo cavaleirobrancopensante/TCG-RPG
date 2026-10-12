@@ -47,6 +47,10 @@ const MECHANICS := {
 	"fights": "Fight: a creature you control and the target deal damage equal to their power to each other.",
 	"rummage": "Rummage: draw a card, then discard a card.",
 	"Rummage": "Rummage: draw a card, then discard a card.",
+	"Unearth": "Unearth: from your graveyard, pay its cost: it returns with haste, and is exiled at end of turn or if it would leave.",
+	"Counter target": "Counter: the spell is cancelled and goes to its owner's graveyard. Cast it while the enemy spell is on the stack.",
+	"Charge": "Charge: when it attacks, for each other attacking Knight choose one (trample, first strike, vigilance, lifelink, +1/+0); all your Knights gain them until end of turn.",
+	"Legendary": "Legendary: you may have only one with this name on the battlefield at a time.",
 }
 const SWIPE := 70.0
 
@@ -281,7 +285,8 @@ func _fill_info(e: Dictionary) -> void:
 	var shown := {}
 	for word in MECHANICS:
 		var line2: String = MECHANICS[word]
-		if String(c.get("text", "")).contains(word) and not shown.has(line2):
+		var has_word: bool = String(c.get("text", "")).contains(word) or (word == "Legendary" and c.get("legendary", false))
+		if has_word and not shown.has(line2):
 			shown[line2] = true
 			info_box.add_child(UIKit.label(I18n.t(line2), UIKit.FS_SECONDARY, UIKit.DIM, true))
 	if c.get("rarity") != "token" and c.get("type") != "land":

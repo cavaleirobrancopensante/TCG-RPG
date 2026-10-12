@@ -409,3 +409,48 @@ Card and ability text follows Magic templating (the validator checks the main po
   "until end of turn", "Your Knight creature cards cost {1} less to play. This effect reduces only
   generic mana.", mana as tokens ({1}{G}, {C}), "Tap" for the tap symbol.
 - Lands: "Mill Weir enters tapped. When Mill Weir enters, you gain 1 life. Tap: Add {G} or {C}."
+
+## New mechanics (1.45)
+
+- **Counterspells** (Stoa only): an instant with a cast effect
+  `{"trigger": "cast", "action": "counter", "filter": "any" | "noncreature" | "creature", "unless_pay": N}`.
+  It counters the topmost enemy spell on the stack that fits the filter (`filter` defaults to
+  any; abilities can't be countered); the spell goes to its owner's graveyard. With
+  `unless_pay`, its controller may pay {N} to keep it (the AI always pays when able; the player
+  is asked). A counterspell can only be cast while such a spell is on the stack. Wording:
+  "Counter target spell.", "Counter target noncreature spell.", "Counter target creature
+  spell.", "Counter target spell unless its controller pays {3}."
+- **Cost per tribe member**: card field `"cost_less_per": {"subtype": "Philosopher", "amount": 1}`
+  takes {amount} generic off the cost for each creature of that subtype you control (never
+  below its coloured pips). Wording: "This spell costs {1} less to cast for each Philosopher you
+  control."
+- **Unearth** (Pact, and the Revel): creature card field `"unearth": {"B": 1, "generic": 1}`.
+  From your graveyard, at sorcery speed, pay it: the creature returns with haste; at the end of
+  the turn, or if it would leave the battlefield, it is exiled instead (it never goes back to
+  the graveyard or a hand). Wording: "Unearth {1}{B} ({1}{B}: Return this card from your
+  graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or
+  if it would leave the battlefield. Unearth only as a sorcery.)" Text tokens such as {B} render
+  as mana symbols.
+- **Instant fight**: a `fight` effect on an instant works as on a sorcery (your creature fights
+  the target).
+- **Legendary**: card field `"legendary": true`. A player may have only one permanent with that
+  name on their side of the battlefield at a time (the second copy can't be cast while the
+  first is there). The type line reads "Legendary Creature · ...". Legendary is for the strong,
+  named lords of a tribe, usually mythic.
+- **Charge** (Church Knights): `{"trigger": "attack", "action": "charge", "subtype": "Knight"}`.
+  When this creature attacks, for each other attacking Knight its controller chooses one of
+  trample, first strike, vigilance, lifelink, +1/+0 (up to all five); every Knight they control
+  gains the chosen until end of turn (vigilance stands the attackers up again). Wording:
+  "Charge (Whenever this creature attacks, choose one for each other attacking Knight: trample,
+  first strike, vigilance, lifelink or +1/+0. Knights you control gain the chosen until end of
+  turn.)"
+
+## The designer's taste (1.45)
+
+"It is ok for the game to have strong cards, actually I hate weak cards. By weak I mean 2 mana
+1/2 that does nothing. Things like that. But I also hate cards that are OP, that do too much and
+are cheap or that are too snowball like planeswalkers (we will never add those to the game) but
+I also don't like some cards like the Scuttler, 1 mana 1/1 sacrifice to add a +1/+1 counter to
+construct, I find them a bit lame unless there is a combo with something."
+So: no filler below rate, no do-nothing bodies, no fiddly low-impact sacrifice cards without a
+payoff; strong is welcome, cheap-and-does-everything and runaway snowballing are not.

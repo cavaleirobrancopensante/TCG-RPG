@@ -243,7 +243,7 @@
       "generic": 3
     },
     "power": 3,
-    "toughness": 3,
+    "toughness": 4,
     "keywords": [
       "lifelink"
     ],
@@ -444,7 +444,7 @@
       {
         "cost": {
           "mana": {
-            "generic": 2
+            "generic": 3
           },
           "tap": true
         },
@@ -452,15 +452,15 @@
           {
             "action": "buff",
             "target": "own_creature",
-            "power": 0,
+            "power": 1,
             "toughness": 1,
             "duration": "permanent"
           }
         ],
-        "text": "{2}, Tap: Put a +0/+1 counter on target creature you control."
+        "text": "{3}, Tap: Put a +1/+1 counter on target creature you control."
       }
     ],
-    "text": "{2}, Tap: Put a +0/+1 counter on target creature you control.",
+    "text": "{3}, Tap: Put a +1/+1 counter on target creature you control.",
     "flavor": "Every brother signs himself on the way in, and goes out a little stronger than he came.",
     "art": "res://art/cards/sanctum_c_019.webp"
   },
@@ -483,9 +483,16 @@
         "power": 0,
         "toughness": 1,
         "scope": "own_creatures"
+      },
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 0,
+        "scope": "own_creatures",
+        "condition": "grace"
       }
     ],
-    "text": "Creatures you control get +0/+1.",
+    "text": "Creatures you control get +0/+1. Grace: As long as you have more life than you started with, they get +1/+1 instead.",
     "flavor": "Vexilla Regis prodeunt. The royal banners forward go, the Cross shines forth in mystic glow. (Venantius Fortunatus)",
     "art": "res://art/cards/sanctum_c_020.webp"
   },
@@ -559,8 +566,15 @@
     "keywords": [
       "flying"
     ],
-    "effects": [],
-    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.)",
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "heal",
+        "target": "self_player",
+        "amount": 2
+      }
+    ],
+    "text": "Flying (This creature can't be blocked except by creatures with flying or reach.) When Angel of the Wayside Shrine enters, you gain 2 life.",
     "flavor": "For he hath given his angels charge over thee; to keep thee in all thy ways. (Psalm 90:11)",
     "art": "res://art/cards/sanctum_c_023.webp"
   },
@@ -608,6 +622,7 @@
         "duration": "permanent"
       }
     ],
+    "speed": "instant",
     "text": "Put two +1/+1 counters on target Knight you control.",
     "flavor": "Be thou a good knight, in the name of God. The blow upon his shoulder is the last he shall take without answer.",
     "art": "res://art/cards/sanctum_c_025.webp"
@@ -1778,5 +1793,175 @@
     "text": "Flying, sanctified. Other Angels and Knights you control get +1/+1.",
     "flavor": "Saint Michael the Archangel, defend us in battle. Be our protection against the wickedness and snares of the devil. (Pope Leo XIII)",
     "art": "res://art/cards/sanctum_m_004.webp"
+  },
+  {
+    "id": "sanctum_c_030",
+    "name": "Squire of the Commandery",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1
+    },
+    "mana_value": 1,
+    "power": 1,
+    "toughness": 1,
+    "keywords": [
+      "martyr"
+    ],
+    "effects": [],
+    "text": "Martyr (When this creature dies, put a +1/+1 counter on another target creature you control.)",
+    "flavor": "Greater love than this no man hath, that a man lay down his life for his friends. (John 15:13)",
+    "art": "res://art/cards/sanctum_c_030.webp"
+  },
+  {
+    "id": "sanctum_c_031",
+    "name": "Knight of the Peace of God",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "mana_value": 3,
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "pacify",
+        "target": "enemy_creature",
+        "tapped": true
+      }
+    ],
+    "text": "When Knight of the Peace of God enters, pacify target tapped enemy creature. (It can't attack for the rest of the duel.)",
+    "flavor": "Blessed are the peacemakers: for they shall be called the children of God. (Matthew 5:9)",
+    "art": "res://art/cards/sanctum_c_031.webp"
+  },
+  {
+    "id": "sanctum_c_032",
+    "name": "Close the Ranks",
+    "faction": "sanctum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Blessing",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "mana_value": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Knight",
+        "power": 0,
+        "toughness": 2,
+        "duration": "turn"
+      }
+    ],
+    "speed": "instant",
+    "text": "Knights you control get +0/+2 until end of turn.",
+    "flavor": "In all things taking the shield of faith, wherewith you may be able to extinguish all the fiery darts of the most wicked one. (Ephesians 6:16)",
+    "art": "res://art/cards/sanctum_c_032.webp"
+  },
+  {
+    "id": "sanctum_u_021",
+    "name": "Vigil of Arms",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Blessing",
+    "cost": {
+      "W": 1,
+      "generic": 2
+    },
+    "mana_value": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "summon",
+        "token": {
+          "name": "Knight of the Vigil",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Human Knight",
+          "keywords": []
+        },
+        "count": 2
+      }
+    ],
+    "text": "Create two 1/1 Human Knight tokens.",
+    "flavor": "Watch ye, stand fast in the faith, do manfully, and be strengthened. (1 Corinthians 16:13)",
+    "art": "res://art/cards/sanctum_u_021.webp"
+  },
+  {
+    "id": "sanctum_u_022",
+    "name": "Rule of the Order",
+    "faction": "sanctum",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Relic",
+    "cost": {
+      "W": 1,
+      "generic": 1
+    },
+    "mana_value": 2,
+    "keywords": [],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "martyr",
+        "scope": "own_creatures",
+        "subtype": "Knight"
+      }
+    ],
+    "text": "Knights you control have martyr. (When a creature with martyr dies, put a +1/+1 counter on another target creature you control.)",
+    "flavor": "Put you on the armour of God, that you may be able to stand against the deceits of the devil. (Ephesians 6:11)",
+    "art": "res://art/cards/sanctum_u_022.webp"
+  },
+  {
+    "id": "sanctum_m_005",
+    "name": "Aymeric de Valcourt, Marshal of the Order",
+    "faction": "sanctum",
+    "rarity": "mythic",
+    "legendary": true,
+    "type": "creature",
+    "subtype": "Human Knight",
+    "cost": {
+      "W": 2,
+      "generic": 3
+    },
+    "mana_value": 5,
+    "power": 4,
+    "toughness": 4,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 0,
+        "scope": "other_own_creatures",
+        "subtype": "Knight"
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "charge",
+        "subtype": "Knight"
+      }
+    ],
+    "text": "Charge (Whenever this creature attacks, choose one for each other attacking Knight: trample, first strike, vigilance, lifelink or +1/+0. Knights you control gain the chosen until end of turn.) Other Knights you control get +1/+0.",
+    "flavor": "For the success of war is not in the multitude of the army, but strength cometh from heaven. (1 Machabees 3:19)",
+    "art": "res://art/cards/sanctum_m_005.webp"
   }
 ]

@@ -2735,3 +2735,404 @@ def machine_r_012(p):
     servo(p, 740, 600, 2.8, BRASS_L, step=1, flip=True)
     servo(p, 820, 600, 2.4, COPPER.light(0.1), step=0, flip=True)
     servo(p, 150, 600, 2.4, BRASS, step=2)
+
+
+# ------------------------------------------------------------------ 1.46 additions
+
+def machine_c_030(p):
+    """Servo Winding Frame: in a clean morning workshop the tall oak-and-brass frame
+    turns its great gear train, a coil drum winding the key of the servo standing on its
+    platform, while a finished servo walks off the end of the bench."""
+    bg.fill_all(p, ('v', C.hex('4a3a2c'), C.hex('6a5440')))
+    stone_wall(p, (0, 0, W, 480), C.hex('a29478'), 96, 46)
+    p.cx.new_path()
+    p.cx.rectangle(0, 0, W, 480)
+    p.fill(('h', C(0, 0, 0, 0.3), C(0, 0, 0, 0.02), C(0, 0, 0, 0.3)))
+    arched_window(p, 790, 90, 130, 220, ('v', C.hex('b8d4e8'), C.hex('f8ecd0')), 2, C.hex('7a6a58'))
+    blueprint_sheet(p, [(120, 120, 0), (290, 110, 0), (300, 250, 0), (126, 262, 0)], BLUEP, 'gear', 0.0)
+    hanging_tools(p, 150, 290, [('wrench', 0), ('calipers', 50), ('hammer', 100)])
+    bg.light_shafts(p, (850, 200), 0.6, 3, strength=0.14)
+    p.glow((500, 300), 360, C.hex('ffe6b0'), 0.28)
+    plank_floor(p, 520, OAK.dark(0.3))
+    # the frame: a base plinth, two posts and a crossbeam
+    p.shape([(300, 600, 0), (310, 540, 0), (690, 540, 0), (700, 600, 0)], ('v', OAK.light(0.1), OAK_D), width=2.4, smooth=False, shade=0.5)
+    p.taper([(300, 546), (700, 546)], 6, 6, metal_band(BRASS, 'v'), width=1.6)
+    for k in range(9):
+        rivet(p, (318 + k * 45, 546), 3.4, BRASS_L)
+    for x in (340, 660):
+        p.taper([(x, 542), (x, 120)], 22, 20, ('h', OAK.light(0.25), OAK, OAK_D), width=2.2)
+        for yy in (180, 320, 470):
+            p.taper([(x - 13, yy), (x + 13, yy)], 4, 4, metal_band(BRASS, 'v'), width=1.2)
+        p.blob((x, 112), 18, 10, metal(BRASS, 'v'), width=1.8, shade=0.8)
+    p.taper([(310, 140), (690, 140)], 16, 16, ('v', OAK.light(0.2), OAK_D), width=2.2)
+    for k in range(7):
+        rivet(p, (360 + k * 48, 140), 3.0, BRASS)
+    # gear train hung from the crossbeam
+    gear(p, (430, 230), 72, 22, BRASS, 0.1, width=2.2, spokes=6, recess=C.hex('3a2416'))
+    gear(p, (556, 196), 40, 14, COPPER, 0.4, width=2.0, spokes=5, recess=C.hex('3a2416'))
+    gear(p, (590, 290), 30, 12, BRASS_L, 0.2, width=1.8, spokes=4, recess=C.hex('3a2416'))
+    p.blob((430, 230), 12, 12, metal(STEELC, 'v'), width=1.8, shade=0.8)
+    # the crank on the big wheel
+    p.taper([(430, 230), (360, 300)], 5, 4, metal(IRONC.light(0.2)), width=1.4)
+    p.taper([(360, 300), (346, 306)], 6, 6, ('h', OAK.light(0.2), OAK_D), width=1.4)
+    # the spring drum and its arm down to the servo's key
+    cylinder(p, 500, 350, 420, 52, BRASS.dark(0.05), bands=(366, 404), rivet_n=6, cap=True, band_col=COPPER)
+    spring(p, (452, 386), (548, 386), 14, 7, STEELC.light(0.1), 2.4)
+    # the servo being wound, large and central on the platform
+    servo(p, 530, 542, 4.6, BRASS, step=0)
+    p.taper([(500, 420), (491, 470)], 4, 3, metal(STEELC), width=1.3)
+    p.blob((491, 473), 6, 6, metal(BRASS_L, 'v'), width=1.4)
+    sparks(p, (491, 470), 6, 4, 18, FURN_CORE, w=1.6)
+    for q in ((410, 170), (560, 170), (520, 470)):
+        p.star(q, 10, C(1, 1, 0.95, 0.85))
+    # finished servos leaving down the bench to the right
+    p.shape([(700, 600, 0), (700, 560, 0), (1010, 560, 0), (1010, 600, 0)], ('v', OAK.light(0.05), OAK_D), width=2, smooth=False, shade=0.4)
+    servo(p, 790, 560, 2.6, BRASS_L, step=1.5)
+    servo(p, 900, 560, 2.6, COPPER.light(0.1), step=-1.5)
+    steam(p, (640, 140), (0.3, -1), 4, 0.6, STEAM, 0.5)
+
+
+def ram_gauntlet(p, c, s=1.0, flip=False, col=BRASS, col2=STEELC, open_=0.0):
+    """A great steam-ram gauntlet lying on its side, cuff to the left, fist to the right:
+    a riveted bracer with two piston rams along it, a copper feed pipe, a valve wheel and a
+    plated fist of jointed knuckles. About 300 wide at s=1."""
+    p.push(c[0], c[1], s, flip)
+    lw = p.lw
+    # the bracer
+    br = [(-150, -46), (-40, -58), (40, -54), (66, -44, 0), (66, 44, 0), (40, 52), (-40, 56), (-150, 46)]
+    p.shape(br, metal(col, 'v'), width=2.4, shade=1.0, rim=0.45)
+    for xx in (-130, -60, 20):
+        p.taper([(xx, -50 - (xx + 130) * 0.04), (xx, 50 + (xx + 130) * 0.03)], 4, 4, metal_band(COPPER, 'h'), width=1.2)
+        for k in range(5):
+            rivet(p, (xx, -38 + k * 19), 2.6, BRASS_L)
+    p.blob((-150, 0), 12, 46, metal(col.dark(0.3), 'h'), width=2.0, shade=0.7)
+    p.blob((-150, 0), 7, 38, SOOT, width=1.4)
+    # the two rams riding on top
+    for yy, dk in ((-66, 0.0), (-50, 0.25)):
+        cylinder_h = [(-110, yy - 9, 0), (-10, yy - 9, 0), (-10, yy + 9, 0), (-110, yy + 9, 0)]
+        p.shape(cylinder_h, metal(col2.dark(dk), 'v'), width=1.8, smooth=False, shade=0.8)
+        p.taper([(-10, yy), (60 + open_ * 30, yy)], 4.2, 4.2, metal(STEELC.light(0.2), 'v'), width=1.4)
+        p.blob((-110, yy), 5, 9, metal(col.dark(0.2), 'h'), width=1.4)
+        p.blob((62 + open_ * 30, yy), 6, 6, metal(BRASS_L, 'v'), width=1.4)
+    # feed pipe and valve wheel
+    pipe(p, [(-140, 40), (-120, 74), (-60, 80), (-20, 64)], 7, COPPER, flanges=(1,))
+    p.blob((-90, 82), 16, 16, None, ink=INK, width=6)
+    p.blob((-90, 82), 16, 16, None, ink=VERMILION.dark(0.1), width=3.4)
+    for k in range(4):
+        p.line([(-90, 82), polar((-90, 82), 15, k * TAU / 4 + 0.4)], VERMILION.dark(0.2), 2.2, smooth=False)
+    gauge(p, (-30, 20), 14, BRASS, 0.6)
+    # the fist: back plate and four jointed fingers curled under
+    p.shape([(60, -50), (110, -54), (140, -38), (146, 20), (132, 46), (66, 48)], metal(col2.light(0.05), 'h'), width=2.4, shade=1.0, rim=0.45)
+    for k in range(4):
+        y0 = -40 + k * 22
+        p.shape([(132, y0 - 2), (164, y0 - 4), (178, y0 + 6), (174, y0 + 18), (140, y0 + 18)], metal(col2.dark(0.05 * k), 'v'), width=2.0, shade=0.9, rim=0.4)
+        p.blob((160, y0 + 6), 4, 4, metal(BRASS, 'v'), width=1.2)
+        p.line([(146, y0 + 2), (170, y0 + 2)], C(1, 1, 1, 0.5), 1.6)
+    p.shape([(76, 40), (120, 46), (128, 70), (100, 80), (72, 64)], metal(col2.dark(0.15), 'v'), width=2.0, shade=0.9)
+    for k in range(4):
+        rivet(p, (84 + k * 16, -40), 2.6, BRASS)
+    p.blob((96, -26), 26, 9, C(1, 1, 0.95, 0.35), rot=-0.15, ink=False)
+    p.line([(-140, -40), (-40, -52), (38, -48)], C(1, 1, 1, 0.45), 2.4)
+    p.pop()
+    p.lw = lw
+
+
+def machine_u_021(p):
+    """Steam-Ram Gauntlets: on the foundry's proving block, lit by the furnace behind,
+    the pair of gauntlets lies with their rams venting steam, beside a thick iron test
+    plate they have just punched through."""
+    foundry_hall(p, furnaces=(500,), chains=True, glow_strength=0.7)
+    p.glow((500, 360), 420, FURN, 0.25)
+    # the proving block
+    p.shape([(180, 610, 0), (200, 470, 0), (800, 470, 0), (820, 610, 0)], metal(IRONC.dark(0.15), 'v'), width=2.6, smooth=False, shade=0.6, rim=0.3)
+    p.shape([(170, 478, 0), (830, 478, 0), (830, 456, 0), (170, 456, 0)], metal(IRONC.light(0.15), 'v'), width=2.4, smooth=False, shade=0.6)
+    for k in range(12):
+        rivet(p, (196 + k * 55, 468), 3.6, BRASS)
+    p.line([(180, 458), (820, 458)], FURN_CORE.alpha(0.5), 2.4, smooth=False)
+    # the punched test plate on its stand at the right
+    p.taper([(880, 600), (880, 330)], 7, 7, metal(IRONC), width=1.6)
+    pl = [(820, 250, 0), (950, 240, 0), (956, 420, 0), (826, 430, 0)]
+    p.shape(pl, metal(IRONC.light(0.25), 'h'), width=2.4, smooth=False, shade=0.8)
+    p.blob((888, 336), 34, 30, ('r', C.hex('1a0c08'), C.hex('3a1a10')), width=2.4)
+    for k in range(9):
+        a = k * TAU / 9 + 0.2
+        p.shape([polar((888, 336), 30, a - 0.12), polar((888, 336), 48, a), polar((888, 336), 30, a + 0.12)], metal(IRONC.light(0.4), 'v'), width=1.4)
+    p.glow((888, 336), 40, FURN, 0.5)
+    sparks(p, (888, 336), 10, 20, 60, FURN_CORE, w=1.8)
+    # the gauntlets, one on the other
+    ram_gauntlet(p, (430, 400), 1.25, False, BRASS, STEELC, 0.0)
+    ram_gauntlet(p, (520, 290), 1.05, True, BRASS.dark(0.05), STEELC.dark(0.05), 0.6)
+    steam(p, (330, 300), (-0.4, -1), 6, 1.2, STEAM, 0.8)
+    steam(p, (640, 210), (0.3, -1), 5, 1.0, STEAM, 0.7)
+    for q in ((520, 360), (420, 250), (700, 400)):
+        p.star(q, 12, C(1, 1, 0.92, 0.9))
+
+
+def machine_u_022(p):
+    """Strongbox Automaton: deep in the guild vault, among shelves of catalogued relics,
+    the squat automaton whose chest is a strongbox door stands guard, a great key on a
+    chain at its belt, while the servo it keeps inside steps out with a tagged relic."""
+    bg.fill_all(p, ('v', C.hex('1a1614'), C.hex('2e2620')))
+    stone_wall(p, (0, 0, W, 500), C.hex('5a524a'), 120, 60)
+    p.cx.new_path()
+    p.cx.rectangle(0, 0, W, 500)
+    p.fill(('r', C(0, 0, 0, 0), C(0, 0, 0, 0.6)))
+    # the round vault door, opened, behind at the left
+    p.blob((150, 300), 130, 150, metal(IRONC.dark(0.2), 'v'), width=2.4, shade=0.8, rim=0.4)
+    p.blob((150, 300), 110, 128, ('r', C.hex('0a0806'), C.hex('2a2018')), width=2.0)
+    for k in range(10):
+        rivet(p, polar((150, 300), 120, k * TAU / 10), 4, BRASS)
+    # relic shelves at the right
+    for yy in (150, 290, 430):
+        p.taper([(620, yy), (990, yy)], 8, 8, ('v', OAK.light(0.1), OAK_D), width=1.8)
+    for (x, yy, kind) in ((660, 150, 'gear'), (740, 150, 'gauge'), (820, 150, 'jar'), (900, 150, 'gear2'),
+                          (670, 290, 'pauldron'), (790, 290, 'box'), (900, 290, 'gauge'),
+                          (680, 430, 'jar'), (780, 430, 'gear'), (900, 430, 'box')):
+        if kind == 'gear':
+            gear(p, (x, yy - 30), 26, 12, BRASS, 0.2, width=1.6, spokes=5)
+        elif kind == 'gear2':
+            gear(p, (x, yy - 26), 22, 10, COPPER, 0.4, width=1.6, spokes=4)
+        elif kind == 'gauge':
+            gauge(p, (x, yy - 30), 24, BRASS, 0.3)
+        elif kind == 'jar':
+            leyden_jar(p, x, yy, 1.2)
+        elif kind == 'pauldron':
+            pauldron(p, (x, yy - 82), 0.5, STEELC, BRASS, LEATHER)
+        elif kind == 'box':
+            p.shape([(x - 30, yy, 0), (x - 30, yy - 44, 0), (x + 30, yy - 44, 0), (x + 30, yy, 0)], ('v', OAK.light(0.15), OAK_D), width=1.8, smooth=False, shade=0.6)
+            p.line([(x - 30, yy - 30), (x + 30, yy - 30)], BRASS, 3, smooth=False)
+            p.blob((x, yy - 24), 4, 5, metal(BRASS_L, 'v'), width=1)
+        # a parchment tag on each relic
+        p.shape([(x + 14, yy - 6, 0), (x + 30, yy - 8, 0), (x + 31, yy + 6, 0), (x + 15, yy + 8, 0)], PARCH, width=1.0, smooth=False)
+    bg.tile_floor(p, 500, C.hex('3a332e'), C.hex('5e544a'))
+    p.glow((450, 560), 260, FURN, 0.3)
+
+    def strongbox(p2, j):
+        # the torso is a strongbox: a door with a combination dial, hinges and bolts
+        door = [(-12, -82, 0), (16, -82, 0), (16, -48, 0), (-12, -48, 0)]
+        p2.shape(door, metal(STEELC.dark(0.15), 'v'), width=1.6, smooth=False, shade=0.8, rim=0.3)
+        p2.shape([(-9, -79, 0), (13, -79, 0), (13, -51, 0), (-9, -51, 0)], None, ink=BRASS, width=2.0, smooth=False)
+        p2.blob((3, -65), 6.4, 6.4, metal(BRASS, 'v'), width=1.4, shade=0.9)
+        p2.blob((3, -65), 3.4, 3.4, metal(BRASS_L, 'v'), width=1.0)
+        for k in range(12):
+            a = k * TAU / 12
+            p2.line([polar((3, -65), 4.6, a), polar((3, -65), 6.0, a)], INK, 0.7, smooth=False)
+        p2.taper([(3, -65), (6.4, -68.4)], 0.8, 0.5, INK, width=0.5)
+        for yy in (-76, -54):
+            p2.shape([(-14, yy - 2.4, 0), (-9, yy - 2.4, 0), (-9, yy + 2.4, 0), (-14, yy + 2.4, 0)], metal(IRONC), width=0.8, smooth=False)
+        p2.taper([(10, -58), (14, -58)], 1.2, 1.2, metal(BRASS_L), width=0.6)
+        for q in ((-10, -80), (14, -80), (-10, -50), (14, -50)):
+            rivet(p2, q, 0.9, BRASS_L)
+        # the great key on its chain
+        chain(p2, [(10, -46), (14, -36), (18, -28)], 2.2, IRONC, 0.8)
+        p2.blob((18, -24), 3.2, 3.2, None, ink=INK, width=2.6)
+        p2.blob((18, -24), 3.2, 3.2, None, ink=BRASS, width=1.4)
+        p2.taper([(18, -21), (18, -8)], 1.0, 1.0, metal(BRASS), width=0.8)
+        p2.shape([(18, -12, 0), (22, -12, 0), (22, -10, 0), (20, -10, 0), (20, -8, 0), (18, -8, 0)], metal(BRASS), width=0.7, smooth=False)
+    Automaton(torso='box', head='helm', legs='pillar', arm_f='hand', arm_b='hand', col=IRONC.light(0.25), col2=STEELC.dark(0.1), trim=BRASS,
+              pose='ma_bot_stand', eye_col=FURN, width=1.45, head_scale=1.0, porthole=False, pauldron=True, neck=3,
+              extra_front=[strongbox], stride=2).draw(p, 450, 604, 430)
+    # the servo it has just let out of its strongbox, stepping off with a tagged relic
+    servo(p, 250, 604, 3.4, BRASS_L, step=1.5, tag=True)
+    gear(p, (300, 548), 13, 10, COPPER, 0.3, width=1.2, spokes=4)
+    # the lantern at its feet
+    p.glow((640, 560), 90, FURN, 0.55)
+    p.shape([(620, 600, 0), (622, 540, 0), (658, 540, 0), (660, 600, 0)], ('v', FURN_CORE, FURN), width=2, smooth=False)
+    for xx in (620, 640, 660):
+        p.line([(xx, 540), (xx, 600)], IRONC, 3, smooth=False)
+    p.shape([(614, 542, 0), (640, 520, 0), (666, 542, 0)], metal(IRONC), width=1.8, smooth=False)
+    p.blob((640, 512), 6, 6, None, ink=IRONC, width=3)
+
+
+def machine_u_023(p):
+    """Guild Assessor: at his tall desk under the arched window the young assessor brings
+    his stamp down on the tag of a newly delivered brass gauge, while a servo carries the
+    next piece up and the ledger lies open to its column of values."""
+    counting_house(p)
+    arched_window(p, 120, 60, 200, 300, ('v', C.hex('d8c8b8'), C.hex('f4e2c0')), 3, C.hex('6a5a48'))
+    pigeonholes(p, 680, 60, 7, 6, 44, 38)
+    bg.light_shafts(p, (220, 220), 0.5, 3, strength=0.15)
+    plank_floor(p, 520, OAK.dark(0.3))
+    # a crate of relics waiting to be assessed, behind him
+    p.shape([(40, 600, 0), (40, 500, 0), (180, 500, 0), (180, 600, 0)], ('v', OAK.light(0.1), OAK_D), width=2, smooth=False, shade=0.5)
+    p.line([(40, 530), (180, 530)], IRONC, 3, smooth=False)
+    gear(p, (90, 494), 22, 12, COPPER, 0.3, width=1.4, spokes=4)
+    p.taper([(140, 500), (150, 452)], 4, 3, metal(STEELC), width=1.2)
+    p.blob((150, 448), 10, 10, metal(BRASS, 'v'), width=1.4)
+    # the assessor
+    fig = Artificer(pose='ma_press', garb='robe', main=C.hex('6a1e1e'), second=C.hex('3a1414'), hair='short', hair_col=C.hex('4a2e1a'),
+                    beard='short', head='cap', fur=C.hex('4a3a2a'), belt='leather', eyes='down', mouth='stern', emblem=chain_of_office(BRASS_L))
+    fig.draw(p, 400, 620, 450)
+    # the tall desk in front of him
+    p.shape([(470, 626, 0), (470, 420, 0), (860, 410, 0), (860, 626, 0)], ('v', OAK.dark(0.05), OAK_D.dark(0.3)), width=2.2, smooth=False)
+    for xx in (500, 680):
+        p.shape([(xx, 450, 0), (xx + 150, 446, 0), (xx + 150, 600, 0), (xx, 600, 0)], None, ink=OAK.light(0.2).alpha(0.5), width=1.6, smooth=False)
+    p.shape([(456, 426, 0), (874, 414, 0), (874, 396, 0), (456, 408, 0)], ('v', OAK.light(0.25), OAK), width=2, smooth=False)
+    # the gauge on the desk with its tag, being stamped
+    gauge(p, (560, 360), 36, BRASS, 0.7)
+    p.shape([(540, 398, 0), (580, 398, 0), (586, 408, 0), (534, 408, 0)], metal(BRASS_D), width=1.4, smooth=False)
+    p.line([(590, 370), (606, 396)], INK, 1.2)
+    p.shape([(598, 396, 0), (640, 394, 0), (642, 406, 0), (600, 408, 0)], PARCH, width=1.2, smooth=False)
+    p.blob((620, 401), 6, 3, CRIMSON, ink=False)
+    # the open ledger and the inkwell
+    p.shape([(680, 404, 0), (760, 398, 0), (770, 406, 0), (686, 412, 0)], PARCH, width=1.2, smooth=False)
+    p.shape([(760, 398, 0), (840, 394, 0), (846, 402, 0), (770, 406, 0)], PARCH.dark(0.05), width=1.2, smooth=False)
+    for k in range(4):
+        p.line([(694 + k * 2, 402 + k * 0.4), (754, 400 + k * 0.4)], INK.alpha(0.4), 0.8)
+    p.blob((810, 388), 9, 10, metal(IRONC, 'v'), width=1.4)
+    p.taper([(812, 380), (830, 340)], 1.4, 0.6, LEAD_WHITE, width=0.8)
+    stamp_in_hand(p, fig, 400, 620, 450, False)
+    # a servo carrying the next relic up the desk steps
+    servo(p, 920, 604, 3.0, BRASS_L, step=1, flip=True)
+    gear(p, (888, 520), 16, 10, BRASS, 0.2, width=1.2, spokes=4)
+
+
+def machine_r_013(p):
+    """Assembly-Line Colossus: under the gantry of the great assembly hall the colossus
+    rises from the line, chains still hooked to its shoulders, while servos and small
+    constructs march up the belt and climb into it to become its parts."""
+    foundry_hall(p, furnaces=(130, 870), chains=False, glow_strength=0.45)
+    # the gantry
+    for x in (230, 770):
+        p.taper([(x, 470), (x, 60)], 14, 14, metal(IRONC.light(0.1), 'h'), width=2)
+        for yy in range(90, 470, 40):
+            p.line([(x - 12, yy), (x + 12, yy + 30)], IRONC.dark(0.3), 2, smooth=False)
+    p.taper([(200, 70), (800, 70)], 18, 18, metal(IRONC.light(0.15), 'v'), width=2.2)
+    for k in range(13):
+        rivet(p, (220 + k * 47, 70), 3.2, BRASS)
+    for x in (360, 640):
+        chain(p, [(x, 80), (x + (40 if x < 500 else -40), 250)], 10, IRONC.dark(0.1), 1.8)
+    # the colossus
+    def panel(p2, j):
+        # an open hatch in the belly where the servos climb in, gear light inside
+        hatch = [(-10, -56, 0), (12, -56, 0), (12, -40, 0), (-10, -40, 0)]
+        p2.shape(hatch, ('v', FURN_CORE, FURN, C.hex('8a2a10')), width=1.4, smooth=False)
+        p2.clip_shape(hatch, smooth=False)
+        gear(p2, (0, -48), 5, 10, BRASS_D, 0.3, width=0.8, spokes=4)
+        gear(p2, (8, -44), 3.4, 8, BRASS_D, 0.6, width=0.7, spokes=0)
+        p2.unclip()
+        p2.shape([(12, -56, 0), (20, -60, 0), (20, -44, 0), (12, -40, 0)], metal(STEELC.dark(0.1), 'h'), width=1.2, smooth=False)
+        for q in ((-10, -58), (12, -58), (-10, -38), (12, -38)):
+            rivet(p2, q, 0.9, BRASS_L)
+    Automaton(torso='hulk', head='visor', legs='pillar', arm_f='hand', arm_b='hand', col=BRASS.dark(0.05), col2=IRONC.light(0.2), trim=COPPER,
+              width=1.6, pose='ma_bot_stand', eye_col=FURN, neck=4, porthole=False, head_scale=1.3, stack=True,
+              extra_front=[panel]).draw(p, 500, 562, 430)
+    # the assembly belt across the front
+    p.shape([(-10, 560, 0), (1010, 560, 0), (1010, 600, 0), (-10, 600, 0)], metal(IRONC.dark(0.1), 'v'), width=2.2, smooth=False, shade=0.5)
+    for k in range(20):
+        p.blob((20 + k * 52, 580), 12, 12, metal(STEELC.dark(0.1), 'v'), width=1.4, shade=0.7)
+        p.blob((20 + k * 52, 580), 3, 3, BRASS, width=0.8)
+    p.taper([(-10, 560), (1010, 560)], 3, 3, IRONC.light(0.3), width=1.0)
+    # constructs marching in from both sides
+    servo(p, 110, 560, 2.8, BRASS, step=1.5)
+    servo(p, 200, 560, 2.8, COPPER.light(0.1), step=-1.5)
+    scuttler(p, 300, 560, 0.9, BRASS_L)
+    servo(p, 880, 560, 2.8, BRASS_L, step=1.5, flip=True)
+    servo(p, 790, 560, 2.8, BRASS, step=-1.5, flip=True)
+    scuttler(p, 690, 560, 0.9, COPPER.light(0.1), flip=True)
+    sparks(p, (420, 300), 12, 8, 50, FURN_CORE, w=1.8)
+    sparks(p, (600, 260), 10, 8, 40, ARC.light(0.2), w=1.6)
+
+
+# ------------------------------------------------------------------ legendary lords (1.45)
+
+def gear_crown(p, c, w, h, col=GOLD):
+    """A crown of gear teeth with a jewel on each tooth, centred at c (its base)."""
+    x, y = c
+    n = 7
+    pts = [(x - w / 2, y, 0)]
+    for k in range(n):
+        x0 = x - w / 2 + w * k / n
+        x1 = x - w / 2 + w * (k + 0.5) / n
+        pts += [(x0 + w * 0.12 / n, y - h * 0.55, 0), (x0 + w * 0.2 / n, y - h, 0), (x1 + w * 0.3 / n, y - h, 0), (x1 + w * 0.38 / n, y - h * 0.55, 0)]
+    pts += [(x + w / 2, y - h * 0.55, 0), (x + w / 2, y, 0)]
+    p.shape(pts, metal(col, 'v'), width=1.6, smooth=False, shade=0.7)
+    p.shape([(x - w / 2, y, 0), (x + w / 2, y, 0), (x + w / 2, y - h * 0.3, 0), (x - w / 2, y - h * 0.3, 0)], metal(col.dark(0.1), 'v'), width=1.4, smooth=False)
+    for k in range(n):
+        xx = x - w / 2 + w * (k + 0.5) / n
+        p.blob((xx, y - h * 0.15), w * 0.03, h * 0.09, VERMILION if k % 2 else ULTRA, width=0.8)
+        p.blob((xx + w * 0.05 / n, y - h * 0.9), w * 0.025, w * 0.025, FURN_CORE, ink=False)
+
+
+def machine_m_005(p):
+    """Talos, the Bronze Sovereign: in the throne hall of the Foundry the bronze giant
+    stands crowned on his dais before a great golden gear, sceptre-spear in hand; his
+    constructs stand guard and the servos he has just made bow on the steps."""
+    stone_wall(p, (0, 0, W, 560), C.hex('5a5048'))
+    p.glow((500, 260), 420, FURN, 0.25)
+    for x in (180, 820):
+        arched_window(p, x, 120, 110, 260, sky=('v', C.hex('3a2a3a'), C.hex('a04a2a'), C.hex('f0a050')), mullions=2)
+    for x in (60, 940):
+        banner(p, x, 90, 80, 300, CRIMSON)
+    # the great gear behind the throne
+    p.rays((500, 250), 230, 340, 24, FURN_CORE.alpha(0.3), 3)
+    gear(p, (500, 250), 230, 24, IRONC.light(0.05), 0.1, width=2.4, spokes=8, hub=0.2)
+    gear(p, (500, 250), 120, 16, GOLD.dark(0.25), 0.3, width=1.8, spokes=0)
+    p.glow((500, 250), 160, FURN_CORE, 0.3)
+    # the dais
+    for k, (y, w) in enumerate(((560, 560), (580, 680), (600, 820))):
+        p.shape([(500 - w / 2, y, 0), (500 + w / 2, y, 0), (500 + w / 2, y + 22, 0), (500 - w / 2, y + 22, 0)],
+                ('v', STONE.light(0.2 - k * 0.05), STONE.dark(0.25)), width=2, smooth=False)
+    p.shape([(-10, 622, 0), (1010, 622, 0), (1010, H + 5, 0), (-10, H + 5, 0)], C.hex('3a3230'), width=1.6, smooth=False)
+    # crimson runner up the steps
+    p.shape([(440, 560, 0), (560, 560, 0), (580, 626, 0), (420, 626, 0)], ('v', CRIMSON.light(0.1), CRIMSON.dark(0.3)), width=1.6, smooth=False)
+    # guard constructs at either side
+    Automaton(torso='cuirass', head='helm', legs='pillar', arm_f='spear', arm_b='shield', col=BRONZE.dark(0.15), col2=IRONC, trim=BRASS,
+              crest=CRIMSON, pose='ma_bot_spear', width=1.1, shield_col=BRASS.dark(0.1)).draw(p, 175, 606, 250)
+    Automaton(torso='cuirass', head='helm', legs='pillar', arm_f='spear', arm_b='shield', col=BRONZE.dark(0.15), col2=IRONC, trim=BRASS,
+              crest=CRIMSON, pose='ma_bot_spear', width=1.1, shield_col=BRASS.dark(0.1)).draw(p, 825, 606, 250, flip=True)
+
+    def mantle(p2, j):
+        # a royal mantle of crimson hanging from the shoulders behind the body
+        sb, sf = j['sh_b'], j['sh_f']
+        pts = [(sb[0] - 4, sb[1] - 2), (sf[0] + 2, sf[1] - 3), (sf[0] + 10, -30), (sf[0] + 16, -2, 0), (-4, 0), (sb[0] - 20, -2, 0), (sb[0] - 14, -40)]
+        p2.shape(pts, ('h', CRIMSON.light(0.15), CRIMSON, CRIMSON.dark(0.35)), width=1.6, shade=0.6, rim=0.3)
+        for xx in (-18, -8, 4, 14):
+            p2.fold_band([(xx * 0.5, -70), (xx, -4)], 0.4, 2.2, CRIMSON.dark(0.5).alpha(0.4))
+        p2.taper([(sb[0] - 20, -2), (-4, 0), (sf[0] + 16, -2)], 1.6, 1.6, GOLD, width=0.8)
+
+    def regalia(p2, j):
+        hx, hy = j['head']
+        gear_crown(p2, (hx + 0.5, hy - 8.5), 19, 11, GOLD)
+        # gold collar of office across the chest
+        p2.taper([(-12, -80), (2, -73), (15, -80)], 2.2, 2.2, metal(GOLD, 'v'), width=1.0)
+        gear(p2, (2, -71), 3.2, 10, GOLD_LIGHT, 0.2, width=0.8, spokes=0)
+
+    Automaton(torso='cuirass', head='helm', legs='jointed', arm_f='spear', arm_b='hand', col=BRONZE.light(0.08), col2=BRONZE.dark(0.25), trim=GOLD,
+              pose='ma_bot_spear', width=1.3, eye_col=FURN_CORE, porthole=False, pauldron=True, neck=0,
+              extra_back=[mantle], extra_front=[regalia]).draw(p, 490, 566, 470)
+    # servos bowing on the steps
+    for (x, y, col, fl) in ((300, 600, BRASS, False), (370, 622, COPPER.light(0.1), False), (640, 622, BRASS_L, True), (710, 600, BRASS, True)):
+        servo(p, x, y, 2.6, col, flip=fl, step=1.0)
+
+
+def machine_m_006(p):
+    """Oswin Brassmoor, Guildmaster: in the guild treasury the guildmaster stands with
+    his ledger and chain of office among his relics: the lance, the gauntlets and the
+    pauldron on their racks; a newly made engine is set on the table and his artificers
+    grow proud in its light."""
+    brick_wall(p, (0, 0, W, 470), BRICK.dark(0.2), soot=0.4)
+    arched_window(p, 500, 70, 150, 300, sky=('v', C.hex('a8c4dc'), C.hex('f2e6c4')), mullions=3)
+    p.glow((500, 200), 260, C.hex('fff0c0'), 0.35)
+    plank_floor(p, 470, OAK.dark(0.1))
+    banner(p, 300, 40, 70, 220, ULTRA_DEEP)
+    banner(p, 700, 40, 70, 220, ULTRA_DEEP)
+    # relic racks along the wall
+    armoury_rack(p, 30, 250, 230, 470, items=('lance', 'shield', 'helm', 'lance'))
+    shelf(p, 740, 990, 250)
+    pauldron(p, (850, 205), 0.5)
+    # the table with the new engine and a pair of gauntlets
+    workbench(p, 540, 880, 500, depth=40, col=OAK)
+    p.glow((640, 430), 120, FURN, 0.45)
+    clock_dial(p, (640, 430), 44, 0.4)
+    gear(p, (585, 472), 20, 12, BRASS, 0.2, width=1.4, spokes=4)
+    gear(p, (700, 470), 16, 10, COPPER, 0.5, width=1.4, spokes=4)
+    ram_gauntlet(p, (770, 478), 0.42)
+    # an artificer apprentice admiring it
+    Artificer(pose='hold', garb='tunic', main=C.hex('4a5a3a'), hair='curly', hair_col=C.hex('5a3a1a'), sleeves='fitted', belt='leather',
+              head=goggles(), props_front=[tool('wrench', 'f')]).draw(p, 920, 606, 290, flip=True)
+    # the guildmaster
+    Artificer(pose='book', garb='robe', main=C.hex('1e2a4a'), second=C.hex('14203a'), hair='short', hair_col=C.hex('6a6a6a'), beard='short',
+              head='cap', fur=C.hex('5a3a20'), cloak='mantle', cloak_col=C.hex('5a1e2a'), lining=GOLD.light(0.3), belt='gold',
+              emblem=chain_of_office(), width=1.2, mouth='stern', props_front=[PR.book('f')]).draw(p, 400, 612, 480)
+    servo(p, 560, 606, 3.0, BRASS_L, step=1.0)

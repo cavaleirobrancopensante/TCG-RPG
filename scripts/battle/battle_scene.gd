@@ -134,6 +134,7 @@ func _build_ui() -> void:
 	enemy_info.clip_contents = true
 	enemy_info.custom_minimum_size = Vector2(60, UIKit.FS_SECONDARY + 10)
 	ebar.add_child(enemy_info)
+	_tap_opens_graveyard(enemy_info, 1)
 	enemy_relics = HBoxContainer.new()
 	ebar.add_child(enemy_relics)
 
@@ -208,6 +209,7 @@ func _build_ui() -> void:
 	player_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	player_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	col.add_child(player_info)
+	_tap_opens_graveyard(player_info, 0)
 
 	hand_box = _HandRow.new()
 	hand_box.scene = self
@@ -1258,6 +1260,18 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 
 func _resolve_owed() -> void:
 	var me := st.side(0)
+	if not me.charge_owed.is_empty():
+		var picks: Array = await _ask_charge(int(me.charge_owed["n"]), String(me.charge_owed["subtype"]))
+		st.charge_choose(0, picks)
+		return
+	if not me.leak_owed.is_empty():
+		var it: Dictionary = me.leak_owed["item"]
+		var n := int(me.leak_owed["amount"])
+		var nm := _card_name(String(it["id"]))
+		var pay_it: bool = await _ask_two(I18n.t("Pay or lose it"),
+			I18n.t("%s is countered unless you pay %d.") % [nm, n], I18n.t("Let it go"), I18n.t("Pay %d") % n)
+		st.answer_leak(0, pay_it)
+		return
 	if me.owed_discards > 0 and not me.hand.is_empty():
 		var idx = await _pick_cards(I18n.t("Discard a card"), I18n.t("Choose a card to discard. Hold a card to read it."), me.hand.duplicate())
 		st.discard_owed(0, int(idx))
@@ -1322,6 +1336,45 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			if int(_last_resolved.get("sid", -1)) == int(e["sid"]):
 				_ctx = _entry_source(_last_resolved)
 			_refresh_stack_view()
+		"counter":
+			var cn := _card_name(String(e.get("id", "")))
+			_log(I18n.t("Your %s is countered.") % cn if int(e["side"]) == 0 else I18n.t("%s is countered.") % cn)
+			_float_text(I18n.t("Countered"), get_viewport_rect().size * 0.5, UIKit.RED)
+			await _wait(0.4)
+		"leak_paid":
+			var ln := _card_name(String(e.get("id", "")))
+			_log(I18n.t("You pay %d to keep %s.") % [int(e["amount"]), ln] if int(e["side"]) == 0 \
+				else I18n.t("%s pays %d to keep %s.") % [st.side(1).name, int(e["amount"]), ln])
+			_refresh_bars()
+			await _wait(0.3)
+		"owe_leak", "owe_charge":
+			pass                         # asked right after this batch (see _resolve_owed)
+		"charge":
+			var nm2 := {"trample": "trample", "first_strike": "first strike", "vigilance": "vigilance",
+				"lifelink": "lifelink", "plus1": "+1/+0"}
+			var parts: Array = []
+			for b in e.get("picks", []):
+				parts.append(I18n.t(nm2[b]))
+			var who := I18n.t("Your %s") % I18n.t(String(e.get("subtype", "Knight")) + "s") if int(e["side"]) == 0 \
+				else I18n.t("%s's %s") % [st.side(1).name, I18n.t(String(e.get("subtype", "Knight")) + "s")]
+			_log(I18n.t("Charge! %s gain %s until end of turn.") % [who, ", ".join(parts)])
+			for f in figures.values():
+				var fp = st.find_perm(f.uid) if "uid" in f else null
+				if fp:
+					f.sync(fp)
+			await _wait(0.4)
+		"unearth":
+			var un := _card_name(String(e.get("id", "")))
+			_log(I18n.t("You unearth %s: it fights this turn, then it is exiled.") % un if int(e["side"]) == 0 \
+				else I18n.t("%s unearths %s.") % [st.side(1).name, un])
+			_refresh_bars()
+		"exile":
+			var xn := _card_name(String(e.get("id", "")))
+			_log(_cap(I18n.t("%s crumbles to dust and is exiled.") % xn))
+			if figures.has(e["uid"]):
+				var xf: SummonFigure = figures[e["uid"]]
+				figures.erase(e["uid"])
+				xf.queue_free()
 		"fizzle":
 			if e.get("ability", false):
 				var src := _entry_name(_last_resolved) if int(_last_resolved.get("sid", -1)) == int(e.get("sid", -2)) else I18n.t("a creature")
@@ -1982,6 +2035,11 @@ func play_block_reason(i: int) -> String:
 		if me.land_played:
 			return I18n.t("You have already played a land this turn.")
 		return I18n.t("Lands are played in your own main phase, with the stack empty.")
+	if st.legend_in_play(0, c):
+		return I18n.t("Legendary: you already have %s on the battlefield.") % _card_name(me.hand[i])
+	if BattleState.is_counterspell(c) and st.has_priority(0) and st.counter_target(0, c).is_empty() \
+			and st.can_pay(0, st.effective_cost(0, c)):
+		return I18n.t("There is no enemy spell on the stack for it to counter.")
 	if not st.has_priority(0):
 		return I18n.t("Wait until you have priority: your main phase, or when the duel stops for you to answer.")
 	if not BattleState.is_instant(c) and not st.sorcery_time(0):
@@ -2496,6 +2554,135 @@ func _can_respond() -> bool:
 	return false
 
 
+## Tapping a side's counts (hand, library, ⚰ graveyard) opens that graveyard.
+func _tap_opens_graveyard(ctl: Control, side_i: int) -> void:
+	ctl.mouse_filter = Control.MOUSE_FILTER_STOP
+	ctl.tooltip_text = I18n.t("Tap to see the graveyard")
+	var down := [Vector2.ZERO]
+	ctl.gui_input.connect(func(ev):
+		if ev is InputEventMouseButton and ev.button_index == MOUSE_BUTTON_LEFT:
+			if ev.pressed:
+				down[0] = ev.position
+			elif ev.position.distance_to(down[0]) < UIKit.tap_slop():
+				_show_graveyard(side_i))
+
+
+## Charge: choose exactly n boons for the tribe.
+signal _charge_done(picks: Array)
+func _ask_charge(n: int, sub: String) -> Array:
+	var names := {"trample": "Trample", "first_strike": "First strike", "vigilance": "Vigilance",
+		"lifelink": "Lifelink", "plus1": "+1/+0"}
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.55)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	var panel := _centered_panel(dim)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", UIKit.SP_2)
+	panel.add_child(v)
+	v.add_child(UIKit.title(I18n.t("Charge!"), UIKit.FS_HEADING))
+	var note := UIKit.label(I18n.t("Choose %d for every %s you control until end of turn.") % [n, I18n.t(sub)], UIKit.FS_BODY, UIKit.TEXT, true)
+	note.custom_minimum_size.x = 440
+	v.add_child(note)
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", UIKit.GAP)
+	grid.add_theme_constant_override("v_separation", UIKit.GAP)
+	v.add_child(grid)
+	var chosen: Array = []
+	var ok_btn: Button
+	var btns := {}
+	var update := func():
+		for k in btns:
+			UIKit.set_selected(btns[k], chosen.has(k))
+		ok_btn.disabled = chosen.size() != n
+		ok_btn.text = I18n.t("Charge") + "  (%d/%d)" % [chosen.size(), n]
+	for k in BattleState.CHARGE_BOONS:
+		var kk: String = k
+		var b := UIKit.button(I18n.t(names[k]), func():
+			if chosen.has(kk):
+				chosen.erase(kk)
+			elif chosen.size() < n:
+				chosen.append(kk)
+			update.call(), 140)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btns[k] = b
+		grid.add_child(b)
+	ok_btn = UIKit.primary_button(I18n.t("Charge"), func():
+		dim.queue_free()
+		_charge_done.emit(chosen.duplicate()), 200)
+	v.add_child(ok_btn)
+	update.call()
+	return await _charge_done
+
+
+## A two-button question; true for the right-hand (second) answer.
+signal _two_answered(right: bool)
+func _ask_two(heading: String, text: String, left: String, right: String) -> bool:
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.55)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	var panel := _centered_panel(dim)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", UIKit.SP_2)
+	panel.add_child(v)
+	v.add_child(UIKit.title(heading, UIKit.FS_HEADING))
+	var lb := UIKit.label(text, UIKit.FS_BODY, UIKit.TEXT, true)
+	lb.custom_minimum_size.x = 420
+	v.add_child(lb)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", UIKit.GAP)
+	v.add_child(row)
+	var a := UIKit.button(left, func():
+		dim.queue_free()
+		_two_answered.emit(false), 180)
+	a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var b := UIKit.primary_button(right, func():
+		dim.queue_free()
+		_two_answered.emit(true), 180)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(a)
+	row.add_child(b)
+	return await _two_answered
+
+
+## You hold a counterspell you could cast at the enemy spell on the stack.
+func _counter_ready() -> bool:
+	var me := st.side(0)
+	if st.stack.is_empty():
+		return false
+	for hi in me.hand.size():
+		var c := CardDB.get_card(me.hand[hi])
+		if BattleState.is_counterspell(c) and st.can_play(0, hi):
+			return true
+	return false
+
+
+## Your graveyard (or the enemy's), with Unearth on the cards that have it.
+func _show_graveyard(side_i: int) -> void:
+	var g: Array = st.side(side_i).graveyard
+	if g.is_empty():
+		return
+	_close_preview()
+	var entries: Array = []
+	for id in g:
+		entries.append(id)
+	preview = CardViewer.open(self, entries, entries.size() - 1, func(_e, gi):
+		if side_i != 0:
+			return []
+		var c := CardDB.get_card(String(st.side(0).graveyard[gi]) if gi < st.side(0).graveyard.size() else "")
+		if not c.has("unearth"):
+			return []
+		var ok: bool = st.can_unearth(0, gi) and not busy and mode == "idle"
+		var why := "" if ok else I18n.t("Unearth works in your own main phase, with the stack empty and the mana to pay.")
+		return [[I18n.t("Unearth") + " " + CardView.plain_text(CardView.cost_tokens(c["unearth"])), func():
+			_close_preview()
+			if st.unearth(0, gi):
+				await play_events()
+				refresh(), ok, true, why]])
+
+
 ## One of your creatures is about to be destroyed and you can pay to regenerate it.
 func _regen_needed() -> bool:
 	return _regen_doomed() != ""
@@ -2544,7 +2731,7 @@ func _run_priority(key: String) -> void:
 			if st.priority == p and st.ai_controls(p) and (st.window_open or not st.stack.is_empty()):
 				st._pass(p)       # cannot happen; never hang on it
 			continue
-		var asked := (wants_response(st, key, _stop_on(key), respond_to_every_spell()) and _can_respond()) or _regen_needed()
+		var asked := (wants_response(st, key, _stop_on(key), respond_to_every_spell()) and _can_respond()) or _regen_needed() or _counter_ready()
 		if asked:
 			await _wait_for_player()
 		else:

@@ -433,6 +433,22 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Pay or lose it",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is countered unless you pay %d.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Let it go",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Pay %d",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Discard a card",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -490,6 +506,54 @@
   },
   {
    "key": "(overclocked)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Your %s is countered.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is countered.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Countered",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You pay %d to keep %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s pays %d to keep %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "first strike",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Your %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Knight",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Charge! %s gain %s until end of turn.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You unearth %s: it fights this turn, then it is exiled.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s unearths %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s crumbles to dust and is exiled.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -797,6 +861,14 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Legendary: you already have %s on the battlefield.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "There is no enemy spell on the stack for it to counter.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Wait until you have priority: your main phase, or when the duel stops for you to answer.",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -910,6 +982,46 @@
   },
   {
    "key": "Don't ask again",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Tap to see the graveyard",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Trample",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "First strike",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Vigilance",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Lifelink",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Charge!",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose %d for every %s you control until end of turn.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Charge",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Unearth works in your own main phase, with the stack empty and the mana to pay.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Unearth",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -1614,10 +1726,6 @@
   },
   {
    "key": "Gentler foes, richer rewards.",
-   "note": "scripts/core/hero.gd"
-  },
-  {
-   "key": "Knight",
    "note": "scripts/core/hero.gd"
   },
   {
@@ -2825,6 +2933,10 @@
    "note": "scripts/ui/card_view.gd"
   },
   {
+   "key": "Legendary",
+   "note": "scripts/ui/card_view.gd"
+  },
+  {
    "key": "Land (Basic Land)",
    "note": "scripts/ui/card_view.gd"
   },
@@ -2986,6 +3098,26 @@
   },
   {
    "key": "Rummage",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Unearth: from your graveyard, pay its cost: it returns with haste, and is exiled at end of turn or if it would leave.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Counter target",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Counter: the spell is cancelled and goes to its owner's graveyard. Cast it while the enemy spell is on the stack.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Charge: when it attacks, for each other attacking Knight choose one (trample, first strike, vigilance, lifelink, +1/+0); all your Knights gain them until end of turn.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Legendary: you may have only one with this name on the battlefield at a time.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -3289,10 +3421,6 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Lifelink",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
    "key": "Sanctified",
    "note": "scripts/ui/deck_builder.gd"
   },
@@ -3301,23 +3429,11 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Trample",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
    "key": "Reach",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
    "key": "Haste",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "First strike",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Vigilance",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -4979,7 +5095,7 @@
    "note": "card name (sanctum, relic)"
   },
   {
-   "key": "{2}, Tap: Put a +0/+1 counter on target creature you control.",
+   "key": "{3}, Tap: Put a +1/+1 counter on target creature you control.",
    "note": "rules text of Holy Water Stoup"
   },
   {
@@ -4991,7 +5107,7 @@
    "note": "card name (sanctum, relic)"
   },
   {
-   "key": "Creatures you control get +0/+1.",
+   "key": "Creatures you control get +0/+1. Grace: As long as you have more life than you started with, they get +1/+1 instead.",
    "note": "rules text of Processional Cross"
   },
   {
@@ -5025,6 +5141,10 @@
   {
    "key": "Angel of the Wayside Shrine",
    "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Flying (This creature can't be blocked except by creatures with flying or reach.) When Angel of the Wayside Shrine enters, you gain 2 life.",
+   "note": "rules text of Angel of the Wayside Shrine"
   },
   {
    "key": "For he hath given his angels charge over thee; to keep thee in all thy ways. (Psalm 90:11)",
@@ -5551,6 +5671,78 @@
    "note": "flavour text of Saint Michael the Archangel"
   },
   {
+   "key": "Squire of the Commandery",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Greater love than this no man hath, that a man lay down his life for his friends. (John 15:13)",
+   "note": "flavour text of Squire of the Commandery"
+  },
+  {
+   "key": "Knight of the Peace of God",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "When Knight of the Peace of God enters, pacify target tapped enemy creature. (It can't attack for the rest of the duel.)",
+   "note": "rules text of Knight of the Peace of God"
+  },
+  {
+   "key": "Blessed are the peacemakers: for they shall be called the children of God. (Matthew 5:9)",
+   "note": "flavour text of Knight of the Peace of God"
+  },
+  {
+   "key": "Close the Ranks",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Knights you control get +0/+2 until end of turn.",
+   "note": "rules text of Close the Ranks"
+  },
+  {
+   "key": "In all things taking the shield of faith, wherewith you may be able to extinguish all the fiery darts of the most wicked one. (Ephesians 6:16)",
+   "note": "flavour text of Close the Ranks"
+  },
+  {
+   "key": "Vigil of Arms",
+   "note": "card name (sanctum, spell)"
+  },
+  {
+   "key": "Create two 1/1 Human Knight tokens.",
+   "note": "rules text of Vigil of Arms"
+  },
+  {
+   "key": "Watch ye, stand fast in the faith, do manfully, and be strengthened. (1 Corinthians 16:13)",
+   "note": "flavour text of Vigil of Arms"
+  },
+  {
+   "key": "Knight of the Vigil",
+   "note": "token creature name"
+  },
+  {
+   "key": "Rule of the Order",
+   "note": "card name (sanctum, relic)"
+  },
+  {
+   "key": "Knights you control have martyr. (When a creature with martyr dies, put a +1/+1 counter on another target creature you control.)",
+   "note": "rules text of Rule of the Order"
+  },
+  {
+   "key": "Put you on the armour of God, that you may be able to stand against the deceits of the devil. (Ephesians 6:11)",
+   "note": "flavour text of Rule of the Order"
+  },
+  {
+   "key": "Aymeric de Valcourt, Marshal of the Order",
+   "note": "card name (sanctum, creature)"
+  },
+  {
+   "key": "Charge (Whenever this creature attacks, choose one for each other attacking Knight: trample, first strike, vigilance, lifelink or +1/+0. Knights you control gain the chosen until end of turn.) Other Knights you control get +1/+0.",
+   "note": "rules text of Aymeric de Valcourt, Marshal of the Order"
+  },
+  {
+   "key": "For the success of war is not in the multitude of the army, but strength cometh from heaven. (1 Machabees 3:19)",
+   "note": "flavour text of Aymeric de Valcourt, Marshal of the Order"
+  },
+  {
    "key": "Pact Initiate",
    "note": "card name (abyss, creature)"
   },
@@ -5779,7 +5971,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Return target creature card with mana value 3 or less from your graveyard to play.",
+   "key": "Return target creature card with mana value 4 or less from your graveyard to play.",
    "note": "rules text of Unquiet Grave"
   },
   {
@@ -5917,6 +6109,30 @@
   {
    "key": "It digs all night in the churchyard, and what it digs up follows it home.",
    "note": "flavour text of Gravepit Ghoul"
+  },
+  {
+   "key": "Grave-Dust Skirmisher",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Unearth {B} ({B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+   "note": "rules text of Grave-Dust Skirmisher"
+  },
+  {
+   "key": "\"Why wait for judgment to rise? I dug him up on Tuesday, and he only has to last till supper.\" (Morvane, a Pact sexton)",
+   "note": "flavour text of Grave-Dust Skirmisher"
+  },
+  {
+   "key": "Empty the Bone-Pits",
+   "note": "card name (abyss, spell)"
+  },
+  {
+   "key": "Create three 1/1 Risen Bones Skeleton tokens.",
+   "note": "rules text of Empty the Bone-Pits"
+  },
+  {
+   "key": "\"Count the bones, never the souls. Bones obey, and souls keep asking where it all went wrong.\" (Ledger-Keeper Ossric)",
+   "note": "flavour text of Empty the Bone-Pits"
   },
   {
    "key": "Bone-Priest of the Pact",
@@ -6175,6 +6391,30 @@
    "note": "flavour text of Hunger of the Grave"
   },
   {
+   "key": "Rattling Grave-Raider",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When Rattling Grave-Raider dies, create a 1/1 Risen Bones Skeleton token. Unearth {2}{B} ({2}{B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+   "note": "rules text of Rattling Grave-Raider"
+  },
+  {
+   "key": "\"A grave is only a purse the dead forgot to lock.\" (Ulric Vane, grave-robber of the Pact)",
+   "note": "flavour text of Rattling Grave-Raider"
+  },
+  {
+   "key": "Twice-Buried Ghoul",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "When Twice-Buried Ghoul enters, create a 1/1 Restless Dead Zombie token. Unearth {2}{B} ({2}{B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+   "note": "rules text of Twice-Buried Ghoul"
+  },
+  {
+   "key": "\"He was buried once for his sins and once for his debts. I dug him up for both, and charged him twice.\" (Morvane, a Pact sexton)",
+   "note": "flavour text of Twice-Buried Ghoul"
+  },
+  {
    "key": "Oathbreaker Knight",
    "note": "card name (abyss, creature)"
   },
@@ -6295,7 +6535,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Other Skeletons you control have dread. (They can't be blocked except by Pact creatures and Constructs.)",
+   "key": "Other Skeletons you control have dread. (They can't be blocked except by Pact creatures and Constructs.) When Barrow-King of the Hollow Hills enters, create two 1/1 Risen Bones Skeleton tokens.",
    "note": "rules text of Barrow-King of the Hollow Hills"
   },
   {
@@ -6377,6 +6617,46 @@
   {
    "key": "\"Every man in my court is free. He is free to pay, and free to pay again.\" (Azgaroth, Duke of the Ninth Pit)",
    "note": "flavour text of Azgaroth, Duke of the Ninth Pit"
+  },
+  {
+   "key": "Kharnoth, the Bone Marshal",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Other Skeletons you control get +1/+1 and have dread. (They can't be blocked except by Pact creatures and Constructs.) Whenever Kharnoth attacks, create a 1/1 Risen Bones Skeleton token.",
+   "note": "rules text of Kharnoth, the Bone Marshal"
+  },
+  {
+   "key": "\"Rest is a rumour. I signed away my bones so they could march forever, and I still call it a bargain.\" (Kharnoth, the Bone Marshal)",
+   "note": "flavour text of Kharnoth, the Bone Marshal"
+  },
+  {
+   "key": "Ulgreth, the Carrion King",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Zombie Lord",
+   "note": "card subtype"
+  },
+  {
+   "key": "Other Zombies you control get +1/+1. At the beginning of your upkeep, create a 1/1 Restless Dead Zombie token. Whenever another Zombie you control dies, the enemy player loses 1 life and you gain 1 life.",
+   "note": "rules text of Ulgreth, the Carrion King"
+  },
+  {
+   "key": "\"Let the righteous wait for the last trumpet. My dead rise every dawn, and it cost me nothing but my soul.\" (Ulgreth, the Carrion King)",
+   "note": "flavour text of Ulgreth, the Carrion King"
+  },
+  {
+   "key": "Vexhal, Warden of the Brimstone Gate",
+   "note": "card name (abyss, creature)"
+  },
+  {
+   "key": "Dread. Other Demons you control get +1/+1. Whenever another Demon enters under your control, the enemy player loses 1 life and you gain 1 life.",
+   "note": "rules text of Vexhal, Warden of the Brimstone Gate"
+  },
+  {
+   "key": "\"Every soldier of mine signed for one battle. The small print says forever, and I wrote the small print.\" (Vexhal, Warden of the Brimstone Gate)",
+   "note": "flavour text of Vexhal, Warden of the Brimstone Gate"
   },
   {
    "key": "Briar Fox",
@@ -6531,24 +6811,24 @@
    "note": "flavour text of Old Hollow Oak"
   },
   {
-   "key": "Greening Rite",
+   "key": "Rag-Tree Well",
+   "note": "card name (wild, relic)"
+  },
+  {
+   "key": "At the beginning of your upkeep, add {G}.",
+   "note": "rules text of Rag-Tree Well"
+  },
+  {
+   "key": "Tie a rag to the thorn above the well and the well will cure you. If it does not, the rag was dirty. (A wellkeeper's teaching)",
+   "note": "flavour text of Rag-Tree Well"
+  },
+  {
+   "key": "Wildsurge",
    "note": "card name (wild, spell)"
   },
   {
    "key": "Rite",
    "note": "card subtype"
-  },
-  {
-   "key": "Add {G}{G}.",
-   "note": "rules text of Greening Rite"
-  },
-  {
-   "key": "The earth is the goddess, and the goddess is never wrong, not even about the blight. (Greening chant)",
-   "note": "flavour text of Greening Rite"
-  },
-  {
-   "key": "Wildsurge",
-   "note": "card name (wild, spell)"
   },
   {
    "key": "Target creature you control gets +3/+3 until end of turn.",
@@ -6611,7 +6891,7 @@
    "note": "card name (wild, relic)"
   },
   {
-   "key": "{G}, Tap: Target creature you control gets +1/+1 until end of turn.",
+   "key": "{G}, Tap: Target creature you control gets +2/+2 until end of turn.",
    "note": "rules text of Rowan Charm"
   },
   {
@@ -6691,7 +6971,7 @@
    "note": "card name (wild, spell)"
   },
   {
-   "key": "Treefolk you control get +1/+2 until end of turn.",
+   "key": "Treefolk you control get +2/+1 and gain trample until end of turn.",
    "note": "rules text of Stand Like Oaks"
   },
   {
@@ -6873,6 +7153,10 @@
   {
    "key": "Dowser's Hazel Rod",
    "note": "card name (wild, relic)"
+  },
+  {
+   "key": "When Dowser's Hazel Rod enters, return target creature card from your graveyard to your hand. Tap: Add {G}.",
+   "note": "rules text of Dowser's Hazel Rod"
   },
   {
    "key": "The river forgives every sin, so long as you confess it downstream of the village. (A dowser's saying)",
@@ -7185,6 +7469,90 @@
   {
    "key": "The wolves den among his roots, and the oaks of the wood stand taller for his shade.",
    "note": "flavour text of Wolfwood, the Denning Oak"
+  },
+  {
+   "key": "Turn at Bay",
+   "note": "card name (wild, spell)"
+  },
+  {
+   "key": "Target creature you control fights target tapped enemy creature. (Each deals damage equal to its power to the other.)",
+   "note": "rules text of Turn at Bay"
+  },
+  {
+   "key": "The hunted boar turns on the hounds, and the druids call it justice. When the hounds win, they call that justice too.",
+   "note": "flavour text of Turn at Bay"
+  },
+  {
+   "key": "Royal Elk of the Glen",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "The druids crowned him king of the glen. He ate the crown, which they took as a sign of great humility.",
+   "note": "flavour text of Royal Elk of the Glen"
+  },
+  {
+   "key": "Barrow-Singer Druid",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "At the beginning of your upkeep, add {G} for each Druid you control.",
+   "note": "rules text of Barrow-Singer Druid"
+  },
+  {
+   "key": "Sing to the barrow and the ancestors will bless the barley. In three hundred years they have never once said no. (Barrow-Singer Druid)",
+   "note": "flavour text of Barrow-Singer Druid"
+  },
+  {
+   "key": "Thunder-Split Ash",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Trample. Other Treefolk you control have trample.",
+   "note": "rules text of Thunder-Split Ash"
+  },
+  {
+   "key": "The storm god struck the ash to punish it, say the druids. The ash took it as encouragement.",
+   "note": "flavour text of Thunder-Split Ash"
+  },
+  {
+   "key": "Cave Bear of the Tors",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Trample. When Cave Bear of the Tors enters, target creature you control fights target enemy creature.",
+   "note": "rules text of Cave Bear of the Tors"
+  },
+  {
+   "key": "Each spring the druids leave him honey and beg his blessing. He eats the honey, then the basket, and looks thoughtfully at the druid.",
+   "note": "flavour text of Cave Bear of the Tors"
+  },
+  {
+   "key": "Ardagh, King of the Oakmoot",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Trample. Other Treefolk you control get +2/+1 and have trample. When Ardagh enters, create a 2/2 Oakling token. Rooted: As long as you control six or more lands, Ardagh has regenerate {1}{G}.",
+   "note": "rules text of Ardagh, King of the Oakmoot"
+  },
+  {
+   "key": "Every king of men dies. Our king is a tree, so we shall be ruled forever, which is the same as being free. (A druid of the Moot)",
+   "note": "flavour text of Ardagh, King of the Oakmoot"
+  },
+  {
+   "key": "Corrach, Archdruid of the Nine Stones",
+   "note": "card name (wild, creature)"
+  },
+  {
+   "key": "Other Druids you control get +1/+1. When Corrach enters, return target creature card from your graveyard to your hand. Tap: Add {G}{G}.",
+   "note": "rules text of Corrach, Archdruid of the Nine Stones"
+  },
+  {
+   "key": "Nine stones, nine winters, nine sacred mushrooms. I have seen the truth of the world, and it is mostly green. (Corrach)",
+   "note": "flavour text of Corrach, Archdruid of the Nine Stones"
+  },
+  {
+   "key": "Tap: Add {G}{G}.",
+   "note": "activated ability text of Corrach, Archdruid of the Nine Stones"
   },
   {
    "key": "Tavern Brawler",
@@ -7547,6 +7915,54 @@
    "note": "flavour text of Wineskin Satyr"
   },
   {
+   "key": "Shovel of Embers",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Shovel of Embers deals 2 damage to any enemy creature or the enemy player.",
+   "note": "rules text of Shovel of Embers"
+  },
+  {
+   "key": "The innkeeper keeps no sword behind the bar. The fire is always lit, and the shovel is always warm.",
+   "note": "flavour text of Shovel of Embers"
+  },
+  {
+   "key": "Gambler's Ruin",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Gambler's Ruin deals 3 damage to target enemy creature. You lose 2 life.",
+   "note": "rules text of Gambler's Ruin"
+  },
+  {
+   "key": "Quid sit futurum cras, fuge quaerere: cease to ask what tomorrow will bring. (Horace, Odes 1.9)",
+   "note": "flavour text of Gambler's Ruin"
+  },
+  {
+   "key": "Pawn the Heirlooms",
+   "note": "card name (revel, spell)"
+  },
+  {
+   "key": "Rummage twice. (Each time, draw a card, then discard a card.)",
+   "note": "rules text of Pawn the Heirlooms"
+  },
+  {
+   "key": "Have drown'd my Glory in a shallow Cup, / And sold my Reputation for a Song. (Omar Khayyam, tr. FitzGerald)",
+   "note": "flavour text of Pawn the Heirlooms"
+  },
+  {
+   "key": "Cinder-Hoof Satyr",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "Unearth {R} ({R}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+   "note": "rules text of Cinder-Hoof Satyr"
+  },
+  {
+   "key": "Every dawn he is ash. Every dusk he is dancing again, and a little less of him each time.",
+   "note": "flavour text of Cinder-Hoof Satyr"
+  },
+  {
    "key": "Duelist of the Velvet Court",
    "note": "card name (revel, creature)"
   },
@@ -7591,7 +8007,7 @@
    "note": "card name (revel, creature)"
   },
   {
-   "key": "Idle: At the end of your turn, if Host of the Lantern Garden is untapped and didn't attack this turn, put a +1/+0 counter on target creature you control.",
+   "key": "Idle: At the end of your turn, if Host of the Lantern Garden is untapped and didn't attack this turn, put a +1/+1 counter on target creature you control.",
    "note": "rules text of Host of the Lantern Garden"
   },
   {
@@ -7793,6 +8209,18 @@
   {
    "key": "Out of the dark wood came a skirl of pipes and a clatter of hooves, and the sentries forgot their courage.",
    "note": "flavour text of Panic in the Thicket"
+  },
+  {
+   "key": "Torchbearer of the Rout",
+   "note": "card name (revel, creature)"
+  },
+  {
+   "key": "When Torchbearer of the Rout enters, it deals 1 damage to target enemy creature for each Satyr you control.",
+   "note": "rules text of Torchbearer of the Rout"
+  },
+  {
+   "key": "He knows the way into the wood by heart. No one has ever asked him the way out.",
+   "note": "flavour text of Torchbearer of the Rout"
   },
   {
    "key": "Salamander Juggler",
@@ -8275,7 +8703,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Whenever another Philosopher enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
+   "key": "Whenever another Philosopher enters under your control, put a +1/+1 counter on Pupil of the Painted Porch.",
    "note": "rules text of Pupil of the Painted Porch"
   },
   {
@@ -8359,7 +8787,7 @@
    "note": "card name (lyceum, creature)"
   },
   {
-   "key": "Flying. Whenever a Sailor enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
+   "key": "Flying. Whenever a Sailor enters under your control, foresight 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
    "note": "rules text of Gull of the Sea Lanes"
   },
   {
@@ -8815,16 +9243,92 @@
    "note": "flavour text of Xenophon of the Ten Thousand"
   },
   {
+   "key": "Ask the Price",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Counter target spell unless its controller pays {3}.",
+   "note": "rules text of Ask the Price"
+  },
+  {
+   "key": "\"You will be unjust, then, and insatiable, if you are unwilling to pay the price for which these things are sold.\" (Epictetus, Enchiridion)",
+   "note": "flavour text of Ask the Price"
+  },
+  {
+   "key": "Stoic Refusal",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Counter target spell.",
+   "note": "rules text of Stoic Refusal"
+  },
+  {
+   "key": "\"If it is not right, do not do it; if it is not true, do not say it.\" (Marcus Aurelius, Meditations)",
+   "note": "flavour text of Stoic Refusal"
+  },
+  {
+   "key": "Test the Appearance",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Counter target noncreature spell.",
+   "note": "rules text of Test the Appearance"
+  },
+  {
+   "key": "\"You are but an appearance, and not absolutely the thing you appear to be.\" (Epictetus, Enchiridion)",
+   "note": "flavour text of Test the Appearance"
+  },
+  {
+   "key": "Groundless Fear",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "Counter target creature spell.",
+   "note": "rules text of Groundless Fear"
+  },
+  {
+   "key": "\"We suffer more often in imagination than in reality.\" (Seneca, Letters to Lucilius)",
+   "note": "flavour text of Groundless Fear"
+  },
+  {
+   "key": "Verdict of the Porch",
+   "note": "card name (lyceum, spell)"
+  },
+  {
+   "key": "This spell costs {1} less to cast for each Philosopher you control. Counter target spell.",
+   "note": "rules text of Verdict of the Porch"
+  },
+  {
+   "key": "\"Better to trip with the feet than with the tongue.\" (Zeno of Citium)",
+   "note": "flavour text of Verdict of the Porch"
+  },
+  {
+   "key": "Nikandros, Lord of the Cold Sea",
+   "note": "card name (lyceum, creature)"
+  },
+  {
+   "key": "Other Sailor creatures you control get +1/+1 and have unmoved. Whenever another Sailor enters under your control, freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.)",
+   "note": "rules text of Nikandros, Lord of the Cold Sea"
+  },
+  {
+   "key": "\"Take away thy opinion, and like a mariner who has doubled the promontory, thou wilt find calm, everything stable, and a waveless bay.\" (Marcus Aurelius)",
+   "note": "flavour text of Nikandros, Lord of the Cold Sea"
+  },
+  {
    "key": "Brass Scuttler",
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Sacrifice Brass Scuttler: Put a +1/+1 counter on target Construct you control.",
+   "key": "When Brass Scuttler dies, create a 1/1 Servo Construct token.",
    "note": "rules text of Brass Scuttler"
   },
   {
    "key": "\"No part is too small to be spent, and no part too precious to be spared.\" (a Foundry maxim)",
    "note": "flavour text of Brass Scuttler"
+  },
+  {
+   "key": "Servo Construct",
+   "note": "token subtype"
   },
   {
    "key": "Cog Drone",
@@ -8849,10 +9353,6 @@
   {
    "key": "His first construct was a mouse. His second was a better mouse.",
    "note": "flavour text of Tinkerer's Apprentice"
-  },
-  {
-   "key": "Servo Construct",
-   "note": "token subtype"
   },
   {
    "key": "Clockwork Hound",
@@ -8903,7 +9403,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Sacrifice a Servo: Put a +1/+1 counter on Scrap Collector.",
+   "key": "Whenever a Construct you control dies, put a +1/+1 counter on Scrap Collector.",
    "note": "rules text of Scrap Collector"
   },
   {
@@ -9067,7 +9567,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Whenever a Construct enters under your control, Bellows Boy gets +1/+0 until end of turn.",
+   "key": "Whenever a Construct enters under your control, put a +1/+1 counter on Bellows Boy.",
    "note": "rules text of Bellows Boy"
   },
   {
@@ -9215,7 +9715,7 @@
    "note": "card name (machine, creature)"
   },
   {
-   "key": "Sacrifice a Servo: Put a +1/+1 counter on target Construct you control.",
+   "key": "Sacrifice a Servo: Put two +1/+1 counters on target Construct you control. Activate only once each turn.",
    "note": "rules text of Furnace Stoker"
   },
   {
@@ -9609,6 +10109,94 @@
   {
    "key": "\"...the enlarging of the bounds of human empire, to the effecting of all things possible.\" (Francis Bacon, New Atlantis)",
    "note": "flavour text of The Archwright of Cogspire"
+  },
+  {
+   "key": "Servo Winding Frame",
+   "note": "card name (machine, relic)"
+  },
+  {
+   "key": "When Servo Winding Frame enters, create a 1/1 Servo Construct token. {3}, Tap: Create a 1/1 Servo Construct token.",
+   "note": "rules text of Servo Winding Frame"
+  },
+  {
+   "key": "\"A servo asks no wage, keeps no feast day and says no prayer. Order a thousand.\" (requisition of the Grand Tabulator)",
+   "note": "flavour text of Servo Winding Frame"
+  },
+  {
+   "key": "{3}, Tap: Create a 1/1 Servo Construct token.",
+   "note": "activated ability text of Servo Winding Frame"
+  },
+  {
+   "key": "Steam-Ram Gauntlets",
+   "note": "card name (machine, relic)"
+  },
+  {
+   "key": "When Steam-Ram Gauntlets enters, attach it to target creature you control. Equipped creature gets +2/+2 and has trample. Equip {3} ({3}: Attach to target creature you control. Equip only as a sorcery.)",
+   "note": "rules text of Steam-Ram Gauntlets"
+  },
+  {
+   "key": "\"Argument is slow. Pressure is measured by the square inch.\" (Guildmaster Orrin Vell)",
+   "note": "flavour text of Steam-Ram Gauntlets"
+  },
+  {
+   "key": "Strongbox Automaton",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Assembly (This creature gets +1/+1 for each other Construct you control.) When Strongbox Automaton enters, create a 1/1 Servo Construct token.",
+   "note": "rules text of Strongbox Automaton"
+  },
+  {
+   "key": "\"What the guild owns, it guards. What it guards, it owns.\" (a Foundry maxim)",
+   "note": "flavour text of Strongbox Automaton"
+  },
+  {
+   "key": "Guild Assessor",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Whenever a relic enters under your control, put a +1/+1 counter on target creature you control.",
+   "note": "rules text of Guild Assessor"
+  },
+  {
+   "key": "\"Nothing enters the ledger without a value, and nothing keeps its value without a stamp.\" (Assessor-General Hask)",
+   "note": "flavour text of Guild Assessor"
+  },
+  {
+   "key": "Assembly-Line Colossus",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "This spell costs {1} less to cast for each Construct you control. Assembly.",
+   "note": "rules text of Assembly-Line Colossus"
+  },
+  {
+   "key": "\"Every part is replaceable. That is the whole beauty of the whole.\" (a Foundry maxim)",
+   "note": "flavour text of Assembly-Line Colossus"
+  },
+  {
+   "key": "Talos, the Bronze Sovereign",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Other Constructs you control get +1/+1. When Talos enters, create two 1/1 Servo Construct tokens.",
+   "note": "rules text of Talos, the Bronze Sovereign"
+  },
+  {
+   "key": "\"We built a king who never sleeps, never errs and never asks for wages. Then we built him subjects.\" (Minutes of the Foundry Council)",
+   "note": "flavour text of Talos, the Bronze Sovereign"
+  },
+  {
+   "key": "Oswin Brassmoor, Guildmaster",
+   "note": "card name (machine, creature)"
+  },
+  {
+   "key": "Other Artificers you control get +1/+1. Whenever a relic enters under your control, put a +1/+1 counter on each Artificer you control.",
+   "note": "rules text of Oswin Brassmoor, Guildmaster"
+  },
+  {
+   "key": "\"Every tool in Cogspire is on my inventory, and so is every man who holds one.\" (Oswin Brassmoor)",
+   "note": "flavour text of Oswin Brassmoor, Guildmaster"
   },
   {
    "key": "Penitent of the Broken Pact",

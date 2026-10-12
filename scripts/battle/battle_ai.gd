@@ -158,6 +158,11 @@ static func main_action(st: BattleState, i: int) -> bool:
 			best_oc = oc
 	if best >= 0:
 		return st.play(i, best, best_targets, best_oc)
+	# 3b. Unearth: a creature back from the graveyard for one swing, in main 1.
+	if st.phase == "main1":
+		var gi := best_unearth(st, i, hold)
+		if gi >= 0:
+			return st.unearth(i, gi)
 	# 4. Abilities.
 	var ab := _best_ability(st, i, hold)
 	if not ab.is_empty():
@@ -1105,7 +1110,16 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 		var t: String = e.get("target", "")
 		var amount := int(e.get("amount", 1))
 		var chosen = null
-		if a == "fight" or (t == "own_grave_creature" and a != "regrow"):
+		if a == "fight":
+			# an instant fight: the best pairing of our creature and theirs, if it wins something
+			var fr := _best_fight(st, i, e)
+			if fr[0] <= 0.0:
+				return [0.0, []]
+			v += fr[0]
+			targets.append(fr[1])
+			targets.append(fr[2])
+			continue
+		if t == "own_grave_creature" and a != "regrow":
 			return [0.0, []]
 		if e.has("condition") and not st.cond_ok(i, String(e["condition"]), source):
 			return [0.0, []]
@@ -1118,6 +1132,16 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 				continue        # does nothing now; the rest of the card may still help
 			amount *= per
 		match a:
+			"counter":
+				var it := st.counter_target(i, card)
+				if it.is_empty():
+					return [0.0, []]
+				var cv := spell_threat(st, i, it)
+				var n := int(e.get("unless_pay", 0))
+				if n > 0 and st.can_pay(int(it["side"]), {"generic": n}):
+					cv *= 0.15            # they will just pay
+				v += cv
+				continue
 			"buff":
 				var bp := int(e.get("power", 0)) * per
 				var bt := int(e.get("toughness", 0)) * per
@@ -1758,6 +1782,11 @@ static func held_instant(st: BattleState, i: int) -> Dictionary:
 			var a := String(e.get("action", ""))
 			var t := String(e.get("target", ""))
 			var amount := int(e.get("amount", 1))
+			if a == "counter":
+				# keep a counterspell's mana open while they still have cards to cast
+				if foe.hand.size() >= 1:
+					v = maxf(v, 1.6 + 0.2 * mini(4, foe.hand.size()))
+				continue
 			if t in ["enemy_creature", "any_enemy"] and a in ["destroy", "damage", "buff", "bounce"]:
 				if a == "buff" and int(e.get("toughness", 0)) >= 0:
 					continue
@@ -1881,3 +1910,70 @@ static func synergy_bonus(st: BattleState, i: int, c: Dictionary) -> float:
 					n += 1
 			b += 0.4 * mini(3, n)
 	return b
+
+
+
+# ============================================================ counterspells and unearth
+
+## How much a spell on the stack hurts us (side i), on the scale of _plan(): its size, plus
+## the creature of ours it would kill.
+static func spell_threat(st: BattleState, i: int, it: Dictionary) -> float:
+	var c: Dictionary = it.get("card", {})
+	var v := 1.0 + float(c.get("mana_value", 0)) + DeckTools.card_score(c) * 0.3
+	if c.get("type") == "creature":
+		v += 0.3 * (int(c.get("power", 0)) + int(c.get("toughness", 0)))
+	for pr in st.item_effect_targets(it):
+		var ref = pr[1]
+		var act := String(pr[0].get("action", ""))
+		if typeof(ref) == TYPE_DICTIONARY and act in ["destroy", "damage", "bounce", "pacify", "snare"]:
+			var z = st.find_perm(int(ref.get("uid", -1)))
+			if z != null and z.owner == i:
+				v += z.value()
+		if typeof(ref) == TYPE_DICTIONARY and ref.get("kind") == "player" and int(ref.get("side", -1)) == i and act == "damage":
+			v += int(pr[0].get("amount", 1)) * (1.5 if st.side(i).life <= 6 else 0.6)
+	return v
+
+
+## The graveyard card worth unearthing now (index), or -1: the biggest attacker we can pay for
+## that would still leave the mana for a held instant.
+static func best_unearth(st: BattleState, i: int, hold: Dictionary = {}) -> int:
+	var s := st.side(i)
+	var best := -1
+	var best_v := 1.5
+	var avail := st.total_available(i)
+	for gi in s.graveyard.size():
+		if not st.can_unearth(i, gi):
+			continue
+		var c := CardDB.get_card(s.graveyard[gi])
+		var cost := CardDB.mana_value(c["unearth"])
+		if not hold.is_empty() and avail - cost < int(hold["mana"]):
+			continue
+		var v := float(int(c.get("power", 0))) + 0.5 * int(c.get("toughness", 0)) + DeckTools.card_score(c) * 0.3 - 0.3 * cost
+		if v > best_v:
+			best_v = v
+			best = gi
+	return best
+
+
+
+## The best fight for effect e: [gain, our creature ref, their creature ref]. Gain is what
+## dies on their side minus what dies on ours ([0, null, null] when no pairing pays).
+static func _best_fight(st: BattleState, i: int, e: Dictionary) -> Array:
+	var best: Array = [0.0, null, null]
+	for zref in st.valid_targets(i, e):
+		if zref.get("kind") != "creature":
+			continue
+		var z = st.find_perm(int(zref["uid"]))
+		if z == null:
+			continue
+		for x in st.side(i).creatures:
+			if x.power() <= 0:
+				continue
+			var kills: bool = x.power() >= z.toughness() - z.damage or x.has_kw("deathtouch")
+			if not kills:
+				continue
+			var dies: bool = z.power() >= x.toughness() - x.damage or z.has_kw("deathtouch")
+			var g: float = z.value() - (x.value() if dies else 0.0)
+			if g > float(best[0]):
+				best = [g, {"kind": "creature", "uid": x.uid}, zref]
+	return best

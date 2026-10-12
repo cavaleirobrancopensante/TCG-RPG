@@ -606,3 +606,23 @@ under *Export → Resources → Filters to export non-resource files*.
 - The deck builder has the draft's type tabs: All, Creatures, Sorceries, Instants, Relics and
   Lands with the deck's count of each. The chosen type filters your collection, the deck list
   and the mana curve together.
+
+## Counterspells, Unearth, legends and Charge (1.45)
+
+- New rules: **counterspells** (the Stoa: cast while an enemy spell is on the stack; "unless its
+  controller pays {3}" asks you whether to pay), **Unearth** (the Pact and the Revel: tap your
+  graveyard counts in a duel to bring a creature back for one turn), **Legendary** (one of each
+  name on your side) and **Charge** (when the Knight lord attacks, each other attacking Knight
+  buys one boon for all your Knights: trample, first strike, vigilance, lifelink or +1/+0).
+  The duel stops to offer a counter when you hold one. The AI counters, unearths, fights at
+  instant speed and picks its Charge boons.
+- 41 new cards with painted art: five counterspells for the Stoa; Skeletons with Unearth, a
+  Skeleton army maker and Zombie help for the Pact; burn and a looting spell for the Revel;
+  ramp, tramplers and an instant fight for the Old Ways (Greening Rite became Rag-Tree Well, a
+  relic); Knights for the Church; Constructs, equipment and relic payoffs for the Technocracy.
+- Legendary lords: Aymeric de Valcourt (Knights, Charge), Ardagh (Treefolk), Corrach (Druids),
+  Kharnoth (Skeletons), Ulgreth (Zombies), Vexhal (Demons), Talos (Constructs), Oswin Brassmoor
+  (Artificers) and Nikandros (Sailors).
+- About 45 weak or fiddly cards raised to rate or given a real effect (Brass Scuttler, the
+  2-mana 1/2s and their kind).
+- AI-vs-AI themes now run from about 38% to 64% (before: 30% to 66%).

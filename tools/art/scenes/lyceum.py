@@ -1879,3 +1879,378 @@ def lyceum_r_012(p):
     Greek(pose='ly_calm', garb='tunic', main=C.hex('8a2a2a'), sleeves='none', hair='short', hair_col=HAIR_GREY, beard='short', age='old',
           cuirass=BRONZE_LIGHT.dark(0.08), greaves=True, chlamys=ULTRA, mouth='stern', eyes='open').draw(p, 470, 604, 470)
     p.shape([(-10, 606, 0), (W + 10, 598, 0), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', VERMILION.dark(0.1), VERMILION.dark(0.4)), width=2, smooth=False)
+
+
+# ------------------------------------------------------------------ counterspells (1.45)
+
+def _unravel(p, c, r, col, side=1, rings=3, spread=1.0):
+    """A spell coming apart: concentric arcs of light broken into fragments that drift
+    away towards `side` (-1 left, +1 right), with loose threads curling off and sparks."""
+    rng = p.rng
+    p.glow(c, r * 1.6, col.light(0.4), 0.55)
+    for k in range(rings):
+        rr = r * (0.38 + 0.62 * k / max(1, rings - 1))
+        n = 9 + k * 3
+        for i in range(n):
+            a0 = math.tau * i / n + k * 0.4
+            a1 = a0 + math.tau / n * rng.uniform(0.45, 0.75)
+            mid = (a0 + a1) / 2
+            # fragments on the far side drift outward and sag
+            loose = max(0.0, math.cos(mid) * side) * spread
+            off = rr * loose * rng.uniform(0.15, 0.55)
+            pts = []
+            for t in range(7):
+                a = lerp(a0, a1, t / 6)
+                q = polar(c, rr + off, a)
+                pts.append((q[0] + side * off * 0.6, q[1] + off * 0.25 * t / 6))
+            w = 5.5 - k * 1.2
+            p.line(pts, col.alpha(0.45 * (1 - loose * 0.5)), w + 5)
+            p.line(pts, col.light(0.55).alpha(0.95 - loose * 0.4), w)
+    # threads unwinding away from the knot
+    for i in range(7):
+        a = rng.uniform(-0.9, 0.9) + (0 if side > 0 else math.pi)
+        q0 = polar(c, r * rng.uniform(0.7, 1.0), a)
+        pts = [q0]
+        ang = a
+        L = r * rng.uniform(0.25, 0.4)
+        for t in range(6):
+            ang += rng.uniform(0.35, 0.8) * (1 if i % 2 else -1)
+            pts.append(polar(pts[-1], L * (1 - t * 0.1), ang))
+        p.line(pts, col.light(0.4).alpha(0.55), 2.2)
+    for i in range(26):
+        a = rng.uniform(-1.3, 1.3) + (0 if side > 0 else math.pi)
+        q = polar(c, r * rng.uniform(0.9, 1.9), a)
+        p.star(q, rng.uniform(2.5, 6), col.light(0.7).alpha(rng.uniform(0.5, 0.95)), 4)
+
+
+def _coin(p, c, r=11, col=BRONZE_LIGHT, flat=0.42):
+    p.blob((c[0], c[1] + r * 0.2), r, r * flat, col.dark(0.35), width=1.4)
+    p.blob(c, r, r * flat, ('h', col.light(0.3), col, col.dark(0.2)), width=1.6)
+    p.blob(c, r * 0.6, r * flat * 0.6, None, ink=col.dark(0.3).alpha(0.7), width=1.0)
+    p.blob((c[0] - 1, c[1] - 0.5), 2.2, 1.1, col.dark(0.4), ink=False)
+
+
+def _scale_stand(p, x, y, h, tilt, left_load=None, right_load=None):
+    """A bronze merchant's balance on its post, beam tilted by `tilt` radians."""
+    rod(p, [(x, y), (x, y - h)], 5, 7, BRONZE_DARK, width=2, shade=0.8)
+    p.shape([(x - 46, y + 4, 0), (x + 46, y + 4, 0), (x + 30, y - 10), (x - 30, y - 10)], BRONZE_DARK, width=2, shade=0.8)
+    top = (x, y - h)
+    arm = 120
+    ends = []
+    for k in (-1, 1):
+        ends.append((x + k * arm * math.cos(tilt), y - h + k * arm * math.sin(tilt)))
+    rod(p, [ends[0], ends[1]], 4.5, 4.5, BRONZE, width=1.8, shade=0.6)
+    p.blob(top, 9, 9, GOLD, width=1.6, shade=0.6)
+    p.shape([(x - 5, y - h - 6), (x, y - h - 34, 0), (x + 5, y - h - 6)], BRONZE, width=1.4)
+    for k, e in enumerate(ends):
+        pan_y = e[1] + 96
+        for dx in (-34, 0, 34):
+            p.line([e, (e[0] + dx, pan_y)], INK.alpha(0.7), 1.4, smooth=False)
+        p.shape([(e[0] - 44, pan_y, 0), (e[0] + 44, pan_y, 0), (e[0] + 30, pan_y + 16), (e[0] - 30, pan_y + 16)],
+                ('v', BRONZE_LIGHT, BRONZE), width=1.8, shade=0.6)
+        load = left_load if k == 0 else right_load
+        if load:
+            load((e[0], pan_y))
+    return ends
+
+
+def lyceum_c_030(p):
+    """Ask the Price: at the agora table the sage weighs the conjurer's spell, and the conjurer's purse is empty."""
+    sea_sky(p, 'day', 0.6)
+    bg.clouds(p, H * 0.16, 2, xs=[340, 760])
+    bg.hills(p, H * 0.6, C.hex('9aa88a'), 26, n=4)
+    temple(p, 780, H * 0.6, 300, 100, 'doric', 6, MARBLE_WARM)
+    # the stoa of the market behind, its columns in shade
+    p.shape(rect(-10, 250, 520, H * 0.7), ('v', C.hex('cbb894'), C.hex('a8916c')), ink=INK.alpha(0.5), smooth=False)
+    for x in range(10, 520, 84):
+        column(p, x, 270, H * 0.7, 30, 'doric', MARBLE_WARM)
+    entablature(p, -10, 530, 236, 38, 'doric', MARBLE_WARM)
+    # a striped awning over a stall, amphorae stacked under it
+    for i in range(8):
+        xa, xb = 580 + i * 50, 630 + i * 50
+        col = VERMILION if i % 2 == 0 else LINEN
+        p.shape([(xa, 322 - i * 2, 0), (xb, 320 - i * 2, 0), (xb + 4, 370 - i * 2, 0), (xa + 4, 372 - i * 2, 0)], col, width=1.6, smooth=False, shade=0.4)
+        p.blob((xa + 29, 372 - i * 2), 25, 9, col, width=1.4, shade=0.4)
+    for x in (600, 960):
+        rod(p, [(x, 360), (x, H * 0.72)], 4, 4, UMBER, width=1.4)
+    amphora(p, 900, H * 0.74, 0.9)
+    amphora(p, 950, H * 0.74, 0.8, TERRA_DARK)
+    ground(p, H * 0.7, C.hex('c8b086'), dry=True)
+    # the table
+    p.shape(rect(200, 470, 760, 494), ('v', MARBLE.light(0.1), MARBLE_SHADE), width=2.2, smooth=False)
+    p.shape(rect(230, 494, 730, 606), ('v', MARBLE_SHADE, MARBLE_SHADE.dark(0.3)), width=2.2, smooth=False)
+    meander(p, 240, 720, 520, 14, MARBLE_SHADE.dark(0.35))
+
+    def spell(c):
+        x, y = c
+        _unravel(p, (x, y - 34), 38, C.hex('e0603a'), side=1, rings=3, spread=0.6)
+        p.blob((x, y - 34), 18, 18, ('r', FLAME_CORE, FLAME, C.hex('c03a20')), width=1.4)
+
+    def nothing(c):
+        pass
+    _scale_stand(p, 470, 470, 180, -0.22, left_load=spell, right_load=nothing)
+    # three coins laid by the empty pan: the price asked
+    for i, q in enumerate(((640, 462), (670, 466), (654, 452))):
+        _coin(p, q, 12, BRONZE_LIGHT.mix(GOLD, 0.3))
+    p.blob((690, 470), 30, 4, C(0.1, 0.05, 0.02, 0.2), ink=False)
+    # the conjurer turns out his empty purse
+    def purse(pp, j):
+        h = j['hand_f']
+        pp.shape([(h[0] - 1, h[1]), (h[0] + 4, h[1] + 3), (h[0] + 6, h[1] + 12), (h[0] + 1, h[1] + 15), (h[0] - 4, h[1] + 10)],
+                 C.hex('7a4a2a'), width=1.0, shade=0.6)
+        pp.line([(h[0] - 1, h[1]), (h[0] - 3, h[1] - 4)], INK, 0.8)
+    LyFigure(pose='hold', garb='robe', main=C.hex('5a2a3a'), second=C.hex('3a1a26'), trim=GOLD_DARK, hair='long', hair_col=C.hex('2a1a12'),
+             beard='forked', head='hood', hood_col=C.hex('3a1a26'), mouth='open', eyes='down', sleeves='wide',
+             props_front=[purse]).draw(p, 840, 606, 430, flip=True)
+    philosopher(pose='ly_finger', himation=C.hex('2e5a8a'), main=LINEN, hair='curly', hair_col=HAIR_GREY, beard='long', age='old',
+                eyes='open', mouth='calm', trim=GOLD).draw(p, 140, 606, 460)
+
+
+def lyceum_c_031(p):
+    """Stoic Refusal: on the headland at dusk a bolt of fire is flung at the sage; before his raised palm it comes undone."""
+    hz = sea_sky(p, 'dusk', 0.58, sun=(220, H * 0.58))
+    bg.clouds(p, H * 0.2, 3, col=C.hex('f0b890').alpha(0.7), xs=[200, 520, 840])
+    sea(p, hz, 'dusk')
+    island(p, 240, hz, 260, 50, C.hex('6a5a7a'), temple=True, haze=0.5)
+    # the headland
+    rock = [(-10, H + 10, 0), (-10, 520), (120, 500), (260, 520), (360, 560), (420, H + 10, 0)]
+    p.shape(rock, ('v', C.hex('6a5a50'), C.hex('3a302a')), width=2.4, shade=0.8, rim=0.4)
+    cliff = [(560, H + 10, 0), (600, 520), (700, 500), (860, 490), (W + 10, 500), (W + 10, H + 10, 0)]
+    p.shape(cliff, ('v', C.hex('8a7a62'), C.hex('4a3e32')), width=2.4, shade=0.8, rim=0.4)
+    p.clip_shape(cliff)
+    p.texture((560, 480, W, H))
+    p.unclip()
+    olive_tree(p, 930, 500, 0.8)
+    # the sorcerer far off on the rock to the left, arms flung out
+    LyFigure(pose='spread', garb='robe', main=C.hex('3a1e2a'), trim=VERMILION, hair='long', hair_col=INK_SOFT, beard='forked',
+             head='hood', hood_col=C.hex('2a121c'), mouth='open', sleeves='wide').draw(p, 150, 512, 200)
+    # the bolt: a long flame streaking right, breaking up as it nears the palm
+    cols = (C.hex('c03a20').alpha(0.55), FLAME.alpha(0.8), FLAME_CORE)
+    for k, w in enumerate((44, 30, 16)):
+        p.taper([(200, 384), (300, 356), (420, 352)], w * 0.25, w, cols[k], ink=(k == 0))
+        p.taper([(420, 352), (490, 356), (545, 362)], w, w * 0.15, cols[k], ink=(k == 0))
+    for k in range(9):
+        y = 330 + k * 8
+        p.line([(470, y), (520, y + (k - 4) * 3), (570, y + (k - 4) * 7)], FLAME.light(0.3).alpha(0.6), 2)
+    _unravel(p, (600, 362), 78, C.hex('f08040'), side=-1, rings=3, spread=1.2)
+    philosopher(pose='ly_palm', himation=C.hex('1f3a72'), main=C.hex('ece4d4'), hair='white', beard='long', age='old',
+                eyes='open', mouth='stern', trim=GOLD).draw(p, 780, 520, 450, flip=True)
+
+
+def lyceum_c_032(p):
+    """Test the Appearance: in the night archive a horned phantom looms; held up to the lamp, it is only smoke."""
+    L.library(p, dark=True, lamp_at=(340, 360))
+    # the brazier whose smoke makes the phantom
+    p.shape([(600, 604, 0), (680, 604, 0), (660, 560), (620, 560)], BRONZE_DARK, width=2, shade=0.8)
+    p.shape([(588, 540), (692, 540), (672, 566), (608, 566)], BRONZE, width=2, shade=0.7)
+    p.glow((640, 536), 60, C.hex('ff9a50'), 0.4)
+    for k in range(5):
+        p.blob((616 + k * 12, 536), 8, 5, C.hex('ff8a3a'), ink=False)
+    # the phantom: a horned head and shoulders of violet smoke
+    smoke = C.hex('8a7ac0')
+    p.clip_shape([(380, 0), (W, 0), (W, 560), (380, 560)], smooth=False)
+    body = [(640, 540), (560, 470), (540, 380), (580, 300), (520, 230), (560, 150), (620, 210), (700, 200),
+            (760, 150), (790, 230), (730, 300), (780, 380), (760, 470)]
+    p.shape(body, smoke.alpha(0.6), ink=smoke.dark(0.3).alpha(0.6), width=2)
+    for k in (-1, 1):
+        p.taper([(660 + k * 50, 200), (660 + k * 100, 150), (660 + k * 96, 90)], 20, 3, smoke.dark(0.25).alpha(0.75), ink=smoke.dark(0.4).alpha(0.6))
+    p.blob((620, 270), 16, 9, C.hex('f0e080').alpha(0.85), ink=False, rot=0.2)
+    p.blob((700, 268), 16, 9, C.hex('f0e080').alpha(0.85), ink=False, rot=-0.2)
+    p.shape([(600, 330), (660, 350), (720, 330), (690, 360), (630, 360)], INK.alpha(0.4), ink=False)
+    for k in range(8):
+        y = 400 + k * 18
+        swirl(p, (640 + (k % 2) * 30 - 15, y), 30 + k * 3, 1.2, smoke.light(0.2), 3, 0.35)
+    p.unclip()
+    # where the lamplight falls the phantom frays into wisps
+    p.clip_shape([(380, 380), (700, 260), (700, 640), (380, 640)], smooth=False)
+    p.shape([(400, 400), (720, 230), (720, 620), (400, 560)], C.hex('ffe0a0').alpha(0.18), ink=False)
+    p.unclip()
+    for k in range(9):
+        y = 250 + k * 34
+        p.line([(560, y), (520, y - 20), (490, y + 4), (460, y - 16)], smoke.light(0.35).alpha(0.5), 3)
+    for k in range(20):
+        q = (p.rng.uniform(440, 560), p.rng.uniform(240, 540))
+        p.star(q, p.rng.uniform(2, 4), C.hex('fff0c0').alpha(0.7), 4)
+    oil_lamp(p, (180, 600), 0.9, glow=False)
+    philosopher(pose='hold', himation=C.hex('4a2e6a'), main=LINEN, hair='short', hair_col=HAIR_DARK, beard='short',
+                eyes='open', mouth='calm', props_front=[held_lamp('f')], trim=GOLD).draw(p, 300, 606, 460)
+
+
+def lyceum_u_021(p):
+    """Groundless Fear: in the morning grove the conjurer calls up a great beast; the seated sage looks at it, and it falls to wisps."""
+    sea_sky(p, 'dawn', 0.62, sun=(160, H * 0.62))
+    bg.hills(p, H * 0.62, C.hex('a0a08a'), 30, n=4)
+    for x, s in ((60, 0.9), (330, 0.7), (880, 1.0)):
+        olive_tree(p, x, H * 0.7, s)
+    cypress(p, 960, H * 0.72, 1.0)
+    ground(p, H * 0.7, C.hex('b8a272'), dry=False, grass=OLIVE)
+    # the circle scratched in the earth
+    for k in range(2):
+        p.blob((700, 590), 170 - k * 24, 26 - k * 4, None, ink=C.hex('c8402a').alpha(0.75), width=3)
+    for i in range(12):
+        q = polar((700, 590), 158, math.tau * i / 12, 24)
+        p.blob(q, 4, 2, C.hex('c8402a').alpha(0.8), ink=False)
+    # the beast: a lion of dark smoke rising out of the circle, its edges crumbling
+    beast = C.hex('2e2a3e')
+    p.glow((700, 560), 200, C.hex('c8402a'), 0.25)
+    body = [(620, 470), (660, 420), (760, 400), (850, 410), (880, 460), (860, 540), (800, 590), (700, 590), (640, 560)]
+    p.shape(body, beast.alpha(0.55), ink=beast.alpha(0.4), width=2)
+    # forelegs reaching out of the smoke, claws spread
+    for (kx, ang) in ((0, 0.0), (40, 0.15)):
+        leg = [(620 + kx, 470), (560 + kx, 520), (520 + kx, 560)]
+        p.taper(leg, 26, 18, beast.alpha(0.75), ink=beast.alpha(0.5))
+        for c in range(4):
+            q = (512 + kx + c * 7, 568)
+            p.taper([(q[0] + 6, q[1] - 8), q, (q[0] - 6, q[1] + 6)], 3, 0.5, C.hex('e8e0d0').alpha(0.8), ink=False)
+    # the maned head, jaws open towards the sage
+    hx, hy = 600, 380
+    for i in range(18):
+        a = math.tau * i / 18
+        q = polar((hx + 10, hy), 82, a, 76)
+        p.blob(q, 30, 22, beast.light(0.08).alpha(0.7), rot=a, ink=False)
+    p.blob((hx + 10, hy), 80, 74, beast.alpha(0.75), ink=beast.alpha(0.5), width=2)
+    face = [(hx - 30, hy - 40), (hx + 10, hy - 50), (hx + 30, hy - 20), (hx + 20, hy + 30), (hx - 30, hy + 40),
+            (hx - 76, hy + 30), (hx - 92, hy + 6), (hx - 80, hy - 18)]
+    p.shape(face, beast.light(0.12).alpha(0.9), ink=beast.alpha(0.6), width=2)
+    jaw = [(hx - 88, hy + 14, 0), (hx - 30, hy + 30), (hx - 20, hy + 56), (hx - 70, hy + 58), (hx - 90, hy + 40, 0)]
+    p.shape(jaw, C.hex('5a1a22').alpha(0.9), ink=beast.alpha(0.6), width=1.6)
+    for t in range(5):
+        x = hx - 84 + t * 12
+        p.shape([(x, hy + 16, 0), (x + 5, hy + 28, 0), (x + 10, hy + 18, 0)], C.hex('e8e0d0'), ink=False, smooth=False)
+        p.shape([(x + 2, hy + 56, 0), (x + 7, hy + 46, 0), (x + 12, hy + 56, 0)], C.hex('e8e0d0'), ink=False, smooth=False)
+    p.blob((hx - 40, hy - 18), 11, 6, C.hex('f0a040'), ink=False, rot=-0.2)
+    p.blob((hx - 40, hy - 18), 3, 4, INK, ink=False)
+    p.glow((hx - 40, hy - 18), 30, C.hex('f0a040'), 0.4)
+    p.blob((hx - 92, hy + 2), 8, 6, INK.alpha(0.8), ink=False)
+    for k in range(2):
+        p.taper([(hx - 30 + k * 30, hy - 60), (hx - 20 + k * 34, hy - 84)], 12, 4, beast.alpha(0.8), ink=False)
+    # its front frays into wisps drifting back, and the smoke column rises from the circle
+    for k in range(18):
+        q = (p.rng.uniform(430, 560), p.rng.uniform(280, 560))
+        swirl(p, q, p.rng.uniform(8, 20), 1.4, beast.light(0.35), 2.2, 0.5)
+    for k in range(12):
+        y = 300 + k * 22
+        p.line([(520, y), (480, y - 12), (440, y + 4), (410, y - 6)], beast.light(0.4).alpha(0.4), 2.6)
+    for k in range(6):
+        x = 640 + k * 40
+        p.line([(x, 600), (x - 10, 560), (x + 8, 520), (x - 4, 480)], beast.light(0.2).alpha(0.45), 4)
+    LyFigure(pose='spread', garb='robe', main=C.hex('2a3a2a'), trim=C.hex('c8402a'), hair='long', hair_col=C.hex('6a3a1a'),
+             beard='forked', head='hood', hood_col=C.hex('1e2a1e'), mouth='open', eyes='open', sleeves='wide').draw(p, 900, 600, 330, flip=True)
+    L.SeatedGreek(pose='ly_knees', garb='toga', main=LINEN, himation=C.hex('2a5a7a'), hair='white', beard='long', age='old',
+                  sleeves='fitted', eyes='open', mouth='calm', trim=GOLD).draw(p, 230, 606, 440)
+
+
+def lyceum_u_022(p):
+    """Verdict of the Porch: three philosophers raise their hands as one, and the conjurer's decree is bound and sealed."""
+    stoa_interior(p, mural=painted_battle, order='ionic')
+    for x in (60, 940):
+        column(p, x, 166, H * 0.74, 50, 'ionic', MARBLE)
+    # the table and the decree on it
+    p.shape(rect(330, 470, 670, 492), ('v', MARBLE.light(0.1), MARBLE_SHADE), width=2.2, smooth=False)
+    p.shape(rect(360, 492, 640, 606), ('v', MARBLE_SHADE, MARBLE_SHADE.dark(0.3)), width=2.2, smooth=False)
+    meander(p, 370, 630, 520, 14, GOLD_DARK)
+    # the snuffed spell rising off it as a last thread of smoke
+    for k in range(4):
+        p.line([(500 + k * 6, 440), (480 + k * 10, 380), (520 - k * 4, 320), (500, 250)], C.hex('7a3a8a').alpha(0.6 - k * 0.1), 6 - k * 1.0)
+    for k in range(12):
+        p.star((p.rng.uniform(440, 560), p.rng.uniform(230, 420)), p.rng.uniform(2, 4), C.hex('e0a0e0').alpha(0.6), 4)
+    scroll_closed(p, (500, 452), 240, 18, 0.0, PARCH.dark(0.05))
+    # the cord round it and the great seal
+    for xx in (440, 560):
+        p.line([(xx, 434), (xx + 4, 470)], VERMILION.dark(0.2), 4, smooth=False)
+    p.blob((500, 452), 30, 26, ('r', C.hex('d84a3a'), C.hex('8a1a1a')), width=2, shade=0.6, rim=0.3)
+    for i in range(10):
+        q = polar((500, 452), 30, math.tau * i / 10, 26)
+        p.blob(q, 5, 4, C.hex('a82a2a'), width=1)
+    p.blob((500, 452), 18, 15, None, ink=C.hex('6a1010').alpha(0.8), width=2)
+    for i in range(8):
+        a = math.tau * i / 8
+        p.line([polar((500, 452), 6, a), polar((500, 452), 14, a, 12)], C.hex('6a1010').alpha(0.8), 2.2)
+    p.blob((500, 452), 5, 5, C.hex('6a1010'), ink=False)
+    philosopher(pose='ly_calm', himation=C.hex('7a3a2a'), main=LINEN, hair='curly', hair_col=HAIR_DARK, beard='short',
+                eyes='open', mouth='stern', trim=GOLD).draw(p, 110, 596, 400)
+    philosopher(pose='ly_palm', himation=C.hex('5a2e5e'), main=C.hex('ece4d4'), hair='white', beard='long', age='old',
+                eyes='open', mouth='stern', trim=GOLD).draw(p, 270, 606, 470)
+    philosopher(pose='ly_palm', himation=C.hex('2a5a3a'), main=LINEN, hair='short', hair_col=C.hex('6a4a2a'), beard='short',
+                eyes='open', mouth='stern', trim=GOLD).draw(p, 800, 606, 460, flip=True)
+
+
+# ------------------------------------------------------------------ legendary lord (1.45)
+
+def lyceum_m_005(p):
+    """Nikandros, Lord of the Cold Sea: on the headland he stands like the promontory; at his
+    pointing hand the enemy fleet is locked in the ice beyond the storm, while his own line of
+    triremes rides at anchor in the calm, sunlit bay behind him."""
+    hz = sea_sky(p, 'cold', 0.52)
+    # the storm on the left, a break of golden light over the bay on the right
+    for k in range(9):
+        x = -40 + k * 62
+        p.blob((x, 60 + (k % 3) * 30), 130, 60, C.hex('2a3244').alpha(0.7), ink=False)
+    for k in range(6):
+        p.blob((40 + k * 70, hz - 70 - (k % 2) * 20), 120, 40, C.hex('3a4458').alpha(0.6), ink=False)
+    for k in range(12):
+        x = 40 + k * 32
+        p.line([(x, 120 + (k % 3) * 20), (x - 22, hz - 10)], C.hex('c8d4e0').alpha(0.25), 1.4)
+    p.glow((800, hz - 90), 320, C.hex('ffe6b0'), 0.6)
+    p.rays((800, 70), 40, 360, 9, C.hex('fff0c8').alpha(0.25), 18)
+    bg.clouds(p, H * 0.12, 2, xs=[700, 930])
+    L.mountains(p, hz, C.hex('8f9aae'), [(560, 60), (760, 90), (960, 70)], snow=True)
+    sea(p, hz, 'cold')
+    # the bay on the right lies flat and golden
+    p.shape(rect(520, hz + 1, W + 10, hz + 120), ('v', C.hex('f4e4c0').alpha(0.55), C.hex('f4e4c0').alpha(0.0)), ink=False, smooth=False)
+    for k in range(14):
+        x = p.rng.uniform(540, 980)
+        y = p.rng.uniform(hz + 6, hz + 110)
+        p.line([(x, y), (x + p.rng.uniform(10, 30), y)], C.hex('fff4d8').alpha(0.7), 1.4, smooth=False)
+    # the open sea on the left, dark and heaving, whitecaps running
+    p.shape([(-10, hz, 0), (480, hz, 0), (420, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('3a4c5c').alpha(0.75), C.hex('1a2834').alpha(0.9)), ink=False)
+    for k in range(26):
+        x = p.rng.uniform(-10, 440)
+        y = p.rng.uniform(hz + 8, H - 40)
+        w = 14 + (y - hz) * 0.12
+        p.line([(x, y), (x + w * 0.5, y - 4), (x + w, y)], LEAD_WHITE.alpha(0.7), 2)
+    # the enemy fleet caught in the ice: dark hulls, sails slack, floes heaped up around them
+    for (x, y, sc) in ((110, hz + 30, 0.26), (260, hz + 18, 0.2), (360, hz + 40, 0.24)):
+        ship(p, x, y, sc, C.hex('b8b0a0'), C.hex('3a3a3a'), oars=True, hull=C.hex('2a2420'), flip=True, sail_up=False)
+        frost(p, (x - 40, y - 50, x + 40, y), 8)
+    for (x, y, w) in ((80, hz + 44, 150), (230, hz + 30, 120), (370, hz + 56, 140), (170, hz + 80, 170), (310, hz + 96, 130)):
+        top = [(x - w / 2, y), (x - w / 3, y - w * 0.08), (x + w * 0.1, y - w * 0.11), (x + w / 2, y - w * 0.02), (x + w * 0.3, y + w * 0.07), (x - w * 0.3, y + w * 0.07)]
+        p.shape([(q[0], q[1] + w * 0.05) for q in top], ICE_DEEP.dark(0.3), ink=False)
+        p.shape(top, ('v', LEAD_WHITE, ICE.dark(0.05), ICE_DEEP), ink=ICE_DEEP.dark(0.45), width=1.5)
+        p.line([(x - w / 3, y - w * 0.05), (x + w * 0.05, y - w * 0.07)], LEAD_WHITE.alpha(0.9), 2)
+    for (x, y, s) in ((150, hz + 62, 0.45), (300, hz + 70, 0.4)):
+        ice_shards(p, x, y, s, n=5)
+    # his own fleet in line abreast in the calm, owl-blue sails furled to the yards
+    for (x, y, sc) in ((600, hz + 30, 0.22), (720, hz + 40, 0.26), (860, hz + 52, 0.3), (990, hz + 70, 0.36)):
+        ship(p, x, y, sc, LEAD_WHITE, ULTRA, oars=True, hull=C.hex('4a3426'))
+    for (x, y, u) in ((640, 150, 0.6), (700, 190, 0.2)):
+        gull(p, (x, y), 0.32, up=u)
+    # the headland he stands on, the waves breaking white at its foot
+    rock = [(-10, H + 10, 0), (-10, 590), (90, 560), (200, 520), (300, 500), (420, 494), (540, 506), (640, 530), (720, 566), (790, 600), (820, H + 10, 0)]
+    p.shape(rock, ('v', C.hex('7a7468'), C.hex('4a443c'), C.hex('2a2622')), width=2.6, shade=0.8, rim=0.45)
+    p.clip_shape(rock)
+    p.texture((-10, 480, 820, H))
+    for k in range(9):
+        x = 40 + k * 86
+        p.line([(x, 510 + (k % 3) * 10), (x - 20, 560), (x - 8, H)], INK.alpha(0.28), 1.6)
+    for k in range(7):
+        x = 200 + k * 70
+        p.line([(x, 504), (x + 40, 508)], LEAD_WHITE.alpha(0.35), 2)
+    p.unclip()
+    frost(p, (60, 540, 380, 600), 12)
+    wave_crash(p, 40, 600, 1.1)
+    wave_crash(p, 830, 610, 0.8)
+    # his standard planted in the rock: a blue banner with the owl of wisdom
+    rod(p, [(690, 560), (690, 120)], 6, 5, C.hex('6a4a2e'), width=1.8, shade=0.7)
+    p.blob((690, 114), 9, 9, GOLD, width=1.4, shade=0.6)
+    flag = [(694, 140), (846, 150), (836, 210), (850, 268), (694, 260)]
+    p.shape(flag, ('h', ULTRA.light(0.1), ULTRA, ULTRA_DEEP), width=2, shade=0.6, rim=0.3)
+    p.clip_shape(flag)
+    meander(p, 690, 850, 246, 12, GOLD)
+    p.unclip()
+    owl(p, (766, 196), 0.62, col=GOLD, eye=LEAD_WHITE)
+    # the lord himself, cloaked in Tyrian purple, gilded cuirass, crested helm, pointing at the ice
+    hoplite(pose='point', head=attic(LEAD_WHITE, BRONZE, None), main=C.hex('1e2e6a'), cuirass=BRONZE.light(0.12),
+            hair='short', hair_col=HAIR_GREY, beard='long', age='old', cloak='mantle', cloak_col=TYRIAN,
+            lining=C.hex('9a4a7a'), fur=C.hex('ece4d8'), mouth='stern', eyes='open', trim=GOLD,
+            props_back=[spear("b", 150)]).draw(p, 440, 506, 435, flip=True)

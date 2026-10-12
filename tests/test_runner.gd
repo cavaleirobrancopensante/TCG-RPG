@@ -49,7 +49,7 @@ func test_card_db() -> void:
 			line += "%s %d/%d  " % [r.substr(0, 1).to_upper(), counts[f][r], Factions.SET_TARGET[r]]
 		print(line)
 	var valid_actions := ["attach", "grant", "regrow", "regen_shield", "damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate",
-		"rummage", "freeze", "pacify", "snare", "fight", "destroy_relic", "foresight", "tax", "upkeep_cost"]
+		"rummage", "freeze", "pacify", "snare", "fight", "destroy_relic", "foresight", "tax", "upkeep_cost", "counter", "charge"]
 	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
 	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "martyr",
 		"sanctified", "dread", "regenerate", "first_strike", "unmoved"]
@@ -214,6 +214,12 @@ func _lib() -> void:
 		"Squire": {"faction": "sanctum", "type": "creature", "subtype": "Human Knight", "cost": {"W": 1, "generic": 2}, "power": 2, "toughness": 2},
 		"Symposium": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "draw", "amount": 1, "amount_per": "Philosopher"}]},
 		"Sage": {"faction": "lyceum", "type": "creature", "subtype": "Human Philosopher", "cost": {"U": 1}, "power": 1, "toughness": 1},
+		"Cancel": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 2, "generic": 1}, "effects": [{"trigger": "cast", "action": "counter"}]},
+		"Leak": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "counter", "unless_pay": 3}]},
+		"Negate": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "counter", "filter": "noncreature"}]},
+		"Dialectic": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 2, "generic": 2}, "cost_less_per": {"subtype": "Philosopher", "amount": 1}, "effects": [{"trigger": "cast", "action": "counter"}]},
+		"Marshal": {"faction": "sanctum", "type": "creature", "subtype": "Human Knight", "legendary": true, "cost": {"W": 2, "generic": 2}, "power": 3, "toughness": 3, "effects": [{"trigger": "attack", "action": "charge", "subtype": "Knight"}]},
+		"Boneman": {"faction": "abyss", "type": "creature", "subtype": "Skeleton", "cost": {"B": 1, "generic": 1}, "power": 2, "toughness": 1, "unearth": {"B": 1}},
 		"Oakhide": {"faction": "wild", "type": "relic", "subtype": "Aura", "attach": "aura", "cost": {"G": 1}, "grants": {"power": 2, "toughness": 2, "keywords": ["trample"]},
 			"effects": [{"trigger": "enter", "action": "attach", "target": "own_creature"}]},
 		"Blade": {"faction": "machine", "type": "relic", "subtype": "Equipment", "attach": "equipment", "cost": {"generic": 1}, "equip": {"generic": 1}, "grants": {"power": 2}},
@@ -430,7 +436,135 @@ func _test_ai_choices() -> void:
 	check(BattleAI.upkeep_keep_value(st4, 0, hauler) < free_v, "a creature that can't attack is worth less to keep")
 
 
+func _test_counters() -> void:
+	# a creature spell on the stack; Cancel counters it into the graveyard
+	var st := _duel()
+	st.auto_priority = false
+	st.side(0).interactive = true
+	st.side(1).interactive = true
+	st.active = 1
+	st.phase = "main1"
+	st.priority = 1
+	_hand(st, 1, ["Bear"])
+	check(st.play(1, st.side(1).hand.size() - 1), "the enemy casts a Bear")
+	_hand(st, 0, ["Negate", "Cancel"])
+	st.priority = 0
+	check(not st.can_play(0, _hand_idx(st, 0, "Negate")), "Negate can't counter a creature spell")
+	check(st.can_play(0, _hand_idx(st, 0, "Cancel")), "Cancel can counter the Bear")
+	st.play(0, _hand_idx(st, 0, "Cancel"))
+	st._resolve_top()
+	check(st.stack.is_empty() and st.side(1).graveyard.has(_id("Bear")) and st.side(1).creatures.is_empty(), "the Bear is countered into the graveyard")
+	# Leak: the AI pays 3 when it can
+	st = _duel()
+	st.auto_priority = false
+	st.side(0).interactive = true
+	st.side(1).interactive = true
+	st.active = 1
+	st.phase = "main1"
+	st.priority = 1
+	_hand(st, 1, ["Bear"])
+	st.play(1, st.side(1).hand.size() - 1)
+	_hand(st, 0, ["Leak"])
+	st.priority = 0
+	st.play(0, _hand_idx(st, 0, "Leak"))
+	st.side(1).interactive = false
+	st._resolve_top()
+	check(st.stack.size() == 1 and st.stack[0]["id"] == _id("Bear"), "Leak: the AI pays and its spell stays")
+	# Leak against a person: asked, and letting it go counters it
+	st = _duel()
+	st.auto_priority = false
+	st.side(0).interactive = true
+	st.side(1).interactive = true
+	st.active = 0
+	st.phase = "main1"
+	st.priority = 0
+	_hand(st, 0, ["Bear"])
+	st.play(0, st.side(0).hand.size() - 1)
+	_hand(st, 1, ["Leak"])
+	st.priority = 1
+	st.play(1, _hand_idx(st, 1, "Leak"))
+	st._resolve_top()
+	check(st.has_owed(0) and int(st.side(0).leak_owed.get("amount", 0)) == 3, "Leak asks the player to pay 3")
+	st.answer_leak(0, false)
+	check(st.stack.is_empty() and st.side(0).graveyard.has(_id("Bear")) and not st.has_owed(0), "letting it go counters the spell")
+	# the Philosopher discount
+	st = _duel()
+	st.auto_priority = false
+	var full := CardDB.mana_value(st.effective_cost(0, CardDB.get_card(_id("Dialectic"))))
+	_put(st, 0, "Sage")
+	_put(st, 0, "Sage")
+	check(CardDB.mana_value(st.effective_cost(0, CardDB.get_card(_id("Dialectic")))) == full - 2, "Dialectic costs 1 less per Philosopher")
+	# the AI counters a big spell
+	st = _duel()
+	st.auto_priority = false
+	st.side(0).interactive = true
+	st.side(1).interactive = true
+	st.active = 0
+	st.phase = "main1"
+	st.priority = 0
+	_hand(st, 0, ["Juggernaut"])
+	st.play(0, st.side(0).hand.size() - 1)
+	_hand(st, 1, ["Cancel"])
+	st.side(1).interactive = false
+	st.priority = 1
+	check(BattleAI.respond(st, 1) and st.stack.size() == 2, "the AI counters a Juggernaut")
+	# Unearth: back with haste, exiled at end of turn, never to the graveyard again
+	st = _duel()
+	st.side(0).graveyard.append(_id("Boneman"))
+	st.active = 0
+	st.phase = "main1"
+	st.priority = 0
+	check(st.can_unearth(0, 0) and st.unearth(0, 0), "Unearth from the graveyard")
+	var bm: BattleState.Perm = st.side(0).creatures.back()
+	check(bm.unearthed and not bm.sick and st.side(0).graveyard.is_empty(), "unearthed: ready to attack, out of the graveyard")
+	st.destroy_perm(bm)
+	check(not st.side(0).graveyard.has(_id("Boneman")), "an unearthed creature that dies is exiled")
+	st.side(0).graveyard.append(_id("Boneman"))
+	st.unearth(0, 0)
+	st.phase = "main2"
+	st.end_turn()
+	check(st.side(0).creatures.is_empty() and st.side(0).graveyard.is_empty(), "exiled at the end of the turn")
+
+
+func _test_legend_charge() -> void:
+	var st := _duel()
+	st.active = 0
+	st.phase = "main1"
+	st.priority = 0
+	_put(st, 0, "Marshal")
+	_hand(st, 0, ["Marshal"])
+	check(not st.can_play(0, _hand_idx(st, 0, "Marshal")), "Legendary: no second copy on your side")
+	# Charge with two other Knights: the AI picks two boons for all its Knights
+	st = _duel()
+	st.active = 0
+	st.phase = "main1"
+	st.priority = 0
+	var m := _put(st, 0, "Marshal")
+	var k1 := _put(st, 0, "Squire")
+	var k2 := _put(st, 0, "Squire")
+	var bear := _put(st, 0, "Bear")
+	st.declare_attackers([m.uid, k1.uid, k2.uid])
+	check(k1.has_kw("first_strike") and k1.has_kw("trample") and not k1.has_kw("vigilance") and m.has_kw("first_strike"),
+		"Charge: two other Knights give two boons to every Knight")
+	check(not bear.has_kw("first_strike"), "Charge leaves other creatures alone")
+	# the player chooses
+	st = _duel()
+	st.side(0).interactive = true
+	st.auto_priority = false
+	st.active = 0
+	st.phase = "begin_combat"
+	st.priority = 0
+	m = _put(st, 0, "Marshal")
+	k1 = _put(st, 0, "Squire")
+	st.declare_attackers([m.uid, k1.uid])
+	check(st.has_owed(0) and int(st.side(0).charge_owed.get("n", 0)) == 1, "Charge asks the player for one boon")
+	st.charge_choose(0, ["vigilance"])
+	check(k1.has_kw("vigilance") and not k1.tapped and not st.has_owed(0), "vigilance from the charge stands them up")
+
+
 func _test_tribes() -> void:
+	_test_legend_charge()
+	_test_counters()
 	_test_attachments()
 	_test_ai_foresight()
 	_test_ai_regenerate()
@@ -778,6 +912,11 @@ func test_mechanics() -> void:
 		d.side(0).hand.append(_id("Toast"))
 		d.side(0).hand.append(id)
 		var hi := d.side(0).hand.size() - 1
+		if BattleState.is_counterspell(CardDB.get_card(id)):
+			# a counterspell needs an enemy spell to counter: a Bear and a Toast on the stack
+			for sid_id in [_id("Bear"), _id("Toast")]:
+				d.stack.append({"sid": 900 + d.stack.size(), "kind": "card", "side": 1, "id": sid_id,
+					"card": CardDB.get_card(sid_id), "targets": []})
 		var ok := d.can_play(0, hi)
 		check(ok, "%s cannot be cast with 24 lands" % id)
 		if ok:

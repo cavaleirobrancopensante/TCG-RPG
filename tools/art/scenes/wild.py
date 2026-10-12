@@ -467,58 +467,102 @@ def wild_c_012(p):
 
 
 def wild_c_013(p):
-    """Greening Rite: seed into soil, soil into sap, sap into power."""
-    gl = 300
-    sky(p, 'dawn', horizon=0.48)
-    p.glow((560, gl), 300, C.hex('ffe8b0'), 0.6)
-    hills(p, gl - 20, C.hex('8aa070'), 30)
-    # the cut earth: layers of loam, clay and stone
-    soil = [(-20, gl, 0), (W + 20, gl, 0), (W + 20, H + 10, 0), (-20, H + 10, 0)]
-    p.shape(soil, ('v', C.hex('6a4a2c'), C.hex('4a3020'), C.hex('3a2818')), width=2, smooth=False)
-    p.clip_shape(soil, smooth=False)
-    for k, y in enumerate((380, 470, 560)):
-        p.line([(0, y + math.sin(k) * 8), (300, y - 10), (600, y + 8), (1000, y - 6)], C.hex('2a1a10').alpha(0.4), 3)
+    """Rag-Tree Well: a spring in a kerb of old stones, a thorn above it hung with rags of every colour."""
+    sky(p, 'day', horizon=0.55)
+    bg.clouds(p, 90, 3, xs=[200, 520, 800], scale=1.0)
+    hills(p, 290, C.hex('9aae88'), 40)
+    fields(p, 320, rows=2)
+    ground(p, 360, C.hex('6a9a3a'), tufts=50, flowers=40)
     r = p.rng
-    for _ in range(40):
-        q = (r.uniform(0, W), r.uniform(gl + 30, H))
-        p.blob(q, r.uniform(4, 12), r.uniform(3, 8), STONE.dark(r.uniform(0.1, 0.4)), width=1.2, shade=0.7)
-    strokes(p, (0, gl, W, H), 0, C.hex('1a1008'), 300, (3, 8), (1, 2), (0.1, 0.25), 0.4)
-    # roots, glowing with rising sap
-    seed = (560, 380)
-    def root(q, a, L, w, depth):
-        pts = [q]
-        for i in range(6):
-            a += r.uniform(-0.35, 0.35)
-            q = polar(q, L / 6, a)
-            pts.append(q)
-        vtaper(p, pts, [w * (1 - i / 7) + 0.6 for i in range(7)], C.hex('d8c890'), width=1.2)
-        p.line(pts, C.hex('e8ff90').alpha(0.7), max(1.0, w * 0.5))
-        if depth:
-            for k in (2, 4):
-                root(pts[k], a + r.choice([-0.8, 0.8]), L * 0.55, w * 0.55, depth - 1)
-    p.glow(seed, 220, C.hex('c8f080'), 0.35)
-    for a in (1.2, 1.6, 2.0, 0.8, 2.4):
-        root(seed, a, 180, 5, 2)
+    # the old thorn leaning over the well from the right; our boughs grow out of its trunk
+    tree(p, 880, 520, 460, 'hawthorn', 'spring', w=44, lean=-0.2)
+    thorn = C.hex('5a4434')
+    boughs = [[(800, 300), (700, 236), (590, 214), (470, 222), (330, 250)],
+              [(830, 380), (720, 352), (610, 338), (500, 346)],
+              [(760, 270), (690, 190), (600, 150)]]
+    for k, bpts in enumerate(boughs):
+        out = vtaper(p, bpts, [18 - k * 3, 12 - k, 8, 5, 3][:len(bpts)], ('v', thorn.light(0.15), thorn.dark(0.25)), width=1.8, shade=0.7)
+        bark(p, out, thorn)
+        for i in range(1, len(bpts)):
+            q = bpts[i]
+            for sg in (-1, 1):
+                p.line([q, v_add(q, (sg * 7, -12))], thorn.dark(0.2), 1.4)
+            leaf_mass(p, v_add(q, (0, -10)), 30, 16, 'spring', n=10)
+    # rags tied along the boughs: torn strips of red, blue, white, ochre and green
+    rag_cols = [VERMILION, AZURE, LEAD_WHITE, OCHRE, C.hex('6a8a3a'), ROSE, C.hex('8a5a9a'), C.hex('c8b490'), CRIMSON]
+    for bpts in boughs:
+        for t in range(20):
+            seg = r.randrange(len(bpts) - 1)
+            q = v_lerp(bpts[seg], bpts[seg + 1], r.random())
+            q = (q[0], q[1] + 3)
+            col = r.choice(rag_cols)
+            L = r.uniform(26, 58)
+            sway = r.uniform(-8, 8)
+            w = r.uniform(4, 7)
+            end = v_add(q, (sway, L))
+            pts = [(q[0] - w / 2, q[1]), (q[0] + w / 2, q[1]), (q[0] + w / 2 + sway * 0.5, q[1] + L * 0.6),
+                   (end[0] + w / 2, end[1], 0), (end[0] + 1, end[1] - 6, 0), (end[0] - w / 2, end[1] + 3, 0),
+                   (q[0] - w / 2 + sway * 0.5, q[1] + L * 0.6)]
+            p.shape(pts, ('v', col.light(0.15), col.dark(0.2)), width=1.0, shade=0.6)
+            p.blob((q[0], q[1] - 1), w * 0.6, 2.6, col.dark(0.25), width=0.8)
+    # the well: a kerb of fitted stones round a glowing pool
+    c = (470, 486)
+    RX, RY, rx, ry, face = 320, 80, 266, 58, 46
+    p.glow(c, 300, C.hex('d8ffb0'), 0.3)
+    ground_shadow(p, (c[0], c[1] + face + 10), RX + 30, RY * 0.5, 0.35)
+    # outer wall face, seen below the near rim
+    outer = [polar(c, RX, math.pi * k / 24, RY) for k in range(25)]
+    facepts = outer + [v_add(q, (0, face)) for q in reversed(outer)]
+    p.shape(facepts, ('v', STONE.dark(0.05), STONE.dark(0.4)), width=2.2, smooth=False, shade=0.6)
+    p.clip_shape(facepts, smooth=False)
+    for k in range(18):
+        a = math.pi * (k + 0.5 * (k % 2)) / 18
+        q = polar(c, RX, a, RY)
+        p.line([q, v_add(q, (0, face))], INK.alpha(0.5), 1.6, smooth=False)
+    p.line([polar(c, RX, math.pi * k / 24, RY) for k in range(25)], INK.alpha(0.15), 1, smooth=True)
+    p.line([v_add(polar(c, RX, math.pi * k / 24, RY), (0, face * 0.5)) for k in range(25)], INK.alpha(0.45), 1.4)
     p.unclip()
-    # the seed split, the shoot rising into the light
-    p.blob(seed, 14, 10, C.hex('a8742e'), rot=0.3, width=1.8, shade=0.7)
-    p.blob(v_add(seed, (2, -2)), 6, 4, C.hex('e8d8a0'), width=1.0)
-    shoot = [seed, (566, 340), (560, gl), (568, 250), (572, 200)]
-    p.glow((570, 230), 120, C.hex('e8ffa0'), 0.5)
-    p.taper(shoot, 4, 2.4, SAP, width=1.4, shade=0.5)
-    for sg, q in ((-1, (570, 220)), (1, (571, 205))):
-        p.shape([q, v_add(q, (sg * 30, -24)), v_add(q, (sg * 56, -10)), v_add(q, (sg * 30, 6))], SAP.light(0.15), width=1.6, shade=0.6)
-        p.line([q, v_add(q, (sg * 48, -10))], SAP.dark(0.3), 1.0)
-    p.rays((572, 200), 30, 90, 16, C.hex('f8ffc0').alpha(0.5), 2)
-    # the druid's hands letting the last seeds fall
-    # (thumbs turned towards each other: the far left hand above, the near right below)
-    for (sx, sy), wr, ang, ts, col in (((-60, 40), (250, 140), 0.35, 1, DRUID_GREEN.dark(0.12)), ((-60, 190), (270, 238), 0.15, -1, DRUID_GREEN)):
-        sleeve(p, (sx, sy), wr, 50, 40, col, cuff=GOLD_DARK)
-        open_hand(p, v_add(wr, (6, 0)), ang, 2.4, curl=0.25, thumb_side=ts, skin=SKIN if ts < 0 else SKIN.dark(0.06))
-    for k in range(5):
-        q = (420 + k * 26 + r.uniform(-8, 8), 250 + k * 14)
-        p.blob(q, 5, 7, C.hex('a8742e'), rot=k, width=1.0, shade=0.6)
-        p.glow(q, 14, C.hex('e8ffa0'), 0.4)
+    # the top of the kerb (a flat ring of capstones)
+    ring_o = [polar(c, RX, 2 * math.pi * k / 48, RY) for k in range(48)]
+    p.shape(ring_o, ('v', STONE.light(0.1), STONE.light(0.25)), width=2.2, shade=0.4)
+    for k in range(22):
+        a = 2 * math.pi * k / 22 + 0.1
+        p.line([polar(c, rx, a, ry), polar(c, RX, a, RY)], INK.alpha(0.55), 1.6, smooth=False)
+    for k in range(9):
+        a = r.uniform(0, 2 * math.pi)
+        q = polar(c, (rx + RX) / 2, a, (ry + RY) / 2)
+        p.blob(q, r.uniform(8, 16), r.uniform(3, 5), MOSS.light(r.uniform(0, 0.2)), width=0.7)
+        p.blob(v_add(q, (r.uniform(-14, 14), 1)), 4, 2, C.hex('c8b44a').alpha(0.6), ink=False)
+    # the pool
+    inner = [polar(c, rx, 2 * math.pi * k / 48, ry) for k in range(48)]
+    p.shape(inner, ('v', C.hex('2a5a4a'), C.hex('6ab09a'), C.hex('e0ffd8')), width=2)
+    p.clip_shape(inner)
+    p.glow((c[0] + 20, c[1] + 10), 200, C.hex('f0ffd0'), 0.55)
+    # reflections of the rags and the thorn
+    for _ in range(14):
+        x = c[0] + r.uniform(-200, 220)
+        p.line([(x, c[1] - 52), (x + 2, c[1] - 26)], r.choice(rag_cols).alpha(0.4), 5)
+    for k in range(4):
+        p.blob((c[0] + 20, c[1] + 6), 40 + k * 44, 8 + k * 10, None, ink=LEAD_WHITE.alpha(0.55 - k * 0.11), width=1.4)
+    for _ in range(18):
+        q = (c[0] + r.uniform(-200, 200), c[1] + r.uniform(-20, 44))
+        p.blob(q, 3.6, 1.8, GOLD_LIGHT if r.random() < 0.6 else STEEL.light(0.3), width=0.5)
+    p.unclip()
+    p.glow((c[0] + 20, c[1] + 6), 90, C.hex('f8ffd8'), 0.4)
+    # water spilling over a notch at the right into a rill that runs downhill
+    rill = [(780, 520), (800, 556), (850, 586), (930, 600), (1020, 606), (1020, 628), (920, 626), (830, 610), (786, 580), (770, 540)]
+    p.shape(rill, ('h', C.hex('c8f0e0'), C.hex('7ab0a8')), width=1.6)
+    for k in range(4):
+        p.line([(790 + k * 56, 570 + k * 9), (826 + k * 56, 580 + k * 9)], LEAD_WHITE.alpha(0.6), 1.6)
+    # a cast-off crutch leaning on the kerb, and primroses in the grass
+    p.taper([(96, 612), (164, 474)], 8, 7, C.hex('8a6a44'), width=1.6, shade=0.6)
+    p.taper([(142, 466), (184, 486)], 7, 7, C.hex('8a6a44'), width=1.6, shade=0.6)
+    for _ in range(30):
+        q = (r.uniform(60, 940), r.uniform(585, 622))
+        if 120 < q[0] < 820:
+            continue
+        p.blob(q, 4.4, 4.4, C.hex('f4e48a'), width=0.6)
+        p.blob(q, 1.4, 1.4, OCHRE, ink=False)
 
 
 def wild_c_014(p):
@@ -2313,3 +2357,256 @@ def wild_r_012(p):
     Druid(pose='staff', garb='robe', main=C.hex('a8a49c'), second=C.hex('7a766e'), head='hood', hood_col=C.hex('8a867e'), hair='white',
           beard='long', age='old', wreath='mistletoe', belt='gold', cloak='mantle', cloak_col=C.hex('6a6a6a'), lining=C.hex('c8c0a8'), eyes='open',
           props_front=[leaf_staff('f', 120, glow=C.hex('e8ffd0')), grip('f')]).draw(p, 470, 606, 470)
+
+
+def wild_c_030(p):
+    """Turn at Bay: the hunted boar backs against the rock and turns on the hounds."""
+    sky(p, 'dusk')
+    p.glow((760, 330), 360, C.hex('f0a060'), 0.45)
+    treeline(p, 360, C.hex('3a3a4a'), 150, pines=True, mist=C.hex('b8889a'))
+    for x, hh in ((80, 520), (930, 500), (690, 380)):
+        tree(p, x, 470, hh, 'oak', 'autumn', w=hh * 0.07)
+    ground(p, 460, C.hex('5a5a34'), tufts=30, leaves=(AUTUMN, 70), ferns=6)
+    # the hunt far off through the trees, a rider with a raised spear
+    ghostly(p, lambda: rider(p, 830, 470, 0.9, flip=True), 0.55)
+    # the boulder and fallen trunk at the boar's back
+    rock = [(60, 610), (80, 470), (150, 380), (260, 350), (340, 390), (380, 470), (400, 612)]
+    p.shape(rock, ('v', STONE.light(0.1), STONE.dark(0.4)), width=2.4, shade=0.8, rim=0.4)
+    p.clip_shape(rock)
+    strokes(p, (60, 350, 400, 612), 0.2, INK, 60, (10, 24), (1, 2), (0.15, 0.3), 0.3)
+    for _ in range(4):
+        q = (p.rng.uniform(110, 330), p.rng.uniform(380, 560))
+        p.blob(q, 24, 10, MOSS.alpha(0.8), width=0.8)
+    p.unclip()
+    log = [(-20, 580), (200, 540), (420, 520)]
+    out = vtaper(p, log, [40, 34, 28], ('v', BARK.light(0.1), BARK.dark(0.3)), width=2, shade=0.7)
+    bark(p, out, BARK, vertical=False)
+    p.blob((420, 520), 14, 28, C.hex('c8a878'), width=1.8, shade=0.4)
+    # churned leaves and earth
+    p.blob((560, 604), 300, 20, C.hex('4a3a24'), ink=False)
+    make_beast('boar', pose='charge', neck=-6, head_pitch=-10, glow=C.hex('ffb040')).draw(p, 420, 606, 3.0)
+    # one hound tossed up, one lunging, one baying back
+    p.push(760, 300, 1.0)
+    p.cx.rotate(-0.7)
+    hound(p, 0, 0, 1.6, flip=True, pose='leap', col=C.hex('e8e0d0'), patch=C.hex('6a4a2a'))
+    p.pop()
+    hound(p, 790, 612, 2.0, flip=True, pose='charge', col=C.hex('d8c8a8'), patch=C.hex('8a5a34'))
+    hound(p, 950, 560, 1.4, flip=True, pose='stand', col=C.hex('c8b898'), patch=C.hex('3a2a1a'))
+    falling_leaves(p, (100, 140, 900, 560), 26)
+
+
+def wild_c_031(p):
+    """Royal Elk of the Glen: the great stag on the knoll, and the whole glen holds its breath."""
+    sky(p, 'dawn', horizon=0.6)
+    p.glow((300, 260), 360, C.hex('ffe0b0'), 0.5)
+    # mountains on both sides of the glen, a loch between
+    for pts, col in (([(-20, 420), (60, 220), (180, 150), (300, 230), (420, 330), (520, 420)], C.hex('7a7a9a')),
+                     ([(440, 420), (600, 260), (720, 180), (860, 140), (1020, 250), (1020, 420)], C.hex('6a6a8a'))):
+        p.shape(pts + [(pts[-1][0], 430, 0), (pts[0][0], 430, 0)], ('v', col.light(0.15), col.dark(0.2)), width=2, shade=0.6)
+    for x, y, hh in ((120, 330, 70), (160, 345, 60), (820, 300, 80), (870, 320, 66), (920, 312, 72)):
+        tree(p, x, y, hh, 'pine', 'summer')
+    mist_band(p, 380, 70, C.hex('f6e8e0'), 0.7)
+    water(p, [(-20, 420), (1020, 420), (1020, 470), (-20, 470)], sky_col=C.hex('d8c8c8'))
+    hills(p, 470, C.hex('6a7a4a'), 20)
+    ground(p, 480, C.hex('6a6a3a'), tufts=40)
+    heather(p, (0, 480, W, H), 420)
+    # the knoll with grey stones and bracken
+    knoll = [(160, H + 10, 0), (240, 560), (380, 510), (560, 500), (720, 530), (860, H + 10, 0)]
+    p.shape(knoll, ('v', C.hex('8a7a4a'), C.hex('5a5030')), ink=INK.alpha(0.5), width=2)
+    for x, w in ((260, 70), (690, 60)):
+        standing_stone(p, x, 600, w, w * 0.6, STONE, lichen=True)
+    heather(p, (200, 520, 820, H), 160)
+    make_beast('stag', pose='stand', col=C.hex('8a5a34'), neck=6, head_pitch=-14, antler_tines=7).draw(p, 470, 590, 2.55)
+    # his breath steaming in the cold
+    for k in range(4):
+        p.blob((690 + k * 24, 226 - k * 10), 14 + k * 5, 8 + k * 3, LEAD_WHITE.alpha(0.4 - k * 0.07), ink=False)
+    # the trampled leaf crown at his hooves, and two tiny druids bowing far below
+    wreath(p, (700, 588), 30, 10, 'flowers', 1.0)
+    for x in (110, 150):
+        Druid(pose='pray', garb='robe', main=DRUID_WHITE, head='hood', wreath='oak', eyes='down', beard='short').draw(p, x, 560, 90, flip=False)
+
+
+def wild_u_021(p):
+    """Barrow-Singer Druid: at dusk he sings to the long barrow, and the lights come up out of the grass."""
+    sky(p, 'dusk', stars=20)
+    p.glow((760, 380), 300, C.hex('f0a070'), 0.4)
+    hills(p, 400, C.hex('4a4a5a'), 30)
+    fields(p, 420, cols=(C.hex('b8a050'), C.hex('a89040'), C.hex('8a8a40')), rows=2)
+    ground(p, 440, C.hex('4a5a34'), tufts=40)
+    barrow(p, 720, 520, 560, 200, C.hex('4a6a3a'))
+    # spirit lights rising off the mound
+    r = p.rng
+    for _ in range(26):
+        q = (r.uniform(480, 960), r.uniform(220, 470))
+        p.glow(q, r.uniform(10, 20), C.hex('c8ffb0'), 0.7)
+        p.blob(q, 2.2, 2.2, C.hex('f0ffd8'), ink=False)
+    for k in range(3):
+        x0 = 600 + k * 110
+        p.line([(x0, 460), (x0 - 20, 380), (x0 + 10, 300), (x0 - 10, 220)], C.hex('c8ffb0').alpha(0.25), 6)
+    # barley sheaves laid before the barrow door
+    for x in (650, 720, 790):
+        for k in range(14):
+            a = -math.pi / 2 + (k - 6.5) * 0.06
+            base = (x + (k - 6.5) * 1.6, 560)
+            tip = polar(base, 90, a)
+            p.line([base, tip], C.hex('d8b860'), 1.6)
+            p.blob(tip, 3, 8, C.hex('e8c870'), rot=a + math.pi / 2, width=0.6)
+        p.blob((x, 532), 12, 4, C.hex('8a6a3a'), width=1.0)
+    Druid(pose='raise', garb='robe', main=C.hex('5a6a4a'), second=C.hex('4a5a3a'), hair='white', hair_col=C.hex('e4e0d8'), beard='long', age='old',
+          head='hood', hood_col=C.hex('5a6a4a'), wreath='oak', mouth='open', eyes='up', belt='leather',
+          cloak='mantle', cloak_col=C.hex('3a4a3a'), lining=C.hex('8a7a4a')).draw(p, 300, 606, 450)
+    # notes of his song as drifting sparks
+    for k in range(8):
+        q = (380 + k * 30, 170 + math.sin(k) * 20 - k * 4)
+        p.glow(q, 10, C.hex('ffe8a0'), 0.6)
+    fireflies(p, (60, 300, 940, 600), 20)
+
+
+def wild_u_022(p):
+    """Thunder-Split Ash: lightning split him to the heart, and he got up and walked through the wall."""
+    sky(p, 'dusk')
+    # the storm moving off, still flickering on the hills
+    bg.clouds(p, 120, 4, xs=[150, 400, 650, 880], scale=1.4)
+    lightning(p, [(880, 120), (860, 180), (890, 230), (850, 300)])
+    hills(p, 400, C.hex('4a4a5a'), 40)
+    fields(p, 420, cols=(C.hex('8a9a4a'), C.hex('a8a050'), C.hex('6a8a3a')), rows=2)
+    ground(p, 450, C.hex('5a7a3a'), tufts=40)
+    r = p.rng
+    for _ in range(80):
+        q = (r.uniform(0, W), r.uniform(0, 380))
+        p.line([q, (q[0] - 6, q[1] + 20)], C.hex('c8d4e8').alpha(0.25), 1.1, smooth=False)
+    # the wall he has just broken, stones tumbling
+    drystone_wall(p, -20, 1020, 560, 48, STONE, gap=(330, 640))
+    for _ in range(14):
+        q = (r.uniform(330, 640), r.uniform(560, 610))
+        p.shape([v_add(q, (-10, 4)), v_add(q, (-8, -6)), v_add(q, (9, -5)), v_add(q, (11, 4))], STONE.dark(r.uniform(0, 0.3)), width=1.2, shade=0.6)
+    for x, fl in ((120, True), (200, True), (840, False), (920, False)):
+        sheep(p, x, 610 - (x % 3) * 6, 2.2, flip=fl, head_up=0.6)
+    treefolk(p, 490, 606, 450, 'ash', 'summer', pose='stride', scar=True, mouth='open', eye_col=C.hex('fff0a0'),
+             glow=C.hex('ffb060'), col=C.hex('8a8070'))
+    # the burning seam of the lightning down his trunk
+    seam = [(500, 200), (486, 260), (506, 320), (488, 380), (502, 440), (492, 500)]
+    p.glow((496, 360), 140, C.hex('ffb040'), 0.5)
+    p.line(seam, C.hex('2a1a10'), 12, smooth=False)
+    p.line(seam, C.hex('ff9a30'), 6, smooth=False)
+    p.line(seam, C.hex('fff0a0'), 2.4, smooth=False)
+    for q in seam[1:-1]:
+        for k in range(3):
+            e = v_add(q, (r.uniform(-30, 30), r.uniform(-40, -10)))
+            p.blob(e, 2, 2, C.hex('ffd070'), ink=False)
+
+
+def wild_r_013(p):
+    """Cave Bear of the Tors: he rears up at the mouth of his cave, the druids' honey spilled at his feet."""
+    sky(p, 'gold')
+    p.glow((220, 340), 340, C.hex('ffd890'), 0.55)
+    hills(p, 400, C.hex('8a7a8a'), 30)
+    tor(p, 880, 420, 260, 200, C.hex('8a8a96'))
+    tor(p, 120, 440, 200, 140, C.hex('9a9aa4'))
+    ground(p, 440, C.hex('7a7040'), tufts=40)
+    heather(p, (0, 440, W, H), 260)
+    # the great tor at the left with the cave mouth he has come out of
+    tor(p, 210, 590, 420, 360, C.hex('7a7a86'))
+    cave = [(80, 592), (96, 470), (160, 404), (250, 400), (320, 460), (340, 592)]
+    p.shape(cave, ('v', C.hex('0e0c10'), C.hex('2a2420')), width=2.4)
+    for q in ((120, 430), (300, 430)):
+        p.blob(q, 30, 12, C.hex('c8b44a').alpha(0.5), ink=False)
+    # bones of old meals at the threshold
+    for q, a in (((60, 600), 0.3), ((350, 604), -0.4)):
+        e = polar(q, 40, a)
+        p.taper([q, e], 6, 6, BONE, width=1.4, shade=0.5)
+        for t in (q, e):
+            p.blob(t, 6, 5, BONE, width=1.2, shade=0.5)
+    make_beast('bear', pose='charge', mouth='roar', neck=6, head_pitch=-8, col=C.hex('4a3428')).draw(p, 420, 610, 3.6)
+    # the honey basket tipped over, combs spilling
+    basket = [(660, 600), (650, 560), (720, 546), (744, 586)]
+    p.shape(basket, C.hex('b48a4a'), width=1.8, shade=0.7)
+    wicker(p, basket, C.hex('b48a4a'), 6, 8)
+    for k in range(3):
+        q = (690 + k * 30, 600 - (k % 2) * 6)
+        p.shape([v_add(q, (-14, 6)), v_add(q, (-12, -8)), v_add(q, (12, -9)), v_add(q, (14, 6))], C.hex('e8a83a'), width=1.2, shade=0.6)
+        for i in range(3):
+            p.blob(v_add(q, (-6 + i * 6, -1)), 2.6, 2.4, C.hex('c87a1a'), width=0.5)
+    p.blob((760, 610), 40, 6, C.hex('e8a83a').alpha(0.8), width=1.0)
+    # the druid who brought it, scrambling away, his hat on the ground
+    Druid(pose='spread', garb='robe', main=DRUID_WHITE.dark(0.05), hair='short', hair_col=C.hex('6a4a2a'), beard='short',
+          mouth='open', wreath=None, belt='leather').draw(p, 880, 612, 210, flip=False)
+    wreath(p, (800, 612), 16, 6, 'oak', 1.0)
+
+
+# ------------------------------------------------------------------ legendary lords (1.45)
+
+def _leaf_circlet(p, x, y, h, wide=1.0, col=GOLD):
+    """A circlet of gilded oak leaves on a treefolk's brow (treefolk units: brow at -82)."""
+    s = h / 100.0
+    for i in range(11):
+        t = -1 + i * 0.2
+        q = (x + t * 15 * s * wide, y + (-83 - (1 - t * t) * 2.5) * s)
+        ang = -math.pi / 2 + t * 0.6
+        oak_leaf(p, q, ang, 8 * s, col.light(0.1 * (i % 2)), lobes=3, vein=False)
+    for t in (-0.5, 0.0, 0.5):
+        p.blob((x + t * 15 * s * wide, y + (-81 - (1 - t * t) * 2.5) * s), 1.5 * s, 1.3 * s, C.hex('a8742e'), width=1.0, shade=0.6)
+
+
+def wild_m_005(p):
+    """Ardagh, King of the Oakmoot: the old king strides down from the Moot hill and the whole wood marches behind him."""
+    sky(p, 'autumn')
+    p.glow((300, 200), 360, C.hex('ffe0a0'), 0.4)
+    rays_from(p, (260, -80), 6, 0.9, C.hex('fff0c0'), strength=0.16, angle=math.pi / 2 - 0.2)
+    hills(p, 380, C.hex('8a8a6a'), 40)
+    # the Moot hill behind with its ring of stones
+    p.shape([(560, 420), (640, 330), (760, 300), (880, 320), (980, 400), (1020, 430)], ('v', C.hex('7a8a4a'), C.hex('5a6a34')), width=1.8, shade=0.5)
+    for k, x in enumerate((650, 700, 760, 820, 880)):
+        standing_stone(p, x, 330 - (2 - abs(k - 2)) * 6, 16, 40, C.hex('a8a49a'))
+    ground(p, 440, C.hex('6a7a3a'), tufts=30, leaves=(AUTUMN_GOLD, 40))
+    # the marching wood: his kin coming down the slope behind him
+    treefolk(p, 790, 470, 250, 'ash', 'autumn', pose='stride', stride=0.4, col=C.hex('8a8070'), flip=True)
+    treefolk(p, 160, 480, 270, 'birch', 'autumn', pose='stride', stride=0.4)
+    treefolk(p, 900, 520, 300, 'oak', 'autumn', pose='raise', flip=True, eye_col=C.hex('fff0a0'))
+    mist_band(p, 500, 40, C.hex('f8e8c8'), 0.4)
+    p.glow((480, 300), 360, C.hex('ffe8a0'), 0.3)
+    treefolk(p, 480, 612, 540, 'oak', 'autumn', pose='stride', stride=0.5, wide=1.4, crown_scale=1.15,
+             eye_col=C.hex('fff4a0'), glow=C.hex('ffe8a0'), col=C.hex('6a5440'), mouth='open')
+    _leaf_circlet(p, 480, 612, 540, wide=1.4)
+    for x, y, s, fl in ((150, 606, 2.6, False), (800, 612, 2.8, True)):
+        oakling(p, x, y, s, 'autumn', flip=fl, step=0.3)
+    falling_leaves(p, (60, 80, 940, 520), 22)
+
+
+def wild_m_006(p):
+    """Corrach, Archdruid of the Nine Stones: at midnight in the ring of nine he lifts his arms to the moon over the fire."""
+    sky(p, 'night', stars=80)
+    moon(p, (720, 110), 44, glow=0.5)
+    hills(p, 380, C.hex('1a2434'), 40)
+    ground(p, 400, C.hex('22301e'), tufts=20)
+    fire = (660, 572)
+    p.glow(fire, 420, C.hex('a8ff80'), 0.35)
+    stone_ring(p, 500, 440, 420, 60, 9, 170, 60, C.hex('8a9088'), front=False)
+    # the circle's druids kneeling at the stones
+    for x, y, h, fl in ((250, 476, 170, False), (760, 476, 170, True)):
+        Druid(pose='pray', garb='robe', main=C.hex('c8c4a8'), head='hood', hood_col=C.hex('a8a488'), beard='short',
+              wreath='oak', eyes='up', kneel=True).draw(p, x, y, h, flip=fl)
+    stone_ring(p, 500, 440, 420, 60, 9, 170, 60, C.hex('8a9088'), back=False)
+    # a fairy ring of toadstools about his feet
+    r = p.rng
+    for k in range(14):
+        a = k / 14 * math.pi * 2
+        q = (500 + math.cos(a) * 190, 590 + math.sin(a) * 22)
+        if q[1] < 580:
+            mushroom(p, q[0], q[1], r.uniform(1.4, 1.9))
+    Druid(pose='raise', garb='robe', main=C.hex('e8e2cc'), second=C.hex('c8bea0'), hair='white', beard='long', age='old', head=None,
+          wreath='rowan', belt='gold', cloak='mantle', cloak_col=C.hex('6a3a2a'), lining=C.hex('c8a060'), eyes='up', mouth='open',
+          props_back=[leaf_staff('b', 120, glow=C.hex('d8ffb0'))]).draw(p, 430, 604, 470)
+    for k in range(14):
+        a = k / 14 * math.pi * 2
+        q = (500 + math.cos(a) * 190, 590 + math.sin(a) * 22)
+        if q[1] >= 580:
+            mushroom(p, q[0], q[1], r.uniform(1.6, 2.1))
+    # the green fire at his feet and its sparks
+    for k, (w, hh, col) in enumerate(((60, 90, C.hex('4ab04a')), (40, 66, C.hex('a8f070')), (20, 40, C.hex('f0ffd0')))):
+        p.shape([(fire[0] - w, fire[1] + 40), (fire[0] - w * 0.6, fire[1] - hh * 0.4), (fire[0] - w * 0.2, fire[1] - hh * 0.7),
+                 (fire[0], fire[1] - hh, 0), (fire[0] + w * 0.3, fire[1] - hh * 0.6), (fire[0] + w * 0.7, fire[1] - hh * 0.3), (fire[0] + w, fire[1] + 40)],
+                col.alpha(0.85), ink=INK.alpha(0.3) if k == 0 else False, width=1.2)
+    for _ in range(26):
+        q = (r.uniform(560, 760), r.uniform(300, 540))
+        p.glow(q, r.uniform(4, 8), C.hex('d8ffa0'), 0.7)

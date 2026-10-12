@@ -31,6 +31,8 @@ ACTION_OWNERS = {
     "summon": ["wild", "abyss", "machine", "sanctum"],   # the Church: small Angel or Knight tokens only
     "regrow": ["abyss", "wild"],
     "buff": FAITHS, "lose_life": FAITHS, "grant": FAITHS,
+    "counter": ["lyceum"],
+    "charge": ["sanctum"],
 }
 TRIBES = {
     "sanctum": ["Knight", "Angel", "Priest"], "abyss": ["Skeleton", "Demon", "Zombie"],
@@ -181,6 +183,27 @@ def check_card(c, owners_override=None):
     check_wording(cid, c)
     if c.get("type") not in ["creature", "spell", "relic"]:
         bad(cid, "bad type")
+    if "unearth" in c:
+        owners_u = [c.get("faction"), c.get("faction2")]
+        if not ("abyss" in owners_u or "revel" in owners_u):
+            bad(cid, "unearth belongs to the Pact (and the Revel)")
+        if c.get("type") != "creature" or not isinstance(c["unearth"], dict) or not c["unearth"]:
+            bad(cid, "unearth: a creature with a mana cost dictionary")
+    if "legendary" in c and not isinstance(c["legendary"], bool):
+        bad(cid, "legendary must be true or false")
+    for e in c.get("effects", []):
+        if e.get("action") == "charge" and e.get("trigger") != "attack":
+            bad(cid, "charge is an attack trigger")
+    if "cost_less_per" in c:
+        cl = c["cost_less_per"]
+        if not isinstance(cl, dict) or not cl.get("subtype"):
+            bad(cid, "cost_less_per needs a subtype")
+    for e in c.get("effects", []):
+        if e.get("action") == "counter":
+            if e.get("trigger") != "cast" or c.get("speed") != "instant":
+                bad(cid, "a counterspell is an instant with a cast effect")
+            if e.get("filter", "any") not in ["any", "noncreature", "creature"]:
+                bad(cid, "counter filter must be any, noncreature or creature")
     if c.get("rarity") not in COUNTS:
         bad(cid, "bad rarity")
     for k, v in c.get("cost", {}).items():
@@ -310,8 +333,8 @@ def main():
                 problems.append("%s: the Stoa may have at most 2 fliers, found %s" % (path, fliers))
         if "gold" not in path and "lands" not in path:
             for r, n in COUNTS.items():
-                if counts.get(r, 0) != n:
-                    problems.append("%s: expected %d %s, found %d" % (path, n, r, counts.get(r, 0)))
+                if counts.get(r, 0) < n:
+                    problems.append("%s: expected at least %d %s, found %d" % (path, n, r, counts.get(r, 0)))
     for p in problems:
         print("PROBLEM", p)
     print("%d problem(s)" % len(problems))

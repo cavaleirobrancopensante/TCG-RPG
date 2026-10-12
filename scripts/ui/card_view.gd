@@ -618,6 +618,8 @@ static func kind(c: Dictionary) -> String:
 ## The type line: "Creature · Human Cleric", "Instant (Curse)", "Sorcery (Revelry)", "Relic (Charm)".
 static func type_line(c: Dictionary) -> String:
 	var tl := I18n.t(type_name(c))
+	if c.get("legendary", false):
+		tl = I18n.t("Legendary") + " " + tl
 	var sub := String(c.get("subtype", ""))
 	if sub == "" or sub == type_name(c):
 		return tl

@@ -34,6 +34,7 @@ class Perm:
 	var snared_by := -1        # uid of the relic holding it (can't attack or block)
 	var frozen := false        # skips its next untap
 	var regen_shield := 0      # regeneration shields bought this turn (Regenerate {cost})
+	var unearthed := false     # back from the graveyard by Unearth: exiled at end of turn or when it leaves
 	var attacked := false      # attacked this turn
 	var entered_turn := 0
 	var uses := {}             # ability index -> uses this turn
@@ -90,6 +91,8 @@ class BattleSide:
 	var max_hand := 7              # the most cards kept at the end of a turn (not the opening hand)
 	var martyr_owed := 0           # interactive: martyrs whose blessing the player still has to give
 	var foresight_cards: Array = []  # interactive: cards lifted off the top, waiting for a decision
+	var leak_owed := {}            # interactive: {"item", "amount"}: pay to keep a spell from being countered
+	var charge_owed := {}          # interactive: {"n", "subtype"}: Charge boons still to choose
 
 
 var sides: Array = []
@@ -366,7 +369,8 @@ func open_main_window() -> void:
 
 ## Interactive choices still open for side i (the screen asks for them before going on).
 func has_owed(i: int) -> bool:
-	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty() or side(i).martyr_owed > 0
+	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty() or side(i).martyr_owed > 0 \
+		or not side(i).leak_owed.is_empty() or not side(i).charge_owed.is_empty()
 
 
 ## The player discards hand card `idx` for a rummage.
@@ -469,6 +473,11 @@ func end_turn() -> void:
 			p.temp_kw.clear()
 			p.deathtouched = false
 			p.regen_shield = 0
+	for sd in sides:
+		for p in sd.creatures.duplicate():
+			if p.unearthed:
+				_remove_perm(p)
+				emit({"type": "exile", "uid": p.uid, "side": p.owner, "id": p.card_id})
 		sd.pool.clear()
 	active = 1 - active
 	turn += 1
@@ -960,6 +969,10 @@ func effective_cost(i: int, c: Dictionary, extra: Dictionary = {}) -> Dictionary
 					gen -= int(stc.get("amount", 1))
 			elif is_machine:
 				gen -= int(stc.get("amount", 1))
+	var per: Dictionary = c.get("cost_less_per", {})
+	if not per.is_empty():
+		# "costs {1} less for each Philosopher you control"
+		gen -= int(per.get("amount", 1)) * count_kin(i, String(per.get("subtype", "")))
 	gen = maxi(0, gen) + side(i).tax
 	if gen > 0:
 		cost["generic"] = gen
@@ -1094,7 +1107,155 @@ func can_play(i: int, hand_idx: int, overclock: bool = false) -> bool:
 	if overclock and c.get("overclock", {}).is_empty():
 		return false
 	var extra: Dictionary = c.get("overclock", {}).get("cost", {}) if overclock else {}
+	if is_counterspell(c) and counter_target(i, c).is_empty():
+		return false
+	if legend_in_play(i, c):
+		return false
 	return can_pay(i, effective_cost(i, c, extra))
+
+
+## Legendary: one of each name on your side at a time.
+func legend_in_play(i: int, c: Dictionary) -> bool:
+	if not c.get("legendary", false):
+		return false
+	for p in side(i).creatures + side(i).relics:
+		if p.name == String(c.get("name", "")):
+			return true
+	return false
+
+
+# ============================================================ Charge
+
+const CHARGE_BOONS := ["trample", "first_strike", "vigilance", "lifelink", "plus1"]
+## The AI's order of preference.
+const CHARGE_AI_ORDER := ["first_strike", "trample", "plus1", "lifelink", "vigilance"]
+
+
+## The chosen boons for every creature of `sub` side i controls, until end of turn.
+func charge_apply(i: int, picks: Array, sub: String) -> void:
+	for p in side(i).creatures:
+		if not p.subtype_has(sub):
+			continue
+		for b in picks:
+			if b == "plus1":
+				p.temp_p += 1
+			elif not p.temp_kw.has(b):
+				p.temp_kw.append(b)
+				if b == "vigilance" and attackers.has(p.uid):
+					p.tapped = false        # it stands ready again behind the charge
+	emit({"type": "charge", "side": i, "picks": picks.duplicate(), "subtype": sub})
+
+
+## The player names the Charge boons (exactly n of CHARGE_BOONS).
+func charge_choose(i: int, picks: Array) -> void:
+	var s := side(i)
+	if s.charge_owed.is_empty():
+		return
+	var n := int(s.charge_owed["n"])
+	var sub := String(s.charge_owed["subtype"])
+	s.charge_owed = {}
+	var ok: Array = []
+	for b in picks:
+		if CHARGE_BOONS.has(b) and not ok.has(b) and ok.size() < n:
+			ok.append(b)
+	charge_apply(i, ok, sub)
+
+
+## Does this card counter a spell when cast?
+static func is_counterspell(c: Dictionary) -> bool:
+	for e in c.get("effects", []):
+		if e.get("trigger") == "cast" and e.get("action") == "counter":
+			return true
+	return false
+
+
+## Does stack item `it` fit a counter's filter ("any", "noncreature", "creature")?
+static func counter_fits(it: Dictionary, filt: String) -> bool:
+	if it.get("kind") == "ability":
+		return false
+	var is_cre: bool = it.get("card", {}).get("type", "") == "creature"
+	match filt:
+		"noncreature":
+			return not is_cre
+		"creature":
+			return is_cre
+	return true
+
+
+## The spell side i's counterspell c would counter: the topmost enemy spell that fits ({} if none).
+func counter_target(i: int, c: Dictionary) -> Dictionary:
+	var filt := "any"
+	for e in c.get("effects", []):
+		if e.get("action") == "counter":
+			filt = String(e.get("filter", "any"))
+	for k in range(stack.size() - 1, -1, -1):
+		var it: Dictionary = stack[k]
+		if int(it["side"]) != i and counter_fits(it, filt):
+			return it
+	return {}
+
+
+## A countered spell goes to its owner's graveyard.
+func _countered(it: Dictionary) -> void:
+	stack.erase(it)
+	var j := int(it["side"])
+	if not it.has("token"):
+		side(j).graveyard.append(String(it["id"]))
+	emit({"type": "counter", "sid": it["sid"], "side": j, "id": it["id"]})
+
+
+## The player answers "pay {N} or the spell is countered".
+func answer_leak(i: int, pay_it: bool) -> void:
+	var s := side(i)
+	if s.leak_owed.is_empty():
+		return
+	var it: Dictionary = s.leak_owed["item"]
+	var n := int(s.leak_owed["amount"])
+	s.leak_owed = {}
+	if pay_it and can_pay(i, {"generic": n}):
+		pay(i, {"generic": n})
+		stack.append(it)
+		emit({"type": "leak_paid", "side": i, "id": it["id"], "amount": n})
+	else:
+		if not stack.has(it):
+			stack.append(it)       # _countered takes it from the stack
+		_countered(it)
+
+
+# ============================================================ unearth
+
+## Can side i unearth graveyard card `gi` now? (sorcery speed, and the cost paid)
+func can_unearth(i: int, gi: int) -> bool:
+	var s := side(i)
+	if gi < 0 or gi >= s.graveyard.size() or not sorcery_time(i):
+		return false
+	var c := CardDB.get_card(s.graveyard[gi])
+	if not c.has("unearth") or c.get("type") != "creature":
+		return false
+	return can_pay(i, c["unearth"])
+
+
+## Unearth: back to the battlefield with haste until end of turn, then exiled. It never goes
+## to the graveyard or to a hand again.
+func unearth(i: int, gi: int) -> bool:
+	if not can_unearth(i, gi):
+		return false
+	var s := side(i)
+	var id: String = s.graveyard[gi]
+	var c := CardDB.get_card(id)
+	pay(i, c["unearth"])
+	s.graveyard.remove_at(gi)
+	var p := _make_perm(i, id, c)
+	p.unearthed = true
+	p.sick = false
+	s.creatures.append(p)
+	emit({"type": "unearth", "side": i, "uid": p.uid, "id": id})
+	emit({"type": "summon", "side": i, "uid": p.uid, "id": id, "from_stack": false})
+	_run_effects(i, c, "enter", p, [], true)
+	if phase != "over":
+		_entered(p)
+	check_state()
+	return true
 
 
 ## Target types the player must pick for this card, in order (one per effect needing it).
@@ -1601,6 +1762,41 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 						p.temp_p += gp
 						p.temp_t += gt
 					emit({"type": "buff", "uid": p.uid, "p": gp, "t": gt})
+		"charge":
+			# for each other attacking creature of the tribe, one boon for all of the tribe
+			var sub := String(e.get("subtype", "Knight"))
+			var n := 0
+			for u in attackers:
+				var q := find_perm(int(u))
+				if q and q != source and q.subtype_has(sub):
+					n += 1
+			n = mini(n, CHARGE_BOONS.size())
+			if n <= 0:
+				return
+			if n >= CHARGE_BOONS.size():
+				charge_apply(i, CHARGE_BOONS.duplicate(), sub)
+			elif me.interactive:
+				me.charge_owed = {"n": n, "subtype": sub}
+				emit({"type": "owe_charge", "side": i, "n": n})
+			else:
+				charge_apply(i, CHARGE_AI_ORDER.slice(0, n), sub)
+		"counter":
+			var cc: Dictionary = {"effects": [e]}
+			var it := counter_target(i, cc)
+			if it.is_empty():
+				return
+			var n := int(e.get("unless_pay", 0))
+			var j := int(it["side"])
+			if n > 0 and can_pay(j, {"generic": n}):
+				if side(j).interactive:
+					stack.erase(it)
+					side(j).leak_owed = {"item": it, "amount": n}
+					emit({"type": "owe_leak", "side": j, "id": it["id"], "amount": n})
+				else:
+					pay(j, {"generic": n})
+					emit({"type": "leak_paid", "side": j, "id": it["id"], "amount": n})
+			else:
+				_countered(it)
 		"regen_shield":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p: Perm = find_perm(int(ref.get("uid", -1))) if ref.get("kind") == "creature" else null
@@ -1624,7 +1820,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 					emit({"type": "prevented", "uid": p.uid})
 				elif p:
 					_remove_perm(p)
-					if not p.is_token:
+					if not p.is_token and not p.unearthed:
 						side(p.owner).hand.append(p.card_id)
 					emit({"type": "bounce", "uid": p.uid, "side": p.owner})
 		"tap", "freeze":
@@ -1871,9 +2067,11 @@ func destroy_perm(p: Perm, sacrifice: bool = false) -> void:
 		emit({"type": "regenerate", "uid": p.uid})
 		return
 	_remove_perm(p)
-	if not p.is_token:
+	if not p.is_token and not p.unearthed:
 		side(p.owner).graveyard.append(p.card_id)
 	emit({"type": "die", "uid": p.uid, "side": p.owner, "sacrifice": sacrifice})
+	if p.unearthed:
+		emit({"type": "exile", "uid": p.uid, "side": p.owner, "id": p.card_id})
 	for e in p.card.get("effects", []):
 		if e.get("trigger") == "death":
 			_with_source(p.card)
