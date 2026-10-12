@@ -54,7 +54,7 @@
       "U": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 2,
     "keywords": [],
     "effects": [],
@@ -186,7 +186,7 @@
       "generic": 2
     },
     "power": 2,
-    "toughness": 2,
+    "toughness": 3,
     "keywords": [],
     "effects": [
       {
@@ -568,11 +568,14 @@
       {
         "trigger": "ally_enter",
         "ally_subtype": "Philosopher",
-        "action": "foresight",
-        "amount": 1
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
       }
     ],
-    "text": "Whenever another Philosopher enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
+    "text": "Whenever another Philosopher enters under your control, put a +1/+1 counter on Pupil of the Painted Porch.",
     "flavor": "\"I feel, my dear Lucilius, that I am being not only reformed, but transformed.\" (Seneca)",
     "art": "res://art/cards/lyceum_c_022.webp"
   },
@@ -587,7 +590,7 @@
       "U": 1,
       "generic": 3
     },
-    "power": 3,
+    "power": 4,
     "toughness": 4,
     "keywords": [
       "vigilance"
@@ -711,7 +714,7 @@
       "U": 1
     },
     "power": 1,
-    "toughness": 1,
+    "toughness": 2,
     "keywords": [],
     "effects": [],
     "statics": [
@@ -738,7 +741,7 @@
       "generic": 1
     },
     "power": 1,
-    "toughness": 1,
+    "toughness": 2,
     "keywords": [
       "flying"
     ],
@@ -747,10 +750,10 @@
         "trigger": "ally_enter",
         "ally_subtype": "Sailor",
         "action": "foresight",
-        "amount": 1
+        "amount": 2
       }
     ],
-    "text": "Flying. Whenever a Sailor enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)",
+    "text": "Flying. Whenever a Sailor enters under your control, foresight 2. (Look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
     "flavor": "Where the gulls wheel, there is land. The helmsman watches them before he trusts the stars.",
     "art": "res://art/cards/lyceum_c_029.webp"
   },
@@ -793,7 +796,7 @@
       "generic": 2
     },
     "power": 2,
-    "toughness": 2,
+    "toughness": 3,
     "keywords": [],
     "effects": [
       {
@@ -818,7 +821,7 @@
       "generic": 2
     },
     "power": 2,
-    "toughness": 2,
+    "toughness": 3,
     "keywords": [],
     "effects": [],
     "statics": [
@@ -1768,5 +1771,178 @@
     "text": "Vigilance (Attacking doesn't cause this creature to tap.) Other Hoplite creatures you control get +1/+1. When Xenophon enters, draw a card for each Philosopher you control.",
     "flavor": "Their generals murdered, ten thousand Greeks far from home chose a pupil of Socrates, and he led them to the sea.",
     "art": "res://art/cards/lyceum_m_004.webp"
+  },
+  {
+    "id": "lyceum_c_030",
+    "name": "Ask the Price",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "mana_value": 2,
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "counter",
+        "filter": "any",
+        "unless_pay": 3
+      }
+    ],
+    "text": "Counter target spell unless its controller pays {3}.",
+    "flavor": "\"You will be unjust, then, and insatiable, if you are unwilling to pay the price for which these things are sold.\" (Epictetus, Enchiridion)",
+    "art": "res://art/cards/lyceum_c_030.webp"
+  },
+  {
+    "id": "lyceum_c_031",
+    "name": "Stoic Refusal",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 2,
+      "generic": 1
+    },
+    "mana_value": 3,
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "counter",
+        "filter": "any"
+      }
+    ],
+    "text": "Counter target spell.",
+    "flavor": "\"If it is not right, do not do it; if it is not true, do not say it.\" (Marcus Aurelius, Meditations)",
+    "art": "res://art/cards/lyceum_c_031.webp"
+  },
+  {
+    "id": "lyceum_c_032",
+    "name": "Test the Appearance",
+    "faction": "lyceum",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "mana_value": 2,
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "counter",
+        "filter": "noncreature"
+      }
+    ],
+    "text": "Counter target noncreature spell.",
+    "flavor": "\"You are but an appearance, and not absolutely the thing you appear to be.\" (Epictetus, Enchiridion)",
+    "art": "res://art/cards/lyceum_c_032.webp"
+  },
+  {
+    "id": "lyceum_u_021",
+    "name": "Groundless Fear",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Meditation",
+    "cost": {
+      "U": 1,
+      "generic": 1
+    },
+    "mana_value": 2,
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "counter",
+        "filter": "creature"
+      }
+    ],
+    "text": "Counter target creature spell.",
+    "flavor": "\"We suffer more often in imagination than in reality.\" (Seneca, Letters to Lucilius)",
+    "art": "res://art/cards/lyceum_u_021.webp"
+  },
+  {
+    "id": "lyceum_u_022",
+    "name": "Verdict of the Porch",
+    "faction": "lyceum",
+    "rarity": "uncommon",
+    "type": "spell",
+    "subtype": "Discourse",
+    "cost": {
+      "U": 2,
+      "generic": 2
+    },
+    "mana_value": 4,
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "counter",
+        "filter": "any"
+      }
+    ],
+    "text": "This spell costs {1} less to cast for each Philosopher you control. Counter target spell.",
+    "flavor": "\"Better to trip with the feet than with the tongue.\" (Zeno of Citium)",
+    "art": "res://art/cards/lyceum_u_022.webp",
+    "cost_less_per": {
+      "subtype": "Philosopher",
+      "amount": 1
+    }
+  },
+  {
+    "id": "lyceum_m_005",
+    "name": "Nikandros, Lord of the Cold Sea",
+    "faction": "lyceum",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Human Sailor",
+    "legendary": true,
+    "cost": {
+      "U": 2,
+      "generic": 3
+    },
+    "mana_value": 5,
+    "power": 4,
+    "toughness": 5,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Sailor",
+        "action": "freeze",
+        "target": "enemy_creature"
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Sailor"
+      },
+      {
+        "static": "keyword",
+        "keyword": "unmoved",
+        "scope": "other_own_creatures",
+        "subtype": "Sailor"
+      }
+    ],
+    "text": "Other Sailor creatures you control get +1/+1 and have unmoved. Whenever another Sailor enters under your control, freeze target enemy creature. (Tap it. It doesn't untap during its controller's next untap step.)",
+    "flavor": "\"Take away thy opinion, and like a mariner who has doubled the promontory, thou wilt find calm, everything stable, and a waveless bay.\" (Marcus Aurelius)",
+    "art": "res://art/cards/lyceum_m_005.webp"
   }
 ]

@@ -70,6 +70,8 @@ static func card_score(c: Dictionary) -> float:
 		s += float(c.get("power", 0) + c.get("toughness", 0)) / float(mv) * 0.6
 		s += c.get("keywords", []).size() * 0.3
 	s += c.get("effects", []).size() * 0.5
+	if c.has("unearth"):
+		s += 0.6              # a second life from the graveyard
 	return s
 
 
@@ -117,7 +119,7 @@ static func auto_build(owned: Dictionary, factions: Array = [], copies: int = -1
 			continue
 		if c.get("faction2", "") != "" and not allowed.has(c["faction2"]):
 			continue
-		for i in mini(int(owned[id]), limit):
+		for i in mini(int(owned[id]), 1 if c.get("legendary", false) else limit):
 			candidates.append(id)
 	# Prefer good cards, and keep the curve sane by penalising very expensive ones.
 	candidates.sort_custom(func(a, b):
@@ -138,7 +140,7 @@ static func auto_build(owned: Dictionary, factions: Array = [], copies: int = -1
 			var c := CardDB.get_card(id)
 			if c.is_empty() or c["type"] == "land":
 				continue
-			while picked < TARGET_SPELLS and int(deck.get(id, 0)) < mini(int(owned[id]), limit):
+			while picked < TARGET_SPELLS and int(deck.get(id, 0)) < mini(int(owned[id]), 1 if c.get("legendary", false) else limit):
 				deck[id] = int(deck.get(id, 0)) + 1
 				picked += 1
 	if picked == 0:
@@ -273,6 +275,8 @@ static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) 
 				continue
 			if int(cd.get("mana_value", 0)) >= 5 and top >= 4:
 				continue
+		if cd.get("legendary", false) and owned.has(id):
+			continue
 		owned[id] = int(owned.get(id, 0)) + 1
 		spells += 1
 		if is_creature:
@@ -349,7 +353,7 @@ static func is_on_theme(card_id: String, theme_id: String) -> bool:
 		var words: Array = [th.get("tribe", "")]
 		words.append_array(th.get("kin", []))
 		var sub: Array = String(c.get("subtype", "")).split(" ", false)
-		var blob := JSON.stringify([c.get("effects", []), c.get("abilities", []), c.get("statics", [])])
+		var blob := JSON.stringify([c.get("effects", []), c.get("abilities", []), c.get("statics", []), c.get("cost_less_per", {})])
 		for w in words:
 			if w == "":
 				continue
@@ -534,6 +538,10 @@ static func _themed_add(st: Dictionary, id: String, n: int, max_rares: int, max_
 		return 0
 	var c := CardDB.get_card(id)
 	var deck: Dictionary = st["deck"]
+	if c.get("legendary", false):
+		n = mini(n, 1 - int(deck.get(id, 0)))      # a second legend would be stuck in hand
+		if n <= 0:
+			return 0
 	var fresh := not deck.has(id)
 	var r: String = c.get("rarity", "common")
 	if fresh and r == "rare" and int(st["rares"]) >= max_rares:

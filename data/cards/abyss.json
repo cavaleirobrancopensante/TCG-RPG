@@ -78,7 +78,7 @@
       "B": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 1,
     "keywords": [
       "deathtouch"
@@ -205,8 +205,8 @@
       "B": 1,
       "generic": 3
     },
-    "power": 2,
-    "toughness": 2,
+    "power": 3,
+    "toughness": 3,
     "keywords": [],
     "effects": [
       {
@@ -290,8 +290,8 @@
       "B": 1,
       "generic": 4
     },
-    "power": 4,
-    "toughness": 3,
+    "power": 5,
+    "toughness": 4,
     "keywords": [
       "dread"
     ],
@@ -439,11 +439,11 @@
       {
         "trigger": "cast",
         "action": "reanimate",
-        "max_mv": 3,
+        "max_mv": 4,
         "target": "own_grave_creature"
       }
     ],
-    "text": "Return target creature card with mana value 3 or less from your graveyard to play.",
+    "text": "Return target creature card with mana value 4 or less from your graveyard to play.",
     "flavor": "Rest was promised to him. The Pact does not honour other men's promises.",
     "art": "res://art/cards/abyss_c_018.webp"
   },
@@ -547,7 +547,7 @@
       "B": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 2,
     "keywords": [],
     "effects": [
@@ -574,7 +574,7 @@
     "subtype": "Skeleton",
     "cost": {
       "B": 1,
-      "generic": 2
+      "generic": 1
     },
     "power": 2,
     "toughness": 2,
@@ -691,8 +691,8 @@
       "B": 1,
       "generic": 3
     },
-    "power": 3,
-    "toughness": 2,
+    "power": 4,
+    "toughness": 3,
     "keywords": [
       "dread"
     ],
@@ -749,6 +749,59 @@
     "text": "When Gravepit Ghoul enters, return target creature card from your graveyard to your hand.",
     "flavor": "It digs all night in the churchyard, and what it digs up follows it home.",
     "art": "res://art/cards/abyss_c_029.webp"
+  },
+  {
+    "id": "abyss_c_030",
+    "name": "Grave-Dust Skirmisher",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Skeleton",
+    "cost": {
+      "B": 1,
+      "generic": 1
+    },
+    "mana_value": 2,
+    "power": 2,
+    "toughness": 1,
+    "keywords": [],
+    "unearth": {
+      "B": 1
+    },
+    "text": "Unearth {B} ({B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+    "flavor": "\"Why wait for judgment to rise? I dug him up on Tuesday, and he only has to last till supper.\" (Morvane, a Pact sexton)",
+    "art": "res://art/cards/abyss_c_030.webp"
+  },
+  {
+    "id": "abyss_c_031",
+    "name": "Empty the Bone-Pits",
+    "faction": "abyss",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Necromancy",
+    "cost": {
+      "B": 1,
+      "generic": 3
+    },
+    "mana_value": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "summon",
+        "token": {
+          "name": "Risen Bones",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Skeleton",
+          "keywords": []
+        },
+        "count": 3
+      }
+    ],
+    "text": "Create three 1/1 Risen Bones Skeleton tokens.",
+    "flavor": "\"Count the bones, never the souls. Bones obey, and souls keep asking where it all went wrong.\" (Ledger-Keeper Ossric)",
+    "art": "res://art/cards/abyss_c_031.webp"
   },
   {
     "id": "abyss_u_001",
@@ -903,8 +956,8 @@
       "B": 1,
       "generic": 3
     },
-    "power": 3,
-    "toughness": 3,
+    "power": 4,
+    "toughness": 4,
     "keywords": [],
     "abilities": [
       {
@@ -1316,6 +1369,80 @@
     "art": "res://art/cards/abyss_u_020.webp"
   },
   {
+    "id": "abyss_u_021",
+    "name": "Rattling Grave-Raider",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Skeleton",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "mana_value": 3,
+    "power": 3,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "summon",
+        "token": {
+          "name": "Risen Bones",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Skeleton",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "unearth": {
+      "B": 1,
+      "generic": 2
+    },
+    "text": "When Rattling Grave-Raider dies, create a 1/1 Risen Bones Skeleton token. Unearth {2}{B} ({2}{B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+    "flavor": "\"A grave is only a purse the dead forgot to lock.\" (Ulric Vane, grave-robber of the Pact)",
+    "art": "res://art/cards/abyss_u_021.webp"
+  },
+  {
+    "id": "abyss_u_022",
+    "name": "Twice-Buried Ghoul",
+    "faction": "abyss",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Zombie",
+    "cost": {
+      "B": 1,
+      "generic": 2
+    },
+    "mana_value": 3,
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Restless Dead",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Zombie",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "unearth": {
+      "B": 1,
+      "generic": 2
+    },
+    "text": "When Twice-Buried Ghoul enters, create a 1/1 Restless Dead Zombie token. Unearth {2}{B} ({2}{B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+    "flavor": "\"He was buried once for his sins and once for his debts. I dug him up for both, and charged him twice.\" (Morvane, a Pact sexton)",
+    "art": "res://art/cards/abyss_u_022.webp"
+  },
+  {
     "id": "abyss_r_001",
     "name": "Oathbreaker Knight",
     "faction": "abyss",
@@ -1621,9 +1748,23 @@
         "subtype": "Skeleton"
       }
     ],
-    "text": "Other Skeletons you control have dread. (They can't be blocked except by Pact creatures and Constructs.)",
+    "text": "Other Skeletons you control have dread. (They can't be blocked except by Pact creatures and Constructs.) When Barrow-King of the Hollow Hills enters, create two 1/1 Risen Bones Skeleton tokens.",
     "flavor": "When he rides out of the hill at midnight, his host walks where no living man can stop it.",
-    "art": "res://art/cards/abyss_r_010.webp"
+    "art": "res://art/cards/abyss_r_010.webp",
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Risen Bones",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Skeleton",
+          "keywords": []
+        },
+        "count": 2
+      }
+    ]
   },
   {
     "id": "abyss_r_011",
@@ -1840,5 +1981,142 @@
     "text": "Dread. Other Demons you control have deathtouch. (Any damage they deal to a creature destroys it.) Whenever another Demon enters under your control, the enemy player discards a card at random. When Azgaroth enters, you lose 3 life.",
     "flavor": "\"Every man in my court is free. He is free to pay, and free to pay again.\" (Azgaroth, Duke of the Ninth Pit)",
     "art": "res://art/cards/abyss_m_004.webp"
+  },
+  {
+    "id": "abyss_m_005",
+    "name": "Kharnoth, the Bone Marshal",
+    "faction": "abyss",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Skeleton Lord",
+    "cost": {
+      "B": 2,
+      "generic": 3
+    },
+    "mana_value": 5,
+    "power": 4,
+    "toughness": 4,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Skeleton"
+      },
+      {
+        "static": "keyword",
+        "keyword": "dread",
+        "scope": "other_own_creatures",
+        "subtype": "Skeleton"
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "attack",
+        "action": "summon",
+        "token": {
+          "name": "Risen Bones",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Skeleton",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "text": "Other Skeletons you control get +1/+1 and have dread. (They can't be blocked except by Pact creatures and Constructs.) Whenever Kharnoth attacks, create a 1/1 Risen Bones Skeleton token.",
+    "flavor": "\"Rest is a rumour. I signed away my bones so they could march forever, and I still call it a bargain.\" (Kharnoth, the Bone Marshal)",
+    "art": "res://art/cards/abyss_m_005.webp",
+    "legendary": true
+  },
+  {
+    "id": "abyss_m_006",
+    "name": "Ulgreth, the Carrion King",
+    "faction": "abyss",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Zombie Lord",
+    "legendary": true,
+    "cost": {
+      "B": 2,
+      "generic": 3
+    },
+    "mana_value": 5,
+    "power": 4,
+    "toughness": 4,
+    "keywords": [],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Zombie"
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "summon",
+        "token": {
+          "name": "Restless Dead",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Zombie",
+          "keywords": []
+        },
+        "count": 1
+      },
+      {
+        "trigger": "ally_dies",
+        "ally_subtype": "Zombie",
+        "action": "drain",
+        "amount": 1
+      }
+    ],
+    "text": "Other Zombies you control get +1/+1. At the beginning of your upkeep, create a 1/1 Restless Dead Zombie token. Whenever another Zombie you control dies, the enemy player loses 1 life and you gain 1 life.",
+    "flavor": "\"Let the righteous wait for the last trumpet. My dead rise every dawn, and it cost me nothing but my soul.\" (Ulgreth, the Carrion King)",
+    "art": "res://art/cards/abyss_m_006.webp"
+  },
+  {
+    "id": "abyss_m_007",
+    "name": "Vexhal, Warden of the Brimstone Gate",
+    "faction": "abyss",
+    "rarity": "mythic",
+    "type": "creature",
+    "subtype": "Demon Lord",
+    "legendary": true,
+    "cost": {
+      "B": 2,
+      "generic": 3
+    },
+    "mana_value": 5,
+    "power": 4,
+    "toughness": 4,
+    "keywords": [
+      "dread"
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Demon"
+      }
+    ],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Demon",
+        "action": "drain",
+        "amount": 1
+      }
+    ],
+    "text": "Dread. Other Demons you control get +1/+1. Whenever another Demon enters under your control, the enemy player loses 1 life and you gain 1 life.",
+    "flavor": "\"Every soldier of mine signed for one battle. The small print says forever, and I wrote the small print.\" (Vexhal, Warden of the Brimstone Gate)",
+    "art": "res://art/cards/abyss_m_007.webp"
   }
 ]

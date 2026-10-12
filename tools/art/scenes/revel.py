@@ -2064,3 +2064,318 @@ def revel_r_012(p):
     SatyrFig(pose='sa_seat_cup', seat='chair', main=C.hex('7a1a3a'), sleeves='none', hair='curly_long', hair_col=C.hex('2a1a10'), beard='forked',
              belt='gold', width=1.1, head=heads(goat_horns(C.hex('e0d0a8'), big=1.25), ivy_crown()), fur=GOLD, goat_col=C.hex('4a3020'),
              props_front=[leopard_skin, goblet('f', GOLD)]).draw(p, 230, 562, 500)
+
+
+# ================================================================ new cards (1.45)
+
+def _coin_pile(p, x, y, n=10, spread=40, r=6.0, col=GOLD):
+    for k in range(n):
+        q = (x + p.rng.uniform(-spread, spread), y + p.rng.uniform(-spread * 0.15, spread * 0.15))
+        p.blob(q, r, r * 0.42, col, width=0.9, shade=0.6)
+        p.blob((q[0] - r * 0.3, q[1] - r * 0.1), r * 0.35, r * 0.12, GOLD_LIGHT.alpha(0.7), ink=False)
+
+
+def _coin_stack(p, x, y, n=6, r=8.0, col=GOLD):
+    for k in range(n):
+        p.blob((x, y - k * r * 0.34), r, r * 0.38, col, width=0.9, shade=0.6)
+    p.blob((x - r * 0.3, y - (n - 1) * r * 0.34 - 1), r * 0.4, r * 0.12, GOLD_LIGHT.alpha(0.8), ink=False)
+
+
+def _ember(p, q, s=1.0):
+    p.glow(q, 12 * s, C.hex('ff8a2a'), 0.55)
+    p.blob(q, 4.2 * s, 3.4 * s, C.hex('e8501a'), rot=p.rng.uniform(0, 3), width=0.8, shade=0.4)
+    p.blob((q[0] - 0.8 * s, q[1] - 0.8 * s), 2.2 * s, 1.6 * s, C.hex('ffd27a'), ink=False)
+
+
+def fire_shovel(which='f'):
+    """A long iron fire-shovel held forward in both hands, its pan heaped with live coals."""
+    def fn(p, j):
+        hf = j['hand_f']
+        hb = j['hand_b']
+        d = v_norm(v_sub(hf, hb))
+        tail = v_sub(hb, v_mul(d, 6))
+        neck = v_add(hf, v_mul(d, 10))
+        p.taper([tail, neck], 1.2, 1.0, C.hex('6a4426'), width=0.9, shade=0.6)
+        p.taper([v_sub(hf, v_mul(d, 1)), neck], 0.8, 0.8, IRON.dark(0.2), width=0.7)
+        nrm = v_perp(d)
+        c = v_add(neck, v_mul(d, 6))
+        pan = [v_add(neck, v_mul(nrm, 3.6)), v_add(c, v_add(v_mul(d, 6), v_mul(nrm, 4.4))), v_add(c, v_mul(d, 7.6)),
+               v_add(c, v_add(v_mul(d, 6), v_mul(nrm, -4.4))), v_add(neck, v_mul(nrm, -3.6))]
+        p.shape(pan, ('h', IRON.light(0.2), IRON.dark(0.3)), width=1.0, shade=0.7)
+        for k in range(4):
+            q = v_add(c, v_add(v_mul(d, p.rng.uniform(-1, 4)), v_mul(nrm, p.rng.uniform(-2.5, 2.5))))
+            p.blob(q, 1.5, 1.2, C.hex('ff7a1a'), ink=False)
+            p.blob(q, 0.7, 0.6, C.hex('ffe0a0'), ink=False)
+        for hnd in (hf, hb):
+            p.blob(hnd, 2.4, 2.0, SKIN, width=1.0, shade=0.4)
+    return fn
+
+
+def revel_c_030(p):
+    """Shovel of Embers: the innkeeper answers the brawl with a shovelful from the hearth."""
+    tavern_bg(p, hearth_x=150, window_x=None, shelf=True)
+    # a hanging lamp and a ham from the beam
+    p.line([(760, 116), (760, 170)], INK, 1.6)
+    p.shape([(744, 170, 0), (776, 170, 0), (770, 196, 0), (750, 196, 0)], GOLD_DARK, width=1.2, smooth=False, shade=0.6)
+    PR.flame(p, (760, 166), 1.6, glow_r=100)
+    p.line([(860, 116), (862, 150)], INK, 1.4)
+    p.shape([(850, 150), (876, 152), (884, 200), (866, 236), (846, 214)], C.hex('a0523a'), width=1.6, shade=0.8, rim=0.3)
+    # the table the brawl began at, overturned, a stool on its side
+    p.shape([(560, 606, 0), (590, 470, 0), (620, 476, 0), (596, 610, 0)], ('h', C.hex('7a5232'), C.hex('4a2e1a')), width=2, smooth=False)
+    for yy in (520, 560):
+        p.taper([(596, yy), (680, yy + 20)], 6, 6, C.hex('5a3a22'), width=1.4, shade=0.6)
+    p.shape([(470, 600, 0), (520, 566, 0), (532, 580, 0), (482, 612, 0)], C.hex('6a4426'), width=1.6, smooth=False, shade=0.6)
+    spilled_goblet(p, 650, 604, 1.6, C.hex('a08060'), WINE)
+    for i, (q, rt) in enumerate((((520, 610), 0.4), ((700, 612), -0.6), ((760, 606), 1.2))):
+        playing_card(p, q, 1.8, rt, CRIMSON, back=i == 1)
+    # the innkeeper, apron on, swinging the shovel
+    RFig(pose='re_throw', garb='tunic', stance='lunge', main=C.hex('5a4a6a'), second=C.hex('3a2a4a'), hose=C.hex('4a3a2a'),
+         hair='bald', hair_col=C.hex('6a4a2a'), beard='long', mouth='stern', sleeves='fitted', belt='leather', width=1.3,
+         scapular=CHEF_WHITE, props_front=[fire_shovel()]).draw(p, 330, 604, 450)
+    # the coals in flight, an arc of embers
+    for i in range(18):
+        t = i / 17
+        x = lerp(520, 790, t) + p.rng.uniform(-14, 14)
+        y = 250 - 150 * 4 * t * (1 - t) * 0.6 + 120 * t + p.rng.uniform(-14, 14)
+        _ember(p, (x, y), 1.5 - 0.3 * abs(t - 0.5))
+    sparks(p, (500, 150, 860, 380), 26)
+    # the mercenary in the doorway, struck, his surcoat smouldering
+    p.shape([(830, 606, 0), (830, 300), (900, 250), (970, 300), (970, 606, 0)], C.hex('141018'), width=2.4)
+    RFig(pose='spread', garb='surcoat', main=C.hex('3a4a3a'), second=C.hex('2a3a2a'), mail=True, head='nasal', hair='short',
+         hair_col=UMBER, beard='short', mouth='open', stance='stride', belt='sword', emblem='cross_black').draw(p, 860, 604, 380, flip=True)
+    for q in ((842, 400), (872, 372), (858, 452)):
+        flame_tongue(p, q, 34, 9, lean=8)
+    smoke(p, (860, 360), 140, C(0.3, 0.28, 0.3, 0.3), -30)
+
+
+def gaming_table(p, x0, x1, y, tilt=0.0, cloth=C.hex('2a5a3a')):
+    """A gaming table, cloth-covered, its top tipped by tilt (radians) about its left edge."""
+    top = [(x0 + 30, y - 40), (x1 + 30, y - 40 + (x1 - x0) * tilt), (x1, y + (x1 - x0) * tilt + 20), (x0, y + 20)]
+    for fx in (x0 + 40, x1 - 40):
+        fy = y + (fx - x0) * tilt + 20
+        p.taper([(fx, fy), (fx + 4, fy + 140)], 8, 7, C.hex('5a3a22'), width=1.6, shade=0.6)
+    p.shape([(a[0], a[1], 0) for a in top], ('v', cloth.light(0.15), cloth.dark(0.2)), width=2, smooth=False)
+    skirt = [top[3] + (0,), top[2] + (0,), (top[2][0], top[2][1] + 40, 0), (top[3][0], top[3][1] + 40, 0)]
+    p.shape(skirt, cloth.dark(0.3), width=1.8, smooth=False)
+    for k in range(6):
+        xa = lerp(top[3][0], top[2][0], (k + 0.5) / 6)
+        ya = lerp(top[3][1], top[2][1], (k + 0.5) / 6)
+        p.blob((xa, ya + 44), 5, 6, GOLD, width=0.8)
+    return top
+
+
+def revel_c_031(p):
+    """Gambler's Ruin: down to his last stake, he kicks over the table and the candelabrum with it."""
+    loggia_bg(p, 'dusk', floor_y=480)
+    lantern_string(p, [(40, 160), (500, 200), (960, 150)], s=0.9)
+    # the table, tipping up toward the knight
+    top = gaming_table(p, 320, 660, 440, tilt=-0.06)
+    # the candelabrum toppling off the high side, fire pouring onto the knight's cloak
+    p.push(680, 360, 1.0, rot=0.7)
+    candelabra(p, 0, 50, 2.4, GOLD, True)
+    p.pop()
+    # the knight on the far side, half risen from his stool, his cloak alight
+    RFig(pose='spread', garb='surcoat', main=C.hex('6a2a2a'), second=C.hex('4a1a1a'), mail=True, head='coif', beard='short',
+         hair_col=UMBER, mouth='open', stance='stride', belt='sword', cloak='cape', cloak_col=C.hex('2a3a6a'),
+         emblem='cross_black').draw(p, 790, 604, 440, flip=True)
+    fire_mass(p, 800, 420, 120, 230, n=7, lean=-10)
+    sparks(p, (680, 140, 920, 420), 26)
+    smoke(p, (800, 230), 200, C(0.3, 0.26, 0.3, 0.35), -40)
+    # dice, coins and cards flying off the cloth
+    for q, s in (((520, 330), 3.0), ((560, 300), 2.6), ((610, 360), 2.4)):
+        die(p, q, s)
+    for i in range(10):
+        q = (p.rng.uniform(380, 680), p.rng.uniform(250, 400))
+        p.blob(q, 7, 3.2, GOLD, rot=p.rng.uniform(0, 3), width=0.9, shade=0.6)
+    for i, (q, rt) in enumerate((((430, 300), -0.5), ((470, 260), 0.6), ((660, 280), 1.2), ((400, 380), 0.2))):
+        playing_card(p, q, 2.4, rt, [CRIMSON, INK_SOFT][i % 2], back=i == 2)
+    _coin_pile(p, 380, 600, 12, 50, 7)
+    # the ruined gambler kicking it over, his own sleeve singed and smoking
+    RFig(pose='re_both_up', garb='jerkin', stance='lunge', main=C.hex('7a1a4a'), second=C.hex('4a1030'), hose=C.hex('d8b860'),
+         hose2=C.hex('7a1a4a'), hair='curly', hair_col=C.hex('2a1a10'), beard='short', mouth='open', eyes='open', sleeves='fitted',
+         belt='gold', head=feathered_cap(C.hex('2a2a4a'), GOLD_LIGHT, GOLD), fur=GOLD).draw(p, 210, 604, 450)
+    flame_tongue(p, (255, 150), 30, 8, lean=10)
+    smoke(p, (255, 140), 100, C(0.35, 0.3, 0.32, 0.3), 20)
+
+
+def silver_ewer(p, x, y, s=1.0, col=C.hex('d8dce0')):
+    p.push(x, y, s)
+    body = [(-10, 0, 0), (-12, -8), (-14, -22), (-8, -34), (-5, -42), (-6, -50), (6, -50), (5, -42), (8, -34), (14, -22), (12, -8), (10, 0, 0)]
+    p.shape(body, ('h', col.light(0.3), col, col.dark(0.35)), width=1.4, shade=0.8, rim=0.3)
+    p.shape([(6, -48), (18, -56), (24, -56), (8, -44)], col, width=1.1, shade=0.6)
+    p.taper([(-12, -44), (-24, -36), (-22, -16), (-12, -12)], 2.2, 2.2, col.dark(0.1), width=1.0)
+    p.line([(-14, -22), (14, -22)], GOLD, 1.6)
+    p.line([(-6, -10), (-7, -30)], LEAD_WHITE.alpha(0.7), 1.4)
+    p.blob((0, 0), 12, 3, col.dark(0.2), width=1.0)
+    p.pop()
+
+
+def balance_scale(p, x, y, s=1.0, col=C.hex('b08a40'), tilt=0.12):
+    p.push(x, y, s)
+    p.shape([(-16, 0, 0), (16, 0, 0), (10, -6, 0), (-10, -6, 0)], col.dark(0.2), width=1.2, smooth=False, shade=0.6)
+    p.taper([(0, -6), (0, -80)], 2.4, 1.6, col, width=1.0, shade=0.6)
+    a = (-44, -76 + 44 * tilt)
+    b = (44, -76 - 44 * tilt)
+    p.taper([a, (0, -76), b], 1.6, 1.6, col, width=0.9)
+    p.blob((0, -82), 3, 3, col, width=0.8)
+    for q, load in ((a, True), (b, False)):
+        for dx in (-12, 12):
+            p.line([q, (q[0] + dx, q[1] + 30)], INK.alpha(0.7), 0.8)
+        p.shape([(q[0] - 14, q[1] + 30), (q[0] + 14, q[1] + 30), (q[0] + 8, q[1] + 36), (q[0] - 8, q[1] + 36)], col, width=1.0, shade=0.6)
+        if load:
+            for k in range(4):
+                p.blob((q[0] - 6 + k * 4, q[1] + 28 - (k % 2) * 2), 4, 1.8, GOLD_LIGHT, width=0.6)
+    p.pop()
+
+
+def revel_c_032(p):
+    """Pawn the Heirlooms: by candlelight the young lord sets his father's silver on the pawnbroker's counter."""
+    timber_wall(p, 470, plaster=C.hex('a89070'), wood=C.hex('3a2414'))
+    # the open door at left: the lit tavern across the night street
+    door = [(30, 470, 0), (30, 230), (110, 190), (190, 230), (190, 470, 0)]
+    p.shape(door, ('v', C.hex('101a3a'), C.hex('2a2a4a')), width=2.4)
+    p.clip_shape(door)
+    p.stars((30, 190, 190, 300), 6, GOLD_LIGHT, (1.5, 3))
+    p.shape([(40, 470, 0), (40, 330, 0), (180, 300, 0), (180, 470, 0)], C.hex('2a1e24'), width=1.4, smooth=False)
+    for q in ((80, 380), (140, 370)):
+        p.shape([(q[0] - 14, q[1] + 22, 0), (q[0] - 14, q[1] - 10, 0), (q[0] + 14, q[1] - 10, 0), (q[0] + 14, q[1] + 22, 0)], C.hex('ffb050'), width=1.0, smooth=False)
+        p.glow(q, 40, C.hex('ffb050'), 0.5)
+    p.unclip()
+    p.shape(door, None, ink=C.hex('3a2414'), width=9)
+    # shelves of pledges: a lute, candlesticks, a sword, a portrait
+    for sy in (210, 330):
+        p.shape([(560, sy, 0), (990, sy, 0), (990, sy + 10, 0), (560, sy + 10, 0)], C.hex('5a3a22'), width=1.4, smooth=False, shade=0.5)
+    candlestick(p, 600, 210, 1.6, False, C.hex('d8dce0'))
+    candlestick(p, 640, 210, 1.6, False, C.hex('d8dce0'))
+    portrait_w(p, 760, 150, 80, 100, sitter=C.hex('5a2a3a'))
+    bottle_at(p, 880, 210, 1.8, GLASS_GREEN)
+    p.blob((940, 296), 22, 28, C.hex('b07a3a'), rot=0.3, width=1.6, shade=0.8)
+    p.taper([(930, 272), (900, 226)], 4, 3, C.hex('6a4426'), width=1.2)
+    p.taper([(720, 320), (960, 300)], 3, 2, STEEL, width=1.0, shade=0.6)
+    p.shape([(712, 312), (722, 330), (726, 314)], GOLD, width=1.0)
+    for i in range(3):
+        p.shape([(780 + i * 40, 330, 0), (800 + i * 40, 300, 0), (830 + i * 40, 300, 0), (830 + i * 40, 330, 0)], [CRIMSON, ULTRA, C.hex('5a3a22'), PLUM][i], width=1.0, smooth=False, shade=0.5)
+    plank_floor(p, 470)
+    # the pawnbroker behind his counter, weighing
+    RFig(pose='re_carry', garb='robe', main=C.hex('3a3a2a'), second=C.hex('2a2a1a'), fur=C.hex('6a5a40'), hair='white', beard='long',
+         age='old', head='cap', mouth='calm', eyes='down', sleeves='fitted', width=1.1).draw(p, 760, 604, 420, flip=True)
+    # the counter
+    p.shape([(400, 460, 0), (1000, 460, 0), (1000, 486, 0), (400, 486, 0)], ('v', C.hex('8a6040'), C.hex('5a3a22')), width=2, smooth=False)
+    p.shape([(420, 486, 0), (990, 486, 0), (990, 630, 0), (420, 630, 0)], ('h', C.hex('5a3a22'), C.hex('3a2414')), width=2, smooth=False)
+    for x in range(470, 990, 90):
+        p.shape([(x, 500, 0), (x + 70, 500, 0), (x + 70, 610, 0), (x, 610, 0)], None, ink=INK.alpha(0.5), width=1.2, smooth=False)
+    balance_scale(p, 860, 460, 1.5)
+    _coin_stack(p, 940, 458, 7, 9)
+    _coin_stack(p, 966, 460, 4, 9)
+    silver_ewer(p, 540, 460, 1.7)
+    candlestick(p, 700, 460, 1.4, True)
+    # a signet ring and a gold chain lying on the counter
+    p.blob((620, 456), 6, 3, None, ink=GOLD, width=2.4)
+    p.blob((624, 452), 3, 2, CRIMSON, width=0.6)
+    p.line([(640, 458), (660, 452), (680, 458), (700, 452)], GOLD, 2.2)
+    # the young lord, his doublet fine but out at the elbow, eyes down
+    RFig(pose='re_carry', garb='jerkin', main=C.hex('6a1a3a'), second=C.hex('4a1028'), hose=C.hex('3a2a3a'), hair='curly',
+         hair_col=C.hex('8a5a2a'), mouth='calm', eyes='down', sleeves='fitted', belt='leather', stance='stand',
+         head=feathered_cap(C.hex('3a2a3a'), LEAD_WHITE.dark(0.2), GOLD_DARK)).draw(p, 400, 604, 440)
+    p.blob((410, 345), 5, 3, C.hex('3a2a3a').dark(0.3), width=0.8)
+
+
+def revel_c_033(p):
+    """Cinder-Hoof Satyr: at dawn he rises dancing from the ash of last night's bonfire."""
+    bg.dawn_sky(p)
+    bg.hills(p, 360, C.hex('8a8aa8'), 26, n=5)
+    bg.hills(p, 400, C.hex('6a7a6a'), 18, n=4)
+    p.shape([(-10, 430), (500, 420), (1010, 436), (1010, 640, 0), (-10, 640, 0)], ('v', C.hex('6a8a4a'), C.hex('4a6a32')), width=1.6)
+    for x, s in ((90, 0.9), (150, 1.2), (860, 1.1), (930, 0.8)):
+        cypress(p, x, 440, s)
+    for r in range(4):
+        y = 446 + r * 22
+        for k in range(16):
+            x = 40 + k * 62 + (r % 2) * 30
+            p.line([(x, y), (x, y - 14 + r * 2)], C.hex('5a3a22'), 1.4)
+            p.blob((x, y - 16 + r * 2), 10 + r * 2, 6 + r, C.hex('4f7a2e').dark(0.05 * r), width=0.8, shade=0.6)
+    # the scorched circle and the dead bonfire, still breathing smoke
+    p.blob((500, 590), 380, 60, ('r', C.hex('4a4440'), C.hex('6a625a'), C.hex('5a6a3a').alpha(0.0)), ink=False)
+    for a in (-0.9, -0.4, 0.3, 0.8, 1.2):
+        base = (500 + math.sin(a) * 220, 600 + math.cos(a) * 6)
+        top = (500 - math.sin(a) * 40, 560)
+        p.taper([base, top], 18, 12, C.hex('2a2220'), width=1.6, shade=0.8)
+        p.blob(base, 9, 7, C.hex('ff7a1a'), ink=False)
+        p.glow(base, 30, C.hex('ff8a2a'), 0.4)
+    for i in range(24):
+        q = (500 + p.rng.uniform(-260, 260), 590 + p.rng.uniform(-20, 20))
+        p.blob(q, p.rng.uniform(8, 20), p.rng.uniform(3, 6), C.hex('8a8480'), width=0.8, shade=0.5)
+    smoke(p, (380, 560), 300, C(0.55, 0.52, 0.55, 0.3), 60)
+    smoke(p, (660, 570), 260, C(0.55, 0.52, 0.55, 0.25), -40)
+    # last night's guests asleep at the edge, cups fallen
+    RFig(pose='re_lap', garb='jerkin', seat='lounge', main=C.hex('2a4a6a'), hair='curly', hair_col=C.hex('3a2414'), eyes='closed',
+         sleeves='fitted').draw(p, 840, 604 + 19 * 2.6, 260, flip=True)
+    zzz(p, 820, 470, 0.9)
+    goblet_w(p, 120, 606, 1.6, GOLD, None, 1.5)
+    bottle_w(p, 900, 612, 1.4, GLASS_GREEN, 1.4)
+    # a charred garland
+    p.line([(60, 560), (140, 580), (230, 570)], C.hex('3a3020'), 3)
+    for k in range(6):
+        p.blob((70 + k * 30, 566 + (k % 2) * 8), 7, 4, C.hex('3a3a28'), rot=k, width=0.8)
+    # the satyr, ash-grey legs veined with glowing embers, dancing up out of the ash
+    SatyrFig(pose='re_dance', stance='dance', main=C.hex('8a2a1a'), sleeves='none', hair='curly', hair_col=C.hex('1a120c'),
+             beard='short', belt='leather', head=heads(goat_horns(C.hex('3a3230'), big=0.9)), mouth='open', eyes='open',
+             goat_col=C.hex('6a625e'), props_front=[goblet('f', C.hex('3a3230'), None)]).draw(p, 500, 600, 470)
+    for q in ((470, 600), (540, 560), (520, 520), (460, 500), (550, 470)):
+        _ember(p, q, 1.1)
+    for i in range(10):
+        q = (500 + p.rng.uniform(-80, 80), 600 - p.rng.uniform(0, 140))
+        p.line([q, (q[0] + p.rng.uniform(-4, 4), q[1] - p.rng.uniform(4, 10))], C.hex('ffb04a'), 1.6)
+    flame_tongue(p, (470, 604), 30, 10, lean=4)
+    flame_tongue(p, (536, 600), 26, 9, lean=-3)
+    # flakes of ash drifting up into the dawn
+    for i in range(40):
+        q = (p.rng.uniform(250, 760), p.rng.uniform(140, 560))
+        p.blob(q, 2.2, 1.2, C.hex('d8d0c8').alpha(0.75), rot=p.rng.uniform(0, 3), ink=False)
+
+
+def revel_u_021(p):
+    """Torchbearer of the Rout: he leads the torchlit procession into the wood and sets the sentry's banner alight."""
+    bg.night_sky(p, moon=False, stars=50)
+    bg.hills(p, 360, C.hex('1a2236'), 24, n=5)
+    p.shape([(-10, 430), (500, 424), (1010, 440), (1010, 640, 0), (-10, 640, 0)], ('v', C.hex('243220'), C.hex('141c12')), width=1.6)
+    # the forest wall behind
+    for x, s in ((20, 1.7), (110, 2.0), (210, 1.6), (300, 1.9), (880, 1.8), (960, 2.0), (790, 1.4)):
+        fir(p, x, 460, s, C.hex('13261a'))
+    # the winding path and the procession of torches back into the trees
+    p.shape([(320, 640, 0), (420, 520), (360, 470), (420, 440), (470, 440), (440, 470), (520, 520), (520, 640, 0)], C.hex('3a3424').alpha(0.8), ink=False)
+    proc = [(420, 446, 70), (452, 460, 84), (400, 482, 100), (460, 508, 120), (380, 540, 150)]
+    for i, (x, y, h) in enumerate(proc):
+        p.glow((x + h * 0.2, y - h * 1.05), h * 0.9, C.hex('ff9a3a'), 0.45)
+        SatyrFig(pose='re_raise_hip', stance=('stride', 'prance')[i % 2], main=[C.hex('5a2a4a'), C.hex('2a4a6a'), C.hex('6a4a1a')][i % 3],
+                 sleeves='none', hair='curly', hair_col=C.hex('1a100a'), belt='leather', head=goat_horns(),
+                 props_front=[torch('f', 26, -1.5, 1.2)]).draw(p, x, y, h)
+    # the sentry at right, his banner catching fire, falling back
+    p.line([(900, 600), (840, 200)], C.hex('4a3a2a'), 5)
+    flag = [(842, 214), (760, 230), (740, 300), (790, 320), (850, 300)]
+    p.shape(flag, ('v', C.hex('2a4a8a'), C.hex('1a2a5a')), width=1.6, shade=0.6)
+    fire_mass(p, 790, 280, 110, 170, n=7, lean=-20)
+    RFig(pose='re_both_up', garb='surcoat', main=C.hex('5a5a4a'), second=C.hex('3a3a2a'), mail=True, head='nasal', hair='short',
+         hair_col=UMBER, mouth='open', stance='stride', belt='sword').draw(p, 880, 604, 330, flip=True)
+    # the torchbearer, thrusting his great torch at the banner
+    def big_torch(p, j):
+        h = j['hand_f']
+        top = v_add(h, (8, -14))
+        bot = v_add(h, (-5, 8))
+        p.taper([bot, top], 1.0, 1.5, UMBER, width=1.0, shade=0.6)
+        for k in range(3):
+            p.line([v_lerp(bot, top, 0.7 + k * 0.08), v_add(v_lerp(bot, top, 0.7 + k * 0.08), (2.4, 0.6))], C.hex('c8a060'), 1.0)
+        p.blob(top, 2.4, 2.0, C.hex('3a2a1a'), width=0.8)
+        flame_tongue(p, v_add(top, (0, -1)), 16, 4.4, lean=4)
+        p.blob(h, 2.6, 2.2, SKIN, width=1.0, shade=0.4)
+    SatyrFig(pose='re_throw', stance='stride', main=C.hex('8a1a2a'), sleeves='none', hair='curly_long', hair_col=C.hex('1a100a'),
+             beard='forked', belt='gold', width=1.1, head=heads(goat_horns(C.hex('d8c8a0'), big=1.1), ivy_crown()),
+             mouth='open', props_front=[leopard_skin, big_torch]).draw(p, 560, 604, 470)
+    hf = STOCK['re_throw'][1]
+    tq = (560 + (hf[0] + 0.1 * 9 + 8) * 4.7, 604 + (hf[1] - 30) * 4.7)
+    for k in range(7):
+        t = (k + 1) / 8
+        q = (lerp(tq[0], 760, t), lerp(tq[1], 270, t) - 40 * 4 * t * (1 - t))
+        _ember(p, q, 1.2)
+        p.line([q, (q[0] - 14, q[1] + 4)], C.hex('ffb04a').alpha(0.6), 2.0)
+    sparks(p, (560, 120, 900, 380), 30)

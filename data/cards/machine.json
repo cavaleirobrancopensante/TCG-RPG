@@ -12,27 +12,23 @@
     "power": 1,
     "toughness": 1,
     "keywords": [],
-    "abilities": [
-      {
-        "cost": {
-          "sacrifice": "self"
-        },
-        "effects": [
-          {
-            "action": "buff",
-            "target": "own_creature",
-            "power": 1,
-            "toughness": 1,
-            "duration": "permanent",
-            "subtype": "Construct"
-          }
-        ],
-        "text": "Sacrifice Brass Scuttler: Put a +1/+1 counter on target Construct you control."
-      }
-    ],
-    "text": "Sacrifice Brass Scuttler: Put a +1/+1 counter on target Construct you control.",
+    "text": "When Brass Scuttler dies, create a 1/1 Servo Construct token.",
     "flavor": "\"No part is too small to be spent, and no part too precious to be spared.\" (a Foundry maxim)",
-    "art": "res://art/cards/machine_c_001.webp"
+    "art": "res://art/cards/machine_c_001.webp",
+    "effects": [
+      {
+        "trigger": "death",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Servo Construct",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ]
   },
   {
     "id": "machine_c_002",
@@ -198,26 +194,20 @@
     "power": 2,
     "toughness": 3,
     "keywords": [],
-    "abilities": [
-      {
-        "cost": {
-          "sacrifice": "servo"
-        },
-        "effects": [
-          {
-            "action": "buff",
-            "target": "self",
-            "power": 1,
-            "toughness": 1,
-            "duration": "permanent"
-          }
-        ],
-        "text": "Sacrifice a Servo: Put a +1/+1 counter on Scrap Collector."
-      }
-    ],
-    "text": "Sacrifice a Servo: Put a +1/+1 counter on Scrap Collector.",
+    "text": "Whenever a Construct you control dies, put a +1/+1 counter on Scrap Collector.",
     "flavor": "He walks the foundry floor at closing time and leaves with his pockets full of other men's mistakes.",
-    "art": "res://art/cards/machine_c_008.webp"
+    "art": "res://art/cards/machine_c_008.webp",
+    "effects": [
+      {
+        "trigger": "ally_dies",
+        "ally_subtype": "Construct",
+        "action": "buff",
+        "target": "self",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ]
   },
   {
     "id": "machine_c_009",
@@ -265,7 +255,7 @@
       "generic": 4
     },
     "power": 3,
-    "toughness": 3,
+    "toughness": 4,
     "keywords": [],
     "text": "As long as you control an Equipment, Bronze Phalanx Automaton gets +1/+1.",
     "flavor": "The Stoa taught discipline. The Technocracy simply built it.",
@@ -443,7 +433,7 @@
     "type": "spell",
     "subtype": "Device",
     "cost": {
-      "generic": 3
+      "generic": 2
     },
     "speed": "instant",
     "keywords": [],
@@ -594,7 +584,7 @@
     "type": "creature",
     "subtype": "Human Artificer",
     "cost": {
-      "generic": 1
+      "C": 1
     },
     "power": 1,
     "toughness": 1,
@@ -606,11 +596,11 @@
         "action": "buff",
         "target": "self",
         "power": 1,
-        "toughness": 0,
-        "duration": "turn"
+        "toughness": 1,
+        "duration": "permanent"
       }
     ],
-    "text": "Whenever a Construct enters under your control, Bellows Boy gets +1/+0 until end of turn.",
+    "text": "Whenever a Construct enters under your control, put a +1/+1 counter on Bellows Boy.",
     "flavor": "He pumps the bellows for every new machine, and runs to see it wake.",
     "art": "res://art/cards/machine_c_021.webp"
   },
@@ -624,8 +614,8 @@
     "cost": {
       "generic": 2
     },
-    "power": 1,
-    "toughness": 1,
+    "power": 2,
+    "toughness": 2,
     "keywords": [],
     "effects": [
       {
@@ -951,30 +941,32 @@
     "type": "creature",
     "subtype": "Human Artificer",
     "cost": {
-      "generic": 2
+      "C": 1,
+      "generic": 1
     },
     "power": 2,
-    "toughness": 1,
+    "toughness": 2,
     "keywords": [],
     "abilities": [
       {
         "cost": {
-          "sacrifice": "servo"
+          "sacrifice": "servo",
+          "once_per_turn": true
         },
         "effects": [
           {
             "action": "buff",
             "target": "own_creature",
-            "power": 1,
-            "toughness": 1,
+            "power": 2,
+            "toughness": 2,
             "duration": "permanent",
             "subtype": "Construct"
           }
         ],
-        "text": "Sacrifice a Servo: Put a +1/+1 counter on target Construct you control."
+        "text": "Sacrifice a Servo: Put two +1/+1 counters on target Construct you control. Activate only once each turn."
       }
     ],
-    "text": "Sacrifice a Servo: Put a +1/+1 counter on target Construct you control.",
+    "text": "Sacrifice a Servo: Put two +1/+1 counters on target Construct you control. Activate only once each turn.",
     "flavor": "To him, every small machine is fuel for a larger one. He applies the same principle to apprentices.",
     "art": "res://art/cards/machine_u_004.webp"
   },
@@ -1256,7 +1248,7 @@
       "C": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 2,
     "keywords": [],
     "statics": [
@@ -1367,8 +1359,8 @@
     "cost": {
       "generic": 4
     },
-    "power": 2,
-    "toughness": 3,
+    "power": 3,
+    "toughness": 4,
     "keywords": [],
     "statics": [
       {
@@ -1990,5 +1982,274 @@
     "text": "Whenever another Construct enters under your control, put a +1/+1 counter on each Artificer you control. Overclock {3} (You may pay an additional {3} as you play this card.) When The Archwright of Cogspire enters, if it was overclocked, create three 1/1 Servo Construct tokens.",
     "flavor": "\"...the enlarging of the bounds of human empire, to the effecting of all things possible.\" (Francis Bacon, New Atlantis)",
     "art": "res://art/cards/machine_m_004.webp"
+  },
+  {
+    "id": "machine_c_030",
+    "name": "Servo Winding Frame",
+    "faction": "machine",
+    "rarity": "common",
+    "type": "relic",
+    "subtype": "Workshop",
+    "cost": {
+      "generic": 3
+    },
+    "mana_value": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Servo Construct",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "abilities": [
+      {
+        "cost": {
+          "mana": {
+            "generic": 3
+          },
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "summon",
+            "token": {
+              "name": "Servo",
+              "power": 1,
+              "toughness": 1,
+              "subtype": "Servo Construct",
+              "keywords": []
+            },
+            "count": 1
+          }
+        ],
+        "text": "{3}, Tap: Create a 1/1 Servo Construct token."
+      }
+    ],
+    "text": "When Servo Winding Frame enters, create a 1/1 Servo Construct token. {3}, Tap: Create a 1/1 Servo Construct token.",
+    "flavor": "\"A servo asks no wage, keeps no feast day and says no prayer. Order a thousand.\" (requisition of the Grand Tabulator)",
+    "art": "res://art/cards/machine_c_030.webp"
+  },
+  {
+    "id": "machine_u_021",
+    "name": "Steam-Ram Gauntlets",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "relic",
+    "subtype": "Equipment",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "mana_value": 3,
+    "keywords": [],
+    "attach": "equipment",
+    "equip": {
+      "generic": 3
+    },
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "attach",
+        "target": "own_creature"
+      }
+    ],
+    "grants": {
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "trample"
+      ]
+    },
+    "text": "When Steam-Ram Gauntlets enters, attach it to target creature you control. Equipped creature gets +2/+2 and has trample. Equip {3} ({3}: Attach to target creature you control. Equip only as a sorcery.)",
+    "flavor": "\"Argument is slow. Pressure is measured by the square inch.\" (Guildmaster Orrin Vell)",
+    "art": "res://art/cards/machine_u_021.webp"
+  },
+  {
+    "id": "machine_u_022",
+    "name": "Strongbox Automaton",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 2
+    },
+    "mana_value": 3,
+    "power": 0,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Servo Construct",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "statics": [
+      {
+        "static": "assembly"
+      }
+    ],
+    "text": "Assembly (This creature gets +1/+1 for each other Construct you control.) When Strongbox Automaton enters, create a 1/1 Servo Construct token.",
+    "flavor": "\"What the guild owns, it guards. What it guards, it owns.\" (a Foundry maxim)",
+    "art": "res://art/cards/machine_u_022.webp"
+  },
+  {
+    "id": "machine_u_023",
+    "name": "Guild Assessor",
+    "faction": "machine",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 1,
+      "generic": 1
+    },
+    "mana_value": 2,
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Relic",
+        "action": "buff",
+        "target": "own_creature",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "text": "Whenever a relic enters under your control, put a +1/+1 counter on target creature you control.",
+    "flavor": "\"Nothing enters the ledger without a value, and nothing keeps its value without a stamp.\" (Assessor-General Hask)",
+    "art": "res://art/cards/machine_u_023.webp"
+  },
+  {
+    "id": "machine_r_013",
+    "name": "Assembly-Line Colossus",
+    "faction": "machine",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 1,
+      "generic": 4
+    },
+    "mana_value": 5,
+    "power": 2,
+    "toughness": 2,
+    "keywords": [],
+    "cost_less_per": {
+      "subtype": "Construct",
+      "amount": 1
+    },
+    "statics": [
+      {
+        "static": "assembly"
+      }
+    ],
+    "text": "This spell costs {1} less to cast for each Construct you control. Assembly.",
+    "flavor": "\"Every part is replaceable. That is the whole beauty of the whole.\" (a Foundry maxim)",
+    "art": "res://art/cards/machine_r_013.webp"
+  },
+  {
+    "id": "machine_m_005",
+    "name": "Talos, the Bronze Sovereign",
+    "faction": "machine",
+    "rarity": "mythic",
+    "legendary": true,
+    "type": "creature",
+    "subtype": "Construct",
+    "cost": {
+      "C": 2,
+      "generic": 3
+    },
+    "mana_value": 5,
+    "power": 4,
+    "toughness": 4,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Servo",
+          "power": 1,
+          "toughness": 1,
+          "subtype": "Servo Construct",
+          "keywords": []
+        },
+        "count": 2
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "scope": "other_own_creatures",
+        "subtype": "Construct",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "text": "Other Constructs you control get +1/+1. When Talos enters, create two 1/1 Servo Construct tokens.",
+    "flavor": "\"We built a king who never sleeps, never errs and never asks for wages. Then we built him subjects.\" (Minutes of the Foundry Council)",
+    "art": "res://art/cards/machine_m_005.webp"
+  },
+  {
+    "id": "machine_m_006",
+    "name": "Oswin Brassmoor, Guildmaster",
+    "faction": "machine",
+    "rarity": "mythic",
+    "legendary": true,
+    "type": "creature",
+    "subtype": "Human Artificer",
+    "cost": {
+      "C": 2,
+      "generic": 2
+    },
+    "mana_value": 4,
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "ally_enter",
+        "ally_subtype": "Relic",
+        "action": "buff",
+        "target": "all_own_creatures",
+        "subtype": "Artificer",
+        "power": 1,
+        "toughness": 1,
+        "duration": "permanent"
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "scope": "other_own_creatures",
+        "subtype": "Artificer",
+        "power": 1,
+        "toughness": 1
+      }
+    ],
+    "text": "Other Artificers you control get +1/+1. Whenever a relic enters under your control, put a +1/+1 counter on each Artificer you control.",
+    "flavor": "\"Every tool in Cogspire is on my inventory, and so is every man who holds one.\" (Oswin Brassmoor)",
+    "art": "res://art/cards/machine_m_006.webp"
   }
 ]

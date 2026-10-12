@@ -2471,3 +2471,334 @@ def sanctum_r_012(p):
     # the bishop
     Fig(pose='sa_bless_staff', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=GOLD, trim=VERMILION, head='mitre', hair='white', beard='long', age='old',
         props_back=[PR.staff('b', 'crook', 108, GOLD_DARK)], eyes='open', emblem=_stole(VEST_WHITE)).draw(p, 330, 604, 480)
+
+
+# ------------------------------------------------------------------ new Knight cards (1.46)
+
+def _chest(p, x, y, w=150, h=80):
+    """An iron-bound wooden travelling chest."""
+    p.shape([(x - w / 2, y, 0), (x - w / 2, y - h, 0), (x + w / 2, y - h, 0), (x + w / 2, y, 0)], ('h', OAK.light(0.15), OAK.dark(0.3)), width=2, smooth=False, shade=0.5)
+    p.shape([(x - w / 2 - 4, y - h, 0), (x - w / 2, y - h - 18), (x + w / 2, y - h - 18), (x + w / 2 + 4, y - h, 0)], OAK.light(0.05), width=2, shade=0.6)
+    for k in (-0.32, 0.32):
+        p.shape([(x + k * w - 6, y, 0), (x + k * w - 6, y - h - 18, 0), (x + k * w + 6, y - h - 18, 0), (x + k * w + 6, y, 0)], IRON, width=1.2, smooth=False, shade=0.5)
+    p.blob((x, y - h * 0.6), 9, 11, IRON, width=1.2, shade=0.5)
+
+
+def sanctum_c_030(p):
+    """Squire of the Commandery: at first light in the camp of the host the young
+    squire stands ready at his lord's pavilion with the lance and the shield, the
+    great helm set on the travelling chest beside him."""
+    bg.dawn_sky(p)
+    p.glow((300, 300), 420, C.hex('ffe2a8'), 0.5)
+    bg.clouds(p, 110, 2, xs=[620, 880], scale=0.7)
+    bg.hills(p, 400, C.hex('a8a0b8'), 36, n=6)
+    bg.hills(p, 440, C.hex('8aa070'), 24, n=4)
+    # morning mist in the valley
+    for i in range(10):
+        p.blob((p.rng.uniform(-40, W + 40), 430 + p.rng.uniform(-6, 10)), p.rng.uniform(90, 150), p.rng.uniform(10, 18), LEAD_WHITE.alpha(0.55), ink=False)
+    for i, (x, col, pen) in enumerate(((920, C.hex('e8e2d4'), VERMILION), (790, C.hex('f2ece0'), ULTRA))):
+        L.tent(p, x, 452 + i * 6, 130, 100, col, VERMILION if pen == ULTRA else ULTRA, pen)
+    bg.meadow(p, 470, C.hex('6a9448'))
+    # the lord's great pavilion behind the squire
+    L.tent(p, 620, 560, 330, 300, LEAD_WHITE, VERMILION, VERMILION)
+    PR.heater_shield(p, (620, 380), 'cross_red', None, 3.0)
+    _chest(p, 790, 600, 160, 76)
+    p.push(790, 504, 4.0)
+    PR.great_helm(p, (0, -8))
+    p.pop()
+    # a pair of gauntlets on the chest beside the helm
+    for dx in (-60, 60):
+        p.blob((790 + dx, 512), 16, 9, STEEL, width=1.4, shade=0.6)
+    # the squire, a beardless youth in his lord's colours
+    Fig(pose='staff', garb='tunic', main=C.hex('e8e2d4'), second=C.hex('c8c0b0'), hair='curly', hair_col=C.hex('a06a30'), age='young',
+        emblem=L.plain_cross_emblem(VERMILION), belt='leather', shield='cross_red', eyes='open', blush=0.8,
+        props_back=[PR.spear('f', 132, pennon=VERMILION)]).draw(p, 330, 604, 440)
+
+
+def _kneeling_brigand_sword(p, x, y, s=1.0):
+    """A brigand's falchion laid on the grass, point away."""
+    _flat_sword(p, (x, y), (x + 150 * s, y + 10 * s))
+
+
+def sanctum_c_031(p):
+    """Knight of the Peace of God: before the village church the knight stands
+    between the brigand and the peasants, his sword sheathed and his hand lifted,
+    and the brigand kneels and lays his blade down on the grass."""
+    bg.sky(p, ULTRA, AZURE, C.hex('f2eedc'), 0.55)
+    bg.clouds(p, 120, 3, xs=[200, 520, 840], scale=0.8)
+    bg.hills(p, 410, C.hex('8a9ab0'), 30, n=6)
+    bg.hills(p, 440, C.hex('7a9a5a'), 22, n=4)
+    # the little stone church with its bell gable, behind at the left
+    cx, cy = 150, 470
+    p.shape([(cx - 110, cy, 0), (cx - 110, cy - 120, 0), (cx + 70, cy - 120, 0), (cx + 70, cy, 0)], ('h', LIMESTONE.light(0.1), LIMESTONE.dark(0.25)), width=2, smooth=False)
+    p.shape([(cx - 124, cy - 116, 0), (cx - 20, cy - 190, 0), (cx + 84, cy - 116, 0)], C.hex('8a4a32'), width=2, smooth=False, shade=0.6)
+    p.shape([(cx - 40, cy - 176, 0), (cx - 40, cy - 236, 0), (cx - 20, cy - 256, 0), (cx, cy - 236, 0), (cx, cy - 176, 0)], LIMESTONE, width=1.8, smooth=False, shade=0.5)
+    p.blob((cx - 20, cy - 214), 7, 9, GOLD_DARK, width=1.2)
+    p.line([(cx - 20, cy - 256), (cx - 20, cy - 276)], INK, 2.4)
+    p.line([(cx - 28, cy - 268), (cx - 12, cy - 268)], INK, 2.4)
+    door = L.pointed_opening(cx - 50, cx + 10, cy - 50, cy, 1.0, 10)
+    L.wooden_door(p, door, OAK)
+    L.ashlar(p, (cx - 110, cy - 120, cx + 70, cy), LIMESTONE, 22, 50, 0.5)
+    for x, y in ((300, 460), (980, 450), (640, 440)):
+        bg.tiny_tree(p, x, y, 1.2, C.hex('3a5a3a'), 'cypress')
+    bg.meadow(p, 470, C.hex('5f8a3c'))
+    bg.road(p, 140, 470, 300, 30, 260)
+    # the peasants sheltering at the church door: an old man with his boy
+    Fig(pose='pray', garb='tunic', main=C.hex('8a6a3a'), second=C.hex('5a4a2a'), hair='white', beard='long', age='old', head='hood',
+        hood_col=C.hex('6a5a3a'), belt='cord', eyes='up').draw(p, 120, 560, 250)
+    L.child(p, 175, 566, 170, main=C.hex('6a7a5a'), hair='curly', hair_col=C.hex('8a5a2a'), eyes='open')
+    # the brigand, kneeling, his blade laid down before him
+    Fig(pose='pray', garb='jerkin', main=C.hex('5a4a3a'), second=C.hex('3a3028'), hair='long', hair_col=C.hex('2a2018'), beard='forked',
+        head='nasal', mail=True, cloak='cape', cloak_col=C.hex('4a2a2a'), belt='leather', width=1.2, kneel=True, eyes='down',
+        mouth='calm').draw(p, 760, 612, 430, flip=True)
+    _kneeling_brigand_sword(p, 560, 596, 1.0)
+    # the knight, sword in the scabbard, lifting his hand for peace
+    Fig(pose='sa_fend', garb='surcoat', main=ULTRA, second=ULTRA_DEEP, mail=True, head='coif', hair='short', hair_col=C.hex('6a4a2a'), beard='short',
+        emblem='cross_white', cloak='mantle', cloak_col=LEAD_WHITE, lining=C.hex('e0dcd0'), belt='sword', mouth='calm',
+        eyes='open').draw(p, 420, 604, 470)
+
+
+def _fire_dart(p, a, b, lit=True):
+    """A crossbow bolt or arrow in flight from a to b, burning at the head."""
+    d = v_norm(v_sub(b, a))
+    n = v_perp(d)
+    if lit:
+        h = v_sub(b, v_mul(d, 10))
+        p.glow(h, 70, FLAME, 0.7)
+        p.taper([v_add(h, v_mul(d, 8)), v_sub(h, v_mul(d, 40)), v_add(v_sub(h, v_mul(d, 70)), v_mul(n, 10))], 13, 0.5, FLAME, width=1.0)
+        p.taper([v_add(h, v_mul(d, 6)), v_sub(h, v_mul(d, 26))], 6, 0.5, FLAME_CORE, ink=False)
+    p.taper([a, b], 3.4, 3.0, OAK.dark(0.1), width=1.2)
+    if lit:
+        PR.flame(p, v_sub(b, v_mul(d, 12)), 3.2)
+    for k in (0.0, 0.07):
+        q = v_lerp(a, b, k)
+        p.shape([q, v_add(v_add(q, v_mul(n, 9)), v_mul(d, -12)) + (0,), v_add(q, v_mul(d, 18))], LEAD_WHITE, width=1.0)
+        p.shape([q, v_add(v_sub(q, v_mul(n, 9)), v_mul(d, -12)) + (0,), v_add(q, v_mul(d, 18))], LEAD_WHITE.dark(0.12), width=1.0)
+    tip = v_add(b, v_mul(d, 14))
+    p.shape([v_add(b, v_mul(n, 5)), tip + (0,), v_sub(b, v_mul(n, 5))], STEEL, width=1.2)
+
+
+def _broken_dart(p, c, ang, lit=False):
+    """A spent dart fallen on the ground, its fire going out."""
+    a = polar(c, 36, ang)
+    b = polar(c, -36, ang)
+    p.line([a, b], OAK.dark(0.3), 2.4, smooth=False)
+    if lit:
+        L.smoke(p, b[0], b[1], 60, C.hex('6a6a6a'), 0.35, 4, 2, 6)
+
+
+def sanctum_c_032(p):
+    """Close the Ranks: at dusk the brothers lock their shields edge to edge, and
+    the fiery darts of the enemy break against the wall of crosses and fall
+    burning into the grass."""
+    bg.sky(p, C.hex('2a2a4a'), C.hex('b05a3a'), C.hex('f2c888'), 0.6)
+    p.glow((860, 380), 360, C.hex('ffd090'), 0.4)
+    bg.hills(p, 430, C.hex('5a4a5a'), 30, n=6)
+    bg.hills(p, 470, C.hex('6a6a3a'), 20, n=4)
+    p.shape([(-10, 500), (W + 10, 490), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('7a7a40'), C.hex('3a3a20')), width=2)
+    for i in range(30):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(510, H)
+        p.taper([(x, y), (x + p.rng.uniform(-5, 5), y - p.rng.uniform(10, 22))], 1.6, 0.4, C.hex('5a6a2a'), width=0.6)
+    # the fiery darts coming in from the right
+    for a, b in (((1060, 100), (900, 190)), ((1060, 300), (930, 330)), ((900, 40), (800, 110))):
+        _fire_dart(p, a, b)
+    # the shield wall: four brothers, facing right, shields overlapping
+    rows = [(160, 596, 400), (300, 600, 430), (450, 604, 460), (610, 608, 490)]
+    for i, (x, y, h) in enumerate(rows):
+        Fig(pose='sa_guard', garb='surcoat', main=LEAD_WHITE, second=C.hex('d8d2c4'), mail=True, head='great_helm' if i % 2 == 0 else 'coif',
+            hair='short', hair_col=[UMBER, C.hex('a06a30'), C.hex('2a2018'), C.hex('7a5030')][i], beard='short', emblem='cross_red',
+            cloak='mantle', cloak_col=LEAD_WHITE, lining=C.hex('e0dcd2'), belt='sword', mouth='stern',
+            props_front=[PR.sword(up=True)]).draw(p, x, y, h)
+        sc = h / 100
+        # the great heater shield held before each man, overlapping the next
+        PR.heater_shield(p, (x + 22 * sc, y - 56 * sc), 'cross_red', None, 2.5 * sc)
+    # darts broken against the shields and burning out on the ground
+    for c, ang, lit in (((760, 560), 0.2, True), ((860, 590), -0.4, False), ((700, 600), 2.8, True), ((920, 548), 0.9, False)):
+        _broken_dart(p, c, ang, lit)
+    # two darts stuck in the foremost shield, still smouldering
+    for a, b in (((900, 200), (800, 250)), ((880, 380), (790, 390))):
+        _fire_dart(p, a, b, lit=False)
+        L.smoke(p, b[0] + 30, b[1] - 6, 70, C.hex('8a8070'), 0.35, 5, 2, 8)
+    for c in ((760, 300), (720, 220)):
+        p.glow(c, 50, FLAME_CORE, 0.6)
+        p.rays(c, 10, 40, 10, FLAME_CORE.alpha(0.8), 2.0)
+
+
+def sanctum_u_021(p):
+    """Vigil of Arms: through the night before their knighting two young men kneel
+    in white before the altar of the dark chapel, their new swords laid crosswise
+    upon it between the candles, and an old knight keeps watch with them."""
+    gothic_choir(p, dark=True, windows=3)
+    p.cx.new_path()
+    p.cx.rectangle(0, 0, W, H)
+    p.fill(C(0.02, 0.02, 0.1, 0.4))
+    # moonlight through the windows
+    bg.light_shafts(p, (520, 140), 0.4, 3, C.hex('c8d8ff'), strength=0.08)
+    L.altar(p, 560, 500, 340, 110, frontal=CRIMSON)
+    L.altar_cross(p, 560, 390, 90)
+    for x in (420, 700):
+        L.candlestick(p, x, 390, 80)
+        p.glow((x, 300), 180, C.hex('ffcf70'), 0.45)
+    # the two swords laid crosswise upon the altar
+    _flat_sword(p, (478, 396), (650, 372))
+    _flat_sword(p, (642, 398), (470, 376))
+    p.glow((560, 420), 380, C.hex('ffcf70'), 0.25)
+    # the old knight standing at the left in the shadow, hands on his sword
+    Fig(pose='sa_hilt', garb='surcoat', main=HOSP_BLACK, second=HOSP_BLACK, mail=True, head='coif', hair='white', beard='long', age='old',
+        emblem='cross_white', cloak='mantle', cloak_col=HOSP_BLACK, lining=C.hex('4a4650'), belt='sword', eyes='down', mouth='calm',
+        props_front=[_sword_down]).draw(p, 150, 590, 400)
+    # the two young men kneeling in white tunics, seen from behind and the side
+    Fig(pose='pray', garb='robe', main=LEAD_WHITE, second=C.hex('d8d2c4'), hair='curly', hair_col=C.hex('6a4422'), kneel=True, eyes='up',
+        belt='cord', blush=0.7).draw(p, 380, 612, 440)
+    Fig(pose='pray', garb='robe', main=LEAD_WHITE, second=C.hex('d8d2c4'), hair='short', hair_col=C.hex('c8902e'), kneel=True, eyes='down',
+        belt='cord', blush=0.7).draw(p, 760, 612, 450, flip=True)
+
+
+def _rule_book(p, c, w=520, h=300):
+    """A great book of the Rule open on its cushion: two pages of black text in
+    two columns with red rubrics and an illuminated initial."""
+    x, y = c
+    # cushion
+    p.shape([(x - w * 0.55, y + 40), (x - w * 0.5, y + 10), (x + w * 0.5, y + 10), (x + w * 0.55, y + 40), (x + w * 0.5, y + 66), (x - w * 0.5, y + 66)],
+            ('v', CRIMSON.light(0.1), CRIMSON.dark(0.35)), width=2, shade=0.7, rim=0.3)
+    for sx in (-1, 1):
+        p.blob((x + sx * w * 0.55, y + 40), 10, 10, GOLD, width=1.2, shade=0.5)
+        p.taper([(x + sx * w * 0.55, y + 48), (x + sx * w * 0.57, y + 80)], 3, 1, GOLD, width=0.8)
+    # covers and pages
+    lc = [(x - w / 2 - 10, y + 22, 0), (x, y + 34, 0), (x, y - h - 6, 0), (x - w / 2 - 14, y - h + 8, 0)]
+    rc = [(x, y + 34, 0), (x + w / 2 + 10, y + 22, 0), (x + w / 2 + 14, y - h + 8, 0), (x, y - h - 6, 0)]
+    for pts in (lc, rc):
+        p.shape(pts, C.hex('5a2a1a'), width=2, smooth=False, shade=0.6)
+    lp = [(x - w / 2, y + 10), (x - w / 4, y + 4), (x - 4, y + 22, 0), (x - 4, y - h + 6, 0), (x - w / 4, y - h - 6), (x - w / 2, y - h + 2, 0)]
+    rp = [(x + 4, y + 22, 0), (x + w / 4, y + 4), (x + w / 2, y + 10, 0), (x + w / 2, y - h + 2, 0), (x + w / 4, y - h - 6), (x + 4, y - h + 6, 0)]
+    p.shape(lp, ('h', PARCH.dark(0.05), PARCH.light(0.08)), width=1.8, shade=0.25)
+    p.shape(rp, ('h', PARCH.light(0.08), PARCH.dark(0.08)), width=1.8, shade=0.25)
+    p.fold_band([(x, y + 20), (x, y - h + 6)], 2, 18, C(0, 0, 0, 0.18))
+    # text in two columns on each page, with red rubrics
+    for side in (-1, 1):
+        for col in range(2):
+            x0 = x + side * (34 + col * (w / 4 - 22)) if side > 0 else x - w / 2 + 26 + col * (w / 4 - 22)
+            x1 = x0 + w / 4 - 60
+            for r in range(int((h - 50) / 14)):
+                yy = y - h + 36 + r * 14
+                if side < 0 and col == 0 and r < 5:
+                    continue
+                wob = 6 * math.sin((x0 + yy) * 0.3)
+                rub = (r % 6 == 0)
+                p.line([(x0, yy), (x1 - (20 if r % 5 == 4 else 0) + wob, yy - 1)], VERMILION.alpha(0.75) if rub else INK.alpha(0.55), 2.6 if rub else 2.0, smooth=False)
+    # the illuminated initial
+    ix, iy = x - w / 2 + 30, y - h + 32
+    p.shape([(ix, iy, 0), (ix + 52, iy, 0), (ix + 52, iy + 58, 0), (ix, iy + 58, 0)], ULTRA, width=1.4, smooth=False)
+    p.gold_leaf([(ix + 6, iy + 6, 0), (ix + 46, iy + 6, 0), (ix + 46, iy + 52, 0), (ix + 6, iy + 52, 0)])
+    p.taper([(ix + 26, iy + 12), (ix + 26, iy + 48)], 4, 4, VERMILION, width=1.0)
+    p.taper([(ix + 14, iy + 24), (ix + 38, iy + 24)], 4, 4, VERMILION, width=1.0)
+    # the ribbon marker
+    p.taper([(x + 2, y - h), (x + 6, y - h * 0.4), (x + 12, y + 30), (x + 22, y + 58)], 4, 3, VERMILION, width=1.0)
+
+
+def sanctum_u_022(p):
+    """Rule of the Order: in the chapter house the great book of the Rule lies open
+    on its crimson cushion, the master's sword laid across its foot, the white
+    mantle with the red cross hung behind it."""
+    wall = C.hex('d8ccb0')
+    bg.fill_all(p, ('v', wall.dark(0.35), wall.dark(0.05)))
+    L.ashlar(p, (-5, -5, W + 5, 470), wall, 38, 84, 0.6)
+    for x0 in (-40, 860):
+        L.pier(p, x0, 60, 470, 70, wall.light(0.1))
+    # the white mantle with the red cross hung on the wall
+    mx = 500
+    mantle = [(mx - 200, 84), (mx - 150, 60, 0), (mx + 150, 60, 0), (mx + 200, 84), (mx + 230, 450), (mx + 120, 470), (mx, 456), (mx - 120, 470), (mx - 230, 450)]
+    p.shape(mantle, ('h', LEAD_WHITE.dark(0.12), LEAD_WHITE, LEAD_WHITE.dark(0.2)), width=2.2, shade=0.5, rim=0.25)
+    p.clip_shape(mantle)
+    for k in (-150, -80, 80, 150):
+        p.fold_band([(mx + k * 0.8, 74), (mx + k * 1.15, 460)], 2, 16, C(0, 0, 0, 0.12))
+        p.fold_band([(mx + k * 0.8 + 18, 74), (mx + k * 1.15 + 20, 460)], 1, 8, C(1, 1, 1, 0.18))
+    p.unclip()
+    p.line([(mx - 160, 62), (mx + 160, 62)], OAK, 6, smooth=False)
+    p.blob((mx - 166, 62), 7, 7, GOLD, width=1.2)
+    p.blob((mx + 166, 62), 7, 7, GOLD, width=1.2)
+    p.shape([(mx - 16, 92, 0), (mx + 16, 92, 0), (mx + 16, 250, 0), (mx - 16, 250, 0)], VERMILION, width=1.6, smooth=False)
+    p.shape([(mx - 66, 128, 0), (mx + 66, 128, 0), (mx + 66, 158, 0), (mx - 66, 158, 0)], VERMILION, width=1.6, smooth=False)
+    # shields of the brothers along the wall
+    for x in (170, 830):
+        PR.heater_shield(p, (x, 250), 'cross_red', None, 4.0)
+    # the stone table under its linen
+    p.shape([(60, 470, 0), (940, 470, 0), (940, H + 10, 0), (60, H + 10, 0)], ('h', STONE.light(0.15), STONE.dark(0.25)), width=2, smooth=False)
+    p.shape([(40, 462, 0), (960, 462, 0), (960, 500, 0), (40, 500, 0)], ('v', LEAD_WHITE, LEAD_WHITE.dark(0.1)), width=1.8, smooth=False)
+    p.line([(40, 490), (960, 490)], GOLD_DARK.alpha(0.6), 1.4, smooth=False)
+    for x in (120, 880):
+        L.candlestick(p, x, 470, 100)
+        p.glow((x, 360), 160, C.hex('ffcf70'), 0.4)
+    _rule_book(p, (500, 452), 460, 210)
+    # the sword laid across the foot of the book
+    _flat_sword(p, (180, 560), (820, 520))
+
+
+def _gonfanon(p, top, w=220, h=110, field=VERMILION, cross=LEAD_WHITE):
+    """A swallow-tailed war gonfanon streaming to the left from a lance top,
+    a white cross on red, the tails whipping in the wind of the charge."""
+    x, y = top
+    up = []
+    lo = []
+    for i in range(9):
+        t = i / 8
+        xx = x - w * t
+        wave = math.sin(t * math.pi * 2.2) * 12 * t
+        up.append((xx, y + wave - t * 10))
+        lo.append((xx, y + h - t * 18 + wave))
+    mid = v_lerp(up[8], lo[8], 0.5)
+    notch = (mid[0] + 50, mid[1])
+    flag = up + [notch + (0,)] + list(reversed(lo))
+    p.shape(flag, field, width=2.0, shade=0.6)
+    p.clip_shape(flag)
+    for i in range(1, 8, 2):
+        p.fold_band([up[i], lo[i]], 2, 10, C(0, 0, 0, 0.18))
+    cx0 = up[3][0]
+    cy0 = (up[3][1] + lo[3][1]) / 2
+    p.shape([(cx0 - 7, cy0 - 40, 0), (cx0 + 7, cy0 - 40, 0), (cx0 + 7, cy0 + 40, 0), (cx0 - 7, cy0 + 40, 0)], cross, width=1.4, smooth=False)
+    p.shape([(cx0 - 30, cy0 - 12, 0), (cx0 + 30, cy0 - 12, 0), (cx0 + 30, cy0 + 2, 0), (cx0 - 30, cy0 + 2, 0)], cross, width=1.4, smooth=False)
+    p.texture((x - w - 10, y - 30, x + 10, y + h + 20), strength=0.5)
+    p.unclip()
+
+
+def sanctum_m_005(p):
+    """Aymeric de Valcourt, Marshal of the Order: at sunrise the old Marshal leads
+    the charge across the plain on his white destrier, his sword lifted high and
+    his red gonfanon streaming, and the whole line of the brethren thunders
+    behind him with lances lowered, dust rising gold from the hooves."""
+    bg.dawn_sky(p)
+    p.glow((640, 300), 460, C.hex('ffe2a0'), 0.65)
+    L.holy_rays(p, (640, 260), 80, 620, 30, GOLD_LIGHT, 0.14)
+    bg.clouds(p, 120, 3, xs=[220, 560, 880], scale=0.75)
+    bg.hills(p, 410, C.hex('b0a0a8'), 30, n=6)
+    bg.hills(p, 440, C.hex('a8a070'), 22, n=4)
+    # the plain, dry and golden
+    p.shape([(-10, 450), (W + 10, 444), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('c8b070'), C.hex('8a7a3e')), width=2)
+    for i in range(36):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(470, H)
+        p.line([(x, y), (x + p.rng.uniform(14, 40), y - 3)], C.hex('6a5a2a').alpha(0.45), 1.2)
+    # the line of brethren charging behind, small and far to large and near
+    for x, y, s, col in ((130, 486, 1.3, C.hex('e8e2d6')), (800, 470, 1.15, C.hex('3a2a22')), (230, 512, 1.6, C.hex('6a4a32')),
+                         (900, 500, 1.55, C.hex('e8e2d6'))):
+        horse(p, x, y, s, col, caparison=LEAD_WHITE, cap_charge='cross_red', step=1.0)
+        k = Fig(pose='staff', garb='surcoat', main=LEAD_WHITE, mail=True, head='great_helm', emblem='cross_red', belt='sword', cloak='cape', cloak_col=LEAD_WHITE)
+        rd = rider(p, x, y, s, k)
+        hand = fig_pt(rd, k.j['hand_f'])
+        lance(p, (hand[0] - 50 * s, hand[1] + 4 * s), (hand[0] + 110 * s, hand[1] - 22 * s), pennon=VERMILION, w=2.4)
+        redraw_hand(p, k, rd[0], rd[1], rd[2] * 100, rd[3] < 0)
+    # golden dust thrown up behind the charge
+    for i in range(26):
+        p.blob((p.rng.uniform(120, 700), p.rng.uniform(470, 600)), p.rng.uniform(30, 70), p.rng.uniform(10, 22), C.hex('f2dca0').alpha(0.35), ink=False)
+    # the standard-bearer's lance and gonfanon rising behind the Marshal
+    lance(p, (300, 560), (330, 130), w=3.2)
+    _gonfanon(p, (322, 150), 200, 104)
+    # the Marshal on his white destrier in red caparison
+    horse(p, 470, 604, 3.05, C.hex('f2eee4'), caparison=VERMILION, cap_charge='cross_white', step=1.0, mane=C.hex('d8d0c0'))
+    m = Fig(pose='sword_up', garb='surcoat', main=VERMILION, second=CRIMSON, trim=GOLD, mail=True, head='coif', hair='white', beard='long',
+            age='old', hair_col=C.hex('e8e4dc'), emblem=L.plain_cross_emblem(LEAD_WHITE), belt='gold', mouth='open', eyes='open',
+            props_front=[PR.sword(up=True, length=46)])
+    rider(p, 470, 604, 3.05, m)
+    # light catching the lifted blade
+    p.glow((560, 160), 90, C.hex('fff4d0'), 0.5)

@@ -30,7 +30,7 @@
       "G": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 2,
     "keywords": [],
     "effects": [],
@@ -92,7 +92,7 @@
       "G": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 3,
     "keywords": [
       "reach"
@@ -113,7 +113,7 @@
       "G": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 1,
     "keywords": [],
     "effects": [
@@ -187,7 +187,7 @@
       "G": 1,
       "generic": 2
     },
-    "power": 2,
+    "power": 3,
     "toughness": 2,
     "keywords": [
       "regenerate"
@@ -292,8 +292,8 @@
       "G": 1,
       "generic": 5
     },
-    "power": 4,
-    "toughness": 6,
+    "power": 5,
+    "toughness": 7,
     "keywords": [
       "regenerate"
     ],
@@ -308,25 +308,27 @@
   },
   {
     "id": "wild_c_013",
-    "name": "Greening Rite",
+    "name": "Rag-Tree Well",
     "faction": "wild",
     "rarity": "common",
-    "type": "spell",
-    "subtype": "Rite",
+    "type": "relic",
+    "subtype": "Relic",
     "cost": {
-      "G": 1
+      "G": 1,
+      "generic": 1
     },
+    "mana_value": 2,
     "keywords": [],
     "effects": [
       {
+        "trigger": "upkeep",
         "action": "add_mana",
         "color": "G",
-        "amount": 2,
-        "trigger": "cast"
+        "amount": 1
       }
     ],
-    "text": "Add {G}{G}.",
-    "flavor": "The earth is the goddess, and the goddess is never wrong, not even about the blight. (Greening chant)",
+    "text": "At the beginning of your upkeep, add {G}.",
+    "flavor": "Tie a rag to the thorn above the well and the well will cure you. If it does not, the rag was dirty. (A wellkeeper's teaching)",
     "art": "res://art/cards/wild_c_013.webp"
   },
   {
@@ -480,15 +482,15 @@
           {
             "action": "buff",
             "target": "own_creature",
-            "power": 1,
-            "toughness": 1,
+            "power": 2,
+            "toughness": 2,
             "duration": "turn"
           }
         ],
-        "text": "{G}, Tap: Target creature you control gets +1/+1 until end of turn."
+        "text": "{G}, Tap: Target creature you control gets +2/+2 until end of turn."
       }
     ],
-    "text": "{G}, Tap: Target creature you control gets +1/+1 until end of turn.",
+    "text": "{G}, Tap: Target creature you control gets +2/+2 until end of turn.",
     "flavor": "A sprig of rowan over the byre door, and no ill thing crosses.",
     "art": "res://art/cards/wild_c_019.webp"
   },
@@ -692,17 +694,18 @@
     "keywords": [],
     "effects": [
       {
-        "action": "buff",
+        "trigger": "cast",
+        "action": "grant",
+        "keyword": "trample",
+        "duration": "turn",
         "target": "all_own_creatures",
         "subtype": "Treefolk",
-        "power": 1,
-        "toughness": 2,
-        "duration": "turn",
-        "trigger": "cast"
+        "power": 2,
+        "toughness": 1
       }
     ],
     "speed": "instant",
-    "text": "Treefolk you control get +1/+2 until end of turn.",
+    "text": "Treefolk you control get +2/+1 and gain trample until end of turn.",
     "flavor": "The axemen came at dawn. By noon they were sharpening their axes and wondering.",
     "art": "res://art/cards/wild_c_026.webp"
   },
@@ -765,7 +768,7 @@
       "G": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 2,
     "keywords": [],
     "effects": [
@@ -854,8 +857,8 @@
       "G": 2,
       "generic": 2
     },
-    "power": 2,
-    "toughness": 3,
+    "power": 3,
+    "toughness": 4,
     "keywords": [
       "reach",
       "regenerate"
@@ -1135,7 +1138,13 @@
       "generic": 2
     },
     "keywords": [],
-    "effects": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "regrow",
+        "target": "own_grave_creature"
+      }
+    ],
     "abilities": [
       {
         "cost": {
@@ -1151,7 +1160,7 @@
         "text": "Tap: Add {G}."
       }
     ],
-    "text": "Tap: Add {G}.",
+    "text": "When Dowser's Hazel Rod enters, return target creature card from your graveyard to your hand. Tap: Add {G}.",
     "flavor": "The river forgives every sin, so long as you confess it downstream of the village. (A dowser's saying)",
     "art": "res://art/cards/wild_u_012.webp"
   },
@@ -1387,7 +1396,7 @@
       "G": 1,
       "generic": 2
     },
-    "power": 1,
+    "power": 2,
     "toughness": 2,
     "keywords": [],
     "statics": [
@@ -1947,5 +1956,251 @@
     "text": "Trample. Other Treefolk you control get +1/+1. Other Wolves you control get +1/+1.",
     "flavor": "The wolves den among his roots, and the oaks of the wood stand taller for his shade.",
     "art": "res://art/cards/wild_m_004.webp"
+  },
+  {
+    "id": "wild_c_030",
+    "name": "Turn at Bay",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Rite",
+    "cost": {
+      "G": 1,
+      "generic": 1
+    },
+    "mana_value": 2,
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "cast",
+        "action": "fight",
+        "target": "enemy_creature",
+        "tapped": true
+      }
+    ],
+    "text": "Target creature you control fights target tapped enemy creature. (Each deals damage equal to its power to the other.)",
+    "flavor": "The hunted boar turns on the hounds, and the druids call it justice. When the hounds win, they call that justice too.",
+    "art": "res://art/cards/wild_c_030.webp"
+  },
+  {
+    "id": "wild_c_031",
+    "name": "Royal Elk of the Glen",
+    "faction": "wild",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "G": 2,
+      "generic": 3
+    },
+    "mana_value": 5,
+    "power": 5,
+    "toughness": 5,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "text": "Trample (This creature can deal excess combat damage to the enemy player.)",
+    "flavor": "The druids crowned him king of the glen. He ate the crown, which they took as a sign of great humility.",
+    "art": "res://art/cards/wild_c_031.webp"
+  },
+  {
+    "id": "wild_u_021",
+    "name": "Barrow-Singer Druid",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Human Druid",
+    "cost": {
+      "G": 1,
+      "generic": 2
+    },
+    "mana_value": 3,
+    "power": 2,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "upkeep",
+        "action": "add_mana",
+        "color": "G",
+        "amount": 1,
+        "amount_per": "Druid"
+      }
+    ],
+    "text": "At the beginning of your upkeep, add {G} for each Druid you control.",
+    "flavor": "Sing to the barrow and the ancestors will bless the barley. In three hundred years they have never once said no. (Barrow-Singer Druid)",
+    "art": "res://art/cards/wild_u_021.webp"
+  },
+  {
+    "id": "wild_u_022",
+    "name": "Thunder-Split Ash",
+    "faction": "wild",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Treefolk",
+    "cost": {
+      "G": 2,
+      "generic": 2
+    },
+    "mana_value": 4,
+    "power": 3,
+    "toughness": 4,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [],
+    "statics": [
+      {
+        "static": "keyword",
+        "keyword": "trample",
+        "scope": "other_own_creatures",
+        "subtype": "Treefolk"
+      }
+    ],
+    "text": "Trample. Other Treefolk you control have trample.",
+    "flavor": "The storm god struck the ash to punish it, say the druids. The ash took it as encouragement.",
+    "art": "res://art/cards/wild_u_022.webp"
+  },
+  {
+    "id": "wild_r_013",
+    "name": "Cave Bear of the Tors",
+    "faction": "wild",
+    "rarity": "rare",
+    "type": "creature",
+    "subtype": "Beast",
+    "cost": {
+      "G": 2,
+      "generic": 5
+    },
+    "mana_value": 7,
+    "power": 7,
+    "toughness": 7,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "fight",
+        "target": "enemy_creature"
+      }
+    ],
+    "text": "Trample. When Cave Bear of the Tors enters, target creature you control fights target enemy creature.",
+    "flavor": "Each spring the druids leave him honey and beg his blessing. He eats the honey, then the basket, and looks thoughtfully at the druid.",
+    "art": "res://art/cards/wild_r_013.webp"
+  },
+  {
+    "id": "wild_m_005",
+    "name": "Ardagh, King of the Oakmoot",
+    "faction": "wild",
+    "rarity": "mythic",
+    "legendary": true,
+    "type": "creature",
+    "subtype": "Treefolk",
+    "cost": {
+      "G": 2,
+      "generic": 4
+    },
+    "mana_value": 6,
+    "power": 6,
+    "toughness": 6,
+    "keywords": [
+      "trample"
+    ],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "summon",
+        "token": {
+          "name": "Oakling",
+          "power": 2,
+          "toughness": 2,
+          "subtype": "Treefolk",
+          "keywords": []
+        },
+        "count": 1
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 2,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Treefolk"
+      },
+      {
+        "static": "keyword",
+        "keyword": "trample",
+        "scope": "other_own_creatures",
+        "subtype": "Treefolk"
+      },
+      {
+        "static": "keyword",
+        "keyword": "regenerate",
+        "scope": "self",
+        "condition": "rooted"
+      }
+    ],
+    "regen_cost": {
+      "generic": 1,
+      "G": 1
+    },
+    "text": "Trample. Other Treefolk you control get +2/+1 and have trample. When Ardagh enters, create a 2/2 Oakling token. Rooted: As long as you control six or more lands, Ardagh has regenerate {1}{G}.",
+    "flavor": "Every king of men dies. Our king is a tree, so we shall be ruled forever, which is the same as being free. (A druid of the Moot)",
+    "art": "res://art/cards/wild_m_005.webp"
+  },
+  {
+    "id": "wild_m_006",
+    "name": "Corrach, Archdruid of the Nine Stones",
+    "faction": "wild",
+    "rarity": "mythic",
+    "legendary": true,
+    "type": "creature",
+    "subtype": "Human Druid",
+    "cost": {
+      "G": 2,
+      "generic": 2
+    },
+    "mana_value": 4,
+    "power": 3,
+    "toughness": 3,
+    "keywords": [],
+    "effects": [
+      {
+        "trigger": "enter",
+        "action": "regrow",
+        "target": "own_grave_creature"
+      }
+    ],
+    "abilities": [
+      {
+        "cost": {
+          "tap": true
+        },
+        "effects": [
+          {
+            "action": "add_mana",
+            "color": "G",
+            "amount": 2
+          }
+        ],
+        "text": "Tap: Add {G}{G}."
+      }
+    ],
+    "statics": [
+      {
+        "static": "anthem",
+        "power": 1,
+        "toughness": 1,
+        "scope": "other_own_creatures",
+        "subtype": "Druid"
+      }
+    ],
+    "text": "Other Druids you control get +1/+1. When Corrach enters, return target creature card from your graveyard to your hand. Tap: Add {G}{G}.",
+    "flavor": "Nine stones, nine winters, nine sacred mushrooms. I have seen the truth of the world, and it is mostly green. (Corrach)",
+    "art": "res://art/cards/wild_m_006.webp"
   }
 ]

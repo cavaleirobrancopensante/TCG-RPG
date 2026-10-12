@@ -70,7 +70,7 @@
       "R": 1,
       "generic": 2
     },
-    "power": 0,
+    "power": 1,
     "toughness": 3,
     "keywords": [],
     "effects": [
@@ -96,7 +96,7 @@
       "R": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 2,
     "keywords": [],
     "effects": [
@@ -121,7 +121,7 @@
       "R": 1,
       "generic": 2
     },
-    "power": 1,
+    "power": 2,
     "toughness": 3,
     "keywords": [],
     "effects": [
@@ -718,7 +718,7 @@
       "R": 1,
       "generic": 1
     },
-    "power": 1,
+    "power": 2,
     "toughness": 2,
     "keywords": [],
     "effects": [
@@ -758,6 +758,108 @@
     "text": "Idle: At the end of your turn, if Wineskin Satyr is untapped and didn't attack this turn, rummage. (Draw a card, then discard a card.)",
     "flavor": "Now drive away your cares with wine; tomorrow we sail the vast sea again. (Horace, Odes 1.7)",
     "art": "res://art/cards/revel_c_029.webp"
+  },
+  {
+    "id": "revel_c_030",
+    "name": "Shovel of Embers",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "speed": "instant",
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "any_enemy",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Shovel of Embers deals 2 damage to any enemy creature or the enemy player.",
+    "flavor": "The innkeeper keeps no sword behind the bar. The fire is always lit, and the shovel is always warm.",
+    "art": "res://art/cards/revel_c_030.webp",
+    "mana_value": 2
+  },
+  {
+    "id": "revel_c_031",
+    "name": "Gambler's Ruin",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_creature",
+        "amount": 3,
+        "trigger": "cast"
+      },
+      {
+        "action": "lose_life",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Gambler's Ruin deals 3 damage to target enemy creature. You lose 2 life.",
+    "flavor": "Quid sit futurum cras, fuge quaerere: cease to ask what tomorrow will bring. (Horace, Odes 1.9)",
+    "art": "res://art/cards/revel_c_031.webp",
+    "mana_value": 2
+  },
+  {
+    "id": "revel_c_032",
+    "name": "Pawn the Heirlooms",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "spell",
+    "subtype": "Revelry",
+    "cost": {
+      "R": 1
+    },
+    "keywords": [],
+    "effects": [
+      {
+        "action": "rummage",
+        "amount": 2,
+        "trigger": "cast"
+      }
+    ],
+    "text": "Rummage twice. (Each time, draw a card, then discard a card.)",
+    "flavor": "Have drown'd my Glory in a shallow Cup, / And sold my Reputation for a Song. (Omar Khayyam, tr. FitzGerald)",
+    "art": "res://art/cards/revel_c_032.webp",
+    "mana_value": 1
+  },
+  {
+    "id": "revel_c_033",
+    "name": "Cinder-Hoof Satyr",
+    "faction": "revel",
+    "rarity": "common",
+    "type": "creature",
+    "subtype": "Satyr",
+    "cost": {
+      "R": 1,
+      "generic": 1
+    },
+    "power": 2,
+    "toughness": 1,
+    "keywords": [],
+    "effects": [],
+    "unearth": {
+      "R": 1
+    },
+    "text": "Unearth {R} ({R}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+    "flavor": "Every dawn he is ash. Every dusk he is dancing again, and a little less of him each time.",
+    "art": "res://art/cards/revel_c_033.webp",
+    "mana_value": 2
   },
   {
     "id": "revel_u_001",
@@ -860,12 +962,12 @@
         "action": "buff",
         "target": "own_creature",
         "power": 1,
-        "toughness": 0,
+        "toughness": 1,
         "duration": "permanent",
         "trigger": "idle"
       }
     ],
-    "text": "Idle: At the end of your turn, if Host of the Lantern Garden is untapped and didn't attack this turn, put a +1/+0 counter on target creature you control.",
+    "text": "Idle: At the end of your turn, if Host of the Lantern Garden is untapped and didn't attack this turn, put a +1/+1 counter on target creature you control.",
     "flavor": "We call pleasure the beginning and end of the blessed life. (Epicurus, Letter to Menoeceus)",
     "art": "res://art/cards/revel_u_004.webp"
   },
@@ -1286,7 +1388,7 @@
       "R": 1,
       "generic": 2
     },
-    "power": 1,
+    "power": 2,
     "toughness": 3,
     "keywords": [],
     "effects": [
@@ -1329,6 +1431,34 @@
     "text": "Panic in the Thicket deals 1 damage to target enemy creature for each Satyr you control.",
     "flavor": "Out of the dark wood came a skirl of pipes and a clatter of hooves, and the sentries forgot their courage.",
     "art": "res://art/cards/revel_u_020.webp"
+  },
+  {
+    "id": "revel_u_021",
+    "name": "Torchbearer of the Rout",
+    "faction": "revel",
+    "rarity": "uncommon",
+    "type": "creature",
+    "subtype": "Satyr",
+    "cost": {
+      "R": 1,
+      "generic": 3
+    },
+    "power": 3,
+    "toughness": 2,
+    "keywords": [],
+    "effects": [
+      {
+        "action": "damage",
+        "target": "enemy_creature",
+        "amount": 1,
+        "amount_per": "Satyr",
+        "trigger": "enter"
+      }
+    ],
+    "text": "When Torchbearer of the Rout enters, it deals 1 damage to target enemy creature for each Satyr you control.",
+    "flavor": "He knows the way into the wood by heart. No one has ever asked him the way out.",
+    "art": "res://art/cards/revel_u_021.webp",
+    "mana_value": 4
   },
   {
     "id": "revel_r_001",

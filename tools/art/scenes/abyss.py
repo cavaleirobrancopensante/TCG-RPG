@@ -2720,3 +2720,574 @@ def abyss_r_012(p):
     Ghoul(pose='reach', skin=C.hex('8a9470'), rags=C.hex('5a4632'), eye=C.hex('ffd060'), fat=0.7, jaw=0.7, hair=C.hex('3a3428'), grip=True, shirt=True,
           props_front=[nail_crown(), spade(110)], overrides=dict(hand_f=(20, -58), hand_b=(-14, -48))).draw(p, 500, 606, 470)
     embers(p, (100, 120, 900, 480), 20)
+
+
+# ------------------------------------------------------------------ 1.45 additions: the bone host
+
+def _buckler(which='b', r=9.5, col=C.hex('6a4a2a'), boss=IRON):
+    """A small round wooden buckler, cracked and iron-bossed, on a skeleton's hand."""
+    def fn(p, j):
+        c = j['hand_' + which]
+        p.blob(c, r, r * 1.05, ('r', col.light(0.15), col.dark(0.35)), width=1.6, shade=0.7, rim=0.5)
+        p.blob(c, r * 0.86, r * 0.9, None, ink=IRON_DARK, width=1.4)
+        for k in range(4):
+            a = k * math.pi / 2 + 0.4
+            p.blob(polar(c, r * 0.86, a), 0.9, 0.9, IRON, width=0.5)
+        p.line([v_add(c, (-r * 0.5, -r * 0.7)), v_add(c, (-r * 0.2, -r * 0.1)), v_add(c, (-r * 0.4, r * 0.5))], INK.alpha(0.7), 1.0)
+        p.blob(c, r * 0.32, r * 0.32, ('r', boss.light(0.4), boss.dark(0.3)), width=1.0, shade=0.6)
+    return fn
+
+
+def _notched_sword(length=30, d=(1.0, -0.35)):
+    """A short notched sword thrust forward from the front hand."""
+    def fn(p, j):
+        h = j['hand_f']
+        dd = v_norm(d)
+        n = v_perp(dd)
+        guard = v_add(h, v_mul(dd, 2.5))
+        tip = v_add(guard, v_mul(dd, length))
+        pts = [v_add(guard, v_mul(n, 1.6)) + (0,)]
+        for k in range(1, 6):
+            q = v_lerp(guard, tip, k / 6.0)
+            w = 1.6 - k * 0.1
+            off = 0.7 if k in (2, 4) else 0.0
+            pts.append(v_add(q, v_mul(n, w - off)))
+        pts.append(tip + (0,))
+        for k in range(5, 0, -1):
+            q = v_lerp(guard, tip, k / 6.0)
+            pts.append(v_sub(q, v_mul(n, 1.6 - k * 0.1)))
+        pts.append(v_sub(guard, v_mul(n, 1.6)) + (0,))
+        p.shape(pts, ('h', C.hex('a8a49a'), C.hex('5a5650')), width=1.1, smooth=False)
+        p.line([v_lerp(guard, tip, 0.1), v_lerp(guard, tip, 0.8)], C.hex('d8d4c8').alpha(0.6), 0.8)
+        for t in (0.3, 0.55, 0.7):
+            p.blob(v_lerp(guard, tip, t), 0.8, 0.5, C.hex('8a4a22').alpha(0.7), ink=False)
+        p.taper([v_add(guard, v_mul(n, 4.5)), v_sub(guard, v_mul(n, 4.5))], 1.0, 1.0, IRON_DARK, width=0.8)
+        p.taper([guard, v_sub(h, v_mul(dd, 3.5))], 0.9, 0.9, C.hex('3a2a1a'), width=0.8)
+        p.blob(v_sub(h, v_mul(dd, 4)), 1.3, 1.3, IRON, width=0.7)
+    return fn
+
+
+def _dust(p, c, rx, ry, col=C.hex('c8a878'), n=14, alpha=0.35):
+    """A rolling cloud of dry grave-dust."""
+    for _ in range(n):
+        q = (c[0] + p.rng.uniform(-rx, rx), c[1] + p.rng.uniform(-ry, ry * 0.4))
+        r = p.rng.uniform(rx * 0.15, rx * 0.35)
+        p.blob(q, r, r * 0.7, col.alpha(alpha * p.rng.uniform(0.5, 1.0)), ink=False)
+
+
+def abyss_c_030(p):
+    """Grave-Dust Skirmisher: on a parched hillside burial ground at a dusty sunset, a lean
+    skeleton bursts from his shallow grave at a run, notched sword thrust forward and a
+    cracked buckler raised, grave-dust streaming off him in the wind."""
+    bg.sky(p, C.hex('3a2430'), C.hex('a8603a'), C.hex('e8b070'), 0.62)
+    p.glow((250, 330), 300, C.hex('ffd090'), 0.45)
+    p.blob((250, 330), 46, 46, ('r', C.hex('fff0c0'), C.hex('ffc070')), ink=False)
+    hz = H * 0.6
+    ridge(p, hz + 10, C.hex('7a5040'), 50, 6, jag=False, ink=INK.alpha(0.4))
+    # a row of leaning wooden grave-markers on the far slope
+    for i, x in enumerate((560, 620, 690, 760, 840, 900)):
+        y = hz + 34 + i * 3
+        t = p.rng.uniform(-0.25, 0.25)
+        p.push(x, y, 1.0, rot=t)
+        p.taper([(0, 0), (0, -46)], 3, 3, C.hex('4a3020'), width=1.2)
+        p.taper([(-10, -34), (10, -34)], 2.6, 2.6, C.hex('4a3020'), width=1.2)
+        p.pop()
+    dead_tree(p, 120, hz + 70, 1.1, C.hex('3a2420'), lean=0.3)
+    p.shape([(-20, H + 10, 0), (-20, hz + 60), (W * 0.4, hz + 50), (W * 0.8, hz + 66), (W + 20, hz + 58), (W + 20, H + 10, 0)],
+            ('v', C.hex('a07850'), C.hex('5a3e2a')), ink=INK.alpha(0.5), width=2)
+    p.clip_shape([(-20, H + 10, 0), (-20, hz + 60), (W + 20, hz + 58), (W + 20, H + 10, 0)])
+    p.texture((0, hz + 50, W, H), strength=1.6)
+    p.unclip()
+    # cracks in the dry earth
+    for _ in range(10):
+        x = p.rng.uniform(40, 960)
+        y = p.rng.uniform(hz + 90, H - 10)
+        p.line([(x, y), (x + p.rng.uniform(-30, 30), y + p.rng.uniform(4, 12)), (x + p.rng.uniform(-50, 50), y + p.rng.uniform(8, 20))], C.hex('4a301e').alpha(0.7), 1.4)
+    # the shallow grave he has just left, with a broken marker and the spray of earth
+    hole = [(170, 590), (230, 570), (380, 566), (440, 584), (380, 604), (220, 606)]
+    p.shape(hole, ('v', C.hex('1e140e'), C.hex('3a2818')), width=2)
+    p.push(420, 572, 1.0, rot=0.5)
+    p.taper([(0, 0), (0, -60)], 4, 4, C.hex('5a3a24'), width=1.4)
+    p.taper([(-14, -44), (14, -44)], 3.4, 3.4, C.hex('5a3a24'), width=1.4)
+    p.pop()
+    for _ in range(26):
+        q = (p.rng.uniform(170, 480), p.rng.uniform(470, 590))
+        p.blob(q, p.rng.uniform(2, 6), p.rng.uniform(2, 4), C.hex('6a4a30'), ink=INK.alpha(0.5), width=0.8)
+    _dust(p, (250, 560), 120, 40, col=C.hex('b89068'), n=16, alpha=0.22)
+    _dust(p, (520, 600), 110, 20, col=C.hex('b89068'), n=12, alpha=0.25)
+
+    def scarf(p, j):
+        p.taper([(-2, -82), (-14, -84), (-28, -80), (-40, -84), (-52, -78)], 3.2, 1.2, C.hex('8a2a20'), width=1.2, shade=0.6)
+        p.taper([(-4, -81), (-16, -78), (-26, -72), (-36, -74)], 2.4, 0.8, C.hex('6a1a16'), width=1.0, shade=0.6)
+
+    def belt(p, j):
+        p.taper([(-9, -50), (0, -47), (9, -50)], 1.6, 1.6, C.hex('4a3020'), width=0.9, shade=0.5)
+        p.shape([(3, -50, 0), (6, -50, 0), (6, -46, 0), (3, -46, 0)], OLD_GOLD, width=0.6, smooth=False)
+        p.shape([(-6, -48), (-4, -40), (-8, -36), (-10, -44)], C.hex('5a3a24'), width=0.9, shade=0.6)
+
+    # the skirmisher, running to the right
+    Skeleton(pose='sword', hands=((30, -66), (-16, -70)), col=BONE_OLD.mix(C.hex('c8a070'), 0.15), glow=C.hex('ffd060'),
+             jaw_open=0.5, armor=belt, props_back=[scarf, _buckler('b')], props_front=[_notched_sword(34)]).draw(p, 560, 604, 450)
+    # dust streaming off the bones in the wind
+    for k in range(6):
+        y = 330 + k * 40
+        p.fold_band([(500 - k * 4, y), (420 - k * 8, y + 6), (340 - k * 10, y - 2)], 3, 0.4, C.hex('f0d0a0').alpha(0.3))
+    crow(p, 820, 210, 0.9, flying=True, flip=True)
+
+
+def _loot_sack(col=C.hex('6a5a3a')):
+    """A bulging sack slung over a skeleton's back shoulder, gold spilling from its mouth."""
+    def fn(p, j):
+        hb = j['hand_b']
+        c = (hb[0] - 9, hb[1] + 4)
+        pts = [(c[0] - 10, c[1] - 6), (c[0] - 4, c[1] - 13), (c[0] + 6, c[1] - 12), (c[0] + 12, c[1] - 2), (c[0] + 9, c[1] + 10),
+               (c[0] - 2, c[1] + 13), (c[0] - 12, c[1] + 6)]
+        p.shape(pts, ('h', col.light(0.15), col.dark(0.35)), width=1.6, shade=0.8, rim=0.4)
+        p.clip_shape(pts)
+        p.texture((c[0] - 14, c[1] - 14, c[0] + 14, c[1] + 14), strength=1.4)
+        p.fold_band([(c[0] - 6, c[1] - 8), (c[0] - 1, c[1] + 2), (c[0] + 4, c[1] + 10)], 0.4, 1.6, col.dark(0.4).alpha(0.5))
+        p.unclip()
+        p.taper([(c[0] + 4, c[1] - 12), hb], 1.4, 1.0, col.dark(0.1), width=1.0)
+        for k in range(5):
+            q = (c[0] - 11 + k * 1.6, c[1] - 6 + k * 2.2)
+            p.blob(q, 1.4, 1.0, OLD_GOLD.light(0.2), width=0.5)
+    return fn
+
+
+def _goblet(which='f', col=OLD_GOLD):
+    """A jewelled gilt goblet lifted in a bony hand."""
+    def fn(p, j):
+        x, y = j['hand_' + which]
+        p.shape([(x - 4.5, y - 12), (x + 4.5, y - 12), (x + 3.5, y - 6), (x + 1, y - 4), (x - 1, y - 4), (x - 3.5, y - 6)], ('h', col.light(0.4), col, col.dark(0.35)), width=1.0, shade=0.6)
+        p.taper([(x, y - 4), (x, y + 3)], 0.9, 0.9, col.dark(0.1), width=0.7)
+        p.blob((x, y - 1), 1.2, 0.8, col, width=0.6)
+        p.blob((x, y + 3.6), 3.4, 1.0, col.dark(0.15), width=0.7)
+        for q, g in (((x - 2, y - 9), BLOOD_LIGHT), ((x + 1.8, y - 9), C.hex('2a8a4a'))):
+            p.blob(q, 0.9, 0.9, g, width=0.4)
+        p.line([(x - 3.6, y - 11), (x - 2.6, y - 6.5)], LEAD_WHITE.alpha(0.6), 0.7)
+        p.glow((x, y - 8), 10, EMBER_LIGHT, 0.3)
+    return fn
+
+
+def abyss_u_021(p):
+    """Rattling Grave-Raider: in a candlelit family crypt a skeleton has heaved the lid off a
+    noble's tomb; he lifts a jewelled goblet to the light with a sack of gold on his back,
+    while coins and a coroneted skull spill across the flagstones."""
+    crypt(p, 'vault', base=C.hex('4a4048'), floor_y=H * 0.8)
+    darken(p, 0.2)
+    # wall niches with guttering candles
+    for x in (150, 850):
+        p.shape([(x - 40, 420, 0), (x - 40, 300), (x, 260), (x + 40, 300), (x + 40, 420, 0)], ('v', PITCH, C.hex('2a2028')), width=2)
+        black_candle(p, x - 12, 420, 46, 7, col=C.hex('d8d0b8'), flame_col=C.hex('ffc060'))
+        black_candle(p, x + 14, 420, 30, 7, col=C.hex('d8d0b8'), flame_col=C.hex('ffc060'))
+        p.glow((x, 360), 120, C.hex('ffb050'), 0.35)
+    # the opened tomb on the left, its lid shoved askew and cracked
+    sarcophagus(p, 300, 560, 300, 120, C.hex('7a7280'), effigy=False)
+    p.push(300, 436, 1.0, rot=-0.12)
+    lid = [(-170, 0, 0), (130, 0, 0), (126, -22, 0), (-166, -22, 0)]
+    p.shape(lid, ('v', C.hex('a098a4'), C.hex('5a5262')), width=2.2, smooth=False, shade=0.5)
+    p.shape([(-130, -22), (-110, -48), (-70, -52), (40, -46), (90, -54), (100, -22)], C.hex('948c98'), width=1.8, shade=0.7)
+    p.blob((-100, -46), 18, 14, C.hex('9a92a0'), width=1.6, shade=0.6)
+    p.line([(-20, 0), (-14, -10), (-24, -22)], INK, 1.6)
+    p.pop()
+    # a pale shroud hanging over the tomb edge, and the gleam of more gold inside
+    p.glow((300, 440), 90, OLD_GOLD.light(0.3), 0.35)
+    p.shape([(200, 440), (230, 470), (224, 520), (240, 540), (210, 530), (190, 470)], LINEN.dark(0.1), width=1.6, shade=0.7)
+    # spilled treasure on the floor
+    coins(p, 470, 590, 18, 70, 7)
+    coins(p, 780, 600, 10, 40, 6)
+    skull(p, (230, 598), 18, BONE_OLD.dark(0.15), rot=-0.3, jaw=False)
+    p.shape([(216, 580, 0), (218, 570, 0), (224, 576, 0), (230, 566, 0), (236, 576, 0), (242, 570, 0), (244, 581, 0)], OLD_GOLD, width=1.2, smooth=False, shade=0.5)
+    # the raider, turning to the right with his prize
+    Skeleton(pose='hold', hands=((24, -88), (-12, -74)), col=BONE_OLD, glow=C.hex('ffd060'), rags=C.hex('3a3036'), jaw_open=0.7,
+             helm=rusty_helm(C.hex('5a5458')), props_back=[_loot_sack()], props_front=[_goblet('f')]).draw(p, 620, 606, 440)
+    # a crowbar left leaning on the tomb
+    p.taper([(440, 600), (468, 470)], 4, 3.5, IRON_DARK, width=1.4, shade=0.5)
+    p.taper([(468, 470), (474, 460), (484, 462)], 3.5, 2.5, IRON_DARK, width=1.2)
+    vignette(p, 0.5)
+
+
+def abyss_c_031(p):
+    """Empty the Bone-Pits: under a green-rimmed moon a hooded Pact sexton stands on the
+    spoil heap with lantern and black book, and out of the old plague pit three skeletons
+    claw their way up into the night, bones rattling in the sickly light."""
+    night(p, moon_col=C.hex('d8f0a8'), moon_at=(800, 110), moon_r=34, mid=C.hex('141c1a'), low=C.hex('2e3a34'))
+    hz = H * 0.6
+    ridge(p, hz + 10, C.hex('1c2420'), 40, 6, jag=False)
+    dead_tree(p, 900, hz + 70, 1.2, C.hex('141814'), lean=-0.3)
+    p.shape([(-20, H + 10, 0), (-20, hz + 56), (W + 20, hz + 50), (W + 20, H + 10, 0)], ('v', C.hex('2e3428'), C.hex('121610')), ink=INK.alpha(0.5), width=2)
+    x0, x1, y = 300, 860, 500
+    p.glow((580, 520), 280, SICKLY_GLOW, 0.4)
+    lime_pit(p, x0, x1, y, 100, bodies=0)
+    # three skeletons climbing out, each at a different stage
+    sk = BONE_OLD.mix(C.hex('d0e8b0'), 0.2)
+    Skeleton(pose='climb', hands=((26, -66), (-6, -62)), col=sk.dark(0.1), glow=SICKLY_GLOW, jaw_open=0.4).draw(p, 420, 650, 260)
+    Skeleton(pose='raise', hands=((14, -104), (-12, -98)), col=sk, glow=SICKLY_GLOW, jaw_open=0.8).draw(p, 590, 640, 320)
+    Skeleton(pose='reach', hands=((30, -76), (24, -72)), col=sk.dark(0.05), glow=SICKLY_GLOW, rags=C.hex('3a3a30'), jaw_open=0.3).draw(p, 760, 650, 280, flip=True)
+    pit_lip(p, x0, x1, y, 100)
+    # bony hands gripping the near lip
+    for x in (470, 690):
+        p.push(x, 556, 3.2)
+        bone_hand(p, (0, 0), (0.2, 1), sk, 1.0, 1.2)
+        p.pop()
+    p.glow((580, 470), 140, SICKLY_GLOW, 0.3)
+    # the sexton on the left spoil heap
+    p.shape([(-20, H + 20, 0), (-20, 560), (120, 520), (260, 540), (330, H + 20, 0)], ('v', C.hex('4a3a2a'), C.hex('1e1810')), width=1.8, shade=0.6)
+    Cultist(pose='lantern', garb='robe', main=C.hex('2a2630'), hood_col=C.hex('221e28'), shadow=0.6, glow_eyes=SICKLY_GLOW,
+            belt='cord', mouth='open', props_front=[black_book('b', open_=True)]).draw(p, 170, 560, 400)
+    fog(p, 560, 50, C.hex('a8c8a0'), 0.25, 8)
+
+
+def abyss_u_022(p):
+    """Twice-Buried Ghoul: in a rain-dark churchyard corner a ghoul heaves himself out of
+    a fresh grave and, gripping a second corpse by the wrist, hauls his neighbour up out of
+    the next grave behind him."""
+    bg.sky(p, C.hex('1a2230'), C.hex('3e4c5a'), C.hex('7a8a90'), 0.6)
+    p.glow((420, 90), 160, C.hex('d8e8e0'), 0.35)
+    clouds_y = 120
+    for k in range(5):
+        p.blob((100 + k * 200, clouds_y + (k % 2) * 30), 160, 40, C.hex('2a323a').alpha(0.7), ink=False)
+    hz = H * 0.6
+    ridge(p, hz + 10, C.hex('242a30'), 30, 6, jag=False)
+    # the churchyard wall and a yew
+    p.shape([(-20, hz + 40, 0), (-20, hz - 10, 0), (W + 20, hz - 10, 0), (W + 20, hz + 40, 0)], ('v', C.hex('4a4a50'), C.hex('2a2a30')), width=2, smooth=False)
+    stone_wall(p, (0, hz - 10, W, 50), C.hex('4a4a50'), 50, 25)
+    p.blob((880, hz - 80), 90, 130, ('v', C.hex('1e2a20'), C.hex('0e140e')), width=2, shade=0.6)
+    p.shape([(-20, H + 10, 0), (-20, hz + 40), (W + 20, hz + 40), (W + 20, H + 10, 0)], ('v', C.hex('2a3226'), C.hex('101410')), ink=INK.alpha(0.5), width=2)
+    for x, k, t in ((120, 'round', -0.1), (240, 'slab', 0.08), (930, 'pointed', 0.12)):
+        gravestone(p, x, hz + 70, 1.0, k, C.hex('6a6a72'), t)
+    # rain
+    for _ in range(90):
+        x = p.rng.uniform(0, W)
+        y = p.rng.uniform(0, H)
+        p.line([(x, y), (x - 6, y + 22)], C.hex('a8b8c8').alpha(0.25), 1.0)
+    # the neighbour: a second corpse half out of the farther grave, dragged by the wrist
+    p.glow((600, 420), 200, SICKLY_GLOW, 0.2)
+    far_hole = [(520, 500), (570, 484), (740, 484), (790, 500), (740, 516), (570, 516)]
+    p.shape(far_hole, ('v', C.hex('140e0a'), C.hex('2a2018')), width=2)
+    Ghoul(pose='reach', skin=ROT.dark(0.1), rags=C.hex('3a3a36'), eye=SICKLY_GLOW, jaw=1.0, hair=None).draw(p, 640, 560, 260, flip=True)
+    p.shape([(500, 600, 0), (510, 504), (580, 512), (650, 508), (720, 512), (800, 502), (810, 600, 0)], ('v', C.hex('4a3c2c'), C.hex('2a2018')), width=2, shade=0.5)
+    for _ in range(14):
+        q = (p.rng.uniform(520, 790), p.rng.uniform(510, 560))
+        p.blob(q, p.rng.uniform(3, 7), p.rng.uniform(2, 4), C.hex('1e160e'), ink=False)
+    gravestone(p, 820, 500, 0.9, 'round', C.hex('7a7a82'), 0.2)
+    # the ghoul in front, climbing out of his own grave and reaching back
+    hole = [(200, 600), (260, 560), (500, 556), (560, 590), (500, 620), (240, 622)]
+    p.shape(hole, ('v', C.hex('140e0a'), C.hex('2a2018')), width=2)
+    Ghoul(pose='lurch', skin=ROT, rags=C.hex('4a4038'), eye=SICKLY_GLOW, jaw=0.9, grip=True,
+          overrides=dict(hand_f=(36, -66), hand_b=(-14, -44))).draw(p, 380, 640, 440)
+    p.shape([(180, H + 20, 0), (200, 610), (300, 598), (450, 600), (580, 606), (600, H + 20, 0)], ('v', C.hex('3a2e22'), C.hex('1a140e')), width=2, shade=0.5)
+    for _ in range(18):
+        q = (p.rng.uniform(200, 580), p.rng.uniform(600, 626))
+        p.blob(q, p.rng.uniform(3, 8), p.rng.uniform(2, 4), C.hex('1e160e'), ink=False)
+    # a sexton's lantern left on the slab tomb, the only warm light in the rain
+    p.glow((240, 384), 130, C.hex('ffb050'), 0.45)
+    p.shape([(230, 402, 0), (250, 402, 0), (252, 374, 0), (240, 364, 0), (228, 374, 0)], ('h', C.hex('ffe0a0'), C.hex('d08030')), width=1.6, smooth=False)
+    p.line([(240, 364), (240, 356)], IRON_DARK, 2)
+    p.blob((240, 354), 5, 4, None, ink=IRON_DARK, width=1.6)
+    vignette(p, 0.3)
+
+
+def _marshal_plate(col=C.hex('3a3a44'), trim=OLD_GOLD):
+    """A blackened breastplate and pauldrons strapped over a skeleton's ribs."""
+    def fn(p, j):
+        p.shape([(-8, -79), (9, -79), (11, -66), (8, -56), (0, -53), (-8, -56), (-10, -66)], ('h', col.light(0.35), col, col.dark(0.4)), width=1.6, shade=0.8, rim=0.4)
+        p.line([(0.5, -78), (0.5, -55)], col.light(0.4).alpha(0.6), 1.0)
+        p.taper([(-8, -79), (0, -77), (9, -79)], 1.1, 1.1, trim, width=0.8, shade=0.5)
+        p.taper([(-8, -56), (0, -53.5), (8, -56)], 1.0, 1.0, trim, width=0.8)
+        skull(p, (0.5, -67), 2.6, trim.light(0.1), front=True, jaw=False)
+        for sx in (9, -8):
+            p.shape([(sx - 5, -82), (sx + 5, -82), (sx + 6, -75), (sx - 6, -75)], ('v', col.light(0.3), col.dark(0.3)), width=1.2, shade=0.7)
+            p.taper([(sx - 6, -75), (sx + 6, -75)], 0.8, 0.8, trim, width=0.6)
+        # tasset of mail
+        p.shape([(-9, -52), (9, -52), (10, -40, 0), (-10, -40, 0)], IRON_DARK.light(0.15), width=1.0, shade=0.6)
+        for yy in range(-50, -40, 2):
+            p.line([(-9, yy), (9, yy)], INK.alpha(0.35), 0.5)
+    return fn
+
+
+def _crown_helm(col=C.hex('3a3a44'), crown=OLD_GOLD):
+    """An open-faced black sallet with a spiked iron crown riveted round it."""
+    def fn(p, hc):
+        x, y = hc
+        p.shape([(x - 8.6, y - 1, 0), (x - 8.4, y - 9), (x - 2, y - 14.5), (x + 5, y - 12), (x + 8.4, y - 6), (x + 8, y - 4, 0), (x + 1, y - 4.6, 0), (x - 1, y - 1, 0)],
+                ('h', col.light(0.35), col.dark(0.3)), width=1.4, shade=0.8, rim=0.3)
+        p.shape([(x - 9, y - 1, 0), (x - 10, y + 4), (x - 6, y + 2, 0)], col, width=1.0)
+        cy0 = y - 10
+        pts = [(x - 7.5, cy0 + 1, 0)]
+        for k in range(5):
+            xx = x - 6 + k * 3.2
+            pts += [(xx, cy0 - 1, 0), (xx + 0.8, cy0 - 6, 0), (xx + 1.6, cy0 - 1, 0)]
+        pts += [(x + 8, cy0 + 1.5, 0)]
+        p.shape(pts, ('v', crown.light(0.3), crown.dark(0.3)), width=1.1, smooth=False)
+        p.blob((x + 1.5, cy0), 0.9, 0.9, BLOOD_LIGHT, width=0.4)
+    return fn
+
+
+def abyss_m_005(p):
+    """Kharnoth, the Bone Marshal: on a ridge of a burned battlefield under a red sky, the
+    crowned and armoured skeleton marshal points his grave-sword down the valley; his bony
+    legions march beneath tattered banners, and fresh Risen Bones claw up from the ash at
+    his feet to join them."""
+    ember_sky(p, C.hex('1a0a10'), C.hex('5a1a1a'), C.hex('d06a30'), 0.6)
+    hz = H * 0.6
+    ridge(p, hz, C.hex('2a1a1c'), 60, 7, jag=True)
+    smoke(p, [(700, hz), (740, hz - 120), (690, hz - 240)], 20, 70, C.hex('2a1a1c'), 0.45)
+    # the valley floor and the legion marching away to the right, rank on rank
+    p.shape([(-20, H + 10, 0), (-20, hz + 30), (W + 20, hz + 20), (W + 20, H + 10, 0)], ('v', C.hex('4a3430'), C.hex('2a1c1a')), ink=INK.alpha(0.5), width=2)
+    for row, (y, h, n, dx) in enumerate(((hz + 50, 90, 9, 50), (hz + 74, 120, 7, 64), (hz + 104, 150, 6, 80))):
+        for k in range(n):
+            x = 520 + k * dx + row * 20
+            if x > W + 40:
+                continue
+            pen = C.hex('5a1a1a') if (k + row) % 3 == 0 else None
+            Skeleton(pose='hold', hands=((16, -62), (-9, -52)), col=BONE_OLD.dark(0.25 + 0.1 * (2 - row)), glow=EMBER_LIGHT,
+                     helm=rusty_helm(C.hex('4a4044')), props_front=[skel_spear(118, pennon=pen)]).draw(p, x, y, h, flip=True)
+    for x, top, col in ((610, 210, C.hex('4a1424')), (820, 230, C.hex('2a1a3a'))):
+        p.taper([(x, hz + 90), (x, top)], 3, 3, C.hex('2a1a14'), width=1.2)
+        tattered_banner(p, x + 34, top + 4, 64, 120, col, emblem=lambda q, c: skull(q, c, 12, BONE_OLD.dark(0.1), front=True))
+    fog(p, hz + 110, 40, C.hex('8a5a4a'), 0.3, 7)
+    # the near ridge he stands on
+    p.shape([(-20, H + 20, 0), (-20, 520), (200, 500), (420, 530), (520, 600), (560, H + 20, 0)], ('v', C.hex('3a2a28'), C.hex('140c0c')), width=2, shade=0.5)
+    p.clip_shape([(-20, H + 20, 0), (-20, 520), (200, 500), (420, 530), (520, 600), (560, H + 20, 0)])
+    p.texture((0, 480, 560, H), strength=1.6)
+    p.unclip()
+    p.glow((300, 330), 230, EMBER_LIGHT, 0.25)
+
+    def cape(p, j):
+        pts = [(-8, -80), (-18, -62), (-28, -34), (-34, -4, 0), (-22, -8), (-14, -2, 0), (-4, -8), (6, -3, 0), (11, -78)]
+        p.shape(pts, ('v', C.hex('3a1430'), C.hex('180814')), width=2.0, shade=0.8, rim=0.4)
+        p.clip_shape(pts)
+        for xx in (-22, -12, -2):
+            p.fold([(xx + 6, -76), (xx - 2, -6)], C.hex('3a1430'), 1.4)
+        p.unclip()
+
+    Skeleton(pose='sword', hands=((26, -70), (-14, -54)), col=BONE_OLD, glow=C.hex('ff6a3a'), jaw_open=0.5,
+             helm=_crown_helm(), armor=_marshal_plate(), props_back=[cape],
+             props_front=[grave_sword(62, (1.0, -0.55), blade=C.hex('c8c0b8'))]).draw(p, 270, 604, 480)
+    # Risen Bones clawing up from the ash before him
+    for x, s, fl in ((450, 3.6, False), (90, 3.0, True)):
+        p.push(x, 600, s, fl)
+        bone_line(p, [(0, 6), (1, -4)], 0.9, BONE_OLD.dark(0.1))
+        bone_hand(p, (1, -5), (0.15, -1), BONE_OLD.dark(0.1), 1.0, 1.3)
+        p.pop()
+        p.glow((x, 578), 34, EMBER_LIGHT, 0.4)
+    skull(p, (500, 612), 16, BONE_OLD.dark(0.2), rot=0.3, jaw=False, glow=EMBER_LIGHT)
+    embers(p, (80, 120, 920, 520), 26)
+
+
+# ------------------------------------------------------------------ 1.45 lords: the Carrion King and the Warden
+
+def _coffin(p, x, y, w=70, h=210, rot=0.0, wood=C.hex('4a3424'), lid_off=0.0):
+    """A plain six-sided coffin standing or lying, with iron bands and a dark gap under a slid lid."""
+    p.push(x, y, 1.0, False, rot)
+    pts = [(-w * 0.32, 0, 0), (-w * 0.5, -h * 0.72, 0), (-w * 0.3, -h, 0), (w * 0.3, -h, 0), (w * 0.5, -h * 0.72, 0), (w * 0.32, 0, 0)]
+    p.shape(pts, ('h', wood.light(0.25), wood, wood.dark(0.4)), width=2.0, smooth=False, shade=0.7, rim=0.3)
+    p.clip_shape(pts)
+    p.texture((-w, -h, w, 0), strength=1.4)
+    for k in range(5):
+        xx = -w * 0.4 + k * w * 0.2
+        p.line([(xx, -h + 6), (xx * 0.8, -4)], wood.dark(0.45).alpha(0.5), 1.0)
+    for t in (0.2, 0.62):
+        p.taper([(-w * 0.6, -h * t), (w * 0.6, -h * t)], 3.2, 3.2, IRON_DARK.light(0.15), width=1.0)
+    if lid_off:
+        p.shape([(-w * 0.5, -h * 0.72, 0), (-w * 0.3, -h, 0), (-w * 0.3 + lid_off, -h, 0), (-w * 0.5 + lid_off, -h * 0.72, 0)], PITCH, ink=False, smooth=False)
+    p.unclip()
+    p.pop()
+
+
+def _royal_crown(col=OLD_GOLD, gem=C.hex('6aff9a')):
+    """A heavy, tarnished royal crown with fleurons, sitting crooked on a Ghoul head."""
+    def fn(p, j):
+        hx, hy = j['head']
+        y0 = hy - 6.5
+        pts = [(hx - 8, y0 + 1.2, 0)]
+        for k in range(5):
+            xx = hx - 7 + k * 3.4
+            pts += [(xx, y0 - 0.5, 0), (xx + 0.9, y0 - 5.5, 0), (xx + 1.7, y0 - 0.5, 0)]
+        pts += [(hx + 9, y0 + 0.2, 0)]
+        p.shape(pts, ('v', col.light(0.25), col.dark(0.35)), width=1.0, smooth=False, shade=0.6)
+        p.taper([(hx - 8, y0 + 1.0), (hx + 0.5, y0 + 0.4), (hx + 9, y0 + 0.2)], 1.6, 1.6, col.dark(0.15), width=0.8, shade=0.5)
+        for k in range(5):
+            p.blob((hx - 6.1 + k * 3.4, y0 - 5.6), 0.8, 0.8, col.light(0.3), width=0.4)
+        for xx, gc in ((hx - 4, gem), (hx + 1.5, BLOOD_LIGHT), (hx + 6.5, gem)):
+            p.blob((xx, y0 + 0.6), 0.9, 0.8, gc, width=0.4)
+        # verdigris and rust
+        for _ in range(6):
+            q = (hx + p.rng.uniform(-7, 8), y0 + p.rng.uniform(-3, 1))
+            p.blob(q, 0.7, 0.4, C.hex('4a8a6a').alpha(0.6), ink=False)
+    return fn
+
+
+def _rotten_mantle(col=C.hex('3a1a3a'), fur=C.hex('c8c0a8')):
+    """A royal mantle gone to rot behind a seated Ghoul, with a moth-eaten ermine collar."""
+    def fn(p, j):
+        nk = j['neck']
+        pts = [(nk[0] - 4, nk[1] - 1), (nk[0] - 14, nk[1] + 6), (nk[0] - 22, nk[1] + 26), (nk[0] - 26, nk[1] + 46), (nk[0] - 18, nk[1] + 58, 0),
+               (nk[0] - 10, nk[1] + 52), (nk[0] - 2, nk[1] + 58, 0), (nk[0] + 8, nk[1] + 50), (nk[0] + 10, nk[1] + 4)]
+        p.shape(pts, ('v', col.light(0.15), col.dark(0.45)), width=1.8, shade=0.8, rim=0.4)
+        p.clip_shape(pts)
+        for xx in (-20, -12, -4):
+            p.fold([(nk[0] + xx + 6, nk[1] + 4), (nk[0] + xx - 2, nk[1] + 56)], col, 1.3)
+        p.unclip()
+        # torn hem holes
+        for q in ((nk[0] - 20, nk[1] + 50), (nk[0] - 6, nk[1] + 54)):
+            p.blob(q, 1.6, 1.0, PITCH.alpha(0.8), ink=False)
+        p.taper([(nk[0] - 9, nk[1] + 1), (nk[0] - 2, nk[1] + 3.5), (nk[0] + 8, nk[1] + 1.5)], 3.2, 3.2, fur, width=1.0, shade=0.5)
+        for k in range(5):
+            p.blob((nk[0] - 7 + k * 3.4, nk[1] + 2.4), 0.5, 0.8, INK.alpha(0.8), ink=False)
+    return fn
+
+
+def abyss_m_006(p):
+    """Ulgreth, the Carrion King: in a drowned churchyard at a sick green dusk, the bloated
+    dead king sits enthroned on a stack of opened coffins, crooked crown and rotten ermine,
+    sceptre raised; around him the Restless Dead claw up out of the mud and his shambling
+    subjects wade toward him out of the fog."""
+    graveyard(p, time='dusk', moon_at=(760, 140), fog_col=C.hex('8ab89a'), ground=C.hex('1e2a20'), stones=True, tree_at=(900, 520), horizon=0.6)
+    p.glow((500, 300), 420, C.hex('6aff9a'), 0.14)
+    hz = H * 0.6
+    # the shambling subjects far off in the fog, wading in
+    for x, h, fl in ((120, 150, False), (200, 170, False), (760, 160, True), (690, 140, True), (840, 180, True)):
+        Ghoul(pose='lurch', skin=C.hex('5a6a58'), rags=C.hex('2a2a26'), eye=SICKLY_GLOW, jaw=0.8).draw(p, x, hz + 96 + h * 0.12, h, flip=fl)
+    fog(p, hz + 110, 50, C.hex('8ab89a'), 0.35, 8)
+    # still black water of the drowned yard
+    p.shape([(-20, H + 10, 0), (-20, 540), (300, 528), (700, 536), (W + 20, 530), (W + 20, H + 10, 0)], ('v', C.hex('2a3a30'), C.hex('0e1410')), width=1.8)
+    for k in range(8):
+        y = 548 + k * 9
+        p.line([(40 + k * 30, y), (220 + k * 40, y)], C.hex('8ab89a').alpha(0.25), 1.2)
+        p.line([(620 - k * 10, y + 4), (900 - k * 20, y + 4)], C.hex('8ab89a').alpha(0.2), 1.2)
+    # the throne of coffins
+    _coffin(p, 340, 560, 80, 250, -0.18, C.hex('3a2a1e'), lid_off=18)
+    _coffin(p, 660, 560, 80, 250, 0.2, C.hex('42301e'), lid_off=-18)
+    _coffin(p, 500, 520, 150, 430, 0.0, C.hex('4a3424'))
+    p.shape([(370, 560, 0), (380, 470, 0), (620, 470, 0), (630, 560, 0)], ('v', C.hex('5a4028'), C.hex('2a1c12')), width=2.2, smooth=False, shade=0.6)
+    for k in range(4):
+        p.line([(380, 488 + k * 18), (620, 488 + k * 18)], INK.alpha(0.4), 1.0)
+    skull(p, (410, 476), 15, BONE_OLD.dark(0.15), front=True, glow=SICKLY_GLOW)
+    skull(p, (590, 476), 15, BONE_OLD.dark(0.15), front=True, glow=SICKLY_GLOW)
+    # the king
+    Ghoul(pose='sit', skin=C.hex('8a9a74'), rags=C.hex('5a4a2a'), eye=C.hex('9aff9a'), fat=0.5, jaw=0.6, hair=C.hex('3a3a2a'), grip=True,
+          props_back=[_rotten_mantle()], props_front=[_royal_crown(), sceptre(46, OLD_GOLD.dark(0.15), C.hex('6aff9a'))],
+          overrides=dict(hand_f=(17, -56), hand_b=(-12, -24), knee_f=(16, -20), ankle_f=(22, -2), knee_b=(10, -15), ankle_b=(14, -1))).draw(p, 480, 478, 460)
+    # the Restless Dead clawing up out of the mud before the throne
+    Ghoul(pose='crawl', skin=C.hex('6a7a62'), rags=C.hex('3a3430'), eye=SICKLY_GLOW, jaw=1.0).draw(p, 760, 612, 200, flip=True)
+    for x, s, fl in ((170, 3.8, False), (300, 3.2, True), (610, 3.4, False)):
+        p.push(x, 606, s, fl)
+        limb(p, [(0, 8), (1, -2), (3, -10)], [3.0, 2.6, 2.2], C.hex('6a7a62'), 0.8, 0.4, width=1.2)
+        claw_hand(p, (3, -11), (0.2, -1), C.hex('6a7a62'), s=0.6)
+        p.pop()
+        p.blob((x, 606), 30, 6, C.hex('1a2018'), width=1.2)
+    Ghoul(pose='crouch', skin=C.hex('5e6e58'), rags=C.hex('2e2a28'), eye=SICKLY_GLOW, jaw=0.9,
+          overrides=dict(head=(18, -52), hand_f=(28, -4), hand_b=(19, -4))).draw(p, 120, 616, 210)
+    vignette(p, 0.4)
+
+
+def _warden_keys(col=IRON):
+    """A great ring of iron keys hanging at a Demon's hip."""
+    def fn(p, j):
+        c = (8, -40)
+        p.blob(c, 4.2, 4.2, None, width=1.4)
+        p.line([(c[0] - 4.2, c[1]), (c[0] + 4.2, c[1])], INK.alpha(0), 0.1)
+        for k, a in enumerate((-0.5, 0.1, 0.6, 1.1)):
+            base = (c[0] + 4 * math.cos(a + 1.2), c[1] + 4 * math.sin(a + 1.2))
+            tip = (base[0] + 2.4 * math.cos(a + 1.3), base[1] + 12)
+            p.taper([base, tip], 0.9, 0.8, col.light(0.1), width=0.8, shade=0.5)
+            p.shape([(tip[0] - 0.4, tip[1] - 2.6, 0), (tip[0] + 2.6, tip[1] - 2.6, 0), (tip[0] + 2.6, tip[1] - 0.4, 0), (tip[0] + 1.2, tip[1] - 0.4, 0), (tip[0] + 1.2, tip[1] + 0.6, 0), (tip[0] - 0.4, tip[1] + 0.6, 0)],
+                    col, width=0.6, smooth=False)
+            p.blob(base, 1.4, 1.4, None, width=0.7)
+    return fn
+
+
+def _warden_halberd(length=112, col=C.hex('2a1a14'), blade=C.hex('6a6a74')):
+    """A tall halberd planted upright in a Demon's back hand."""
+    def fn(p, j):
+        h = j['hand_b']
+        foot = (h[0] - 1, -1)
+        top = (h[0] + 2, -length + 2)
+        p.taper([foot, top], 1.5, 1.3, col, width=1.2, shade=0.6)
+        t = top
+        p.shape([(t[0] - 0.5, t[1] + 14, 0), (t[0] - 12, t[1] + 9), (t[0] - 15, t[1] + 18, 0), (t[0] - 13, t[1] + 26), (t[0] - 0.5, t[1] + 22, 0)],
+                ('h', blade.light(0.35), blade.dark(0.3)), width=1.3, shade=0.6)
+        p.shape([(t[0], t[1] + 15, 0), (t[0] + 8, t[1] + 13, 0), (t[0] - 1, t[1] + 19, 0)], blade.dark(0.1), width=1.0, smooth=False)
+        p.shape([(t[0] - 1.2, t[1] + 14, 0), (t[0] + 1, t[1] - 8, 0), (t[0] + 2.6, t[1] + 14, 0)], blade.light(0.15), width=1.0, smooth=False)
+        p.line([(t[0] - 13.8, t[1] + 11), (t[0] - 14.2, t[1] + 24)], LEAD_WHITE.alpha(0.6), 1.2)
+        p.blob((h[0] + 0.5, h[1]), 2.4, 2.0, IRON_DARK, width=0.8)
+    return fn
+
+
+def _warden_cloak(col=C.hex('2a0e12')):
+    def fn(p, j):
+        pts = [(-8, -80), (-20, -66), (-30, -36), (-36, -2, 0), (-24, -6), (-14, 0, 0), (-2, -6), (6, -2, 0), (12, -78)]
+        p.shape(pts, ('v', col.light(0.2), col.dark(0.45)), width=2.0, shade=0.8, rim=0.4)
+        p.clip_shape(pts)
+        for xx in (-24, -14, -4):
+            p.fold([(xx + 6, -76), (xx - 2, -4)], col, 1.4)
+        p.unclip()
+        p.taper([(-9, -80), (1, -77), (12, -79)], 2.6, 2.6, OLD_GOLD, width=1.0, shade=0.5)
+    return fn
+
+
+def abyss_m_007(p):
+    """Vexhal, Warden of the Brimstone Gate: on the black bridge before the open gate of the
+    pit, the wingless horned warden with his halberd and ring of keys points his legions out
+    into the world; demons march out of the burning gateway behind him and imps wheel over
+    the walls."""
+    bg.sky(p, C.hex('0e0608'), C.hex('3a0e0c'), C.hex('b03a1a'), 0.72)
+    p.glow((500, 420), 520, EMBER, 0.4)
+    # the basalt wall and its towers
+    wall_y = 470
+    p.shape([(-20, wall_y, 0), (-20, 170, 0), (W + 20, 170, 0), (W + 20, wall_y, 0)], ('v', C.hex('2a1416'), C.hex('140a0c')), width=2, smooth=False)
+    stone_wall(p, (-20, 170, W + 20, wall_y), C.hex('2a1618'), 70, 36, 0.1)
+    for tx in (150, 850):
+        p.shape([(tx - 70, wall_y, 0), (tx - 70, 90, 0), (tx + 70, 90, 0), (tx + 70, wall_y, 0)], ('h', C.hex('3a1c1c'), C.hex('1a0c0e')), width=2.2, smooth=False, shade=0.5)
+        for k in range(4):
+            p.shape([(tx - 70 + k * 40, 90, 0), (tx - 70 + k * 40, 66, 0), (tx - 46 + k * 40, 66, 0), (tx - 46 + k * 40, 90, 0)], C.hex('3a1c1c'), width=1.6, smooth=False)
+        p.shape([(tx - 10, 220, 0), (tx - 10, 180), (tx, 170), (tx + 10, 180), (tx + 10, 220, 0)], EMBER_LIGHT, width=1.2)
+        p.glow((tx, 200), 40, EMBER_LIGHT, 0.5)
+    # the gateway: a pointed arch full of fire, the doors thrown back
+    gx, gw, gtop = 500, 300, 150
+    arch = [(gx - gw / 2, wall_y, 0), (gx - gw / 2, 300), (gx - gw * 0.3, 210), (gx, gtop, 0), (gx + gw * 0.3, 210), (gx + gw / 2, 300), (gx + gw / 2, wall_y, 0)]
+    p.shape(arch, ('v', FLAME_CORE, EMBER_LIGHT, EMBER, HELL), width=2.6)
+    p.clip_shape(arch)
+    fire(p, gx - gw / 2, gx + gw / 2, wall_y, 160, 9)
+    # the legion marching out of the fire, in silhouette
+    for k, (x, h) in enumerate(((410, 150), (470, 170), (540, 160), (600, 150), (450, 120), (560, 125))):
+        Demon(pose='hold', skin=C.hex('2a0e0e'), horns='bull', wings=False, eye=FLAME_CORE, shadow=False, mouth='grin',
+              props_front=[skel_spear(110, col=C.hex('1a0a08'))]).draw(p, x, wall_y - 2 - (20 if h < 130 else 0), h, flip=k % 2 == 1)
+    p.unclip()
+    p.shape(arch, None, width=3.0)
+    for sx in (-1, 1):
+        door = [(gx + sx * gw / 2, wall_y, 0), (gx + sx * gw / 2, 300, 0), (gx + sx * (gw / 2 + 70), 320, 0), (gx + sx * (gw / 2 + 70), wall_y + 20, 0)]
+        p.shape(door, ('h', C.hex('2a1a16'), C.hex('140c0a')), width=2, smooth=False, shade=0.5)
+        for t in (0.25, 0.6):
+            y0 = 300 + (wall_y - 300) * t
+            p.taper([(gx + sx * gw / 2, y0), (gx + sx * (gw / 2 + 70), y0 + 14)], 5, 5, IRON_DARK.light(0.1), width=1.0)
+        p.blob((gx + sx * (gw / 2 + 50), 400), 6, 6, IRON, width=1.2)
+    # imps wheeling over the walls
+    for x, y, h, fl in ((300, 120, 110, False), (700, 100, 120, True), (620, 210, 90, False), (380, 230, 80, True)):
+        imp(p, x, y + h, h, flip=fl, pose='claws', skin=C.hex('9a3a24'))
+    # the bridge over the lava
+    p.shape([(-20, wall_y + 10), (W + 20, wall_y + 10), (W + 20, H + 10, 0), (-20, H + 10, 0)], ('h', EMBER, EMBER_LIGHT, HELL, EMBER_LIGHT, EMBER), width=1.5)
+    for _ in range(14):
+        x = p.rng.uniform(0, W)
+        p.blob((x, p.rng.uniform(500, 600)), p.rng.uniform(10, 26), 2.2, FLAME_CORE.alpha(0.6), ink=False)
+    bridge = [(gx - 210, wall_y + 2, 0), (gx + 210, wall_y + 2, 0), (gx + 330, H + 20, 0), (gx - 330, H + 20, 0)]
+    p.shape(bridge, ('v', C.hex('2a1a1a'), C.hex('120a0a')), width=2.4, smooth=False)
+    p.clip_shape(bridge)
+    for k in range(7):
+        y = wall_y + 14 + k * k * 3.2
+        p.line([(0, y), (W, y)], INK.alpha(0.45), 1.2)
+    p.texture((150, wall_y, 850, H), strength=1.4)
+    p.unclip()
+    for sx in (-1, 1):
+        p.taper([(gx + sx * 210, wall_y + 2), (gx + sx * 330, H + 20)], 7, 12, C.hex('3a2020'), width=1.6, shade=0.5)
+    smoke(p, [(130, 560), (110, 440), (160, 330)], 18, 60, C.hex('1a0a0c'), 0.4)
+    smoke(p, [(880, 560), (900, 440), (850, 330)], 18, 60, C.hex('1a0a0c'), 0.4)
+    # the warden
+    p.glow((480, 330), 260, FLAME_CORE, 0.18)
+    Demon(pose='point', skin=C.hex('6a1e18'), horns='great', horn_col=C.hex('1e1210'), wings=False, stout=1.25, crown=None, eye=FLAME_CORE,
+          mouth='grin', beard=C.hex('120606'), cloth=C.hex('1a0c0e'), trim=OLD_GOLD, collar=OLD_GOLD, spikes=True,
+          hands=((38, -84), (-24, -66)), fist='b',
+          props_back=[_warden_cloak(), _warden_halberd()], props_front=[_warden_keys()]).draw(p, 470, 612, 480)
+    embers(p, (60, 80, 940, 560), 34)
