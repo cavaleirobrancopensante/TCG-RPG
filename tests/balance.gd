@@ -13,6 +13,7 @@ extends Node
 ##   SHOW   comma-separated theme ids: only print one themed deck of each at LEVEL
 ##   BAN    comma-separated card ids left out of every deck this run
 ##   KW_STRIP comma-separated keywords taken off every card this run
+##   FORCE  id:n,... cards put into every pair deck of their faith (MODE=pairs)
 ##   LIFE   starting life of both sides (default Hero.BASE_LIFE, 15)
 ##   DUMP   "1" also prints machine-readable lines (W a b wins games, C id cast won,
 ##          D deck id cast won: the same per deck faith or theme, to measure each card's lift)
@@ -354,7 +355,38 @@ func _pair_deck(f1: String, f2: String) -> Dictionary:
 				deck[id] = 3
 				duals += 3
 	DeckTools.add_lands(deck, 17 - duals)
+	_force_cards(deck, allowed)
 	return deck
+
+
+## FORCE=id:n,id:n puts those cards into every pair deck of their faith, in place of the
+## lowest-rated non-land cards (spells first), to measure what they add.
+func _force_cards(deck: Dictionary, allowed: Array) -> void:
+	for tok in OS.get_environment("FORCE").split(",", false):
+		var parts := tok.split(":")
+		var fid := parts[0]
+		var n := int(parts[1]) if parts.size() > 1 else 1
+		var fc := CardDB.get_card(fid)
+		if fc.is_empty() or not allowed.has(fc.get("faction", "")):
+			continue
+		for k in n:
+			# the weakest card that is not a land and not forced
+			var worst := ""
+			var worst_v := 9.0
+			for id in deck:
+				var c := CardDB.get_card(id)
+				if c.get("type") == "land" or OS.get_environment("FORCE").contains(id):
+					continue
+				var v := _rating(id, c) + (0.05 if c.get("type") == "creature" else 0.0)
+				if v < worst_v:
+					worst_v = v
+					worst = id
+			if worst == "":
+				break
+			deck[worst] = int(deck[worst]) - 1
+			if int(deck[worst]) <= 0:
+				deck.erase(worst)
+			deck[fid] = int(deck.get(fid, 0)) + 1
 
 
 func _print_deck(nm: String, d: Dictionary) -> void:
