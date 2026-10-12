@@ -26,6 +26,9 @@ var _players: Array = []
 var _active := 0
 var _bar: Control
 var _fade: Tween
+var _cache := {}               # web: file path -> stream fetched from the site
+var _fetching := {}            # web: file paths being downloaded
+var _want := ""                # web: the track waiting for its file
 
 
 func _ready() -> void:
@@ -265,6 +268,8 @@ func _order(list: Array, start: int) -> void:
 
 
 func _load_stream(path: String) -> AudioStream:
+	if _cache.has(path):
+		return _cache[path]
 	if ResourceLoader.exists(path):
 		return load(path)
 	# Fallback for unimported files (e.g. right after a git pull, before the editor imports).
@@ -279,6 +284,10 @@ func _play(track_id: String, from_pos: float = 0.0) -> void:
 		return
 	var stream := _load_stream(t["file"])
 	if stream == null:
+		if OS.has_feature("web"):
+			# the web build keeps the music beside the page, not in the game file: fetch it
+			_fetch(track_id, from_pos)
+			return
 		push_warning("Music: missing " + t["file"])
 		return
 	current = t
@@ -302,6 +311,7 @@ func _play(track_id: String, from_pos: float = 0.0) -> void:
 		tw.chain().tween_callback(old.stop)
 	track_changed.emit(t)
 	state_changed.emit()
+	_prefetch_next()
 
 
 func _on_finished(which: int) -> void:
@@ -333,3 +343,52 @@ func _save_settings() -> void:
 	cf.set_value("music", "auto", auto)
 	cf.set_value("music", "shuffle", shuffle)
 	cf.save(SETTINGS)
+
+
+
+# ------------------------------------------------------------------ web: music beside the page
+
+## Download a track's file from the site (music/<name>.ogg next to the page), then play it if it
+## is still the one wanted. Keeps the game file small: the music is fetched as it is needed.
+func _fetch(track_id: String, from_pos: float = 0.0, play_it: bool = true) -> void:
+	var t: Dictionary = by_id.get(track_id, {})
+	if t.is_empty():
+		return
+	var path: String = t["file"]
+	if play_it:
+		_want = track_id
+	if _cache.has(path) or _fetching.has(path):
+		return
+	_fetching[path] = true
+	var req := HTTPRequest.new()
+	add_child(req)
+	var rel := path.trim_prefix("res://")
+	var url := rel
+	if Engine.has_singleton("JavaScriptBridge"):
+		url = str(JavaScriptBridge.eval("new URL('%s', location.href).href" % rel))
+	req.request_completed.connect(func(result: int, code: int, _headers, body: PackedByteArray):
+		_fetching.erase(path)
+		req.queue_free()
+		if result != HTTPRequest.RESULT_SUCCESS or code != 200:
+			push_warning("Music: could not fetch %s (%d)" % [url, code])
+			return
+		var s := AudioStreamOggVorbis.load_from_buffer(body)
+		if s == null:
+			return
+		_cache[path] = s
+		if _want == track_id:
+			_want = ""
+			_play(track_id, from_pos))
+	if req.request(url) != OK:
+		_fetching.erase(path)
+		req.queue_free()
+
+
+## Fetch the next piece of the playlist ahead of time (web), so the change is seamless.
+func _prefetch_next() -> void:
+	if not OS.has_feature("web") or playlist.is_empty():
+		return
+	var nxt = playlist[(index + 1) % playlist.size()]
+	var t: Dictionary = by_id.get(nxt, {})
+	if not t.is_empty() and not ResourceLoader.exists(t["file"]):
+		_fetch(nxt, 0.0, false)

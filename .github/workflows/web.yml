@@ -24,7 +24,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Cache Godot and web export templates
         id: cache-godot
@@ -68,6 +68,12 @@ jobs:
           mkdir -p build/site/b/$sha
           timeout 900 ~/godot/godot --headless --path . --export-release "Web" build/site/b/$sha/index.html
           test -f build/site/b/$sha/index.pck
+          # the music lives beside the page (fetched as it plays), not inside the game file
+          mkdir -p build/site/b/$sha/music
+          cp music/*.ogg build/site/b/$sha/music/
+          ls -la build/site/b/$sha/index.pck
+          # GitHub refuses files over 100 MB
+          test $(stat -c %s build/site/b/$sha/index.pck) -lt 95000000
           # Root page: parchment-coloured, forwards to the newest build.
           cat > build/site/index.html <<HTML
           <!doctype html><html><head><meta charset="utf-8">
