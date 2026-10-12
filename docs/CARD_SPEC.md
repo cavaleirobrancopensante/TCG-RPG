@@ -468,3 +468,21 @@ payoff; strong is welcome, cheap-and-does-everything and runaway snowballing are
 - Why: the Church has 12 fliers and only the Old Ways can block them; Church Angels win 59-66% in
   AI tests. Each faith (except the Old Ways, which have reach) gets cards that do something
   useful against any creature and much more against a flier.
+
+## Redesign prototype (1.57)
+
+Cards in `data/cards/proto.json` carry `"proto": true` and stay out of every pool (only the
+Quick duel's prototype decks, `DeckTools.PROTO_DECKS`, use them). New fields and targets:
+- Two-faced: the front (Peace face) has `"transform": "<back id>"`; the back (Crusade face) has
+  `"transform": "<front id>"` and `"front": "<front id>"`. The state is `BattleState.realm`
+  ("", "peace", "crusade"), one for the table, checked at the start of each turn from the
+  previous active player's `cast_count`. Effects with `"trigger": "transform"` fire on the new
+  face. Conditions `peace` and `crusade`.
+- `immortal` (keyword): `_bury` exiles it instead of putting it in a graveyard (side.exile).
+- Possessions: relic, subtype "Demon Possession", `"attach": "aura"`, `grants`, an enter
+  `attach` effect; `"possess": true` (moves to another creature of its controller when the host
+  dies, else exiled); `"steal": true` with target `enemy_creature` (takes control while
+  attached; `Perm.base_owner` is the card's owner).
+- `"extra_cost": {"life": N, "discard": N, "sacrifice": true}` on any card: paid on casting.
+- `"uncounterable": true`. Targets `enemy_demon` (a Demon creature or a possession),
+  `all_demons`, `all_tapped_enemy_demons` (a possession counts as tapped when its host is).

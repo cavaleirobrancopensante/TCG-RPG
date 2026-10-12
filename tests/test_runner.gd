@@ -13,6 +13,7 @@ func _ready() -> void:
 	test_enemy_decks()
 	test_mulligan()
 	test_mechanics()
+	test_redesign()
 	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
@@ -2271,3 +2272,128 @@ func _owned_total() -> int:
 	for k in o:
 		n += int(o[k])
 	return n
+
+
+## The redesign's prototype rules: Peace and Crusade, two-faced cards, Immortal, possessions,
+## exorcisms (cards in data/cards/proto.json).
+func test_redesign() -> void:
+	print("-- redesign prototype: Peace and Crusade, Immortal, possession")
+	check(not CardDB.all_set_ids().has("proto_s_pilgrim") and CardDB.has_card("proto_s_pilgrim"), "prototype cards stay out of the pools")
+	check(DeckTools.proto_decks().size() == 2 and DeckTools.count(DeckTools.proto_decks()[0]["cards"]) == 40, "two 40-card prototype decks")
+	var st := _duel()
+	_lands(st, 0, "WWWWBBBB")
+	_lands(st, 1, "WWWWBBBB")
+	check(st.realm == "", "no state before a two-faced card")
+	var pil := st._make_perm(0, "proto_s_pilgrim", CardDB.get_card("proto_s_pilgrim"))
+	st.side(0).creatures.append(pil)
+	check(st.realm == "peace" and pil.power() == 1 and pil.toughness() == 3, "the first two-faced card begins Peace (1/3)")
+	pil.bonus_p += 1
+	st.side(0).cast_count = 2
+	st.phase = "main2"
+	st.end_turn()
+	check(st.realm == "crusade" and pil.card_id == "proto_s_pilgrim_b" and pil.power() == 4 and pil.toughness() == 1, "two spells: Crusade, it turns over and keeps its counter (3/1 +1)")
+	var late := st._make_perm(1, "proto_s_priest", CardDB.get_card("proto_s_priest"))
+	check(late.card_id == "proto_s_priest_b", "a two-faced card enters on the Crusade face")
+	st.side(1).cast_count = 1
+	st.phase = "main2"
+	st.end_turn()
+	check(st.realm == "crusade", "one spell keeps the state")
+	st.side(0).cast_count = 0
+	st.phase = "main2"
+	st.end_turn()
+	check(st.realm == "peace" and pil.card_id == "proto_s_pilgrim", "no spells: Peace returns")
+	st.destroy_perm(pil)
+	check(st.side(0).graveyard.has("proto_s_pilgrim"), "the front face goes to the graveyard")
+	# Immortal
+	st = _duel()
+	var ang := st._make_perm(0, "proto_s_angel", CardDB.get_card("proto_s_angel"))
+	st.side(0).creatures.append(ang)
+	st.destroy_perm(ang)
+	check(st.side(0).graveyard.is_empty() and st.side(0).exile.has("proto_s_angel"), "Immortal: exiled instead of the graveyard")
+	st.side(0).hand.append("proto_s_angel")
+	st.side(0).hand.append("proto_a_cultist")
+	st.side(0).owed_discards = 1
+	st.discard_owed(0, 0)
+	check(st.side(0).exile.count("proto_s_angel") == 2, "Immortal: a discarded spirit is exiled too")
+	# possession: the extra cost, Possess to a new host, then exile
+	st = _duel()
+	_lands(st, 0, "WWWWBBBB")
+	var c1 := st._make_perm(0, "proto_a_cultist", CardDB.get_card("proto_a_cultist"))
+	var c2 := st._make_perm(0, "proto_a_cultist", CardDB.get_card("proto_a_cultist"))
+	st.side(0).creatures.append_array([c1, c2])
+	c1.sick = false
+	st.side(0).hand.append("proto_a_whisper")
+	var life0 := st.side(0).life
+	check(st.play(0, 0, [{"kind": "creature", "uid": c1.uid}]), "cast a possession")
+	check(st.side(0).life == life0 - 1 and c1.power() == 4 and c1.toughness() == 2, "paid 1 life; the possessed cultist is 4/2")
+	st.destroy_perm(c1)
+	check(c2.power() == 4 and st.side(0).relics.size() == 1, "Possess: the demon moves to the other cultist")
+	st.destroy_perm(c2)
+	check(st.side(0).relics.is_empty() and st.side(0).exile.has("proto_a_whisper"), "no host left: the possession is exiled")
+	# Demon of Wrath: sacrifice another creature
+	st = _duel()
+	_lands(st, 0, "WWWWBBBB")
+	var big := st._make_perm(0, "proto_a_robber", CardDB.get_card("proto_a_robber"))
+	var small := st._make_perm(0, "proto_a_cultist", CardDB.get_card("proto_a_cultist"))
+	st.side(0).creatures.append_array([big, small])
+	st.side(0).hand.append("proto_a_wrath")
+	check(st.play(0, 0, [{"kind": "creature", "uid": big.uid}]), "cast Demon of Wrath")
+	check(st.side(0).creatures.size() == 1 and big.power() == 5 and big.has_kw("dread"), "sacrificed the other creature; the host is 5/3 with dread")
+	# Legion's Hold steals; an uncounterable exorcism frees him
+	st = _duel()
+	_lands(st, 0, "WWWWBBBB")
+	_lands(st, 1, "WWWWBBBB")
+	var priest := st._make_perm(1, "proto_s_priest", CardDB.get_card("proto_s_priest"))
+	st.side(1).creatures.append(priest)
+	st.side(0).hand.append_array(["proto_a_hold", "proto_a_cultist"])
+	life0 = st.side(0).life
+	check(st.play(0, 0, [{"kind": "creature", "uid": priest.uid}]), "cast Legion's Hold")
+	check(st.side(0).creatures.has(priest) and priest.owner == 0 and priest.base_owner == 1 and st.side(0).hand.is_empty() and st.side(0).life == life0 - 2,
+		"the Hold takes the priest (a discard and 2 life paid)")
+	var hold: BattleState.Perm = st.side(0).relics[0]
+	var ex := {"kind": "card", "card": CardDB.get_card("proto_s_exorcism"), "side": 1}
+	st.stack.append(ex)
+	check(st.counter_target(0, {"effects": [{"trigger": "cast", "action": "counter"}]}).is_empty(), "an exorcism can't be countered")
+	st.stack.clear()
+	var refs := st.valid_targets(1, {"target": "enemy_demon"})
+	check(refs.has({"kind": "relic", "uid": hold.uid}), "the possession is a Demon to exorcise")
+	st.resolve_effect(1, {"action": "destroy", "target": "enemy_demon"}, null, {"kind": "relic", "uid": hold.uid})
+	check(st.side(1).creatures.has(priest) and priest.owner == 1 and st.side(0).exile.has("proto_a_hold"), "exorcised: the priest is freed, the demon exiled")
+	# Crusade: the exorcism also takes every tapped Demon
+	st = _duel()
+	st.realm = "crusade"
+	var sk1 := st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	var sk2 := st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	var sk3 := st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	st.side(0).creatures.append_array([sk1, sk2, sk3])
+	sk2.tapped = true
+	sk3.tapped = true
+	st.active = 1
+	st._run_list(1, CardDB.get_card("proto_s_exorcism")["effects"], null, [{"kind": "creature", "uid": sk1.uid}])
+	check(st.side(0).creatures.is_empty() and st.side(0).graveyard.size() == 3, "on Crusade: the target and every tapped Demon; skeletons are bodies and go to the graveyard")
+	st.realm = "peace"
+	var sk4 := st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	var sk5 := st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	st.side(0).creatures.append_array([sk4, sk5])
+	sk5.tapped = true
+	st._run_list(1, CardDB.get_card("proto_s_exorcism")["effects"], null, [{"kind": "creature", "uid": sk4.uid}])
+	check(st.side(0).creatures == [sk5], "at Peace: only the target")
+	# a whole AI duel of the two prototype decks finishes
+	var d := DeckTools.proto_decks()
+	st = BattleState.new()
+	st.setup(DeckTools.to_list(d[0]["cards"]), DeckTools.to_list(d[1]["cards"]), ["A", "B"], [15, 15], 0, 77, true)
+	BattleAI.resolve_mulligan(st, 0)
+	BattleAI.resolve_mulligan(st, 1)
+	var guard := 0
+	while st.phase != "over" and guard < 120:
+		guard += 1
+		BattleAI.play_main(st, st.active)
+		if st.phase == "main1":
+			st.declare_attackers(BattleAI.choose_attackers(st, st.active))
+		if st.phase == "block":
+			st.declare_blocks(BattleAI.choose_blocks(st, 1 - st.active))
+		if st.phase == "main2":
+			BattleAI.play_main(st, st.active)
+		st.take_events()
+		st.end_turn()
+	check(st.phase == "over", "a prototype duel between the AIs finishes")

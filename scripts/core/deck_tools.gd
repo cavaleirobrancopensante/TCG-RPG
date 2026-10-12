@@ -667,7 +667,7 @@ static func _premade_cap(c: Dictionary) -> int:
 ## (as the wanderers on the road build them, a seasoned level) and the 15 two-faith decks.
 ## The same every time (fixed seeds).
 static func premade_decks() -> Array:
-	var out: Array = []
+	var out: Array = proto_decks()
 	var th := themes()
 	for tid in th:
 		var rng := RandomNumberGenerator.new()
@@ -682,4 +682,32 @@ static func premade_decks() -> Array:
 			var b: String = Factions.ORDER[bi]
 			out.append({"name": "%s + %s" % [Factions.info(a)["short"], Factions.info(b)["short"]],
 				"cards": premade_pair(a, b), "faith": a, "kind": "pair"})
+	return out
+
+
+# ------------------------------------------------------------------ prototype decks
+
+## The redesign's test decks (cards in data/cards/proto.json, outside every pool): the Church's
+## Peace and Crusade, the Pact's possessions. Quick duel only.
+const PROTO_DECKS := {
+	"Prototype: Church, Pilgrimage": {"faith": "sanctum", "cards": {
+		"proto_s_pilgrim": 4, "proto_s_priest": 3, "proto_s_sentinel": 3, "proto_s_bishop": 2,
+		"proto_s_angel": 1, "proto_s_michael": 1, "proto_s_exorcism": 3, "proto_s_sign": 3,
+		"proto_s_muster": 2, "proto_s_great": 1}},
+	"Prototype: Pact, Possession": {"faith": "abyss", "cards": {
+		"proto_a_cultist": 4, "proto_a_robber": 3, "proto_a_skeleton": 3, "proto_a_azrakel": 1,
+		"proto_a_whisper": 4, "proto_a_wrath": 2, "proto_a_hold": 2, "proto_a_bargain": 2,
+		"proto_a_whispers": 2}},
+}
+
+
+static func proto_decks() -> Array:
+	var out: Array = []
+	for nm in PROTO_DECKS:
+		var d: Dictionary = PROTO_DECKS[nm]
+		var cards: Dictionary = d["cards"].duplicate()
+		if not CardDB.has_card(cards.keys()[0]):
+			continue
+		cards[Factions.land_id(d["faith"])] = 40 - count(cards)
+		out.append({"name": nm, "cards": cards, "faith": d["faith"], "kind": "proto"})
 	return out

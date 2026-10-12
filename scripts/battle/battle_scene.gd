@@ -54,6 +54,7 @@ var enemy_relics: HBoxContainer
 var player_relics: GridContainer
 var hand_box: _HandRow
 var phase_bar: PhaseBar
+var realm_mark: _RealmMark       # Peace (an olive branch) or Crusade (a sword), once it has begun
 var stack_view: StackView
 var _mid_bar: Control
 var log_label: Label
@@ -163,6 +164,12 @@ func _build_ui() -> void:
 	phase_bar = PhaseBar.new()
 	phase_bar.popup_host = self
 	mid.add_child(phase_bar)
+	realm_mark = _RealmMark.new()
+	realm_mark.name = "RealmMark"
+	realm_mark.custom_minimum_size = Vector2(UIKit.TARGET, UIKit.TARGET)
+	realm_mark.visible = false
+	realm_mark.pressed.connect(func(): _log(_realm_help(), false))
+	mid.add_child(realm_mark)
 	_log_band = _LogBand.new()
 	_log_band.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	mid.add_child(_log_band)
@@ -791,6 +798,10 @@ func refresh() -> void:
 		for p in s.creatures:
 			alive[p.uid] = true
 			_remember(p)
+			if figures.has(p.uid) and figures[p.uid].enemy != (i == 1):
+				# it changed hands: it stands on its new side
+				figures[p.uid].queue_free()
+				figures.erase(p.uid)
 			if not figures.has(p.uid):
 				if busy:
 					continue   # its summon animation is still queued
@@ -804,6 +815,7 @@ func refresh() -> void:
 		_refresh_relics(i)
 		_restack(i)
 	_refresh_bars()
+	_refresh_realm()
 	player_field.queue_sort()
 	enemy_field.queue_sort()
 	_rebuild_hand()
@@ -1374,6 +1386,20 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 
 func _resolve_owed() -> void:
 	var me := st.side(0)
+	if not me.possess_owed.is_empty():
+		var auid := int(me.possess_owed[0])
+		var a = st.find_perm(auid)
+		var hosts: Array = st.possess_hosts(a) if a != null else []
+		if hosts.is_empty():
+			st.possess_choose(0, auid, -1)
+			return
+		var ids: Array = []
+		for c in hosts:
+			ids.append(c.card_id)
+		var pick = await _pick_cards(I18n.t("Possess"), I18n.t("The demon leaves the dead body. Choose the creature it possesses now."), ids)
+		var k := clampi(int(pick), 0, hosts.size() - 1)
+		st.possess_choose(0, auid, hosts[k].uid)
+		return
 	if not me.charge_owed.is_empty():
 		var picks: Array = await _ask_charge(int(me.charge_owed["n"]), String(me.charge_owed["subtype"]))
 		st.charge_choose(0, picks)
@@ -1665,8 +1691,60 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				_float_text(kw, figures[e["uid"]].global_position + _fsz() * 0.5, Tapestry.GILT)
 				await _wait(0.25)
 		"attach":
-			_log(_cap(I18n.t("%s is attached to %s.") % [_obj(int(e["uid"])), _obj(int(e.get("host", -1)))]))
+			if e.get("possess", false):
+				_log(_cap(I18n.t("The demon leaves the dead body: %s now possesses %s.") % [_obj(int(e["uid"])), _obj(int(e.get("host", -1)))]))
+			else:
+				_log(_cap(I18n.t("%s is attached to %s.") % [_obj(int(e["uid"])), _obj(int(e.get("host", -1)))]))
 			_refresh_relics(int(e.get("side", 0)))
+			if figures.has(int(e.get("host", -1))):
+				var hp = st.find_perm(int(e["host"]))
+				if hp:
+					figures[int(e["host"])].sync(hp)
+		"realm":
+			_refresh_realm()
+			if e.get("begins", false):
+				_log(I18n.t("Peace begins. Two spells cast in one turn bring Crusade; a turn with none brings Peace back."))
+			elif String(e["realm"]) == "crusade":
+				_log(I18n.t("Two spells were cast last turn: Crusade! The two-faced cards turn over."))
+				await _banner(I18n.t("Crusade"))
+			else:
+				_log(I18n.t("No spell was cast last turn: Peace returns. The two-faced cards turn back."))
+				await _banner(I18n.t("Peace"))
+		"transform":
+			var old_name := I18n.t(String(_known.get(int(e["uid"]), {}).get("name", "")))
+			var tp = st.find_perm(int(e["uid"]))
+			if figures.has(int(e["uid"])) and tp:
+				var tf: SummonFigure = figures[int(e["uid"])]
+				tf.setup(tp.uid, tp.card, tf.enemy)
+				tf.sync(tp)
+				tf.queue_redraw()
+				_burst(tf.global_position + _fsz() * 0.5, Tapestry.GILT, 16)
+			if tp:
+				_remember(tp)
+			_log(_cap(I18n.t("%s turns over: %s.") % [old_name, _card_name(String(e["id"]))]), false)
+		"banished":
+			var bc := CardDB.get_card(String(e["id"]))
+			var bn := _card_name(String(e["id"]))
+			if String(bc.get("subtype", "")).contains("Angel"):
+				_log(I18n.t("Immortal: %s is not destroyed. He returns to Heaven (exiled).") % bn)
+			else:
+				_log(I18n.t("Immortal: %s is cast back into Hell (exiled).") % bn)
+			for k in 2:
+				_refresh_relics(k)
+		"control":
+			var cp = st.find_perm(int(e["uid"]))
+			if cp:
+				_remember(cp)
+			if int(e["side"]) == 0:
+				_log(_cap(I18n.t("%s is freed and fights for you again.") % _obj(int(e["uid"]))) if cp and cp.base_owner == 0 \
+					else _cap(I18n.t("You now control %s.") % _obj(int(e["uid"]))))
+			else:
+				_log(_cap(I18n.t("%s is possessed: %s controls him now.") % [_obj(int(e["uid"])), st.side(1).name]) if cp and cp.base_owner == 0 \
+					else _cap(I18n.t("%s goes back to %s.") % [_obj(int(e["uid"])), st.side(1).name]))
+			refresh()
+			await _wait(0.3)
+		"owe_possess":
+			pass
 		"regrow":
 			var gn := _card_name(String(e.get("id", "")))
 			_log(_with_ctx(I18n.t("%s returns to your hand.") % gn if int(e["side"]) == 0 else I18n.t("%s returns to %s's hand.") % [gn, st.side(1).name], _ctx))
@@ -2442,7 +2520,11 @@ func _spec_prompt(spec: Dictionary) -> String:
 		return I18n.t("your creature that will fight")
 	if a == "sacrifice":
 		return I18n.t("a creature to sacrifice")
-	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures", "enemy_relic": "an enemy relic"}.get(t, t)
+	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures", "enemy_relic": "an enemy relic", "enemy_demon": "an enemy Demon (a Demon creature or a possession)"}.get(t, t)
+	if a == "attach" and t == "own_creature":
+		return I18n.t("Possess or attach → one of your creatures")
+	if a == "attach" and t == "enemy_creature":
+		return I18n.t("Possess → an enemy creature")
 	return "%s → %s" % [I18n.t(a.capitalize()), I18n.t(who)]
 
 
@@ -3286,3 +3368,67 @@ func _show_result() -> void:
 	panel.position = (get_viewport_rect().size - panel.size) * 0.5
 	if won:
 		_burst(get_viewport_rect().size * 0.5, Tapestry.GILT, 60)
+
+
+# =================================================================== Peace and Crusade
+
+func _refresh_realm() -> void:
+	if realm_mark == null or st == null:
+		return
+	realm_mark.visible = st.realm != ""
+	if realm_mark.realm != st.realm:
+		realm_mark.realm = st.realm
+		realm_mark.tooltip_text = _realm_help()
+		realm_mark.queue_redraw()
+
+
+func _realm_help() -> String:
+	if st == null or st.realm == "":
+		return ""
+	if st.realm == "peace":
+		return I18n.t("Peace. If a player casts two or more spells in his turn, Crusade begins at the start of the next turn.")
+	return I18n.t("Crusade. If a player casts no spells in his turn, Peace returns at the start of the next turn.")
+
+
+## The state's mark in the middle bar: an olive branch for Peace, a sword for Crusade.
+class _RealmMark extends Button:
+	var realm := ""
+
+	func _init() -> void:
+		flat = true
+		focus_mode = Control.FOCUS_NONE
+		text = ""
+
+	func _draw() -> void:
+		var c := size * 0.5
+		var r := minf(size.x, size.y) * 0.44
+		var ink := Tapestry.INK
+		if realm == "crusade":
+			Tapestry.ink_circle(self, c, r, Color(Tapestry.VERMILION, 0.95), 1.6)
+			# a sword, point up: blade, crossguard, grip, pommel
+			var bw := r * 0.16
+			var blade := PackedVector2Array([c + Vector2(0, -r * 0.82), c + Vector2(bw, -r * 0.62), c + Vector2(bw, r * 0.22),
+				c + Vector2(-bw, r * 0.22), c + Vector2(-bw, -r * 0.62)])
+			Tapestry.ink_poly(self, blade, Color(0.92, 0.92, 0.95), 1.2, ink)
+			Tapestry.ink_rect(self, Rect2(c + Vector2(-r * 0.5, r * 0.22), Vector2(r, r * 0.13)), Tapestry.GILT, 1.2)
+			Tapestry.ink_rect(self, Rect2(c + Vector2(-bw * 0.8, r * 0.35), Vector2(bw * 1.6, r * 0.32)), Color(0.35, 0.2, 0.1), 1.0)
+			Tapestry.ink_circle(self, c + Vector2(0, r * 0.74), r * 0.11, Tapestry.GILT, 1.0)
+		else:
+			Tapestry.ink_circle(self, c, r, Color(Tapestry.PARCHMENT_LIGHT, 0.95), 1.6)
+			# an olive branch: a curved stem with paired leaves
+			var stem := PackedVector2Array()
+			for k in 9:
+				var t := k / 8.0
+				stem.append(c + Vector2(lerpf(-r * 0.55, r * 0.5, t), lerpf(r * 0.55, -r * 0.6, t) + sin(t * PI) * r * 0.18))
+			draw_polyline(stem, Color(0.35, 0.28, 0.12), 2.0, true)
+			var leaf := Color(0.42, 0.55, 0.25)
+			for k in [2, 4, 6, 8]:
+				var at: Vector2 = stem[k]
+				var dir: Vector2 = (stem[k] - stem[k - 1]).normalized()
+				for sgn in [-1.0, 1.0]:
+					var n := dir.rotated(sgn * 1.0)
+					var pts := PackedVector2Array()
+					for q in 10:
+						var a := TAU * q / 10.0
+						pts.append(at + n * r * 0.17 + n * cos(a) * r * 0.17 + n.orthogonal() * sin(a) * r * 0.07)
+					Tapestry.ink_poly(self, pts, leaf, 1.0, ink)

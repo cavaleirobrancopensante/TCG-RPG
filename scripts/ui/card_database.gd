@@ -194,7 +194,7 @@ func _collect() -> void:
 		if String(id).begins_with("t_"):
 			continue          # rules-test cards registered by the test runner
 		var c := CardDB.get_card(id)
-		if c.get("rarity", "") == "token":
+		if c.get("rarity", "") == "token" or c.get("proto", false):
 			continue
 		all_ids.append(id)
 		var lname := I18n.t(String(c.get("name", "")))

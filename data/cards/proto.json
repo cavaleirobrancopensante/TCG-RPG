@@ -1,0 +1,668 @@
+[
+ {
+  "id": "proto_s_pilgrim",
+  "name": "Pilgrim of the Way",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Pilgrim",
+  "cost": {
+   "W": 1
+  },
+  "power": 1,
+  "toughness": 3,
+  "keywords": [],
+  "transform": "proto_s_pilgrim_b",
+  "text": "Two-faced: at Crusade it turns over into Crusader of the Way.",
+  "flavor": "\"Unless the Lord build the house, they labour in vain that build it.\" (Psalm 126:1)",
+  "art": "res://art/cards/sanctum_c_005.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_s_pilgrim_b",
+  "name": "Crusader of the Way",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Pilgrim",
+  "cost": {
+   "W": 1
+  },
+  "power": 3,
+  "toughness": 1,
+  "keywords": [],
+  "transform": "proto_s_pilgrim",
+  "front": "proto_s_pilgrim",
+  "text": "Two-faced: at Peace it turns back into Pilgrim of the Way.",
+  "flavor": "\"Deus vult.\" (the cry at Clermont, 1095)",
+  "art": "res://art/cards/sanctum_c_008.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_s_priest",
+  "name": "Parish Priest of the Way",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Priest",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "power": 1,
+  "toughness": 4,
+  "keywords": [],
+  "transform": "proto_s_priest_b",
+  "text": "Two-faced: at Crusade it turns over into Inquisitor of the Way.",
+  "flavor": "\"The good shepherd giveth his life for his sheep.\" (John 10:11)",
+  "art": "res://art/cards/sanctum_c_028.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_s_priest_b",
+  "name": "Inquisitor of the Way",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Priest",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "power": 4,
+  "toughness": 1,
+  "keywords": [],
+  "transform": "proto_s_priest",
+  "front": "proto_s_priest",
+  "text": "Two-faced: at Peace it turns back into Parish Priest of the Way.",
+  "flavor": "\"Prove all things; hold fast that which is good.\" (1 Thessalonians 5:21)",
+  "art": "res://art/cards/sanctum_u_005.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_s_sentinel",
+  "name": "Abbey Sentinel",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Soldier",
+  "cost": {
+   "W": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 4,
+  "keywords": [
+   "vigilance"
+  ],
+  "transform": "proto_s_sentinel_b",
+  "text": "Vigilance Two-faced: at Crusade it turns over into Abbey Crusader.",
+  "flavor": "\"Watch ye, stand fast in the faith, do manfully, and be strengthened.\" (1 Corinthians 16:13)",
+  "art": "res://art/cards/sanctum_c_004.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_s_sentinel_b",
+  "name": "Abbey Crusader",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Soldier",
+  "cost": {
+   "W": 1,
+   "generic": 2
+  },
+  "power": 4,
+  "toughness": 2,
+  "keywords": [
+   "vigilance"
+  ],
+  "transform": "proto_s_sentinel",
+  "front": "proto_s_sentinel",
+  "text": "Vigilance Two-faced: at Peace it turns back into Abbey Sentinel.",
+  "flavor": "\"Watch ye, stand fast in the faith, do manfully, and be strengthened.\" (1 Corinthians 16:13)",
+  "art": "res://art/cards/sanctum_c_010.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_s_bishop",
+  "name": "Bishop of the See",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Priest",
+  "cost": {
+   "W": 2,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 4,
+  "keywords": [],
+  "transform": "proto_s_bishop_b",
+  "text": "Other creatures you control get +0/+1. Two-faced: at Crusade it turns over into Grand Inquisitor.",
+  "flavor": "\"Feed the flock of God which is among you.\" (1 Peter 5:2)",
+  "art": "res://art/cards/sanctum_r_012.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 4,
+  "statics": [
+   {
+    "static": "anthem",
+    "scope": "other_own_creatures",
+    "power": 0,
+    "toughness": 1
+   }
+  ]
+ },
+ {
+  "id": "proto_s_bishop_b",
+  "name": "Grand Inquisitor",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Priest",
+  "cost": {
+   "W": 2,
+   "generic": 2
+  },
+  "power": 4,
+  "toughness": 2,
+  "keywords": [],
+  "transform": "proto_s_bishop",
+  "front": "proto_s_bishop",
+  "text": "Other creatures you control get +1/+0. Two-faced: at Peace it turns back into Bishop of the See.",
+  "flavor": "\"Put you on the armour of God, that you may be able to stand against the deceits of the devil.\" (Ephesians 6:11)",
+  "art": "res://art/cards/sanctum_u_019.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 4,
+  "statics": [
+   {
+    "static": "anthem",
+    "scope": "other_own_creatures",
+    "power": 1,
+    "toughness": 0
+   }
+  ]
+ },
+ {
+  "id": "proto_s_angel",
+  "name": "Guardian Angel of the Way",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Angel",
+  "cost": {
+   "W": 1,
+   "generic": 3
+  },
+  "power": 3,
+  "toughness": 3,
+  "keywords": [
+   "flying",
+   "immortal"
+  ],
+  "text": "Flying. Immortal (If this card would be put into a graveyard from anywhere, exile it instead.)",
+  "flavor": "\"For he hath given his angels charge over thee; to keep thee in all thy ways.\" (Psalm 90:11)",
+  "art": "res://art/cards/sanctum_u_006.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_s_michael",
+  "name": "Saint Michael, Defender in Battle",
+  "faction": "sanctum",
+  "rarity": "mythic",
+  "type": "creature",
+  "subtype": "Angel",
+  "cost": {
+   "W": 2,
+   "generic": 4
+  },
+  "power": 4,
+  "toughness": 5,
+  "keywords": [
+   "flying",
+   "immortal"
+  ],
+  "legendary": true,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "destroy",
+    "target": "enemy_demon"
+   }
+  ],
+  "text": "Flying. Immortal. When Saint Michael enters, destroy target Demon an opponent controls.",
+  "flavor": "\"Saint Michael the Archangel, defend us in battle.\" (Pope Leo XIII)",
+  "art": "res://art/cards/sanctum_m_004.webp",
+  "proto": true,
+  "mana_value": 6
+ },
+ {
+  "id": "proto_s_exorcism",
+  "name": "Exorcism of the Way",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Exorcism",
+  "speed": "instant",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "uncounterable": true,
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy",
+    "target": "enemy_demon"
+   },
+   {
+    "trigger": "cast",
+    "action": "destroy",
+    "target": "all_tapped_enemy_demons",
+    "condition": "crusade"
+   }
+  ],
+  "text": "This spell can't be countered. Destroy target Demon an opponent controls. If it's Crusade, also destroy each tapped Demon an opponent controls. (A possession is tapped while its host is.)",
+  "flavor": "\"In my name they shall cast out devils.\" (Mark 16:17)",
+  "art": "res://art/cards/sanctum_c_017.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_s_sign",
+  "name": "Sign of the Cross",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Sacramental",
+  "speed": "instant",
+  "cost": {
+   "W": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "buff",
+    "target": "own_creature",
+    "power": 1,
+    "toughness": 1
+   },
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 1
+   }
+  ],
+  "text": "Target creature you control gets +1/+1 until end of turn. Draw a card.",
+  "flavor": "\"In the name of the Father, and of the Son, and of the Holy Ghost.\"",
+  "art": "res://art/cards/sanctum_c_015.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_s_muster",
+  "name": "Muster the Faithful",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Blessing",
+  "speed": "instant",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "summon",
+    "token": {
+     "name": "Faithful Pilgrim",
+     "power": 1,
+     "toughness": 1,
+     "subtype": "Human Pilgrim",
+     "keywords": []
+    },
+    "count": 2
+   }
+  ],
+  "text": "Create two 1/1 Human Pilgrim creature tokens.",
+  "flavor": "\"Where there are two or three gathered together in my name, there am I in the midst of them.\" (Matthew 18:20)",
+  "art": "res://art/cards/sanctum_u_021.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_s_great",
+  "name": "Great Exorcism",
+  "faction": "sanctum",
+  "rarity": "rare",
+  "type": "spell",
+  "subtype": "Exorcism",
+  "cost": {
+   "W": 1,
+   "generic": 3
+  },
+  "uncounterable": true,
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy",
+    "target": "all_demons"
+   }
+  ],
+  "text": "This spell can't be countered. Destroy all Demons.",
+  "flavor": "\"I saw Satan like lightning falling from heaven.\" (Luke 10:18)",
+  "art": "res://art/cards/sanctum_r_006.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_a_cultist",
+  "name": "Sworn Cultist",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Cultist",
+  "cost": {
+   "B": 1
+  },
+  "power": 2,
+  "toughness": 1,
+  "text": "",
+  "flavor": "\"I signed in my own blood. It was the only ink they would take.\"",
+  "art": "res://art/cards/abyss_c_001.webp",
+  "keywords": [],
+  "effects": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_a_robber",
+  "name": "Grave Robber",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Necromancer",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 1,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "summon",
+    "token": {
+     "name": "Corpse",
+     "power": 1,
+     "toughness": 1,
+     "subtype": "Zombie Demon",
+     "keywords": []
+    },
+    "count": 1
+   }
+  ],
+  "text": "When Grave Robber enters, create a 1/1 Zombie Demon creature token named Corpse.",
+  "flavor": "\"The dead keep no accounts. I keep theirs.\"",
+  "art": "res://art/cards/abyss_u_007.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_a_skeleton",
+  "name": "Risen Bone-Walker",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Skeleton Demon",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "unearth": {
+   "B": 1,
+   "generic": 2
+  },
+  "text": "Unearth {2}{B} ({2}{B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)",
+  "flavor": "It does not remember its name. Something else wears its bones.",
+  "art": "res://art/cards/abyss_c_010.webp",
+  "keywords": [],
+  "effects": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_a_azrakel",
+  "name": "Azrakel, Prince of Wrath",
+  "faction": "abyss",
+  "rarity": "mythic",
+  "type": "creature",
+  "subtype": "Demon",
+  "cost": {
+   "B": 2,
+   "generic": 3
+  },
+  "power": 5,
+  "toughness": 5,
+  "keywords": [
+   "flying",
+   "immortal"
+  ],
+  "legendary": true,
+  "abilities": [
+   {
+    "cost": {
+     "life": 2
+    },
+    "once_per_turn": true,
+    "effects": [
+     {
+      "action": "buff",
+      "target": "self",
+      "power": 2,
+      "toughness": 0
+     }
+    ],
+    "text": "Pay 2 life: Azrakel gets +2/+0 until end of turn. Use this only once each turn."
+   }
+  ],
+  "text": "Flying. Immortal (If this card would be put into a graveyard from anywhere, exile it instead.) Pay 2 life: Azrakel gets +2/+0 until end of turn. Use this only once each turn.",
+  "flavor": "\"Kneel, and I will give you the world. I have done it before.\"",
+  "art": "res://art/cards/abyss_m_001.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 5
+ },
+ {
+  "id": "proto_a_whisper",
+  "name": "Whisper of the Imp",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "relic",
+  "subtype": "Demon Possession",
+  "cost": {
+   "B": 1
+  },
+  "attach": "aura",
+  "possess": true,
+  "keywords": [
+   "immortal"
+  ],
+  "extra_cost": {
+   "life": 1
+  },
+  "grants": {
+   "power": 2,
+   "toughness": 1,
+   "keywords": []
+  },
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "attach",
+    "target": "own_creature"
+   }
+  ],
+  "text": "As an additional cost to cast this, pay 1 life. Possess target creature you control. It gets +2/+1. Possess (When the possessed creature dies, attach this to another creature you control. If you can't, exile this.) Immortal.",
+  "flavor": "\"Only a little sin, to begin with. They always say yes to a little.\"",
+  "art": "res://art/cards/abyss_c_022.webp",
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_a_wrath",
+  "name": "Demon of Wrath",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Demon Possession",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "attach": "aura",
+  "possess": true,
+  "keywords": [
+   "immortal"
+  ],
+  "extra_cost": {
+   "sacrifice": true
+  },
+  "grants": {
+   "power": 3,
+   "toughness": 2,
+   "keywords": [
+    "dread"
+   ]
+  },
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "attach",
+    "target": "own_creature"
+   }
+  ],
+  "text": "As an additional cost to cast this, sacrifice another creature. Possess target creature you control. It gets +3/+2 and has dread. Possess (When the possessed creature dies, attach this to another creature you control. If you can't, exile this.) Immortal.",
+  "flavor": "\"Give me one of your men, and I will make another of them a monster.\"",
+  "art": "res://art/cards/abyss_c_024.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_a_hold",
+  "name": "Legion's Hold",
+  "faction": "abyss",
+  "rarity": "rare",
+  "type": "relic",
+  "subtype": "Demon Possession",
+  "cost": {
+   "B": 2,
+   "generic": 2
+  },
+  "attach": "aura",
+  "steal": true,
+  "keywords": [
+   "immortal"
+  ],
+  "extra_cost": {
+   "life": 2,
+   "discard": 1
+  },
+  "grants": {
+   "power": 1,
+   "toughness": 1,
+   "keywords": []
+  },
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "attach",
+    "target": "enemy_creature"
+   }
+  ],
+  "text": "As an additional cost to cast this, discard a card and pay 2 life. Possess target creature an opponent controls. You control it, and it gets +1/+1. When it dies, exile this. Immortal.",
+  "flavor": "\"He prayed for strength. We gave him ours, and kept the rest of him.\"",
+  "art": "res://art/cards/abyss_r_002.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_a_bargain",
+  "name": "Black Bargain",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Pact",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 2
+   },
+   {
+    "trigger": "cast",
+    "action": "lose_life",
+    "amount": 2
+   }
+  ],
+  "text": "Draw two cards. You lose 2 life.",
+  "flavor": "\"Two pages of the ledger, signed. The price is written small.\"",
+  "art": "res://art/cards/abyss_c_015.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_a_whispers",
+  "name": "Whispers in the Dark",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Curse",
+  "cost": {
+   "B": 1,
+   "generic": 2
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "discard_enemy",
+    "amount": 2
+   }
+  ],
+  "text": "Target opponent discards two cards at random.",
+  "flavor": "\"Forget your prayers. Here, I will help you.\"",
+  "art": "res://art/cards/abyss_c_017.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ }
+]

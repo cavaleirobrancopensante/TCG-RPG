@@ -11,16 +11,17 @@ const SIZE := Vector2(118, 158)
 const SELECT_COLOR := Color(0.45, 0.95, 0.3)
 const KW_ICONS := {"flying": "✈", "reach": "R", "haste": "»", "lifelink": "♥", "deathtouch": "☠",
 	"vigilance": "◉", "trample": "T", "defender": "▣", "martyr": "✝", "sanctified": "✚",
-	"dread": "☾", "regenerate": "♻", "first_strike": "‼", "unmoved": "◆"}
+	"dread": "☾", "regenerate": "♻", "first_strike": "‼", "unmoved": "◆", "immortal": "∞"}
 ## What else a creature does on the battlefield, read from its card (the same plaque, after the
 ## keywords): an ability you can use, what it does when it attacks or dies, each upkeep, when
 ## idle, for its allies, as a lord, growing with its kin; and Legendary.
 const ABILITY_ICONS := {"ability": "⚙", "attack": "⚔", "death": "⚰", "upkeep": "☀", "idle": "☕",
-	"ally": "✦", "lord": "♛", "grows": "▲", "legendary": "★"}
+	"ally": "✦", "lord": "♛", "grows": "▲", "legendary": "★", "transform": "⟳"}
 ## The order and meaning of every icon, for the rules glossary.
 const ICON_HELP := [["✈", "Flying"], ["R", "Reach"], ["»", "Haste"], ["♥", "Lifelink"], ["☠", "Deathtouch"],
 	["◉", "Vigilance"], ["T", "Trample"], ["▣", "Defender"], ["✝", "Martyr"], ["✚", "Sanctified"], ["☾", "Dread"],
-	["♻", "Regenerate"], ["‼", "First strike"], ["◆", "Unmoved"],
+	["♻", "Regenerate"], ["‼", "First strike"], ["◆", "Unmoved"], ["∞", "Immortal: exiled instead of going to the graveyard"],
+	["⟳", "two-faced: turns over with Peace and Crusade"], ["◈", "possessed by a demon"],
 	["⚙", "an ability you can use (tap it to see it)"], ["⚔", "does something when it attacks (Charge too)"],
 	["⚰", "does something when it dies"], ["☀", "does something at the beginning of your upkeep"],
 	["☕", "Idle: does something if it rests at the end of your turn"], ["✦", "does something when another of its kind enters or dies"],
@@ -106,6 +107,11 @@ func sync(p) -> void:   # p: BattleState.Perm
 		status.append("unearthed")
 	if p.regen_shield > 0:
 		status.append("shield")
+	if p._state():
+		for a in p._state().attachments_of(p):
+			if BattleState.is_demon(a):
+				status.append("possessed")
+				break
 	kw_now = []
 	for k in KW_ICONS:
 		if p.has_kw(k):
@@ -307,7 +313,7 @@ func _draw() -> void:
 	var sy := maxf(5.0 + fmin + 6, _plaque_bottom) + rad + 6
 	_plaque_bottom = 0.0
 	for stt in status:
-		var glyph: String = {"pacified": "☮", "snared": "⛓", "frozen": "❄", "unearthed": "⚱", "shield": "🛡"}.get(stt, "?")
+		var glyph: String = {"pacified": "☮", "snared": "⛓", "frozen": "❄", "unearthed": "⚱", "shield": "🛡", "possessed": "◈"}.get(stt, "?")
 		Tapestry.ink_circle(self, Vector2(4 + rad, sy), rad, Color(Tapestry.PARCHMENT_LIGHT, 0.95 * a), 1.4)
 		draw_string(book, Vector2(4, sy + fmin * 0.38), glyph, HORIZONTAL_ALIGNMENT_CENTER, rad * 2.0, fmin, Color(Tapestry.ULTRAMARINE, a))
 		sy += rad * 2.0 + 3
@@ -352,4 +358,6 @@ static func ability_marks(c: Dictionary, n_abilities: int = -1) -> Array:
 			out.append("grows")
 	if c.get("legendary", false):
 		out.append("legendary")
+	if c.has("transform"):
+		out.append("transform")
 	return out

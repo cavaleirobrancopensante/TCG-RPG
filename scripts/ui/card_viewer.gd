@@ -28,6 +28,7 @@ const KEYWORDS := {
 	"regenerate": "Regenerate: pay its cost to shield it; the next time it would be destroyed this turn, it is tapped, healed and taken out of combat instead.",
 	"first_strike": "First strike: deals combat damage before creatures without it.",
 	"unmoved": "Unmoved: enemy spells and abilities can't tap it, return it to its owner's hand or shrink it.",
+	"immortal": "Immortal: if it would be put into a graveyard from anywhere, it is exiled instead. Angels return to Heaven, demons are cast back into Hell; no necromancy can raise them.",
 }
 ## Mechanics named in rules text, explained under the card.
 const MECHANICS := {
@@ -51,6 +52,9 @@ const MECHANICS := {
 	"Counter target": "Counter: the spell is cancelled and goes to its owner's graveyard. Cast it while the enemy spell is on the stack.",
 	"Charge": "Charge: when it attacks, for each other attacking Knight choose one (trample, first strike, vigilance, lifelink, +1/+0); all your Knights gain them until end of turn.",
 	"Legendary": "Legendary: you may have only one with this name on the battlefield at a time.",
+	"Two-faced": "Two-faced: Peace and Crusade. Peace begins when the first two-faced card appears. At the start of each turn: at Peace, if the player whose turn ended cast two or more spells in it, Crusade begins; at Crusade, if he cast none, Peace returns. Every two-faced card turns over with it. Tap the card to read its other face.",
+	"Possess": "Possess: when the possessed creature dies, the demon moves to another creature its master controls; if there is none, it is exiled.",
+	"Demon": "Demon: everything fantastical that is not an angel. Exorcisms destroy Demons; a possession destroyed frees its host.",
 }
 const SWIPE := 70.0
 
@@ -81,6 +85,7 @@ var _pinch_d0 := 0.0
 var _pinch_z0 := 1.0
 var _pinch_mid := Vector2.ZERO
 var _pinching := false
+var _flipped := {}               # entry index -> true: a two-faced card shows its other face
 
 
 static func open(parent: Node, p_entries: Array, p_index: int, p_actions: Callable = Callable(), p_close_label: String = "Close") -> CardViewer:
@@ -182,6 +187,34 @@ func entry() -> Dictionary:
 	return entries[index] if index < entries.size() else {}
 
 
+## The id on show: a two-faced card turned over shows its other face.
+func _shown_id(e: Dictionary) -> String:
+	var id := String(e.get("id", ""))
+	if _flipped.get(index, false):
+		var c := CardDB.get_card(id)
+		if c.has("transform"):
+			return String(c["transform"])
+	return id
+
+
+static func is_two_faced(id: String) -> bool:
+	return CardDB.get_card(id).has("transform")
+
+
+## Turn a two-faced card over (the button, or a tap on the card).
+func flip() -> void:
+	var e := entry()
+	if e.is_empty() or e.has("data") or not is_two_faced(String(e["id"])):
+		return
+	_flipped[index] = not _flipped.get(index, false)
+	card_view.set_card(_shown_id(e), e.get("foil", false), {})
+	var tw := create_tween()
+	card_view.pivot_offset = card_view.size * 0.5
+	card_view.scale = Vector2(0.1, 1.0)
+	tw.tween_property(card_view, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	refresh()
+
+
 func next() -> void:
 	if index < entries.size() - 1:
 		index += 1
@@ -204,7 +237,7 @@ func _show(dir: int) -> void:
 	var e := entry()
 	if e.is_empty():
 		return
-	card_view.set_card(e["id"], e.get("foil", false), e.get("data", {}))
+	card_view.set_card(_shown_id(e), e.get("foil", false), e.get("data", {}))
 	_set_zoom(1.0, Vector2.ZERO)
 	if dir != 0:
 		var home := _home
@@ -237,7 +270,7 @@ func _fill_info(e: Dictionary) -> void:
 	UIKit.clear(info_box)
 	UIKit.clear(actions_box)
 	UIKit.clear(head_box)
-	var c: Dictionary = e.get("data", {}) if e.has("data") else CardDB.get_card(e["id"])
+	var c: Dictionary = e.get("data", {}) if e.has("data") else CardDB.get_card(_shown_id(e))
 	var f: String = c.get("faction", "machine")
 	var head := head_box
 	var tl := UIKit.title(I18n.t(c.get("name", "")), UIKit.FS_HEADING + 2)
@@ -251,6 +284,14 @@ func _fill_info(e: Dictionary) -> void:
 	help.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
 	help.tooltip_text = I18n.t("Rules glossary")
 	help.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	if c.has("transform") and not e.has("data"):
+		var fb := UIKit.button("⟳", flip, UIKit.TARGET_W)
+		fb.name = "FlipButton"
+		fb.custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
+		fb.add_theme_font_size_override("font_size", UIKit.FS_HEADING)
+		fb.tooltip_text = I18n.t("Turn the card over to read its other face")
+		fb.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		head.add_child(fb)
 	head.add_child(help)
 	var line := "%s · %s" % [Factions.info(f)["name"], I18n.t(String(c.get("rarity", "")).capitalize())]
 	if e.get("foil", false):
@@ -289,7 +330,10 @@ func _fill_info(e: Dictionary) -> void:
 		if has_word and not shown.has(line2):
 			shown[line2] = true
 			info_box.add_child(UIKit.label(I18n.t(line2), UIKit.FS_SECONDARY, UIKit.DIM, true))
-	if c.get("rarity") != "token" and c.get("type") != "land":
+	if c.has("transform"):
+		var face := I18n.t("Crusade face") if c.has("front") else I18n.t("Peace face")
+		info_box.add_child(UIKit.label(face + ". " + I18n.t("Tap the card or ⟳ to read the other face."), UIKit.FS_SECONDARY, UIKit.GOLD, true))
+	if c.get("rarity") != "token" and c.get("type") != "land" and not c.get("proto", false):
 		info_box.add_child(UIKit.label(I18n.t("You own %d") % GameState.owned_count(e["id"]), UIKit.FS_SECONDARY, UIKit.DIM))
 	info_box.add_child(UIKit.label("%d / %d" % [index + 1, entries.size()], UIKit.FS_SECONDARY, UIKit.DIM))
 	var row := HFlowContainer.new()
@@ -386,6 +430,8 @@ func _input(event: InputEvent) -> void:
 					prev()
 				elif d.x < -SWIPE and index < entries.size() - 1:
 					next()
+			elif d.length() < 14.0 and _zoom <= 1.01 and card_view.get_global_rect().has_point(event.position):
+				flip()          # a tap on a two-faced card turns it over
 	elif event is InputEventMouseMotion and _pressing and _zoom > 1.01:
 		# zoomed in: the finger moves the picture around
 		card_view.position += event.relative
