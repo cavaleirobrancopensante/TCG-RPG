@@ -653,3 +653,10 @@ under *Export → Resources → Filters to export non-resource files*.
 - Wanderers' themed decks now rank their tribe's lords and payoffs higher, so a Treefolk deck
   brings its Treefolk lords.
 - AI-vs-AI themes now run from 44% to 62% (Church Angels 56%); the middle duel ends in round 7.
+
+## Roomier panels on phones (1.49)
+
+- Draft on a phone: the Deck and Sideboard piles share one list with a switch at the top
+  ([Deck (n)] [Sideboard (n)]), and the card types are a drop-down instead of two rows of tabs,
+  so the list shows about four rows instead of one.
+- Deck builder on a phone: the card types are a drop-down too, giving the deck list two more rows.

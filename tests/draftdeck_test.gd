@@ -132,7 +132,7 @@ func _intro_draft() -> void:
 	ds = main.screen
 	_check(ds is DraftScreen, "back on the draft screen")
 	_check(main.tournament.side_pool() == {moved_id: 1} and DeckTools.count(main.tournament.deck_pool()) == 2, "the piles survive a save and reload")
-	_check(ds.side_box.get_node_or_null("Side_" + moved_id) != null, "the Sideboard pile shows the moved pick after the reload")
+	_check(_side_node(ds, "Side_" + moved_id) != null, "the Sideboard pile shows the moved pick after the reload")
 	ds.move_pick(moved_id, false)
 	_check(main.tournament.side.is_empty() and DeckTools.count(main.tournament.deck_pool()) == 3, "and moves back to the Deck")
 	# half the picks as the bots would take them, half at random
@@ -300,8 +300,12 @@ func _check_picks_panel(ds: DraftScreen) -> void:
 		elif String(c.name).begins_with("Group_"):
 			groups += 1
 	_check(rows == deck.size() and groups >= 1, "picks panel: a row per card (%d) in %d type groups" % [rows, groups])
-	_check(ds.side_box.get_node_or_null("EmptyHint") != null, "picks panel: the Sideboard starts empty (with a hint)")
+	_check(_side_node(ds, "EmptyHint") != null, "picks panel: the Sideboard starts empty (with a hint)")
 	var tabs: Array = ds.type_tabs.get_children().map(func(b): return b.text)
+	if ds.compact:
+		tabs = []
+		for ix in ds.type_pick.item_count:
+			tabs.append(ds.type_pick.get_item_text(ix))
 	_check(tabs.size() == 6 and tabs[0].begins_with(I18n.t("All")) and tabs[1].begins_with(I18n.t("Creatures")), "picks panel: All, then counts by type (%s)" % str(tabs))
 	var fsum := 0
 	for f in ds.faith_row.counts:
@@ -338,13 +342,13 @@ func _check_picks_panel(ds: DraftScreen) -> void:
 	# the arrow: one tap to the Sideboard, one tap on the Sideboard row back up
 	(ds.picks_box.get_node("Pick_" + id).get_node("Move") as Button).pressed.emit()
 	await _frames()
-	var srow := ds.side_box.get_node_or_null("Side_" + id)
+	var srow = _side_node(ds, "Side_" + id)
 	_check(int(d.side_pool().get(id, 0)) == 1 and srow != null, "the arrow moves a pick to the Sideboard")
 	_check(ds.side_head.text.contains("(1)"), "the Sideboard heading counts it (%s)" % ds.side_head.text)
 	if srow != null:
 		(srow.get_node("Move") as Button).pressed.emit()
 		await _frames()
-		_check(d.side.is_empty() and ds.side_box.get_node_or_null("Side_" + id) == null, "the Sideboard arrow moves it back to the Deck")
+		_check(d.side.is_empty() and _side_node(ds, "Side_" + id) == null, "the Sideboard arrow moves it back to the Deck")
 	# a press after a drag is no tap
 	ds.picks_drag.dragged = true
 	(ds.picks_box.get_node("Pick_" + id).get_node("Move") as Button).pressed.emit()
@@ -415,3 +419,18 @@ func _sealed_slots() -> void:
 	_check(have.size() == GameState.MAX_DECKS and have.has(last_name) and not have.has(other_name),
 		"slots full: the list used last is kept, the other is not (%d decks)" % have.size())
 	await _close_dialogs()
+
+
+
+## A row of the Sideboard pile (or null): its own box, or on a phone the shared list switched to
+## the Sideboard for a moment and back to the Deck.
+func _side_node(ds, nm: String):
+	if not ds.compact:
+		return ds.side_box.get_node_or_null(nm)
+	ds.show_side = true
+	ds._fill_picks()
+	var n = ds.picks_box.get_node_or_null(nm)
+	var found: bool = n != null
+	ds.show_side = false
+	ds._fill_picks()
+	return true if found else null

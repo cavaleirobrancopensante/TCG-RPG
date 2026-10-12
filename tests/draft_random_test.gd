@@ -56,8 +56,12 @@ func _ready() -> void:
 			await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(OS.get_user_data_dir() + "/shots/draft_tabs_all.png")
-	var tab: Button = ds.type_tabs.get_node("Tab_creature")
-	tab.pressed.emit()
+	if ds.compact:
+		ds.type_pick.select(1)
+		ds.type_pick.item_selected.emit(1)
+	else:
+		var tab: Button = ds.type_tabs.get_node("Tab_creature")
+		tab.pressed.emit()
 	for i in 4:
 		await get_tree().process_frame
 	_check(ds.kind_filter == "creature", "the Creatures tab filters the panel")

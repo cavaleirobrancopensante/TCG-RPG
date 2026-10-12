@@ -26,6 +26,10 @@ var sub: Label
 var picks_box: VBoxContainer      # the Deck pile's rows
 var side_box: VBoxContainer       # the Sideboard pile's rows
 var picks_head: Label
+var compact := false             # phone-sized: one pile shown at a time, the type as a drop-down
+var type_pick: OptionButton      # compact: the type filter
+var pile_switch: HBoxContainer   # compact: [Deck (n)] [Sideboard (n)]
+var show_side := false           # compact: the Sideboard pile is the one shown
 var side_head: Label
 var type_tabs: GridContainer      # All, Creatures, Sorceries...: filters the panel
 var kind_filter := "all"
@@ -44,7 +48,7 @@ func _ready() -> void:
 	theme = UIKit.make_theme()
 	add_child(Backdrop.create("rings"))
 	var vp := get_viewport_rect().size
-	var compact := vp.y < 600.0
+	compact = vp.y < 600.0
 	card_scale = PHONE_SCALE if compact else SCALE
 	var root := HBoxContainer.new()
 	UIKit.content_rect(root)
@@ -100,11 +104,36 @@ func _ready() -> void:
 	picks_head.clip_text = true
 	picks_head.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	rv.add_child(picks_head)
+	if compact:
+		# on a phone the two piles share one list: a switch picks which one it shows
+		picks_head.visible = false
+		pile_switch = HBoxContainer.new()
+		pile_switch.name = "PileSwitch"
+		pile_switch.add_theme_constant_override("separation", 4)
+		rv.add_child(pile_switch)
+		for side_i in 2:
+			var si: bool = side_i == 1
+			var pb := UIKit.button("", func():
+				show_side = si
+				_fill_picks(), 0)
+			pb.name = "ShowSide" if si else "ShowDeck"
+			pb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			pb.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY)
+			pile_switch.add_child(pb)
+		type_pick = OptionButton.new()
+		type_pick.name = "TypePick"
+		type_pick.custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
+		type_pick.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY)
+		type_pick.item_selected.connect(func(ix):
+			kind_filter = (["all"] + KINDS)[clampi(ix, 0, KINDS.size())]
+			_fill_picks())
+		rv.add_child(type_pick)
 	type_tabs = GridContainer.new()
 	type_tabs.name = "TypeCounts"
 	type_tabs.columns = 3
 	type_tabs.add_theme_constant_override("h_separation", 4)
 	type_tabs.add_theme_constant_override("v_separation", 4)
+	type_tabs.visible = not compact
 	rv.add_child(type_tabs)
 	faith_row = _FaithRow.new()
 	faith_row.name = "FaithCounts"
@@ -144,6 +173,9 @@ func _ready() -> void:
 	side_box.add_theme_constant_override("separation", 4)
 	ss.add_child(side_box)
 	side_drag = DragScroll.attach(self, ss)
+	if compact:
+		for n in [rule, side_head, ss]:
+			n.visible = false
 	_refresh()
 
 
@@ -239,12 +271,33 @@ func _fill_picks() -> void:
 	curve.set_deck(fdeck)
 	var none := I18n.t("None of this type.")
 	var deck_empty: String = I18n.t("Nothing yet.") if draft.picks[0].is_empty() else (none if kind_filter != "all" else I18n.t("No cards in the deck pile."))
+	var side_empty: String = none if kind_filter != "all" and not side.is_empty() else I18n.t("Tap the arrow on a card to move it here.")
+	if compact:
+		var sb: Button = pile_switch.get_node("ShowSide")
+		var db: Button = pile_switch.get_node("ShowDeck")
+		db.text = I18n.t("Deck") + " (%d)" % nd
+		sb.text = I18n.t("Sideboard") + " (%d)" % ns
+		UIKit.set_selected(db, not show_side)
+		UIKit.set_selected(sb, show_side)
+		if show_side:
+			_fill_pile(picks_box, fside, true, side_empty)
+		else:
+			_fill_pile(picks_box, fdeck, false, deck_empty)
+		return
 	_fill_pile(picks_box, fdeck, false, deck_empty)
-	_fill_pile(side_box, fside, true, none if kind_filter != "all" and not side.is_empty() else I18n.t("Tap the arrow on a card to move it here."))
+	_fill_pile(side_box, fside, true, side_empty)
 
 
 ## The type tabs: All first, then each type with its count in the Deck pile; one is chosen.
 func _fill_tabs(by_kind: Dictionary, total: int) -> void:
+	if compact:
+		type_pick.clear()
+		var ks: Array = ["all"] + KINDS
+		for k in ks:
+			var nm2: String = I18n.t("All") if k == "all" else I18n.t(KIND_NAMES[k])
+			type_pick.add_item("%s %d" % [nm2, total if k == "all" else int(by_kind.get(k, 0))])
+		type_pick.select(ks.find(kind_filter))
+		return
 	UIKit.clear(type_tabs)
 	var keys: Array = ["all"] + KINDS
 	for k in keys:
