@@ -1374,7 +1374,13 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 	var w := minf(CardView.BASE.x * 0.62, (get_viewport_rect().size.x - 140.0) / float(maxi(1, ids.size())) - 8.0)
 	var views: Array = []
 	for k in ids.size():
-		var cv := CardView.create(ids[k], w / CardView.BASE.x)
+		var cv: CardView
+		if typeof(ids[k]) == TYPE_DICTIONARY:
+			# a token: its own card data
+			cv = CardView.create("token", w / CardView.BASE.x)
+			cv.set_card(String(ids[k].get("id", "token")), false, ids[k].get("data", {}))
+		else:
+			cv = CardView.create(ids[k], w / CardView.BASE.x)
 		var kk: int = k
 		cv.tapped.connect(func(_c):
 			if mode == "one":
@@ -1410,6 +1416,35 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 
 func _resolve_owed() -> void:
 	var me := st.side(0)
+	if not me.hand_owed.is_empty():
+		var t: Dictionary = me.hand_owed[0]
+		var e: Dictionary = t["e"]
+		var opts := st.hand_choices(1)
+		if opts.is_empty():
+			st.hand_choose(0, -1)
+			return
+		var ids: Array = opts.map(func(hi): return st.side(1).hand[hi])
+		var what := ""
+		match String(e.get("action", "")):
+			"covet":
+				what = I18n.t("Choose the card he discards.")
+			"confess":
+				what = I18n.t("Choose the card the Confessor holds until he leaves the battlefield.")
+			_:
+				what = I18n.t("Choose the card to condemn: he exiles it (and, with the Index, every copy) and creates a Testimony for each.") if e.get("index", false) \
+					else I18n.t("Choose the card to condemn: he exiles it and creates a Testimony.")
+		var head := I18n.t("%s's hand") % st.side(1).name
+		var pick = await _pick_cards(head, what, ids)
+		st.hand_choose(0, int(opts[clampi(int(pick), 0, opts.size() - 1)]))
+		return
+	if me.edict_owed > 0:
+		if me.creatures.is_empty():
+			me.edict_owed = 0
+			return
+
+		var pick2 = await _pick_cards(I18n.t("Sacrifice"), I18n.t("Choose the creature you sacrifice."), me.creatures.map(_perm_entry))
+		st.edict_choose(0, me.creatures[clampi(int(pick2), 0, me.creatures.size() - 1)].uid)
+		return
 	if not me.trigger_owed.is_empty():
 		var t: Dictionary = me.trigger_owed[0]
 		var src = st.find_perm(int(t["uid"]))
@@ -1433,9 +1468,7 @@ func _resolve_owed() -> void:
 		if hosts.is_empty():
 			st.possess_choose(0, auid, -1)
 			return
-		var ids: Array = []
-		for c in hosts:
-			ids.append(c.card_id)
+		var ids: Array = hosts.map(_perm_entry)
 		var pick = await _pick_cards(I18n.t("Possess"), I18n.t("The demon leaves the dead body. Choose the creature it possesses now."), ids)
 		var k := clampi(int(pick), 0, hosts.size() - 1)
 		st.possess_choose(0, auid, hosts[k].uid)
@@ -1461,9 +1494,7 @@ func _resolve_owed() -> void:
 		if me.creatures.is_empty():
 			me.martyr_owed = 0
 		else:
-			var ids: Array = []
-			for c in me.creatures:
-				ids.append(c.card_id)
+			var ids: Array = me.creatures.map(_perm_entry)
 			var pick = await _pick_cards(I18n.t("Martyr"), I18n.t("Choose the creature that receives the martyr's grace (+1/+1)."), ids)
 			var k := clampi(int(pick), 0, me.creatures.size() - 1)
 			st.martyr_bless(0, me.creatures[k].uid)
@@ -1794,8 +1825,38 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 					else _cap(I18n.t("%s goes back to %s.") % [_obj(int(e["uid"])), st.side(1).name]))
 			refresh()
 			await _wait(0.3)
-		"owe_possess", "owe_trigger":
+		"owe_possess", "owe_trigger", "owe_hand", "owe_edict":
 			pass
+		"relic_token":
+			_log(I18n.t("You get a Testimony.") if int(e["side"]) == 0 else I18n.t("%s gets a Testimony.") % st.side(1).name)
+			_refresh_relics(int(e["side"]))
+		"reveal":
+			if int(e.get("by", -1)) == 1:
+				_log(I18n.t("%s looks at your hand.") % st.side(1).name)
+		"censured":
+			var cn := _card_name(String(e["id"]))
+			var cnt := int(e.get("count", 1))
+			if int(e["side"]) == 1:
+				_log(I18n.t("Condemned: %s is exiled (%d card(s)); he gets as many Testimonies.") % [cn, cnt])
+			else:
+				_log(I18n.t("Condemned: your %s is exiled (%d card(s)); you get as many Testimonies.") % [cn, cnt])
+			_refresh_bars()
+			await _wait(0.3)
+		"held":
+			_log(_cap(I18n.t("%s holds %s until he leaves the battlefield.") % [_obj(int(e["uid"])), _card_name(String(e["id"]))]))
+			_refresh_bars()
+		"held_back":
+			_log(_cap(I18n.t("%s returns to its owner's hand.") % _card_name(String(e["id"]))))
+			_rebuild_hand()
+			_refresh_bars()
+		"grave_exile":
+			_log(_cap(I18n.t("%s is exiled from a graveyard.") % _card_name(String(e["id"]))))
+			_refresh_bars()
+		"venerate":
+			_log(_cap(I18n.t("Veneration: %s is laid to rest as a relic (exiled).") % _card_name(String(e["id"]))))
+			_refresh_bars()
+		"edict":
+			_log(_cap(I18n.t("%s is sacrificed.") % _obj(int(e["uid"]))))
 		"regrow":
 			var gn := _card_name(String(e.get("id", "")))
 			_log(_with_ctx(I18n.t("%s returns to your hand.") % gn if int(e["side"]) == 0 else I18n.t("%s returns to %s's hand.") % [gn, st.side(1).name], _ctx))
@@ -2414,9 +2475,11 @@ func _advance_targeting() -> void:
 		if opts.is_empty():
 			chosen_targets.append(null)
 			continue
-		if spec.get("target") == "own_grave_creature":
+		if spec.get("target") in ["own_grave_creature", "any_grave_card"]:
 			var gids: Array = opts.map(func(o): return o["id"])
-			var gi = await _pick_cards(I18n.t("Return a creature"), I18n.t("Choose a creature card from your graveyard."), gids, "one", true)
+			var gnote := I18n.t("Choose a creature card from your graveyard.") if spec.get("target") == "own_grave_creature" \
+				else I18n.t("Choose a card from a graveyard (his first, then yours).")
+			var gi = await _pick_cards(I18n.t("Return a creature") if spec.get("target") == "own_grave_creature" else I18n.t("Exile from a graveyard"), gnote, gids, "one", true)
 			if int(gi) < 0 and pending_trigger != -1:
 				gi = 0                   # a trigger must take a target
 			elif int(gi) < 0:
@@ -2593,7 +2656,7 @@ func _spec_prompt(spec: Dictionary) -> String:
 		return I18n.t("your creature that will fight")
 	if a == "sacrifice":
 		return I18n.t("a creature to sacrifice")
-	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures", "enemy_relic": "an enemy relic", "enemy_demon": "an enemy Demon (a Demon creature or a possession)"}.get(t, t)
+	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures", "enemy_relic": "an enemy relic", "enemy_demon": "an enemy Demon (a Demon creature or a possession)", "enemy_creature_or_demon": "an enemy creature or possession", "any_grave_card": "a card in a graveyard"}.get(t, t)
 	if a == "attach" and t == "own_creature":
 		return I18n.t("Possess or attach → one of your creatures")
 	if a == "attach" and t == "enemy_creature":
@@ -3617,3 +3680,10 @@ func _board_notes(p) -> Array:
 		if h:
 			out.append((I18n.t("Possesses %s.") if BattleState.is_demon(p) else I18n.t("On %s.")) % I18n.t(h.name))
 	return out
+
+
+## A permanent as a card for the pickers (a token brings its own card data).
+func _perm_entry(q) -> Variant:
+	if q.is_token:
+		return {"id": "token", "data": q.card}
+	return q.card_id

@@ -2472,6 +2472,70 @@ func test_redesign() -> void:
 	if bear:
 		st.trigger_choose(0, {"kind": "creature", "uid": foe.uid}, bear.uid)
 		check(st.find_perm(foe.uid) == null and bear.damage == 2, "the Cave Bear itself fights the enemy")
+	# Holy Office and Possession (second prototype)
+	st = _duel()
+	st.side(1).hand = ["proto_p_azrakel", "proto_p_azrakel", "proto_p_covet", "land_abyss"]
+	st.side(1).deck.append("proto_p_azrakel")
+	st.side(1).graveyard.append("proto_p_azrakel")
+	st.resolve_effect(0, {"action": "censure", "index": true}, null, null)
+	check(not st.side(1).hand.has("proto_p_azrakel") and not st.side(1).deck.has("proto_p_azrakel") and st.side(1).exile.count("proto_p_azrakel") == 4,
+		"Index: every copy, in hand, library and graveyard, is exiled")
+	check(st.side(1).relics.size() == 4 and st.side(1).relics[0].name == "Testimony", "Index: he gets a Testimony for each card")
+	var tm: BattleState.Perm = st.side(1).relics[0]
+	var hand_n := st.side(1).hand.size()
+	st.priority = 1
+	st.window_open = true
+	check(st.activate(1, tm.uid, 0), "a Testimony can be cashed in")
+	st._force_resolve()
+	check(st.side(1).hand.size() == hand_n + 1 and st.find_perm(tm.uid) == null, "{2}, sacrifice: draw a card")
+	st = _duel()
+	var conf := st._make_perm(0, "proto_c_confessor", CardDB.get_card("proto_c_confessor"))
+	st.side(0).creatures.append(conf)
+	st.side(1).hand = ["proto_p_hierophant", "land_abyss"]
+	st.resolve_effect(0, {"action": "confess"}, conf, null)
+	check(st.side(1).hand == ["land_abyss"] and conf.held.size() == 1, "the Confessor holds a card from his hand")
+	st.destroy_perm(conf)
+	check(st.side(1).hand.has("proto_p_hierophant"), "when the Confessor dies, the card goes back to its owner's hand")
+	st = _duel()
+	var man := st._make_perm(1, "proto_p_hierophant", CardDB.get_card("proto_p_hierophant"))
+	var corpse_host := st._make_perm(1, "proto_p_cultist", CardDB.get_card("proto_p_cultist"))
+	st.side(1).creatures.append_array([man, corpse_host])
+	var exo: Dictionary = CardDB.get_card("proto_c_exorcism")["effects"][0]
+	st.resolve_effect(0, exo, null, {"kind": "creature", "uid": corpse_host.uid})
+	check(st.find_perm(corpse_host.uid) == null and _named(st, 1, "Corpse") == 1, "Exorcism deals 2 to a man; the Cultist leaves a Corpse")
+	var cor: BattleState.Perm = st.side(1).creatures.back()
+	st.resolve_effect(0, exo, null, {"kind": "creature", "uid": cor.uid})
+	check(st.find_perm(cor.uid) == null, "Exorcism destroys a Demon (the Corpse)")
+	var inq: Dictionary = CardDB.get_card("proto_c_inquisitor")["effects"][0]
+	st.resolve_effect(0, inq, null, null)
+	check(st.find_perm(man.uid) == null, "the Inquisitor destroys a Heretic")
+	var plain := st._make_perm(1, "wild_c_001", CardDB.get_card("wild_c_001"))
+	st.side(1).creatures.append(plain)
+	st.resolve_effect(0, inq, null, null)
+	check(plain.tapped and st.find_perm(plain.uid) != null, "with no Heretic, the Inquisitor taps instead")
+	# Veneration: the Angel costs less for each creature card in the graveyard
+	st = _duel()
+	_lands(st, 0, "WW")
+	st.side(0).graveyard = ["proto_p_cultist", "proto_c_keeper", "proto_c_thurifer", "proto_c_pilgrim", "proto_c_inquisitor"]
+	st.side(0).hand = ["proto_c_angel"]
+	check(st.can_play(0, 0), "Veneration: the Angel for {W}{W} with five creature cards in the graveyard")
+	st.play(0, 0)
+	check(st.side(0).graveyard.is_empty() and st.side(0).exile.size() == 5, "the five are exiled as relics")
+	# Hierophant drains when a demon possesses
+	st = _duel()
+	_lands(st, 0, "BBBB")
+	var hie := st._make_perm(0, "proto_p_hierophant", CardDB.get_card("proto_p_hierophant"))
+	st.side(0).creatures.append(hie)
+	st.side(0).hand = ["proto_a_whisper"]
+	var l1b := st.side(1).life
+	st.play(0, 0, [{"kind": "creature", "uid": hie.uid}])
+	check(st.side(1).life == l1b - 1, "the Hierophant drains when a demon possesses")
+	# Azrakel: the edict
+	st = _duel()
+	var vic := st._make_perm(1, "wild_c_001", CardDB.get_card("wild_c_001"))
+	st.side(1).creatures.append(vic)
+	st.resolve_effect(0, {"action": "edict"}, null, null)
+	check(st.side(1).creatures.is_empty(), "Azrakel's edict: he sacrifices a creature")
 	# a whole AI duel of the two prototype decks finishes
 	var d := DeckTools.proto_decks()
 	st = BattleState.new()
