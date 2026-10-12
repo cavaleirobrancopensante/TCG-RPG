@@ -43,7 +43,19 @@ func _ready() -> void:
 	st.side(0).hand = ["proto_c_censure", "proto_c_keeper", "proto_c_confessor"]
 	st.side(1).hand = ["proto_p_azrakel", "proto_p_covet", "proto_a_whisper", "land_abyss"]
 	st.make_testimony(0)
+	st.make_testimony(0)
+	st.make_testimony(0)
+	st.side(0).relics.append(st._make_perm(0, "proto_c_keeper", CardDB.get_card("proto_c_cleansing")))
+	var cul := st._make_perm(1, "proto_p_cultist", CardDB.get_card("proto_p_cultist"))
+	st.side(1).creatures.append(cul)
+	var wh := st._make_perm(1, "proto_a_whisper", CardDB.get_card("proto_a_whisper"))
+	wh.attached_to = cul.uid
+	st.side(1).relics.append(wh)
+	st.side(1).relics.append(st._make_perm(1, "proto_p_altar", CardDB.get_card("proto_p_altar")))
+	st.make_testimony(1)
 	b.refresh()
+	await get_tree().create_timer(0.5).timeout
+	await _shot("relics")
 	b._begin_play(0)
 	await get_tree().create_timer(2.5).timeout
 	await _shot("censure_pick")
