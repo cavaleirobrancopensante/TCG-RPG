@@ -111,7 +111,8 @@ var phase := "setup"
 ## blockers, damage, main2, end (the phase bar shows these).
 var step := ""
 var attackers: Array = []   # uids
-var blocks := {}            # attacker uid -> blocker uid
+var blocks := {}            # attacker uid -> its first blocker uid (what most code asks about)
+var blockers := {}          # attacker uid -> every blocker uid, in damage order (several may block one)
 var was_blocked := {}       # attacker uid -> true once blocked (stays blocked if the blocker leaves)
 var winner := -1
 var events: Array = []
@@ -289,6 +290,7 @@ func begin_turn() -> void:
 			p.uses.clear()          # "once per turn" counts each turn, abilities work in both
 	attackers.clear()
 	blocks.clear()
+	blockers.clear()
 	was_blocked.clear()
 	stack.clear()
 	window_open = false
@@ -1650,10 +1652,7 @@ func _change_control(p: Perm, to: int) -> void:
 		return
 	side(p.owner).creatures.erase(p)
 	attackers.erase(p.uid)
-	blocks.erase(p.uid)
-	for a in blocks.keys():
-		if blocks[a] == p.uid:
-			blocks.erase(a)
+	_unblock(p.uid)
 	p.owner = to
 	p.sick = true
 	side(to).creatures.append(p)
@@ -2371,10 +2370,7 @@ func destroy_perm(p: Perm, sacrifice: bool = false) -> void:
 		p.deathtouched = false
 		p.tapped = true
 		attackers.erase(p.uid)
-		blocks.erase(p.uid)
-		for a in blocks.keys():
-			if blocks[a] == p.uid:
-				blocks.erase(a)
+		_unblock(p.uid)
 		emit({"type": "regenerate", "uid": p.uid})
 		return
 	_remove_perm(p)
@@ -2473,10 +2469,32 @@ func _remove_perm(p: Perm) -> void:
 					_bury(a.base_owner, a.card_id, a.card)
 				emit({"type": "die", "uid": a.uid, "side": a.owner, "sacrifice": false})
 	attackers.erase(p.uid)
-	blocks.erase(p.uid)
-	for a in blocks.keys():
-		if blocks[a] == p.uid:
-			blocks.erase(a)
+	_unblock(p.uid)
+
+
+## A creature leaves combat (it died, regenerated or changed hands): as attacker or as blocker.
+func _unblock(uid: int) -> void:
+	blocks.erase(uid)
+	blockers.erase(uid)
+	for a in blockers.keys():
+		var list: Array = blockers[a]
+		if list.has(uid):
+			list.erase(uid)
+			if list.is_empty():
+				blockers.erase(a)
+				blocks.erase(a)
+			else:
+				blocks[a] = list[0]
+
+
+## Every blocker of an attacker still on the battlefield, in damage order.
+func blockers_of(a: int) -> Array:
+	var out: Array = []
+	for u in blockers.get(a, []):
+		var b := find_perm(int(u))
+		if b != null:
+			out.append(b)
+	return out
 
 
 ## Kill creatures with lethal damage, check for a winner.
@@ -2594,19 +2612,26 @@ func declare_blocks(blocks_in: Dictionary) -> void:
 		_force_resolve()
 	window_open = false
 	blocks.clear()
+	blockers.clear()
 	was_blocked.clear()
 	var used := {}
 	for a in blocks_in:
 		var ap := find_perm(int(a))
-		var bp := find_perm(int(blocks_in[a]))
-		if ap == null or bp == null or not attackers.has(ap.uid) or used.has(bp.uid):
+		if ap == null or not attackers.has(ap.uid):
 			continue
-		if not can_block(bp, ap):
-			continue
-		blocks[ap.uid] = bp.uid
-		used[bp.uid] = true
-		was_blocked[ap.uid] = true
-		emit({"type": "block", "uid": bp.uid, "attacker": ap.uid})
+		# one blocker, or several on the same attacker
+		var list: Array = blocks_in[a] if typeof(blocks_in[a]) == TYPE_ARRAY else [blocks_in[a]]
+		for bu in list:
+			var bp := find_perm(int(bu))
+			if bp == null or used.has(bp.uid) or not can_block(bp, ap):
+				continue
+			if not blockers.has(ap.uid):
+				blockers[ap.uid] = []
+				blocks[ap.uid] = bp.uid
+			blockers[ap.uid].append(bp.uid)
+			used[bp.uid] = true
+			was_blocked[ap.uid] = true
+			emit({"type": "block", "uid": bp.uid, "attacker": ap.uid})
 	phase = "combat"
 	step = "blockers"
 	if _window():
@@ -2633,31 +2658,39 @@ func combat_damage() -> void:
 ## Combat damage in two steps: first strikers, then everyone else still standing.
 func _resolve_combat() -> void:
 	var defender := 1 - active
-	var pairs: Array = []
-	for u in attackers.duplicate():
-		pairs.append([u, blocks.get(u, -1)])
+	var order: Array = attackers.duplicate()
 	for step in [true, false]:
-		for pr in pairs:
-			var ap := find_perm(pr[0])
-			var bp: Perm = find_perm(pr[1]) if int(pr[1]) >= 0 else null
+		for u in order:
+			var ap := find_perm(int(u))
+			var bls := blockers_of(int(u))      # still standing (a first striker may have killed some)
 			if ap != null and ap.has_kw("first_strike") == step:
-				if bp != null:
-					var dmg := ap.power()
-					var lethal := maxi(0, bp.toughness() - bp.damage)
-					if ap.has_kw("deathtouch"):
-						lethal = mini(lethal, 1)
-					if ap.has_kw("trample") and dmg > lethal:
-						deal_damage(ap, active, {"kind": "creature", "uid": bp.uid}, lethal)
-						deal_damage(ap, active, {"kind": "player", "side": defender}, dmg - lethal)
-					else:
-						deal_damage(ap, active, {"kind": "creature", "uid": bp.uid}, dmg)
-				elif int(pr[1]) < 0 and (not was_blocked.has(ap.uid) or ap.has_kw("trample")):
-					# a blocked attacker whose blocker left combat deals no damage (trample: all to the player)
+				if not bls.is_empty():
+					# several blockers: lethal damage to each in order, the rest to the last
+					# (trample: the rest to the player)
+					var rem := ap.power()
+					for k in bls.size():
+						var bp: Perm = bls[k]
+						if rem <= 0:
+							break
+						var lethal := maxi(0, bp.toughness() - bp.damage)
+						if ap.has_kw("deathtouch"):
+							lethal = mini(lethal, 1)
+						var give := rem
+						if k < bls.size() - 1 or ap.has_kw("trample"):
+							give = mini(rem, lethal)
+						if give > 0:
+							deal_damage(ap, active, {"kind": "creature", "uid": bp.uid}, give)
+						rem -= give
+					if rem > 0 and ap.has_kw("trample"):
+						deal_damage(ap, active, {"kind": "player", "side": defender}, rem)
+				elif not was_blocked.has(ap.uid) or ap.has_kw("trample"):
+					# a blocked attacker whose blockers left combat deals no damage (trample: all to the player)
 					deal_damage(ap, active, {"kind": "player", "side": defender}, ap.power())
-			if bp != null and find_perm(bp.uid) != null and bp.has_kw("first_strike") == step:
-				var ap2 := find_perm(pr[0])
-				if ap2:
-					deal_damage(bp, defender, {"kind": "creature", "uid": ap2.uid}, bp.power())
+			for bp in bls:
+				if find_perm(bp.uid) != null and bp.has_kw("first_strike") == step:
+					var ap2 := find_perm(int(u))
+					if ap2:
+						deal_damage(bp, defender, {"kind": "creature", "uid": ap2.uid}, bp.power())
 		check_state()
 		if phase == "over":
 			return

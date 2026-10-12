@@ -19,7 +19,7 @@ var figures := {}               # uid -> SummonFigure
 var busy := false
 var mode := "idle"              # idle | attack | block | target
 var sel_attackers: Array = []
-var pending_blocks := {}        # attacker uid -> blocker uid
+var pending_blocks := {}        # attacker uid -> Array of blocker uids (several may block one)
 var block_pick := -1
 var target_specs: Array = []
 var chosen_targets: Array = []
@@ -672,14 +672,14 @@ func persistent_arrows() -> Array:
 				out.append([_fig_center(figures[u]), portrait_pos(1), red])
 	elif st.phase in ["block", "combat"]:
 		var defender := 1 - st.active
-		var bl: Dictionary = pending_blocks if st.phase == "block" else st.blocks
+		var bl: Dictionary = pending_blocks if st.phase == "block" else st.blockers
 		for u in st.attackers:
 			if figures.has(u) and not bl.has(u) and not st.was_blocked.has(u):
 				out.append([_fig_center(figures[u]), portrait_pos(defender), red])
 		for a in bl:
-			var b: int = bl[a]
-			if figures.has(a) and figures.has(b):
-				out.append([_fig_center(figures[b]), _fig_center(figures[a]), blue])
+			for b in bl[a]:
+				if figures.has(a) and figures.has(int(b)):
+					out.append([_fig_center(figures[int(b)]), _fig_center(figures[a]), blue])
 	# confirming targets: the card (or the creature using its ability) points at its targets
 	if mode == "confirm":
 		var from := Vector2.ZERO
@@ -1220,7 +1220,7 @@ func _update_marks() -> void:
 				elif p.owner == 0 and st.can_attack(p):
 					fig.mark = "select"
 			"block":
-				if pending_blocks.values().has(uid):
+				if _pending_blocker(uid) >= 0:
 					fig.mark = "block"
 				elif uid == block_pick:
 					fig.mark = "select"
@@ -2625,26 +2625,52 @@ func _on_figure_tapped(fig: SummonFigure) -> void:
 		"block":
 			if p.owner == 0:
 				# Tap an assigned blocker again to unassign it.
-				for a in pending_blocks.keys():
-					if pending_blocks[a] == fig.uid:
-						pending_blocks.erase(a)
-						block_pick = -1
-						refresh()
-						return
-				block_pick = fig.uid if not p.tapped else -1
-				_log("Now tap the attacker it should block." if block_pick >= 0 else "That creature is tapped.", false)
+				var was := _pending_blocker(fig.uid)
+				if was >= 0:
+					pending_blocks[was].erase(fig.uid)
+					if pending_blocks[was].is_empty():
+						pending_blocks.erase(was)
+					block_pick = -1
+					_log(I18n.t("Blocker taken back."), false)
+					refresh()
+					return
+				if block_pick == fig.uid:
+					# tapped again while chosen: read it (and drop the choice)
+					block_pick = -1
+					refresh()
+					_show_board(p.owner, p.uid)
+					return
+				if p.tapped or p.has_kw("converted") or p.snared_by >= 0:
+					_show_board(p.owner, p.uid)
+					return
+				block_pick = fig.uid
+				_log(I18n.t("Now tap the attacker it should block (several may block one). Tap it again to read it."), false)
 				refresh()
 			elif st.attackers.has(fig.uid) and block_pick >= 0:
 				var b = st.find_perm(block_pick)
 				if b and st.can_block(b, p):
-					pending_blocks[fig.uid] = block_pick
+					if not pending_blocks.has(fig.uid):
+						pending_blocks[fig.uid] = []
+					pending_blocks[fig.uid].append(block_pick)
 					block_pick = -1
-					_log("Blocker assigned.", false)
+					var n: int = pending_blocks[fig.uid].size()
+					_log(I18n.t("Blocker assigned.") if n == 1 else I18n.t("%d blockers on this attacker.") % n, false)
 				else:
 					_log("That creature can't block this attacker (flying?).", false)
 				refresh()
+			else:
+				# an enemy creature with no blocker chosen: read it
+				_show_board(p.owner, p.uid)
 		_:
 			_show_board(p.owner, p.uid)
+
+
+## The attacker a creature of ours is set to block (-1: none).
+func _pending_blocker(uid: int) -> int:
+	for a in pending_blocks:
+		if Array(pending_blocks[a]).has(uid):
+			return int(a)
+	return -1
 
 
 ## Long press on a creature: read it, in every mode (attack, block and targeting keep tap
@@ -3244,7 +3270,10 @@ func _combat() -> void:
 		if defender == 0 and not auto_play:
 			await _player_blocks()
 		else:
-			pending_blocks = BattleAI.choose_blocks(st, defender)
+			var chosen_blocks := BattleAI.choose_blocks(st, defender)
+			pending_blocks = {}
+			for a in chosen_blocks:
+				pending_blocks[a] = chosen_blocks[a] if typeof(chosen_blocks[a]) == TYPE_ARRAY else [chosen_blocks[a]]
 		st.declare_blocks(pending_blocks)
 		pending_blocks.clear()
 		await _run_priority("blockers")
@@ -3270,7 +3299,7 @@ func _player_blocks() -> void:
 	if can_any:
 		mode = "block"
 		busy = false
-		_log("You are attacked! Tap your creature, then the attacker it blocks.", false)
+		_log(I18n.t("You are attacked! Tap your creature, then the attacker it blocks. Several may block one attacker. Hold any creature to read it."), false)
 		refresh()
 		await _blocks_done
 		busy = true

@@ -95,7 +95,7 @@ func _field() -> void:
 	if not st.attackers.is_empty():
 		for p in st.side(0).creatures:
 			if st.can_block(p, st.find_perm(st.attackers[0])):
-				b.pending_blocks[st.attackers[0]] = p.uid
+				b.pending_blocks[st.attackers[0]] = [p.uid]
 				break
 	b.refresh()
 	await _shot("h_block_arrows")

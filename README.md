@@ -762,3 +762,10 @@ live in data/cards/proto.json and are outside every pool (no drafts, shops or ca
 - The Pact's prototype deck gets **Withering Curse** ({1}{B}, instant, -2/-2), which kills a
   Crusade face, in place of Black Bargain; Whispers in the Dark (discard two) stays: it is the
   Pact's best tool against the Church's two-spell turns. AI against AI: Church about 62%.
+
+## Several blockers on one attacker (1.60)
+
+- When you are attacked, more than one of your creatures may block the same attacker: tap a
+  creature, then the attacker, and again with the next. The attacker deals lethal damage to each
+  blocker in order and the rest to the last one (with trample, the rest to you).
+- While blocking, tap an enemy creature to read it, or tap your chosen creature a second time.
