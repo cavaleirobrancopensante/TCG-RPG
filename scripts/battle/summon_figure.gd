@@ -11,7 +11,7 @@ const SIZE := Vector2(118, 158)
 const SELECT_COLOR := Color(0.45, 0.95, 0.3)
 const KW_ICONS := {"flying": "✈", "reach": "R", "haste": "»", "lifelink": "♥", "deathtouch": "☠",
 	"vigilance": "◉", "trample": "T", "defender": "▣", "martyr": "✝", "sanctified": "✚",
-	"dread": "☾", "regenerate": "♻", "first_strike": "‼", "unmoved": "◆", "immortal": "∞"}
+	"dread": "☾", "regenerate": "♻", "first_strike": "‼", "unmoved": "◆", "immortal": "∞", "converted": "✠"}
 ## What else a creature does on the battlefield, read from its card (the same plaque, after the
 ## keywords): an ability you can use, what it does when it attacks or dies, each upkeep, when
 ## idle, for its allies, as a lord, growing with its kin; and Legendary.
@@ -20,7 +20,7 @@ const ABILITY_ICONS := {"ability": "⚙", "attack": "⚔", "death": "⚰", "upke
 ## The order and meaning of every icon, for the rules glossary.
 const ICON_HELP := [["✈", "Flying"], ["R", "Reach"], ["»", "Haste"], ["♥", "Lifelink"], ["☠", "Deathtouch"],
 	["◉", "Vigilance"], ["T", "Trample"], ["▣", "Defender"], ["✝", "Martyr"], ["✚", "Sanctified"], ["☾", "Dread"],
-	["♻", "Regenerate"], ["‼", "First strike"], ["◆", "Unmoved"], ["∞", "Immortal: exiled instead of going to the graveyard"],
+	["♻", "Regenerate"], ["‼", "First strike"], ["◆", "Unmoved"], ["∞", "Immortal: exiled instead of going to the graveyard"], ["✠", "converted: can't attack or block"],
 	["⟳", "two-faced: turns over with Peace and Crusade"], ["◈", "possessed by a demon"],
 	["⚙", "an ability you can use (tap it to see it)"], ["⚔", "does something when it attacks (Charge too)"],
 	["⚰", "does something when it dies"], ["☀", "does something at the beginning of your upkeep"],

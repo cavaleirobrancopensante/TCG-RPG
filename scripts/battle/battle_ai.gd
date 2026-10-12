@@ -612,6 +612,11 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 					var host = equip_target(st, i, c)
 					if host != null:
 						chosen = host
+				if c.get("attach_enemy", false) and chosen != null:
+					var foe_p = st.find_perm(int(chosen.get("uid", -1)))
+					if foe_p == null or foe_p.value() < 2.5:
+						return [0.0, []]      # keep a conversion for a real threat
+					v += foe_p.value()
 				if c.get("steal", false) and chosen != null:
 					var held = st.find_perm(int(chosen.get("uid", -1)))
 					if held:

@@ -80,10 +80,18 @@
   "keywords": [],
   "transform": "proto_s_priest",
   "front": "proto_s_priest",
-  "text": "Two-faced: at Peace it turns back into Parish Priest of the Way.",
+  "text": "When this turns over into Inquisitor of the Way, destroy target Heretic with power 2 or less an opponent controls. Two-faced: at Peace it turns back into Parish Priest of the Way.",
   "flavor": "\"Prove all things; hold fast that which is good.\" (1 Thessalonians 5:21)",
   "art": "res://art/cards/sanctum_u_005.webp",
-  "effects": [],
+  "effects": [
+   {
+    "trigger": "transform",
+    "action": "destroy",
+    "target": "enemy_creature",
+    "subtype": "Heretic",
+    "max_power": 2
+   }
+  ],
   "proto": true,
   "mana_value": 2
  },
@@ -182,10 +190,17 @@
   "keywords": [],
   "transform": "proto_s_bishop",
   "front": "proto_s_bishop",
-  "text": "Other creatures you control get +1/+0. Two-faced: at Peace it turns back into Bishop of the See.",
+  "text": "When this turns over into Grand Inquisitor, destroy target Heretic an opponent controls. Other creatures you control get +1/+0. Two-faced: at Peace it turns back into Bishop of the See.",
   "flavor": "\"Put you on the armour of God, that you may be able to stand against the deceits of the devil.\" (Ephesians 6:11)",
   "art": "res://art/cards/sanctum_u_019.webp",
-  "effects": [],
+  "effects": [
+   {
+    "trigger": "transform",
+    "action": "destroy",
+    "target": "enemy_creature",
+    "subtype": "Heretic"
+   }
+  ],
   "proto": true,
   "mana_value": 4,
   "statics": [
@@ -378,18 +393,56 @@
   "mana_value": 4
  },
  {
+  "id": "proto_s_conversion",
+  "name": "Mission of Conversion",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "relic",
+  "subtype": "Mission",
+  "cost": {
+   "W": 1,
+   "generic": 2
+  },
+  "mana_value": 3,
+  "attach": "aura",
+  "attach_enemy": true,
+  "grants": {
+   "power": 0,
+   "toughness": 0,
+   "keywords": [
+    "converted"
+   ]
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "attach",
+    "target": "enemy_creature",
+    "subtypes": [
+     "Heretic",
+     "Pagan"
+    ]
+   }
+  ],
+  "text": "Attach to target Heretic or Pagan an opponent controls. It can't attack or block.",
+  "flavor": "\"Going therefore, teach ye all nations; baptizing them in the name of the Father, and of the Son, and of the Holy Ghost.\" (Matthew 28:19)",
+  "art": "res://art/cards/sanctum_u_002.webp",
+  "proto": true
+ },
+ {
   "id": "proto_a_cultist",
   "name": "Sworn Cultist",
   "faction": "abyss",
   "rarity": "common",
   "type": "creature",
-  "subtype": "Human Cultist",
+  "subtype": "Human Cultist Heretic",
   "cost": {
    "B": 1
   },
   "power": 2,
   "toughness": 1,
-  "text": "",
+  "text": "Heretic.",
   "flavor": "\"I signed in my own blood. It was the only ink they would take.\"",
   "art": "res://art/cards/abyss_c_001.webp",
   "keywords": [],
@@ -403,7 +456,7 @@
   "faction": "abyss",
   "rarity": "common",
   "type": "creature",
-  "subtype": "Human Necromancer",
+  "subtype": "Human Necromancer Heretic",
   "cost": {
    "B": 1,
    "generic": 1
@@ -665,5 +718,33 @@
   "keywords": [],
   "proto": true,
   "mana_value": 3
+ },
+ {
+  "id": "proto_a_curse",
+  "name": "Withering Curse",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Curse",
+  "speed": "instant",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "mana_value": 2,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "buff",
+    "target": "enemy_creature",
+    "power": -2,
+    "toughness": -2
+   }
+  ],
+  "text": "Target creature an opponent controls gets -2/-2 until end of turn.",
+  "flavor": "\"Your saints bleed like any other man. I only remind them.\"",
+  "art": "res://art/cards/abyss_c_014.webp",
+  "proto": true
  }
 ]

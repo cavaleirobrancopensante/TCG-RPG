@@ -693,11 +693,11 @@ const PROTO_DECKS := {
 	"Prototype: Church, Pilgrimage": {"faith": "sanctum", "cards": {
 		"proto_s_pilgrim": 4, "proto_s_priest": 3, "proto_s_sentinel": 3, "proto_s_bishop": 2,
 		"proto_s_angel": 1, "proto_s_michael": 1, "proto_s_exorcism": 3, "proto_s_sign": 3,
-		"proto_s_muster": 2, "proto_s_great": 1}},
+		"proto_s_conversion": 2, "proto_s_great": 1}},
 	"Prototype: Pact, Possession": {"faith": "abyss", "cards": {
 		"proto_a_cultist": 4, "proto_a_robber": 3, "proto_a_skeleton": 3, "proto_a_azrakel": 1,
-		"proto_a_whisper": 4, "proto_a_wrath": 2, "proto_a_hold": 2, "proto_a_bargain": 2,
-		"proto_a_whispers": 2}},
+		"proto_a_whisper": 4, "proto_a_wrath": 2, "proto_a_hold": 2, "proto_a_whispers": 2,
+		"proto_a_curse": 2}},
 }
 
 

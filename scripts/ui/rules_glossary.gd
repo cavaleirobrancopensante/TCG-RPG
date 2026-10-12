@@ -16,7 +16,7 @@ const GENERIC := "{1} {2} {X}: generic mana, paid with mana of any kind."
 const STACK := "The stack: cast cards and used abilities wait on the stack, and when both players pass, the last one added resolves first."
 ## Keyword order of the card spec.
 const KEYWORD_ORDER := ["flying", "martyr", "lifelink", "sanctified", "deathtouch", "dread", "trample", "reach",
-	"regenerate", "haste", "first_strike", "vigilance", "defender", "unmoved", "immortal"]
+	"regenerate", "haste", "first_strike", "vigilance", "defender", "unmoved", "immortal", "converted"]
 
 var panel: PanelContainer
 var list: VBoxContainer

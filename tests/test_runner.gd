@@ -2380,6 +2380,42 @@ func test_redesign() -> void:
 	check(st.target_specs(CardDB.get_card("proto_s_exorcism")).size() == 1, "at Peace it takes one target")
 	st._run_list(1, CardDB.get_card("proto_s_exorcism")["effects"], null, [{"kind": "creature", "uid": sk4.uid}])
 	check(st.side(0).creatures == [sk3, sk5], "at Peace: only the target")
+	# Conversion: only on a Heretic or Pagan; he can't attack or block
+	st = _duel()
+	_lands(st, 0, "WWWWBBBB")
+	var her := st._make_perm(1, "proto_a_cultist", CardDB.get_card("proto_a_cultist"))
+	var dem := st._make_perm(1, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
+	st.side(1).creatures.append_array([her, dem])
+	var conv: Dictionary = CardDB.get_card("proto_s_conversion")
+	var copts := st.valid_targets(0, conv["effects"][0])
+	check(copts.size() == 1 and int(copts[0]["uid"]) == her.uid, "Conversion takes only a Heretic or Pagan")
+	st.side(0).hand.append("proto_s_conversion")
+	check(st.play(0, 0, [{"kind": "creature", "uid": her.uid}]), "cast Conversion")
+	check(her.owner == 1 and her.has_kw("converted") and not st.can_block(her, dem), "converted: still his, can't block")
+	st.active = 1
+	her.sick = false
+	check(not st.can_attack(her), "converted: can't attack")
+	# Inquisitors judge Heretics when Crusade begins: the AI picks, the player chooses
+	st = _duel()
+	var pr := st._make_perm(0, "proto_s_priest", CardDB.get_card("proto_s_priest"))
+	st.side(0).creatures.append(pr)
+	var h1 := st._make_perm(1, "proto_a_cultist", CardDB.get_card("proto_a_cultist"))
+	var h2 := st._make_perm(1, "proto_a_robber", CardDB.get_card("proto_a_robber"))
+	st.side(1).creatures.append_array([h1, h2])
+	st.side(0).interactive = true
+	st.side(1).cast_count = 2
+	st._realm_check(1)
+	check(st.realm == "crusade" and st.side(0).trigger_owed.size() == 1 and st.has_owed(0), "the Inquisitor's judgement waits for the player's target")
+	st.trigger_choose(0, {"kind": "creature", "uid": h2.uid})
+	check(st.side(1).creatures == [h1] and st.side(0).trigger_owed.is_empty(), "the chosen Heretic is destroyed")
+	st = _duel()
+	pr = st._make_perm(1, "proto_s_priest", CardDB.get_card("proto_s_priest"))
+	st.side(1).creatures.append(pr)
+	h1 = st._make_perm(0, "proto_a_cultist", CardDB.get_card("proto_a_cultist"))
+	st.side(0).creatures.append(h1)
+	st.side(0).cast_count = 2
+	st._realm_check(0)
+	check(st.side(0).creatures.is_empty(), "the AI's Inquisitor judges a Heretic at once")
 	# a whole AI duel of the two prototype decks finishes
 	var d := DeckTools.proto_decks()
 	st = BattleState.new()
