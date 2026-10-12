@@ -17,6 +17,9 @@ var cast_won := {}
 var deck_cast := {}        # "deck name|card id" -> times cast, for the lift per deck
 var deck_won := {}
 var turns := 0
+var rounds: Array = []          # rounds per game (one round = each player takes a turn)
+var side_rounds := {}           # deck name -> [sum of rounds, games]
+var unfinished := 0
 var total := 0
 
 
@@ -69,6 +72,7 @@ func _ready() -> void:
 				if w == 0:
 					wins[key] = int(wins.get(key, 0)) + 1
 	print("games %d, avg turns %.1f" % [total, float(turns) / maxi(1, total)])
+	_print_lengths()
 	if dump:
 		for k in games:
 			var p: PackedStringArray = String(k).split(">")
@@ -150,6 +154,13 @@ func _play(da: Dictionary, db: Dictionary, first: int, game_seed: int, sides: Ar
 		st.end_turn()
 	total += 1
 	turns += st.turn
+	var rd := int(ceil(st.turn / 2.0))
+	if st.phase != "over":
+		unfinished += 1
+	rounds.append(rd)
+	for sd in 2:
+		var acc: Array = side_rounds.get(sides[sd], [0, 0])
+		side_rounds[sides[sd]] = [int(acc[0]) + rd, int(acc[1]) + 1]
 	for sd in 2:
 		for id in seen[sd]:
 			cast[id] = int(cast.get(id, 0)) + 1
@@ -171,3 +182,26 @@ func _show_decks(ids: PackedStringArray, level: int, rng: RandomNumberGenerator)
 			var c := CardDB.get_card(id)
 			var stats := "%d/%d" % [int(c.get("power", 0)), int(c.get("toughness", 0))] if c["type"] == "creature" else String(c["type"])
 			print("  %d x %s %s (mv %d) %s" % [int(d[id]), id, c["name"], int(c.get("mana_value", 0)), stats])
+
+
+
+## How long the duels last, in rounds (each player has had a turn): a histogram, percentiles,
+## and the average per deck.
+func _print_lengths() -> void:
+	if rounds.is_empty():
+		return
+	var r := rounds.duplicate()
+	r.sort()
+	var pct := func(q: float) -> int: return int(r[clampi(int(q * (r.size() - 1)), 0, r.size() - 1)])
+	print("LENGTH rounds: median %d, 10%% %d, 25%% %d, 75%% %d, 90%% %d, max %d, unfinished %d" % [
+		pct.call(0.5), pct.call(0.1), pct.call(0.25), pct.call(0.75), pct.call(0.9), r.back(), unfinished])
+	var hist := {}
+	for x in r:
+		hist[x] = int(hist.get(x, 0)) + 1
+	for k in range(1, int(r.back()) + 1):
+		var n := int(hist.get(k, 0))
+		print("  round %2d %5.1f%% %s" % [k, 100.0 * n / r.size(), "#".repeat(int(round(200.0 * n / r.size())))])
+	var keys := side_rounds.keys()
+	keys.sort_custom(func(a, b): return float(side_rounds[a][0]) / side_rounds[a][1] < float(side_rounds[b][0]) / side_rounds[b][1])
+	for k in keys:
+		print("  %-20s avg %.1f rounds" % [k, float(side_rounds[k][0]) / side_rounds[k][1]])
