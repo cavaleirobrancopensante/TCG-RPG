@@ -44,6 +44,12 @@ func _ready() -> void:
 	g.add_child(_name("Music volume"))
 	g.add_child(UIKit.volume_stepper())
 
+	# --- sound effects volume
+	g.add_child(_name("Sound effects"))
+	var sv := UIKit.volume_stepper(true)
+	sv.name = "SfxVolume"
+	g.add_child(sv)
+
 	# --- music follows the game
 	g.add_child(_name("Music follows the game"))
 	var auto := _check()

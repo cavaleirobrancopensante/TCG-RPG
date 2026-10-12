@@ -2369,15 +2369,17 @@ func test_redesign() -> void:
 	sk2.tapped = true
 	sk3.tapped = true
 	st.active = 1
-	st._run_list(1, CardDB.get_card("proto_s_exorcism")["effects"], null, [{"kind": "creature", "uid": sk1.uid}])
-	check(st.side(0).creatures.is_empty() and st.side(0).graveyard.size() == 3, "on Crusade: the target and every tapped Demon; skeletons are bodies and go to the graveyard")
+	check(st.target_specs(CardDB.get_card("proto_s_exorcism")).size() == 2, "on Crusade the exorcism takes a second target")
+	st._run_list(1, CardDB.get_card("proto_s_exorcism")["effects"], null, [{"kind": "creature", "uid": sk1.uid}, {"kind": "creature", "uid": sk2.uid}])
+	check(st.side(0).creatures == [sk3] and st.side(0).graveyard.size() == 2, "on Crusade: two Demons; skeletons are bodies and go to the graveyard")
 	st.realm = "peace"
 	var sk4 := st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
 	var sk5 := st._make_perm(0, "proto_a_skeleton", CardDB.get_card("proto_a_skeleton"))
 	st.side(0).creatures.append_array([sk4, sk5])
 	sk5.tapped = true
+	check(st.target_specs(CardDB.get_card("proto_s_exorcism")).size() == 1, "at Peace it takes one target")
 	st._run_list(1, CardDB.get_card("proto_s_exorcism")["effects"], null, [{"kind": "creature", "uid": sk4.uid}])
-	check(st.side(0).creatures == [sk5], "at Peace: only the target")
+	check(st.side(0).creatures == [sk3, sk5], "at Peace: only the target")
 	# a whole AI duel of the two prototype decks finishes
 	var d := DeckTools.proto_decks()
 	st = BattleState.new()

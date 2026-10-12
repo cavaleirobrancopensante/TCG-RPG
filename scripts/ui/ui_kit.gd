@@ -347,7 +347,7 @@ static func set_selected(b: Button, on: bool) -> void:
 
 ## Music volume as − 80% + buttons: a slider jumps to wherever a finger lands, so a swipe
 ## through a page could silence the music without anyone meaning to.
-static func volume_stepper() -> HBoxContainer:
+static func volume_stepper(sfx: bool = false) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.name = "Volume"
 	row.add_theme_constant_override("separation", 6)
@@ -356,13 +356,20 @@ static func volume_stepper() -> HBoxContainer:
 	val.custom_minimum_size.x = 64
 	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	val.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var show := func(): val.text = "%d%%" % roundi(Music.volume * 100.0)
+	var get_v := func() -> float: return Sfx.volume if sfx else Music.volume
+	var set_v := func(v: float):
+		if sfx:
+			Sfx.set_volume(v)
+			Sfx.play("clash")
+		else:
+			Music.set_volume(v)
+	var show := func(): val.text = "%d%%" % roundi(float(get_v.call()) * 100.0)
 	var down := button("−", func():
-		Music.set_volume(snappedf(Music.volume - 0.1, 0.1))
+		set_v.call(snappedf(float(get_v.call()) - 0.1, 0.1))
 		show.call(), TARGET_W)
 	down.name = "Down"
 	var up := button("+", func():
-		Music.set_volume(snappedf(Music.volume + 0.1, 0.1))
+		set_v.call(snappedf(float(get_v.call()) + 0.1, 0.1))
 		show.call(), TARGET_W)
 	up.name = "Up"
 	row.add_child(down)

@@ -218,6 +218,11 @@ func _draw() -> void:
 
 	# --- ground shadow ---
 	draw_colored_polygon(Tapestry.ellipse(feet + Vector2(0, 2), 30, 6, 16), Color(0, 0, 0, 0.25 * a))
+	if status.has("possessed"):
+		# a demon on him: dark smoke rising round the figure
+		for k in 3:
+			draw_colored_polygon(Tapestry.ellipse(feet + Vector2(0, -38 - k * 6), 30 - k * 4, 46 - k * 6, 20), Color(0.35, 0.0, 0.12, 0.24 * a))
+		draw_colored_polygon(Tapestry.ellipse(feet + Vector2(0, 2), 34, 8, 16), Color(0.45, 0.0, 0.1, 0.45 * a))
 
 	# --- the figure rises ---
 	var rise := clampf((summon_t - 0.3) / 0.7, 0.0, 1.0)

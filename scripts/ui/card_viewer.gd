@@ -320,6 +320,12 @@ func _fill_info(e: Dictionary) -> void:
 		fl.custom_minimum_size.x = 300
 		fl.add_theme_font_override("font", Tapestry.font("italic"))
 		info_box.add_child(fl)
+	# on the battlefield: what is on it (a possession, equipment) and its stats now
+	for note in e.get("notes", []):
+		var nl := CardView.RulesText.new(String(note), UIKit.FS_BODY - 1, UIKit.GOLD)
+		nl.name = "BoardNote"
+		nl.custom_minimum_size.x = 300
+		info_box.add_child(nl)
 	for kw in c.get("keywords", []):
 		if KEYWORDS.has(kw):
 			info_box.add_child(UIKit.label(I18n.t(KEYWORDS[kw]), UIKit.FS_SECONDARY, UIKit.DIM, true))

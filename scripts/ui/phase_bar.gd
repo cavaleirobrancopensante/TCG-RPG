@@ -23,7 +23,7 @@ const NOTES := {
 	"end": "The turn ends. Extra cards in hand are discarded.",
 }
 const DEFAULT_MINE := {"main1": true, "main2": true, "blockers": true}
-const DEFAULT_OPP := {"attackers": true, "blockers": true}
+const DEFAULT_OPP := {"attackers": true, "blockers": true, "end": true}
 const HOLD_TIME := 0.45          # seconds held for a long press
 const HOLD_SLOP := 14.0          # px a finger may wander and still tap
 
@@ -47,6 +47,12 @@ func _init() -> void:
 	size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	stops_mine = _load("stops_mine", DEFAULT_MINE)
 	stops_opp = _load("stops_opp", DEFAULT_OPP)
+	if not GameState.settings.get("stop_opp_end_1_58", false):
+		# 1.58: the opponent's end step stops for you by default (only when you can cast something)
+		stops_opp["end"] = true
+		GameState.set_setting("stop_opp_end_1_58", true)
+		if GameState.settings.has("stops_opp"):
+			GameState.set_setting("stops_opp", stops_opp.duplicate())
 	_chip = _Chip.new()
 	_chip.bar = self
 	_chip.pressed.connect(_on_chip)

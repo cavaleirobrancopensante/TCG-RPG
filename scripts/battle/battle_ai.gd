@@ -587,7 +587,7 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 			# a small bonus for each ally of that tribe that may die later
 			v += 0.25 * mini(4, st.count_kin(i, String(e.get("ally_subtype", ""))))
 	for e in c.get("effects", []):
-		if e.get("trigger") != trig:
+		if e.get("trigger") != trig or not st.spec_active(e):
 			continue
 		var t: String = e.get("target", "")
 		var a: String = e.get("action", "")
@@ -1143,10 +1143,10 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 			continue
 		if t == "own_grave_creature" and a != "regrow":
 			return [0.0, []]
+		if not st.spec_active(e):
+			continue            # a Peace or Crusade bonus that is off now: no target, no value
 		if e.has("condition") and not st.cond_ok(i, String(e["condition"]), source):
-			if BattleState.TARGET_CHOICE_TYPES.has(t):
-				return [0.0, []]
-			continue            # a bonus that does not apply now; the rest of the card may help
+			return [0.0, []]
 		var per := 1
 		if e.has("amount_per"):
 			per = st.count_kin(i, String(e["amount_per"]))
@@ -1242,6 +1242,8 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 				if t == "enemy_creature" or t == "enemy_demon":
 					var best_g := 0.0
 					for ref in st.valid_targets(i, e):
+						if targets.has(ref):
+							continue      # a second target must be another one
 						var z = st.find_perm(ref["uid"])
 						var g := _removal_gain(st, i, z, top) if z.is_creature() else _possession_gain(st, i, z)
 						if g > best_g:
@@ -1345,6 +1347,9 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 				v += 0.8 if chosen != null or not BattleState.TARGET_CHOICE_TYPES.has(t) else 0.0
 		if BattleState.TARGET_CHOICE_TYPES.has(t):
 			if chosen == null:
+				if e.get("distinct", false):
+					targets.append(null)      # a second target there is none for: the first still counts
+					continue
 				return [0.0, []]
 			targets.append(chosen)
 	return [v, targets]

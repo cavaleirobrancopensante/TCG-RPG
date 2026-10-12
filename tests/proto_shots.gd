@@ -71,6 +71,10 @@ func _ready() -> void:
 	await get_tree().create_timer(3.0).timeout
 	b.refresh()
 	await _shot("crusade")
+	# a possessed creature read on the board
+	b._show_board(1, host.uid)
+	await _shot("possessed")
+	b._close_preview()
 	# the viewer: a two-faced card in hand, then turned over
 	b._show_preview("", 2)
 	await _shot("viewer_front")

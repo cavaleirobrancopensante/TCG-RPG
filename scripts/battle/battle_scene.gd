@@ -765,6 +765,22 @@ func _draw() -> void:
 	Tapestry.draw_diaper(self, Rect2(0, mid_y, r.size.x, r.size.y - mid_y), Tapestry.field(pf) if pf != "lyceum" else Tapestry.ULTRA_DARK, Color(Tapestry.GILT, 0.45), 30)
 	UIKit.draw_sigil(self, ef, Vector2(r.size.x * 0.5, mid_y * 0.55), 64, Color(Tapestry.GILT, 0.18), 4)
 	UIKit.draw_sigil(self, pf, Vector2(r.size.x * 0.5, mid_y + (r.size.y - mid_y) * 0.25), 64, Color(Tapestry.GILT, 0.18), 4)
+	# Peace or Crusade washes over the whole field: pale morning light, or the red of the banners
+	if _realm_tint.a > 0.0:
+		draw_rect(r, _realm_tint)
+		if _realm_rays > 0.0:
+			# Peace: soft rays of light falling from the top
+			for k in 7:
+				var x0 := r.size.x * (k + 0.5) / 7.0
+				var ray := PackedVector2Array([Vector2(x0 - 18, 0), Vector2(x0 + 18, 0), Vector2(x0 + 90, r.size.y), Vector2(x0 - 30, r.size.y)])
+				draw_colored_polygon(ray, Color(1.0, 0.97, 0.85, 0.07 * _realm_rays))
+		if _realm_rays < 0.0:
+			# Crusade: red crosses on the banners' field
+			for k in 6:
+				var c := Vector2(r.size.x * (k + 0.5) / 6.0, mid_y * 0.5 if k % 2 == 0 else mid_y + (r.size.y - mid_y) * 0.4)
+				var a := -_realm_rays * 0.22
+				draw_rect(Rect2(c + Vector2(-5, -26), Vector2(10, 52)), Color(0.8, 0.08, 0.05, a))
+				draw_rect(Rect2(c + Vector2(-20, -10), Vector2(40, 10)), Color(0.8, 0.08, 0.05, a))
 	# earth under each rank of figures
 	for g in _grounds:
 		var fr := _local(g)
@@ -955,6 +971,10 @@ func _refresh_relics(i: int) -> void:
 			var host = st.find_perm(r.attached_to)
 			if host:
 				b.text += " → " + I18n.t(host.name)
+		if BattleState.is_demon(r):
+			b.text = "◈ " + b.text.substr(2)
+			b.add_theme_color_override("font_color", Color(0.5, 0.02, 0.1))
+			b.tooltip_text = I18n.t("A demon possession: hold to read it")
 		box.add_child(b)
 
 
@@ -1563,6 +1583,7 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				await _show_cast(e["id"], e["side"], 0.9)
 		"attack":
 			_ctx = _obj(int(e["uid"]))           # its attack trigger follows
+			Sfx.play("attack")
 			if figures.has(e["uid"]):
 				figures[e["uid"]].mark = "attack"
 				arrows.flash(_fig_center(figures[e["uid"]]), portrait_pos(1 - int(e["side"])), Color(Tapestry.VERMILION, 0.9), 1.6)
@@ -1606,6 +1627,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			else:
 				_log(_cap(I18n.t("%s takes %d damage.") % [whom, amt]))
 			var tpos := _ref_pos(tgt)
+			if src >= 0 and figures.has(src) and tgt["kind"] == "creature":
+				Sfx.play("clash")                # steel on steel
 			if src >= 0 and figures.has(src):
 				await figures[src].play_lunge(tpos)
 			else:
@@ -1652,6 +1675,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			_ctx = who                          # its death trigger follows
 			if not is_relic and k.get("card", {}).get("keywords", []).has("martyr"):
 				_martyr_pending += 1
+			if not is_relic:
+				Sfx.play("death")
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
 				_burst(f.global_position + _fsz() * 0.5, Factions.color(f.faction), 24)
@@ -1691,6 +1716,9 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				_float_text(kw, figures[e["uid"]].global_position + _fsz() * 0.5, Tapestry.GILT)
 				await _wait(0.25)
 		"attach":
+			var ak := _known_of(int(e["uid"]))
+			if String(ak.get("card", {}).get("subtype", "")).contains("Demon"):
+				Sfx.play("possess")
 			if e.get("possess", false):
 				_log(_cap(I18n.t("The demon leaves the dead body: %s now possesses %s.") % [_obj(int(e["uid"])), _obj(int(e.get("host", -1)))]))
 			else:
@@ -1702,6 +1730,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 					figures[int(e["host"])].sync(hp)
 		"realm":
 			_refresh_realm()
+			_realm_backdrop(String(e["realm"]))
+			Sfx.play("crusade" if String(e["realm"]) == "crusade" else "peace")
 			if e.get("begins", false):
 				_log(I18n.t("Peace begins. Two spells cast in one turn bring Crusade; a turn with none brings Peace back."))
 			elif String(e["realm"]) == "crusade":
@@ -1711,7 +1741,7 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				_log(I18n.t("No spell was cast last turn: Peace returns. The two-faced cards turn back."))
 				await _banner(I18n.t("Peace"))
 		"transform":
-			var old_name := I18n.t(String(_known.get(int(e["uid"]), {}).get("name", "")))
+			var old_name := _card_name(String(CardDB.get_card(String(e["id"])).get("transform", "")))
 			var tp = st.find_perm(int(e["uid"]))
 			if figures.has(int(e["uid"])) and tp:
 				var tf: SummonFigure = figures[int(e["uid"])]
@@ -1725,6 +1755,7 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 		"banished":
 			var bc := CardDB.get_card(String(e["id"]))
 			var bn := _card_name(String(e["id"]))
+			Sfx.play("exorcism")
 			if String(bc.get("subtype", "")).contains("Angel"):
 				_log(I18n.t("Immortal: %s is not destroyed. He returns to Heaven (exiled).") % bn)
 			else:
@@ -2247,7 +2278,7 @@ func _show_board(side_i: int, uid: int) -> void:
 	for p in st.side(side_i).creatures + st.side(side_i).relics:
 		if p.uid == uid:
 			start = entries.size()
-		var e := {"id": p.card_id, "foil": false, "uid": p.uid}
+		var e := {"id": p.card_id, "foil": false, "uid": p.uid, "notes": _board_notes(p)}
 		if p.is_token:
 			e["data"] = p.card
 		entries.append(e)
@@ -2359,7 +2390,7 @@ func _ask(head: String, body: String, yes_label: String, no_label: String, cb: C
 func _advance_targeting() -> void:
 	while chosen_targets.size() < target_specs.size():
 		var spec: Dictionary = target_specs[chosen_targets.size()]
-		var opts := st.valid_targets(0, spec)
+		var opts := _spec_options(spec)
 		if opts.is_empty():
 			chosen_targets.append(null)
 			continue
@@ -2531,11 +2562,19 @@ func _spec_prompt(spec: Dictionary) -> String:
 func _is_valid_target(ref: Dictionary) -> bool:
 	if mode != "target" or chosen_targets.size() >= target_specs.size():
 		return false
-	for v in st.valid_targets(0, target_specs[chosen_targets.size()]):
+	for v in _spec_options(target_specs[chosen_targets.size()]):
 		if v.get("kind") == ref.get("kind") and v.get("uid", -1) == ref.get("uid", -1) and v.get("side", -1) == ref.get("side", -1) \
 				and v.get("id", "") == ref.get("id", ""):
 			return true
 	return false
+
+
+## The legal choices for a target spec; a "distinct" one can't take a target already chosen.
+func _spec_options(spec: Dictionary) -> Array:
+	var opts := st.valid_targets(0, spec)
+	if spec.get("distinct", false):
+		opts = opts.filter(func(o): return not chosen_targets.has(o))
+	return opts
 
 
 func _choose_target(ref: Dictionary) -> void:
@@ -3372,9 +3411,47 @@ func _show_result() -> void:
 
 # =================================================================== Peace and Crusade
 
+var _realm_tint := Color(0, 0, 0, 0)    # the field's wash for Peace or Crusade
+var _realm_rays := 0.0                  # 1: Peace's light, -1: Crusade's crosses
+var _realm_shown := ""
+var _realm_tw: Tween
+
+
+## Turn the battlefield's look to the state (eased, so the change is seen).
+func _realm_backdrop(realm: String) -> void:
+	if realm == _realm_shown:
+		return
+	_realm_shown = realm
+	var to_c := Color(0, 0, 0, 0)
+	var to_r := 0.0
+	if realm == "peace":
+		to_c = Color(0.92, 0.96, 1.0, 0.16)
+		to_r = 1.0
+	elif realm == "crusade":
+		to_c = Color(0.62, 0.08, 0.04, 0.26)
+		to_r = -1.0
+	if _realm_tw != null and _realm_tw.is_valid():
+		_realm_tw.kill()
+	_realm_tw = create_tween().set_parallel(true)
+	_realm_tw.tween_method(_set_realm_tint, _realm_tint, to_c, 0.8)
+	_realm_tw.tween_method(_set_realm_rays, _realm_rays, to_r, 0.8)
+
+
+func _set_realm_tint(c: Color) -> void:
+	_realm_tint = c
+	queue_redraw()
+
+
+func _set_realm_rays(v: float) -> void:
+	_realm_rays = v
+	queue_redraw()
+
+
 func _refresh_realm() -> void:
 	if realm_mark == null or st == null:
 		return
+	if busy == false and st.realm != _realm_shown:
+		_realm_backdrop(st.realm)
 	realm_mark.visible = st.realm != ""
 	if realm_mark.realm != st.realm:
 		realm_mark.realm = st.realm
@@ -3432,3 +3509,40 @@ class _RealmMark extends Button:
 						var a := TAU * q / 10.0
 						pts.append(at + n * r * 0.17 + n * cos(a) * r * 0.17 + n.orthogonal() * sin(a) * r * 0.07)
 					Tapestry.ink_poly(self, pts, leaf, 1.0, ink)
+
+
+## What the card viewer tells about a permanent in play, beyond its card: possessions and
+## equipment on a creature (what they give), what a possession holds, its stats now.
+func _board_notes(p) -> Array:
+	var out: Array = []
+	if p.is_creature():
+		for a in st.attachments_of(p):
+			var g: Dictionary = a.card.get("grants", {})
+			var parts: Array = []
+			if int(g.get("power", 0)) != 0 or int(g.get("toughness", 0)) != 0:
+				parts.append("%+d/%+d" % [int(g.get("power", 0)), int(g.get("toughness", 0))])
+			for k in g.get("keywords", []):
+				parts.append(I18n.t(_kw_name(String(k))))
+			if a.card.get("steal", false):
+				parts.append(I18n.t("controlled by %s") % (I18n.t("you") if a.owner == 0 else st.side(a.owner).name))
+			var what := I18n.t("Possessed by %s") if BattleState.is_demon(a) else I18n.t("Carries %s")
+			var line := what % I18n.t(a.name)
+			if not parts.is_empty():
+				line += ": " + ", ".join(parts)
+			if a.card.get("possess", false):
+				line += ". " + I18n.t("If he dies, the demon moves to another creature of its master")
+			out.append(line + ".")
+		if p.owner != p.base_owner:
+			out.append(I18n.t("Taken from %s: he goes back when the possession is gone.") % (I18n.t("you") if p.base_owner == 0 else st.side(p.base_owner).name))
+		var pw: int = p.power()
+		var tg: int = p.toughness()
+		if pw != int(p.card.get("power", 0)) or tg != int(p.card.get("toughness", 0)) or p.damage > 0:
+			var now := I18n.t("Now %d/%d") % [pw, tg]
+			if p.damage > 0:
+				now += " " + I18n.t("(%d damage)") % p.damage
+			out.append(now + ".")
+	elif p.attached_to >= 0:
+		var h = st.find_perm(p.attached_to)
+		if h:
+			out.append((I18n.t("Possesses %s.") if BattleState.is_demon(p) else I18n.t("On %s.")) % I18n.t(h.name))
+	return out
