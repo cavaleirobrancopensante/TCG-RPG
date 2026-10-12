@@ -577,7 +577,13 @@ func _test_vs_flying() -> void:
 	check(st.find_perm(angel.uid) == null, "vs_flying: 4 damage to a flier")
 
 
+func _test_overflow_gold() -> void:
+	check(Economy.overflow_gold(0) == 0 and Economy.overflow_gold(-3) == 0, "no surplus, no gold")
+	check(Economy.overflow_gold(5) == Economy.income(10) and Economy.overflow_gold(30) == Economy.income(20), "2 gold per point over full life, at most 10 points")
+
+
 func _test_tribes() -> void:
+	_test_overflow_gold()
 	_test_vs_flying()
 	_test_legend_charge()
 	_test_counters()

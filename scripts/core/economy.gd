@@ -107,6 +107,14 @@ static func spoils_card_chance() -> float:
 
 
 ## Gold won, after the difficulty's measure.
+## Gold for ending a won duel above your maximum life (lifelink, healing): 2 per point
+## over, for at most 10 points.
+static func overflow_gold(over: int) -> int:
+	if over <= 0:
+		return 0
+	return income(2 * mini(over, 10))
+
+
 static func income(g: int) -> int:
 	return int(round(g * float(GameState.diff("income"))))
 

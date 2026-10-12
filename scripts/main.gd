@@ -1395,7 +1395,9 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 	world.grace = 3.0
 	GameState.day += 1
 	var lvl := int(info.get("level", 1))
-	# wounds carry over: you leave the duel with the life you had left
+	# wounds carry over: you leave the duel with the life you had left (any surplus is lost,
+	# but a won duel pays a little gold for it)
+	var over := int(info.get("life_left", 0)) - GameState.max_life()
 	GameState.life = clampi(int(info.get("life_left", GameState.life)), 1, GameState.max_life())
 	if won:
 		var lair_id: String = info.get("lair", "")
@@ -1438,6 +1440,10 @@ func _on_battle_finished(won: bool, info: Dictionary) -> void:
 			GameState.add_card(spoil)
 			cards.append(spoil)
 			parts.append(I18n.t("%s, taken from the loser's deck") % I18n.t(CardDB.get_card(spoil).get("name", spoil)))
+		var og := Economy.overflow_gold(over)
+		if og > 0:
+			GameState.add_gold(og)
+			parts.append(I18n.t("%d gold for ending the duel above your full life") % og)
 		if parts.is_empty():
 			parts.append(I18n.t("nothing but the road ahead"))
 		var vtext := I18n.t("You gain: %s") % ", ".join(parts)
@@ -2110,6 +2116,7 @@ func _story_battle_finished(won: bool, info: Dictionary) -> void:
 	_pause_world(false)
 	world.grace = 3.0
 	GameState.day += 1
+	var over := int(info.get("life_left", 0)) - GameState.max_life()
 	GameState.life = clampi(int(info.get("life_left", GameState.life)), 1, GameState.max_life())
 	var arc := String(info["story"])
 	if won:
@@ -2120,11 +2127,16 @@ func _story_battle_finished(won: bool, info: Dictionary) -> void:
 			world.refresh_decor()
 		var gained := Hero.duel_xp(int(info.get("level", 1)), lair_id != "")
 		GameState.gain_xp(gained)
+		var og := Economy.overflow_gold(over)
+		var extra := ""
+		if og > 0:
+			GameState.add_gold(og)
+			extra = " " + I18n.t("%d gold for ending the duel above your full life.") % og
 		GameState.save_game()
 		_update_hud()
 		var o := Story.objective(arc)
 		_story_finish(arc, String(info.get("story_place", "")), String(o.get("foe", "")), o.get("done", []),
-			I18n.t("You gain %d experience for the duel.") % gained)
+			I18n.t("You gain %d experience for the duel.") % gained + extra)
 	elif not info.get("fled", false):
 		_game_over()
 		return

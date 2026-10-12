@@ -4745,5 +4745,7 @@
  "Charge: when it attacks, for each other attacking Knight choose one (trample, first strike, vigilance, lifelink, +1/+0); all your Knights gain them until end of turn.": "Investida: quando ataca, para cada outro Cavaleiro atacante escolha um (atropelar, iniciativa, vigilância, vínculo com a vida, +1/+0); todos os seus Cavaleiros ganham até o fim do turno.",
  "Legendary: you may have only one with this name on the battlefield at a time.": "Lendária: você só pode ter uma com este nome no campo de batalha.",
  "Everyone starts duels with 15 life (and Devotion adds more to yours) and draws 7 cards.": "Todos começam os duelos com 15 de vida (a Devoção aumenta a sua) e compram 7 cartas.",
- "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.": "Ensanguentado: Enquanto você tiver 5 ou menos de vida, Carniçal Esfomeado recebe +2/+1."
+ "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.": "Ensanguentado: Enquanto você tiver 5 ou menos de vida, Carniçal Esfomeado recebe +2/+1.",
+ "%d gold for ending the duel above your full life": "%d de ouro por terminar o duelo acima da sua vida máxima",
+ "%d gold for ending the duel above your full life.": "%d de ouro por terminar o duelo acima da sua vida máxima."
 }

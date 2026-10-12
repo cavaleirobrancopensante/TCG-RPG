@@ -637,3 +637,8 @@ under *Export → Resources → Filters to export non-resource files*.
 - Bloodied still means 5 or less life. Famished Ghoul gets +2/+1 when Bloodied (was +1/+1).
 - The web version keeps its music beside the page and fetches each piece as it plays: the game
   file went from 104 MB to 25 MB, so it opens much faster, and GitHub publishes it again.
+
+## Surplus life pays (1.47)
+
+- Win a duel above your full life (lifelink, healing) and the surplus, which never carries to the
+  road, pays 2 gold per point over, for at most 10 points (20 gold), scaled by difficulty.
