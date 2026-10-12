@@ -714,17 +714,26 @@ func _resolve_card(it: Dictionary) -> void:
 			var p := _make_perm(i, id, c)
 			s.creatures.append(p)
 			emit({"type": "summon", "side": i, "uid": p.uid, "id": p.card_id, "from_stack": true})
-			_run_effects(i, p.card, "enter", p, targets, true)
+			if s.interactive:
+				_enter_for_player(i, p, _enter_list(p.card), targets)
+			else:
+				_run_effects(i, p.card, "enter", p, targets, true)
 			if phase != "over":
 				_entered(p)
 			if overclock and phase != "over":
 				emit({"type": "overclock", "side": i, "uid": p.uid})
-				_run_list(i, c.get("overclock", {}).get("effects", []), p, oc_targets, true)
+				if s.interactive:
+					_enter_for_player(i, p, c.get("overclock", {}).get("effects", []), [])
+				else:
+					_run_list(i, c.get("overclock", {}).get("effects", []), p, oc_targets, true)
 		"relic":
 			var r := _make_perm(i, id, c)
 			s.relics.append(r)
 			emit({"type": "relic", "side": i, "uid": r.uid, "id": id, "from_stack": true})
-			_run_effects(i, c, "enter", r, targets, true)
+			if s.interactive:
+				_enter_for_player(i, r, _enter_list(c), targets)
+			else:
+				_run_effects(i, c, "enter", r, targets, true)
 			if find_perm(r.uid):
 				_entered(r)
 			if c.get("attach", "") == "aura" and r.attached_to < 0 and find_perm(r.uid):
@@ -734,7 +743,10 @@ func _resolve_card(it: Dictionary) -> void:
 				emit({"type": "die", "uid": r.uid, "side": i, "sacrifice": false})
 			if overclock and phase != "over":
 				emit({"type": "overclock", "side": i, "uid": r.uid})
-				_run_list(i, c.get("overclock", {}).get("effects", []), r, oc_targets, true)
+				if s.interactive:
+					_enter_for_player(i, r, c.get("overclock", {}).get("effects", []), [])
+				else:
+					_run_list(i, c.get("overclock", {}).get("effects", []), r, oc_targets, true)
 		_:
 			var cast_list: Array = []
 			for e in c.get("effects", []):
@@ -1318,6 +1330,50 @@ func target_specs(card: Dictionary, overclock: bool = false) -> Array:
 const FIGHTER_SPEC := {"action": "fight_with", "target": "own_creature"}
 
 
+## What a person chooses while casting: a spell's targets, an aura's creature. A creature's or
+## relic's "when it enters" targets are chosen after it is on the battlefield (so it can choose
+## itself), as in Magic: see _enter_for_player.
+func cast_specs(card: Dictionary, overclock: bool = false) -> Array:
+	if card.get("type") == "spell":
+		return target_specs(card, overclock)
+	var out: Array = []
+	for e in card.get("effects", []):
+		if e.get("trigger") == "enter" and e.get("action") == "attach" and spec_active(e) \
+				and TARGET_CHOICE_TYPES.has(e.get("target", "")):
+			out.append(e)
+	return out
+
+
+static func _enter_list(c: Dictionary) -> Array:
+	var out: Array = []
+	for e in c.get("effects", []):
+		if e.get("trigger") == "enter":
+			out.append(e)
+	return out
+
+
+## A person's permanent has entered: its enter effects in order. An aura's attach uses the
+## target chosen when cast; any other chosen target waits for the person (trigger_owed).
+func _enter_for_player(i: int, p: Perm, list: Array, cast_targets: Array) -> void:
+	var ti := 0
+	for e in list:
+		if not spec_active(e) or phase == "over":
+			continue
+		var t := String(e.get("target", ""))
+		var targeted: bool = TARGET_CHOICE_TYPES.has(t) or e.get("action") == "fight"
+		if e.get("action") == "attach" and TARGET_CHOICE_TYPES.has(t):
+			var ref = cast_targets[ti] if ti < cast_targets.size() else null
+			ti += 1
+			if typeof(ref) == TYPE_DICTIONARY and not _ref_still_valid(i, e, ref):
+				ref = null
+			resolve_effect(i, e, p, ref)
+		elif targeted and not valid_targets_for(i, p, e).is_empty():
+			side(i).trigger_owed.append({"uid": p.uid, "e": e})
+			emit({"type": "owe_trigger", "side": i, "uid": p.uid})
+		else:
+			resolve_effect(i, e, p, null)
+
+
 func _protected_from_current(p: Perm) -> bool:
 	return p.has_kw("sanctified") and (cur_faction == "abyss" or cur_faction2 == "abyss")
 
@@ -1634,13 +1690,16 @@ func _transform(p: Perm) -> void:
 
 
 ## The player's target for a waiting trigger (null: none / let the game pick).
-func trigger_choose(i: int, ref) -> void:
+func trigger_choose(i: int, ref, fighter_uid: int = -1) -> void:
 	var s := side(i)
 	if s.trigger_owed.is_empty():
 		return
 	var t: Dictionary = s.trigger_owed.pop_front()
 	var src := find_perm(int(t["uid"]))
 	var e: Dictionary = t["e"]
+	if fighter_uid >= 0:
+		e = e.duplicate()
+		e["_fighter"] = fighter_uid
 	if src:
 		_with_source(src.card)
 	resolve_effect(i, e, src, ref)

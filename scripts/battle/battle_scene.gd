@@ -1410,17 +1410,42 @@ func _resolve_owed() -> void:
 		var t: Dictionary = me.trigger_owed[0]
 		var src = st.find_perm(int(t["uid"]))
 		var e: Dictionary = t["e"]
-		var opts: Array = st.valid_targets_for(0, src, e) if src else st.valid_targets(0, e)
-		opts = opts.filter(func(o): return o.get("kind") == "creature")
-		if opts.is_empty():
-			st.trigger_choose(0, null)
-			return
-		var ids: Array = []
-		for o in opts:
-			ids.append(st.find_perm(int(o["uid"])).card_id)
 		var head := I18n.t(src.name) if src else I18n.t("Choose a target")
-		var pick = await _pick_cards(head, I18n.t("Choose the target: %s") % _spec_prompt(e), ids)
-		st.trigger_choose(0, opts[clampi(int(pick), 0, opts.size() - 1)])
+		var fighter := -1
+		if e.get("action") == "fight":
+			# first your creature that fights (it may be the one that just entered)
+			if me.creatures.is_empty():
+				st.trigger_choose(0, null)
+				return
+			var mine_ids: Array = me.creatures.map(func(q): return q.card_id)
+			var fp = await _pick_cards(head, I18n.t("Choose your creature that fights."), mine_ids)
+			fighter = me.creatures[clampi(int(fp), 0, me.creatures.size() - 1)].uid
+		var opts: Array = st.valid_targets_for(0, src, e) if src else st.valid_targets(0, e)
+		var cards: Array = []
+		var refs: Array = []
+		for o in opts:
+			if o.get("kind") == "creature" or o.get("kind") == "relic":
+				cards.append(st.find_perm(int(o["uid"])).card_id)
+				refs.append(o)
+			elif o.get("kind") == "grave":
+				cards.append(String(o["id"]))
+				refs.append(o)
+		var player_ref = null
+		for o in opts:
+			if o.get("kind") == "player":
+				player_ref = o
+		if player_ref != null:
+			var at_player := refs.is_empty()
+			if not at_player:
+				at_player = await _ask_two(head, I18n.t("Choose the target: %s") % _spec_prompt(e), I18n.t("A creature"), I18n.t("%s himself") % st.side(1).name)
+			if at_player:
+				st.trigger_choose(0, player_ref, fighter)
+				return
+		if refs.is_empty():
+			st.trigger_choose(0, null, fighter)
+			return
+		var pick = await _pick_cards(head, I18n.t("Choose the target: %s") % _spec_prompt(e), cards)
+		st.trigger_choose(0, refs[clampi(int(pick), 0, refs.size() - 1)], fighter)
 		return
 	if not me.possess_owed.is_empty():
 		var auid := int(me.possess_owed[0])
@@ -2349,7 +2374,7 @@ func _begin_play(idx: int) -> void:
 
 func _start_targets(c: Dictionary) -> void:
 	st._with_source(c)
-	target_specs = st.target_specs(c, pending_overclock)
+	target_specs = st.cast_specs(c, pending_overclock)
 	chosen_targets = []
 	_advance_targeting()
 

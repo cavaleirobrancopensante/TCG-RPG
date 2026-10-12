@@ -769,3 +769,10 @@ live in data/cards/proto.json and are outside every pool (no drafts, shops or ca
   creature, then the attacker, and again with the next. The attacker deals lethal damage to each
   blocker in order and the rest to the last one (with trample, the rest to you).
 - While blocking, tap an enemy creature to read it, or tap your chosen creature a second time.
+
+## "When it enters" targets after it enters (1.61)
+
+- A creature or relic you cast no longer asks for its "when it enters" targets from your hand.
+  It goes onto the battlefield first, then you choose, so it can choose itself (the Cave Bear of
+  the Tors and the Spearman of the Greenwood can fight with their own bodies). A fight asks for
+  your creature first, then the enemy. Auras still choose their creature as they are cast.
