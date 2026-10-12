@@ -57,6 +57,7 @@ func _ready() -> void:
 	await _test_cancel_abilities(b)
 	await _test_ability_narration(b)
 	await _test_narration_lines(b)
+	await _test_enter_trigger(b)
 	GameState.delete_slot(SLOT)
 	if failures.is_empty():
 		print("duel ui test ok")
@@ -383,3 +384,40 @@ func _find(b: BattleScene, a: String, c: String) -> String:
 		if line.contains(a) and (c == "" or line.contains(c)):
 			return line
 	return ""
+
+
+## A creature's "when it enters" target is chosen on the board once it has entered (it may be
+## itself), with the same confirm question as a spell.
+func _test_enter_trigger(b: BattleScene) -> void:
+	print("enter trigger targets chosen on the board")
+	await _stage(b)
+	var st := b.st
+	var me := st.side(0)
+	for l in me.lands:
+		l["tapped"] = false
+	for n in 4:
+		me.lands.append({"id": "land_wild", "color": "G", "colors": ["G"], "tapped": false})
+	me.hand = ["wild_r_013"]
+	var foe: BattleState.Perm = st.side(1).creatures[0]
+	b._begin_play(0)
+	var guard := 0
+	while b.mode != "target" and guard < 200:
+		guard += 1
+		if b.waiting_priority and not b.busy:
+			b._on_main()
+		await _wait(0.05)
+	check(b.mode == "target" and b.pending_trigger >= 0, "the Cave Bear entered and now asks for its fighter")
+	var bear = st.find_perm(b.pending_trigger)
+	check(bear != null and bear.card_id == "wild_r_013", "the Cave Bear is on the battlefield while choosing")
+	if bear == null:
+		return
+	b._on_figure_tapped(b.figures[bear.uid])
+	await _frames(2)
+	b._on_figure_tapped(b.figures[foe.uid])
+	await _frames(3)
+	var conf: Button = b.find_child("ConfirmTarget", true, false)
+	check(conf != null and b.find_child("CancelCast", true, false) == null, "confirm asked, with no Cancel (the trigger must happen)")
+	if conf:
+		conf.pressed.emit()
+	await _settle(b)
+	check(st.find_perm(foe.uid) == null, "the Cave Bear itself fought and killed the enemy")

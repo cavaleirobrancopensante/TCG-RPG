@@ -19,6 +19,8 @@ var figures := {}               # uid -> SummonFigure
 var busy := false
 var mode := "idle"              # idle | attack | block | target
 var sel_attackers: Array = []
+var pending_trigger := -1        # uid of our permanent whose "when it enters/turns over" targets we choose
+signal _trigger_done
 var pending_blocks := {}        # attacker uid -> Array of blocker uids (several may block one)
 var block_pick := -1
 var target_specs: Array = []
@@ -685,6 +687,8 @@ func persistent_arrows() -> Array:
 		var from := Vector2.ZERO
 		if not pending_ability.is_empty() and figures.has(int(pending_ability[0])):
 			from = _fig_center(figures[int(pending_ability[0])])
+		elif pending_trigger >= 0 and figures.has(pending_trigger):
+			from = _fig_center(figures[pending_trigger])
 		elif pending_hand_idx >= 0 and pending_hand_idx < hand_box.get_child_count():
 			from = (hand_box.get_child(pending_hand_idx) as Control).get_global_rect().get_center()
 		if from != Vector2.ZERO:
@@ -1244,7 +1248,7 @@ func _update_controls() -> void:
 	phase_bar.set_state(_bar_key(), mine)
 	btn_alt.visible = false
 	btn_main.visible = mode != "target"
-	btn_cancel.visible = mode == "target"
+	btn_cancel.visible = mode == "target" and pending_trigger == -1
 	btn_cancel.disabled = busy
 	btn_main.disabled = busy
 	btn_alt.disabled = busy
@@ -1410,42 +1414,17 @@ func _resolve_owed() -> void:
 		var t: Dictionary = me.trigger_owed[0]
 		var src = st.find_perm(int(t["uid"]))
 		var e: Dictionary = t["e"]
-		var head := I18n.t(src.name) if src else I18n.t("Choose a target")
-		var fighter := -1
-		if e.get("action") == "fight":
-			# first your creature that fights (it may be the one that just entered)
-			if me.creatures.is_empty():
-				st.trigger_choose(0, null)
-				return
-			var mine_ids: Array = me.creatures.map(func(q): return q.card_id)
-			var fp = await _pick_cards(head, I18n.t("Choose your creature that fights."), mine_ids)
-			fighter = me.creatures[clampi(int(fp), 0, me.creatures.size() - 1)].uid
-		var opts: Array = st.valid_targets_for(0, src, e) if src else st.valid_targets(0, e)
-		var cards: Array = []
-		var refs: Array = []
-		for o in opts:
-			if o.get("kind") == "creature" or o.get("kind") == "relic":
-				cards.append(st.find_perm(int(o["uid"])).card_id)
-				refs.append(o)
-			elif o.get("kind") == "grave":
-				cards.append(String(o["id"]))
-				refs.append(o)
-		var player_ref = null
-		for o in opts:
-			if o.get("kind") == "player":
-				player_ref = o
-		if player_ref != null:
-			var at_player := refs.is_empty()
-			if not at_player:
-				at_player = await _ask_two(head, I18n.t("Choose the target: %s") % _spec_prompt(e), I18n.t("A creature"), I18n.t("%s himself") % st.side(1).name)
-			if at_player:
-				st.trigger_choose(0, player_ref, fighter)
-				return
-		if refs.is_empty():
-			st.trigger_choose(0, null, fighter)
-			return
-		var pick = await _pick_cards(head, I18n.t("Choose the target: %s") % _spec_prompt(e), cards)
-		st.trigger_choose(0, refs[clampi(int(pick), 0, refs.size() - 1)], fighter)
+		# chosen on the board like a spell's targets, then confirmed: your creature first for a fight
+		target_specs = ([BattleState.FIGHTER_SPEC] if e.get("action") == "fight" else []) + [e]
+		chosen_targets = []
+		pending_trigger = src.uid if src else -2
+		pending_hand_idx = -1
+		pending_ability = []
+		busy = false
+		_log(_cap(I18n.t("%s: choose its target.") % (_obj(src.uid) if src else I18n.t("A trigger"))), false)
+		_advance_targeting()
+		await _trigger_done
+		busy = true
 		return
 	if not me.possess_owed.is_empty():
 		var auid := int(me.possess_owed[0])
@@ -2438,7 +2417,9 @@ func _advance_targeting() -> void:
 		if spec.get("target") == "own_grave_creature":
 			var gids: Array = opts.map(func(o): return o["id"])
 			var gi = await _pick_cards(I18n.t("Return a creature"), I18n.t("Choose a creature card from your graveyard."), gids, "one", true)
-			if int(gi) < 0:
+			if int(gi) < 0 and pending_trigger != -1:
+				gi = 0                   # a trigger must take a target
+			elif int(gi) < 0:
 				_cancel_targeting()
 				return
 			chosen_targets.append(opts[int(gi)])
@@ -2465,6 +2446,21 @@ func _advance_targeting() -> void:
 			_advance_targeting()
 			return
 	mode = "idle"
+	if pending_trigger != -1:
+		var tg2: Array = chosen_targets.duplicate()
+		var fighter := -1
+		if target_specs.size() > 1 and String(target_specs[0].get("action", "")) == "fight_with":
+			var fr = tg2.pop_front()
+			if typeof(fr) == TYPE_DICTIONARY:
+				fighter = int(fr.get("uid", -1))
+		var ref = tg2[0] if not tg2.is_empty() else null
+		pending_trigger = -1
+		target_specs = []
+		chosen_targets = []
+		st.trigger_choose(0, ref, fighter)
+		refresh()
+		_trigger_done.emit()
+		return
 	if not pending_ability.is_empty():
 		var ab: Array = pending_ability
 		pending_ability = []
@@ -2507,6 +2503,8 @@ func _confirm_targets() -> String:
 		what = I18n.t("Use %s's ability on %s?") % [_obj(int(pending_ability[0])), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_hand_idx >= 0 and pending_hand_idx < st.side(0).hand.size():
 		what = I18n.t("Cast %s on %s?") % [_card_name(st.side(0).hand[pending_hand_idx]), _refs_text(chosen_targets.filter(func(t): return t != null))]
+	elif pending_trigger >= 0:
+		what = I18n.t("%s: target %s?") % [_obj(pending_trigger), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	var lb := UIKit.label(_cap(what), UIKit.FS_BODY, UIKit.TEXT, true)
 	lb.custom_minimum_size.x = 420
 	v.add_child(lb)
@@ -2517,7 +2515,10 @@ func _confirm_targets() -> String:
 		veil.queue_free()
 		_targets_answered.emit("cancel"), 120)
 	stop.name = "CancelCast"
-	row.add_child(stop)
+	if pending_trigger == -1:
+		row.add_child(stop)         # a trigger must happen: it can only change its target
+	else:
+		stop.queue_free()
 	var back := _btn(I18n.t("Change target"), func():
 		veil.queue_free()
 		_targets_answered.emit("change"), 180)
@@ -2548,7 +2549,7 @@ func _confirm_targets() -> String:
 ## been paid yet (BattleState.play() and activate() pay the mana, life, taps and sacrifices only
 ## once the targets are given), so the card simply stays in hand and nothing goes on the stack.
 func _cancel_targeting() -> void:
-	if busy:
+	if busy or pending_trigger != -1:
 		return
 	var what := ""
 	if pending_hand_idx >= 0 and pending_hand_idx < st.side(0).hand.size():

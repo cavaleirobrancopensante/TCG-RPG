@@ -776,3 +776,9 @@ live in data/cards/proto.json and are outside every pool (no drafts, shops or ca
   It goes onto the battlefield first, then you choose, so it can choose itself (the Cave Bear of
   the Tors and the Spearman of the Greenwood can fight with their own bodies). A fight asks for
   your creature first, then the enemy. Auras still choose their creature as they are cast.
+
+## Enter and turn-over targets on the board (1.62)
+
+- "When it enters" targets (and the Inquisitors' judgement when Crusade begins) are chosen on the
+  battlefield like a spell's: tap the target, an arrow points at it, then Confirm or Change target.
+  There is no Cancel: the creature is already in play and its ability must happen.
