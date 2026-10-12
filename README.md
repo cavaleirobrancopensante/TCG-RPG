@@ -705,3 +705,8 @@ under *Export → Resources → Filters to export non-resource files*.
 
 - Your hand, library and graveyard icons sit on their own row under your portrait, so the column
   beside the hand stays narrow and the hand has room to spread to the left.
+
+## Rarity colours (1.56)
+
+- The rarity gem on each card follows Magic: black for common, silver for uncommon, gold for rare,
+  orange for mythic (commons were grey before, easy to mistake for uncommon).
