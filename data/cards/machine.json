@@ -1156,10 +1156,13 @@
         "trigger": "upkeep",
         "action": "damage",
         "amount": 1,
-        "target": "enemy_creature"
+        "target": "enemy_creature",
+        "vs_flying": {
+          "amount": 2
+        }
       }
     ],
-    "text": "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature.",
+    "text": "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature. If that creature has flying, it deals 2 damage instead.",
     "flavor": "It crackles once each dawn, and something nearby flinches.",
     "art": "res://art/cards/machine_u_010.webp"
   },

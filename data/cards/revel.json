@@ -334,7 +334,10 @@
         "action": "damage",
         "target": "enemy_creature",
         "amount": 1,
-        "trigger": "cast"
+        "trigger": "cast",
+        "vs_flying": {
+          "amount": 3
+        }
       },
       {
         "action": "damage",
@@ -344,7 +347,7 @@
         "condition": "carouse"
       }
     ],
-    "text": "Firecracker Garland deals 1 damage to target enemy creature. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.",
+    "text": "Firecracker Garland deals 1 damage to target enemy creature. If that creature has flying, it deals 3 damage instead. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.",
     "flavor": "Strung across the square for the feast day, lit one at a time, aimed carelessly.",
     "art": "res://art/cards/revel_c_014.webp"
   },

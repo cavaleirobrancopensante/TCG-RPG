@@ -712,7 +712,7 @@
       "generic": 1
     },
     "power": 2,
-    "toughness": 1,
+    "toughness": 2,
     "keywords": [],
     "effects": [
       {
@@ -736,8 +736,8 @@
       "B": 1,
       "generic": 3
     },
-    "power": 2,
-    "toughness": 2,
+    "power": 3,
+    "toughness": 3,
     "keywords": [],
     "effects": [
       {

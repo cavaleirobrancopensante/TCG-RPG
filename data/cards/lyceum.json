@@ -514,13 +514,16 @@
         "effects": [
           {
             "action": "tap",
-            "target": "enemy_creature"
+            "target": "enemy_creature",
+            "vs_flying": {
+              "action": "freeze"
+            }
           }
         ],
-        "text": "{2}, Tap: Tap target enemy creature."
+        "text": "{2}, Tap: Tap target enemy creature. If that creature has flying, freeze it instead. (It doesn't untap during its controller's next untap step.)"
       }
     ],
-    "text": "{2}, Tap: Tap target enemy creature.",
+    "text": "{2}, Tap: Tap target enemy creature. If that creature has flying, freeze it instead. (It doesn't untap during its controller's next untap step.)",
     "flavor": "Stretched across the harbour mouth at dusk, it teaches impatient captains to wait.",
     "art": "res://art/cards/lyceum_c_020.webp"
   },

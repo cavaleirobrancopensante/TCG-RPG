@@ -4239,7 +4239,6 @@
  "Return target enemy creature to its owner's hand. Tax 1. (The enemy player's next non-land card costs {1} more.)": "Devolva a criatura inimiga alvo à mão de seu dono. Tributo 1. (A próxima carta do jogador inimigo que não seja terreno custa {1} a mais.)",
  "{1}, Tap: Foresight 1.": "{1}, Virar: Previsão 1.",
  "{1}, Tap: Foresight 1. (Look at the top card of your library. You may put that card on the bottom.)": "{1}, Virar: Previsão 1. (Olhe a carta do topo do seu grimório. Você pode colocá-la no fundo.)",
- "{2}, Tap: Tap target enemy creature.": "{2}, Virar: Vire a criatura inimiga alvo.",
  "Spear of the Second Rank gets +1/+0 for each other Hoplite you control.": "Lança da Segunda Fileira recebe +1/+0 para cada outro Hoplita que você controla.",
  "Whenever another Philosopher enters under your control, foresight 1. (Look at the top card of your library. You may put that card on the bottom.)": "Sempre que outro Filósofo entrar sob seu controle, previsão 1. (Olhe a carta do topo do seu grimório. Você pode colocá-la no fundo.)",
  "When Questioner in the Agora enters, tax 1. (The enemy player's next non-land card costs {1} more.)": "Quando Inquiridor da Ágora entrar, tributo 1. (A próxima carta do jogador inimigo que não seja terreno custa {1} a mais.)",
@@ -4301,7 +4300,6 @@
  "Sacrifice a Servo: Put a +1/+1 counter on target Construct you control.": "Sacrifique um Servo: Coloque um marcador +1/+1 no Constructo alvo que você controla.",
  "Whenever Trip-Hammer Automaton attacks, put a +1/+1 counter on it.": "Sempre que Autômato Martelo-Pilão atacar, coloque um marcador +1/+1 nele.",
  "Overclock {2} (You may pay an additional {2} as you play this card.) Put a +1/+1 counter on each creature you control. If this spell was overclocked, put another +1/+1 counter on each creature you control.": "Sobrecarga {2} (Você pode pagar {2} adicional ao jogar esta carta.) Coloque um marcador +1/+1 em cada criatura que você controla. Se este feitiço tiver sido sobrecarregado, coloque outro marcador +1/+1 em cada criatura que você controla.",
- "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature.": "No início da sua manutenção, Bobina Galvânica causa 1 de dano à criatura inimiga alvo.",
  "Your Technocracy cards cost {1} less to play. This effect reduces only generic mana.": "Suas cartas da Tecnocracia custam {1} a menos para jogar. Este efeito reduz apenas mana genérico.",
  "When Clockwork Gaol enters, target enemy creature with power 2 or less can't attack or block until Clockwork Gaol leaves play.": "Quando Cárcere de Engrenagens entrar, a criatura inimiga alvo com poder 2 ou menos não pode atacar nem bloquear até Cárcere de Engrenagens sair de jogo.",
  "Your Construct creature cards cost {1} less to play. This effect reduces only generic mana.": "Suas cartas de criatura Constructo custam {1} a menos para jogar. Este efeito reduz apenas mana genérico.",
@@ -4331,7 +4329,6 @@
  "Haste (This creature can attack and use Tap abilities the turn it enters.) Idle: At the end of your turn, if Satyr of the Drowsy Vineyard is untapped and didn't attack this turn, put a +1/+1 counter on it.": "Ímpeto (Esta criatura pode atacar e usar habilidades de Virar no turno em que entra.) Ócio: No fim do seu turno, se Sátiro da Vinha Sonolenta estiver desvirado e não tiver atacado neste turno, coloque um marcador +1/+1 nele.",
  "When Garlanded Festival Bull enters, creatures you control get +1/+0 until end of turn.": "Quando Touro Engrinaldado da Festa entrar, as criaturas que você controla recebem +1/+0 até o fim do turno.",
  "Toast of Fire deals 2 damage to any enemy creature or the enemy player.": "Brinde de Fogo causa 2 de dano a qualquer criatura inimiga ou ao jogador inimigo.",
- "Firecracker Garland deals 1 damage to target enemy creature. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.": "Guirlanda de Bombinhas causa 1 de dano à criatura inimiga alvo. Farra: Se você já jogou outra carta que não seja terreno neste turno, ele também causa 1 de dano ao jogador inimigo.",
  "Spilled Brandy deals 1 damage to any enemy creature or the enemy player. Then rummage. (Draw a card, then discard a card.)": "Conhaque Derramado causa 1 de dano a qualquer criatura inimiga ou ao jogador inimigo. Depois vasculhe. (Compre uma carta e depois descarte uma carta.)",
  "Creatures you control get +1/+0 until end of turn. Carouse: If you've played another non-land card this turn, they get an additional +1/+0 until end of turn.": "As criaturas que você controla recebem +1/+0 até o fim do turno. Farra: Se você já jogou outra carta que não seja terreno neste turno, elas recebem mais +1/+0 até o fim do turno.",
  "Flaming Flagon deals 3 damage to the enemy player.": "Garrafão em Chamas causa 3 de dano ao jogador inimigo.",
@@ -4747,5 +4744,8 @@
  "Everyone starts duels with 15 life (and Devotion adds more to yours) and draws 7 cards.": "Todos começam os duelos com 15 de vida (a Devoção aumenta a sua) e compram 7 cartas.",
  "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.": "Ensanguentado: Enquanto você tiver 5 ou menos de vida, Carniçal Esfomeado recebe +2/+1.",
  "%d gold for ending the duel above your full life": "%d de ouro por terminar o duelo acima da sua vida máxima",
- "%d gold for ending the duel above your full life.": "%d de ouro por terminar o duelo acima da sua vida máxima."
+ "%d gold for ending the duel above your full life.": "%d de ouro por terminar o duelo acima da sua vida máxima.",
+ "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature. If that creature has flying, it deals 2 damage instead.": "No início da sua manutenção, Bobina Galvânica causa 1 de dano à criatura inimiga alvo. Se essa criatura tiver voo, causa 2 de dano em vez disso.",
+ "{2}, Tap: Tap target enemy creature. If that creature has flying, freeze it instead. (It doesn't untap during its controller's next untap step.)": "{2}, Virar: Vire a criatura inimiga alvo. Se essa criatura tiver voo, congele-a em vez disso. (Ela não desvira na próxima etapa de desvirar de seu controlador.)",
+ "Firecracker Garland deals 1 damage to target enemy creature. If that creature has flying, it deals 3 damage instead. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.": "Guirlanda de Bombinhas causa 1 de dano à criatura inimiga alvo. Se essa criatura tiver voo, causa 3 de dano em vez disso. Farra: Se você já jogou outra carta que não seja terreno neste turno, ele também causa 1 de dano ao jogador inimigo."
 }
