@@ -4747,5 +4747,21 @@
  "%d gold for ending the duel above your full life.": "%d de oro por terminar el duelo por encima de tu vida máxima.",
  "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature. If that creature has flying, it deals 2 damage instead.": "Al comienzo de tu mantenimiento, Bobina Galvánica inflige 1 de daño a la criatura enemiga objetivo. Si esa criatura tiene vuelo, inflige 2 de daño en su lugar.",
  "{2}, Tap: Tap target enemy creature. If that creature has flying, freeze it instead. (It doesn't untap during its controller's next untap step.)": "{2}, Girar: Gira la criatura enemiga objetivo. Si esa criatura tiene vuelo, congélala en su lugar. (No se endereza en el siguiente paso de enderezar de su controlador.)",
- "Firecracker Garland deals 1 damage to target enemy creature. If that creature has flying, it deals 3 damage instead. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.": "Guirnalda de Petardos inflige 1 de daño a la criatura enemiga objetivo. Si esa criatura tiene vuelo, inflige 3 de daño en su lugar. Jolgorio: Si ya jugaste otra carta que no sea tierra este turno, también inflige 1 de daño al jugador enemigo."
+ "Firecracker Garland deals 1 damage to target enemy creature. If that creature has flying, it deals 3 damage instead. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.": "Guirnalda de Petardos inflige 1 de daño a la criatura enemiga objetivo. Si esa criatura tiene vuelo, inflige 3 de daño en su lugar. Jolgorio: Si ya jugaste otra carta que no sea tierra este turno, también inflige 1 de daño al jugador enemigo.",
+ "View": "Ver",
+ "Your deck": "Tu mazo",
+ "Opponent": "Oponente",
+ "Practice only: no life, gold or cards of your game are at stake. Your practice decks may use every card in the game.": "Solo práctica: no está en juego la vida, el oro ni las cartas de tu partida. Tus mazos de práctica pueden usar todas las cartas del juego.",
+ "Nothing is lost: it is only practice.": "No se pierde nada: es solo práctica.",
+ "Two-faith decks": "Mazos de dos fes",
+ "Practice deck": "Mazo de práctica",
+ "Practice deck 1": "Mazo de práctica 1",
+ "The practice duel is lost.": "El duelo de práctica está perdido.",
+ "Leave the practice duel?": "¿Salir del duelo de práctica?",
+ "Starting life": "Vida inicial",
+ "Build decks": "Construir mazos",
+ "Theme decks (the wanderers' decks)": "Mazos temáticos (los de los vagabundos)",
+ "Build decks to make your own from every card.": "Construye mazos para crear los tuyos con todas las cartas.",
+ "Your practice decks": "Tus mazos de práctica",
+ "Quick duel": "Duelo rápido"
 }

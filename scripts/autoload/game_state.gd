@@ -34,6 +34,7 @@ var deck: Dictionary:
 		active_deck = clampi(active_deck, 0, decks.size() - 1)
 		decks[active_deck]["cards"] = value
 var player_name: String = "Wanderer"
+var sandbox := false               # quick duel deck building: saving is off
 var player_pos: Vector2 = Vector2.ZERO
 var current_city: String = ""
 var cleared_lairs: Array = []
@@ -250,6 +251,8 @@ func current_play_time() -> float:
 
 ## Saves the run. With n > 0 it saves into that slot and keeps playing there.
 func save_game(n: int = 0) -> void:
+	if sandbox:
+		return                # the quick duel's deck builder: the saved game is not touched
 	if n > 0:
 		slot = n
 	play_time = current_play_time()

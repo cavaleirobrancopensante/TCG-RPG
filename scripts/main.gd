@@ -495,7 +495,7 @@ func show_menu() -> void:
 	grid.add_theme_constant_override("h_separation", UIKit.GAP)
 	grid.add_theme_constant_override("v_separation", UIKit.GAP)
 	v.add_child(grid)
-	var items := [["New game", _open_new_game], ["Load game", _open_load_game], ["Settings", _open_settings]]
+	var items := [["New game", _open_new_game], ["Load game", _open_load_game], ["Quick duel", _open_quick_duel], ["Settings", _open_settings]]
 	if not OS.has_feature("web"):      # a browser tab is closed by the browser, not the game
 		items.append(["Quit game", func(): get_tree().quit()])
 	for it in items:
@@ -586,6 +586,75 @@ func _open_load_game() -> void:
 	sc.chosen.connect(func(n): _continue_game(n))
 	sc.closed.connect(show_menu)      # a deleted slot may change the menu
 	ui_layer.add_child(sc)
+
+
+# ============================================================ quick duel (playtest)
+
+func _open_quick_duel() -> void:
+	var q := QuickDuelScreen.new()
+	q.name = "QuickDuel"
+	q.duel.connect(func(mine: Dictionary, theirs: Dictionary, life: int):
+		q.queue_free()
+		_start_practice(mine, theirs, life))
+	q.edit_decks.connect(func():
+		q.queue_free()
+		_open_practice_builder())
+	ui_layer.add_child(q)
+
+
+## A practice duel: the chosen decks, the chosen life, nothing of the saved game at stake.
+func _start_practice(mine: Dictionary, theirs: Dictionary, life: int) -> void:
+	Music.set_context("battle", String(theirs.get("faith", "abyss")))
+	var b := BattleScene.new()
+	var info := {"practice": true, "player_deck": mine["cards"], "player_name": I18n.t(String(mine["name"])),
+		"name": String(theirs["name"]), "faction": String(theirs.get("faith", "abyss")), "level": 3,
+		"life": life, "player_life": life, "player_hand": BattleState.START_HAND, "deck": theirs["cards"]}
+	_set_screen(b)
+	b.finished.connect(func(_won: bool):
+		show_menu()
+		_open_quick_duel())
+	b.start(info)
+
+
+## The deck builder in a sandbox: every card four times, the practice decks as its lists. The
+## game's own decks are put back untouched when it closes (and nothing is saved meanwhile).
+func _open_practice_builder() -> void:
+	var snap := {"decks": GameState.decks.duplicate(true), "active": GameState.active_deck}
+	GameState.sandbox = true
+	var st := QuickDuelScreen.load_state()
+	var lists: Array = []
+	for d in st.get("decks", []):
+		var cards := {}
+		for k in d.get("cards", {}):
+			cards[String(k)] = int(d["cards"][k])
+		lists.append({"name": String(d.get("name", "Practice deck")), "cards": cards})
+	if lists.is_empty():
+		lists.append({"name": "Practice deck 1", "cards": {}})
+	GameState.decks = lists
+	GameState.active_deck = 0
+	var pool := {}
+	for id in CardDB.all_set_ids():
+		if CardDB.get_card(id).get("rarity", "") != "token":
+			pool[id] = 4
+	var db := DeckBuilder.new()
+	db.pool = pool
+	db.draft_decks = range(lists.size())
+	db.draft_deck = 0
+	db.draft_base = "Practice deck"
+	db.closed.connect(func():
+		var keep: Array = []
+		for i in db.draft_decks:
+			if i < GameState.decks.size():
+				keep.append(GameState.decks[i].duplicate(true))
+		st["decks"] = keep
+		QuickDuelScreen.write_state(st)
+		GameState.decks = snap["decks"]
+		GameState.active_deck = int(snap["active"])
+		GameState.sandbox = false
+		_set_screen(null)
+		show_menu()
+		_open_quick_duel())
+	_set_screen(db)
 
 
 func _open_settings() -> void:

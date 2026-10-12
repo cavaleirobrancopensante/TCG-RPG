@@ -660,3 +660,13 @@ under *Export → Resources → Filters to export non-resource files*.
   ([Deck (n)] [Sideboard (n)]), and the card types are a drop-down instead of two rows of tabs,
   so the list shows about four rows instead of one.
 - Deck builder on a phone: the card types are a drop-down too, giving the deck list two more rows.
+
+## Quick duel (1.50)
+
+- A new button on the title page, Quick duel, for playtesting decks on their own: pick your deck
+  and the opponent's from your practice decks, the 18 theme decks (the wanderers' decks) and the
+  15 two-faith decks, choose the starting life, and duel. View shows a deck card by card.
+- Build decks opens the deck builder with every card in the game (four of each) for your
+  practice decks; they are kept for next time.
+- Nothing of your saved game is touched: no life, gold, cards or death, and leaving a practice
+  duel costs nothing.

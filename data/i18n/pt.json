@@ -4747,5 +4747,21 @@
  "%d gold for ending the duel above your full life.": "%d de ouro por terminar o duelo acima da sua vida máxima.",
  "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature. If that creature has flying, it deals 2 damage instead.": "No início da sua manutenção, Bobina Galvânica causa 1 de dano à criatura inimiga alvo. Se essa criatura tiver voo, causa 2 de dano em vez disso.",
  "{2}, Tap: Tap target enemy creature. If that creature has flying, freeze it instead. (It doesn't untap during its controller's next untap step.)": "{2}, Virar: Vire a criatura inimiga alvo. Se essa criatura tiver voo, congele-a em vez disso. (Ela não desvira na próxima etapa de desvirar de seu controlador.)",
- "Firecracker Garland deals 1 damage to target enemy creature. If that creature has flying, it deals 3 damage instead. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.": "Guirlanda de Bombinhas causa 1 de dano à criatura inimiga alvo. Se essa criatura tiver voo, causa 3 de dano em vez disso. Farra: Se você já jogou outra carta que não seja terreno neste turno, ele também causa 1 de dano ao jogador inimigo."
+ "Firecracker Garland deals 1 damage to target enemy creature. If that creature has flying, it deals 3 damage instead. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.": "Guirlanda de Bombinhas causa 1 de dano à criatura inimiga alvo. Se essa criatura tiver voo, causa 3 de dano em vez disso. Farra: Se você já jogou outra carta que não seja terreno neste turno, ele também causa 1 de dano ao jogador inimigo.",
+ "View": "Ver",
+ "Your deck": "Seu baralho",
+ "Opponent": "Oponente",
+ "Practice only: no life, gold or cards of your game are at stake. Your practice decks may use every card in the game.": "Só treino: nenhuma vida, ouro ou carta do seu jogo está em jogo. Seus baralhos de treino podem usar todas as cartas do jogo.",
+ "Nothing is lost: it is only practice.": "Nada se perde: é só treino.",
+ "Two-faith decks": "Baralhos de duas fés",
+ "Practice deck": "Baralho de treino",
+ "Practice deck 1": "Baralho de treino 1",
+ "The practice duel is lost.": "O duelo de treino foi perdido.",
+ "Leave the practice duel?": "Sair do duelo de treino?",
+ "Starting life": "Vida inicial",
+ "Build decks": "Montar baralhos",
+ "Theme decks (the wanderers' decks)": "Baralhos temáticos (os dos andarilhos)",
+ "Build decks to make your own from every card.": "Monte baralhos para criar os seus com todas as cartas.",
+ "Your practice decks": "Seus baralhos de treino",
+ "Quick duel": "Duelo rápido"
 }
