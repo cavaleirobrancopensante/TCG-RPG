@@ -1304,9 +1304,21 @@ func play_events() -> void:
 	_update_controls()
 	await _play_batch(st.take_events())
 	# choices the rules left to you: discards from rummage, foresight
+	var stuck := 0
 	while st.phase != "over" and st.has_owed(0):
+		var before := _owed_key()
 		await _resolve_owed()
 		await _play_batch(st.take_events())
+		# a choice that could not be asked must never hold the duel: let the rules decide it
+		if _owed_key() == before:
+			stuck += 1
+			if stuck >= 3:
+				push_warning("BattleScene: an owed choice made no progress; resolved automatically")
+				_force_owed()
+				await _play_batch(st.take_events())
+				break
+		else:
+			stuck = 0
 	busy = false
 	_sync_view_stack()
 	refresh()
@@ -1458,7 +1470,8 @@ func _resolve_owed() -> void:
 		busy = false
 		_log(_cap(I18n.t("%s: choose its target.") % (_obj(src.uid) if src else I18n.t("A trigger"))), false)
 		_advance_targeting()
-		await _trigger_done
+		if pending_trigger != -1:
+			await _trigger_done          # (with no target to choose it has finished already)
 		busy = true
 		return
 	if not me.possess_owed.is_empty():
@@ -1612,7 +1625,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			fig.summon_t = 0.0
 			await get_tree().process_frame
 			_burst(fig.global_position + Vector2(_fsz().x * 0.5, _fsz().y - 30 * fig_zoom), Factions.color(fig.faction).lightened(0.3), 30)
-			await fig.play_summon()
+			fig.play_summon()
+			await _wait(0.9)
 		"relic":
 			if not e.get("from_stack", false):
 				await _show_cast(e["id"], e["side"])
@@ -1681,7 +1695,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			if src >= 0 and figures.has(src) and tgt["kind"] == "creature":
 				Sfx.play("clash")                # steel on steel
 			if src >= 0 and figures.has(src):
-				await figures[src].play_lunge(tpos)
+				figures[src].play_lunge(tpos)
+				await _wait(0.34)
 			else:
 				_bolt(tpos)
 			if tgt["kind"] == "creature" and figures.has(tgt["uid"]):
@@ -1690,7 +1705,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				if p:
 					f.sync(p)
 				_float_text("-%d" % e["amount"], tpos, UIKit.RED)
-				await f.play_hit()
+				f.play_hit()
+				await _wait(0.35)
 			else:
 				_burst(tpos, UIKit.RED, 16)
 				await _wait(0.15)
@@ -1732,14 +1748,16 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				var f: SummonFigure = figures[e["uid"]]
 				_burst(f.global_position + _fsz() * 0.5, Factions.color(f.faction), 24)
 				figures.erase(e["uid"])
-				await f.play_death()
+				f.play_death()
+				await _wait(0.55)
 				f.queue_free()
 		"bounce":
 			_log(_with_ctx(I18n.t("%s returns to its owner's hand.") % _obj(int(e["uid"])), _ctx))
 			if figures.has(e["uid"]):
 				var f: SummonFigure = figures[e["uid"]]
 				figures.erase(e["uid"])
-				await f.play_death()
+				f.play_death()
+				await _wait(0.55)
 				f.queue_free()
 			_rebuild_hand()
 		"buff":
@@ -1756,7 +1774,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				if p:
 					f.sync(p)
 				_float_text("%+d/%+d" % [bp, bt], f.global_position + _fsz() * 0.5, UIKit.GREEN if bp >= 0 and bt >= 0 else UIKit.RED)
-				await f.play_buff()
+				f.play_buff()
+				await _wait(0.35)
 		"grant":
 			var kw := I18n.t(_kw_name(String(e.get("keyword", ""))))
 			_log(_with_ctx(I18n.t("%s gains %s.") % [_obj(int(e["uid"])), kw], _ctx))
@@ -1895,7 +1914,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				if p:
 					f.sync(p)
 				_float_text(I18n.t("Regenerates"), f.global_position + _fsz() * 0.5, UIKit.GREEN)
-				await f.play_buff()
+				f.play_buff()
+				await _wait(0.35)
 		"regen_shield":
 			_log(_cap(I18n.t("%s will regenerate if it is destroyed this turn.") % _obj(int(e["uid"]))))
 			if figures.has(e["uid"]):
@@ -3687,3 +3707,37 @@ func _perm_entry(q) -> Variant:
 	if q.is_token:
 		return {"id": "token", "data": q.card}
 	return q.card_id
+
+
+## What the player still owes (to see whether a choice moved on).
+func _owed_key() -> String:
+	var me := st.side(0)
+	return str([me.owed_discards, me.foresight_cards.size(), me.martyr_owed, me.leak_owed.size(), me.charge_owed.size(),
+		me.possess_owed.size(), me.trigger_owed.size(), me.hand_owed.size(), me.edict_owed])
+
+
+## Settle every owed choice of the player the way the AI would.
+func _force_owed() -> void:
+	var me := st.side(0)
+	while not me.trigger_owed.is_empty():
+		st.trigger_choose(0, null)
+	while not me.hand_owed.is_empty():
+		var opts := st.hand_choices(1)
+		st.hand_choose(0, int(opts[0]) if not opts.is_empty() else -1)
+	while me.edict_owed > 0 and not me.creatures.is_empty():
+		st.edict_choose(0, me.creatures[0].uid)
+	me.edict_owed = 0
+	while not me.possess_owed.is_empty():
+		st.possess_choose(0, int(me.possess_owed[0]), -1)
+	while me.martyr_owed > 0 and not me.creatures.is_empty():
+		st.martyr_bless(0, me.creatures[0].uid)
+	me.martyr_owed = 0
+	if not me.charge_owed.is_empty():
+		st.charge_choose(0, BattleState.CHARGE_AI_ORDER.slice(0, int(me.charge_owed["n"])))
+	if not me.leak_owed.is_empty():
+		st.answer_leak(0, true)
+	if not me.foresight_cards.is_empty():
+		st.resolve_foresight(0, me.foresight_cards.duplicate())
+	while me.owed_discards > 0 and not me.hand.is_empty():
+		st.discard_owed(0, me.hand.size() - 1)
+	me.owed_discards = 0
