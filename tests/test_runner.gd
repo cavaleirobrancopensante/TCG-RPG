@@ -2454,6 +2454,24 @@ func test_redesign() -> void:
 	if st.phase == "combat":
 		st.combat_damage()
 	check(st.side(1).creatures.is_empty() and st.side(1).life == l1 - 2 and st.find_perm(att.uid) != null, "trample over two blockers: 2 + 2, then 2 to the player")
+	# a person's creature chooses its "when it enters" targets once it is on the battlefield
+	st = _duel()
+	_lands(st, 0, "GGGGGGG")
+	st.side(0).interactive = true
+	var foe := st._make_perm(1, "proto_a_cultist", CardDB.get_card("proto_a_cultist"))
+	st.side(1).creatures.append(foe)
+	st.side(0).hand.append("wild_r_013")
+	check(st.cast_specs(CardDB.get_card("wild_r_013")).is_empty(), "no target is chosen while casting the Cave Bear")
+	check(st.play(0, 0, []), "cast the Cave Bear")
+	st.pass_priority(0)
+	var bear: BattleState.Perm = null
+	for q in st.side(0).creatures:
+		if q.card_id == "wild_r_013":
+			bear = q
+	check(bear != null and st.side(0).trigger_owed.size() == 1, "on the battlefield, its fight waits for the player's choices")
+	if bear:
+		st.trigger_choose(0, {"kind": "creature", "uid": foe.uid}, bear.uid)
+		check(st.find_perm(foe.uid) == null and bear.damage == 2, "the Cave Bear itself fights the enemy")
 	# a whole AI duel of the two prototype decks finishes
 	var d := DeckTools.proto_decks()
 	st = BattleState.new()
