@@ -42,7 +42,8 @@ const MANA_ORDER: Array[String] = ["W", "U", "B", "R", "G", "C"]
 
 const RARITIES: Array[String] = ["common", "uncommon", "rare", "mythic"]
 const RARITY_COLOR := {
-	"common": Color(0.75, 0.75, 0.75), "uncommon": Color(0.70, 0.85, 0.95),
+	# as in Magic: common black, uncommon silver, rare gold, mythic orange
+	"common": Color(0.10, 0.09, 0.08), "uncommon": Color(0.74, 0.78, 0.82),
 	"rare": Color(1.0, 0.82, 0.30), "mythic": Color(1.0, 0.45, 0.15),
 }
 ## Target number of cards per faith per rarity in the full set.
