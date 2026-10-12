@@ -700,3 +700,8 @@ under *Export → Resources → Filters to export non-resource files*.
   of cards, a deck stacked at a slant, and a tombstone.
 - Tap the tombstone (yours or the enemy's) for the graveyard as a list, newest card on top; tap a
   card to read it (and, in yours, to Unearth it when it can be).
+
+## Pile icons under the portrait (1.55)
+
+- Your hand, library and graveyard icons sit on their own row under your portrait, so the column
+  beside the hand stays narrow and the hand has room to spread to the left.
