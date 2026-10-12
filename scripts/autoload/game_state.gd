@@ -7,7 +7,7 @@ signal gold_changed(value: int)
 signal collection_changed
 signal mission_updated(mission_id: String)
 signal leveled_up(new_level: int, points_gained: int)
-const ROAD_HOURS_PER_LIFE := 4.0
+const ROAD_HOURS_PER_LIFE := 3.0
 signal saved                           # after every save (the HUD shows a short "Saved" mark)
 
 const LEGACY_SAVE := "user://save.json"
@@ -264,7 +264,7 @@ func save_game(n: int = 0) -> void:
 		"faction_packs": faction_packs, "hero": hero,
 		"stats": stats, "play_time": play_time,
 		"market": market, "day": day, "rested": rested, "last_region": last_region, "errand": errand, "feast_log": feast_log, "story": story,
-		"attrs": attrs, "level": level, "xp": xp, "stat_points": stat_points, "difficulty": difficulty, "look": Hero.look_to_save(look), "life": life, "clock": clock,
+		"attrs": attrs, "level": level, "xp": xp, "stat_points": stat_points, "difficulty": difficulty, "look": Hero.look_to_save(look), "life": life, "life15": true, "clock": clock,
 		"explored": Marshalls.raw_to_base64(explored),
 		"meta": _meta(),
 	}
@@ -395,6 +395,8 @@ func load_game(n: int = 0) -> bool:
 	difficulty = String(data.get("difficulty", "knight"))
 	look = Hero.look_from_save(data.get("look", {}))
 	life = clampi(int(data.get("life", max_life())), 1, max_life())
+	if not bool(data.get("life15", false)):
+		life = mini(life + Hero.LIFE_BONUS_15, max_life())     # saves from before 15 life: the same wounds, on a bigger total
 	clock = float(data.get("clock", 8.0))
 	explored = Marshalls.base64_to_raw(String(data.get("explored", "")))
 	# the storylines came in 1.x: an older hero begins his faith's storyline at the first chapter
@@ -844,7 +846,7 @@ func diff(key: String):
 
 
 ## Time passes on the road: the clock turns, new days begin, wounds heal.
-## Four hours on the road mend one point of life (ROAD_HOURS_PER_LIFE).
+## Three hours on the road mend one point of life (ROAD_HOURS_PER_LIFE).
 func advance_clock(hours: float) -> void:
 	clock += hours
 	while clock >= 24.0:

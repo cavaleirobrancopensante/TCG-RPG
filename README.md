@@ -626,3 +626,14 @@ under *Export → Resources → Filters to export non-resource files*.
 - About 45 weak or fiddly cards raised to rate or given a real effect (Brass Scuttler, the
   2-mana 1/2s and their kind).
 - AI-vs-AI themes now run from about 38% to 64% (before: 30% to 66%).
+
+## Fifteen life (1.46)
+
+- Everyone has 15 life instead of 10: your hero starts at 15 (plus 2 per Devotion, as before),
+  every foe has 5 more (13 + 2 per level), tournament opponents 15. Duels last about a round
+  longer (the middle duel ends in round 7), and the faiths sit closer together.
+- The road mends one point of life every 3 hours (was 4), so a full recovery takes the same time.
+  Saved games gain the 5 extra points of life once on loading.
+- Bloodied still means 5 or less life. Famished Ghoul gets +2/+1 when Bloodied (was +1/+1).
+- The web version keeps its music beside the page and fetches each piece as it plays: the game
+  file went from 104 MB to 25 MB, so it opens much faster, and GitHub publishes it again.

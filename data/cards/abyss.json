@@ -104,13 +104,13 @@
     "statics": [
       {
         "static": "anthem",
-        "power": 1,
+        "power": 2,
         "toughness": 1,
         "scope": "self",
         "condition": "bloodied"
       }
     ],
-    "text": "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +1/+1.",
+    "text": "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.",
     "flavor": "The closer you come to the grave, the better it can smell you.",
     "art": "res://art/cards/abyss_c_005.webp"
   },

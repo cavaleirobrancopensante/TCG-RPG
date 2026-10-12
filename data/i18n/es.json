@@ -4156,7 +4156,6 @@
  "Flying (This creature can't be blocked except by creatures with flying or reach.)": "Vuelo (Esta criatura solo puede ser bloqueada por criaturas con vuelo o alcance.)",
  "When Blood-Oath Thrall enters, you lose 1 life.": "Cuando Siervo del Juramento de Sangre entre, pierdes 1 vida.",
  "Deathtouch (Any damage this creature deals to a creature destroys it.)": "Toque mortal (Cualquier daño que esta criatura inflija a una criatura la destruye.)",
- "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +1/+1.": "Ensangrentado: Mientras tengas 5 o menos de vida, Necrófago Famélico obtiene +1/+1.",
  "Dread (This creature can't be blocked except by Pact creatures and Constructs.)": "Pavor (Esta criatura solo puede ser bloqueada por criaturas del Pacto y Autómatas.)",
  "When Grave Chanter enters, the enemy player loses 1 life and you gain 1 life.": "Cuando Cantora de Tumbas entre, el jugador enemigo pierde 1 vida y tú ganas 1 vida.",
  "Sacrifice another Zombie: Charnel Glutton gets +3/+3 until end of turn.": "Sacrifica otro Zombi: Glotón del Osario obtiene +3/+3 hasta el final del turno.",
@@ -4577,7 +4576,6 @@
  "None of this type.": "Ninguna de este tipo.",
  "Antlered and silent, he rides out from the old oak at midnight, and the wolves pour after him.": "Astado y silencioso, cabalga desde el viejo roble a medianoche, y los lobos se derraman tras él.",
  "+1 card you may keep in hand at the end of your turn for every point (7 + Reason). Everyone draws 7.": "+1 carta que puedes conservar en la mano al final de tu turno por cada punto (7 + Razón). Todos roban 7.",
- "Everyone has 10 life and draws 7 cards.": "Todos tienen 10 de vida y roban 7 cartas.",
  "Grave-Dust Skirmisher": "Escaramuzador del Polvo de Tumba",
  "Unearth {B} ({B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)": "Desenterrar {B} ({B}: Regresa esta carta de tu cementerio al campo de batalla. Gana prisa. Exíliala al comienzo del próximo paso final o si fuera a dejar el campo de batalla. Desentierra solo como un conjuro.)",
  "\"Why wait for judgment to rise? I dug him up on Tuesday, and he only has to last till supper.\" (Morvane, a Pact sexton)": "\"¿Para qué esperar al juicio para levantarse? Lo desenterré el martes, y solo tiene que durar hasta la cena.\" (Morvane, un sacristán del Pacto)",
@@ -4745,5 +4743,7 @@
  "Unearth: from your graveyard, pay its cost: it returns with haste, and is exiled at end of turn or if it would leave.": "Desenterrar: desde tu cementerio, paga su coste: vuelve con prisa y se exilia al final del turno o si fuera a salir.",
  "Counter: the spell is cancelled and goes to its owner's graveyard. Cast it while the enemy spell is on the stack.": "Contrarrestar: el hechizo se cancela y va al cementerio de su dueño. Lánzalo mientras el hechizo enemigo está en la pila.",
  "Charge: when it attacks, for each other attacking Knight choose one (trample, first strike, vigilance, lifelink, +1/+0); all your Knights gain them until end of turn.": "Carga: cuando ataca, por cada otro Caballero atacante elige uno (arrollar, primer golpe, vigilancia, vínculo vital, +1/+0); todos tus Caballeros los ganan hasta el final del turno.",
- "Legendary: you may have only one with this name on the battlefield at a time.": "Legendaria: solo puedes tener una con este nombre en el campo de batalla."
+ "Legendary: you may have only one with this name on the battlefield at a time.": "Legendaria: solo puedes tener una con este nombre en el campo de batalla.",
+ "Everyone starts duels with 15 life (and Devotion adds more to yours) and draws 7 cards.": "Todos empiezan los duelos con 15 de vida (la Devoción aumenta la tuya) y roban 7 cartas.",
+ "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.": "Ensangrentado: Mientras tengas 5 o menos de vida, Necrófago Famélico obtiene +2/+1."
 }

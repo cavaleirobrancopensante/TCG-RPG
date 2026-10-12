@@ -1304,7 +1304,7 @@ func _reward_text(r: Dictionary) -> String:
 func _start_lair(lair_id: String) -> void:
 	var l := GameState.lair(lair_id)
 	var deck := DeckTools.enemy_deck(l["faction"], int(l["level"]), GameState.rng)
-	var boss_life := maxi(8, int(round(int(l["life"]) * 0.5)) + int(GameState.diff("enemy_life")))
+	var boss_life := maxi(13, int(round(int(l["life"]) * 0.5)) + Hero.LIFE_BONUS_15 + int(GameState.diff("enemy_life")))
 	start_battle({"name": l["boss"], "faction": l["faction"], "level": int(l["level"]), "life": boss_life,
 		"deck": deck, "lair": lair_id, "look": _boss_look(l)})
 
@@ -1330,7 +1330,7 @@ func _fight_enemy(e: Dictionary) -> void:
 	var theme: String = e.get("theme", WorldEntities.theme_for_name(String(e["name"])))
 	var deck := DeckTools.themed_deck(theme, int(e["level"]), GameState.rng) if theme != "" else DeckTools.enemy_deck(e["faction"], int(e["level"]), GameState.rng)
 	start_battle({"name": e["name"], "faction": e["faction"], "level": int(e["level"]),
-		"life": maxi(6, 8 + int(e["level"]) * 2 + int(GameState.diff("enemy_life"))), "deck": deck, "enemy_id": e["id"], "look": e.get("look", ""),
+		"life": maxi(11, Hero.ENEMY_LIFE_BASE + int(e["level"]) * 2 + int(GameState.diff("enemy_life"))), "deck": deck, "enemy_id": e["id"], "look": e.get("look", ""),
 		"disposition": e.get("disposition", "hostile"), "thief": e.get("thief", false)})
 
 
@@ -1716,7 +1716,7 @@ func _play_tour_match(opp: int) -> void:
 		return
 	GameState.active_deck = _tour_deck
 	var mf := d.main_faith(opp)
-	start_battle({"name": d.names[opp], "faction": mf, "level": 3, "life": 10,
+	start_battle({"name": d.names[opp], "faction": mf, "level": 3, "life": Hero.BASE_LIFE,
 		"deck": d.decks[opp], "tournament": true, "look": {"faction": mf, "subtype": GameState.HEROES.get(mf, {}).get("subtype", "Human"), "name": d.names[opp]}})
 
 
@@ -2093,9 +2093,9 @@ func _story_battle(arc: String, place_id: String) -> void:
 	var foe := String(o.get("foe", ""))
 	var c := Story.character(foe)
 	var lvl := int(o.get("level", 1))
-	var life := maxi(6, 8 + lvl * 2 + int(GameState.diff("enemy_life")))
+	var life := maxi(11, Hero.ENEMY_LIFE_BASE + lvl * 2 + int(GameState.diff("enemy_life")))
 	if o.has("life"):      # a lair's master: as strong as its own master would be, or more
-		life = maxi(life, maxi(8, int(round(int(o["life"]) * 0.5)) + int(GameState.diff("enemy_life"))))
+		life = maxi(life, maxi(13, int(round(int(o["life"]) * 0.5)) + Hero.LIFE_BONUS_15 + int(GameState.diff("enemy_life"))))
 	var info := {"name": String(c.get("name", "")), "faction": String(c.get("faith", "abyss")), "level": lvl, "life": life,
 		"deck": DeckTools.themed_deck(String(o.get("theme", "")), lvl, GameState.rng), "look": Story.look(foe),
 		"story": arc, "story_place": place_id}

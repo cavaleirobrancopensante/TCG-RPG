@@ -125,7 +125,7 @@ func _ready() -> void:
 	sh.add_child(st)
 	_points_label = UIKit.label("", UIKit.FS_SECONDARY + 1, UIKit.GOLD)
 	sh.add_child(_points_label)
-	right.add_child(UIKit.label("Everyone has 10 life and draws 7 cards.", UIKit.FS_MIN, UIKit.DIM, true))
+	right.add_child(UIKit.label("Everyone starts duels with 15 life (and Devotion adds more to yours) and draws 7 cards.", UIKit.FS_MIN, UIKit.DIM, true))
 	_stats_box = VBoxContainer.new()
 	_stats_box.add_theme_constant_override("separation", UIKit.SP_1)
 	right.add_child(_stats_box)
