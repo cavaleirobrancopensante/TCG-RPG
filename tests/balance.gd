@@ -9,6 +9,7 @@ extends Node
 ##          theme of the other faiths, with DeckTools.themed_deck at LEVEL (default 3)
 ##   SEED   rng seed (default 2026), so several runs can be pooled
 ##   SHOW   comma-separated theme ids: only print one themed deck of each at LEVEL
+##   LIFE   starting life of both sides (default 10)
 ##   DUMP   "1" also prints machine-readable lines (W a b wins games, C id cast won,
 ##          D deck id cast won: the same per deck faith or theme, to measure each card's lift)
 
@@ -133,7 +134,8 @@ func _ready() -> void:
 ## One AI duel; returns the winner (0 or 1, -1 for none) and records the cards cast.
 func _play(da: Dictionary, db: Dictionary, first: int, game_seed: int, sides: Array) -> int:
 	var st := BattleState.new()
-	st.setup(DeckTools.to_list(da), DeckTools.to_list(db), ["A", "B"], [10, 10], first, game_seed, true)
+	var life := int(OS.get_environment("LIFE")) if OS.get_environment("LIFE") != "" else 10
+	st.setup(DeckTools.to_list(da), DeckTools.to_list(db), ["A", "B"], [life, life], first, game_seed, true)
 	BattleAI.resolve_mulligan(st, 0)
 	BattleAI.resolve_mulligan(st, 1)
 	var seen := [{}, {}]
