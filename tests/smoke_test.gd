@@ -612,6 +612,9 @@ func _interactive_battle() -> void:
 	assert(not blocked[0][2] and String(blocked[0][4]) != "", "the reason travels with the disabled Play")
 	b._close_preview()
 	b._on_player_target(1)
+	await _frames(3)
+	assert(b.mode == "confirm", "a chosen target is confirmed first")
+	(b.find_child("ConfirmTarget", true, false) as Button).pressed.emit()
 	while b.busy or b.mode != "idle":
 		await _wait(0.2)
 	assert(st.side(1).life == life_before - 2, "burn should hit for 2")
@@ -666,6 +669,10 @@ func _interactive_battle() -> void:
 				await _frames(2)
 				if b.mode == "target":
 					b._on_figure_tapped(b.figures[me.creatures[0].uid])
+					await _frames(3)
+					var cf = b.find_child("ConfirmTarget", true, false)
+					if cf:
+						cf.pressed.emit()
 					cast_instant = true
 				continue
 			b._on_main()       # pass / resolve

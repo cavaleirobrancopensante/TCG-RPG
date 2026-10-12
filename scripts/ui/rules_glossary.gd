@@ -84,6 +84,9 @@ func _fill(text_w: float) -> void:
 		if not seen.has(m):
 			seen[m] = true
 			_line(I18n.t(m), text_w)
+	_heading("Icons on the battlefield")
+	for pair in SummonFigure.ICON_HELP:
+		_line("%s  %s" % [pair[0], I18n.t(pair[1])], text_w)
 	_heading("The stack")
 	_line(I18n.t(STACK), text_w)
 

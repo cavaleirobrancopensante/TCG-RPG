@@ -675,3 +675,16 @@ under *Export → Resources → Filters to export non-resource files*.
 
 - Each side of Quick duel can be set to Random deck: any of the decks is drawn when the duel
   starts (the two sides never draw the same one). The duel shows both decks' names.
+
+## Confirm targets, battlefield icons, lighter duels (1.52)
+
+- Choosing a target no longer casts at once: an arrow runs from the card (or the creature using its
+  ability) to the target, and a box asks "Cast Wildsurge on your Briar Fox?" with Change target
+  and Confirm. Nothing is paid until you confirm.
+- Creatures on the battlefield show an icon for every keyword (regenerate is now ♻) and for what
+  else they do: ⚙ an ability to use, ⚔ when attacking, ⚰ when dying, ☀ each upkeep, ☕ idle,
+  ✦ when allies enter or die, ♛ a lord, ▲ grows with its kin, ★ legendary; and status marks for
+  unearthed (⚱) and a regeneration shield (🛡). The rules glossary lists them all.
+- Smoother duels with many creatures: no idle animation at all (marks and glows hold still),
+  animations at about 20 frames a second, and a creature is repainted only when something about
+  it changes.

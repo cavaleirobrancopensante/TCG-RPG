@@ -11,7 +11,22 @@ const SIZE := Vector2(118, 158)
 const SELECT_COLOR := Color(0.45, 0.95, 0.3)
 const KW_ICONS := {"flying": "✈", "reach": "R", "haste": "»", "lifelink": "♥", "deathtouch": "☠",
 	"vigilance": "◉", "trample": "T", "defender": "▣", "martyr": "✝", "sanctified": "✚",
-	"dread": "☾", "regenerate": "↻", "first_strike": "‼", "unmoved": "◆"}
+	"dread": "☾", "regenerate": "♻", "first_strike": "‼", "unmoved": "◆"}
+## What else a creature does on the battlefield, read from its card (the same plaque, after the
+## keywords): an ability you can use, what it does when it attacks or dies, each upkeep, when
+## idle, for its allies, as a lord, growing with its kin; and Legendary.
+const ABILITY_ICONS := {"ability": "⚙", "attack": "⚔", "death": "⚰", "upkeep": "☀", "idle": "☕",
+	"ally": "✦", "lord": "♛", "grows": "▲", "legendary": "★"}
+## The order and meaning of every icon, for the rules glossary.
+const ICON_HELP := [["✈", "Flying"], ["R", "Reach"], ["»", "Haste"], ["♥", "Lifelink"], ["☠", "Deathtouch"],
+	["◉", "Vigilance"], ["T", "Trample"], ["▣", "Defender"], ["✝", "Martyr"], ["✚", "Sanctified"], ["☾", "Dread"],
+	["♻", "Regenerate"], ["‼", "First strike"], ["◆", "Unmoved"],
+	["⚙", "an ability you can use (tap it to see it)"], ["⚔", "does something when it attacks (Charge too)"],
+	["⚰", "does something when it dies"], ["☀", "does something at the beginning of your upkeep"],
+	["☕", "Idle: does something if it rests at the end of your turn"], ["✦", "does something when another of its kind enters or dies"],
+	["♛", "a lord: makes other creatures stronger"], ["▲", "grows with your other creatures or relics"],
+	["★", "Legendary"], ["☮", "pacified: can't attack"], ["⛓", "snared: can't attack or block"],
+	["❄", "frozen: won't untap next turn"], ["⚱", "unearthed: exiled at end of turn"], ["🛡", "a regeneration shield is up"]]
 
 var uid := -1
 var card: Dictionary = {}
@@ -37,6 +52,9 @@ var lunge := Vector2.ZERO     # attack offset
 var _bob := 0.0
 var _texture: Texture2D = null
 var _idle_acc := 0.0
+var _plaque_bottom := 0.0
+var _last_key := ""
+var _was_animating := false
 
 
 
@@ -84,11 +102,22 @@ func sync(p) -> void:   # p: BattleState.Perm
 		status.append("snared")
 	if p.frozen:
 		status.append("frozen")
+	if p.unearthed:
+		status.append("unearthed")
+	if p.regen_shield > 0:
+		status.append("shield")
 	kw_now = []
 	for k in KW_ICONS:
 		if p.has_kw(k):
 			kw_now.append(k)
-	queue_redraw()
+	for k in ability_marks(p.card):
+		kw_now.append(k)
+	# repaint only when something shown changed: a refresh touches every figure, and painting
+	# a full board of them each time was what made a busy duel stutter
+	var key := str([power, toughness, damage, is_tapped, sick, status, kw_now, mark, in_back, zoom])
+	if key != _last_key:
+		_last_key = key
+		queue_redraw()
 
 
 ## Painting a figure is costly, so redraw only while something moves: every frame during
@@ -97,16 +126,17 @@ func _process(delta: float) -> void:
 	var animating := summon_t < 1.0 or fade < 1.0 or flash > 0.0 or lunge != Vector2.ZERO
 	_idle_acc += delta
 	if animating:
-		# animations at about 30 frames a second: smooth enough, half the painting
-		if _idle_acc >= 1.0 / 30.0:
+		_was_animating = true
+	if animating:
+		# animations at about 20 frames a second: enough to read, a third of the painting
+		if _idle_acc >= 1.0 / 20.0:
 			_idle_acc = 0.0
 			queue_redraw()
 		return
-	# at rest a figure stands still (no idle bob); a mark (ready, selected) beats slowly
-	if mark != "" and _idle_acc >= 0.25:
-		_idle_acc = 0.0
-		_bob += 0.55
-		queue_redraw()
+	if _was_animating:
+		_was_animating = false
+		queue_redraw()          # the last frame of a move, then nothing until it changes
+	# at rest a figure and its marks stand still: no idle animation at all
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -174,7 +204,7 @@ func _draw() -> void:
 		var m_w := 46.0 * glow_t
 		var mc := feet + Vector2(0, -m_h * 0.5)
 		for i in 18:
-			var ang := TAU * i / 18.0 + _bob * 0.3
+			var ang := TAU * i / 18.0
 			draw_line(mc, mc + Vector2(cos(ang), sin(ang) * 1.6) * m_w * 1.5, Color(Tapestry.GILT, 0.6 * fade_glow * a), 2.0)
 		var pts := Tapestry.ellipse(mc, m_w, m_h * 0.5, 28)
 		draw_colored_polygon(pts, Color(Tapestry.GILT, 0.55 * fade_glow * a))
@@ -187,7 +217,7 @@ func _draw() -> void:
 	var rise := clampf((summon_t - 0.3) / 0.7, 0.0, 1.0)
 	if rise > 0.0:
 		var tilt := (0.25 if is_tapped else 0.0) * (-1.0 if enemy else 1.0)
-		var bob := sin(_bob) * 1.5 if not is_tapped else 0.0
+		var bob := 0.0
 		var h := 104.0 * (0.85 + 0.15 * rise)
 		var xf := Transform2D(tilt, feet + lunge + Vector2(0, bob + (1.0 - rise) * 24.0))
 		var alpha := a * rise * (0.65 if is_tapped else 1.0)
@@ -211,7 +241,7 @@ func _draw() -> void:
 		"target": mark_col = Tapestry.GILT
 		"select": mark_col = SELECT_COLOR
 	if mark_col.a > 0:
-		var pulse := 0.6 + 0.4 * sin(_bob * 3.0)
+		var pulse := 1.0                 # marks hold still (no idle animation)
 		var fr := Rect2(Vector2(3, 3), SIZE - Vector2(6, 6))
 		draw_rect(fr, Color(mark_col, 0.18 * pulse))
 		draw_rect(fr, Color(mark_col, pulse), false, 3.5)
@@ -250,16 +280,34 @@ func _draw() -> void:
 	if not kws.is_empty():
 		var txt := ""
 		for kw in kws:
-			txt += KW_ICONS.get(kw, "?")
-		var tw := book.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fmin).x
-		var pr := Rect2(4, 5, tw + 10, fmin + 6)
+			txt += KW_ICONS.get(kw, ABILITY_ICONS.get(kw, "?"))
+		# as many lines as the icons need, clear of the power/toughness shield
+		var room := maxf(fmin * 2.0, size.x - sw * 2.0 - 16.0)
+		var lines: Array = []
+		var cur := ""
+		for i in txt.length():
+			var nxt := cur + txt[i]
+			if cur != "" and book.get_string_size(nxt, HORIZONTAL_ALIGNMENT_LEFT, -1, fmin).x > room:
+				lines.append(cur)
+				cur = txt[i]
+			else:
+				cur = nxt
+		lines.append(cur)
+		var tw := 0.0
+		for ln in lines:
+			tw = maxf(tw, book.get_string_size(ln, HORIZONTAL_ALIGNMENT_LEFT, -1, fmin).x)
+		var lh := fmin + 3
+		var pr := Rect2(4, 5, tw + 10, lh * lines.size() + 3)
 		Tapestry.ink_rect(self, pr, Color(Tapestry.PARCHMENT_LIGHT, 0.95 * a), 1.4)
-		draw_string(book, pr.position + Vector2(5, fmin + 1), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fmin, Color(Tapestry.RUBRIC, a))
+		for li in lines.size():
+			draw_string(book, pr.position + Vector2(5, fmin + 1 + li * lh), lines[li], HORIZONTAL_ALIGNMENT_LEFT, -1, fmin, Color(Tapestry.RUBRIC, a))
+		_plaque_bottom = pr.end.y
 	# status: pacified (dove), snared (chain), frozen (snowflake)
 	var rad := fmin * 0.75
-	var sy := 5.0 + fmin + 6 + rad + 6
+	var sy := maxf(5.0 + fmin + 6, _plaque_bottom) + rad + 6
+	_plaque_bottom = 0.0
 	for stt in status:
-		var glyph: String = {"pacified": "☮", "snared": "⛓", "frozen": "❄"}.get(stt, "?")
+		var glyph: String = {"pacified": "☮", "snared": "⛓", "frozen": "❄", "unearthed": "⚱", "shield": "🛡"}.get(stt, "?")
 		Tapestry.ink_circle(self, Vector2(4 + rad, sy), rad, Color(Tapestry.PARCHMENT_LIGHT, 0.95 * a), 1.4)
 		draw_string(book, Vector2(4, sy + fmin * 0.38), glyph, HORIZONTAL_ALIGNMENT_CENTER, rad * 2.0, fmin, Color(Tapestry.ULTRAMARINE, a))
 		sy += rad * 2.0 + 3
@@ -274,3 +322,34 @@ static func _fs(min_size: int) -> int:
 
 func rise_done() -> bool:
 	return summon_t >= 1.0
+
+
+
+## The ability marks of a card (see ABILITY_ICONS), in plaque order.
+static func ability_marks(c: Dictionary, n_abilities: int = -1) -> Array:
+	var out: Array = []
+	var trig := {}
+	for e in c.get("effects", []):
+		trig[String(e.get("trigger", ""))] = true
+	if n_abilities > 0 or (n_abilities < 0 and not c.get("abilities", []).is_empty()):
+		out.append("ability")
+	if trig.has("attack"):
+		out.append("attack")
+	if trig.has("death"):
+		out.append("death")
+	if trig.has("upkeep"):
+		out.append("upkeep")
+	if trig.has("idle"):
+		out.append("idle")
+	if trig.has("ally_enter") or trig.has("ally_dies"):
+		out.append("ally")
+	for stc in c.get("statics", []):
+		var k := String(stc.get("static", ""))
+		var scope := String(stc.get("scope", "self"))
+		if k in ["anthem", "keyword"] and scope != "self" and not out.has("lord"):
+			out.append("lord")
+		if (k in ["kinship", "assembly"]) and not out.has("grows"):
+			out.append("grows")
+	if c.get("legendary", false):
+		out.append("legendary")
+	return out

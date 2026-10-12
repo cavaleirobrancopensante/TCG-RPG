@@ -4765,5 +4765,22 @@
  "Your practice decks": "Tus mazos de práctica",
  "Quick duel": "Duelo rápido",
  "Random deck": "Mazo al azar",
- "Any of the decks below, drawn when the duel starts": "Cualquiera de los mazos de abajo, sorteado al empezar el duelo"
+ "Any of the decks below, drawn when the duel starts": "Cualquiera de los mazos de abajo, sorteado al empezar el duelo",
+ "Use %s's ability on %s?": "¿Usar la habilidad de %s en %s?",
+ "Cast %s on %s?": "¿Lanzar %s sobre %s?",
+ "Change target": "Cambiar objetivo",
+ "an ability you can use (tap it to see it)": "una habilidad que puedes usar (tócala para verla)",
+ "does something when it attacks (Charge too)": "hace algo cuando ataca (también Carga)",
+ "does something when it dies": "hace algo cuando muere",
+ "does something at the beginning of your upkeep": "hace algo al comienzo de tu mantenimiento",
+ "Idle: does something if it rests at the end of your turn": "Ocio: hace algo si descansa al final de tu turno",
+ "does something when another of its kind enters or dies": "hace algo cuando otro de su clase entra o muere",
+ "a lord: makes other creatures stronger": "un señor: fortalece a otras criaturas",
+ "grows with your other creatures or relics": "crece con tus otras criaturas o reliquias",
+ "pacified: can't attack": "pacificada: no puede atacar",
+ "snared: can't attack or block": "atrapada: no puede atacar ni bloquear",
+ "frozen: won't untap next turn": "congelada: no se endereza el próximo turno",
+ "unearthed: exiled at end of turn": "desenterrada: se exilia al final del turno",
+ "a regeneration shield is up": "un escudo de regeneración está activo",
+ "Icons on the battlefield": "Iconos en el campo de batalla"
 }

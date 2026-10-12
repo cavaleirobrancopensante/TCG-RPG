@@ -4765,5 +4765,22 @@
  "Your practice decks": "Seus baralhos de treino",
  "Quick duel": "Duelo rápido",
  "Random deck": "Baralho aleatório",
- "Any of the decks below, drawn when the duel starts": "Qualquer um dos baralhos abaixo, sorteado quando o duelo começa"
+ "Any of the decks below, drawn when the duel starts": "Qualquer um dos baralhos abaixo, sorteado quando o duelo começa",
+ "Use %s's ability on %s?": "Usar a habilidade de %s em %s?",
+ "Cast %s on %s?": "Conjurar %s em %s?",
+ "Change target": "Trocar alvo",
+ "an ability you can use (tap it to see it)": "uma habilidade que você pode usar (toque nela para ver)",
+ "does something when it attacks (Charge too)": "faz algo quando ataca (Investida também)",
+ "does something when it dies": "faz algo quando morre",
+ "does something at the beginning of your upkeep": "faz algo no início da sua manutenção",
+ "Idle: does something if it rests at the end of your turn": "Ócio: faz algo se descansar no fim do seu turno",
+ "does something when another of its kind enters or dies": "faz algo quando outro da sua espécie entra ou morre",
+ "a lord: makes other creatures stronger": "um senhor: fortalece outras criaturas",
+ "grows with your other creatures or relics": "cresce com suas outras criaturas ou relíquias",
+ "pacified: can't attack": "pacificada: não pode atacar",
+ "snared: can't attack or block": "presa: não pode atacar nem bloquear",
+ "frozen: won't untap next turn": "congelada: não desvira no próximo turno",
+ "unearthed: exiled at end of turn": "desenterrada: exilada no fim do turno",
+ "a regeneration shield is up": "um escudo de regeneração está ativo",
+ "Icons on the battlefield": "Ícones no campo de batalha"
 }

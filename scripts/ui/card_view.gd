@@ -63,12 +63,8 @@ func _process(delta: float) -> void:
 				tapped.emit(self)
 			else:
 				long_pressed.emit(self)
-	if foil or highlight or selected:
-		_t += delta
-		_acc += delta
-		if _acc >= 0.15:       # a few repaints a second is plenty for the shimmer and glow
-			_acc = 0.0
-			queue_redraw()
+	# foil, highlight and selected are drawn still: no shimmer animation (it cost a repaint of
+	# every such card several times a second)
 
 
 ## Tap = press and release without moving. Hold ~0.45 s = long press (e.g. read the card).
@@ -113,7 +109,7 @@ func _draw() -> void:
 
 	if highlight or selected:
 		var gc := Tapestry.GILT if selected else Color(0.35, 0.85, 0.35)
-		var pulse := 0.5 + 0.5 * sin(_t * 5.0)
+		var pulse := 1.0        # steady (no blinking)
 		draw_rect(r.grow(4 * k), Color(gc, 0.45 + 0.45 * pulse), false, 4 * k)
 
 	# leaf + faith border band
@@ -232,7 +228,7 @@ func _draw() -> void:
 			HORIZONTAL_ALIGNMENT_CENTER, 34 * k, int(15 * k), pt_col)
 
 	if foil:
-		var band := fmod(_t * 0.35, 1.6) - 0.3
+		var band := 0.5         # the foil sheen held still across the middle
 		var x0 := band * w * 1.6 - w * 0.3
 		var pts := PackedVector2Array([Vector2(x0, 0), Vector2(x0 + w * 0.3, 0), Vector2(x0 + w * 0.02, h), Vector2(x0 - w * 0.28, h)])
 		var clipped := PackedVector2Array()
