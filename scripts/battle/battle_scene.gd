@@ -214,12 +214,18 @@ func _build_ui() -> void:
 	player_portrait.pressed.connect(func(): _on_player_target(0))
 	prow.add_child(player_portrait)
 	prow.add_child(player_life)
+	# hand, library and graveyard on their own row under the portrait: the column stays narrow,
+	# leaving the hand room to spread to the left
+	var pile_row := HBoxContainer.new()
+	pile_row.name = "PileRow"
+	pile_row.add_theme_constant_override("separation", 2)
+	col.add_child(pile_row)
 	for k in ["hand", "library"]:
 		var pi0 := _pile_icon(k)
 		pile_icons[0].append(pi0)
-		prow.add_child(pi0)
+		pile_row.add_child(pi0)
 	grave_btns[0] = _grave_button(0)
-	prow.add_child(grave_btns[0])
+	pile_row.add_child(grave_btns[0])
 	player_info = _rich(UIKit.FS_BODY)
 	player_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	player_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
