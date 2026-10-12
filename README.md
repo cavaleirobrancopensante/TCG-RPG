@@ -803,3 +803,10 @@ two-for-one creatures, engines and the graveyard as a resource.
   Grave Summoner (a cheap creature back from the graveyard), Legion's Hold, Azrakel (each opponent
   sacrifices a creature).
 - AI against AI: the Pact wins about 60% for now; playtesting will tell more than the AI can.
+
+## A duel can no longer hang on an animation (1.64)
+
+- The duel no longer waits on a figure's own animation (a lunge, a hit, a death): it waits a set
+  time instead, so a figure removed mid-animation can't leave the duel stuck.
+- A choice the duel owes you that can't be asked (a target that vanished) is settled
+  automatically instead of holding the game.
