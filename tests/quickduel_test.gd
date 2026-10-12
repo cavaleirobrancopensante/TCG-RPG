@@ -52,6 +52,24 @@ func _ready() -> void:
 		await _frames(6)
 	_check(GameState.gold == gold0 and GameState.life == life0, "the game's gold and life are untouched")
 	_check(main.ui_layer.get_node_or_null("QuickDuel") != null, "back at Quick duel after the duel")
+	# random decks on both sides: two different decks are drawn
+	q = main.ui_layer.get_node("QuickDuel")
+	(q.find_child("Random0", true, false) as Button).pressed.emit()
+	(q.find_child("Random1", true, false) as Button).pressed.emit()
+	await _frames(2)
+	_check(q.mine == QuickDuelScreen.RANDOM and q.theirs == QuickDuelScreen.RANDOM, "Random deck can be chosen for both sides")
+	var diff := true
+	for k in 20:
+		var pk: Array = q._resolve()
+		if pk[0] == pk[1] or pk[0] < 0 or pk[1] < 0:
+			diff = false
+	_check(diff, "random draws two different real decks")
+	(q.find_child("Duel", true, false) as Button).pressed.emit()
+	await _frames(6)
+	_check(main.screen is BattleScene and DeckTools.count(main.screen.info["deck"]) == 40, "a random duel starts with real decks")
+	if main.screen is BattleScene:
+		main.screen.finished.emit(false)
+		await _frames(6)
 	# the sandbox builder
 	var decks0: Array = GameState.decks.duplicate(true)
 	main.ui_layer.get_node("QuickDuel").edit_decks.emit()

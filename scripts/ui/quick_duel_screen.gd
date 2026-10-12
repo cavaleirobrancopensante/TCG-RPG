@@ -11,7 +11,9 @@ signal back
 const SAVE := "user://quickduel.json"
 
 var premade: Array = []
-var mine := 0                 # index into _all() for your side
+const RANDOM := -1            # "a random deck", drawn when the duel starts
+const RANDOM_KEY := "__random__"
+var mine := 0                 # index into _all() for your side (RANDOM: drawn at the duel)
 var theirs := 0               # and the opponent's
 var life := 15
 var _lists := {}              # side -> VBoxContainer
@@ -26,8 +28,8 @@ func _ready() -> void:
 	var st := load_state()
 	life = int(st.get("life", Hero.BASE_LIFE))
 	var all := _all()
-	mine = clampi(_find(String(st.get("mine", "")), 0), 0, all.size() - 1)
-	theirs = clampi(_find(String(st.get("theirs", "")), mini(1, all.size() - 1)), 0, all.size() - 1)
+	mine = RANDOM if st.get("mine", "") == RANDOM_KEY else clampi(_find(String(st.get("mine", "")), 0), 0, all.size() - 1)
+	theirs = RANDOM if st.get("theirs", "") == RANDOM_KEY else clampi(_find(String(st.get("theirs", "")), mini(1, all.size() - 1)), 0, all.size() - 1)
 	var root := VBoxContainer.new()
 	UIKit.content_rect(root)
 	root.add_theme_constant_override("separation", UIKit.SP_1)
@@ -99,7 +101,8 @@ func _ready() -> void:
 	var go := UIKit.primary_button("Duel", func():
 		var a := _all()
 		save_state()
-		duel.emit(a[mine], a[theirs], life), 200)
+		var pick := _resolve()
+		duel.emit(a[pick[0]], a[pick[1]], life), 200)
 	go.name = "Duel"
 	foot.add_child(go)
 	_set_life(life)
@@ -120,6 +123,22 @@ func _all() -> Array:
 	return out + premade
 
 
+## The two decks for the duel: a Random side draws any deck (the two sides never the same one).
+func _resolve() -> Array:
+	var n := _all().size()
+	var a := mine if mine != RANDOM else randi() % n
+	var b := theirs
+	if b == RANDOM:
+		b = randi() % n
+		if n > 1:
+			while b == a:
+				b = randi() % n
+	if mine == RANDOM and n > 1:
+		while a == b:
+			a = randi() % n
+	return [a, b]
+
+
 func _find(nm: String, fallback: int) -> int:
 	var a := _all()
 	for i in a.size():
@@ -138,6 +157,21 @@ func _fill() -> void:
 	for side in 2:
 		var box: VBoxContainer = _lists[side]
 		UIKit.clear(box)
+		# first: a random deck, drawn from all of them when the duel starts
+		var sdr: int = side
+		var rb := UIKit.button("🎲  " + I18n.t("Random deck"), func():
+			if sdr == 0:
+				mine = RANDOM
+			else:
+				theirs = RANDOM
+			_fill(), 0)
+		rb.name = "Random%d" % side
+		rb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rb.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		rb.add_theme_font_size_override("font_size", UIKit.FS_SECONDARY)
+		rb.tooltip_text = I18n.t("Any of the decks below, drawn when the duel starts")
+		UIKit.set_selected(rb, (mine if side == 0 else theirs) == RANDOM)
+		box.add_child(rb)
 		var last_kind := ""
 		for i in a.size():
 			var d: Dictionary = a[i]
@@ -164,12 +198,15 @@ func _fill() -> void:
 		if not a.any(func(x): return x["kind"] == "mine") and side == 0:
 			var hint := UIKit.label(I18n.t("Build decks to make your own from every card."), UIKit.FS_MIN, UIKit.DIM, true)
 			box.add_child(hint)
-			box.move_child(hint, 0)
+			box.move_child(hint, 1)
 
 
 ## Read the chosen deck card by card.
 func _view(side: int) -> void:
-	var d: Dictionary = _all()[mine if side == 0 else theirs]
+	var ix := mine if side == 0 else theirs
+	if ix == RANDOM:
+		return              # a random deck is only known when the duel starts
+	var d: Dictionary = _all()[ix]
 	var ids: Array = []
 	var keys: Array = d["cards"].keys()
 	keys.sort_custom(func(x, y): return int(CardDB.get_card(x).get("mana_value", 0)) < int(CardDB.get_card(y).get("mana_value", 0)))
@@ -192,8 +229,8 @@ static func load_state() -> Dictionary:
 func save_state() -> void:
 	var st := load_state()
 	var a := _all()
-	st["mine"] = a[mine]["name"]
-	st["theirs"] = a[theirs]["name"]
+	st["mine"] = RANDOM_KEY if mine == RANDOM else a[mine]["name"]
+	st["theirs"] = RANDOM_KEY if theirs == RANDOM else a[theirs]["name"]
 	st["life"] = life
 	write_state(st)
 
