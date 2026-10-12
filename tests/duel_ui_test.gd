@@ -316,6 +316,19 @@ func _test_ability_narration(b: BattleScene) -> void:
 	var died := _find(b, "Pit Imp dies", "")
 	check(died != "", "the death is told: '%s'" % died)
 	check(b.log_label.text == b.log_history.back(), "the middle bar shows the last line of the log")
+	# the graveyard: a 🪦 button opens the list, a row opens the card
+	var gb: Button = b.grave_btns[0]
+	check(gb != null and not gb.disabled and gb.count == st.side(0).graveyard.size(), "the tombstone button counts the graveyard's cards (%d)" % (gb.count if gb else -1))
+	gb.pressed.emit()
+	await _frames(2)
+	var gl = b.get_node_or_null("GraveList")
+	check(gl != null and gl.find_child("Grave_0", true, false) != null, "it opens a list of the graveyard's cards")
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png(OS.get_user_data_dir() + "/shots/duel_graveyard.png")
+	(gl.find_child("Grave_0", true, false) as Button).pressed.emit()
+	await _frames(2)
+	check(b.preview is CardViewer and b.get_node_or_null("GraveList") == null or b.preview is CardViewer, "tapping a card opens it to read")
+	b._close_preview()
 
 
 ## Lines for events shaped as BattleState emits them: an enemy spell on our creature and its

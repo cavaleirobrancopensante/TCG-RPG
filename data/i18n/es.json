@@ -4782,5 +4782,11 @@
  "frozen: won't untap next turn": "congelada: no se endereza el próximo turno",
  "unearthed: exiled at end of turn": "desenterrada: se exilia al final del turno",
  "a regeneration shield is up": "un escudo de regeneración está activo",
- "Icons on the battlefield": "Iconos en el campo de batalla"
+ "Icons on the battlefield": "Iconos en el campo de batalla",
+ "Your graveyard": "Tu cementerio",
+ "%s's graveyard": "Cementerio de %s",
+ "Graveyard": "Cementerio",
+ "Graveyard: tap to see its cards": "Cementerio: toca para ver sus cartas",
+ "Cards in hand": "Cartas en la mano",
+ "Cards in the library": "Cartas en la biblioteca"
 }

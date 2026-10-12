@@ -693,3 +693,10 @@ under *Export → Resources → Filters to export non-resource files*.
 
 - The target question has a third button, Cancel: the card stays in hand (or the ability unused)
   and nothing is paid.
+
+## Hand, library and graveyard icons (1.54)
+
+- Each side's hand, library and graveyard are drawn icons with their counts beside the life: a fan
+  of cards, a deck stacked at a slant, and a tombstone.
+- Tap the tombstone (yours or the enemy's) for the graveyard as a list, newest card on top; tap a
+  card to read it (and, in yours, to Unearth it when it can be).

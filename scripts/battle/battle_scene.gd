@@ -46,6 +46,8 @@ var enemy_lands: LandStrip
 var player_lands: LandStrip
 var enemy_life: Button
 var player_life: Button
+var grave_btns := [null, null]     # the tombstone graveyard buttons, yours and the enemy's
+var pile_icons := [[], []]         # per side: the hand and library count icons
 var enemy_info: RichTextLabel
 var player_info: RichTextLabel
 var enemy_relics: HBoxContainer
@@ -128,6 +130,12 @@ func _build_ui() -> void:
 	enemy_portrait.pressed.connect(func(): _on_player_target(1))
 	ebar.add_child(enemy_portrait)
 	ebar.add_child(enemy_life)
+	for k in ["hand", "library"]:
+		var pi1 := _pile_icon(k)
+		pile_icons[1].append(pi1)
+		ebar.add_child(pi1)
+	grave_btns[1] = _grave_button(1)
+	ebar.add_child(grave_btns[1])
 	enemy_info = _rich(UIKit.FS_SECONDARY)
 	enemy_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	# a long name must never make the bar (and with it the whole duel) wider than the screen
@@ -206,6 +214,12 @@ func _build_ui() -> void:
 	player_portrait.pressed.connect(func(): _on_player_target(0))
 	prow.add_child(player_portrait)
 	prow.add_child(player_life)
+	for k in ["hand", "library"]:
+		var pi0 := _pile_icon(k)
+		pile_icons[0].append(pi0)
+		prow.add_child(pi0)
+	grave_btns[0] = _grave_button(0)
+	prow.add_child(grave_btns[0])
 	player_info = _rich(UIKit.FS_BODY)
 	player_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	player_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -930,12 +944,18 @@ func _refresh_bars() -> void:
 	for i in 2:
 		var s := st.side(i)
 		(player_lands if i == 0 else enemy_lands).set_lands(s.lands)
+		if grave_btns[i]:
+			grave_btns[i].set_count(s.graveyard.size())
+			grave_btns[i].disabled = s.graveyard.is_empty()
+		if pile_icons[i].size() == 2:
+			pile_icons[i][0].set_count(s.hand.size())
+			pile_icons[i][1].set_count(s.deck.size())
 		var lb := player_life if i == 0 else enemy_life
 		lb.text = "♥ %d" % s.life
 		lb.add_theme_color_override("font_color", UIKit.RED if s.life <= 5 else UIKit.TEXT)
 		lb.add_theme_color_override("font_hover_color", UIKit.RED)
-		var t := ("✋%d  📚%d  ⚰%d\n" % [s.hand.size(), s.deck.size(), s.graveyard.size()]) if i == 0 \
-			else "[b]%s[/b]   ✋%d  📚%d  ⚰%d   " % [s.name, s.hand.size(), s.deck.size(), s.graveyard.size()]
+		# hand, library and graveyard are drawn icons beside the life; this line names and counts mana
+		var t := "" if i == 0 else "[b]%s[/b]   " % s.name
 		# Lands: untapped/total per colour.
 		var tot := {}
 		var free := {}
@@ -1016,6 +1036,84 @@ func _update_hand_glow() -> void:
 ## The green pulse drawn over a playable card in hand (inside its edge, so neighbours and the
 ## bottom of the screen never hide it).
 const GLOW_COLOR := SummonFigure.SELECT_COLOR
+
+
+## A drawn pile icon with its count: an open hand, a stack of books (the library) or a tombstone
+## (the graveyard, a button that opens the list). Inked like the rest of the board.
+class _PileIcon extends Button:
+	var kind := "hand"
+	var count := 0
+
+	func _init() -> void:
+		flat = true
+		focus_mode = Control.FOCUS_NONE
+		text = ""
+
+	func set_count(n: int) -> void:
+		if n != count:
+			count = n
+			queue_redraw()
+
+	func _draw() -> void:
+		var h := size.y
+		var s := minf(h * 0.62, 34.0)                 # the icon's size
+		var c := Vector2(6.0 + s * 0.5, h * 0.5)
+		var a := 0.45 if disabled else 1.0
+		var ink := Color(Tapestry.INK, a)
+		match kind:
+			"hand":
+				# a fan of three cards held from the bottom corner
+				var pivot := c + Vector2(0, s * 0.48)
+				var cw := s * 0.42
+				var ch := s * 0.66
+				for i in 3:
+					var ang := (i - 1) * 0.42
+					var corners := [Vector2(-cw * 0.5, -ch), Vector2(cw * 0.5, -ch), Vector2(cw * 0.5, 0), Vector2(-cw * 0.5, 0)]
+					var pts := PackedVector2Array()
+					for q in corners:
+						pts.append(pivot + q.rotated(ang) + Vector2(0, -s * 0.06))
+					Tapestry.ink_poly(self, pts, Color(Tapestry.PARCHMENT_LIGHT, a), 1.4, ink)
+					# a gilt frame line inside each card
+					var inner := PackedVector2Array()
+					for q in corners:
+						inner.append(pivot + (q * 0.72 + Vector2(0, -ch * 0.14)).rotated(ang) + Vector2(0, -s * 0.06))
+					inner.append(inner[0])
+					draw_polyline(inner, Color(Tapestry.GILT, a), 1.2)
+			"library":
+				# a deck of cards stacked, seen from above at a slant
+				var cw2 := s * 0.50
+				var ch2 := s * 0.66
+				var skew := s * 0.16
+				for i in 5:
+					var o := Vector2(-i * s * 0.05, -i * s * 0.05) + Vector2(s * 0.10, s * 0.10)
+					var pts2 := PackedVector2Array([c + o + Vector2(-cw2 * 0.5 + skew, -ch2 * 0.5), c + o + Vector2(cw2 * 0.5 + skew, -ch2 * 0.5),
+						c + o + Vector2(cw2 * 0.5 - skew, ch2 * 0.5), c + o + Vector2(-cw2 * 0.5 - skew, ch2 * 0.5)])
+					var top_card := i == 4
+					Tapestry.ink_poly(self, pts2, Color(Tapestry.ULTRAMARINE if top_card else Tapestry.PARCHMENT_LIGHT, a), 1.3, ink)
+					if top_card:
+						# the card back: a gilt lozenge
+						var mid := (pts2[0] + pts2[2]) * 0.5
+						var lz := PackedVector2Array([mid + Vector2(skew * 0.3, -ch2 * 0.28), mid + Vector2(cw2 * 0.22, 0),
+							mid + Vector2(-skew * 0.3, ch2 * 0.28), mid + Vector2(-cw2 * 0.22, 0)])
+						Tapestry.ink_poly(self, lz, Color(Tapestry.GILT, a), 1.0, ink)
+			"grave":
+				# a round-topped headstone with a cross, on a strip of earth
+				var w := s * 0.66
+				var top := c.y - s * 0.48
+				var base := c.y + s * 0.38
+				var pts := PackedVector2Array()
+				pts.append(Vector2(c.x - w * 0.5, base))
+				for k in 13:
+					var t := PI + PI * k / 12.0
+					pts.append(Vector2(c.x + cos(t) * w * 0.5, top + w * 0.5 + sin(t) * w * 0.5))
+				pts.append(Vector2(c.x + w * 0.5, base))
+				Tapestry.ink_poly(self, pts, Color(Tapestry.STONE, a), 1.6, ink)
+				draw_line(Vector2(c.x, top + s * 0.18), Vector2(c.x, top + s * 0.62), ink, 2.0)
+				draw_line(Vector2(c.x - s * 0.15, top + s * 0.32), Vector2(c.x + s * 0.15, top + s * 0.32), ink, 2.0)
+				draw_rect(Rect2(c.x - s * 0.55, base, s * 1.1, s * 0.1), Color(0.35, 0.24, 0.14, a))
+		var fnt := Tapestry.font("book")
+		var fs := UIKit.FS_SECONDARY
+		draw_string(fnt, Vector2(c.x + s * 0.5 + 6.0, h * 0.5 + fs * 0.36), str(count), HORIZONTAL_ALIGNMENT_LEFT, -1, fs, ink)
 
 
 class _Glow extends Control:
@@ -2638,7 +2736,7 @@ func _can_respond() -> bool:
 	return false
 
 
-## Tapping a side's counts (hand, library, ⚰ graveyard) opens that graveyard.
+## Tapping a side's line (its name and mana) opens that graveyard too.
 func _tap_opens_graveyard(ctl: Control, side_i: int) -> void:
 	ctl.mouse_filter = Control.MOUSE_FILTER_STOP
 	ctl.tooltip_text = I18n.t("Tap to see the graveyard")
@@ -2744,7 +2842,91 @@ func _counter_ready() -> bool:
 
 
 ## Your graveyard (or the enemy's), with Unearth on the cards that have it.
+## The tombstone button of a side: its graveyard as a list.
+func _grave_button(side_i: int) -> Button:
+	var b := _pile_icon("grave")
+	b.name = "Graveyard%d" % side_i
+	b.tooltip_text = I18n.t("Graveyard: tap to see its cards")
+	b.pressed.connect(func(): _show_graveyard(side_i))
+	b.custom_minimum_size = Vector2(UIKit.TARGET_W + 10, UIKit.TARGET)
+	for st_name in ["normal", "hover", "pressed", "disabled", "focus"]:
+		b.add_theme_stylebox_override(st_name, Tapestry.stylebox({"normal": "button", "hover": "hover", "pressed": "pressed", "disabled": "disabled", "focus": "hover"}[st_name]))
+	return b
+
+
+## A hand or library count: the drawn icon and the number (not a button).
+func _pile_icon(kind: String) -> _PileIcon:
+	var b := _PileIcon.new()
+	b.kind = kind
+	b.custom_minimum_size = Vector2(UIKit.TARGET_W, 40)
+	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if kind != "grave":
+		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.tooltip_text = I18n.t("Cards in hand") if kind == "hand" else I18n.t("Cards in the library")
+	return b
+
+
+## A side's graveyard as a list, newest first; tap a card to read it (and, for yours, to
+## unearth it when it can be).
 func _show_graveyard(side_i: int) -> void:
+	var g: Array = st.side(side_i).graveyard
+	if g.is_empty():
+		return
+	_close_preview()
+	if has_node("GraveList"):
+		get_node("GraveList").queue_free()
+	var dim := ColorRect.new()
+	dim.name = "GraveList"
+	dim.color = Color(0, 0, 0, 0.55)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	dim.gui_input.connect(func(ev):
+		if ev is InputEventMouseButton and ev.pressed:
+			dim.queue_free())
+	var panel := _centered_panel(dim)
+	var vp := get_viewport_rect().size
+	panel.custom_minimum_size = Vector2(minf(560.0, vp.x - 40.0), minf(vp.y - 80.0, 120.0 + 70.0 * g.size()))
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", UIKit.SP_1)
+	panel.add_child(v)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", UIKit.GAP)
+	v.add_child(head)
+	var who := I18n.t("Your graveyard") if side_i == 0 else I18n.t("%s's graveyard") % st.side(1).name
+	var t := UIKit.title("%s (%d)" % [who, g.size()], UIKit.FS_HEADING - 4)
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	t.clip_text = true
+	head.add_child(t)
+	var close := _btn(I18n.t("Close"), func(): dim.queue_free(), 110)
+	close.name = "CloseGrave"
+	head.add_child(close)
+	var sc := ScrollContainer.new()
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	v.add_child(sc)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 4)
+	sc.add_child(list)
+	var drag := DragScroll.attach(self, sc)
+	for k in range(g.size() - 1, -1, -1):        # the newest on top
+		var gi: int = k
+		var row := DeckBuilder.CardRow.create(String(g[k]))
+		row.name = "Grave_%d" % k
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.pressed.connect(func():
+			if drag.dragged:
+				return
+			dim.queue_free()
+			_show_graveyard_card(side_i, gi))
+		var c := CardDB.get_card(String(g[k]))
+		if side_i == 0 and c.has("unearth"):
+			row.tooltip_text = I18n.t("Unearth") + " " + CardView.plain_text(CardView.cost_tokens(c["unearth"]))
+		list.add_child(row)
+
+
+## Read the graveyard card by card from card `gi` (Unearth on yours, when it can be).
+func _show_graveyard_card(side_i: int, start: int) -> void:
 	var g: Array = st.side(side_i).graveyard
 	if g.is_empty():
 		return
@@ -2752,7 +2934,8 @@ func _show_graveyard(side_i: int) -> void:
 	var entries: Array = []
 	for id in g:
 		entries.append(id)
-	preview = CardViewer.open(self, entries, entries.size() - 1, func(_e, gi):
+	preview = CardViewer.open(self, entries, clampi(start, 0, entries.size() - 1), func(_e, gi2):
+		var gi := int(gi2)
 		if side_i != 0:
 			return []
 		var c := CardDB.get_card(String(st.side(0).graveyard[gi]) if gi < st.side(0).graveyard.size() else "")
