@@ -225,6 +225,10 @@
    "note": "scripts/autoload/music.gd"
   },
   {
+   "key": "new URL('%s', location.href).href",
+   "note": "scripts/autoload/music.gd"
+  },
+  {
    "key": "Back",
    "note": "scripts/autoload/shortcuts.gd"
   },
@@ -1053,6 +1057,14 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Leave the practice duel?",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Nothing is lost: it is only practice.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "You will lose this match.",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -1082,6 +1094,10 @@
   },
   {
    "key": "You flee the field.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "The practice duel is lost.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -2341,6 +2357,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Quick duel",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Settings",
    "note": "scripts/main.gd"
   },
@@ -2354,6 +2374,14 @@
   },
   {
    "key": "build %s",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Practice deck",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Practice deck 1",
    "note": "scripts/main.gd"
   },
   {
@@ -2669,6 +2697,10 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "%d gold for ending the duel above your full life",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "nothing but the road ahead",
    "note": "scripts/main.gd"
   },
@@ -2830,6 +2862,10 @@
   },
   {
    "key": "Not yet",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "%d gold for ending the duel above your full life.",
    "note": "scripts/main.gd"
   },
   {
@@ -4033,7 +4069,7 @@
    "note": "scripts/ui/hero_screen.gd"
   },
   {
-   "key": "Everyone has 10 life and draws 7 cards.",
+   "key": "Everyone starts duels with 15 life (and Devotion adds more to yours) and draws 7 cards.",
    "note": "scripts/ui/hero_screen.gd"
   },
   {
@@ -4189,6 +4225,58 @@
    "note": "scripts/ui/phase_bar.gd"
   },
   {
+   "key": "Practice only: no life, gold or cards of your game are at stake. Your practice decks may use every card in the game.",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Your deck",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Opponent",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "View",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "View%d",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Build decks",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Starting life",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Duel",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Your practice decks",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Theme decks (the wanderers' decks)",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Two-faith decks",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Deck%d_%d",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Build decks to make your own from every card.",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
    "key": "Turn your device sideways",
    "note": "scripts/ui/rotate_overlay.gd"
   },
@@ -4302,10 +4390,6 @@
   },
   {
    "key": "Fill the whole screen",
-   "note": "scripts/ui/settings_screen.gd"
-  },
-  {
-   "key": "Duel",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -5803,7 +5887,7 @@
    "note": "card subtype"
   },
   {
-   "key": "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +1/+1.",
+   "key": "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.",
    "note": "rules text of Famished Ghoul"
   },
   {
@@ -7731,7 +7815,7 @@
    "note": "card name (revel, spell)"
   },
   {
-   "key": "Firecracker Garland deals 1 damage to target enemy creature. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.",
+   "key": "Firecracker Garland deals 1 damage to target enemy creature. If that creature has flying, it deals 3 damage instead. Carouse: If you've played another non-land card this turn, it also deals 1 damage to the enemy player.",
    "note": "rules text of Firecracker Garland"
   },
   {
@@ -8679,7 +8763,7 @@
    "note": "card name (lyceum, relic)"
   },
   {
-   "key": "{2}, Tap: Tap target enemy creature.",
+   "key": "{2}, Tap: Tap target enemy creature. If that creature has flying, freeze it instead. (It doesn't untap during its controller's next untap step.)",
    "note": "rules text of Harbour Chain"
   },
   {
@@ -9787,7 +9871,7 @@
    "note": "card subtype"
   },
   {
-   "key": "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature.",
+   "key": "At the beginning of your upkeep, Galvanic Coil deals 1 damage to target enemy creature. If that creature has flying, it deals 2 damage instead.",
    "note": "rules text of Galvanic Coil"
   },
   {

@@ -596,3 +596,90 @@ static func theme_look(theme_id: String, rng: RandomNumberGenerator) -> String:
 			if c["type"] == "creature" and is_on_theme(id, theme_id) and c.get("faction2", "") == "":
 				pool.append(id)
 	return pool[rng.randi_range(0, pool.size() - 1)] if not pool.is_empty() else ""
+
+
+# ------------------------------------------------------------------ pre-made decks (quick duel)
+
+const PREMADE_CURVE := {1: 2, 2: 7, 3: 6, 4: 4, 5: 3, 6: 1}   # 23 spells by mana value (6 = six or more)
+
+## A two-faith deck as a careful player would build it from every card of the two faiths (and,
+## with the Technocracy, its generic cards): the best cards by build value, 3 copies of a
+## common or uncommon, 2 of a rare, 1 of a mythic or a legend, a real curve, 15 creatures and
+## 8 other cards, the pair's dual land and basics to match.
+static func premade_pair(f1: String, f2: String) -> Dictionary:
+	var allowed := [f1, f2]
+	var cands: Array = []
+	for id in CardDB.all_set_ids():
+		var c := CardDB.get_card(id)
+		if c.is_empty() or c.get("type") == "land" or c.get("rarity", "") == "token":
+			continue
+		var fa: String = c.get("faction", "")
+		var fb: String = c.get("faction2", "")
+		if allowed.has(fa) and (fb == "" or allowed.has(fb)):
+			cands.append([id, _build_value(c)])
+	cands.sort_custom(func(x, y): return x[1] > y[1])
+	var deck := {}
+	var slots := {}
+	var spells := 0
+	var creatures := 0
+	for pass_i in 3:
+		for e in cands:
+			if spells >= TARGET_SPELLS:
+				break
+			var id: String = e[0]
+			var c := CardDB.get_card(id)
+			var is_cre: bool = c.get("type") == "creature"
+			if (pass_i == 0 and not is_cre) or (pass_i == 1 and is_cre):
+				continue
+			var slot := clampi(int(c.get("mana_value", 0)), 1, 6)
+			var cap := _premade_cap(c)
+			while int(deck.get(id, 0)) < cap and spells < TARGET_SPELLS:
+				if pass_i == 0 and creatures >= 15:
+					break
+				if pass_i < 2 and int(slots.get(slot, 0)) >= int(PREMADE_CURVE[slot]):
+					break
+				deck[id] = int(deck.get(id, 0)) + 1
+				slots[slot] = int(slots.get(slot, 0)) + 1
+				spells += 1
+				if is_cre:
+					creatures += 1
+	var duals := 0
+	for id in CardDB.cards:
+		var c := CardDB.get_card(id)
+		if c.get("type") == "land" and c.has("produces") and not CardDB.is_basic_land(id):
+			var pr: Array = c["produces"]
+			if pr.size() == 2 and pr.has(Factions.info(f1)["mana"]) and pr.has(Factions.info(f2)["mana"]):
+				deck[id] = 3
+				duals += 3
+	add_lands(deck, TARGET_LANDS - duals)
+	return deck
+
+
+static func _premade_cap(c: Dictionary) -> int:
+	if c.get("legendary", false) or c.get("rarity", "") == "mythic":
+		return 1
+	if c.get("rarity", "") == "rare":
+		return 2
+	return 3
+
+
+## Every pre-made deck for the quick duel: [{name, cards, faith, kind}], the 18 theme decks
+## (as the wanderers on the road build them, a seasoned level) and the 15 two-faith decks.
+## The same every time (fixed seeds).
+static func premade_decks() -> Array:
+	var out: Array = []
+	var th := themes()
+	for tid in th:
+		var rng := RandomNumberGenerator.new()
+		rng.seed = hash(tid)
+		var t: Dictionary = th[tid]
+		var tribe := String(t.get("tribe", ""))
+		out.append({"name": "%s: %s" % [Factions.info(t["faith"])["short"], I18n.t(tribe + "s") if tribe != "" else tid],
+			"cards": themed_deck(tid, 4, rng), "faith": t["faith"], "kind": "theme"})
+	for ai in Factions.ORDER.size():
+		for bi in range(ai + 1, Factions.ORDER.size()):
+			var a: String = Factions.ORDER[ai]
+			var b: String = Factions.ORDER[bi]
+			out.append({"name": "%s + %s" % [Factions.info(a)["short"], Factions.info(b)["short"]],
+				"cards": premade_pair(a, b), "faith": a, "kind": "pair"})
+	return out

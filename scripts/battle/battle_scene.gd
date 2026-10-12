@@ -77,11 +77,12 @@ func start(p_info: Dictionary) -> void:
 	_build_ui()
 	st = BattleState.new()
 	st.auto_priority = false        # the screen drives the priority windows
-	var pdeck := DeckTools.to_list(GameState.deck)
+	var my_deck: Dictionary = info.get("player_deck", GameState.deck)     # a practice duel brings its own
+	var pdeck := DeckTools.to_list(my_deck)
 	var edeck := DeckTools.to_list(info.get("deck", {}))
-	var main_f := DeckTools.best_factions(GameState.deck, 1)
+	var main_f := DeckTools.best_factions(my_deck, 1)
 	st.side_faction = [main_f[0] if not main_f.is_empty() else "sanctum", info.get("faction", "abyss")]
-	st.setup(pdeck, edeck, [GameState.player_name, I18n.t(info.get("name", "Foe"))], [int(info.get("player_life", 20)), int(info.get("life", 20))], -1, 0, true,
+	st.setup(pdeck, edeck, [String(info.get("player_name", GameState.player_name)), I18n.t(info.get("name", "Foe"))], [int(info.get("player_life", 20)), int(info.get("life", 20))], -1, 0, true,
 		[int(info.get("player_hand", BattleState.START_HAND)), BattleState.START_HAND])
 	st.side(0).interactive = not auto_play       # you make your own choices (discards, foresight)
 	_log(I18n.t("A duel against %s begins!") % I18n.t(info.get("name", "a stranger")))
@@ -2959,6 +2960,9 @@ var fled := false
 func _ask_flee() -> void:
 	if st.phase == "over":
 		return
+	if info.get("practice", false):
+		UIKit.confirm(self, I18n.t("Leave the practice duel?"), I18n.t("Nothing is lost: it is only practice."), I18n.t("Leave"), _on_flee, "")
+		return
 	var body := I18n.t("You will lose this match.") if info.get("tournament", false) \
 		else I18n.t("You will drop %d gold (half your purse) and lose 5 random cards from your deck.") % int(GameState.gold / 2)
 	UIKit.confirm(self, I18n.t("Flee the duel?"), body, I18n.t("Flee"), _on_flee)
@@ -2995,6 +2999,8 @@ func _show_result() -> void:
 	var lost_line := "You are driven back to safety."      # a tournament bout: no one dies
 	if fled:
 		lost_line = "You flee the field."
+	elif info.get("practice", false):
+		lost_line = "The practice duel is lost."
 	elif not info.get("tournament", false):
 		lost_line = "You have fallen."
 	var sub := UIKit.label((I18n.t("%s is defeated.") % st.side(1).name) if won else I18n.t(lost_line), 22)
