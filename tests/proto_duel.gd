@@ -71,12 +71,24 @@ func _count(evs: Array, st: BattleState) -> void:
 				k = "Immortal exiled: " + String(CardDB.get_card(String(e["id"])).get("name", ""))
 			"control":
 				k = "creature changes hands"
+			"censured":
+				k = "cards condemned (exiled)"
+			"relic_token":
+				k = "Testimony made for side " + str(e["side"])
+			"venerate":
+				k = "creature cards venerated"
+			"grave_exile":
+				k = "Keeper exiles from a graveyard"
+			"held":
+				k = "Confessor holds a card"
+			"edict":
+				k = "edict sacrifice"
 			"attach":
 				if e.get("possess", false):
 					k = "possession moves to a new host"
 			"cast":
 				var nm := String(CardDB.get_card(String(e["id"])).get("name", ""))
-				if nm in ["Exorcism of the Way", "Great Exorcism", "Legion's Hold", "Whisper of the Imp", "Demon of Wrath", "Mission of Conversion", "Withering Curse"]:
+				if nm in ["Exorcism", "Censure", "Index", "Covet", "Confessor of the Holy Office", "Inquisitor of the Holy Office", "Angel of the Reliquary", "Whisper of the Imp", "Demon of Wrath", "Legion's Hold", "Bargain in Blood", "Withering Curse", "Azrakel, Prince of Wrath"]:
 					k = "cast " + nm
 		if k != "":
 			counts[k] = int(counts.get(k, 0)) + 1

@@ -782,3 +782,24 @@ live in data/cards/proto.json and are outside every pool (no drafts, shops or ca
 - "When it enters" targets (and the Inquisitors' judgement when Crusade begins) are chosen on the
   battlefield like a spell's: tap the target, an arrow points at it, then Confirm or Change target.
   There is no Cancel: the creature is already in play and its ability must happen.
+
+## New prototype decks: Holy Office and Possession (1.63)
+
+Quick duel's prototype decks are rebuilt from the designer's own Magic style: disruption,
+two-for-one creatures, engines and the graveyard as a resource.
+
+- **Church, Holy Office:** Thurifer of the Procession (a Testimony when he enters), Censure ({W}:
+  look at his hand, exile a card, he gets a Testimony), Index ({2}{W}: the same for every copy in
+  his hand, library and graveyard, a Testimony for each), Keeper of the Ossuary (eats graveyards and
+  grows), Pilgrim of the Way (two-faced: a Testimony when Peace returns, taps a blocker when Crusade
+  begins), Exorcism (destroys a Demon, or 2 damage to a man; can't be countered), Confessor of the
+  Holy Office (holds a card from his hand while he lives), Inquisitor of the Holy Office (destroys a
+  Heretic, or taps two), Angel of the Reliquary (Veneration: {1} less for each creature card exiled
+  from your graveyard; flying, Immortal).
+- **Testimony:** a relic token, "{2}, sacrifice this: draw a card".
+- **Pact, Possession:** Sworn Cultist (leaves a Corpse), Covet (he discards the card you choose; you
+  lose 2), Whisper of the Imp, Bargain in Blood (sacrifice a creature: draw two), Grave Robber,
+  Withering Curse (now -3/-3), Demon of Wrath, Cult Hierophant (drains whenever a demon possesses),
+  Grave Summoner (a cheap creature back from the graveyard), Legion's Hold, Azrakel (each opponent
+  sacrifices a creature).
+- AI against AI: the Pact wins about 60% for now; playtesting will tell more than the AI can.

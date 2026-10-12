@@ -690,14 +690,14 @@ static func premade_decks() -> Array:
 ## The redesign's test decks (cards in data/cards/proto.json, outside every pool): the Church's
 ## Peace and Crusade, the Pact's possessions. Quick duel only.
 const PROTO_DECKS := {
-	"Prototype: Church, Pilgrimage": {"faith": "sanctum", "cards": {
-		"proto_s_pilgrim": 4, "proto_s_priest": 3, "proto_s_sentinel": 3, "proto_s_bishop": 2,
-		"proto_s_angel": 1, "proto_s_michael": 1, "proto_s_exorcism": 3, "proto_s_sign": 3,
-		"proto_s_conversion": 2, "proto_s_great": 1}},
+	"Prototype: Church, Holy Office": {"faith": "sanctum", "cards": {
+		"proto_c_thurifer": 3, "proto_c_censure": 4, "proto_c_index": 1, "proto_c_keeper": 2,
+		"proto_c_pilgrim": 3, "proto_c_exorcism": 4, "proto_c_confessor": 3, "proto_c_inquisitor": 2,
+		"proto_c_angel": 1}},
 	"Prototype: Pact, Possession": {"faith": "abyss", "cards": {
-		"proto_a_cultist": 4, "proto_a_robber": 3, "proto_a_skeleton": 3, "proto_a_azrakel": 1,
-		"proto_a_whisper": 4, "proto_a_wrath": 2, "proto_a_hold": 2, "proto_a_whispers": 2,
-		"proto_a_curse": 2}},
+		"proto_p_cultist": 4, "proto_p_covet": 3, "proto_a_whisper": 3, "proto_p_bargain": 2,
+		"proto_a_robber": 2, "proto_a_curse": 2, "proto_a_wrath": 2, "proto_p_hierophant": 2,
+		"proto_p_summoner": 1, "proto_a_hold": 1, "proto_p_azrakel": 1}},
 }
 
 

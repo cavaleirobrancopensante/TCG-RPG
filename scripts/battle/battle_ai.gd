@@ -241,7 +241,16 @@ static func _ability_choice(st: BattleState, i: int, p, ab: Dictionary) -> Array
 				targets.append(host_ref)
 				continue
 			"draw":
-				v += 1.4 * int(e.get("amount", 1))
+				v += 1.4 * int(e.get("amount", 1)) + (0.9 if p.is_token else 0.0)
+			"exile_grave":
+				var gref = st.auto_target(i, e)
+				if gref == null:
+					return [0.0, [], -1]
+				if int(gref.get("side", i)) == i:
+					return [0.0, [], -1]      # our own dead stay for Veneration
+				v += 1.6
+				targets.append(gref)
+				continue
 			"summon":
 				var n := summon_count(st, i, e)
 				if n <= 0:
@@ -339,7 +348,7 @@ static func _ability_choice(st: BattleState, i: int, p, ab: Dictionary) -> Array
 			if e.get("action") == "fight":
 				aligned.append(null)
 			if BattleState.TARGET_CHOICE_TYPES.has(e.get("target", "")):
-				aligned.append(targets[0] if e.get("action") == "attach" else null)
+				aligned.append(targets[0] if e.get("action") in ["attach", "exile_grave"] else null)
 		targets = aligned
 	return [v, targets, sac_uid]
 
@@ -782,6 +791,22 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 					v += amount * 0.4
 			"draw":
 				v += amount * 0.8
+			"censure", "covet", "confess":
+				if st.hand_choices(1 - i).is_empty():
+					if is_spell:
+						return [0.0, []]
+				else:
+					v += 2.6 if e.get("index", false) else 1.8
+			"edict":
+				if foe.creatures.is_empty():
+					if is_spell:
+						return [0.0, []]
+				else:
+					v += 2.2
+			"testimony":
+				v += (0.8 if e.get("who", "self") != "enemy" else -0.8) * amount
+			"inquire":
+				v += st.find_perm(int(chosen["uid"])).value() if chosen != null else 1.0
 		if BattleState.TARGET_CHOICE_TYPES.has(t):
 			targets.append(chosen)
 	return [maxf(v, 0.0), targets]
@@ -1076,6 +1101,16 @@ static func respond(st: BattleState, i: int) -> bool:
 				list.append(e)
 		var r := _answer_value(st, i, list, null, c)
 		var v: float = r[0] - 0.15 * float(c.get("mana_value", 0))
+		var xc: Dictionary = c.get("extra_cost", {})
+		if int(xc.get("life", 0)) > 0:
+			if s.life <= int(xc["life"]) + 4:
+				continue
+			v -= 0.4 * int(xc["life"])
+		if xc.get("sacrifice", false):
+			var cheapest := 99.0
+			for q in s.creatures:
+				cheapest = minf(cheapest, q.value() * (0.4 if q.is_token else 0.9))
+			v -= cheapest
 		if v > best_v:
 			best_v = v
 			best = ["card", hi, r[1]]
@@ -1262,6 +1297,19 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 							v += demon_value(st, z) * 0.8
 				else:
 					return [0.0, []]
+			"exorcise":
+				var best_g := 0.0
+				for ref in st.valid_targets(i, e):
+					var z = st.find_perm(ref["uid"])
+					var g := 0.0
+					if not z.is_creature():
+						g = _possession_gain(st, i, z)
+					elif BattleState.is_demon(z) or z.toughness() - z.damage <= int(e.get("amount", 2)):
+						g = _removal_gain(st, i, z, top)
+					if g > best_g:
+						best_g = g
+						chosen = ref
+				v += best_g
 			"bounce":
 				var best_g := 0.0
 				for ref in st.valid_targets(i, e):

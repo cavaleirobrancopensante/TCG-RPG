@@ -7,7 +7,8 @@ extends RefCounted
 const OPENING_HAND := 7         # everyone draws seven, whatever the stats
 const START_HAND := 7           # the most cards kept at the end of a turn; Reason lets the hero keep more
 const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
-const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "enemy_demon"]
+const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "enemy_demon",
+	"enemy_creature_or_demon", "any_grave_card"]
 
 
 class Perm:
@@ -41,6 +42,7 @@ class Perm:
 	var attached_to := -1      # auras and equipment: the uid of the creature they are on
 	var base_owner := 0        # whose card it is (owner is who controls it now: a possession may steal it)
 	var front_id := ""         # a two-faced card's front face: what goes to the graveyard or a hand
+	var held: Array = []       # [side, card id] taken from a hand while this stays (the Confessor)
 
 	func _state() -> BattleState:
 		return st.get_ref() if st else null
@@ -98,6 +100,8 @@ class BattleSide:
 	var exile: Array = []          # exiled cards (Immortal spirits, unearthed creatures)
 	var possess_owed: Array = []   # interactive: possessions (uids) whose host died, waiting for a new one
 	var trigger_owed: Array = []   # interactive: [{"uid", "e"}] triggers (turning over) waiting for a target
+	var hand_owed: Array = []      # interactive: [{"uid", "e"}] a card to choose from the opponent's hand
+	var edict_owed := 0            # interactive: creatures this side must sacrifice (its choice)
 
 
 var sides: Array = []
@@ -386,7 +390,7 @@ func open_main_window() -> void:
 func has_owed(i: int) -> bool:
 	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty() or side(i).martyr_owed > 0 \
 		or not side(i).leak_owed.is_empty() or not side(i).charge_owed.is_empty() or not side(i).possess_owed.is_empty() \
-		or not side(i).trigger_owed.is_empty()
+		or not side(i).trigger_owed.is_empty() or not side(i).hand_owed.is_empty() or side(i).edict_owed > 0
 
 
 ## The player discards hand card `idx` for a rummage.
@@ -984,7 +988,7 @@ func total_available(i: int) -> int:
 
 
 ## The real cost of a card for side i: Technocracy reducers and the Stoa's tax applied.
-func effective_cost(i: int, c: Dictionary, extra: Dictionary = {}) -> Dictionary:
+func effective_cost(i: int, c: Dictionary, extra: Dictionary = {}, venerate: int = -1) -> Dictionary:
 	var cost: Dictionary = c.get("cost", {}).duplicate()
 	for k in extra:
 		cost[k] = int(cost.get(k, 0)) + int(extra[k])
@@ -1009,6 +1013,10 @@ func effective_cost(i: int, c: Dictionary, extra: Dictionary = {}) -> Dictionary
 	if not per.is_empty():
 		# "costs {1} less for each Philosopher you control"
 		gen -= int(per.get("amount", 1)) * count_kin(i, String(per.get("subtype", "")))
+	if c.get("veneration", false):
+		# Veneration: {1} less for each creature card exiled from your graveyard as you cast it
+		var most := venerable(i)
+		gen -= most if venerate < 0 else mini(venerate, most)
 	gen = maxi(0, gen) + side(i).tax
 	if gen > 0:
 		cost["generic"] = gen
@@ -1427,6 +1435,21 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 		"enemy_relic":
 			for r in enemy.relics:
 				out.append({"kind": "relic", "uid": r.uid})
+		"enemy_creature_or_demon":
+			# an enemy creature, or a possession on one (an Exorcism: Demons die, men take damage)
+			for p in enemy.creatures:
+				if not _protected_from_current(p) and _passes_filters(p, e):
+					out.append({"kind": "creature", "uid": p.uid})
+			for r in enemy.relics:
+				if is_demon(r):
+					out.append({"kind": "relic", "uid": r.uid})
+		"any_grave_card":
+			for k in [1 - i, i]:
+				var seen := {}
+				for gid in side(k).graveyard:
+					if not seen.has(gid):
+						seen[gid] = true
+						out.append({"kind": "grave", "id": gid, "side": k})
 		"enemy_demon":
 			# a Demon creature, or a possession (a Demon on a host)
 			for p in enemy.creatures:
@@ -1469,8 +1492,24 @@ func play(i: int, hand_idx: int, targets: Array = [], overclock: bool = false) -
 		return true
 	# Everything else is cast: the cost (with tax) is paid now, the targets are chosen now,
 	# and it waits on the stack until both players pass.
-	pay(i, effective_cost(i, c, extra))
+	var venerated := 0
+	if c.get("veneration", false):
+		# exile only as many of your dead as the cost needs
+		var most := mini(venerable(i), int(c.get("cost", {}).get("generic", 0)))
+		for k in most + 1:
+			if can_pay(i, effective_cost(i, c, extra, k)):
+				venerated = k
+				break
+	pay(i, effective_cost(i, c, extra, venerated if c.get("veneration", false) else -1))
 	s.tax = 0
+	for n in venerated:
+		for gi in s.graveyard.size():
+			if CardDB.get_card(s.graveyard[gi]).get("type") == "creature":
+				var gid: String = s.graveyard[gi]
+				s.graveyard.remove_at(gi)
+				s.exile.append(gid)
+				emit({"type": "venerate", "side": i, "id": gid})
+				break
 	s.hand.remove_at(hand_idx)
 	s.cast_count += 1
 	_pay_extra(i, c, targets)
@@ -1689,6 +1728,158 @@ func _transform(p: Perm) -> void:
 				return
 
 
+## How many creature cards side i could exile for Veneration.
+func venerable(i: int) -> int:
+	var n := 0
+	for gid in side(i).graveyard:
+		if CardDB.get_card(gid).get("type") == "creature":
+			n += 1
+	return n
+
+
+const TESTIMONY := {"id": "token", "name": "Testimony", "type": "relic", "subtype": "Testimony", "rarity": "token",
+	"faction": "sanctum", "power": 0, "toughness": 0, "keywords": [], "effects": [], "cost": {},
+	"abilities": [{"cost": {"mana": {"generic": 2}, "sacrifice": "self"}, "effects": [{"action": "draw", "amount": 1}],
+		"text": "{2}, sacrifice this: draw a card."}],
+	"text": "{2}, sacrifice this: draw a card."}
+
+
+## A Testimony (a relic token) for side i.
+func make_testimony(i: int) -> void:
+	var r := _make_perm(i, "token", TESTIMONY.duplicate(true))
+	r.is_token = true
+	r.sick = false
+	side(i).relics.append(r)
+	emit({"type": "relic_token", "side": i, "uid": r.uid, "name": "Testimony"})
+
+
+## Censure, Index, Covet, Confessor: look at the opponent's hand and choose a card other than
+## a land. A person chooses (hand_owed); the AI takes the card it fears most.
+func _ask_hand(i: int, e: Dictionary, source: Perm) -> void:
+	var j := 1 - i
+	var opts := hand_choices(j)
+	emit({"type": "reveal", "side": j, "cards": side(j).hand.duplicate(), "by": i})
+	if opts.is_empty():
+		return
+	if side(i).interactive:
+		side(i).hand_owed.append({"uid": source.uid if source else -1, "e": e})
+		emit({"type": "owe_hand", "side": i})
+		return
+	var best: int = int(opts[0])
+	var best_v := -1e9
+	for hi in opts:
+		var hc := CardDB.get_card(side(j).hand[hi])
+		var v := float(hc.get("mana_value", 0)) + (0.5 if hc.get("type") == "creature" else 0.0) + (1.0 if hc.get("rarity", "") in ["rare", "mythic"] else 0.0)
+		if v > best_v:
+			best_v = v
+			best = hi
+	_hand_pick(i, e, source, best)
+
+
+## Indices of the cards in side j's hand that are not lands.
+func hand_choices(j: int) -> Array:
+	var out: Array = []
+	for hi in side(j).hand.size():
+		if not CardDB.is_land(side(j).hand[hi]):
+			out.append(hi)
+	return out
+
+
+## The player's choice from the opponent's hand.
+func hand_choose(i: int, hand_idx: int) -> void:
+	var s := side(i)
+	if s.hand_owed.is_empty():
+		return
+	var t: Dictionary = s.hand_owed.pop_front()
+	var opts := hand_choices(1 - i)
+	if opts.is_empty():
+		return
+	if not opts.has(hand_idx):
+		hand_idx = opts[0]
+	var src := find_perm(int(t["uid"]))
+	_hand_pick(i, t["e"], src, hand_idx)
+	check_state()
+
+
+func _hand_pick(i: int, e: Dictionary, source: Perm, hi: int) -> void:
+	var j := 1 - i
+	var sj := side(j)
+	var id: String = sj.hand[hi]
+	match String(e.get("action", "")):
+		"covet":
+			sj.hand.remove_at(hi)
+			_bury(j, id)
+			emit({"type": "discard", "side": j, "id": id})
+		"confess":
+			sj.hand.remove_at(hi)
+			if source and find_perm(source.uid):
+				source.held.append([j, id])
+				emit({"type": "held", "side": j, "id": id, "uid": source.uid})
+			else:
+				sj.hand.append(id)
+		"censure":
+			sj.hand.remove_at(hi)
+			var n := 1
+			sj.exile.append(id)
+			if e.get("index", false):
+				# the Index: every copy, in his library, graveyard and hand
+				for zone in [sj.deck, sj.graveyard, sj.hand]:
+					while zone.has(id):
+						zone.erase(id)
+						sj.exile.append(id)
+						n += 1
+				_shuffle(sj.deck)
+			emit({"type": "censured", "side": j, "id": id, "count": n, "index": e.get("index", false)})
+			for k in n:
+				make_testimony(j)
+
+
+## The Inquisitor: destroy the chosen Heretic; with none to judge, tap up to two of his creatures.
+func _inquire(i: int, e: Dictionary, source: Perm, chosen) -> void:
+	var heretic = null
+	if typeof(chosen) == TYPE_DICTIONARY and _ref_still_valid(i, e, chosen):
+		heretic = find_perm(int(chosen.get("uid", -1)))
+	if heretic == null:
+		var opts := valid_targets(i, e)
+		if not opts.is_empty():
+			heretic = find_perm(int(auto_target(i, e).get("uid", -1)))
+	if heretic != null:
+		emit({"type": "aim", "side": i, "source": source.uid if source else -1, "target": {"kind": "creature", "uid": heretic.uid}, "action": "destroy"})
+		destroy_perm(heretic)
+		return
+	var cands: Array = side(1 - i).creatures.filter(func(q): return not q.tapped)
+	cands.sort_custom(func(a, b): return a.value() > b.value())
+	for q in cands.slice(0, 2):
+		q.tapped = true
+		emit({"type": "tap", "uid": q.uid, "freeze": false})
+
+
+## The player sacrifices one of his creatures to an edict.
+func edict_choose(i: int, uid: int) -> void:
+	var s := side(i)
+	if s.edict_owed <= 0:
+		return
+	s.edict_owed -= 1
+	var p := find_perm(uid)
+	if p == null or p.owner != i or not p.is_creature():
+		p = s.creatures[0] if not s.creatures.is_empty() else null
+	if p:
+		emit({"type": "edict", "side": i, "uid": p.uid})
+		destroy_perm(p, true)
+		check_state()
+
+
+## A demon has just possessed host (cast onto him or moved to him): the Hierophants rejoice.
+func _possessed(host: Perm) -> void:
+	for src in side(host.owner).creatures.duplicate():
+		if find_perm(src.uid) == null:
+			continue
+		for e in src.card.get("effects", []):
+			if e.get("trigger") == "possessed":
+				_with_source(src.card)
+				resolve_effect(src.owner, e, src, null)
+
+
 ## The player's target for a waiting trigger (null: none / let the game pick).
 func trigger_choose(i: int, ref, fighter_uid: int = -1) -> void:
 	var s := side(i)
@@ -1747,6 +1938,7 @@ func possess_choose(i: int, aura_uid: int, host_uid: int) -> void:
 		return
 	a.attached_to = h.uid
 	emit({"type": "attach", "uid": a.uid, "host": h.uid, "side": i, "possess": true})
+	_possessed(h)
 	check_state()
 
 
@@ -2017,6 +2209,10 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 		if kin <= 0:
 			return
 	var t: String = e.get("target", "")
+	if e.get("action") == "inquire":
+		_inquire(i, e, source, chosen)
+		check_state()
+		return
 	if TARGET_CHOICE_TYPES.has(t):
 		if chosen == null or not _ref_still_valid(i, e, chosen):
 			chosen = auto_target(i, e)
@@ -2149,6 +2345,48 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 					emit({"type": "leak_paid", "side": j, "id": it["id"], "amount": n})
 			else:
 				_countered(it)
+		"exorcise":
+			# a Demon is destroyed; a man takes the damage instead
+			for ref in _expand_targets(i, t, chosen, source):
+				var p := find_perm(int(ref.get("uid", -1)))
+				if p == null:
+					continue
+				if is_demon(p):
+					destroy_perm(p)
+				else:
+					deal_damage(source, i, ref, amount if e.has("amount") else 2)
+		"exile_grave":
+			if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") == "grave":
+				var k := int(chosen.get("side", i))
+				var gid := String(chosen.get("id", ""))
+				if side(k).graveyard.has(gid):
+					side(k).graveyard.erase(gid)
+					side(k).exile.append(gid)
+					emit({"type": "grave_exile", "side": k, "id": gid, "by": source.uid if source else -1})
+					if source and find_perm(source.uid) and CardDB.get_card(gid).get("type") == "creature":
+						source.bonus_p += 1
+						source.bonus_t += 1
+						emit({"type": "buff", "uid": source.uid, "p": 1, "t": 1})
+		"testimony":
+			var who := (1 - i) if e.get("who", "self") == "enemy" else i
+			for n in amount:
+				make_testimony(who)
+		"censure", "covet", "confess":
+			_ask_hand(i, e, source)
+		"edict":
+			var j := 1 - i
+			if side(j).creatures.is_empty():
+				return
+			if side(j).interactive:
+				side(j).edict_owed += 1
+				emit({"type": "owe_edict", "side": j})
+			else:
+				var worst: Perm = null
+				for q in side(j).creatures:
+					if worst == null or q.value() + (0.0 if q.is_token else 2.0) < worst.value() + (0.0 if worst.is_token else 2.0):
+						worst = q
+				emit({"type": "edict", "side": j, "uid": worst.uid})
+				destroy_perm(worst, true)
 		"regen_shield":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p: Perm = find_perm(int(ref.get("uid", -1))) if ref.get("kind") == "creature" else null
@@ -2275,6 +2513,8 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				if host and host.owner == source.owner:
 					source.attached_to = host.uid
 					emit({"type": "attach", "uid": source.uid, "host": host.uid, "side": i})
+					if is_demon(source):
+						_possessed(host)
 				elif host and source.card.get("attach_enemy", false):
 					# laid on an enemy creature (a Conversion): it stays his
 					source.attached_to = host.uid
@@ -2496,6 +2736,11 @@ func _unmoved(p: Perm, caster: int, e: Dictionary) -> bool:
 
 func _remove_perm(p: Perm) -> void:
 	var s := side(p.owner)
+	for h in p.held:
+		# the Confessor is gone: what he held goes back to its owner's hand
+		side(int(h[0])).hand.append(String(h[1]))
+		emit({"type": "held_back", "side": int(h[0]), "id": String(h[1]), "uid": p.uid})
+	p.held.clear()
 	if not p.is_creature() and p.card.get("steal", false) and p.attached_to >= 0:
 		# the possession is gone: the man it held goes back to his own side
 		var held := find_perm(p.attached_to)
@@ -2520,6 +2765,7 @@ func _remove_perm(p: Perm) -> void:
 							best = h
 					a.attached_to = best.uid
 					emit({"type": "attach", "uid": a.uid, "host": best.uid, "side": a.owner, "possess": true})
+					_possessed(best)
 					continue
 			if a.card.get("attach", "") == "aura":
 				# an aura has nothing left to hold on to
@@ -2785,6 +3031,34 @@ func auto_target(i: int, e: Dictionary):
 		return _highest(opts)
 	if action == "attach":
 		return _highest(opts)
+	if e.get("target") == "any_grave_card":
+		# the enemy's dead first (they could rise again), the biggest; then our own creature cards
+		var best = null
+		var best_v := -1.0
+		for ref in opts:
+			var gc := CardDB.get_card(String(ref["id"]))
+			if gc.get("type") != "creature":
+				continue
+			var v := float(gc.get("mana_value", 0)) + (10.0 if int(ref.get("side", i)) != i else 0.0)
+			if v > best_v:
+				best_v = v
+				best = ref
+		return best
+	if action == "exorcise":
+		# a Demon first (destroyed outright), else a man the damage kills
+		var best = null
+		var best_v := -1.0
+		for ref in opts:
+			var p := find_perm(int(ref["uid"]))
+			var v := -1.0
+			if is_demon(p):
+				v = 10.0 + BattleAI.demon_value(self, p)
+			elif p.is_creature() and p.toughness() - p.damage <= int(e.get("amount", 2)):
+				v = p.value()
+			if v > best_v:
+				best_v = v
+				best = ref
+		return best if best != null else _highest(opts)
 	if action == "grant":
 		# a creature that lacks the keyword (haste: one that could not attack yet)
 		var kw := String(e.get("keyword", ""))

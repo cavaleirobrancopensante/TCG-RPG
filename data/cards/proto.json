@@ -738,13 +738,462 @@
     "trigger": "cast",
     "action": "buff",
     "target": "enemy_creature",
-    "power": -2,
-    "toughness": -2
+    "power": -3,
+    "toughness": -3
    }
   ],
-  "text": "Target creature an opponent controls gets -2/-2 until end of turn.",
+  "text": "Target creature an opponent controls gets -3/-3 until end of turn.",
   "flavor": "\"Your saints bleed like any other man. I only remind them.\"",
   "art": "res://art/cards/abyss_c_014.webp",
   "proto": true
+ },
+ {
+  "id": "proto_c_thurifer",
+  "name": "Thurifer of the Procession",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Cleric",
+  "cost": {
+   "W": 1
+  },
+  "power": 1,
+  "toughness": 1,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "testimony",
+    "amount": 1
+   }
+  ],
+  "text": "When Thurifer of the Procession enters, create a Testimony. (It is a relic with \"{2}, sacrifice this: draw a card.\")",
+  "flavor": "\"Let my prayer be directed as incense in thy sight.\" (Psalm 140:2)",
+  "art": "res://art/cards/sanctum_c_009.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_c_censure",
+  "name": "Censure",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Judgement",
+  "cost": {
+   "W": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "censure"
+   }
+  ],
+  "text": "Look at target opponent's hand. Choose a card other than a land. He exiles it and creates a Testimony.",
+  "flavor": "\"If he will not hear the church, let him be to thee as the heathen.\" (Matthew 18:17)",
+  "art": "res://art/cards/sanctum_c_014.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_c_index",
+  "name": "Index",
+  "faction": "sanctum",
+  "rarity": "rare",
+  "type": "spell",
+  "subtype": "Judgement",
+  "cost": {
+   "W": 1,
+   "generic": 2
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "censure",
+    "index": true
+   }
+  ],
+  "text": "Look at target opponent's hand. Choose a card other than a land. He exiles it and every card with the same name from his hand, library and graveyard, then creates a Testimony for each card exiled this way.",
+  "flavor": "\"Many of them who had followed curious arts, brought together their books, and burnt them before all.\" (Acts 19:19)",
+  "art": "res://art/cards/sanctum_m_003.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_c_keeper",
+  "name": "Keeper of the Ossuary",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Monk",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "abilities": [
+   {
+    "cost": {
+     "mana": {
+      "generic": 1
+     }
+    },
+    "effects": [
+     {
+      "action": "exile_grave",
+      "target": "any_grave_card"
+     }
+    ],
+    "text": "{1}: Exile target card from a graveyard. If it was a creature card, put a +1/+1 counter on Keeper of the Ossuary."
+   }
+  ],
+  "text": "{1}: Exile target card from a graveyard. If it was a creature card, put a +1/+1 counter on Keeper of the Ossuary.",
+  "flavor": "He keeps the bones of the faithful, and lets no sorcerer near them.",
+  "art": "res://art/cards/sanctum_r_001.webp",
+  "keywords": [],
+  "effects": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_c_pilgrim",
+  "name": "Pilgrim of the Way",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Pilgrim",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "power": 1,
+  "toughness": 3,
+  "transform": "proto_c_pilgrim_b",
+  "effects": [
+   {
+    "trigger": "transform",
+    "action": "testimony",
+    "amount": 1
+   }
+  ],
+  "text": "When this turns back into Pilgrim of the Way, create a Testimony. Two-faced: at Crusade it turns over into Crusader of the Way.",
+  "flavor": "\"Unless the Lord build the house, they labour in vain that build it.\" (Psalm 126:1)",
+  "art": "res://art/cards/sanctum_c_005.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_c_pilgrim_b",
+  "name": "Crusader of the Way",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Pilgrim",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "power": 3,
+  "toughness": 2,
+  "transform": "proto_c_pilgrim",
+  "front": "proto_c_pilgrim",
+  "effects": [
+   {
+    "trigger": "transform",
+    "action": "tap",
+    "target": "enemy_creature"
+   }
+  ],
+  "text": "When this turns over into Crusader of the Way, tap target creature an opponent controls. Two-faced: at Peace it turns back into Pilgrim of the Way.",
+  "flavor": "\"Deus vult.\" (the cry at Clermont, 1095)",
+  "art": "res://art/cards/sanctum_c_008.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_c_exorcism",
+  "name": "Exorcism",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Exorcism",
+  "speed": "instant",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "uncounterable": true,
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "exorcise",
+    "target": "enemy_creature_or_demon",
+    "amount": 2
+   }
+  ],
+  "text": "This spell can't be countered. Choose target creature or Demon an opponent controls. If it's a Demon, destroy it. Otherwise, Exorcism deals 2 damage to it.",
+  "flavor": "\"In my name they shall cast out devils.\" (Mark 16:17)",
+  "art": "res://art/cards/sanctum_c_017.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_c_confessor",
+  "name": "Confessor of the Holy Office",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Priest",
+  "cost": {
+   "W": 2,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "confess"
+   }
+  ],
+  "text": "When Confessor of the Holy Office enters, look at target opponent's hand and choose a card other than a land. Exile it until Confessor of the Holy Office leaves the battlefield; then it returns to its owner's hand.",
+  "flavor": "\"Confess therefore your sins one to another.\" (James 5:16)",
+  "art": "res://art/cards/sanctum_u_019.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_c_inquisitor",
+  "name": "Inquisitor of the Holy Office",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Priest Inquisitor",
+  "cost": {
+   "W": 2,
+   "generic": 2
+  },
+  "power": 3,
+  "toughness": 3,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "inquire",
+    "target": "enemy_creature",
+    "subtype": "Heretic"
+   }
+  ],
+  "text": "When Inquisitor of the Holy Office enters, destroy target Heretic an opponent controls. If he controls no Heretic, tap up to two creatures he controls instead.",
+  "flavor": "\"A man that is a heretic, after the first and second admonition, avoid.\" (Titus 3:10)",
+  "art": "res://art/cards/sanctum_u_005.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_c_angel",
+  "name": "Angel of the Reliquary",
+  "faction": "sanctum",
+  "rarity": "mythic",
+  "type": "creature",
+  "subtype": "Angel",
+  "cost": {
+   "W": 2,
+   "generic": 5
+  },
+  "power": 5,
+  "toughness": 5,
+  "keywords": [
+   "flying",
+   "immortal"
+  ],
+  "veneration": true,
+  "text": "Veneration (As you cast this, you may exile creature cards from your graveyard. It costs {1} less for each.) Flying. Immortal (If this card would be put into a graveyard from anywhere, exile it instead.)",
+  "flavor": "\"Precious in the sight of the Lord is the death of his saints.\" (Psalm 115:15)",
+  "art": "res://art/cards/sanctum_m_001.webp",
+  "effects": [],
+  "proto": true,
+  "mana_value": 7
+ },
+ {
+  "id": "proto_p_cultist",
+  "name": "Sworn Cultist",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Cultist Heretic",
+  "cost": {
+   "B": 1
+  },
+  "power": 2,
+  "toughness": 1,
+  "effects": [
+   {
+    "trigger": "death",
+    "action": "summon",
+    "token": {
+     "name": "Corpse",
+     "power": 1,
+     "toughness": 1,
+     "subtype": "Zombie Demon",
+     "keywords": []
+    },
+    "count": 1
+   }
+  ],
+  "text": "Heretic. When Sworn Cultist dies, create a 1/1 Zombie Demon creature token named Corpse.",
+  "flavor": "\"I signed in my own blood. It was the only ink they would take.\"",
+  "art": "res://art/cards/abyss_c_001.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_p_covet",
+  "name": "Covet",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Curse",
+  "cost": {
+   "B": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "covet"
+   },
+   {
+    "trigger": "cast",
+    "action": "lose_life",
+    "amount": 2
+   }
+  ],
+  "text": "Look at target opponent's hand. Choose a card other than a land. He discards it. You lose 2 life.",
+  "flavor": "\"Want is the first prayer we teach them.\"",
+  "art": "res://art/cards/abyss_c_017.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_p_bargain",
+  "name": "Bargain in Blood",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Pact",
+  "speed": "instant",
+  "cost": {
+   "B": 1
+  },
+  "extra_cost": {
+   "sacrifice": true
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 2
+   }
+  ],
+  "text": "As an additional cost to cast this, sacrifice a creature. Draw two cards.",
+  "flavor": "\"One life for two pages of the ledger. The rate never changes.\"",
+  "art": "res://art/cards/abyss_c_015.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_p_hierophant",
+  "name": "Cult Hierophant",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Cultist Heretic",
+  "cost": {
+   "B": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 3,
+  "effects": [
+   {
+    "trigger": "possessed",
+    "action": "drain",
+    "amount": 1
+   }
+  ],
+  "text": "Heretic. Whenever a demon possesses a creature you control, each opponent loses 1 life and you gain 1 life.",
+  "flavor": "\"Open the door, my brothers. Something is knocking from below.\"",
+  "art": "res://art/cards/abyss_u_001.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_p_summoner",
+  "name": "Grave Summoner",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Necromancer Heretic",
+  "cost": {
+   "B": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "regrow",
+    "target": "own_grave_creature",
+    "max_mv": 2
+   }
+  ],
+  "text": "Heretic. When Grave Summoner enters, return target creature card with mana value 2 or less from your graveyard to your hand.",
+  "flavor": "\"Rest is for the faithful. Mine still have work to do.\"",
+  "art": "res://art/cards/abyss_c_007.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_p_azrakel",
+  "name": "Azrakel, Prince of Wrath",
+  "faction": "abyss",
+  "rarity": "mythic",
+  "type": "creature",
+  "subtype": "Demon",
+  "cost": {
+   "B": 2,
+   "generic": 3
+  },
+  "power": 5,
+  "toughness": 5,
+  "keywords": [
+   "flying",
+   "immortal"
+  ],
+  "legendary": true,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "edict"
+   }
+  ],
+  "text": "Flying. Immortal. When Azrakel enters, each opponent sacrifices a creature.",
+  "flavor": "\"Kneel, and I will give you the world. I have done it before.\"",
+  "art": "res://art/cards/abyss_m_001.webp",
+  "proto": true,
+  "mana_value": 5
  }
 ]
