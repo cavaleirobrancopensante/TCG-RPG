@@ -454,3 +454,17 @@ I also don't like some cards like the Scuttler, 1 mana 1/1 sacrifice to add a +1
 construct, I find them a bit lame unless there is a combo with something."
 So: no filler below rate, no do-nothing bodies, no fiddly low-impact sacrifice cards without a
 payoff; strong is welcome, cheap-and-does-everything and runaway snowballing are not.
+
+## Answers to fliers (1.46)
+
+- **Stronger against fliers**: any effect aimed at enemy creatures may carry
+  `"vs_flying": {...}` with fields that replace the effect's own when the target has flying,
+  e.g. `{"action": "damage", "target": "enemy_creature", "amount": 2, "vs_flying": {"amount": 4}}`
+  ("deals 2 damage to target enemy creature, or 4 damage instead if it has flying"), or a shrink
+  `{"action": "buff", "power": -1, "toughness": -1, "vs_flying": {"power": -3, "toughness": -3}}`, or
+  a tap that freezes a flier `{"action": "tap", ..., "vs_flying": {"action": "freeze"}}`. Works
+  for targeted effects and, for damage, per creature on all_enemy_creatures. The replacement must
+  still be an action the faith owns. Wording: "... If that creature has flying, ... instead."
+- Why: the Church has 12 fliers and only the Old Ways can block them; Church Angels win 59-66% in
+  AI tests. Each faith (except the Old Ways, which have reach) gets cards that do something
+  useful against any creature and much more against a flier.
