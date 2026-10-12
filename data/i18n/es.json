@@ -4745,5 +4745,7 @@
  "Charge: when it attacks, for each other attacking Knight choose one (trample, first strike, vigilance, lifelink, +1/+0); all your Knights gain them until end of turn.": "Carga: cuando ataca, por cada otro Caballero atacante elige uno (arrollar, primer golpe, vigilancia, vínculo vital, +1/+0); todos tus Caballeros los ganan hasta el final del turno.",
  "Legendary: you may have only one with this name on the battlefield at a time.": "Legendaria: solo puedes tener una con este nombre en el campo de batalla.",
  "Everyone starts duels with 15 life (and Devotion adds more to yours) and draws 7 cards.": "Todos empiezan los duelos con 15 de vida (la Devoción aumenta la tuya) y roban 7 cartas.",
- "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.": "Ensangrentado: Mientras tengas 5 o menos de vida, Necrófago Famélico obtiene +2/+1."
+ "Bloodied: As long as you have 5 or less life, Famished Ghoul gets +2/+1.": "Ensangrentado: Mientras tengas 5 o menos de vida, Necrófago Famélico obtiene +2/+1.",
+ "%d gold for ending the duel above your full life": "%d de oro por terminar el duelo por encima de tu vida máxima",
+ "%d gold for ending the duel above your full life.": "%d de oro por terminar el duelo por encima de tu vida máxima."
 }
