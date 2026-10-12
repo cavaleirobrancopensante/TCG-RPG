@@ -194,6 +194,18 @@ def check_card(c, owners_override=None):
     for e in c.get("effects", []):
         if e.get("action") == "charge" and e.get("trigger") != "attack":
             bad(cid, "charge is an attack trigger")
+    for e in c.get("effects", []) + [x for ab in c.get("abilities", []) for x in ab.get("effects", [])]:
+        vf = e.get("vs_flying")
+        if vf is None:
+            continue
+        if not isinstance(vf, dict) or not vf:
+            bad(cid, "vs_flying must be a dictionary of overrides")
+            continue
+        act = vf.get("action")
+        if act and act in ACTION_OWNERS and not any(o in ACTION_OWNERS[act] for o in [c.get("faction"), c.get("faction2")]):
+            bad(cid, "vs_flying action %s not allowed for this faith" % act)
+        if e.get("target") not in ["enemy_creature", "any_enemy", "all_enemy_creatures", "all_creatures"]:
+            bad(cid, "vs_flying needs a creature target")
     if "cost_less_per" in c:
         cl = c["cost_less_per"]
         if not isinstance(cl, dict) or not cl.get("subtype"):

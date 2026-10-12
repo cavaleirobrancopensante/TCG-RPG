@@ -1114,6 +1114,17 @@ func can_play(i: int, hand_idx: int, overclock: bool = false) -> bool:
 	return can_pay(i, effective_cost(i, c, extra))
 
 
+## Effect e as it applies to creature p: with the "vs_flying" overrides merged in when p flies
+## ("2 damage to target creature, 4 instead if it has flying").
+static func fly_eff(e: Dictionary, p) -> Dictionary:
+	if p == null or not e.has("vs_flying") or not p.has_kw("flying"):
+		return e
+	var out := e.duplicate()
+	for k in e["vs_flying"]:
+		out[k] = e["vs_flying"][k]
+	return out
+
+
 ## Legendary: one of each name on your side at a time.
 func legend_in_play(i: int, c: Dictionary) -> bool:
 	if not c.get("legendary", false):
@@ -1681,10 +1692,19 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 			return   # nothing to target: effect fizzles
 		if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") in ["creature", "player", "relic"]:
 			emit({"type": "aim", "side": i, "source": source.uid if source else -1, "target": chosen, "action": e.get("action", "")})
+		# stronger against fliers: "vs_flying" overrides the effect when the target flies
+		if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") == "creature" and e.has("vs_flying"):
+			var fe := fly_eff(e, find_perm(int(chosen.get("uid", -1))))
+			if fe != e:
+				e = fe
+				amount = int(e.get("amount", amount))
 	match e.get("action", ""):
 		"damage":
 			for ref in _expand_targets(i, t, chosen, source):
-				deal_damage(source, i, ref, amount)
+				var amt := amount
+				if e.has("vs_flying") and ref.get("kind") == "creature":
+					amt = int(fly_eff(e, find_perm(int(ref.get("uid", -1)))).get("amount", amount))
+				deal_damage(source, i, ref, amt)
 		"heal":
 			gain_life(i, amount)
 		"drain":
@@ -2351,7 +2371,7 @@ func auto_target(i: int, e: Dictionary):
 			if ref["kind"] != "creature":
 				continue
 			var p := find_perm(ref["uid"])
-			var eff := amount
+			var eff := int(fly_eff(e, p).get("amount", amount))
 			if p.toughness() - p.damage <= eff and p.value() > best_v:
 				best_v = p.value()
 				best = ref

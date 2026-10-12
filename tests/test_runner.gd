@@ -219,6 +219,7 @@ func _lib() -> void:
 		"Negate": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "counter", "filter": "noncreature"}]},
 		"Dialectic": {"faction": "lyceum", "type": "spell", "speed": "instant", "cost": {"U": 2, "generic": 2}, "cost_less_per": {"subtype": "Philosopher", "amount": 1}, "effects": [{"trigger": "cast", "action": "counter"}]},
 		"Marshal": {"faction": "sanctum", "type": "creature", "subtype": "Human Knight", "legendary": true, "cost": {"W": 2, "generic": 2}, "power": 3, "toughness": 3, "effects": [{"trigger": "attack", "action": "charge", "subtype": "Knight"}]},
+		"Skyshot": {"faction": "revel", "type": "spell", "speed": "instant", "cost": {"R": 1, "generic": 1}, "effects": [{"trigger": "cast", "action": "damage", "target": "enemy_creature", "amount": 2, "vs_flying": {"amount": 4}}]},
 		"Boneman": {"faction": "abyss", "type": "creature", "subtype": "Skeleton", "cost": {"B": 1, "generic": 1}, "power": 2, "toughness": 1, "unearth": {"B": 1}},
 		"Oakhide": {"faction": "wild", "type": "relic", "subtype": "Aura", "attach": "aura", "cost": {"G": 1}, "grants": {"power": 2, "toughness": 2, "keywords": ["trample"]},
 			"effects": [{"trigger": "enter", "action": "attach", "target": "own_creature"}]},
@@ -562,7 +563,22 @@ func _test_legend_charge() -> void:
 	check(k1.has_kw("vigilance") and not k1.tapped and not st.has_owed(0), "vigilance from the charge stands them up")
 
 
+func _test_vs_flying() -> void:
+	var st := _duel()
+	st.active = 0
+	st.phase = "main1"
+	st.priority = 0
+	var ogre := _put(st, 1, "Ogre")
+	st.resolve_effect(0, CardDB.get_card(_id("Skyshot"))["effects"][0], null, {"kind": "creature", "uid": ogre.uid})
+	check(ogre.damage == 2, "vs_flying: 2 damage to a creature that doesn't fly")
+	var angel := _put(st, 1, "Angel")
+	angel.base_t = 4
+	st.resolve_effect(0, CardDB.get_card(_id("Skyshot"))["effects"][0], null, {"kind": "creature", "uid": angel.uid})
+	check(st.find_perm(angel.uid) == null, "vs_flying: 4 damage to a flier")
+
+
 func _test_tribes() -> void:
+	_test_vs_flying()
 	_test_legend_charge()
 	_test_counters()
 	_test_attachments()

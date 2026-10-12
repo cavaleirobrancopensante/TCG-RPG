@@ -611,7 +611,7 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 				if t == "all_enemy_creatures":
 					var kills := 0
 					for p in foe.creatures:
-						if p.toughness() - p.damage <= amount:
+						if p.toughness() - p.damage <= int(BattleState.fly_eff(e, p).get("amount", amount)):
 							kills += 1
 					if kills == 0:
 						return [0.0, []]
@@ -619,7 +619,7 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 				elif chosen != null:
 					if chosen.get("kind") == "creature":
 						var p := st.find_perm(chosen["uid"])
-						if p and p.toughness() - p.damage <= amount:
+						if p and p.toughness() - p.damage <= int(BattleState.fly_eff(e, p).get("amount", amount)):
 							v += p.value()
 						elif is_spell and t == "enemy_creature":
 							return [0.0, []]   # would not kill anything
@@ -1151,10 +1151,13 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 						for ref in st.valid_targets(i, e):
 							var z = st.find_perm(ref["uid"])
 							var g := 0.0
-							if z.toughness() + bt <= z.damage:
+							var zfe := BattleState.fly_eff(e, z)
+							var zbt := int(zfe.get("toughness", 0)) * per
+							var zbp := int(zfe.get("power", 0)) * per
+							if z.toughness() + zbt <= z.damage:
 								g = _removal_gain(st, i, z, top)
 							else:
-								g = _shrink_combat_gain(st, i, z, bp, bt)
+								g = _shrink_combat_gain(st, i, z, zbp, zbt)
 							if g > best_g:
 								best_g = g
 								chosen = ref
@@ -1196,7 +1199,7 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 							if ref["kind"] != "creature":
 								continue
 							var z = st.find_perm(ref["uid"])
-							if amount >= z.toughness() - z.damage or (source != null and source.has_kw("deathtouch")):
+							if int(BattleState.fly_eff(e, z).get("amount", amount)) >= z.toughness() - z.damage or (source != null and source.has_kw("deathtouch")):
 								var g := _removal_gain(st, i, z, top)
 								if g > best_g:
 									best_g = g
@@ -1209,7 +1212,7 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 					v += 100.0 if amount >= foe.life else (amount * 0.5 if their_end else 0.0)
 				elif t == "all_enemy_creatures":
 					for z in foe.creatures:
-						if amount >= z.toughness() - z.damage:
+						if int(BattleState.fly_eff(e, z).get("amount", amount)) >= z.toughness() - z.damage:
 							v += _removal_gain(st, i, z, top, true)
 			"destroy":
 				if t == "enemy_creature":
