@@ -2197,8 +2197,11 @@ func _advance_targeting() -> void:
 	if chosen_targets.any(func(t): return t != null):
 		mode = "confirm"
 		refresh()
-		var sure: bool = await _confirm_targets()
-		if not sure:
+		var answer: String = await _confirm_targets()
+		if answer == "cancel":
+			_cancel_targeting()          # changed your mind: the card stays in hand, nothing paid
+			return
+		if answer != "confirm":
 			# back to choosing the last target (the earlier ones stay)
 			while not chosen_targets.is_empty():
 				var last = chosen_targets.pop_back()
@@ -2232,8 +2235,9 @@ func _advance_targeting() -> void:
 
 ## "Cast Wildsurge on your Briar Fox?": the arrow already points at it; Change goes back to
 ## choosing, Confirm casts. The board stays visible behind a light veil.
-signal _targets_answered(ok: bool)
-func _confirm_targets() -> bool:
+signal _targets_answered(answer: String)
+## "confirm", "change" (choose the target again) or "cancel" (don't cast it at all).
+func _confirm_targets() -> String:
 	var veil := ColorRect.new()
 	veil.name = "ConfirmTargets"
 	veil.color = Color(0, 0, 0, 0.12)
@@ -2255,14 +2259,19 @@ func _confirm_targets() -> bool:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", UIKit.GAP)
 	v.add_child(row)
+	var stop := _btn(I18n.t("Cancel"), func():
+		veil.queue_free()
+		_targets_answered.emit("cancel"), 120)
+	stop.name = "CancelCast"
+	row.add_child(stop)
 	var back := _btn(I18n.t("Change target"), func():
 		veil.queue_free()
-		_targets_answered.emit(false), 180)
+		_targets_answered.emit("change"), 180)
 	back.name = "ChangeTarget"
 	back.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var ok := UIKit.primary_button(I18n.t("Confirm"), func():
 		veil.queue_free()
-		_targets_answered.emit(true), 180)
+		_targets_answered.emit("confirm"), 160)
 	ok.name = "ConfirmTarget"
 	ok.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(back)

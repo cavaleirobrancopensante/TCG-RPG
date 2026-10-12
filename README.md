@@ -688,3 +688,8 @@ under *Export → Resources → Filters to export non-resource files*.
 - Smoother duels with many creatures: no idle animation at all (marks and glows hold still),
   animations at about 20 frames a second, and a creature is repainted only when something about
   it changes.
+
+## Cancel from the target question (1.53)
+
+- The target question has a third button, Cancel: the card stays in hand (or the ability unused)
+  and nothing is paid.
