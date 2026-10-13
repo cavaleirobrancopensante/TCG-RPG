@@ -831,3 +831,10 @@ two-for-one creatures, engines and the graveyard as a resource.
   of name buttons. Marks on the picture: ✦ an ability you can use now, ◈ a demon possession, →
   attached to a creature. Tap or hold one to read it.
 - Identical relics stack diagonally, like creatures (three Testimonies take one place).
+
+## Duels that end in combat now finish (1.67)
+
+- Fixed: when a duel was won or lost by combat damage, the result never appeared and the duel
+  stayed on screen (the "stuck after winning the second tournament bout" report). The end of the
+  duel is now always played out, with Victoria or Clades and Continue.
+- New test tests/tour_flow_test.tscn plays tournament bouts through the real screens.

@@ -3381,6 +3381,10 @@ func _can_act_main(with_attack: bool) -> bool:
 ## every spell" off, the stack only asks in combat), and only if you can answer at all;
 ## otherwise you pass at once.
 func _run_priority(key: String) -> void:
+	if st.phase == "over":
+		# the duel just ended (lethal combat damage, a drain): play it out and show the result
+		await play_events()
+		return
 	var guard := 0
 	while st.phase != "over":
 		guard += 1
