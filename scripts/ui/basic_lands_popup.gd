@@ -1,4 +1,3 @@
-class_name BasicLandsPopup
 extends RefCounted
 ## The Basic lands pop-up of the deck builder (1.81), the same on every deck-building screen:
 ## your decks, Quick Duel, and the draft and sealed tournaments.
