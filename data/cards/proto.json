@@ -1732,12 +1732,16 @@
     "amount": 1
    }
   ],
-  "text": "Draw two cards, then discard a card.",
+  "text": "Draw two cards, then discard a card. Encore {1}{R}",
   "flavor": "One clumsy elbow, one candle, and the evening became memorable.",
   "art": "res://art/cards/revel_c_015.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "flashback": {
+   "R": 1,
+   "generic": 1
+  }
  },
  {
   "id": "proto_rv_flagon",
@@ -1762,12 +1766,16 @@
     }
    }
   ],
-  "text": "Flaming Flagon deals 2 damage to any enemy creature or the enemy player. If you discarded a card this turn, it deals 4 damage instead.",
+  "text": "Flaming Flagon deals 2 damage to any enemy creature or the enemy player. If you discarded a card this turn, it deals 4 damage instead. Encore {3}{R} (You may cast this card from your graveyard for its Encore cost. Then exile it.)",
   "flavor": "It was poured for him. It simply arrived faster than he expected.",
   "art": "res://art/cards/revel_c_017.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "flashback": {
+   "R": 1,
+   "generic": 3
+  }
  },
  {
   "id": "proto_rv_cask",
@@ -1884,12 +1892,16 @@
     "keep": 2
    }
   ],
-  "text": "Look at the top four cards of your library. Put two of them into your hand and the rest on the bottom of your library in any order.",
+  "text": "Look at the top four cards of your library. Put two of them into your hand and the rest on the bottom of your library in any order. Recollection {3}{U} (You may cast this card from your graveyard for its Recollection cost. Then exile it.)",
   "flavor": "\"Everywhere means nowhere.\" (Seneca, Letters to Lucilius, on reading too many books)",
   "art": "res://art/cards/lyceum_c_015.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "flashback": {
+   "U": 1,
+   "generic": 3
+  }
  },
  {
   "id": "proto_st_gate",
@@ -2765,5 +2777,2098 @@
   "keywords": [],
   "proto": true,
   "mana_value": 3
+ },
+ {
+  "id": "proto_c_martyr",
+  "name": "Martyr of the Arena",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Cleric",
+  "cost": {
+   "W": 1
+  },
+  "power": 1,
+  "toughness": 1,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "death",
+    "action": "heal",
+    "amount": 2
+   },
+   {
+    "trigger": "death",
+    "action": "testimony",
+    "amount": 1
+   }
+  ],
+  "text": "When Martyr of the Arena dies, you gain 2 life and create a Testimony.",
+  "flavor": "\"Be thou faithful until death: and I will give thee the crown of life.\" (Apocalypse 2:10)",
+  "art": "res://art/cards/sanctum_c_001.webp",
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_c_sergeant",
+  "name": "Sergeant of the Temple",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Knight",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "keywords": [
+   "vigilance"
+  ],
+  "effects": [],
+  "transform": "proto_c_sergeant_b",
+  "text": "Vigilance. Two-faced: at Crusade it turns over into Templar Sergeant.",
+  "flavor": "\"Watch ye, stand fast in the faith, do manfully, and be strengthened.\" (1 Corinthians 16:13)",
+  "art": "res://art/cards/sanctum_c_030.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_c_sergeant_b",
+  "name": "Templar Sergeant",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Knight",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "power": 3,
+  "toughness": 2,
+  "keywords": [
+   "first_strike"
+  ],
+  "effects": [],
+  "transform": "proto_c_sergeant",
+  "front": "proto_c_sergeant",
+  "text": "First strike. Two-faced: at Peace it turns back into Sergeant of the Temple.",
+  "flavor": "\"Not to us, O Lord, not to us; but to thy name give glory.\" (Psalm 113:9)",
+  "art": "res://art/cards/sanctum_u_003.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_c_hospitaller",
+  "name": "Hospitaller Knight",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Knight",
+  "cost": {
+   "W": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "regrow",
+    "target": "own_grave_creature",
+    "max_mv": 2
+   }
+  ],
+  "text": "When Hospitaller Knight enters, return target creature card with mana value 2 or less from your graveyard to your hand.",
+  "flavor": "\"I was sick, and you visited me.\" (Matthew 25:36)",
+  "art": "res://art/cards/sanctum_c_011.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_c_cherub",
+  "name": "Cherub of the Choir",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Angel",
+  "cost": {
+   "W": 2,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "keywords": [
+   "flying",
+   "immortal"
+  ],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "destroy",
+    "target": "enemy_demon",
+    "max_mv": 3
+   }
+  ],
+  "text": "Flying. Immortal. When Cherub of the Choir enters, destroy target Demon an opponent controls with mana value 3 or less.",
+  "flavor": "\"Praise ye him, all his angels: praise ye him, all his hosts.\" (Psalm 148:2)",
+  "art": "res://art/cards/sanctum_u_016.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_c_bishop",
+  "name": "Bishop of the Diocese",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Bishop",
+  "cost": {
+   "W": 1,
+   "generic": 3
+  },
+  "power": 2,
+  "toughness": 4,
+  "keywords": [],
+  "effects": [],
+  "statics": [
+   {
+    "static": "anthem",
+    "scope": "other_own_creatures",
+    "subtype": "Human",
+    "power": 1,
+    "toughness": 1
+   }
+  ],
+  "text": "Other Humans you control get +1/+1.",
+  "flavor": "\"Take heed to yourselves, and to the whole flock, wherein the Holy Ghost hath placed you bishops.\" (Acts 20:28)",
+  "art": "res://art/cards/sanctum_u_004.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_c_crusader",
+  "name": "Crusader of the Cross",
+  "faction": "sanctum",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Human Knight",
+  "cost": {
+   "W": 2,
+   "generic": 2
+  },
+  "power": 3,
+  "toughness": 3,
+  "keywords": [
+   "vigilance"
+  ],
+  "effects": [],
+  "transform": "proto_c_crusader_b",
+  "text": "Vigilance. Two-faced: at Crusade it turns over into Crusader of the Cross, Sword Drawn.",
+  "flavor": "\"Take unto you the armour of God.\" (Ephesians 6:13)",
+  "art": "res://art/cards/sanctum_c_022.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_c_crusader_b",
+  "name": "Crusader of the Cross, Sword Drawn",
+  "faction": "sanctum",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Human Knight",
+  "cost": {
+   "W": 2,
+   "generic": 2
+  },
+  "power": 4,
+  "toughness": 4,
+  "keywords": [
+   "first_strike"
+  ],
+  "effects": [
+   {
+    "trigger": "attack",
+    "action": "buff",
+    "target": "other_attackers",
+    "power": 1,
+    "toughness": 0
+   }
+  ],
+  "transform": "proto_c_crusader",
+  "front": "proto_c_crusader",
+  "text": "First strike. Whenever this attacks, other attacking creatures you control get +1/+0 until end of turn. Two-faced: at Peace it turns back into Crusader of the Cross.",
+  "flavor": "\"Deus vult.\" (the cry at Clermont, 1095)",
+  "art": "res://art/cards/sanctum_r_010.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_c_sword",
+  "name": "Put to the Sword",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Judgement",
+  "cost": {
+   "W": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy",
+    "target": "attacking_or_blocking"
+   }
+  ],
+  "speed": "instant",
+  "text": "Destroy target attacking or blocking creature.",
+  "flavor": "\"All that take the sword shall perish with the sword.\" (Matthew 26:52)",
+  "art": "res://art/cards/sanctum_u_008.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_c_arms",
+  "name": "Blessing of Arms",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "relic",
+  "subtype": "Blessing",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "attach",
+    "target": "own_creature"
+   }
+  ],
+  "attach": "aura",
+  "grants": {
+   "power": 1,
+   "toughness": 1,
+   "keywords": [
+    "first_strike"
+   ]
+  },
+  "on_host_dies": "return",
+  "text": "Enchant creature you control. Enchanted creature gets +1/+1 and has first strike. When enchanted creature dies, return Blessing of Arms to its owner's hand.",
+  "flavor": "\"Blessed be the Lord my God, who teacheth my hands to fight.\" (Psalm 143:1)",
+  "art": "res://art/cards/sanctum_c_025.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_c_penance",
+  "name": "Penance",
+  "faction": "sanctum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Judgement",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "penance"
+   },
+   {
+    "trigger": "cast",
+    "action": "heal",
+    "amount": 2
+   }
+  ],
+  "text": "Look at target opponent's hand. Choose a card other than a land. He puts it on top of his library. You gain 2 life.",
+  "flavor": "\"Do penance: for the kingdom of heaven is at hand.\" (Matthew 3:2)",
+  "art": "res://art/cards/sanctum_c_029.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_c_ground",
+  "name": "Consecrated Ground",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Blessing",
+  "cost": {
+   "W": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enemy_demon_dies",
+    "action": "heal",
+    "amount": 2
+   }
+  ],
+  "statics": [
+   {
+    "static": "no_repossess"
+   }
+  ],
+  "text": "Possessions your opponents control can't attach to a new host. Whenever a Demon an opponent controls dies, you gain 2 life.",
+  "flavor": "\"Put off the shoes from thy feet: for the place whereon thou standest is holy ground.\" (Exodus 3:5)",
+  "art": "res://art/cards/sanctum_c_019.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_p_scribe",
+  "name": "Scribe of the Black Pact",
+  "faction": "abyss",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Heretic",
+  "cost": {
+   "B": 1,
+   "generic": 1
+  },
+  "power": 1,
+  "toughness": 2,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "dig",
+    "amount": 3,
+    "keep": 1,
+    "rest_to": "grave"
+   }
+  ],
+  "text": "Heretic. When Scribe of the Black Pact enters, look at the top three cards of your library. Put one into your hand and the rest into your graveyard.",
+  "flavor": "\"Write it plainly. They always say they did not read the small print.\"",
+  "art": "res://art/cards/abyss_c_003.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_p_despoiler",
+  "name": "Despoiler of Relics",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Heretic",
+  "cost": {
+   "B": 1,
+   "generic": 2
+  },
+  "power": 3,
+  "toughness": 2,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "destroy",
+    "target": "enemy_holy"
+   },
+   {
+    "trigger": "enter",
+    "action": "enemy_loses_life",
+    "amount": 2
+   }
+  ],
+  "text": "Heretic. When Despoiler of Relics enters, destroy target Holy Relic or Blessing an opponent controls. That player loses 2 life.",
+  "flavor": "He sells the gold of the chalice and keeps the stones for himself.",
+  "art": "res://art/cards/abyss_u_003.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_rv_juggler",
+  "name": "Juggler of Knives",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "R": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 1,
+  "keywords": [
+   "haste"
+  ],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "damage",
+    "target": "any_enemy",
+    "amount": 1
+   }
+  ],
+  "excess": {
+   "R": 1,
+   "generic": 1
+  },
+  "text": "Haste. When Juggler of Knives enters, he deals 1 damage to any enemy creature or the enemy player. Excess {1}{R}",
+  "flavor": "Six knives in the air, and only five of them came down.",
+  "art": "res://art/cards/revel_r_001.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_rv_satyr",
+  "name": "Satyr of the Drunken Rout",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Demon Satyr",
+  "cost": {
+   "R": 1,
+   "generic": 2
+  },
+  "power": 3,
+  "toughness": 2,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "discard",
+    "action": "damage",
+    "target": "enemy_player",
+    "amount": 1
+   }
+  ],
+  "text": "Whenever you discard a card, Satyr of the Drunken Rout deals 1 damage to each opponent.",
+  "flavor": "Every broken cup is a song to him.",
+  "art": "res://art/cards/revel_c_033.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_rv_masquerade",
+  "name": "Host of the Masquerade",
+  "faction": "revel",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Noble",
+  "cost": {
+   "R": 1,
+   "generic": 3
+  },
+  "power": 3,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "draw",
+    "amount": 2
+   },
+   {
+    "trigger": "enter",
+    "action": "discard_self",
+    "amount": 2
+   }
+  ],
+  "text": "When Host of the Masquerade enters, draw two cards, then discard two cards.",
+  "flavor": "Behind the mask nobody owes anything, least of all the host.",
+  "art": "res://art/cards/revel_u_014.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_rv_champion",
+  "name": "Rowdy Champion",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "R": 1,
+   "generic": 3
+  },
+  "power": 4,
+  "toughness": 3,
+  "keywords": [
+   "haste"
+  ],
+  "effects": [],
+  "excess": {
+   "R": 1,
+   "generic": 2
+  },
+  "text": "Haste. Excess {2}{R} (If you discard this card, you may cast it for its Excess cost instead of putting it into your graveyard.)",
+  "flavor": "Undefeated at the long table, and at the door afterwards.",
+  "art": "res://art/cards/revel_c_010.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_rv_gambler",
+  "name": "Gambler's Last Night",
+  "faction": "revel",
+  "rarity": "uncommon",
+  "type": "spell",
+  "subtype": "Revelry",
+  "cost": {
+   "R": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "wheel",
+    "plus": 1
+   }
+  ],
+  "text": "Discard your hand, then draw that many cards plus one.",
+  "flavor": "Everything on one throw. Then everything on the next.",
+  "art": "res://art/cards/revel_c_031.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_rv_volley",
+  "name": "Firework Volley",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Revelry",
+  "cost": {
+   "R": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "damage",
+    "target": "all_enemy_creatures",
+    "amount": 1
+   }
+  ],
+  "flashback": {
+   "R": 1,
+   "generic": 3
+  },
+  "text": "Firework Volley deals 1 damage to each creature your opponents control. Encore {3}{R} (You may cast this card from your graveyard for its Encore cost. Then exile it.)",
+  "flavor": "The crowd cheered the first burst. The guards cheered rather less.",
+  "art": "res://art/cards/revel_c_014.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_rv_bottle",
+  "name": "Second Bottle",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Revelry",
+  "cost": {
+   "R": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "grant",
+    "target": "all_own_creatures",
+    "keyword": "trample",
+    "power": 2
+   }
+  ],
+  "speed": "instant",
+  "excess": {
+   "R": 1
+  },
+  "text": "Creatures you control get +2/+0 and gain trample until end of turn. Excess {R}",
+  "flavor": "The first bottle was for courage. The second was for everything after.",
+  "art": "res://art/cards/revel_u_008.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_rv_masks",
+  "name": "Carnival Masks",
+  "faction": "revel",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "R": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "discard",
+    "action": "grant",
+    "target": "own_creature",
+    "keyword": "haste",
+    "power": 1
+   }
+  ],
+  "text": "Whenever you discard a card, target creature you control gets +1/+0 and gains haste until end of turn.",
+  "flavor": "Put one on, and you are someone with nothing to lose.",
+  "art": "res://art/cards/revel_u_013.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_rv_mock",
+  "name": "Mock the Philosophers",
+  "faction": "revel",
+  "rarity": "uncommon",
+  "type": "spell",
+  "subtype": "Revelry",
+  "cost": {
+   "R": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "silence_opponents"
+   },
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 1
+   }
+  ],
+  "text": "Your opponents can't cast spells this turn. Draw a card.",
+  "flavor": "\"Live according to nature,\" they said, and the whole tavern took them at their word.",
+  "art": "res://art/cards/revel_c_016.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_st_bronze",
+  "name": "Bronze-Shield Hoplite",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Hoplite",
+  "cost": {
+   "U": 1,
+   "generic": 1
+  },
+  "power": 1,
+  "toughness": 4,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "foresight",
+    "amount": 2
+   }
+  ],
+  "text": "When Bronze-Shield Hoplite enters, scry 2.",
+  "flavor": "\"Come back with your shield, or on it.\" (a Spartan mother)",
+  "art": "res://art/cards/lyceum_c_007.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_st_questioner",
+  "name": "Questioner in the Agora",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Philosopher",
+  "cost": {
+   "U": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 2,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "bounce",
+    "target": "enemy_permanent",
+    "max_mv": 3
+   }
+  ],
+  "text": "When Questioner in the Agora enters, return target nonland permanent an opponent controls with mana value 3 or less to its owner's hand.",
+  "flavor": "\"The unexamined life is not worth living.\" (Socrates, in Plato's Apology)",
+  "art": "res://art/cards/lyceum_c_024.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_st_owl",
+  "name": "Great-Owl of the Archive",
+  "faction": "lyceum",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Owl",
+  "cost": {
+   "U": 2,
+   "generic": 3
+  },
+  "power": 3,
+  "toughness": 4,
+  "keywords": [
+   "flash",
+   "flying"
+  ],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "draw",
+    "amount": 1
+   }
+  ],
+  "premeditation": {
+   "U": 1,
+   "generic": 2
+  },
+  "text": "Flash. Flying. When Great-Owl of the Archive enters, draw a card. Premeditation {2}{U} (During your turn, you may pay {2} and exile this card from your hand face down. Cast it on a later turn for its Premeditation cost.)",
+  "flavor": "The owl of Minerva spreads its wings only with the falling of the dusk.",
+  "art": "res://art/cards/lyceum_u_005.webp",
+  "proto": true,
+  "mana_value": 5
+ },
+ {
+  "id": "proto_st_rebuke",
+  "name": "Measured Rebuke",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Discourse",
+  "cost": {
+   "U": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "counter",
+    "filter": "noncreature",
+    "unless_pay": 2
+   }
+  ],
+  "speed": "instant",
+  "text": "Counter target noncreature spell unless its controller pays {2}.",
+  "flavor": "\"Say nothing in anger that you would not say in calm.\"",
+  "art": "res://art/cards/lyceum_c_012.webp",
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_st_letters",
+  "name": "Letters to Lucilius",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Meditation",
+  "cost": {
+   "U": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 1,
+    "amount_if": {
+     "condition": "opp_turn",
+     "amount": 2
+    }
+   }
+  ],
+  "speed": "instant",
+  "text": "Draw a card. If it's an opponent's turn, draw two cards instead.",
+  "flavor": "\"Hold every hour in your grasp.\" (Seneca, Letters to Lucilius 1)",
+  "art": "res://art/cards/lyceum_u_010.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_st_apatheia",
+  "name": "Apatheia",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "spell",
+  "subtype": "Meditation",
+  "cost": {
+   "U": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "freeze",
+    "target": "enemy_creature"
+   },
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 1
+   }
+  ],
+  "speed": "instant",
+  "flashback": {
+   "U": 1,
+   "generic": 3
+  },
+  "text": "Tap target creature an opponent controls. It doesn't untap during its controller's next untap step. Draw a card. Recollection {3}{U} (You may cast this card from your graveyard for its Recollection cost. Then exile it.)",
+  "flavor": "\"Nothing outside the will can hinder or harm the will.\" (Epictetus)",
+  "art": "res://art/cards/lyceum_r_006.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_st_drill",
+  "name": "Phalanx Drill",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Discipline",
+  "cost": {
+   "U": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "buff",
+    "target": "all_own_creatures",
+    "subtype": "Hoplite",
+    "power": 1,
+    "toughness": 1
+   },
+   {
+    "trigger": "cast",
+    "action": "untap",
+    "target": "all_own_creatures",
+    "subtype": "Hoplite"
+   }
+  ],
+  "speed": "instant",
+  "flashback": {
+   "U": 1,
+   "generic": 2
+  },
+  "text": "Hoplites you control get +1/+1 until end of turn. Untap them. Recollection {2}{U}",
+  "flavor": "Shield to shield, a thousand times, until the thousandth looks like the first.",
+  "art": "res://art/cards/lyceum_c_026.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_st_calm",
+  "name": "Sudden Calm",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "spell",
+  "subtype": "Meditation",
+  "cost": {
+   "U": 2,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "bounce",
+    "target": "all_attackers"
+   }
+  ],
+  "speed": "instant",
+  "text": "Return all attacking creatures to their owners' hands.",
+  "flavor": "\"How easy it is to repel and wipe away every impression which is troublesome.\" (Marcus Aurelius)",
+  "art": "res://art/cards/lyceum_u_011.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_st_tablet",
+  "name": "Sumptuary Tablet",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "U": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "opp_discards",
+    "action": "foresight",
+    "amount": 1
+   }
+  ],
+  "statics": [
+   {
+    "static": "offhand_tax",
+    "amount": 2
+   }
+  ],
+  "text": "Spells your opponents cast from anywhere other than their hands cost {2} more. Whenever an opponent discards a card, scry 1.",
+  "flavor": "Cut in bronze and set in the market: so many dishes at a feast, and no more.",
+  "art": "res://art/cards/lyceum_u_013.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_ow_archdruid",
+  "name": "Mistletoe Archdruid",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Druid",
+  "cost": {
+   "G": 1,
+   "generic": 2
+  },
+  "power": 1,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [],
+  "abilities": [
+   {
+    "cost": {
+     "tap": true
+    },
+    "effects": [
+     {
+      "action": "add_mana",
+      "color": "G",
+      "amount": 2
+     }
+    ],
+    "text": "{T}: Add {G}{G}."
+   }
+  ],
+  "text": "{T}: Add {G}{G}.",
+  "flavor": "He cuts the mistletoe with a golden sickle, and the oak forgives him.",
+  "art": "res://art/cards/wild_r_001.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_ow_huntsman",
+  "name": "Huntsman of the Weald",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Hunter",
+  "cost": {
+   "G": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 2,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "fight",
+    "target": "enemy_creature",
+    "fighter": "self"
+   }
+  ],
+  "text": "When Huntsman of the Weald enters, he fights up to one target creature you don't control.",
+  "flavor": "He knows the deer paths, and the paths of men who hunt in his wood.",
+  "art": "res://art/cards/wild_c_010.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_ow_greywolf",
+  "name": "Old Grey Wolf",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Wolf",
+  "cost": {
+   "G": 1,
+   "generic": 3
+  },
+  "power": 3,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "summon",
+    "token": {
+     "name": "Wolf",
+     "power": 2,
+     "toughness": 2,
+     "subtype": "Wolf",
+     "keywords": []
+    },
+    "count": 1
+   },
+   {
+    "trigger": "landfall",
+    "action": "buff",
+    "target": "all_own_creatures",
+    "subtype": "Wolf",
+    "power": 1,
+    "toughness": 0,
+    "text": "Landfall: Wolves you control get +1/+0 until end of turn."
+   }
+  ],
+  "text": "When Old Grey Wolf enters, create a 2/2 Wolf creature token. Landfall: Wolves you control get +1/+0 until end of turn.",
+  "flavor": "Where the old one runs, the young ones follow.",
+  "art": "res://art/cards/wild_u_015.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_ow_bear",
+  "name": "Cave Bear of the Tors",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Bear",
+  "cost": {
+   "G": 1,
+   "generic": 4
+  },
+  "power": 5,
+  "toughness": 5,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "fight",
+    "target": "enemy_creature",
+    "fighter": "self"
+   }
+  ],
+  "text": "When Cave Bear of the Tors enters, it fights up to one target creature you don't control.",
+  "flavor": "It has slept under the tor since before the stones were raised.",
+  "art": "res://art/cards/wild_r_013.webp",
+  "proto": true,
+  "mana_value": 5
+ },
+ {
+  "id": "proto_ow_antler",
+  "name": "Antler-King of the Fens",
+  "faction": "wild",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Demon Spirit",
+  "cost": {
+   "G": 2,
+   "generic": 3
+  },
+  "power": 4,
+  "toughness": 4,
+  "keywords": [
+   "immortal"
+  ],
+  "effects": [
+   {
+    "trigger": "landfall",
+    "action": "buff",
+    "target": "own_creature",
+    "power": 1,
+    "toughness": 1,
+    "duration": "permanent",
+    "text": "Landfall: Put a +1/+1 counter on target creature you control."
+   }
+  ],
+  "text": "Immortal. Landfall: Put a +1/+1 counter on target creature you control.",
+  "flavor": "The fen folk leave him the first calf of spring, and do not ask what he gives back.",
+  "art": "res://art/cards/wild_r_003.webp",
+  "proto": true,
+  "mana_value": 5
+ },
+ {
+  "id": "proto_ow_greenman",
+  "name": "Green Man of the Hedgerow",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Possession Demon Spirit",
+  "cost": {
+   "G": 1,
+   "generic": 1
+  },
+  "keywords": [
+   "immortal"
+  ],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "animate_land",
+    "power": 2,
+    "toughness": 2,
+    "subtype": "Spirit",
+    "keywords": [
+     "haste"
+    ]
+   },
+   {
+    "trigger": "landfall",
+    "action": "buff",
+    "target": "host",
+    "power": 2,
+    "toughness": 2,
+    "text": "Landfall: enchanted land gets +2/+2 until end of turn."
+   }
+  ],
+  "attach": "aura",
+  "possess_land": true,
+  "land_power": 2,
+  "land_toughness": 2,
+  "land_subtype": "Spirit",
+  "land_keywords": [
+   "haste"
+  ],
+  "text": "Immortal. Enchant land you control. Enchanted land is a 2/2 Spirit creature with haste in addition to its other types. Landfall: It gets +2/+2 until end of turn. When enchanted land leaves the battlefield, return Green Man of the Hedgerow attached to another land you control.",
+  "flavor": "His face looks out of every hedge, and every hedge looks back.",
+  "art": "res://art/cards/wild_u_003.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_ow_trial",
+  "name": "Trial by Tooth",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Rite",
+  "cost": {
+   "G": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "fight",
+    "target": "enemy_creature",
+    "fighter_counter": 1
+   }
+  ],
+  "speed": "instant",
+  "text": "Put a +1/+1 counter on target creature you control. Then it fights target creature you don't control.",
+  "flavor": "The wood settles its quarrels the old way.",
+  "art": "res://art/cards/wild_u_010.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_ow_earth",
+  "name": "Brought to Earth",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Rite",
+  "cost": {
+   "G": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy",
+    "target": "enemy_creature",
+    "flying": true
+   }
+  ],
+  "speed": "instant",
+  "text": "Destroy target creature with flying an opponent controls.",
+  "flavor": "What flies must land, and the wood is patient.",
+  "art": "res://art/cards/wild_c_016.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_ow_awaken",
+  "name": "Awaken the Grove",
+  "faction": "wild",
+  "rarity": "rare",
+  "type": "spell",
+  "subtype": "Rite",
+  "cost": {
+   "G": 1,
+   "generic": 6
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "summon",
+    "token": {
+     "name": "Treefolk",
+     "power": 3,
+     "toughness": 3,
+     "subtype": "Demon Treefolk",
+     "keywords": []
+    },
+    "count": 3
+   }
+  ],
+  "offering": true,
+  "text": "Offering (As you cast this spell, you may return any number of lands you control to their owner's hand. It costs {1} less for each land returned.) Create three 3/3 Demon Treefolk creature tokens.",
+  "flavor": "The oaks remember every axe. Tonight they walk.",
+  "art": "res://art/cards/wild_m_004.webp",
+  "proto": true,
+  "mana_value": 7
+ },
+ {
+  "id": "proto_ow_rust",
+  "name": "Rust and Root",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "spell",
+  "subtype": "Rite",
+  "cost": {
+   "G": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy",
+    "target": "enemy_construct"
+   },
+   {
+    "trigger": "cast",
+    "action": "heal",
+    "amount": 2
+   }
+  ],
+  "speed": "instant",
+  "text": "Destroy target Construct an opponent controls. You gain 2 life.",
+  "flavor": "Iron is young. The root is old, and has all the time it needs.",
+  "art": "res://art/cards/wild_c_017.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_te_hawk",
+  "name": "Clockwork Hawk",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Construct",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "power": 1,
+  "toughness": 1,
+  "keywords": [
+   "flying",
+   "salvage"
+  ],
+  "effects": [],
+  "text": "Flying. Salvage (When this leaves the battlefield, create a Scrap token.)",
+  "flavor": "It sees everything, and files a report on most of it.",
+  "art": "res://art/cards/machine_c_002.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_smelter",
+  "name": "Smelter Automaton",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Construct",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 2,
+  "keywords": [],
+  "effects": [],
+  "abilities": [
+   {
+    "cost": {
+     "sacrifice": "construct"
+    },
+    "effects": [
+     {
+      "action": "buff",
+      "target": "self",
+      "power": 1,
+      "toughness": 1,
+      "duration": "permanent"
+     }
+    ],
+    "text": "Sacrifice another Construct: Put a +1/+1 counter on Smelter Automaton."
+   }
+  ],
+  "text": "Sacrifice another Construct: Put a +1/+1 counter on Smelter Automaton.",
+  "flavor": "Nothing is wasted. Everything is eventually Smelter Automaton.",
+  "art": "res://art/cards/machine_c_012.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_linemaster",
+  "name": "Foundry Line-Master",
+  "faction": "machine",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Artificer",
+  "cost": {
+   "C": 1,
+   "generic": 3
+  },
+  "power": 2,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [],
+  "statics": [
+   {
+    "static": "anthem",
+    "scope": "other_own_creatures",
+    "subtype": "Construct",
+    "power": 1,
+    "toughness": 1
+   }
+  ],
+  "text": "Construct creatures you control get +1/+1.",
+  "flavor": "\"A machine is only as good as the man who counts its rivets.\"",
+  "art": "res://art/cards/machine_u_014.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_te_welder",
+  "name": "Arc-Welder Construct",
+  "faction": "machine",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Construct",
+  "cost": {
+   "C": 1,
+   "generic": 4
+  },
+  "power": 3,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "damage",
+    "target": "enemy_creature",
+    "amount": 2
+   }
+  ],
+  "cost_less_per": {
+   "subtype": "Construct",
+   "amount": 1
+  },
+  "text": "Affinity for Constructs (This spell costs {1} less for each Construct you control.) When Arc-Welder Construct enters, it deals 2 damage to target creature an opponent controls.",
+  "flavor": "It joins steel to steel, and enemies to the floor.",
+  "art": "res://art/cards/machine_r_004.webp",
+  "proto": true,
+  "mana_value": 5
+ },
+ {
+  "id": "proto_te_ledger",
+  "name": "Foundry Ledger",
+  "faction": "machine",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [],
+  "abilities": [
+   {
+    "cost": {
+     "mana": {
+      "generic": 1
+     },
+     "tap": true,
+     "sacrifice": "construct"
+    },
+    "effects": [
+     {
+      "action": "draw",
+      "amount": 1
+     }
+    ],
+    "text": "{1}, {T}, Sacrifice another Construct: Draw a card."
+   }
+  ],
+  "text": "{1}, {T}, Sacrifice another Construct: Draw a card.",
+  "flavor": "Every part that leaves the floor is entered in the book, and the book is never wrong.",
+  "art": "res://art/cards/machine_u_012.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_pauldron",
+  "name": "Riveted Pauldron",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "relic",
+  "subtype": "Construct Relic Equipment",
+  "cost": {
+   "C": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "attach",
+    "target": "own_creature"
+   }
+  ],
+  "attach": "equipment",
+  "equip": {
+   "generic": 1
+  },
+  "grants": {
+   "power": 1,
+   "toughness": 1,
+   "keywords": []
+  },
+  "on_host_dies": "scrap",
+  "text": "When Riveted Pauldron enters, attach it to target creature you control. Equipped creature gets +1/+1. Whenever equipped creature dies, create a Scrap token. Equip {1}",
+  "flavor": "Forty rivets, each one counted, each one entered in the ledger.",
+  "art": "res://art/cards/machine_u_019.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_te_geartrap",
+  "name": "Gear Trap",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "snare",
+    "target": "enemy_creature",
+    "tap": true
+   }
+  ],
+  "text": "When Gear Trap enters, tap target creature an opponent controls. It can't attack or block for as long as Gear Trap remains on the battlefield.",
+  "flavor": "The springs are wound by apprentices. The release is set by accountants.",
+  "art": "res://art/cards/machine_c_018.webp",
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_discharge",
+  "name": "Calibrated Discharge",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Device",
+  "cost": {
+   "C": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "damage",
+    "target": "enemy_creature",
+    "amount": 2,
+    "amount_oc": true
+   }
+  ],
+  "speed": "instant",
+  "overclock_each": {
+   "generic": 1
+  },
+  "text": "Calibrated Discharge deals 2 damage to target creature an opponent controls. Overclock {1} (You may pay {1} any number of times as you cast this spell.) It deals 1 more damage for each time you paid.",
+  "flavor": "\"When you can measure what you are speaking about, you know something about it.\" (Lord Kelvin)",
+  "art": "res://art/cards/machine_c_017.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_te_bulk",
+  "name": "Bulk Order",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Order",
+  "cost": {
+   "C": 1,
+   "generic": 3
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "make_scrap",
+    "amount": 3,
+    "amount_oc": true
+   }
+  ],
+  "overclock_each": {
+   "generic": 1
+  },
+  "text": "Create three Scrap tokens. Overclock {1}: Create one more for each time you paid.",
+  "flavor": "\"Order by the gross. The unit price is a sin.\" (a Foundry purchaser)",
+  "art": "res://art/cards/machine_u_009.webp",
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_te_felling",
+  "name": "Felling",
+  "faction": "machine",
+  "rarity": "uncommon",
+  "type": "spell",
+  "subtype": "Order",
+  "cost": {
+   "C": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy",
+    "target": "enemy_walking_land"
+   }
+  ],
+  "speed": "instant",
+  "text": "Destroy target land that is a creature an opponent controls, or target Possession attached to one.",
+  "flavor": "The survey shows no sacred grove. The survey is always right.",
+  "art": "res://art/cards/machine_c_026.webp",
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_g_penitent",
+  "name": "Penitent of the Broken Pact",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Penitent",
+  "cost": {
+   "W": 1,
+   "B": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "exile_perm",
+    "target": "any_demon",
+    "draw_if_mine": 2
+   }
+  ],
+  "text": "When Penitent of the Broken Pact enters, exile target Demon or Possession. If you controlled it, draw two cards.",
+  "flavor": "\"I will arise, and will go to my father.\" (Luke 15:18)",
+  "art": "res://art/cards/gold_sanctum_abyss.webp",
+  "proto": true,
+  "mana_value": 3,
+  "faction2": "abyss"
+ },
+ {
+  "id": "proto_g_boethius",
+  "name": "Boethius in the Tower",
+  "faction": "sanctum",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Human Philosopher",
+  "cost": {
+   "W": 1,
+   "U": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 4,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "temperance",
+    "action": "testimony",
+    "amount": 1,
+    "text": "Temperance: Whenever you cast your first spell each turn, create a Testimony."
+   }
+  ],
+  "legendary": true,
+  "text": "Temperance: Whenever you cast your first spell each turn, create a Testimony.",
+  "flavor": "\"Blessed are they that suffer persecution for justice' sake.\" (Matthew 5:10)",
+  "art": "res://art/cards/gold_sanctum_lyceum.webp",
+  "proto": true,
+  "mana_value": 4,
+  "faction2": "lyceum"
+ },
+ {
+  "id": "proto_g_friar",
+  "name": "Rogationtide Friar",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Friar",
+  "cost": {
+   "W": 1,
+   "G": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "landfall",
+    "action": "testimony",
+    "amount": 1,
+    "condition": "not_crusade",
+    "text": "Landfall: Create a Testimony."
+   },
+   {
+    "trigger": "landfall",
+    "action": "buff",
+    "target": "own_creature",
+    "power": 1,
+    "toughness": 1,
+    "duration": "permanent",
+    "condition": "crusade",
+    "text": "Landfall at Crusade: put a +1/+1 counter on target creature you control."
+   }
+  ],
+  "text": "Landfall: Create a Testimony. If it's Crusade, put a +1/+1 counter on target creature you control instead.",
+  "flavor": "\"The earth hath yielded her fruit. May God, our God bless us.\" (Psalm 66:7)",
+  "art": "res://art/cards/gold_sanctum_wild.webp",
+  "proto": true,
+  "mana_value": 3,
+  "faction2": "wild"
+ },
+ {
+  "id": "proto_g_shrovetide",
+  "name": "Shrovetide Reveller",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "W": 1,
+   "R": 1,
+   "generic": 1
+  },
+  "power": 3,
+  "toughness": 2,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "testimony",
+    "amount": 1
+   }
+  ],
+  "excess": {
+   "W": 1,
+   "R": 1
+  },
+  "text": "When Shrovetide Reveller enters, create a Testimony. Excess {W}{R}",
+  "flavor": "\"Rend your hearts, and not your garments, and turn to the Lord your God.\" (Joel 2:13)",
+  "art": "res://art/cards/gold_sanctum_revel.webp",
+  "proto": true,
+  "mana_value": 3,
+  "faction2": "revel"
+ },
+ {
+  "id": "proto_g_clock",
+  "name": "Abbot's Astronomical Clock",
+  "faction": "sanctum",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Construct Holy Relic",
+  "cost": {
+   "W": 1,
+   "C": 1,
+   "generic": 1
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "upkeep",
+    "action": "foresight",
+    "amount": 2,
+    "condition": "not_crusade"
+   },
+   {
+    "trigger": "upkeep",
+    "action": "buff",
+    "target": "own_creature",
+    "power": 1,
+    "toughness": 1,
+    "duration": "permanent",
+    "condition": "crusade"
+   }
+  ],
+  "text": "At the beginning of your upkeep, scry 2. If it's Crusade, put a +1/+1 counter on target creature you control instead.",
+  "flavor": "\"Seven times a day I have given praise to thee.\" (Psalm 118:164)",
+  "art": "res://art/cards/gold_sanctum_machine.webp",
+  "proto": true,
+  "mana_value": 3,
+  "faction2": "machine"
+ },
+ {
+  "id": "proto_g_gallows",
+  "name": "Gallows Oak",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Demon Treefolk",
+  "cost": {
+   "B": 1,
+   "G": 1,
+   "generic": 2
+  },
+  "power": 4,
+  "toughness": 4,
+  "keywords": [
+   "immortal"
+  ],
+  "effects": [
+   {
+    "trigger": "landfall",
+    "action": "drain",
+    "amount": 1,
+    "text": "Landfall: Each opponent loses 1 life and you gain 1 life."
+   }
+  ],
+  "offering": true,
+  "text": "Immortal. Offering (As you cast this spell, you may return any number of lands you control to their owner's hand. It costs {1} less for each land returned.) Landfall: Each opponent loses 1 life and you gain 1 life.",
+  "flavor": "Its acorns fall only on the graves beneath it.",
+  "art": "res://art/cards/gold_abyss_wild.webp",
+  "proto": true,
+  "mana_value": 4,
+  "faction2": "wild"
+ },
+ {
+  "id": "proto_g_maskedball",
+  "name": "Demon at the Masked Ball",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Demon",
+  "cost": {
+   "B": 1,
+   "R": 1,
+   "generic": 1
+  },
+  "power": 3,
+  "toughness": 2,
+  "keywords": [
+   "haste"
+  ],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "discard_enemy",
+    "amount": 1
+   }
+  ],
+  "text": "Haste. When Demon at the Masked Ball enters, each opponent discards a card at random.",
+  "flavor": "Everyone wore a mask. Only one of them was taking his off.",
+  "art": "res://art/cards/gold_abyss_revel.webp",
+  "proto": true,
+  "mana_value": 3,
+  "faction2": "revel"
+ },
+ {
+  "id": "proto_g_apostate",
+  "name": "Apostate of the Porch",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Heretic",
+  "cost": {
+   "U": 1,
+   "B": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "draw",
+    "amount": 2
+   },
+   {
+    "trigger": "enter",
+    "action": "lose_life",
+    "amount": 2
+   },
+   {
+    "trigger": "temperance",
+    "action": "enemy_loses_life",
+    "amount": 1,
+    "text": "Temperance: Whenever you cast your first spell each turn, each opponent loses 1 life."
+   }
+  ],
+  "text": "Heretic. When Apostate of the Porch enters, you draw two cards and you lose 2 life. Temperance: Whenever you cast your first spell each turn, each opponent loses 1 life.",
+  "flavor": "He wanted every answer. The Pact sold him every one, at the asking price.",
+  "art": "res://art/cards/gold_abyss_lyceum.webp",
+  "proto": true,
+  "mana_value": 4,
+  "faction2": "abyss"
+ },
+ {
+  "id": "proto_g_bonemill",
+  "name": "Bone Mill Engine",
+  "faction": "abyss",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "B": 1,
+   "C": 1,
+   "generic": 2
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "creature_dies_own",
+    "action": "make_scrap",
+    "amount": 1
+   }
+  ],
+  "text": "Whenever a creature you control dies, create a Scrap token.",
+  "flavor": "The wheel turns, the stones grind, and the guild bills by the pound.",
+  "art": "res://art/cards/gold_abyss_machine.webp",
+  "proto": true,
+  "mana_value": 4,
+  "faction2": "machine"
+ },
+ {
+  "id": "proto_g_satyrking",
+  "name": "Satyr-King of the Vintage",
+  "faction": "revel",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Demon Satyr",
+  "cost": {
+   "R": 1,
+   "G": 1,
+   "generic": 2
+  },
+  "power": 4,
+  "toughness": 4,
+  "keywords": [
+   "trample"
+  ],
+  "effects": [
+   {
+    "trigger": "landfall",
+    "action": "rummage",
+    "amount": 1,
+    "text": "Landfall: Draw a card, then discard a card."
+   }
+  ],
+  "text": "Trample. Landfall: Draw a card, then discard a card.",
+  "flavor": "Every vine on the hill is his, and every head that aches at dawn.",
+  "art": "res://art/cards/gold_wild_revel.webp",
+  "proto": true,
+  "mana_value": 4,
+  "faction2": "wild"
+ },
+ {
+  "id": "proto_g_planter",
+  "name": "Planter of Slow Oaks",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Philosopher",
+  "cost": {
+   "G": 1,
+   "U": 1,
+   "generic": 1
+  },
+  "power": 1,
+  "toughness": 4,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "temperance",
+    "action": "put_lands",
+    "amount": 1,
+    "text": "Temperance: Whenever you cast your first spell each turn, you may put a land card from your hand onto the battlefield tapped."
+   }
+  ],
+  "text": "Temperance: Whenever you cast your first spell each turn, you may put a land card from your hand onto the battlefield tapped.",
+  "flavor": "He plants oaks whose shade he will never sit in, and calls it reason.",
+  "art": "res://art/cards/gold_wild_lyceum.webp",
+  "proto": true,
+  "mana_value": 3,
+  "faction2": "lyceum"
+ },
+ {
+  "id": "proto_g_millwright",
+  "name": "Millwright of the Weir",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Artificer",
+  "cost": {
+   "G": 1,
+   "C": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "landfall",
+    "action": "make_scrap",
+    "amount": 1,
+    "text": "Landfall: Create a Scrap token."
+   }
+  ],
+  "text": "Landfall: Create a Scrap token.",
+  "flavor": "The river does the work. He only takes the credit, and the toll.",
+  "art": "res://art/cards/gold_wild_machine.webp",
+  "proto": true,
+  "mana_value": 3,
+  "faction2": "machine"
+ },
+ {
+  "id": "proto_g_epicurean",
+  "name": "Epicurean on the Porch Steps",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Philosopher",
+  "cost": {
+   "U": 1,
+   "R": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 3,
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "temperance",
+    "action": "rummage",
+    "amount": 1,
+    "text": "Temperance: Whenever you cast your first spell each turn, draw a card, then discard a card."
+   }
+  ],
+  "text": "Temperance: Whenever you cast your first spell each turn, draw a card, then discard a card.",
+  "flavor": "\"One cup, well chosen,\" he says, and means it, mostly.",
+  "art": "res://art/cards/gold_revel_lyceum.webp",
+  "proto": true,
+  "mana_value": 3,
+  "faction2": "revel"
+ },
+ {
+  "id": "proto_g_pyro",
+  "name": "Pyrotechnic Automaton",
+  "faction": "revel",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Construct",
+  "cost": {
+   "R": 1,
+   "C": 1,
+   "generic": 2
+  },
+  "power": 3,
+  "toughness": 2,
+  "keywords": [
+   "haste",
+   "salvage"
+  ],
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "damage",
+    "target": "any_enemy",
+    "amount": 0,
+    "amount_oc": true
+   }
+  ],
+  "overclock_each": {
+   "generic": 1
+  },
+  "text": "Haste. Overclock {1} (You may pay {1} any number of times as you cast this spell.) When Pyrotechnic Automaton enters, it deals damage equal to the number of times its Overclock was paid to any enemy creature or the enemy player. Salvage",
+  "flavor": "The Revel ordered a spectacle. The guild delivered one, itemised, with a surcharge for the burns.",
+  "art": "res://art/cards/gold_revel_machine.webp",
+  "proto": true,
+  "mana_value": 4,
+  "faction2": "machine"
+ },
+ {
+  "id": "proto_g_rhodes",
+  "name": "Reckoning Engine of Rhodes",
+  "faction": "lyceum",
+  "rarity": "rare",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "U": 1,
+   "C": 1,
+   "generic": 3
+  },
+  "keywords": [],
+  "effects": [
+   {
+    "trigger": "upkeep",
+    "action": "foresight",
+    "amount": 2
+   }
+  ],
+  "abilities": [
+   {
+    "cost": {
+     "mana": {
+      "generic": 2
+     },
+     "tap": true
+    },
+    "effects": [
+     {
+      "action": "draw",
+      "amount": 1
+     }
+    ],
+    "text": "{2}, {T}: Draw a card."
+   }
+  ],
+  "text": "At the beginning of your upkeep, scry 2. {2}, {T}: Draw a card.",
+  "flavor": "Bronze wheels in a sponge diver's net: the sky, counted to the day.",
+  "art": "res://art/cards/gold_lyceum_machine.webp",
+  "proto": true,
+  "mana_value": 5,
+  "faction2": "machine"
  }
 ]

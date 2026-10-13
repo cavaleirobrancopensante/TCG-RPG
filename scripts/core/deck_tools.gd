@@ -691,28 +691,43 @@ static func premade_decks() -> Array:
 ## Peace and Crusade, the Pact's possessions, the Revel's Excess against the Stoa's Phalanx. Quick duel only.
 const PROTO_DECKS := {
 	"Prototype: Church, Holy Office": {"faith": "sanctum", "cards": {
-		"proto_c_thurifer": 3, "proto_c_censure": 4, "proto_c_index": 1, "proto_c_keeper": 2,
-		"proto_c_pilgrim": 3, "proto_c_exorcism": 4, "proto_c_confessor": 3, "proto_c_inquisitor": 2,
-		"proto_c_angel": 1}},
+		"proto_c_thurifer": 3, "proto_c_martyr": 3, "proto_c_censure": 3, "proto_c_sergeant": 3, "proto_c_keeper": 2,
+		"proto_c_hospitaller": 2, "proto_c_cherub": 2, "proto_c_exorcism": 3, "proto_c_confessor": 2, "proto_c_penance": 2,
+		"proto_c_arms": 1, "proto_c_bishop": 2, "proto_c_inquisitor": 2, "proto_c_crusader": 2, "proto_c_sword": 2,
+		"proto_c_index": 1, "proto_c_angel": 1}},
 	"Prototype: Pact, Possession": {"faith": "abyss", "cards": {
-		"proto_p_cultist": 4, "proto_p_covet": 3, "proto_a_whisper": 3, "proto_p_bones": 2,
-		"proto_a_robber": 2, "proto_a_curse": 1, "proto_p_price": 1, "proto_a_wrath": 2, "proto_p_hierophant": 2,
-		"proto_p_altar": 1, "proto_p_summoner": 1, "proto_a_hold": 1, "proto_p_azrakel": 1}},
+		"proto_p_cultist": 4, "proto_p_covet": 3, "proto_a_whisper": 3, "proto_p_bones": 2, "proto_p_scribe": 3,
+		"proto_a_robber": 2, "proto_a_curse": 1, "proto_p_price": 2, "proto_a_wrath": 2, "proto_p_hierophant": 2,
+		"proto_p_altar": 1, "proto_p_summoner": 1, "proto_a_hold": 1, "proto_p_azrakel": 1, "proto_p_bargain": 2,
+		"proto_p_unquiet": 2, "proto_p_brute": 2, "proto_p_wings": 2}},
 	"Prototype: Revel, Midnight Revel": {"faith": "revel", "cards": {
-		"proto_rv_brawler": 4, "proto_rv_masked": 3, "proto_rv_fireeater": 3, "proto_rv_host": 2,
-		"proto_rv_heckler": 1, "proto_rv_lord": 2, "proto_rv_archduke": 1, "proto_rv_toast": 3,
-		"proto_rv_brandy": 2, "proto_rv_flagon": 2, "proto_rv_cask": 1}},
+		"proto_rv_brawler": 4, "proto_rv_masked": 3, "proto_rv_fireeater": 3, "proto_rv_juggler": 3, "proto_rv_satyr": 2,
+		"proto_rv_host": 2, "proto_rv_masquerade": 2, "proto_rv_champion": 2, "proto_rv_lord": 2, "proto_rv_archduke": 1,
+		"proto_rv_toast": 3, "proto_rv_brandy": 2, "proto_rv_flagon": 2, "proto_rv_volley": 2, "proto_rv_bottle": 1,
+		"proto_rv_gambler": 1, "proto_rv_masks": 1}},
 	"Prototype: Stoa, the Phalanx": {"faith": "lyceum", "cards": {
-		"proto_st_ephebe": 3, "proto_st_shieldwall": 2, "proto_st_watchman": 3, "proto_st_polemarch": 2,
-		"proto_st_scholarch": 2, "proto_st_lochagos": 2, "proto_st_navarch": 1, "lyceum_c_030": 3,
-		"proto_st_gate": 2, "proto_st_lamplight": 2, "proto_st_reply": 1}},
+		"proto_st_ephebe": 3, "proto_st_bronze": 4, "proto_st_shieldwall": 3, "proto_st_watchman": 3, "proto_st_questioner": 2,
+		"proto_st_polemarch": 2, "proto_st_scholarch": 2, "proto_st_lochagos": 2, "proto_st_owl": 2, "proto_st_rebuke": 2,
+		"lyceum_c_030": 1, "proto_st_letters": 2, "proto_st_apatheia": 2, "proto_st_drill": 2, "proto_st_calm": 2,
+		"proto_st_reply": 1, "proto_st_gate": 1}},
 	"Prototype: Old Ways, the Sacred Grove": {"faith": "wild", "cards": {
-		"proto_ow_druid": 4, "proto_ow_boar": 4, "proto_ow_wolf": 2, "proto_ow_elder": 3, "proto_ow_stag": 2,
-		"proto_ow_wyrm": 1, "proto_ow_hunt": 3, "proto_ow_rites": 2, "proto_ow_leylines": 1, "proto_ow_spirit": 1}},
+		"proto_ow_druid": 4, "proto_ow_boar": 4, "proto_ow_archdruid": 2, "proto_ow_huntsman": 3, "proto_ow_wolf": 2,
+		"proto_ow_greywolf": 2, "proto_ow_elder": 2, "proto_ow_greenman": 2, "proto_ow_bear": 2, "proto_ow_antler": 1,
+		"proto_ow_stag": 2, "proto_ow_wyrm": 1, "proto_ow_hunt": 2, "proto_ow_trial": 2, "proto_ow_rites": 2,
+		"proto_ow_leylines": 1, "proto_ow_spirit": 1, "proto_ow_awaken": 1}},
 	"Prototype: Technocracy, the Foundry": {"faith": "machine", "cards": {
-		"proto_te_sentry": 4, "proto_te_engine": 2, "proto_te_foreman": 3, "proto_te_mule": 3, "proto_te_overseer": 2,
-		"proto_te_ballista": 2, "proto_te_lancer": 3, "proto_te_writ": 1, "proto_te_reclaim": 1, "proto_te_automaton": 2}},
+		"proto_te_sentry": 4, "proto_te_mule": 4, "proto_te_smelter": 2, "proto_te_engine": 2, "proto_te_foreman": 2,
+		"proto_te_overseer": 2, "proto_te_linemaster": 3, "proto_te_lancer": 3, "proto_te_welder": 2, "proto_te_ballista": 1,
+		"proto_te_automaton": 2, "proto_te_pauldron": 2, "proto_te_geartrap": 3, "proto_te_discharge": 4}},
 }
+## Each deck's narrow answers to its rival, kept out of the main deck (1.79).
+const PROTO_SIDEBOARDS := {
+	"sanctum": ["proto_c_ground", "proto_c_cleansing"], "abyss": ["proto_p_despoiler", "proto_p_desecration"],
+	"revel": ["proto_rv_mock"], "lyceum": ["proto_st_tablet", "proto_st_navarch", "proto_st_lamplight"], "wild": ["proto_ow_rust", "proto_ow_earth"],
+	"machine": ["proto_te_felling", "proto_te_writ", "proto_te_hawk", "proto_te_ledger", "proto_te_bulk", "proto_te_reclaim"],
+}
+## Prototype decks are 60 cards: 36 spells and the faith's lands (40 stays the minimum).
+const PROTO_DECK_SIZE := 60
 
 
 static func proto_decks() -> Array:
@@ -722,6 +737,6 @@ static func proto_decks() -> Array:
 		var cards: Dictionary = d["cards"].duplicate()
 		if not CardDB.has_card(cards.keys()[0]):
 			continue
-		cards[Factions.land_id(d["faith"])] = 40 - count(cards)
+		cards[Factions.land_id(d["faith"])] = PROTO_DECK_SIZE - count(cards)
 		out.append({"name": nm, "cards": cards, "faith": d["faith"], "kind": "proto"})
 	return out

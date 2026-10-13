@@ -16,6 +16,7 @@ func _ready() -> void:
 	test_redesign()
 	test_revel_stoa()
 	test_grove_foundry()
+	test_first_set()
 	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
@@ -2461,7 +2462,7 @@ func test_grove_foundry() -> void:
 func test_revel_stoa() -> void:
 	print("-- the Revel and the Stoa")
 	for d in DeckTools.proto_decks():
-		check(DeckTools.count(d["cards"]) == 40, "%s has 40 cards" % d["name"])
+		check(DeckTools.count(d["cards"]) == 60, "%s has 60 cards" % d["name"])
 	# Excess, the computer: a discarded Toast of Fire is cast at once for {R}
 	var st := _duel()
 	_lands(st, 0, "RR")
@@ -2672,7 +2673,7 @@ func test_revel_stoa() -> void:
 func test_redesign() -> void:
 	print("-- redesign prototype: Peace and Crusade, Immortal, possession")
 	check(not CardDB.all_set_ids().has("proto_s_pilgrim") and CardDB.has_card("proto_s_pilgrim"), "prototype cards stay out of the pools")
-	check(DeckTools.proto_decks().size() == 6 and DeckTools.count(DeckTools.proto_decks()[0]["cards"]) == 40, "six 40-card prototype decks")
+	check(DeckTools.proto_decks().size() == 6 and DeckTools.count(DeckTools.proto_decks()[0]["cards"]) == 60, "six 60-card prototype decks")
 	var st := _duel()
 	_lands(st, 0, "WWWWBBBB")
 	_lands(st, 1, "WWWWBBBB")
@@ -2992,3 +2993,255 @@ func test_redesign() -> void:
 		st.take_events()
 		st.end_turn()
 	check(st.phase == "over", "a prototype duel between the AIs finishes")
+
+
+## The first set at 20 cards per faith (1.79): the new rules, one by one.
+func test_first_set() -> void:
+	print("-- the first set: 20 cards per faith")
+	var n_new := 0
+	for id in CardDB.cards:
+		if String(id).begins_with("proto_"):
+			var c: Dictionary = CardDB.cards[id]
+			var words := String(c.get("text", "")) + String(c.get("flavor", "")) + String(c.get("name", ""))
+			if words.contains("—") or words.contains("–") or words.contains("Covenant"):
+				check(false, "%s: no dashes and no 'Covenant'" % id)
+			n_new += 1
+	check(n_new >= 150, "the prototype pool has %d cards" % n_new)
+	# Encore: Firework Volley from the graveyard, then exiled
+	var st := _duel()
+	_lands(st, 0, "RRRR")
+	var f1 := _perm(st, 1, "proto_st_ephebe")
+	var f2 := _perm(st, 1, "proto_rv_brawler")
+	st.side(0).graveyard = ["proto_rv_volley"]
+	check(st.can_flashback(0, 0) and st.cast_flashback(0, 0), "Encore: Firework Volley is cast from the graveyard")
+	st._force_resolve()
+	check(st.find_perm(f2.uid) == null and f1.damage == 1, "Firework Volley: 1 damage to each enemy creature")
+	check(st.side(0).exile.has("proto_rv_volley") and not st.side(0).graveyard.has("proto_rv_volley"), "Encore: then it is exiled")
+	check(st.side(0).lands.filter(func(l): return l["tapped"]).size() == 4, "Encore: it paid {3}{R}")
+	# a card without Encore stays put
+	st.side(0).graveyard = ["proto_rv_toast"]
+	check(not st.can_flashback(0, 0), "no Encore on a card without one")
+	# Sumptuary Tablet: {2} more from the graveyard, for the opponent only
+	st = _duel()
+	_lands(st, 0, "UUUU")
+	var tab := _perm(st, 1, "proto_st_tablet")
+	st.side(0).graveyard = ["proto_st_drill"]
+	check(not st.can_flashback(0, 0), "Sumptuary Tablet: Recollection {2}{U} costs {2} more (four lands are not enough)")
+	_lands(st, 0, "UUUUU")
+	check(st.can_flashback(0, 0), "Sumptuary Tablet: five lands pay it")
+	st.side(1).deck = ["land_lyceum", "proto_st_gate"]
+	st.side(0).hand = ["land_lyceum"]
+	st.discard_card(0, 0)
+	check(st.has_owed(1) or st.side(1).deck.size() == 2, "Sumptuary Tablet: an opponent's discard lets him scry 1")
+	tab = tab
+	# Phalanx Drill: Hoplites +1/+1 and untap
+	st = _duel()
+	var eph := _perm(st, 0, "proto_st_ephebe")
+	eph.tapped = true
+	for e in CardDB.get_card("proto_st_drill")["effects"]:
+		st.resolve_effect(0, e, null, null)
+	check(not eph.tapped and eph.power() == 2, "Phalanx Drill: the Hoplite gets +1/+1 and untaps")
+	# Mock the Philosophers: no spells for him this turn
+	st = _duel()
+	_lands(st, 1, "UU")
+	st.side(1).hand = ["proto_st_gate"]
+	st.side(0).deck = ["land_revel"]
+	for e in CardDB.get_card("proto_rv_mock")["effects"]:
+		st.resolve_effect(0, e, null, null)
+	_perm(st, 0, "proto_rv_brawler")
+	st.priority = 1
+	st.window_open = true
+	check(not st.can_play(1, 0), "Mock the Philosophers: the opponent can't cast spells this turn")
+	check(st.side(0).hand.size() == 1, "Mock the Philosophers: draw a card")
+	# Gambler's Last Night: discard the hand, draw that many plus one
+	st = _duel()
+	st.side(0).hand = ["land_revel", "land_revel", "proto_rv_toast"]
+	st.side(0).deck = ["land_revel", "land_revel", "land_revel", "land_revel", "land_revel"]
+	st.resolve_effect(0, CardDB.get_card("proto_rv_gambler")["effects"][0], null, null)
+	check(st.side(0).hand.size() == 4 and st.side(0).discarded_turn == 3, "Gambler's Last Night: three discarded, four drawn")
+	# Satyr of the Drunken Rout and Carnival Masks on a discard
+	st = _duel()
+	_perm(st, 0, "proto_rv_satyr")
+	_perm(st, 0, "proto_rv_masks")
+	var br := _perm(st, 0, "proto_rv_brawler")
+	var life := st.side(1).life
+	st.side(0).hand = ["land_revel"]
+	st.discard_card(0, 0)
+	check(st.side(1).life == life - 1, "Satyr of the Drunken Rout: 1 damage on a discard")
+	check(br.has_kw("haste"), "Carnival Masks (or the Brawler): haste on a discard")
+	# Penance: the AI puts his best card on top of his library; you gain 2
+	st = _duel()
+	st.side(1).hand = ["land_lyceum", "proto_st_reply"]
+	life = st.side(0).life
+	for e in CardDB.get_card("proto_c_penance")["effects"]:
+		st.resolve_effect(0, e, null, null)
+	check(st.side(1).hand == ["land_lyceum"] and st.side(1).deck.back() == "proto_st_reply", "Penance: the card goes on top of his library")
+	check(st.side(0).life == life + 2, "Penance: you gain 2 life")
+	# Martyr of the Arena: gain 2 and a Testimony when he dies
+	st = _duel()
+	var mar := _perm(st, 0, "proto_c_martyr")
+	life = st.side(0).life
+	var relics := st.side(0).relics.size()
+	st.destroy_perm(mar)
+	check(st.side(0).life == life + 2 and st.side(0).relics.size() == relics + 1, "Martyr of the Arena: 2 life and a Testimony")
+	# Bishop of the Diocese: other Humans +1/+1
+	st = _duel()
+	var thu := _perm(st, 0, "proto_c_thurifer")
+	_perm(st, 0, "proto_c_bishop")
+	check(thu.power() == 2 and thu.toughness() == 2, "Bishop of the Diocese: other Humans get +1/+1")
+	# Blessing of Arms comes back to hand when its host dies
+	st = _duel()
+	var host := _perm(st, 0, "proto_c_thurifer")
+	var arms := _perm(st, 0, "proto_c_arms")
+	arms.attached_to = host.uid
+	check(host.power() == 2 and host.has_kw("first_strike"), "Blessing of Arms: +1/+1 and first strike")
+	st.destroy_perm(host)
+	check(st.side(0).hand.has("proto_c_arms") and st.find_perm(arms.uid) == null, "Blessing of Arms: back to its owner's hand")
+	# Consecrated Ground: his Possession stays off a new host
+	st = _duel()
+	_perm(st, 0, "proto_c_ground")
+	var h1 := _perm(st, 1, "proto_p_cultist")
+	_perm(st, 1, "proto_p_cultist")
+	var wings := _perm(st, 1, "proto_p_wings")
+	wings.attached_to = h1.uid
+	st.destroy_perm(h1)
+	check(st.find_perm(wings.uid) == null or wings.attached_to < 0, "Consecrated Ground: the Possession can't attach to a new host")
+	var dem := _perm(st, 1, "proto_p_bones")
+	life = st.side(0).life
+	st.destroy_perm(dem)
+	check(st.side(0).life == life + 2, "Consecrated Ground: a Demon of his dies, you gain 2")
+	# Put to the Sword: only an attacker or blocker
+	st = _duel()
+	var att := _perm(st, 1, "proto_rv_brawler")
+	var idle := _perm(st, 1, "proto_rv_masked")
+	st.attackers = [att.uid]
+	var tg := st.valid_targets(0, CardDB.get_card("proto_c_sword")["effects"][0])
+	check(tg.size() == 1 and int(tg[0]["uid"]) == att.uid, "Put to the Sword: only the attacking creature is a target")
+	idle = idle
+	# Sudden Calm: every attacker back to hand
+	st.resolve_effect(0, CardDB.get_card("proto_st_calm")["effects"][0], null, null)
+	check(st.find_perm(att.uid) == null and st.side(1).hand.has("proto_rv_brawler"), "Sudden Calm: the attackers go back to their owners' hands")
+	# Letters to Lucilius: two on the opponent's turn
+	st = _duel()
+	st.side(0).deck = ["land_lyceum", "land_lyceum", "land_lyceum"]
+	st.active = 1
+	st.resolve_effect(0, CardDB.get_card("proto_st_letters")["effects"][0], null, null)
+	check(st.side(0).hand.size() == 2, "Letters to Lucilius: two cards on the opponent's turn")
+	st.active = 0
+	st.resolve_effect(0, CardDB.get_card("proto_st_letters")["effects"][0], null, null)
+	check(st.side(0).hand.size() == 3, "Letters to Lucilius: one on your own")
+	# Scribe of the Black Pact: one to hand, the rest to the graveyard
+	st = _duel()
+	st.side(0).deck = ["land_abyss", "proto_p_covet", "proto_p_cultist"]
+	st.resolve_effect(0, CardDB.get_card("proto_p_scribe")["effects"][0], null, null)
+	check(st.side(0).hand.size() == 1 and st.side(0).graveyard.size() == 2 and st.side(0).deck.is_empty(), "Scribe: one to hand, two to the graveyard")
+	# Penitent of the Broken Pact: exile your own Demon, draw two
+	st = _duel()
+	st.side(0).deck = ["land_abyss", "land_abyss"]
+	var bones := _perm(st, 0, "proto_p_bones")
+	st.resolve_effect(0, CardDB.get_card("proto_g_penitent")["effects"][0], null, {"kind": "creature", "uid": bones.uid})
+	check(st.find_perm(bones.uid) == null and st.side(0).exile.has("proto_p_bones") and st.side(0).hand.size() == 2, "Penitent: your Demon is exiled and you draw two")
+	# Mistletoe Archdruid: {G}{G}
+	st = _duel()
+	var ad := _perm(st, 0, "proto_ow_archdruid")
+	st.activate(0, ad.uid, 0)
+	check(int(st.side(0).pool.get("G", 0)) == 2, "Mistletoe Archdruid: {T}: add {G}{G}")
+	# Green Man of the Hedgerow: a 2/2 Spirit land with haste; Felling cuts it down
+	st = _duel()
+	_forests(st, 0, 3)
+	st.side(0).hand = ["proto_ow_greenman"]
+	check(st.play(0, 0), "Green Man of the Hedgerow is cast")
+	st._force_resolve()
+	var walker: BattleState.Perm = null
+	for q in st.side(0).creatures:
+		if q.land_anim:
+			walker = q
+	check(walker != null and walker.power() == 2 and walker.has_kw("haste"), "Green Man: the land is a 2/2 Spirit with haste")
+	if walker:
+		var ft := st.valid_targets(1, CardDB.get_card("proto_te_felling")["effects"][0])
+		check(ft.size() >= 2, "Felling: the walking land and the spirit in it are targets")
+	# Old Grey Wolf: a Wolf token
+	st = _duel()
+	var ogw := _perm(st, 0, "proto_ow_greywolf")
+	st.resolve_effect(0, CardDB.get_card("proto_ow_greywolf")["effects"][0], ogw, null)
+	check(st.side(0).creatures.size() == 2 and st.side(0).creatures[1].subtype_has("Wolf"), "Old Grey Wolf: a 2/2 Wolf token")
+	# Trial by Tooth: a +1/+1 counter, then the fight
+	st = _duel()
+	var bear := _perm(st, 0, "proto_ow_boar")
+	var prey := _perm(st, 1, "proto_st_shieldwall")
+	st.resolve_effect(0, CardDB.get_card("proto_ow_trial")["effects"][0], null, {"kind": "creature", "uid": prey.uid})
+	check(st.find_perm(prey.uid) == null and bear.power() == 3, "Trial by Tooth: the counter, then it kills the 2/2")
+	# Brought to Earth: only fliers
+	st = _duel()
+	_perm(st, 1, "proto_rv_brawler")
+	var hawk := _perm(st, 1, "proto_te_hawk")
+	tg = st.valid_targets(0, CardDB.get_card("proto_ow_earth")["effects"][0])
+	check(tg.size() == 1 and int(tg[0]["uid"]) == hawk.uid, "Brought to Earth: only the flier")
+	# Awaken the Grove: three 3/3 Demon Treefolk
+	st = _duel()
+	st.resolve_effect(0, CardDB.get_card("proto_ow_awaken")["effects"][0], null, null)
+	check(st.side(0).creatures.size() == 3 and st.side(0).creatures[0].subtype_has("Demon"), "Awaken the Grove: three Demon Treefolk")
+	# Calibrated Discharge, overclocked twice: 4 damage
+	st = _duel()
+	_lands(st, 0, "CCCC")
+	var wall := _perm(st, 1, "proto_st_bronze")
+	st.side(0).hand = ["proto_te_discharge"]
+	check(st.play(0, 0, [{"kind": "creature", "uid": wall.uid}]), "Calibrated Discharge is cast")
+	st._force_resolve()
+	check(st.find_perm(wall.uid) == null, "Calibrated Discharge: 2 damage, +1 for each Overclock paid, kills the 1/4")
+	# Bulk Order: three Scrap, more with Overclock
+	st = _duel()
+	_lands(st, 0, "CCCCC")
+	st.side(0).hand = ["proto_te_bulk"]
+	st.play(0, 0)
+	st._force_resolve()
+	check(st.side(0).relics.size() == 4, "Bulk Order: three Scrap and one more for the Overclock (%d)" % st.side(0).relics.size())
+	# Foundry Line-Master and the Smelter
+	st = _duel()
+	var sm := _perm(st, 0, "proto_te_smelter")
+	_perm(st, 0, "proto_te_linemaster")
+	var sen := _perm(st, 0, "proto_te_sentry")
+	check(sm.power() == 3 and sen.power() == 2, "Foundry Line-Master: Construct creatures +1/+1")
+	check(st.activate(0, sm.uid, 0, [], sen.uid), "Smelter Automaton: sacrifice another Construct")
+	st._force_resolve()
+	check(sm.power() == 4 and st.find_perm(sen.uid) == null, "Smelter Automaton: a +1/+1 counter")
+	# Gear Trap: tapped and held
+	st = _duel()
+	var gt := _perm(st, 0, "proto_te_geartrap")
+	var tgt := _perm(st, 1, "proto_rv_lord")
+	st.resolve_effect(0, CardDB.get_card("proto_te_geartrap")["effects"][0], gt, {"kind": "creature", "uid": tgt.uid})
+	check(tgt.tapped and tgt.snared_by == gt.uid, "Gear Trap: the creature is tapped and can't attack or block")
+	# Riveted Pauldron: a Scrap when the equipped creature dies
+	st = _duel()
+	var hc := _perm(st, 0, "proto_te_mule")
+	var pd := _perm(st, 0, "proto_te_pauldron")
+	pd.attached_to = hc.uid
+	check(hc.power() == 3, "Riveted Pauldron: +1/+1")
+	var r0 := st.side(0).relics.size()
+	st.destroy_perm(hc)
+	check(st.side(0).relics.size() >= r0 + 1, "Riveted Pauldron: a Scrap when the host dies (and the Mule's Salvage)")
+	# Bone Mill Engine: a Scrap whenever a creature of yours dies
+	st = _duel()
+	_perm(st, 0, "proto_g_bonemill")
+	var cu := _perm(st, 0, "proto_p_cultist")
+	r0 = st.side(0).relics.size()
+	st.destroy_perm(cu)
+	check(st.side(0).relics.size() == r0 + 1, "Bone Mill Engine: a Scrap when a creature of yours dies")
+	# Pyrotechnic Automaton: damage equal to the Overclock paid
+	st = _duel()
+	_lands(st, 0, "RCCCCC")
+	st.side(0).hand = ["proto_g_pyro"]
+	life = st.side(1).life
+	st.play(0, 0, [{"kind": "player", "side": 1}])
+	st._force_resolve()
+	st.settle()
+	check(st.side(1).life == life - 2, "Pyrotechnic Automaton: 2 damage for 2 Overclock paid (%d)" % (life - st.side(1).life))
+	# the AI casts a spell again from the graveyard when its hand is spent
+	st = _duel()
+	_lands(st, 0, "RRRR")
+	st.phase = "main1"
+	st.side(0).land_played = true
+	_perm(st, 1, "proto_rv_brawler")
+	st.side(0).graveyard = ["proto_rv_volley"]
+	BattleAI.main_action(st, 0)
+	check(st.side(0).graveyard.is_empty(), "the AI uses Encore when it has nothing better")

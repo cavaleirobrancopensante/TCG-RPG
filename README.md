@@ -970,3 +970,48 @@ two-for-one creatures, engines and the graveyard as a resource.
   ({1}{C} 2/2 Construct: a Scrap when it enters, Salvage when it leaves) and Scrapyard Overseer
   ({2}{C} 1/3: whenever you cast a Construct spell, create a Scrap).
 - tests/proto_duel.tscn takes SMART=1 to let both sides think.
+
+## The first set: 20 cards per faith, 60-card decks (1.79)
+
+- 65 new cards (67 card faces with the two-faced knights): every faith now has 20 cards, plus
+  one two-faith card for each of the 15 pairs. Balance comes from new cards, not from changing
+  printed ones.
+  - Church: Martyr of the Arena, Sergeant of the Temple (two-faced), Hospitaller Knight, Cherub
+    of the Choir, Bishop of the Diocese, Crusader of the Cross (two-faced), Put to the Sword,
+    Blessing of Arms, Penance, Consecrated Ground.
+  - Pact: Scribe of the Black Pact, Despoiler of Relics.
+  - Revel: Juggler of Knives, Satyr of the Drunken Rout, Host of the Masquerade, Rowdy
+    Champion, Gambler's Last Night, Firework Volley, Second Bottle, Carnival Masks, Mock the
+    Philosophers.
+  - Stoa: Bronze-Shield Hoplite, Questioner in the Agora, Great-Owl of the Archive, Measured
+    Rebuke, Letters to Lucilius, Apatheia, Phalanx Drill, Sudden Calm, Sumptuary Tablet.
+  - Old Ways: Mistletoe Archdruid, Huntsman of the Weald, Old Grey Wolf, Cave Bear of the Tors,
+    Antler-King of the Fens, Green Man of the Hedgerow, Trial by Tooth, Brought to Earth,
+    Awaken the Grove, Rust and Root.
+  - Technocracy: Clockwork Hawk, Smelter Automaton, Foundry Line-Master, Arc-Welder Construct,
+    Foundry Ledger, Riveted Pauldron, Gear Trap, Calibrated Discharge, Bulk Order, Felling.
+  - Two-faith: Penitent of the Broken Pact, Boethius in the Tower, Rogationtide Friar,
+    Shrovetide Reveller, Abbot's Astronomical Clock, Gallows Oak, Demon at the Masked Ball,
+    Apostate of the Porch, Bone Mill Engine, Satyr-King of the Vintage, Planter of Slow Oaks,
+    Millwright of the Weir, Epicurean on the Porch Steps, Pyrotechnic Automaton, Reckoning
+    Engine of Rhodes.
+- Encore (the Revel) and Recollection (the Stoa): cast the card again from your graveyard for
+  its second cost, then it is exiled. On Flaming Flagon, Spilled Brandy and Firework Volley;
+  on Reading by Lamplight, Apatheia and Phalanx Drill. Open your graveyard and press Encore or
+  Recollection. The AI uses them too, on its turn or as an answer.
+- New rules: Penance (his card goes on top of his library), "can't cast spells this turn",
+  "discard your hand, then draw that many plus one", spells from outside the hand taxed {2},
+  Possessions that can't move to a new host, exile a Demon or Possession (draw two if it was
+  yours), Overclock on spells and damage equal to the Overclock paid, a Blessing that returns
+  to hand, equipment that leaves a Scrap, a spirit with haste in a land, and Wolf and Treefolk
+  tokens.
+- The six prototype decks are now 60 cards (36 spells, 24 lands); 40 stays the minimum. Each
+  faith's narrow answers to its rival stay out of the main deck (DeckTools.PROTO_SIDEBOARDS).
+- Fixed: the new kinds of targets (an attacker or blocker, a Holy Relic or Blessing, any Demon,
+  an enemy permanent, a walking land) can now be chosen by you and by the AI.
+- tests/proto_fuzz.tscn plays every prototype card in two-faith decks: in 600 duels every one
+  of the 150 cards was cast and every duel finished.
+- Win rates, ordinary AI, 200 duels per pairing (the row deck's share): Church 46%, Pact 53%,
+  Revel 59%, Stoa 47%, Old Ways 46%, Technocracy 48% on average. With the first 60-card lists
+  the Technocracy was at 33%; more Calibrated Discharge, Gear Trap and Line-Master (and a Stoa
+  with more early Hoplites) closed the gap without changing a card.

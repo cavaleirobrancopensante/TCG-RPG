@@ -53,6 +53,7 @@ var player_life: Button
 var grave_btns := [null, null]     # the tombstone graveyard buttons, yours and the enemy's
 var premed_btn: Button = null      # your premeditated cards, face down (shown when there are some)
 var pending_premed := -1           # the premeditated card whose targets we choose
+var pending_flash := -1            # the graveyard card cast for Encore or Recollection whose targets we choose
 var pending_x := -1                # X chosen for the ability being used ({X} paid, or X counters removed)
 var pile_icons := [[], []]         # per side: the hand and library count icons
 var enemy_info: RichTextLabel
@@ -1796,6 +1797,8 @@ func _resolve_owed() -> void:
 				what = I18n.t("Choose the card he discards.")
 			"confess":
 				what = I18n.t("Choose the card the Confessor holds until he leaves the battlefield.")
+			"penance":
+				what = I18n.t("Choose the card he puts on top of his library.")
 			_:
 				what = I18n.t("Choose the card to condemn: he exiles it (and, with the Index, every copy) and creates a Testimony for each.") if e.get("index", false) \
 					else I18n.t("Choose the card to condemn: he exiles it and creates a Testimony.")
@@ -1912,6 +1915,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				line += " " + I18n.t("(for its Excess cost)")
 			if e.get("premeditated", false):
 				line += " " + I18n.t("(premeditated)")
+			if e.get("flashback", false):
+				line += " " + I18n.t("(from the graveyard)")
 			_log(line)
 			_rebuild_hand()
 			_refresh_bars()
@@ -2235,6 +2240,13 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			await _wait(0.3)
 		"held":
 			_log(_cap(I18n.t("%s holds %s until he leaves the battlefield.") % [_obj(int(e["uid"])), _card_name(String(e["id"]))]))
+			_refresh_bars()
+		"penance":
+			if int(e["side"]) == 0:
+				_log(I18n.t("Penance: your %s goes on top of your library.") % _card_name(String(e["id"])))
+			else:
+				_log(I18n.t("Penance: %s puts %s on top of his library.") % [st.side(1).name, _card_name(String(e["id"]))])
+			_rebuild_hand()
 			_refresh_bars()
 		"held_back":
 			_log(_cap(I18n.t("%s returns to its owner's hand.") % _card_name(String(e["id"]))))
@@ -3053,6 +3065,13 @@ func _advance_targeting() -> void:
 		await play_events()
 		await _after_player_action()
 		return
+	if pending_flash >= 0:
+		var fk := pending_flash
+		pending_flash = -1
+		st.cast_flashback(0, fk, chosen_targets)
+		await play_events()
+		await _after_player_action()
+		return
 	var idx := pending_hand_idx
 	pending_hand_idx = -1
 	st.play(0, idx, chosen_targets, pending_overclock, pending_mode)
@@ -3084,6 +3103,8 @@ func _confirm_targets() -> String:
 		what = I18n.t("Cast %s on %s?") % [_card_name(st.side(0).hand[pending_hand_idx]), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_premed >= 0 and pending_premed < st.side(0).premeditated.size():
 		what = I18n.t("Cast %s on %s?") % [_card_name(String(st.side(0).premeditated[pending_premed]["id"])), _refs_text(chosen_targets.filter(func(t): return t != null))]
+	elif pending_flash >= 0 and pending_flash < st.side(0).graveyard.size():
+		what = I18n.t("Cast %s again on %s?") % [_card_name(String(st.side(0).graveyard[pending_flash])), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_excess != "":
 		what = I18n.t("Cast %s on %s?") % [_card_name(pending_excess), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_trigger >= 0:
@@ -3145,6 +3166,7 @@ func _cancel_targeting() -> void:
 		st.side(0).oc_next = -1
 	pending_hand_idx = -1
 	pending_premed = -1
+	pending_flash = -1
 	pending_ability = []
 	pending_overclock = false
 	target_specs = []
@@ -3782,6 +3804,21 @@ func _begin_premeditated(k: int) -> void:
 	_advance_targeting()
 
 
+## Cast graveyard card gi again for its Encore or Recollection cost: choose its targets first.
+func _begin_flashback(gi: int) -> void:
+	_close_preview()
+	if busy or not st.can_flashback(0, gi):
+		return
+	var c := CardDB.get_card(String(st.side(0).graveyard[gi]))
+	st._with_source(c)
+	target_specs = st.cast_specs(c)
+	chosen_targets = []
+	pending_hand_idx = -1
+	pending_ability = []
+	pending_flash = gi
+	_advance_targeting()
+
+
 ## Read the graveyard card by card from card `gi` (Unearth on yours, when it can be).
 func _show_graveyard_card(side_i: int, start: int) -> void:
 	var g: Array = st.side(side_i).graveyard
@@ -3804,6 +3841,11 @@ func _show_graveyard_card(side_i: int, start: int) -> void:
 				if st.reassemble(0, gi):
 					await play_events()
 					refresh(), rok, true, rwhy]]
+		if not c.get("flashback", {}).is_empty():
+			var fok: bool = st.can_flashback(0, gi) and not busy and mode in ["idle", "priority"]
+			var fwhy := "" if fok else I18n.t("Cast it again at its usual speed, with the mana to pay. Afterwards it is exiled.")
+			var fname := I18n.t("Encore") if String(c.get("faction", "")) == "revel" else I18n.t("Recollection")
+			return [[fname + " " + CardView.plain_text(CardView.cost_tokens(c["flashback"])), func(): _begin_flashback(gi), fok, true, fwhy]]
 		if not c.has("unearth"):
 			return []
 		var ok: bool = st.can_unearth(0, gi) and not busy and mode == "idle"

@@ -9,7 +9,8 @@ const START_HAND := 7           # the most cards kept at the end of a turn; Reas
 const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
 const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "enemy_demon",
 	"enemy_creature_or_demon", "any_grave_card", "nonland_permanent", "enemy_land", "enemy_construct", "own_construct",
-	"own_grave_construct", "noncreature_permanent"]
+	"own_grave_construct", "noncreature_permanent", "attacking_or_blocking", "enemy_holy", "any_demon", "enemy_permanent",
+	"enemy_walking_land"]
 
 
 class Perm:
@@ -45,6 +46,7 @@ class Perm:
 	var front_id := ""         # a two-faced card's front face: what goes to the graveyard or a hand
 	var held: Array = []       # [side, card id] taken from a hand while this stays (the Confessor)
 	var counters := {}         # named counters ("charge"); +1/+1 counters are bonus_p / bonus_t
+	var oc_paid := 0           # times its Overclock was paid (for "damage equal to the number of times")
 	var land_anim := false     # a land that has become a creature (Spirit of the Old Oak); its land is in lands, marked "anim"
 
 	func _state() -> BattleState:
@@ -115,6 +117,7 @@ class BattleSide:
 	var lands_turn := 0            # lands that entered under this side's control this turn (landfall)
 	var offering_next := -1        # interactive: lands to return for the next Offering (-1: the fewest needed)
 	var oc_next := -1              # interactive: times to pay the next card's Overclock (-1: none)
+	var silenced_turn := -1        # "can't cast spells this turn" (Mock the Philosophers): the turn it holds
 
 
 var sides: Array = []
@@ -166,6 +169,7 @@ var _passes := 0
 var _settling := false
 var _next_sid := 1
 var _resolving_cast_side := -1    # carouse: the card now resolving counts itself
+var _resolving_oc := 0            # Overclock payments of the spell now resolving
 var _cast_hold := -1              # a cast whose triggers wait for the player's order or targets: priority waits too
 const MAX_WINDOW_ACTIONS := 4     # no side acts more than this in one window
 const SETTLE_GUARD := 400
@@ -237,6 +241,7 @@ func clone(hide_side: int = -1, seed_value: int = 0) -> BattleState:
 		d.spells_turn = s.spells_turn
 		d.lands_turn = s.lands_turn
 		d.premeditated = s.premeditated.duplicate(true)
+		d.silenced_turn = s.silenced_turn
 		for p in s.creatures:
 			d.creatures.append(_copy_perm(p, c))
 		for p in s.relics:
@@ -291,6 +296,7 @@ static func _copy_perm(p: Perm, owner_state: BattleState) -> Perm:
 	q.held = p.held.duplicate(true)
 	q.counters = p.counters.duplicate()
 	q.land_anim = p.land_anim
+	q.oc_paid = p.oc_paid
 	return q
 
 
@@ -577,6 +583,11 @@ func discard_card(i: int, idx: int) -> void:
 				resolve_effect(i, e, p, null)
 				if phase == "over":
 					return
+	for p in side(1 - i).creatures.duplicate() + side(1 - i).relics.duplicate():
+		for e in p.card.get("effects", []):
+			if e.get("trigger") == "opp_discards" and find_perm(p.uid):
+				_with_source(p.card)
+				resolve_effect(1 - i, e, p, null)
 	var c := CardDB.get_card(id)
 	if c.get("excess", {}).is_empty() or phase == "over":
 		_bury(i, id)
@@ -601,7 +612,22 @@ static func excess_card(c: Dictionary) -> Dictionary:
 
 
 func can_cast_excess(i: int, id: String) -> bool:
-	return side(i).exile.has(id) and phase != "over" and can_pay(i, effective_cost(i, excess_card(CardDB.get_card(id))))
+	return side(i).exile.has(id) and phase != "over" and side(i).silenced_turn != turn \
+		and can_pay(i, _with_offhand_tax(i, effective_cost(i, excess_card(CardDB.get_card(id)))))
+
+
+## Sumptuary Tablet: spells side i casts from anywhere but its hand cost {2} more for each the opponent has.
+func _with_offhand_tax(i: int, cost: Dictionary) -> Dictionary:
+	var n := 0
+	for r in side(1 - i).relics + side(1 - i).creatures:
+		for stc in r.card.get("statics", []):
+			if stc.get("static", "") == "offhand_tax":
+				n += int(stc.get("amount", 2))
+	if n == 0:
+		return cost
+	var c2 := cost.duplicate()
+	c2["generic"] = int(c2.get("generic", 0)) + n
+	return c2
 
 
 ## Not cast: the discarded card goes on to the graveyard.
@@ -620,7 +646,7 @@ func cast_excess(i: int, id: String, targets: Array = []) -> bool:
 		return false
 	var s := side(i)
 	var c := CardDB.get_card(id)
-	pay(i, effective_cost(i, excess_card(c)))
+	pay(i, _with_offhand_tax(i, effective_cost(i, excess_card(c))))
 	s.exile.erase(id)
 	s.cast_count += 1
 	var item := {"sid": _next_sid, "kind": "card", "side": i, "id": id, "card": c,
@@ -760,12 +786,13 @@ func excess_choose(i: int, cast: bool, targets: Array = []) -> void:
 
 
 ## The cards kept from a dig go to the hand, the rest to the bottom of the library.
-func dig_choose(i: int, keep_ids: Array, looked: Array = []) -> void:
+func dig_choose(i: int, keep_ids: Array, looked: Array = [], rest_to: String = "bottom") -> void:
 	var s := side(i)
 	if looked.is_empty():
 		if s.dig_owed.is_empty():
 			return
 		looked = s.dig_owed["cards"]
+		rest_to = String(s.dig_owed.get("rest_to", "bottom"))
 		var n := int(s.dig_owed["keep"])
 		s.dig_owed = {}
 		keep_ids = keep_ids.slice(0, n)
@@ -777,8 +804,11 @@ func dig_choose(i: int, keep_ids: Array, looked: Array = []) -> void:
 			s.hand.append(id)
 			kept += 1
 	for id in rest:
-		s.deck.insert(0, id)
-	emit({"type": "dig", "side": i, "kept": kept, "bottom": rest.size()})
+		if rest_to == "grave":
+			s.graveyard.append(id)
+		else:
+			s.deck.insert(0, id)
+	emit({"type": "dig", "side": i, "kept": kept, "bottom": rest.size(), "grave": rest_to == "grave"})
 
 
 # ------------------------------------------------------------ Premeditation
@@ -818,9 +848,11 @@ func can_cast_premeditated(i: int, k: int) -> bool:
 		return false
 	if legend_in_play(i, c):
 		return false
+	if s.silenced_turn == turn:
+		return false
 	var pc := c.duplicate()
 	pc["cost"] = c.get("premeditation", {})
-	return can_pay(i, effective_cost(i, pc))
+	return can_pay(i, _with_offhand_tax(i, effective_cost(i, pc)))
 
 
 func cast_premeditated(i: int, k: int, targets: Array = []) -> bool:
@@ -832,7 +864,7 @@ func cast_premeditated(i: int, k: int, targets: Array = []) -> bool:
 	var c := CardDB.get_card(id)
 	var pc := c.duplicate()
 	pc["cost"] = c.get("premeditation", {})
-	pay(i, effective_cost(i, pc))
+	pay(i, _with_offhand_tax(i, effective_cost(i, pc)))
 	s.tax = 0
 	s.premeditated.remove_at(k)
 	s.cast_count += 1
@@ -840,6 +872,51 @@ func cast_premeditated(i: int, k: int, targets: Array = []) -> bool:
 	_next_sid += 1
 	stack.append(item)
 	emit({"type": "cast", "side": i, "id": id, "sid": item["sid"], "targets": _event_targets(item), "overclock": false, "premeditated": true})
+	_cast_done(i, item)
+	return true
+
+
+# ------------------------------------------------------------ Encore and Recollection (flashback)
+
+## May side i cast graveyard card gi for its Encore or Recollection cost now?
+func can_flashback(i: int, gi: int) -> bool:
+	var s := side(i)
+	if phase == "over" or gi < 0 or gi >= s.graveyard.size() or not has_priority(i) or s.silenced_turn == turn:
+		return false
+	var c := CardDB.get_card(String(s.graveyard[gi]))
+	if c.get("flashback", {}).is_empty():
+		return false
+	if not is_instant(c) and not sorcery_time(i):
+		return false
+	if is_counterspell(c) and counter_target(i, c).is_empty():
+		return false
+	return can_pay(i, _flashback_cost(i, c))
+
+
+func _flashback_cost(i: int, c: Dictionary) -> Dictionary:
+	var fc := c.duplicate()
+	fc["cost"] = c.get("flashback", {})
+	return _with_offhand_tax(i, effective_cost(i, fc))
+
+
+## Cast it from the graveyard; it is exiled afterwards instead of going back there.
+func cast_flashback(i: int, gi: int, targets: Array = [], mode: int = -1) -> bool:
+	if not can_flashback(i, gi):
+		return false
+	var s := side(i)
+	var id := String(s.graveyard[gi])
+	var c := CardDB.get_card(id)
+	pay(i, _flashback_cost(i, c))
+	s.tax = 0
+	s.graveyard.remove_at(gi)
+	if c.has("modes") and c.get("type") == "spell":
+		c = mode_card(c, maxi(0, mode))
+	s.cast_count += 1
+	var item := {"sid": _next_sid, "kind": "card", "side": i, "id": id, "card": c, "targets": targets.duplicate(),
+		"overclock": false, "flashback": true}
+	_next_sid += 1
+	stack.append(item)
+	emit({"type": "cast", "side": i, "id": id, "sid": item["sid"], "targets": _event_targets(item), "overclock": false, "flashback": true})
 	_cast_done(i, item)
 	return true
 
@@ -1164,6 +1241,7 @@ func _resolve_card(it: Dictionary) -> void:
 	match c.get("type"):
 		"creature":
 			var p := _make_perm(i, id, c)
+			p.oc_paid = int(it.get("oc_times", 0))
 			s.creatures.append(p)
 			emit({"type": "summon", "side": i, "uid": p.uid, "id": p.card_id, "from_stack": true})
 			if s.interactive:
@@ -1219,6 +1297,7 @@ func _resolve_card(it: Dictionary) -> void:
 				if e.get("trigger") == "cast":
 					cast_list.append(e)
 			var oc_list: Array = c.get("overclock", {}).get("effects", []) if overclock else []
+			_resolving_oc = int(it.get("oc_times", 0))
 			var g1: Array = _target_check(i, cast_list, targets)
 			var g2: Array = _target_check(i, oc_list, oc_targets)
 			if g1[0] + g2[0] > 0 and g1[1] + g2[1] == 0:
@@ -1228,7 +1307,12 @@ func _resolve_card(it: Dictionary) -> void:
 				_run_list(i, cast_list, null, targets, true)
 				if overclock and phase != "over":
 					_run_list(i, oc_list, null, oc_targets, true)
-			_bury(i, id)
+			_resolving_oc = 0
+			if it.get("flashback", false):
+				side(i).exile.append(id)          # Encore, Recollection: once from the graveyard, then gone
+				emit({"type": "exile_card", "side": i, "id": id})
+			else:
+				_bury(i, id)
 	_resolving_cast_side = -1
 
 
@@ -1291,6 +1375,10 @@ func cond_ok(i: int, cond: String, source = null) -> bool:
 			return s.discarded_turn > 0
 		"landfall_turn":
 			return s.lands_turn > 0
+		"opp_turn":
+			return active != i
+		"not_crusade":
+			return realm != "crusade"
 		"no_casts":
 			return s.cast_count == 0
 		"rooted":
@@ -1607,7 +1695,8 @@ func mana_creatures(i: int) -> Array:
 		for ab in p.card.get("abilities", []):
 			var cost: Dictionary = ab.get("cost", {})
 			if cost.size() == 1 and cost.get("tap", false) and is_mana_ability(ab) and ab["effects"].size() == 1:
-				out.append([p.uid, String(ab["effects"][0].get("color", "C"))])
+				for n in maxi(1, int(ab["effects"][0].get("amount", 1))):
+					out.append([p.uid, String(ab["effects"][0].get("color", "C"))])
 				break
 	return out
 
@@ -1662,6 +1751,8 @@ func can_play(i: int, hand_idx: int, overclock: bool = false) -> bool:
 	var c := CardDB.get_card(s.hand[hand_idx])
 	if c.get("type") == "land":
 		return sorcery_time(i) and not s.land_played
+	if s.silenced_turn == turn:
+		return false                 # "your opponents can't cast spells this turn"
 	if not is_instant(c) and not c.get("keywords", []).has("flash") and not sorcery_time(i):
 		return false
 	if overclock and c.get("overclock", {}).is_empty():
@@ -1803,7 +1894,9 @@ func counter_target(i: int, c: Dictionary) -> Dictionary:
 func _countered(it: Dictionary) -> void:
 	stack.erase(it)
 	var j := int(it["side"])
-	if not it.has("token"):
+	if it.get("flashback", false):
+		side(j).exile.append(String(it["id"]))
+	elif not it.has("token"):
 		_bury(j, String(it["id"]))
 	emit({"type": "counter", "sid": it["sid"], "side": j, "id": it["id"]})
 
@@ -1966,6 +2059,8 @@ func _protected_from_current(p: Perm) -> bool:
 func _passes_filters(p: Perm, e: Dictionary) -> bool:
 	if e.has("max_power") and p.power() > int(e["max_power"]):
 		return false
+	if e.has("max_mv") and int(p.card.get("mana_value", 0)) > int(e["max_mv"]):
+		return false
 	if e.has("min_power") and p.power() < int(e["min_power"]):
 		return false
 	if e.get("tapped", false) and not p.tapped:
@@ -2014,6 +2109,32 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 		"enemy_relic":
 			for r in enemy.relics:
 				out.append({"kind": "relic", "uid": r.uid})
+		"attacking_or_blocking":
+			for k in [1 - i, i]:
+				for p in side(k).creatures:
+					if (attackers.has(p.uid) or _is_blocking(p.uid)) and not (k != i and _protected_from_current(p)):
+						out.append({"kind": "creature", "uid": p.uid})
+		"enemy_holy":
+			for r in enemy.relics:
+				var sub := String(r.card.get("subtype", ""))
+				if sub.contains("Holy") or sub.contains("Blessing"):
+					out.append({"kind": "relic", "uid": r.uid})
+		"any_demon":
+			for k in [1 - i, i]:
+				for p in side(k).creatures + side(k).relics:
+					if is_demon(p):
+						out.append({"kind": "creature" if p.is_creature() else "relic", "uid": p.uid})
+		"enemy_permanent":
+			for p in enemy.creatures + enemy.relics:
+				if not _protected_from_current(p) and _passes_filters(p, e):
+					out.append({"kind": "creature" if p.is_creature() else "relic", "uid": p.uid})
+		"enemy_walking_land":
+			# a land that is a creature, or the spirit in it (Felling)
+			for p in enemy.creatures:
+				if p.land_anim:
+					out.append({"kind": "creature", "uid": p.uid})
+					for a in attachments_of(p):
+						out.append({"kind": "relic", "uid": a.uid})
 		"enemy_land":
 			# one choice per kind of land he has (the kind is what matters)
 			var seen_l := {}
@@ -2067,7 +2188,7 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 				if is_demon(p) and _passes_filters(p, e):
 					out.append({"kind": "creature", "uid": p.uid})
 			for r in enemy.relics:
-				if is_demon(r):
+				if is_demon(r) and (not e.has("max_mv") or int(r.card.get("mana_value", 0)) <= int(e["max_mv"])):
 					out.append({"kind": "relic", "uid": r.uid})
 		"own_grave_creature":
 			var cap := int(e.get("max_mv", 99))
@@ -2455,12 +2576,12 @@ func _free_land(i: int) -> int:
 
 
 ## Land li of side i becomes a creature (power/toughness given) carrying `spirit` attached.
-func _animate_land(i: int, li: int, spirit: Perm, pw: int, tg: int, sub: String) -> Perm:
+func _animate_land(i: int, li: int, spirit: Perm, pw: int, tg: int, sub: String, kws: Array = []) -> Perm:
 	var s := side(i)
 	var land: Dictionary = s.lands[li]
 	var lc := CardDB.get_card(String(land["id"]))
 	var c := {"id": String(land["id"]), "name": lc.get("name", "Land"), "type": "creature", "subtype": "Land " + sub,
-		"faction": lc.get("faction", "wild"), "rarity": "common", "power": pw, "toughness": tg, "keywords": [],
+		"faction": lc.get("faction", "wild"), "rarity": "common", "power": pw, "toughness": tg, "keywords": kws.duplicate(),
 		"effects": [], "cost": {}, "art": lc.get("art", ""), "text": "This land is also a %s creature." % sub}
 	var p := _make_perm(i, String(land["id"]), c)
 	p.land_anim = true
@@ -2578,6 +2699,10 @@ func _hand_pick(i: int, e: Dictionary, source: Perm, hi: int) -> void:
 	match String(e.get("action", "")):
 		"covet":
 			discard_card(j, hi)
+		"penance":
+			sj.hand.remove_at(hi)
+			sj.deck.append(id)               # the top of his library
+			emit({"type": "penance", "side": j, "id": id})
 		"confess":
 			sj.hand.remove_at(hi)
 			if source and find_perm(source.uid):
@@ -3104,6 +3229,9 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 	var me := side(i)
 	var enemy := side(1 - i)
 	var amount := int(e.get("amount", 1))
+	if e.get("amount_oc", false):
+		# "damage equal to the number of times its Overclock was paid" (plus any base)
+		amount += source.oc_paid if source else _resolving_oc
 	if e.get("amount_lands", false):
 		amount = me.lands.size()        # "for each land you control"
 	if e.has("amount_if") and cond_ok(i, String(e["amount_if"].get("condition", "")), source):
@@ -3161,6 +3289,43 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 					break
 				var idx := rng.randi_range(0, enemy.hand.size() - 1)
 				discard_card(1 - i, idx)
+		"silence_opponents":
+			side(1 - i).silenced_turn = turn
+			emit({"type": "silenced", "side": 1 - i})
+		"wheel":
+			# "Discard your hand, then draw that many cards plus one."
+			var nh := me.hand.size()
+			for n in nh:
+				if me.hand.is_empty():
+					break
+				discard_card(i, 0)
+				if phase == "over":
+					return
+			for n in nh + int(e.get("plus", 1)):
+				draw_card(i)
+				if phase == "over":
+					return
+		"untap":
+			for ref in _expand_targets(i, t, chosen, source):
+				var p := find_perm(int(ref.get("uid", -1)))
+				if p and (not e.has("subtype") or p.subtype_has(String(e["subtype"]))):
+					p.tapped = false
+		"enemy_loses_life":
+			lose_life(1 - i, amount)
+		"exile_perm":
+			# exile target permanent; "if you controlled it, draw two cards" (Penitent of the Broken Pact)
+			for ref in _expand_targets(i, t, chosen, source):
+				var p := find_perm(int(ref.get("uid", -1)))
+				if p == null:
+					continue
+				var mine: bool = p.owner == i
+				_remove_perm(p)
+				if not p.is_token:
+					side(p.base_owner).exile.append(_front_of(p))
+				emit({"type": "exile", "uid": p.uid, "side": p.owner, "id": p.card_id})
+				if mine:
+					for n in int(e.get("draw_if_mine", 0)):
+						draw_card(i)
 		"put_lands":
 			# "you may put up to N land cards from your hand onto the battlefield tapped"
 			for n in amount:
@@ -3259,7 +3424,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 			if source and find_perm(source.uid):
 				var fl := _free_land(i)
 				if fl >= 0:
-					_animate_land(i, fl, source, int(e.get("power", 0)), int(e.get("toughness", 4)), String(e.get("subtype", "Treefolk")))
+					_animate_land(i, fl, source, int(e.get("power", 0)), int(e.get("toughness", 4)), String(e.get("subtype", "Treefolk")), e.get("keywords", []))
 		"dig":
 			# "Look at the top N cards. Put K of them into your hand and the rest on the bottom."
 			var looked: Array = []
@@ -3269,12 +3434,12 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				return
 			var keep_n := mini(int(e.get("keep", 1)), looked.size())
 			if me.interactive:
-				me.dig_owed = {"cards": looked, "keep": keep_n}
+				me.dig_owed = {"cards": looked, "keep": keep_n, "rest_to": String(e.get("rest_to", "bottom"))}
 				emit({"type": "owe_dig", "side": i, "n": looked.size()})
 			else:
 				var order := looked.duplicate()
 				order.sort_custom(func(a, b): return BattleAI.card_priority(self, i, a) > BattleAI.card_priority(self, i, b))
-				dig_choose(i, order.slice(0, keep_n), looked)
+				dig_choose(i, order.slice(0, keep_n), looked, String(e.get("rest_to", "bottom")))
 		"discard_self":
 			# "Then discard a card": of your choice
 			for n in amount:
@@ -3401,7 +3566,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 			var who := (1 - i) if e.get("who", "self") == "enemy" else i
 			for n in amount:
 				make_testimony(who)
-		"censure", "covet", "confess":
+		"censure", "covet", "confess", "penance":
 			_ask_hand(i, e, source)
 		"index":
 			if side(i).interactive:
@@ -3480,6 +3645,9 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 					emit({"type": "prevented", "uid": p.uid})
 				elif p and source:
 					p.snared_by = source.uid
+					if e.get("tap", false):
+						p.tapped = true      # "tap target creature. It can't attack or block..." (Gear Trap)
+						emit({"type": "tap", "uid": p.uid, "freeze": false})
 					emit({"type": "snare", "uid": p.uid, "by": source.uid})
 		"fight":
 			var mine = _strongest(i)
@@ -3488,6 +3656,11 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				mine = find_perm(fu)
 			if e.get("fighter", "") == "self" and source and find_perm(source.uid):
 				mine = source               # it fights itself (Barrow Wolf)
+			if mine != null and int(e.get("fighter_counter", 0)) > 0:
+				# "Put a +1/+1 counter on target creature you control. Then it fights" (Trial by Tooth)
+				mine.bonus_p += int(e["fighter_counter"])
+				mine.bonus_t += int(e["fighter_counter"])
+				emit({"type": "buff", "uid": mine.uid, "p": int(e["fighter_counter"]), "t": int(e["fighter_counter"])})
 			var fb: Dictionary = e.get("fighter_bonus", {})
 			if mine != null and not fb.is_empty() and cond_ok(i, String(fb.get("condition", "")), source):
 				mine.temp_p += int(fb.get("power", 0))
@@ -3668,6 +3841,14 @@ func _expand_targets(i: int, t: String, chosen, source: Perm) -> Array:
 		"all_enemy_creatures":
 			for p in side(1 - i).creatures:
 				out.append({"kind": "creature", "uid": p.uid})
+		"all_attackers":
+			for u in attackers:
+				if find_perm(int(u)):
+					out.append({"kind": "creature", "uid": int(u)})
+		"other_attackers":
+			for u in attackers:
+				if find_perm(int(u)) and (source == null or int(u) != source.uid):
+					out.append({"kind": "creature", "uid": int(u)})
 		"all_own_creatures":
 			for p in side(i).creatures:
 				out.append({"kind": "creature", "uid": p.uid})
@@ -3748,6 +3929,18 @@ func destroy_perm(p: Perm, sacrifice: bool = false) -> void:
 		if e.get("trigger") == "death":
 			_with_source(p.card)
 			resolve_effect(p.owner, e, null, null)
+	if p.is_creature():
+		for src in (side(p.owner).creatures + side(p.owner).relics).duplicate():
+			for e in src.card.get("effects", []):
+				if e.get("trigger") == "creature_dies_own" and find_perm(src.uid):
+					_with_source(src.card)
+					resolve_effect(src.owner, e, src, null)
+	if is_demon(p):
+		for src in (side(1 - p.owner).creatures + side(1 - p.owner).relics).duplicate():
+			for e in src.card.get("effects", []):
+				if e.get("trigger") == "enemy_demon_dies" and find_perm(src.uid):
+					_with_source(src.card)
+					resolve_effect(src.owner, e, src, null)
 	if p.subtype_has("Construct"):
 		# "Whenever a Construct you control is put into a graveyard from the battlefield" (Foreman of the Line)
 		for src in (side(p.owner).creatures + side(p.owner).relics).duplicate():
@@ -3831,13 +4024,21 @@ func _remove_perm(p: Perm) -> void:
 	if p.is_creature():
 		for a in attachments_of(p):
 			a.attached_to = -1
+			var ohd := String(a.card.get("on_host_dies", ""))
+			if ohd == "return" and find_perm(a.uid):
+				side(a.owner).relics.erase(a)
+				side(a.base_owner).hand.append(a.card_id)
+				emit({"type": "bounce", "uid": a.uid, "side": a.owner})
+				continue
+			if ohd == "scrap":
+				make_token(a.owner, SCRAP)
 			if a.card.get("possess_land", false) and find_perm(a.uid):
 				# the spirit leaves the fallen land for another land of its master
 				var fl := _free_land(a.owner)
 				if fl >= 0:
-					_animate_land(a.owner, fl, a, int(a.card.get("land_power", 0)), int(a.card.get("land_toughness", 4)), "Treefolk")
+					_animate_land(a.owner, fl, a, int(a.card.get("land_power", 0)), int(a.card.get("land_toughness", 4)), String(a.card.get("land_subtype", "Treefolk")), a.card.get("land_keywords", []))
 					continue
-			if a.card.get("possess", false):
+			if a.card.get("possess", false) and not _no_repossess(a.owner):
 				# Possess: the demon leaves the dead body for another creature of its master
 				var hosts := possess_hosts(a)
 				if hosts.size() > 1 and side(a.owner).interactive:
@@ -3865,6 +4066,22 @@ func _remove_perm(p: Perm) -> void:
 		# Salvage: whatever took it, something is left behind
 		emit({"type": "salvage", "uid": p.uid, "side": p.owner})
 		make_token(p.owner, SCRAP)
+
+
+## Consecrated Ground: side i's possessions can't move to a new host while the opponent holds one.
+func _no_repossess(i: int) -> bool:
+	for r in side(1 - i).relics + side(1 - i).creatures:
+		for stc in r.card.get("statics", []):
+			if stc.get("static", "") == "no_repossess":
+				return true
+	return false
+
+
+func _is_blocking(uid: int) -> bool:
+	for a in blockers:
+		if Array(blockers[a]).has(uid):
+			return true
+	return false
 
 
 ## A creature leaves combat (it died, regenerated or changed hands): as attacker or as blocker.
@@ -4139,6 +4356,21 @@ func auto_target(i: int, e: Dictionary):
 		# the computer sends back the enemy's best permanent, never its own
 		var theirs := opts.filter(func(r): return find_perm(int(r.get("uid", -1))) != null and find_perm(int(r.get("uid", -1))).owner != i)
 		return _highest(theirs) if not theirs.is_empty() else null
+	if e.get("target", "") in ["attacking_or_blocking", "any_demon"]:
+		# his creature or Demon first; Penitent may take one of ours (the least) for the two cards
+		var his := opts.filter(func(r): return find_perm(int(r.get("uid", -1))) != null and find_perm(int(r.get("uid", -1))).owner != i)
+		if not his.is_empty():
+			return _highest(his)
+		if e.get("target") == "any_demon" and int(e.get("draw_if_mine", 0)) > 0:
+			var least = null
+			var least_v := 999.0
+			for r in opts:
+				var q := find_perm(int(r.get("uid", -1)))
+				if q != null and (q.is_token or q.is_creature()) and q.value() < least_v:
+					least_v = q.value()
+					least = r
+			return least if least_v <= 3.0 else null
+		return null
 	if action == "damage":
 		if e.get("target") == "any_enemy" and enemy.life <= amount:
 			return {"kind": "player", "side": 1 - i}

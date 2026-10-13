@@ -187,6 +187,9 @@ static func main_action(st: BattleState, i: int) -> bool:
 		var ab0 := _best_ability(st, i, {})
 		if not ab0.is_empty():
 			opts.append({"kind": "ability", "uid": ab0[0], "idx": ab0[1], "targets": ab0[2], "sac": ab0[3]})
+		var fb0 := best_flashback(st, i, {})
+		if not fb0.is_empty():
+			opts.append({"kind": "flashback", "idx": fb0[0], "targets": fb0[1], "mode": fb0[2]})
 		opts.append({"kind": "pass_main"})
 		var pick: Dictionary = opts[AISearch.choose(st, i, opts)]
 		match String(pick["kind"]):
@@ -194,10 +197,16 @@ static func main_action(st: BattleState, i: int) -> bool:
 				return st.play(i, int(pick["idx"]), pick["targets"], bool(pick["oc"]), int(pick["mode"]))
 			"ability":
 				return st.activate(i, int(pick["uid"]), int(pick["idx"]), pick["targets"], int(pick["sac"]))
+			"flashback":
+				return st.cast_flashback(i, int(pick["idx"]), pick["targets"], int(pick["mode"]))
 			"pass_main":
 				return false
 	if best >= 0:
 		return st.play(i, best, best_targets, best_oc, best_mode)
+	# 3a. Encore and Recollection: a spell cast again from the graveyard, once the hand is spent.
+	var fb := best_flashback(st, i, hold)
+	if not fb.is_empty():
+		return st.cast_flashback(i, int(fb[0]), fb[1], int(fb[2]))
 	# 3b. Unearth: a creature back from the graveyard for one swing, in main 1.
 	if st.phase == "main1":
 		var gi := best_unearth(st, i, hold)
@@ -1332,6 +1341,18 @@ static func respond(st: BattleState, i: int) -> bool:
 		if v > best_v:
 			best_v = v
 			best = ["card", hi, r[1], r_mode]
+	# an instant cast again from the graveyard (Recollection, Encore)
+	for gi in s.graveyard.size():
+		var gc := CardDB.get_card(String(s.graveyard[gi]))
+		if gc.get("flashback", {}).is_empty() or not BattleState.is_instant(gc) or not st.can_flashback(i, gi):
+			continue
+		st._with_source(gc)
+		var gl: Array = gc.get("effects", []).filter(func(x): return x.get("trigger") == "cast")
+		var gr := _answer_value(st, i, gl, null, gc)
+		var gv: float = float(gr[0]) - 0.15 * float(CardDB.mana_value(gc["flashback"])) - 0.3
+		if gv > best_v:
+			best_v = gv
+			best = ["flash", gi, gr[1], -1]
 	for p in s.creatures + s.relics:
 		var abl := st.abilities_of(p)
 		for idx in abl.size():
@@ -1393,6 +1414,8 @@ static func respond(st: BattleState, i: int) -> bool:
 			return false
 	if best[0] == "premeditated":
 		return st.cast_premeditated(i, int(best[1]))
+	if best[0] == "flash":
+		return st.cast_flashback(i, int(best[1]), best[2])
 	if best[0] == "card":
 		return st.play(i, best[1], best[2], false, int(best[3]) if best.size() > 3 else -1)
 	return st.activate(i, best[1][0], best[1][1], best[2])
@@ -1412,6 +1435,8 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 		var a: String = e.get("action", "")
 		var t: String = e.get("target", "")
 		var amount := int(e.get("amount", 1))
+		if e.has("amount_if") and st.cond_ok(i, String(e["amount_if"].get("condition", "")), source):
+			amount = int(e["amount_if"].get("amount", amount))   # "two cards instead" (Letters to Lucilius)
 		var chosen = null
 		if a == "fight":
 			# an instant fight: the best pairing of our creature and theirs, if it wins something
@@ -1536,6 +1561,20 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 						var z = st.find_perm(int(ref.get("uid", -1)))
 						if z != null:
 							v += demon_value(st, z) * 0.8
+				elif BattleState.TARGET_CHOICE_TYPES.has(t):
+					# any other kind of target (an attacker, a Construct, a walking land, a Holy Relic): his only
+					var best_g := 0.0
+					for ref in st.valid_targets(i, e):
+						if targets.has(ref) or not ref.has("uid"):
+							continue
+						var z = st.find_perm(int(ref["uid"]))
+						if z == null or z.owner == i:
+							continue
+						var g := _removal_gain(st, i, z, top) if z.is_creature() else _relic_gain(st, i, z)
+						if g > best_g:
+							best_g = g
+							chosen = ref
+					v += best_g
 				else:
 					return [0.0, []]
 			"exorcise":
@@ -1552,6 +1591,15 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 						chosen = ref
 				v += best_g
 			"bounce":
+				if t == "all_attackers":
+					# Sudden Calm: worth it when his attack is real, and costs us our own attackers
+					for u in st.attackers:
+						var z = st.find_perm(int(u))
+						if z != null:
+							v += (z.value() * 0.8 if z.owner != i else -z.value())
+					if v < 2.5:
+						return [0.0, []]
+					continue
 				var best_g := 0.0
 				for ref in st.valid_targets(i, e):
 					var z = st.find_perm(ref["uid"])
@@ -1637,7 +1685,17 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 				v -= 0.5 * amount
 			"foresight", "tax", "rummage":
 				v += 0.6 if their_end else 0.0
-			"add_mana", "upkeep_cost", "reanimate", "snare", "pacify", "destroy_relic":
+			"destroy_relic":
+				var best_r := 0.0
+				for ref in st.valid_targets(i, e):
+					var z = st.find_perm(int(ref.get("uid", -1)))
+					if z != null and z.owner != i:
+						var g := _relic_gain(st, i, z)
+						if g > best_r:
+							best_r = g
+							chosen = ref
+				v += best_r
+			"add_mana", "upkeep_cost", "reanimate", "snare", "pacify":
 				if not their_end:
 					return [0.0, []]
 				if BattleState.TARGET_CHOICE_TYPES.has(t):
@@ -1651,6 +1709,16 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 				return [0.0, []]
 			targets.append(chosen)
 	return [v, targets]
+
+
+## What destroying his relic z is worth: a Possession by its demon, a real relic by its cost,
+## a token a little.
+static func _relic_gain(st: BattleState, i: int, z) -> float:
+	if BattleState.is_demon(z):
+		return _possession_gain(st, i, z)
+	if z.is_token:
+		return 0.6
+	return 1.6 + 0.35 * float(z.card.get("mana_value", 0))
 
 
 ## The other side's stack item that pumps this creature (worth answering with removal).
@@ -2281,6 +2349,35 @@ static func spell_threat(st: BattleState, i: int, it: Dictionary) -> float:
 		if typeof(ref) == TYPE_DICTIONARY and ref.get("kind") == "player" and int(ref.get("side", -1)) == i and act == "damage":
 			v += int(pr[0].get("amount", 1)) * (1.5 if st.side(i).life <= 6 else 0.6)
 	return v
+
+
+## The graveyard spell worth casting again for its Encore or Recollection cost now:
+## [graveyard index, targets, mode], or []. It keeps the mana an answer in hand needs.
+static func best_flashback(st: BattleState, i: int, hold: Dictionary = {}) -> Array:
+	var g: Array = st.side(i).graveyard
+	var best: Array = []
+	var best_v := 0.0
+	for gi in g.size():
+		if not st.can_flashback(i, gi):
+			continue
+		var c := CardDB.get_card(String(g[gi]))
+		var cost := CardDB.mana_value(c["flashback"])
+		if not hold.is_empty() and st.total_available(i) - cost < int(hold["mana"]):
+			continue
+		var mode := -1
+		var plan := _plan(st, i, c)
+		if c.has("modes") and c.get("type") == "spell":
+			plan = [0.0, []]
+			for m in c["modes"].size():
+				var pm := _plan(st, i, BattleState.mode_card(c, m))
+				if pm[0] > plan[0]:
+					plan = pm
+					mode = m
+		var v: float = float(plan[0]) - 0.5      # a spare card, but the graveyard keeps it otherwise
+		if v > best_v:
+			best_v = v
+			best = [gi, plan[1], mode]
+	return best
 
 
 ## The graveyard card worth unearthing now (index), or -1: the biggest attacker we can pay for
