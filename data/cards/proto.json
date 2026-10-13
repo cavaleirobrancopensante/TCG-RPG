@@ -398,7 +398,7 @@
   "faction": "sanctum",
   "rarity": "common",
   "type": "relic",
-  "subtype": "Mission",
+  "subtype": "Blessing",
   "cost": {
    "W": 1,
    "generic": 2
@@ -1289,7 +1289,7 @@
   "faction": "abyss",
   "rarity": "uncommon",
   "type": "relic",
-  "subtype": "Relic",
+  "subtype": "Construct Relic",
   "cost": {
    "B": 1,
    "generic": 1
@@ -1775,7 +1775,7 @@
   "faction": "revel",
   "rarity": "uncommon",
   "type": "relic",
-  "subtype": "Relic",
+  "subtype": "Construct Relic",
   "cost": {
    "R": 1,
    "generic": 1
@@ -2097,5 +2097,676 @@
   ],
   "proto": true,
   "mana_value": 7
+ },
+ {
+  "id": "proto_ow_druid",
+  "name": "Druid of the Standing Stones",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Druid",
+  "cost": {
+   "G": 1
+  },
+  "power": 1,
+  "toughness": 1,
+  "effects": [],
+  "abilities": [
+   {
+    "cost": {
+     "tap": true
+    },
+    "effects": [
+     {
+      "action": "add_mana",
+      "color": "G",
+      "amount": 1
+     }
+    ],
+    "text": "{T}: Add {G}."
+   }
+  ],
+  "text": "{T}: Add {G}.",
+  "flavor": "The soil is our true mother, and the ploughman owes her an apology every spring. (Hedgerow Druid)",
+  "art": "res://art/cards/wild_c_002.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_ow_boar",
+  "name": "Boar of the Sacred Wood",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Boar",
+  "cost": {
+   "G": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "landfall",
+    "action": "buff",
+    "target": "self",
+    "power": 2,
+    "toughness": 2,
+    "text": "Landfall: Boar of the Sacred Wood gets +2/+2 until end of turn."
+   }
+  ],
+  "text": "Landfall: Whenever a land enters the battlefield under your control, Boar of the Sacred Wood gets +2/+2 until end of turn.",
+  "flavor": "Its tusks have uprooted more saplings than any woodsman's axe.",
+  "art": "res://art/cards/wild_c_003.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_ow_wolf",
+  "name": "Barrow Wolf",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Wolf",
+  "cost": {
+   "G": 1,
+   "generic": 2
+  },
+  "power": 3,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "landfall",
+    "action": "fight",
+    "target": "enemy_creature",
+    "fighter": "self",
+    "text": "Landfall: Barrow Wolf fights target creature you don't control."
+   }
+  ],
+  "text": "Landfall: Whenever a land enters the battlefield under your control, Barrow Wolf fights up to one target creature you don't control.",
+  "flavor": "Alone he is a thin grey shadow on the heather. He is seldom alone.",
+  "art": "res://art/cards/wild_c_021.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_ow_elder",
+  "name": "Elder of the Barrow Mound",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Druid",
+  "cost": {
+   "G": 1,
+   "generic": 3
+  },
+  "power": 3,
+  "toughness": 4,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "put_lands",
+    "amount": 1
+   }
+  ],
+  "statics": [
+   {
+    "static": "anthem",
+    "power": 2,
+    "toughness": 2,
+    "scope": "self",
+    "condition": "rooted"
+   },
+   {
+    "static": "keyword",
+    "keyword": "trample",
+    "scope": "self",
+    "condition": "rooted"
+   }
+  ],
+  "text": "When Elder of the Barrow Mound enters, you may put a land card from your hand onto the battlefield tapped. Rooted: As long as you control six or more lands, he gets +2/+2 and has trample.",
+  "flavor": "We are not the masters of the wood. We are its weeds, and ought to apologise for it. (Elder of the Oak Circle)",
+  "art": "res://art/cards/wild_u_005.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_ow_stag",
+  "name": "Ancient Stag",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Elk",
+  "cost": {
+   "G": 2,
+   "generic": 4
+  },
+  "power": 5,
+  "toughness": 5,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "heal",
+    "amount_lands": true
+   }
+  ],
+  "offering": true,
+  "text": "Offering (As you cast this spell, you may return any number of lands you control to their owner's hand. It costs {1} less for each land returned.) When Ancient Stag enters, you gain 1 life for each land you control.",
+  "flavor": "Our forefathers did not die. They became mushrooms, and one must never be rude to them. (A moot-folk saying)",
+  "art": "res://art/cards/wild_c_006.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 6
+ },
+ {
+  "id": "proto_ow_wyrm",
+  "name": "Wyrm of the Barrow",
+  "faction": "wild",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Demon Wyrm",
+  "cost": {
+   "G": 2,
+   "generic": 6
+  },
+  "power": 7,
+  "toughness": 7,
+  "effects": [
+   {
+    "trigger": "attack",
+    "action": "put_lands",
+    "amount": 2
+   }
+  ],
+  "offering": true,
+  "text": "Trample. Immortal. Offering. Whenever Wyrm of the Barrow attacks, you may put up to two land cards from your hand onto the battlefield tapped.",
+  "flavor": "Cut it in two and throw half in the river. By morning it has found itself again.",
+  "art": "res://art/cards/wild_r_005.webp",
+  "keywords": [
+   "trample",
+   "immortal"
+  ],
+  "proto": true,
+  "mana_value": 8
+ },
+ {
+  "id": "proto_ow_hunt",
+  "name": "Hunt Under the Moon",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Rite",
+  "cost": {
+   "G": 1,
+   "generic": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "fight",
+    "target": "enemy_creature",
+    "fighter_bonus": {
+     "condition": "landfall_turn",
+     "power": 2,
+     "toughness": 2
+    }
+   }
+  ],
+  "text": "Choose target creature you control and target creature you don't control. If a land entered the battlefield under your control this turn, the creature you control gets +2/+2 until end of turn. Then those creatures fight each other.",
+  "flavor": "Under the October moon the hunt rides twice before dawn.",
+  "art": "res://art/cards/wild_r_007.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_ow_rites",
+  "name": "Rites of Return",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "spell",
+  "subtype": "Rite",
+  "cost": {
+   "G": 1,
+   "generic": 2
+  },
+  "effects": [],
+  "modes": [
+   {
+    "text": "Return up to two land cards from your graveyard to the battlefield tapped.",
+    "effects": [
+     {
+      "trigger": "cast",
+      "action": "lands_from_grave",
+      "amount": 2
+     }
+    ]
+   },
+   {
+    "text": "Destroy target Construct.",
+    "effects": [
+     {
+      "trigger": "cast",
+      "action": "destroy",
+      "target": "enemy_construct"
+     }
+    ]
+   }
+  ],
+  "text": "Choose one: Return up to two land cards from your graveyard to the battlefield tapped; or destroy target Construct.",
+  "flavor": "The trees have souls, the druids teach, and woodcutters do not. The trees agree.",
+  "art": "res://art/cards/wild_r_008.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_ow_leylines",
+  "name": "Walk the Ley Lines",
+  "faction": "wild",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Rite",
+  "cost": {
+   "G": 1,
+   "generic": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "fetch_land",
+    "amount": 1
+   },
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 1,
+    "condition": "rooted"
+   }
+  ],
+  "text": "Put a basic land card from your library onto the battlefield tapped, then shuffle. Rooted: Draw a card.",
+  "flavor": "Pray to the stones. In all these years they have never once contradicted a druid. (Grey Elder of the Henge)",
+  "art": "res://art/cards/wild_r_009.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_ow_spirit",
+  "name": "Spirit of the Old Oak",
+  "faction": "wild",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Possession Demon Spirit",
+  "cost": {
+   "G": 1,
+   "generic": 2
+  },
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "animate_land",
+    "power": 0,
+    "toughness": 4,
+    "subtype": "Treefolk"
+   },
+   {
+    "trigger": "landfall",
+    "action": "buff",
+    "target": "host",
+    "power": 1,
+    "toughness": 1,
+    "duration": "permanent",
+    "text": "Landfall: put a +1/+1 counter on enchanted land."
+   }
+  ],
+  "attach": "aura",
+  "possess_land": true,
+  "land_power": 0,
+  "land_toughness": 4,
+  "text": "Immortal. Enchant land you control. Enchanted land is a 0/4 Treefolk creature in addition to its other types. Landfall: Put a +1/+1 counter on enchanted land. When enchanted land leaves the battlefield, return Spirit of the Old Oak attached to another land you control.",
+  "flavor": "There is no sin but the axe, and no prayer but the rustle of leaves. (The druids' creed of the Green Man)",
+  "art": "res://art/cards/wild_u_006.webp",
+  "keywords": [
+   "immortal"
+  ],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_sentry",
+  "name": "Clockwork Sentry",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Construct",
+  "cost": {
+   "C": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 1,
+  "effects": [],
+  "text": "Salvage (When this leaves the battlefield, create a Scrap token.)",
+  "flavor": "Built to stand in a doorway until the end of the world, and slightly beyond.",
+  "art": "res://art/cards/machine_c_006.webp",
+  "keywords": [
+   "salvage"
+  ],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_te_engine",
+  "name": "Foundry Engine",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "C": 1,
+   "generic": 1
+  },
+  "effects": [],
+  "statics": [
+   {
+    "static": "cost_reduce",
+    "subtype": "Construct",
+    "amount": 1
+   }
+  ],
+  "text": "Construct spells you cast cost {1} less.",
+  "flavor": "It crackles once each dawn, and something nearby flinches.",
+  "art": "res://art/cards/machine_u_010.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_te_foreman",
+  "name": "Foreman of the Line",
+  "faction": "machine",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Artificer",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 3,
+  "effects": [
+   {
+    "trigger": "construct_dies",
+    "action": "drain",
+    "amount": 1
+   }
+  ],
+  "text": "Whenever a Construct you control is put into a graveyard from the battlefield, each opponent loses 1 life and you gain 1 life.",
+  "flavor": "\"The line does not wait for the slow man. It finds a faster one.\" (a Foundry maxim)",
+  "art": "res://art/cards/machine_u_015.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_furnace",
+  "name": "Smelting Furnace",
+  "faction": "machine",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "effects": [],
+  "abilities": [
+   {
+    "cost": {
+     "mana": {
+      "generic": 1
+     },
+     "sacrifice": "construct"
+    },
+    "effects": [
+     {
+      "action": "make_scrap",
+      "amount": 1
+     },
+     {
+      "action": "add_counter",
+      "counter": "charge",
+      "amount": 1
+     }
+    ],
+    "text": "{1}, Sacrifice another Construct: Create a Scrap token and put a charge counter on Smelting Furnace."
+   },
+   {
+    "cost": {
+     "tap": true,
+     "sacrifice": "self"
+    },
+    "effects": [
+     {
+      "action": "damage",
+      "target": "any_enemy",
+      "amount_x": "charge"
+     }
+    ],
+    "text": "{T}, Remove all charge counters and sacrifice it: It deals X damage to any target."
+   },
+   {
+    "cost": {
+     "tap": true,
+     "sacrifice": "self"
+    },
+    "effects": [
+     {
+      "action": "add_mana",
+      "color": "C",
+      "amount_x": "charge"
+     }
+    ],
+    "text": "{T}, Remove all charge counters and sacrifice it: Add X {C}."
+   }
+  ],
+  "text": "{1}, Sacrifice another Construct: Create a Scrap token and put a charge counter on Smelting Furnace. {T}, Remove all charge counters from Smelting Furnace and sacrifice it: Choose one: It deals X damage to any target; or add X {C}. X is the number of charge counters removed.",
+  "flavor": "\"Soon the forge will need no smith, and the city no citizens. We call this progress.\" (a Foundry prospectus)",
+  "art": "res://art/cards/machine_u_011.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_ballista",
+  "name": "Siege Ballista",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "effects": [],
+  "abilities": [
+   {
+    "cost": {
+     "mana": {
+      "generic": 1
+     },
+     "tap": true,
+     "sacrifice": "construct"
+    },
+    "effects": [
+     {
+      "action": "damage",
+      "target": "enemy_creature",
+      "amount": 2
+     }
+    ],
+    "text": "{1}, {T}, Sacrifice another Construct: Siege Ballista deals 2 damage to target creature."
+   }
+  ],
+  "text": "{1}, {T}, Sacrifice another Construct: Siege Ballista deals 2 damage to target creature.",
+  "flavor": "The wall was rated for catapults. No one had rated it for patience.",
+  "art": "res://art/cards/machine_u_001.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_lancer",
+  "name": "Clockwork Lancer",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Construct",
+  "cost": {
+   "C": 1,
+   "generic": 3
+  },
+  "power": 3,
+  "toughness": 3,
+  "effects": [],
+  "overclock_each": {
+   "generic": 1
+  },
+  "text": "Overclock {1} (You may pay {1} any number of times as you cast this spell. It enters with a +1/+1 counter for each time you paid.) Salvage (When this leaves the battlefield, create a Scrap token.)",
+  "flavor": "The Stoa taught discipline. The Technocracy simply built it.",
+  "art": "res://art/cards/machine_c_010.webp",
+  "keywords": [
+   "salvage"
+  ],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_te_quarry",
+  "name": "Quarry Engine",
+  "faction": "machine",
+  "rarity": "rare",
+  "type": "relic",
+  "subtype": "Construct Relic",
+  "cost": {
+   "C": 1,
+   "generic": 3
+  },
+  "effects": [],
+  "abilities": [
+   {
+    "cost": {
+     "mana": {
+      "generic": 4
+     },
+     "tap": true
+    },
+    "effects": [
+     {
+      "action": "destroy_land",
+      "target": "enemy_land"
+     }
+    ],
+    "text": "{4}, {T}: Destroy target land. Its controller creates an Ore token."
+   }
+  ],
+  "text": "{4}, {T}: Destroy target land. Its controller creates an Ore token. (It is a Construct relic with \"Sacrifice this: Add one mana of any color.\")",
+  "flavor": "\"Do not ask where progress leads. To ask is to slow it.\" (a Foundry maxim)",
+  "art": "res://art/cards/machine_r_009.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_te_writ",
+  "name": "Quarry Writ",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Order",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "destroy_land",
+    "target": "enemy_land"
+   }
+  ],
+  "text": "Destroy target land. Its controller creates an Ore token.",
+  "flavor": "\"Men are requisitioned on the same form as rivets. It saves paper.\" (a Foundry clerk)",
+  "art": "res://art/cards/machine_c_015.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_te_reclaim",
+  "name": "Tinker's Reclaim",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Device",
+  "cost": {
+   "C": 1,
+   "generic": 1
+  },
+  "speed": "instant",
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "regrow",
+    "target": "own_grave_construct"
+   },
+   {
+    "trigger": "cast",
+    "action": "foresight",
+    "amount": 1
+   }
+  ],
+  "text": "Return target Construct card from your graveyard to your hand. Scry 1.",
+  "flavor": "\"Every man is a spare part. The wise ones keep themselves well oiled.\" (a Foundry maxim)",
+  "art": "res://art/cards/machine_c_014.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_te_automaton",
+  "name": "Great Automaton",
+  "faction": "machine",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Construct",
+  "cost": {
+   "C": 1,
+   "generic": 7
+  },
+  "power": 6,
+  "toughness": 6,
+  "effects": [],
+  "cost_less_per": {
+   "subtype": "Construct",
+   "amount": 1
+  },
+  "overclock_each": {
+   "generic": 1
+  },
+  "text": "Affinity for Constructs (This spell costs {1} less for each Construct you control.) Trample. Overclock {1} (pay any number of times: it enters with a +1/+1 counter for each). Salvage (When this leaves the battlefield, create a Scrap token.)",
+  "flavor": "Its footfalls are measured in tremors, and its upkeep in whole coal seams.",
+  "art": "res://art/cards/machine_r_002.webp",
+  "keywords": [
+   "trample",
+   "salvage"
+  ],
+  "proto": true,
+  "mana_value": 8
  }
 ]

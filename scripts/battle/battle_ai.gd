@@ -299,10 +299,29 @@ static func _ability_choice(st: BattleState, i: int, p, ab: Dictionary) -> Array
 					return [0.0, [], -1]
 				v += 1.4
 			"damage":
+				var dmg := int(e.get("amount", 1))
+				if e.has("amount_x"):
+					# the Furnace: wait until it is charged enough to matter (or to finish him)
+					dmg = int(p.counters.get(String(e["amount_x"]), 0))
+					if dmg < 3 and st.side(1 - i).life > dmg:
+						return [0.0, [], -1]
 				var ref = st.auto_target(i, e)
 				if ref != null:
-					v += 1.5 + (2.0 if ref.get("kind") == "creature" else 0.0)
+					v += 1.5 + (2.0 if ref.get("kind") == "creature" else 0.0) + 0.6 * maxi(0, dmg - 1)
 					helps_attack = true
+			"destroy_land":
+				# the Old Ways live on their lands: take one whenever the mana is there
+				if st.side(1 - i).lands.size() < 2:
+					return [0.0, [], -1]
+				v += 2.6
+			"make_scrap":
+				v += 0.9 * int(e.get("amount", 1))
+			"add_counter":
+				v += 0.6
+			"become_servo":
+				if st.phase != "main2":
+					return [0.0, [], -1]
+				v += 1.1
 			"drain":
 				v += 1.4 * int(e.get("amount", 1))
 			"discard_enemy":
@@ -351,7 +370,7 @@ static func _ability_choice(st: BattleState, i: int, p, ab: Dictionary) -> Array
 			return [0.0, [], -1]
 		v -= 0.4 * life
 	var sac_kind := String(cost.get("sacrifice", ""))
-	if sac_kind in ["other", "servo"] or sac_kind.begins_with("tribe:"):
+	if sac_kind in ["other", "servo", "construct"] or sac_kind.begins_with("tribe:"):
 		var victim = sacrifice_victim(st, i, p, sac_kind, ab)
 		if victim == null:
 			return [0.0, [], -1]
@@ -803,6 +822,21 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 					v += 0.5 * amount
 			"rummage":
 				v += 0.6
+			"destroy_land":
+				if foe.lands.size() < 2:
+					if is_spell:
+						return [0.0, []]
+				else:
+					v += 2.6
+			"fetch_land":
+				v += 1.4 if me.lands.size() < 7 else 0.3
+			"lands_from_grave":
+				var gl := me.graveyard.filter(func(x): return CardDB.is_land(x)).size()
+				if gl == 0:
+					if is_spell:
+						return [0.0, []]
+				else:
+					v += 1.2 * mini(gl, amount) + 0.5
 			"discard_self":
 				# a cost, unless a discarded Excess card is cast or a Brawler is waiting for it
 				var gain := -0.6 * amount
@@ -1915,7 +1949,7 @@ static func _cast_value(st: BattleState, i: int, mana: int) -> float:
 static func sacrifice_victim(st: BattleState, i: int, src, kind: String, _ab: Dictionary = {}):
 	var best = null
 	var best_v := 1e9
-	for q in st.side(i).creatures:
+	for q in st.side(i).creatures + (st.side(i).relics if kind == "construct" else []):
 		if not BattleState.sacrifice_fits(kind, src, q):
 			continue
 		var v := sacrifice_cost(st, i, q)
@@ -1928,6 +1962,9 @@ static func sacrifice_victim(st: BattleState, i: int, src, kind: String, _ab: Di
 ## How much losing q to a sacrifice hurts (for ordering victims).
 static func sacrifice_cost(st: BattleState, i: int, q) -> float:
 	var v: float = q.value() + (0.0 if q.is_token else 2.0)
+	if not q.is_creature():
+		# a relic: a Scrap is there to be spent; a real relic (an engine) is worth its cost and more
+		v = 0.6 if q.is_token else 3.0 + float(q.card.get("mana_value", 0)) * 1.2
 	if q.sick and not q.is_token and q.value() < 4.0:
 		v -= 0.5                # it could not attack this turn anyway
 	if _is_payoff(q):

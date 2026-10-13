@@ -1007,7 +1007,7 @@ func _refresh_relics(i: int) -> void:
 	var list: Array = st.side(i).relics.filter(func(r): return r.attached_to < 0 or st.find_perm(r.attached_to) == null)
 	var parts: Array = [fig_zoom, busy, mode]
 	for r in list:
-		parts.append([r.uid, r.attached_to, r.tapped, _is_valid_target({"kind": "relic", "uid": r.uid}),
+		parts.append([r.uid, r.attached_to, r.tapped, r.counters.duplicate(), _is_valid_target({"kind": "relic", "uid": r.uid}),
 			i == 0 and range(st.abilities_of(r).size()).any(func(kk): return st.can_activate(0, r.uid, kk))])
 	var rkey := str(parts)
 	if rkey == _relic_keys[i] and (box.get_child_count() > 0) == (not list.is_empty()):
@@ -1091,12 +1091,14 @@ class _RelicTile extends Control:
 		mouse_filter = Control.MOUSE_FILTER_STOP
 
 	var card: Dictionary = {}
+	var charge := 0
 
 	func sync(st, r, can_use: bool, valid_target: bool) -> void:
 		faction = String(r.card.get("faction", "machine"))
 		title = String(r.name)
 		token = r.is_token
 		card = r.card
+		charge = int(r.counters.get("charge", 0))
 		usable = can_use
 		demon = BattleState.is_demon(r)
 		attached = r.attached_to >= 0
@@ -1108,6 +1110,9 @@ class _RelicTile extends Control:
 		var rr := Rect2(Vector2.ZERO, size)
 		var frame := Tapestry.GILT if target_ok else (SummonFigure.SELECT_COLOR if usable else Color.TRANSPARENT)
 		var opt := {"frame": frame}
+		if charge > 0:
+			opt["badge"] = "⚡%d" % charge
+			opt["badge_col"] = Color(0.45, 0.25, 0.05)
 		if tapped:
 			CardFace.paint_tapped(self, rr, card, opt)
 		else:
@@ -1819,7 +1824,7 @@ func _resolve_owed() -> void:
 		if pending_mode >= 0:
 			target_specs = Array(t["modes"][pending_mode].get("effects", [])).filter(func(x): return BattleState.TARGET_CHOICE_TYPES.has(x.get("target", "")))
 		else:
-			target_specs = ([BattleState.FIGHTER_SPEC] if e.get("action") == "fight" else []) + [e]
+			target_specs = ([BattleState.FIGHTER_SPEC] if e.get("action") == "fight" and e.get("fighter", "") != "self" else []) + [e]
 		chosen_targets = []
 		pending_trigger = src.uid if src else -2
 		pending_hand_idx = -1
@@ -2269,6 +2274,21 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			_rebuild_hand()
 		"excess_gone":
 			pass
+		"offering":
+			_log(I18n.t("Offering: %s goes back to %s hand.") % [_card_name(e["id"]), I18n.t("your") if int(e["side"]) == 0 else I18n.t("his")], false)
+			_refresh_bars()
+			_rebuild_hand()
+		"landfall":
+			if figures.has(int(e["uid"])):
+				_float_text(I18n.t("Landfall"), figures[int(e["uid"])].global_position + _fsz() * 0.5, Tapestry.LEAF)
+		"land_destroyed":
+			_log(I18n.t("%s is destroyed; its controller creates an Ore token.") % _card_name(e["id"]))
+			_refresh_bars()
+		"salvage":
+			_log(I18n.t("Salvage: a Scrap token is left behind."), false)
+		"counter_added":
+			_refresh_relics(0)
+			_refresh_relics(1)
 		"discard":
 			var dn := _card_name(e["id"])
 			_log(I18n.t("You discard %s.") % dn if int(e["side"]) == 0 else I18n.t("%s discards %s.") % [st.side(1).name, dn])
@@ -2832,6 +2852,25 @@ func _begin_play(idx: int) -> void:
 		pending_mode = 1 if second else 0
 		_start_targets(BattleState.mode_card(c, pending_mode))
 		return
+	if c.get("offering", false) and st.max_offering(0, c) > 0:
+		# Offering: how many lands go back to your hand (each makes it {1} cheaper)
+		var need := st.offering_needed(0, c)
+		var most: int = mini(st.max_offering(0, c), int(c.get("cost", {}).get("generic", 0)))
+		if most > need:
+			var n = await _ask_count(I18n.t("Offering"), I18n.t("Return how many lands to your hand? Each makes it {1} cheaper. (You may tap them for mana first.)"), need, most)
+			if n < 0:
+				_cancel_targeting()
+				return
+			st.side(0).offering_next = n
+	if not c.get("overclock_each", {}).is_empty():
+		var off := maxi(0, st.side(0).offering_next)
+		var most_oc := st.overclock_most(0, c, st.effective_cost(0, c, {}, -1, off))
+		if most_oc > 0:
+			var m = await _ask_count(I18n.t("Overclock"), I18n.t("Pay %s how many times? It enters with a +1/+1 counter for each.") % UIKit.cost_text(c["overclock_each"]), 0, most_oc)
+			if m < 0:
+				_cancel_targeting()
+				return
+			st.side(0).oc_next = m
 	if not c.get("overclock", {}).is_empty() and st.can_play(0, idx, true):
 		var extra := UIKit.cost_text(c["overclock"].get("cost", {}))
 		_ask(I18n.t("Overclock"), I18n.t("Pay %s more to overclock it?") % extra, I18n.t("Overclock"), I18n.t("Play normally"), func(yes: bool):
@@ -2904,11 +2943,23 @@ func _advance_targeting() -> void:
 		if opts.is_empty():
 			chosen_targets.append(null)
 			continue
-		if spec.get("target") in ["own_grave_creature", "any_grave_card"]:
+		if spec.get("target") == "enemy_land":
+			# which kind of his lands: shown as cards
+			var lids: Array = opts.map(func(o): return o["id"])
+			var li = await _pick_cards(I18n.t("Destroy a land"), I18n.t("Choose the kind of land to destroy. Its controller creates an Ore token."), lids, "one", pending_trigger == -1)
+			if int(li) < 0 and pending_trigger == -1:
+				_cancel_targeting()
+				return
+			chosen_targets.append(opts[clampi(int(li), 0, opts.size() - 1)])
+			continue
+		if spec.get("target") in ["own_grave_creature", "any_grave_card", "own_grave_construct"]:
 			var gids: Array = opts.map(func(o): return o["id"])
-			var gnote := I18n.t("Choose a creature card from your graveyard.") if spec.get("target") == "own_grave_creature" \
-				else I18n.t("Choose a card from a graveyard (his first, then yours).")
-			var gi = await _pick_cards(I18n.t("Return a creature") if spec.get("target") == "own_grave_creature" else I18n.t("Exile from a graveyard"), gnote, gids, "one", true)
+			var gt := String(spec.get("target"))
+			var gnote := I18n.t("Choose a creature card from your graveyard.") if gt == "own_grave_creature" \
+				else (I18n.t("Choose a Construct card from your graveyard.") if gt == "own_grave_construct" \
+				else I18n.t("Choose a card from a graveyard (his first, then yours)."))
+			var ghead := I18n.t("Return a creature") if gt == "own_grave_creature" else (I18n.t("Return a Construct") if gt == "own_grave_construct" else I18n.t("Exile from a graveyard"))
+			var gi = await _pick_cards(ghead, gnote, gids, "one", true)
 			if int(gi) < 0 and pending_trigger != -1:
 				gi = 0                   # a trigger must take a target
 			elif int(gi) < 0:
@@ -3075,6 +3126,9 @@ func _cancel_targeting() -> void:
 	elif not pending_ability.is_empty():
 		what = I18n.t("Cancelled: %s's ability is not used.") % _obj(int(pending_ability[0]))
 	mode = "idle"
+	if st:
+		st.side(0).offering_next = -1      # a cast given up keeps no Offering or Overclock count for the next
+		st.side(0).oc_next = -1
 	pending_hand_idx = -1
 	pending_premed = -1
 	pending_ability = []
@@ -3523,6 +3577,37 @@ func _ask_charge(n: int, sub: String) -> Array:
 	v.add_child(ok_btn)
 	update.call()
 	return await _charge_done
+
+
+## A number from lo to hi (a button for each); -1 when cancelled.
+signal _count_answered(n: int)
+func _ask_count(heading: String, text: String, lo: int, hi: int) -> int:
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.55)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	var panel := _centered_panel(dim)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", UIKit.SP_2)
+	panel.add_child(v)
+	v.add_child(UIKit.title(heading, UIKit.FS_HEADING))
+	var l := UIKit.label(text, UIKit.FS_BODY, UIKit.TEXT, true)
+	l.custom_minimum_size.x = 460
+	v.add_child(l)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", UIKit.SP_1)
+	v.add_child(row)
+	for n in range(lo, hi + 1):
+		var nn: int = n
+		row.add_child(_btn(str(n), func():
+			dim.queue_free()
+			_count_answered.emit(nn), UIKit.TARGET_W))
+	var cancel := _btn(I18n.t("Cancel"), func():
+		dim.queue_free()
+		_count_answered.emit(-1), 140)
+	cancel.name = "Cancel"
+	v.add_child(cancel)
+	return await _count_answered
 
 
 ## A two-button question; true for the right-hand (second) answer.

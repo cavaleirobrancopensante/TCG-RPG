@@ -917,3 +917,24 @@ two-for-one creatures, engines and the graveyard as a resource.
   miniature cards in a scrolling grid, a search by name, and tabs by type (All, Creature,
   Sorcery, Instant, Relic, with how many of each). Each card shows how many copies are in
   the library. Tap a card to select it, hold it to read it, then Choose.
+
+## The Old Ways and the Technocracy (1.75)
+
+- Two new Quick duel decks under Prototype decks: "Old Ways, the Sacred Grove" (green) and
+  "Technocracy, the Foundry" (colourless).
+- Landfall: "whenever a land enters the battlefield under your control" (played, put from your
+  hand, from the library or back from the graveyard). Rooted: six or more lands.
+- Offering: as you cast the card, return lands you control to your hand; it costs {1} less for
+  each. You choose how many (at least what you need); tapped lands go back first.
+- A land can become a creature: Spirit of the Old Oak makes one of your lands a 0/4 Treefolk,
+  in the front row with the spirit tucked under it. It taps with its land; if it dies the land
+  is gone, and the spirit enters another land.
+- Mana creatures (Druid of the Standing Stones) now pay for spells by themselves, like lands.
+- Salvage leaves a Scrap token: a Construct relic you can sacrifice to scry 1, or for {2} to
+  draw, or turn into a 1/1 Servo for {1}. The Furnace keeps charge counters (shown ⚡) and
+  spends them as damage or mana. Land destruction leaves the victim an Ore token.
+- Sacrifice another Construct (creature or relic) as a cost; Affinity for Constructs;
+  Overclock paid any number of times (you choose how many; each adds a +1/+1 counter).
+- Card types on the prototype cards: Construct, Possession and Blessing (Mission of
+  Conversion is a Blessing, so Exorcism never takes it for a demon); the Testimony is a
+  Construct Holy Relic.

@@ -601,7 +601,16 @@ static func type_name(c: Dictionary) -> String:
 	match String(c.get("type", "")):
 		"creature": return "Creature"
 		"spell": return "Instant" if String(c.get("speed", "")) == "instant" else "Sorcery"
-		"relic": return "Relic"
+		"relic":
+			# the redesign's types: a demon's hold, a holy enchantment, or an artifact (a Construct)
+			var sub := String(c.get("subtype", ""))
+			if sub.contains("Possession"):
+				return "Possession"
+			if sub.contains("Blessing"):
+				return "Blessing"
+			if sub.contains("Construct"):
+				return "Construct"
+			return "Relic"
 		"land": return "Land"
 	return String(c.get("type", "")).capitalize()
 
@@ -621,6 +630,10 @@ static func type_line(c: Dictionary) -> String:
 		return tl
 	if sub.ends_with(" " + type_name(c)):
 		return I18n.t(sub)     # "Basic Land", not "Land (Basic Land)"
+	if c.get("type") == "relic" and sub.contains(type_name(c)):
+		# "Construct Relic" reads "Construct (Relic)", "Demon Possession" reads "Possession (Demon)"
+		sub = sub.replace(type_name(c), "").strip_edges().replace("  ", " ")
+		return tl if sub == "" else "%s (%s)" % [tl, I18n.t(sub)]
 	if c.get("type") == "creature":
 		return tl + " · " + I18n.t(sub)
 	return "%s (%s)" % [tl, I18n.t(sub)]
