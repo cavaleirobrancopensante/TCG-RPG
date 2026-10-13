@@ -15,6 +15,7 @@ func _ready() -> void:
 	test_mechanics()
 	test_redesign()
 	test_revel_stoa()
+	test_grove_foundry()
 	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
@@ -2288,6 +2289,140 @@ func _perm(st: BattleState, i: int, id: String) -> BattleState.Perm:
 
 
 ## The Revel (Excess) and the Stoa (Composure, the Phalanx) prototypes.
+func _forests(st: BattleState, i: int, n: int, land_id: String = "land_wild", col: String = "G") -> void:
+	st.side(i).lands.clear()
+	for k in n:
+		st.side(i).lands.append({"id": land_id, "color": col, "colors": [col], "tapped": false})
+
+
+## The Old Ways (landfall, Offering, a spirit in a land) and the Technocracy (Salvage, Scrap,
+## the Furnace, land destruction, Affinity, Overclock paid many times).
+func test_grove_foundry() -> void:
+	print("-- the Sacred Grove and the Foundry")
+	# a mana druid pays like a land
+	var st := _duel()
+	_forests(st, 0, 1)
+	var dr := _perm(st, 0, "proto_ow_druid")
+	st.side(0).hand = ["proto_ow_boar"]
+	check(st.can_play(0, 0), "the Druid's mana counts: a 2-mana Boar with one Forest")
+	st.play(0, 0, [])
+	check(dr.tapped and st.side(0).creatures.size() == 2, "the Druid tapped to pay")
+	# landfall
+	var boar: BattleState.Perm = st.side(0).creatures[1]
+	st.side(0).hand = ["land_wild"]
+	st.side(0).land_played = false
+	st.play(0, 0, [])
+	check(boar.power() == 4 and boar.toughness() == 4, "Landfall: the Boar gets +2/+2")
+	# the spirit in a land
+	st = _duel()
+	_forests(st, 0, 3)
+	st.side(0).hand = ["proto_ow_spirit"]
+	st.play(0, 0, [])
+	var tree: Array = st.side(0).creatures.filter(func(q): return q.land_anim)
+	check(tree.size() == 1 and tree[0].toughness() == 4 and st.side(0).lands.size() == 3, "Spirit of the Old Oak: a land becomes a 0/4 Treefolk (and stays a land)")
+	st.side(0).hand = ["land_wild"]
+	st.side(0).land_played = false
+	st.play(0, 0, [])
+	check(tree[0].bonus_p == 1 and tree[0].toughness() == 5, "Landfall: a +1/+1 counter on the enchanted land")
+	st.destroy_perm(tree[0])
+	var tree2: Array = st.side(0).creatures.filter(func(q): return q.land_anim)
+	check(st.side(0).lands.size() == 3 and st.side(0).graveyard.has("land_wild") and tree2.size() == 1,
+		"the land dies with its creature; the spirit enters another land")
+	# Offering
+	st = _duel()
+	_forests(st, 0, 4)
+	st.side(0).hand = ["proto_ow_stag"]
+	check(st.can_play(0, 0) and st.offering_needed(0, CardDB.get_card("proto_ow_stag")) == 2, "Offering: a 6-mana Stag with four Forests, returning two")
+	var life0 := st.side(0).life
+	st.play(0, 0, [])
+	check(st.side(0).lands.size() == 2 and st.side(0).hand.count("land_wild") == 2 and st.side(0).life == life0 + 2,
+		"two lands back to the hand; the Stag gains 1 life for each land left")
+	# Rites of Return: lands from the graveyard
+	st = _duel()
+	_forests(st, 0, 3)
+	st.side(0).graveyard = ["land_wild", "land_wild", "proto_ow_boar"]
+	st.side(0).hand = ["proto_ow_rites"]
+	st.play(0, 0, [], false, 0)
+	check(st.side(0).lands.size() == 5 and st.side(0).lands_turn == 2, "Rites of Return: two lands come back (two landfalls)")
+	# the Technocracy: Salvage, the Foreman, Scrap
+	st = _duel()
+	var sentry := _perm(st, 0, "proto_te_sentry")
+	_perm(st, 0, "proto_te_foreman")
+	var foe_life := st.side(1).life
+	st.destroy_perm(sentry)
+	var scraps: Array = st.side(0).relics.filter(func(r): return r.name == "Scrap")
+	check(scraps.size() == 1 and st.side(1).life == foe_life - 1, "Salvage leaves a Scrap; the Foreman drains 1")
+	_lands(st, 0, "CCC")
+	check(st.activate(0, scraps[0].uid, 2), "{1}: Scrap becomes a Servo")
+	st._force_resolve()
+	check(st.side(0).creatures.any(func(q): return q.name == "Servo" and q.power() == 1), "a 1/1 Servo")
+	# the Furnace: charge counters, then X damage
+	st = _duel()
+	_lands(st, 0, "CCCC")
+	var fur := _perm(st, 0, "proto_te_furnace")
+	var victim := _perm(st, 0, "proto_te_sentry")
+	check(st.activate(0, fur.uid, 0, [], victim.uid), "Furnace: sacrifice another Construct")
+	st._force_resolve()
+	check(int(fur.counters.get("charge", 0)) == 1 and st.side(0).relics.filter(func(r): return r.name == "Scrap").size() == 2,
+		"a charge counter, a Scrap from the Furnace and one from the Sentry's Salvage")
+	foe_life = st.side(1).life
+	check(st.activate(0, fur.uid, 1, [{"kind": "player", "side": 1}]), "Furnace: sacrifice it for X damage")
+	st._force_resolve()
+	check(st.side(1).life == foe_life - 1 and st.find_perm(fur.uid) == null, "X = 1 damage, the Furnace is gone")
+	# land destruction and Ore
+	st = _duel()
+	_lands(st, 0, "CCC")
+	_forests(st, 1, 3)
+	st.side(0).hand = ["proto_te_writ"]
+	st.play(0, 0, [{"kind": "land", "side": 1, "id": "land_wild"}])
+	var ores: Array = st.side(1).relics.filter(func(r): return r.name == "Ore")
+	check(st.side(1).lands.size() == 2 and ores.size() == 1, "Quarry Writ: a land destroyed, its controller gets an Ore")
+	# Affinity and Overclock paid many times
+	st = _duel()
+	_lands(st, 0, "CCCCCC")
+	for k in 3:
+		_perm(st, 0, "proto_te_sentry")
+	var auto := CardDB.get_card("proto_te_automaton")
+	check(int(st.effective_cost(0, auto).get("generic", 0)) == 4, "Affinity: the Automaton costs {4}{C} with three Constructs")
+	st.side(0).hand = ["proto_te_lancer"]
+	st.play(0, 0, [])
+	var lancer: Array = st.side(0).creatures.filter(func(q): return q.card_id == "proto_te_lancer")
+	check(lancer.size() == 1 and lancer[0].power() == 5, "Overclock twice with six mana: a 5/5 Lancer")
+	# the Hunt: +2/+2 on a landfall turn, then the fight
+	st = _duel()
+	_forests(st, 0, 2)
+	var mine := _perm(st, 0, "proto_ow_boar")
+	var big := _perm(st, 1, "proto_te_lancer")
+	st.side(0).lands_turn = 1
+	st.side(0).hand = ["proto_ow_hunt"]
+	st.play(0, 0, [{"kind": "creature", "uid": mine.uid}, {"kind": "creature", "uid": big.uid}])
+	check(st.find_perm(big.uid) == null and st.find_perm(mine.uid) != null, "Hunt Under the Moon: a 4/4 Boar kills the 3/3 and lives")
+	# the decks play out
+	var decks := DeckTools.proto_decks()
+	var gr: Dictionary = decks.filter(func(d): return d["faith"] == "wild")[0]
+	var fo: Dictionary = decks.filter(func(d): return d["faith"] == "machine")[0]
+	var ends := 0
+	for g in 6:
+		var b := BattleState.new()
+		b.setup(DeckTools.to_list(gr["cards"]), DeckTools.to_list(fo["cards"]), ["G", "F"], [20, 20], g % 2, 700 + g)
+		var guard := 0
+		while b.phase != "over" and guard < 80:
+			guard += 1
+			var i := b.active
+			BattleAI.play_main(b, i)
+			if b.phase == "main1":
+				b.declare_attackers(BattleAI.choose_attackers(b, i))
+			if b.phase == "block":
+				b.declare_blocks(BattleAI.choose_blocks(b, 1 - i))
+			if b.phase == "main2":
+				BattleAI.play_main(b, i)
+			b.take_events()
+			b.end_turn()
+		if b.phase == "over":
+			ends += 1
+	check(ends == 6, "the Grove against the Foundry: every AI duel finishes (%d of 6)" % ends)
+
+
 func test_revel_stoa() -> void:
 	print("-- the Revel and the Stoa")
 	for d in DeckTools.proto_decks():
@@ -2502,7 +2637,7 @@ func test_revel_stoa() -> void:
 func test_redesign() -> void:
 	print("-- redesign prototype: Peace and Crusade, Immortal, possession")
 	check(not CardDB.all_set_ids().has("proto_s_pilgrim") and CardDB.has_card("proto_s_pilgrim"), "prototype cards stay out of the pools")
-	check(DeckTools.proto_decks().size() == 4 and DeckTools.count(DeckTools.proto_decks()[0]["cards"]) == 40, "four 40-card prototype decks")
+	check(DeckTools.proto_decks().size() == 6 and DeckTools.count(DeckTools.proto_decks()[0]["cards"]) == 40, "six 40-card prototype decks")
 	var st := _duel()
 	_lands(st, 0, "WWWWBBBB")
 	_lands(st, 1, "WWWWBBBB")

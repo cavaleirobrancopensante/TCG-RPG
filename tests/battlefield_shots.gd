@@ -88,6 +88,31 @@ func _ready() -> void:
 		"proto_c_keeper", "proto_c_pilgrim", "proto_c_thurifer", "land_sanctum"]
 	b.refresh()
 	await _shot("crowded")
+	# the Old Ways against the Technocracy: a land that is a creature, Scrap, a charged Furnace
+	for side in 2:
+		st.side(side).creatures.clear()
+		st.side(side).relics.clear()
+		st.side(side).lands.clear()
+	for n in 5:
+		st.side(0).lands.append({"id": "land_wild", "color": "G", "colors": ["G"], "tapped": n < 1})
+		st.side(1).lands.append({"id": "land_machine", "color": "C", "colors": ["C"], "tapped": n < 2})
+	var spirit := _add(st, 0, "proto_ow_spirit")
+	st._animate_land(0, 2, spirit, 0, 4, "Treefolk").bonus_p = 1
+	_add(st, 0, "proto_ow_boar")
+	_add(st, 0, "proto_ow_druid", true)
+	_add(st, 0, "proto_ow_elder")
+	var fur := _add(st, 1, "proto_te_furnace")
+	fur.counters["charge"] = 2
+	_add(st, 1, "proto_te_engine")
+	st.make_token(1, BattleState.SCRAP)
+	st.make_token(1, BattleState.SCRAP)
+	st.make_token(0, BattleState.ORE)
+	_add(st, 1, "proto_te_sentry")
+	_add(st, 1, "proto_te_foreman")
+	_add(st, 1, "proto_te_lancer").bonus_p = 2
+	st.side(0).hand = ["proto_ow_stag", "proto_ow_hunt", "land_wild"]
+	b.refresh()
+	await _shot("grove")
 	# the Index: a whole library to choose from, with search and type tabs
 	var lib := st.library_choices(1)
 	var counts := {}

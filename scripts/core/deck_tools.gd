@@ -706,6 +706,12 @@ const PROTO_DECKS := {
 		"proto_st_ephebe": 3, "proto_st_shieldwall": 2, "proto_st_watchman": 3, "proto_st_polemarch": 2,
 		"proto_st_scholarch": 2, "proto_st_lochagos": 2, "proto_st_navarch": 1, "lyceum_c_030": 3,
 		"proto_st_gate": 2, "proto_st_lamplight": 2, "proto_st_reply": 1}},
+	"Prototype: Old Ways, the Sacred Grove": {"faith": "wild", "cards": {
+		"proto_ow_druid": 4, "proto_ow_boar": 4, "proto_ow_wolf": 2, "proto_ow_elder": 3, "proto_ow_stag": 2,
+		"proto_ow_wyrm": 1, "proto_ow_hunt": 3, "proto_ow_rites": 2, "proto_ow_leylines": 1, "proto_ow_spirit": 1}},
+	"Prototype: Technocracy, the Foundry": {"faith": "machine", "cards": {
+		"proto_te_sentry": 4, "proto_te_engine": 3, "proto_te_foreman": 3, "proto_te_furnace": 2, "proto_te_ballista": 2,
+		"proto_te_lancer": 3, "proto_te_quarry": 1, "proto_te_writ": 1, "proto_te_reclaim": 2, "proto_te_automaton": 2}},
 }
 
 

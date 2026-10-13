@@ -34,6 +34,8 @@ func _fit() -> void:
 func set_lands(p_lands: Array) -> void:
 	var copy: Array = []
 	for l in p_lands:
+		if l.has("anim"):
+			continue                 # a land that is a creature stands in the front row
 		copy.append({"id": l.get("id", ""), "color": l["color"], "tapped": l["tapped"]})
 	if copy == lands:
 		return
