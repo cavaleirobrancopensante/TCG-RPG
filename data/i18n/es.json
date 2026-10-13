@@ -5161,5 +5161,6 @@
  "Calculate": "Calcular",
  "How many cards should the deck have? Basic lands fill the rest, shared by the mana symbols of your spells. The least is 40.": "¿Cuántas cartas debe tener el mazo? Las tierras básicas completan el resto, repartidas según los símbolos de maná de tus hechizos. El mínimo es 40.",
  "%d cards": "%d cartas",
- "The deck already has %d cards besides its basic lands: more than %d.": "El mazo ya tiene %d cartas además de sus tierras básicas: más de %d."
+ "The deck already has %d cards besides its basic lands: more than %d.": "El mazo ya tiene %d cartas además de sus tierras básicas: más de %d.",
+ "Flash. When Questioner in the Agora enters, return target nonland permanent an opponent controls with mana value 3 or less to its owner's hand.": "Destello. Cuando Inquisidor del Ágora entre, devuelve el permanente objetivo que no sea tierra con valor de maná 3 o menos que controla un oponente a la mano de su propietario."
 }

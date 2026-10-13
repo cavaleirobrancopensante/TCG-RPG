@@ -5161,5 +5161,6 @@
  "Calculate": "Calcular",
  "How many cards should the deck have? Basic lands fill the rest, shared by the mana symbols of your spells. The least is 40.": "Quantas cartas o baralho deve ter? Os terrenos básicos completam o resto, divididos pelos símbolos de mana dos seus feitiços. O mínimo é 40.",
  "%d cards": "%d cartas",
- "The deck already has %d cards besides its basic lands: more than %d.": "O baralho já tem %d cartas além dos terrenos básicos: mais de %d."
+ "The deck already has %d cards besides its basic lands: more than %d.": "O baralho já tem %d cartas além dos terrenos básicos: mais de %d.",
+ "Flash. When Questioner in the Agora enters, return target nonland permanent an opponent controls with mana value 3 or less to its owner's hand.": "Lampejo. Quando Inquiridor da Ágora entrar, devolva a permanente alvo que não seja terreno com valor de mana 3 ou menos que um oponente controla à mão de seu dono."
 }

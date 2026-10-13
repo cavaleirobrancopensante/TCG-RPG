@@ -18,6 +18,7 @@ func _ready() -> void:
 	test_grove_foundry()
 	test_first_set()
 	test_basic_lands_calc()
+	test_flash_questioner()
 	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
@@ -3303,3 +3304,36 @@ func test_basic_lands_calc() -> void:
 	var mono := {"proto_ow_boar": 4, "proto_ow_druid": 4}
 	got = DeckTools.basics_by_pips(mono, 17)
 	check(got == {"wild": 17}, "a mono-faith deck: all 17 to its faith")
+
+
+## Questioner in the Agora has Flash (1.83): the AI sends an attacker back mid-combat.
+func test_flash_questioner() -> void:
+	print("-- flash Questioner")
+	var q := CardDB.get_card("proto_st_questioner")
+	check(q.get("keywords", []).has("flash") and q.get("rarity") == "uncommon", "Questioner in the Agora: Flash, uncommon")
+	var st := _duel()
+	_lands(st, 0, "UUU")
+	st.side(0).hand = ["proto_st_questioner"]
+	var att := _perm(st, 1, "proto_rv_juggler")
+	_perm(st, 1, "proto_rv_lord")
+	st.active = 1
+	st.phase = "main1"
+	st.step = "main1"
+	st.auto_priority = false
+	st.declare_attackers([att.uid])
+	st.window_open = true
+	st.priority = 0
+	BattleAI.respond(st, 0)
+	st._force_resolve()
+	var qs := st.side(0).creatures.filter(func(p): return p.card_id == "proto_st_questioner")
+	check(qs.size() == 1, "the AI flashes the Questioner in during the attack")
+	check(st.find_perm(att.uid) == null and st.side(1).hand.has("proto_rv_juggler"), "and sends the attacker (mana value 3 or less) back to his hand")
+	# on its own turn it keeps the Questioner for his
+	st = _duel()
+	_lands(st, 0, "UUU")
+	st.side(0).hand = ["proto_st_questioner"]
+	st.side(0).land_played = true
+	_perm(st, 1, "proto_rv_masked")
+	st.phase = "main1"
+	BattleAI.main_action(st, 0)
+	check(st.side(0).hand.has("proto_st_questioner"), "on its own turn the AI holds it")

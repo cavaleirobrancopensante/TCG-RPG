@@ -4356,6 +4356,10 @@ func auto_target(i: int, e: Dictionary):
 		# the computer sends back the enemy's best permanent, never its own
 		var theirs := opts.filter(func(r): return find_perm(int(r.get("uid", -1))) != null and find_perm(int(r.get("uid", -1))).owner != i)
 		return _highest(theirs) if not theirs.is_empty() else null
+	if action == "bounce" and e.get("target", "") == "enemy_permanent":
+		# his attacker first (sent back mid-combat), else his best permanent
+		var his_att := opts.filter(func(r): return attackers.has(int(r.get("uid", -1))))
+		return _highest(his_att) if not his_att.is_empty() else _highest(opts)
 	if e.get("target", "") in ["attacking_or_blocking", "any_demon"]:
 		# his creature or Demon first; Penitent may take one of ours (the least) for the two cards
 		var his := opts.filter(func(r): return find_perm(int(r.get("uid", -1))) != null and find_perm(int(r.get("uid", -1))).owner != i)
