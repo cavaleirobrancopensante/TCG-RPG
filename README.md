@@ -1056,3 +1056,12 @@ two-for-one creatures, engines and the graveyard as a resource.
   total is exact: 18 green and 12 red symbols with 17 lands make 10 and 7.
 - Clear empties the counters. Nothing changes until Done, and one Undo takes the whole change
   back. The old land sigils (tap to add, hold to take away) still work.
+
+## The deck builder opens again in the editor (1.82)
+
+- Fixed: after a pull, the Godot editor on a phone showed a grey screen instead of the deck
+  builder. The Basic lands pop-up was found by its class name, which an editor learns only
+  when it rescans the project. The deck builder now loads it by path
+  (scripts/ui/basic_lands_popup.gd has no class_name).
+- tests/deck_open_check.tscn opens the deck builder the way the game does: a new game, a deck
+  with old-set cards, and the Quick Duel sandbox.

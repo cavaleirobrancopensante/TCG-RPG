@@ -33,6 +33,9 @@ const DESK_SCALE := 0.6
 const RIGHT_MIN := 404.0              # the deck column: room for six land pips (6 x 64 + gaps)
 const MENU := ["New deck", "Copy deck", "Rename deck", "Delete deck", "Auto build", "Basic lands"]
 const MAX_LISTS := 6                  # draft mode: lists from one pool at most
+## Loaded by path, not by class name: an editor that has not rescanned the project yet (a phone
+## after a pull) would not know a new class_name, and the whole deck builder would fail to load.
+const LandsPopup := preload("res://scripts/ui/basic_lands_popup.gd")
 
 var editing := 0                  # index of the deck being edited
 var pool := {}                    # draft mode: build only from these cards ({id: n})
@@ -551,7 +554,7 @@ func _lands_button() -> Button:
 
 ## The Basic lands pop-up for the deck being edited; Done replaces its basic lands (one Undo).
 func open_basic_lands() -> Control:
-	return BasicLandsPopup.open(self, _deck(), func(counts: Dictionary):
+	return LandsPopup.open(self, _deck(), func(counts: Dictionary):
 		_push_undo()
 		var d := _deck()
 		for f in Factions.ORDER:
