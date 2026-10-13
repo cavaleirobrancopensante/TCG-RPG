@@ -140,6 +140,8 @@ static func main_action(st: BattleState, i: int) -> bool:
 		var c := CardDB.get_card(s.hand[hi])
 		if c.get("type") == "land" or _is_ramp_spell(c) or BattleState.is_instant(c):
 			continue
+		if c.get("keywords", []).has("flash") and c.get("effects", []).any(func(x): return x.get("trigger") == "enter" and x.get("action") == "counter"):
+			continue                 # a Watchman waits for the opponent's spell
 		var mode := -1
 		var plan := _plan(st, i, c)
 		if c.has("modes") and c.get("type") == "spell":
@@ -181,6 +183,18 @@ static func main_action(st: BattleState, i: int) -> bool:
 				var rc: Dictionary = CardDB.get_card(st.side(i).graveyard[gi])["reassemble"]
 				if hold.is_empty() or st.total_available(i) - CardDB.mana_value(rc) >= int(hold["mana"]):
 					return st.reassemble(i, gi)
+	# 3d. Premeditation: a card still too dear goes face down with spare mana, after the plays (main 2).
+	if st.phase == "main2":
+		for k in s.premeditated.size():
+			var pcard := CardDB.get_card(String(s.premeditated[k]["id"]))
+			if not pcard.get("keywords", []).has("flash") and st.can_cast_premeditated(i, k):
+				return st.cast_premeditated(i, k)
+		for hi in s.hand.size():
+			var hc := CardDB.get_card(s.hand[hi])
+			if hc.get("premeditation", {}).is_empty() or st.can_play(i, hi) or not st.can_premeditate(i, hi):
+				continue
+			if hold.is_empty() or st.total_available(i) - 2 >= int(hold["mana"]):
+				return st.premeditate(i, hi)
 	# 4. Abilities.
 	var ab := _best_ability(st, i, hold)
 	if not ab.is_empty():
@@ -1140,6 +1154,23 @@ static func respond(st: BattleState, i: int) -> bool:
 		if c.get("type") == "land":
 			continue
 		var instant := BattleState.is_instant(c)
+		if not instant and c.get("type") == "creature" and c.get("keywords", []).has("flash") and st.active != i:
+			# Flash on the opponent's turn: a Watchman to counter his spell, or a body at his end step
+			if not st.can_play(i, hi):
+				continue
+			var enter: Array = c.get("effects", []).filter(func(x): return x.get("trigger") == "enter")
+			var fv := 0.0
+			if enter.any(func(x): return x.get("action") == "counter"):
+				var ra := _answer_value(st, i, enter, null, {"effects": enter})
+				if ra[0] > 0.0:
+					fv = ra[0] + 1.0
+			if fv <= 0.0 and st.step == "end" and st.stack.is_empty():
+				fv = 1.2 + float(c.get("power", 0)) * 0.3 + float(c.get("toughness", 0)) * 0.2
+			fv -= 0.15 * float(c.get("mana_value", 0))
+			if fv > best_v:
+				best_v = fv
+				best = ["card", hi, [], -1]
+			continue
 		if not instant and not st.sorcery_time(i):
 			continue
 		if not instant:
@@ -1209,8 +1240,17 @@ static func respond(st: BattleState, i: int) -> bool:
 			if v > best_v:
 				best_v = v
 				best = ["ability", [p.uid, idx], r[1]]
+	# a premeditated card: cast it when it can be (a flash one at the opponent's end step)
+	for k in s.premeditated.size():
+		if st.can_cast_premeditated(i, k):
+			var pv := 4.0 if (st.step == "end" and st.active != i and st.stack.is_empty()) else 0.0
+			if pv > best_v:
+				best_v = pv
+				best = ["premeditated", k]
 	if best.is_empty():
 		return false
+	if best[0] == "premeditated":
+		return st.cast_premeditated(i, int(best[1]))
 	if best[0] == "card":
 		return st.play(i, best[1], best[2], false, int(best[3]) if best.size() > 3 else -1)
 	return st.activate(i, best[1][0], best[1][1], best[2])
@@ -1927,15 +1967,18 @@ static func held_instant(st: BattleState, i: int) -> Dictionary:
 	var best_v := 0.0
 	for hi in me.hand.size():
 		var c := CardDB.get_card(me.hand[hi])
-		if c.get("type") == "land" or not BattleState.is_instant(c):
+		var watch: bool = c.get("keywords", []).has("flash") and c.get("type") == "creature"
+		if c.get("type") == "land" or not (BattleState.is_instant(c) or watch):
 			continue
 		var mana := CardDB.mana_value(st.effective_cost(i, c))
 		if mana > avail:
 			continue
 		st._with_source(c)
 		var v := 0.0
+		if watch:
+			v = 1.0                  # a flash creature is worth holding up for the opponent's turn
 		for e in c.get("effects", []):
-			if e.get("trigger") != "cast":
+			if e.get("trigger") != ("enter" if watch else "cast"):
 				continue
 			var a := String(e.get("action", ""))
 			var t := String(e.get("target", ""))
@@ -1945,7 +1988,7 @@ static func held_instant(st: BattleState, i: int) -> Dictionary:
 				if foe.hand.size() >= 1:
 					v = maxf(v, 1.6 + 0.2 * mini(4, foe.hand.size()))
 				continue
-			if t in ["enemy_creature", "any_enemy", "enemy_demon"] and a in ["destroy", "damage", "buff", "bounce"]:
+			if t in ["enemy_creature", "any_enemy", "enemy_demon", "nonland_permanent"] and a in ["destroy", "damage", "buff", "bounce"]:
 				if a == "buff" and int(e.get("toughness", 0)) >= 0:
 					continue
 				var top := 0.0
@@ -1953,7 +1996,7 @@ static func held_instant(st: BattleState, i: int) -> Dictionary:
 					if ref.get("kind") != "creature" and t != "enemy_demon":
 						continue
 					var z := st.find_perm(int(ref["uid"]))
-					if z == null:
+					if z == null or z.owner == i:
 						continue
 					if t == "enemy_demon":
 						top = maxf(top, demon_value(st, z))

@@ -88,6 +88,13 @@ func _count(evs: Array, st: BattleState) -> void:
 				k = "edict sacrifice"
 			"excess":
 				k = "Excess card discarded"
+			"premeditate":
+				k = "card premeditated"
+			"counter":
+				k = "spell countered (side %d's)" % int(e["side"])
+			"ability":
+				if e.get("trigger", false):
+					k = "cast trigger: " + String(CardDB.get_card(String(e["id"])).get("name", ""))
 			"attach":
 				if e.get("possess", false):
 					k = "possession moves to a new host"
@@ -95,7 +102,7 @@ func _count(evs: Array, st: BattleState) -> void:
 				var nm := String(CardDB.get_card(String(e["id"])).get("name", ""))
 				if e.get("excess", false):
 					counts["cast for Excess"] = int(counts.get("cast for Excess", 0)) + 1
-				if nm in ["Sent Back to the Gate", "Considered Reply", "Ask the Price", "Polemarch", "Lord of Misrule", "Reading by Lamplight", "Exorcism", "Censure", "Index", "Covet", "Confessor of the Holy Office", "Inquisitor of the Holy Office", "Angel of the Reliquary", "Whisper of the Imp", "Demon of Wrath", "Legion's Hold", "Bargain in Blood", "Withering Curse", "Azrakel, Prince of Wrath"]:
+				if nm in ["Watchman of the Gate", "Navarch of the Cold Sea", "Scholarch of the Porch", "Lochagos of the File", "Sent Back to the Gate", "Considered Reply", "Ask the Price", "Polemarch", "Lord of Misrule", "Reading by Lamplight", "Exorcism", "Censure", "Index", "Covet", "Confessor of the Holy Office", "Inquisitor of the Holy Office", "Angel of the Reliquary", "Whisper of the Imp", "Demon of Wrath", "Legion's Hold", "Bargain in Blood", "Withering Curse", "Azrakel, Prince of Wrath"]:
 					k = "cast " + nm
 		if k != "":
 			counts[k] = int(counts.get(k, 0)) + 1

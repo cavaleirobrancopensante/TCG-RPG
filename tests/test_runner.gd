@@ -2337,39 +2337,132 @@ func test_revel_stoa() -> void:
 	for e in CardDB.get_card("proto_rv_brandy")["effects"]:
 		st.resolve_effect(0, e, null, null)
 	check(st.side(0).hand.size() == 1 and st.side(0).discarded_turn == 1, "Spilled Brandy: draw two, then discard a card")
-	# Heckler at the Porch: the opponent's upkeep, four cards or more
+	# Heckler at the Porch: an opponent casting on your turn
 	st = _duel()
+	st.side(0).interactive = true
+	st.side(1).interactive = true
 	_perm(st, 0, "proto_rv_heckler")
-	st.side(1).hand = ["land_lyceum", "land_lyceum", "land_lyceum", "land_lyceum"]
-	st.side(1).deck = ["land_lyceum", "land_lyceum"]
-	st.side(0).deck = ["land_revel", "land_revel"]
+	_lands(st, 1, "UU")
+	st.side(1).hand = ["proto_st_gate"]
+	var ally := _perm(st, 0, "proto_rv_brawler")
 	life = st.side(1).life
-	st.end_turn()
-	check(st.side(1).life == life - 1, "Heckler at the Porch: 1 damage at the upkeep of an opponent with four or more cards")
-	# the Stoa
+	st.auto_priority = false
+	st.priority = 1
+	st.window_open = true
+	check(st.play(1, 0, [{"kind": "creature", "uid": ally.uid}]), "the Stoa answers on the Revel's turn")
+	check(st.stack.size() == 2 and st.stack.back().get("trigger", false), "Heckler's trigger goes on the stack above the spell")
+	st._force_resolve()
+	check(st.side(1).life == life - 1 and st.find_perm(ally.uid) == null, "Heckler deals 1 damage first, then the bounce resolves")
+	# the Stoa: Polemarch and Temperance
 	st = _duel()
 	var eph := _perm(st, 0, "proto_st_ephebe")
 	var pol := _perm(st, 0, "proto_st_polemarch")
+	var wall := _perm(st, 0, "proto_st_shieldwall")
 	check(eph.power() == 2 and eph.toughness() == 3 and pol.power() == 2, "Polemarch: other Hoplites +1/+1, not himself")
-	check(not eph.has_kw("vigilance"), "no vigilance without Composure")
-	st.side(0).hand = ["land_lyceum", "land_lyceum", "land_lyceum", "land_lyceum"]
-	check(eph.power() == 3 and eph.toughness() == 4 and eph.has_kw("vigilance") and pol.has_kw("vigilance"),
-		"Composure: the Ephebe gets +1/+1 and the Hoplites have vigilance")
-	# Patient Strategos: draws at the end step when no spell was cast
+	_lands(st, 0, "UUUU")
+	st.side(0).hand = ["proto_st_gate", "proto_st_gate"]
+	var foe2 := _perm(st, 1, "proto_rv_brawler")
+	check(st.play(0, 0, [{"kind": "creature", "uid": foe2.uid}]), "first spell of the turn")
+	check(eph.toughness() == 3 + 1 + 2 and eph.power() == 3 and wall.toughness() == 2 + 1 + 2,
+		"Temperance: the Ephebe gets +1/+1 and the Shieldwall gives Hoplites +0/+2")
+	var t_before := eph.toughness()
+	st.play(0, 0, [{"kind": "creature", "uid": eph.uid}])
+	check(st.side(0).hand.has("proto_st_ephebe") or eph.toughness() == t_before, "Temperance: the second spell triggers nothing")
+	# Temperance on the opponent's turn: the Scholarch draws
 	st = _duel()
-	_perm(st, 0, "proto_st_strategos")
+	_perm(st, 0, "proto_st_scholarch")
+	_lands(st, 0, "UU")
+	st.side(0).hand = ["proto_st_gate"]
 	st.side(0).deck = ["land_lyceum", "land_lyceum"]
-	var hn := st.side(0).hand.size()
-	st.side(0).cast_count = 0
-	st.begin_end_step()
-	check(st.side(0).hand.size() == hn + 1, "Patient Strategos: a card at the end step of a turn without spells")
+	var foe3 := _perm(st, 1, "proto_rv_brawler")
+	st.active = 1
+	st.auto_priority = false
+	st.priority = 0
+	st.window_open = true
+	check(st.play(0, 0, [{"kind": "creature", "uid": foe3.uid}]), "a spell on the opponent's turn")
+	st._force_resolve()
+	check(st.side(0).hand.size() == 1, "Scholarch: Temperance on the opponent's turn draws a card")
+	# Order of triggers: a person chooses
 	st = _duel()
-	_perm(st, 0, "proto_st_strategos")
-	st.side(0).deck = ["land_lyceum", "land_lyceum"]
-	hn = st.side(0).hand.size()
-	st.side(0).cast_count = 1
-	st.begin_end_step()
-	check(st.side(0).hand.size() == hn, "Patient Strategos: nothing after a spell")
+	st.side(0).interactive = true
+	st.auto_priority = false
+	_perm(st, 0, "proto_st_ephebe")
+	_perm(st, 0, "proto_st_shieldwall")
+	_lands(st, 0, "UU")
+	st.side(0).hand = ["proto_st_gate"]
+	var foe4 := _perm(st, 1, "proto_rv_brawler")
+	st.priority = 0
+	check(st.play(0, 0, [{"kind": "creature", "uid": foe4.uid}]), "a spell with two Temperance triggers")
+	check(st.side(0).order_owed.size() == 1 and st.priority == 0 and st.stack.size() == 1, "two triggers together: the player orders them, and priority waits")
+	st.order_choose(0, [1, 0])
+	check(st.stack.size() == 2 and int(st.stack.back()["uid"]) == st.side(0).creatures[0].uid and st.side(0).creatures[0].toughness() == 2 + 2,
+		"the trigger chosen to resolve first (the Shieldwall's) resolved first; the Ephebe's waits")
+	# Lochagos: a target, chosen by the player, as the trigger goes on the stack
+	st = _duel()
+	st.side(0).interactive = true
+	st.auto_priority = false
+	_perm(st, 0, "proto_st_lochagos")
+	var hop := _perm(st, 0, "proto_st_ephebe")
+	st.side(0).creatures.erase(hop)
+	st.side(0).creatures.append(hop)
+	_lands(st, 0, "UU")
+	st.side(0).hand = ["proto_st_gate"]
+	var foe5 := _perm(st, 1, "proto_rv_brawler")
+	st.priority = 0
+	st.play(0, 0, [{"kind": "creature", "uid": foe5.uid}])
+	check(st.side(0).order_owed.size() == 1, "Lochagos and the Ephebe trigger together")
+	st.order_choose(0, [0, 1])
+	check(not st.side(0).trigger_owed.is_empty() and st.side(0).trigger_owed[0].get("push", false), "the Lochagos asks for its target")
+	st.trigger_choose(0, {"kind": "creature", "uid": hop.uid})
+	check(st.stack.size() == 2 and st.priority == 0 and hop.bonus_p == 1, "both triggers are on the stack; the opponent has passed back")
+	st._force_resolve()
+	check(hop.bonus_p == 1, "Lochagos: a +1/+1 counter on the chosen Hoplite")
+	# Watchman of the Gate: flash, and its counter
+	st = _duel()
+	st.side(0).interactive = true
+	_lands(st, 0, "UUU")
+	_lands(st, 1, "RR")
+	st.side(0).hand = ["proto_st_watchman"]
+	st.side(1).hand = ["proto_rv_toast"]
+	st.active = 1
+	st.auto_priority = false
+	st.priority = 1
+	st.window_open = true
+	var ok_t := st.play(1, 0, [{"kind": "player", "side": 0}])
+	check(ok_t, "the Revel casts Toast of Fire")
+	check(st.can_play(0, 0), "Flash: the Watchman on the opponent's turn")
+	st.play(0, 0, [])
+	st._force_resolve()
+	check(st.side(0).life == 20 and st.side(1).graveyard.has("proto_rv_toast") and st.side(0).creatures.size() == 1,
+		"Watchman: the Toast is countered (he can't pay {1}) and the Watchman stays")
+	# Reading by Lamplight: look at four, keep two
+	st = _duel()
+	st.side(0).interactive = true
+	st.side(0).deck = ["land_lyceum", "proto_st_reply", "proto_st_gate", "land_lyceum", "proto_st_navarch"]
+	st.side(0).hand = []
+	st.resolve_effect(0, CardDB.get_card("proto_st_lamplight")["effects"][0], null, null)
+	check(st.side(0).dig_owed.get("cards", []).size() == 4 and st.side(0).deck.size() == 1, "Lamplight: four cards looked at")
+	st.dig_choose(0, ["proto_st_reply", "proto_st_gate"])
+	check(st.side(0).hand == ["proto_st_reply", "proto_st_gate"] and st.side(0).deck.size() == 3 and st.side(0).deck.back() == "land_lyceum" and st.side(0).deck.has("proto_st_navarch"),
+		"Lamplight: two kept, two to the bottom")
+	# Premeditation
+	st = _duel()
+	_lands(st, 0, "UUUUU")
+	st.side(0).hand = ["proto_st_navarch"]
+	st.auto_priority = false
+	st.priority = 0
+	check(st.premeditate(0, 0) and st.side(0).premeditated.size() == 1 and st.side(0).hand.is_empty(), "Premeditation: {2}, face down")
+	check(not st.can_cast_premeditated(0, 0), "not on the turn it was premeditated")
+	st.turn += 1
+	st.active = 1
+	for l in st.side(0).lands:
+		l["tapped"] = false
+	st.priority = 0
+	st.window_open = true
+	check(st.can_cast_premeditated(0, 0), "a later turn, at flash speed")
+	st.cast_premeditated(0, 0)
+	st._force_resolve()
+	check(st.side(0).creatures.size() == 1 and st.side(0).lands.filter(func(l): return l["tapped"]).size() == 4, "the Navarch for {3}{U}")
 	# Sent Back to the Gate: any nonland permanent; the computer sends back the enemy's
 	st = _duel()
 	var mine := _perm(st, 0, "proto_rv_cask")
@@ -2380,15 +2473,6 @@ func test_revel_stoa() -> void:
 	check(int(st.auto_target(0, gate).get("uid", -1)) == theirs.uid, "the AI sends back the enemy's permanent")
 	st.resolve_effect(0, gate, null, {"kind": "relic", "uid": mine.uid})
 	check(st.find_perm(mine.uid) == null and st.side(0).hand.has("proto_rv_cask"), "Sent Back to the Gate: a relic returns to its owner's hand")
-	# Flash: the Hoplite of Plataea on the opponent's turn
-	st = _duel()
-	st.auto_priority = false
-	st.side(0).hand = ["proto_st_plataea", "proto_st_ephebe"]
-	st.active = 1
-	st.phase = "main1"
-	st.window_open = true
-	st.priority = 0
-	check(st.can_play(0, 0) and not st.can_play(0, 1), "Flash: cast on the opponent's turn; a creature without it can't be")
 	# the decks play out, AI against AI
 	var decks := DeckTools.proto_decks()
 	var rv: Dictionary = decks.filter(func(d): return d["faith"] == "revel")[0]

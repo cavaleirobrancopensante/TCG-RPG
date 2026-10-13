@@ -1601,14 +1601,14 @@
   "toughness": 1,
   "effects": [
    {
-    "trigger": "opp_upkeep",
-    "condition": "opp_composure",
+    "trigger": "opp_cast_your_turn",
     "action": "damage",
     "target": "enemy_player",
-    "amount": 1
+    "amount": 1,
+    "text": "Heckler at the Porch deals 1 damage to the opponent who cast a spell during your turn."
    }
   ],
-  "text": "At the beginning of each opponent's upkeep, if that player has four or more cards in hand, Heckler at the Porch deals 1 damage to him.",
+  "text": "Whenever an opponent casts a spell during your turn, Heckler at the Porch deals 1 damage to that player.",
   "flavor": "\"Tell us again, philosopher, how little you need.\"",
   "art": "res://art/cards/revel_c_021.webp",
   "keywords": [],
@@ -1633,7 +1633,8 @@
     "trigger": "excess_cast",
     "action": "damage",
     "target": "enemy_player",
-    "amount": 1
+    "amount": 1,
+    "text": "Whenever you cast a spell for its Excess cost, Lord of Misrule deals 1 damage to each opponent."
    }
   ],
   "statics": [
@@ -1816,45 +1817,22 @@
   },
   "power": 1,
   "toughness": 2,
-  "effects": [],
-  "statics": [
+  "effects": [
    {
-    "static": "anthem",
+    "trigger": "temperance",
+    "action": "buff",
+    "target": "self",
     "power": 1,
     "toughness": 1,
-    "scope": "self",
-    "condition": "composure"
+    "text": "Temperance: Whenever you cast your first spell each turn, Ephebe of the Phalanx gets +1/+1 until end of turn."
    }
   ],
-  "text": "Composure: As long as you have four or more cards in hand, Ephebe of the Phalanx gets +1/+1.",
+  "text": "Temperance: Whenever you cast your first spell each turn, Ephebe of the Phalanx gets +1/+1 until end of turn.",
   "flavor": "\"It is difficulties that show what men are.\" (Epictetus, Discourses)",
   "art": "res://art/cards/lyceum_c_002.webp",
   "keywords": [],
   "proto": true,
   "mana_value": 1
- },
- {
-  "id": "proto_st_plataea",
-  "name": "Hoplite of Plataea",
-  "faction": "lyceum",
-  "rarity": "common",
-  "type": "creature",
-  "subtype": "Human Hoplite",
-  "cost": {
-   "U": 1,
-   "generic": 1
-  },
-  "power": 2,
-  "toughness": 2,
-  "effects": [],
-  "text": "Flash (You may cast this spell any time you could cast an instant.)",
-  "flavor": "At Plataea the arrows fell like hail, and the line stood and waited for the omens. Then it came on.",
-  "art": "res://art/cards/lyceum_c_023.webp",
-  "keywords": [
-   "flash"
-  ],
-  "proto": true,
-  "mana_value": 2
  },
  {
   "id": "proto_st_polemarch",
@@ -1877,49 +1855,14 @@
     "toughness": 1,
     "scope": "other_own_creatures",
     "subtype": "Hoplite"
-   },
-   {
-    "static": "keyword",
-    "keyword": "vigilance",
-    "scope": "own_creatures",
-    "subtype": "Hoplite",
-    "condition": "composure"
    }
   ],
-  "text": "Other Hoplites you control get +1/+1. Composure: As long as you have four or more cards in hand, Hoplites you control have vigilance.",
+  "text": "Other Hoplites you control get +1/+1.",
   "flavor": "He takes his place on the right of the line, where the honour is, and the danger.",
   "art": "res://art/cards/lyceum_u_014.webp",
   "keywords": [],
   "proto": true,
   "mana_value": 3
- },
- {
-  "id": "proto_st_strategos",
-  "name": "Patient Strategos",
-  "faction": "lyceum",
-  "rarity": "uncommon",
-  "type": "creature",
-  "subtype": "Human Soldier",
-  "cost": {
-   "U": 2,
-   "generic": 2
-  },
-  "power": 3,
-  "toughness": 3,
-  "effects": [
-   {
-    "trigger": "end_step",
-    "condition": "no_casts",
-    "action": "draw",
-    "amount": 1
-   }
-  ],
-  "text": "At the beginning of your end step, if you cast no spells this turn, draw a card.",
-  "flavor": "\"No great thing is created suddenly.\" (Epictetus, Discourses)",
-  "art": "res://art/cards/lyceum_u_006.webp",
-  "keywords": [],
-  "proto": true,
-  "mana_value": 4
  },
  {
   "id": "proto_st_lamplight",
@@ -1936,11 +1879,12 @@
   "effects": [
    {
     "trigger": "cast",
-    "action": "draw",
-    "amount": 2
+    "action": "dig",
+    "amount": 4,
+    "keep": 2
    }
   ],
-  "text": "Draw two cards.",
+  "text": "Look at the top four cards of your library. Put two of them into your hand and the rest on the bottom of your library in any order.",
   "flavor": "\"Everywhere means nowhere.\" (Seneca, Letters to Lucilius, on reading too many books)",
   "art": "res://art/cards/lyceum_c_015.webp",
   "keywords": [],
@@ -2003,5 +1947,155 @@
   "keywords": [],
   "proto": true,
   "mana_value": 4
+ },
+ {
+  "id": "proto_st_shieldwall",
+  "name": "Shieldwall Hoplite",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Hoplite",
+  "cost": {
+   "U": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "temperance",
+    "action": "buff",
+    "target": "all_own_creatures",
+    "subtype": "Hoplite",
+    "toughness": 2,
+    "text": "Temperance: Whenever you cast your first spell each turn, Hoplites you control get +0/+2 until end of turn."
+   }
+  ],
+  "text": "Temperance: Whenever you cast your first spell each turn, Hoplites you control get +0/+2 until end of turn.",
+  "flavor": "\"Be like the promontory against which the waves continually break, but it stands firm.\" (Marcus Aurelius, Meditations)",
+  "art": "res://art/cards/lyceum_c_005.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_st_watchman",
+  "name": "Watchman of the Gate",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Hoplite",
+  "cost": {
+   "U": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "counter",
+    "filter": "any",
+    "unless_pay": 1
+   }
+  ],
+  "text": "Flash. When Watchman of the Gate enters, counter target spell unless its controller pays {1}.",
+  "flavor": "\"For men make the city and not walls or ships without men in them.\" (Nicias, in Thucydides)",
+  "art": "res://art/cards/lyceum_c_011.webp",
+  "keywords": [
+   "flash"
+  ],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_st_scholarch",
+  "name": "Scholarch of the Porch",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Philosopher",
+  "cost": {
+   "U": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 3,
+  "effects": [
+   {
+    "trigger": "temperance_opp",
+    "action": "draw",
+    "amount": 1,
+    "text": "Temperance: Whenever you cast your first spell during an opponent's turn, draw a card."
+   }
+  ],
+  "text": "Temperance: Whenever you cast your first spell during an opponent's turn, draw a card.",
+  "flavor": "The school passed from Zeno to Cleanthes and from Cleanthes to Chrysippus, like a lamp handed on in the dark.",
+  "art": "res://art/cards/lyceum_u_017.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_st_lochagos",
+  "name": "Lochagos of the File",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Hoplite",
+  "cost": {
+   "U": 1,
+   "generic": 3
+  },
+  "power": 3,
+  "toughness": 4,
+  "effects": [
+   {
+    "trigger": "temperance",
+    "action": "buff",
+    "target": "own_creature",
+    "subtypes": [
+     "Hoplite"
+    ],
+    "subtype": "Hoplite",
+    "power": 1,
+    "toughness": 1,
+    "duration": "permanent",
+    "text": "Temperance: Whenever you cast your first spell each turn, put a +1/+1 counter on target Hoplite you control."
+   }
+  ],
+  "text": "Temperance: Whenever you cast your first spell each turn, put a +1/+1 counter on target Hoplite you control.",
+  "flavor": "Every man who steps into his file is one more reason for the enemy to hesitate.",
+  "art": "res://art/cards/lyceum_u_015.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_st_navarch",
+  "name": "Navarch of the Cold Sea",
+  "faction": "lyceum",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Human Sailor",
+  "cost": {
+   "U": 2,
+   "generic": 5
+  },
+  "power": 5,
+  "toughness": 6,
+  "effects": [],
+  "premeditation": {
+   "U": 1,
+   "generic": 3
+  },
+  "text": "Flash. Premeditation {3}{U} (During your turn, you may pay {2} and exile this card from your hand face down. Cast it on a later turn for its Premeditation cost.)",
+  "flavor": "\"When a man does not know what harbour he is making for, no wind is the right wind.\" (Seneca)",
+  "art": "res://art/cards/lyceum_u_007.webp",
+  "keywords": [
+   "flash"
+  ],
+  "proto": true,
+  "mana_value": 7
  }
 ]
