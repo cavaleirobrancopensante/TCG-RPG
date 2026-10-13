@@ -69,6 +69,8 @@ static func _apply(c: BattleState, i: int, o: Dictionary) -> bool:
 			return c.play(i, int(o["idx"]), o.get("targets", []), bool(o.get("oc", false)), int(o.get("mode", -1)))
 		"ability":
 			return c.activate(i, int(o["uid"]), int(o["idx"]), o.get("targets", []), int(o.get("sac", -1)))
+		"flashback":
+			return c.cast_flashback(i, int(o["idx"]), o.get("targets", []), int(o.get("mode", -1)))
 		"premeditate":
 			return c.premeditate(i, int(o["idx"]))
 		"cast_premeditated":

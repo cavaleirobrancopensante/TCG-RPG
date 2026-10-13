@@ -28,10 +28,11 @@ func _ready() -> void:
 	_check(all.size() >= 33, "33 pre-made decks or more (%d)" % all.size())
 	var ok_sizes := true
 	for d in all:
-		if DeckTools.count(d["cards"]) != 40:
+		var want := DeckTools.PROTO_DECK_SIZE if d.get("kind", "") == "proto" else 40
+		if DeckTools.count(d["cards"]) != want:
 			ok_sizes = false
 			print("   bad size: ", d["name"], " ", DeckTools.count(d["cards"]))
-	_check(ok_sizes, "every pre-made deck has 40 cards")
+	_check(ok_sizes, "every pre-made deck has 40 cards (a prototype 60)")
 	await RenderingServer.frame_post_draw
 	DirAccess.make_dir_recursive_absolute(OS.get_user_data_dir() + "/shots")
 	get_viewport().get_texture().get_image().save_png(OS.get_user_data_dir() + "/shots/quickduel.png")
@@ -47,7 +48,7 @@ func _ready() -> void:
 	_check(b is BattleScene, "Duel starts a practice duel")
 	if b is BattleScene:
 		_check(b.st.side(0).life == 20 and b.st.side(1).life == 20, "both sides start with the chosen life")
-		_check(b.st.side(0).deck.size() + b.st.side(0).hand.size() == 40, "your side plays the chosen deck")
+		_check(b.st.side(0).deck.size() + b.st.side(0).hand.size() == DeckTools.count(all[0]["cards"]), "your side plays the chosen deck")
 		b.finished.emit(false)
 		await _frames(6)
 	_check(GameState.gold == gold0 and GameState.life == life0, "the game's gold and life are untouched")
@@ -66,7 +67,7 @@ func _ready() -> void:
 	_check(diff, "random draws two different real decks")
 	(q.find_child("Duel", true, false) as Button).pressed.emit()
 	await _frames(6)
-	_check(main.screen is BattleScene and DeckTools.count(main.screen.info["deck"]) == 40, "a random duel starts with real decks")
+	_check(main.screen is BattleScene and DeckTools.count(main.screen.info["deck"]) in [40, DeckTools.PROTO_DECK_SIZE], "a random duel starts with real decks")
 	if main.screen is BattleScene:
 		main.screen.finished.emit(false)
 		await _frames(6)

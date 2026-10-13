@@ -113,6 +113,32 @@ func _ready() -> void:
 	st.side(0).hand = ["proto_ow_stag", "proto_ow_hunt", "land_wild"]
 	b.refresh()
 	await _shot("grove")
+	# the first set (1.79): a Blessing on a knight, a Pauldron, a Green Man in a land, a Wolf token
+	for side in 2:
+		st.side(side).creatures.clear()
+		st.side(side).relics.clear()
+		st.side(side).lands.clear()
+	for n in 5:
+		st.side(0).lands.append({"id": "land_sanctum", "color": "W", "colors": ["W"], "tapped": n < 1})
+		st.side(1).lands.append({"id": "land_wild", "color": "G", "colors": ["G"], "tapped": n < 2})
+	var kn := _add(st, 0, "proto_c_crusader_b")
+	_add(st, 0, "proto_c_arms").attached_to = kn.uid
+	_add(st, 0, "proto_c_sergeant")
+	_add(st, 0, "proto_c_bishop")
+	_add(st, 0, "proto_c_martyr", true)
+	_add(st, 0, "proto_g_clock")
+	var gm := _add(st, 1, "proto_ow_greenman")
+	st._animate_land(1, 1, gm, 2, 2, "Spirit", ["haste"])
+	_add(st, 1, "proto_ow_greywolf")
+	st.resolve_effect(1, CardDB.get_card("proto_ow_greywolf")["effects"][0], null, null)
+	var ad := _add(st, 1, "proto_ow_antler")
+	ad.bonus_p = 1
+	ad.bonus_t = 1
+	st.side(0).hand = ["proto_c_penance", "proto_c_sword", "proto_rv_volley", "proto_st_owl", "proto_te_discharge", "land_sanctum"]
+	st.side(0).graveyard = ["proto_st_drill"]
+	st.take_events()
+	b.refresh()
+	await _shot("first_set")
 	# the Index: a whole library to choose from, with search and type tabs
 	var lib := st.library_choices(1)
 	var counts := {}
