@@ -910,3 +910,10 @@ two-for-one creatures, engines and the graveyard as a resource.
   its scroll bar appears under it. The hand does the same: a crowded hand keeps its cards at
   full size and scrolls, with its bar, instead of squeezing them together. Drag with a finger
   or the mouse, or use the bar.
+
+## The Index picker (1.74)
+
+- Choosing a card from a whole library (the Index) opens a picker like the deck builder:
+  miniature cards in a scrolling grid, a search by name, and tabs by type (All, Creature,
+  Sorcery, Instant, Relic, with how many of each). Each card shows how many copies are in
+  the library. Tap a card to select it, hold it to read it, then Choose.
