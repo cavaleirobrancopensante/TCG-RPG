@@ -9,8 +9,11 @@ var counts := {}
 func _ready() -> void:
 	var games := int(OS.get_environment("GAMES")) if OS.get_environment("GAMES") != "" else 200
 	var decks := DeckTools.proto_decks()
-	var church: Dictionary = decks[0]["cards"]
-	var pact: Dictionary = decks[1]["cards"]
+	# PAIR="2,3": which prototype decks (default the Church against the Pact; 2,3 the Revel against the Stoa)
+	var pair := (OS.get_environment("PAIR") if OS.get_environment("PAIR") != "" else "0,1").split(",")
+	var church: Dictionary = decks[int(pair[0])]["cards"]
+	var pact: Dictionary = decks[int(pair[1])]["cards"]
+	print("%s against %s" % [decks[int(pair[0])]["name"], decks[int(pair[1])]["name"]])
 	var wins := [0, 0]
 	var rounds := 0
 	var errors := 0
@@ -26,8 +29,8 @@ func _ready() -> void:
 		else:
 			wins[1] += 1
 		rounds += int(counts.get("_last_rounds", 0))
-	print("Church %d  Pact %d  (unfinished %d) of %d" % [wins[0], wins[1], errors, games])
-	print("Church win rate %.1f%%, average rounds %.1f" % [100.0 * wins[0] / maxf(1, wins[0] + wins[1]), float(rounds) / games])
+	print("First %d  Second %d  (unfinished %d) of %d" % [wins[0], wins[1], errors, games])
+	print("First deck win rate %.1f%%, average rounds %.1f" % [100.0 * wins[0] / maxf(1, wins[0] + wins[1]), float(rounds) / games])
 	var keys := counts.keys()
 	keys.sort()
 	for k in keys:
@@ -83,12 +86,16 @@ func _count(evs: Array, st: BattleState) -> void:
 				k = "Confessor holds a card"
 			"edict":
 				k = "edict sacrifice"
+			"excess":
+				k = "Excess card discarded"
 			"attach":
 				if e.get("possess", false):
 					k = "possession moves to a new host"
 			"cast":
 				var nm := String(CardDB.get_card(String(e["id"])).get("name", ""))
-				if nm in ["Exorcism", "Censure", "Index", "Covet", "Confessor of the Holy Office", "Inquisitor of the Holy Office", "Angel of the Reliquary", "Whisper of the Imp", "Demon of Wrath", "Legion's Hold", "Bargain in Blood", "Withering Curse", "Azrakel, Prince of Wrath"]:
+				if e.get("excess", false):
+					counts["cast for Excess"] = int(counts.get("cast for Excess", 0)) + 1
+				if nm in ["Sent Back to the Gate", "Considered Reply", "Ask the Price", "Polemarch", "Lord of Misrule", "Reading by Lamplight", "Exorcism", "Censure", "Index", "Covet", "Confessor of the Holy Office", "Inquisitor of the Holy Office", "Angel of the Reliquary", "Whisper of the Imp", "Demon of Wrath", "Legion's Hold", "Bargain in Blood", "Withering Curse", "Azrakel, Prince of Wrath"]:
 					k = "cast " + nm
 		if k != "":
 			counts[k] = int(counts.get(k, 0)) + 1

@@ -29,6 +29,7 @@ const KEYWORDS := {
 	"first_strike": "First strike: deals combat damage before creatures without it.",
 	"unmoved": "Unmoved: enemy spells and abilities can't tap it, return it to its owner's hand or shrink it.",
 	"converted": "Converted: it can't attack or block.",
+	"flash": "Flash: you may cast it any time you could cast an instant.",
 	"immortal": "Immortal: if it would be put into a graveyard from anywhere, it is exiled instead. Angels return to Heaven, demons are cast back into Hell; no necromancy can raise them.",
 }
 ## Mechanics named in rules text, explained under the card.
@@ -38,6 +39,7 @@ const MECHANICS := {
 	"Rooted": "Rooted: you control six or more lands.",
 	"Carouse": "Carouse: you already played another card this turn.",
 	"Composure": "Composure: you hold four or more cards.",
+	"Excess": "Excess: when you discard this card, you may cast it right then for its Excess cost, even on your opponent's turn. If you don't, it goes to your graveyard.",
 	"Idle": "Idle: at the end of your turn, if this creature is untapped and didn't attack this turn.",
 	"Overclock": "Overclock: you may pay more as you play it for the bonus.",
 	"Assembly": "Assembly: this creature gets +1/+1 for each other Construct you control.",

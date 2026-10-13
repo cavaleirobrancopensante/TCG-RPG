@@ -14,6 +14,7 @@ func _ready() -> void:
 	test_mulligan()
 	test_mechanics()
 	test_redesign()
+	test_revel_stoa()
 	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
@@ -2276,10 +2277,148 @@ func _owned_total() -> int:
 
 ## The redesign's prototype rules: Peace and Crusade, two-faced cards, Immortal, possessions,
 ## exorcisms (cards in data/cards/proto.json).
+func _perm(st: BattleState, i: int, id: String) -> BattleState.Perm:
+	var p := st._make_perm(i, id, CardDB.get_card(id))
+	p.sick = false
+	if p.is_creature():
+		st.side(i).creatures.append(p)
+	else:
+		st.side(i).relics.append(p)
+	return p
+
+
+## The Revel (Excess) and the Stoa (Composure, the Phalanx) prototypes.
+func test_revel_stoa() -> void:
+	print("-- the Revel and the Stoa")
+	for d in DeckTools.proto_decks():
+		check(DeckTools.count(d["cards"]) == 40, "%s has 40 cards" % d["name"])
+	# Excess, the computer: a discarded Toast of Fire is cast at once for {R}
+	var st := _duel()
+	_lands(st, 0, "RR")
+	var foe := _perm(st, 1, "proto_st_ephebe")
+	st.side(0).hand = ["proto_rv_toast"]
+	st.discard_card(0, 0)
+	check(st.side(0).graveyard.has("proto_rv_toast") and st.find_perm(foe.uid) == null and st.side(0).cast_count == 1,
+		"Excess: the AI casts the discarded Toast for {R} and kills the Ephebe")
+	check(st.side(0).lands.filter(func(l): return l["tapped"]).size() == 1, "Excess: it paid only the Excess cost")
+	# Excess, a person: asked; Lord of Misrule and Tavern Brawler answer it
+	st = _duel()
+	_lands(st, 0, "R")
+	st.side(0).interactive = true
+	var lord := _perm(st, 0, "proto_rv_lord")
+	var brawler := _perm(st, 0, "proto_rv_brawler")
+	check(brawler.power() == 3, "Lord of Misrule: other Revellers get +1/+0")
+	st.side(0).hand = ["proto_rv_fireeater", "proto_rv_toast"]
+	st.discard_card(0, 0)
+	check(st.side(0).excess_owed == ["proto_rv_fireeater"] and st.has_owed(0), "Excess: the player is asked")
+	check(brawler.power() == 4 and brawler.has_kw("haste"), "Tavern Brawler: +1/+0 and haste when you discard")
+	var life := st.side(1).life
+	st.excess_choose(0, true, [])
+	var fe := st.side(0).creatures.filter(func(q): return q.card_id == "proto_rv_fireeater")
+	check(fe.size() == 1 and st.side(1).life == life - 1, "Excess: the Fire-Eater is cast and Lord of Misrule deals 1 damage")
+	st.side(0).hand = ["proto_rv_toast"]
+	st.discard_card(0, 0)
+	check(not st.can_cast_excess(0, "proto_rv_toast"), "Excess: no mana left to pay it")
+	st.excess_choose(0, true, [])
+	check(st.side(0).graveyard.has("proto_rv_toast") and not st.side(0).exile.has("proto_rv_toast"), "Excess: unpaid, it goes to the graveyard")
+	check(lord.power() == 4, "the Lord does not pump himself")
+	# Flaming Flagon: 4 damage after a discard
+	st = _duel()
+	st.resolve_effect(0, CardDB.get_card("proto_rv_flagon")["effects"][0], null, {"kind": "player", "side": 1})
+	check(st.side(1).life == 18, "Flaming Flagon: 2 damage")
+	st.side(0).hand = ["land_revel"]
+	st.discard_card(0, 0)
+	st.resolve_effect(0, CardDB.get_card("proto_rv_flagon")["effects"][0], null, {"kind": "player", "side": 1})
+	check(st.side(1).life == 14, "Flaming Flagon: 4 damage if you discarded a card this turn")
+	# Spilled Brandy: draw two, then discard (the AI picks)
+	st = _duel()
+	st.side(0).deck = ["land_revel", "land_revel", "proto_rv_toast"]
+	st.side(0).hand = []
+	for e in CardDB.get_card("proto_rv_brandy")["effects"]:
+		st.resolve_effect(0, e, null, null)
+	check(st.side(0).hand.size() == 1 and st.side(0).discarded_turn == 1, "Spilled Brandy: draw two, then discard a card")
+	# Heckler at the Porch: the opponent's upkeep, four cards or more
+	st = _duel()
+	_perm(st, 0, "proto_rv_heckler")
+	st.side(1).hand = ["land_lyceum", "land_lyceum", "land_lyceum", "land_lyceum"]
+	st.side(1).deck = ["land_lyceum", "land_lyceum"]
+	st.side(0).deck = ["land_revel", "land_revel"]
+	life = st.side(1).life
+	st.end_turn()
+	check(st.side(1).life == life - 1, "Heckler at the Porch: 1 damage at the upkeep of an opponent with four or more cards")
+	# the Stoa
+	st = _duel()
+	var eph := _perm(st, 0, "proto_st_ephebe")
+	var pol := _perm(st, 0, "proto_st_polemarch")
+	check(eph.power() == 2 and eph.toughness() == 3 and pol.power() == 2, "Polemarch: other Hoplites +1/+1, not himself")
+	check(not eph.has_kw("vigilance"), "no vigilance without Composure")
+	st.side(0).hand = ["land_lyceum", "land_lyceum", "land_lyceum", "land_lyceum"]
+	check(eph.power() == 3 and eph.toughness() == 4 and eph.has_kw("vigilance") and pol.has_kw("vigilance"),
+		"Composure: the Ephebe gets +1/+1 and the Hoplites have vigilance")
+	# Patient Strategos: draws at the end step when no spell was cast
+	st = _duel()
+	_perm(st, 0, "proto_st_strategos")
+	st.side(0).deck = ["land_lyceum", "land_lyceum"]
+	var hn := st.side(0).hand.size()
+	st.side(0).cast_count = 0
+	st.begin_end_step()
+	check(st.side(0).hand.size() == hn + 1, "Patient Strategos: a card at the end step of a turn without spells")
+	st = _duel()
+	_perm(st, 0, "proto_st_strategos")
+	st.side(0).deck = ["land_lyceum", "land_lyceum"]
+	hn = st.side(0).hand.size()
+	st.side(0).cast_count = 1
+	st.begin_end_step()
+	check(st.side(0).hand.size() == hn, "Patient Strategos: nothing after a spell")
+	# Sent Back to the Gate: any nonland permanent; the computer sends back the enemy's
+	st = _duel()
+	var mine := _perm(st, 0, "proto_rv_cask")
+	var theirs := _perm(st, 1, "proto_st_polemarch")
+	var gate: Dictionary = CardDB.get_card("proto_st_gate")["effects"][0]
+	var opts := st.valid_targets(0, gate)
+	check(opts.has({"kind": "relic", "uid": mine.uid}) and opts.has({"kind": "creature", "uid": theirs.uid}), "Sent Back to the Gate: your own relic or his creature")
+	check(int(st.auto_target(0, gate).get("uid", -1)) == theirs.uid, "the AI sends back the enemy's permanent")
+	st.resolve_effect(0, gate, null, {"kind": "relic", "uid": mine.uid})
+	check(st.find_perm(mine.uid) == null and st.side(0).hand.has("proto_rv_cask"), "Sent Back to the Gate: a relic returns to its owner's hand")
+	# Flash: the Hoplite of Plataea on the opponent's turn
+	st = _duel()
+	st.auto_priority = false
+	st.side(0).hand = ["proto_st_plataea", "proto_st_ephebe"]
+	st.active = 1
+	st.phase = "main1"
+	st.window_open = true
+	st.priority = 0
+	check(st.can_play(0, 0) and not st.can_play(0, 1), "Flash: cast on the opponent's turn; a creature without it can't be")
+	# the decks play out, AI against AI
+	var decks := DeckTools.proto_decks()
+	var rv: Dictionary = decks.filter(func(d): return d["faith"] == "revel")[0]
+	var sto: Dictionary = decks.filter(func(d): return d["faith"] == "lyceum")[0]
+	var ends := 0
+	for g in 6:
+		var b := BattleState.new()
+		b.setup(DeckTools.to_list(rv["cards"]), DeckTools.to_list(sto["cards"]), ["R", "S"], [20, 20], g % 2, 500 + g)
+		var guard := 0
+		while b.phase != "over" and guard < 80:
+			guard += 1
+			var i := b.active
+			BattleAI.play_main(b, i)
+			if b.phase == "main1":
+				b.declare_attackers(BattleAI.choose_attackers(b, i))
+			if b.phase == "block":
+				b.declare_blocks(BattleAI.choose_blocks(b, 1 - i))
+			if b.phase == "main2":
+				BattleAI.play_main(b, i)
+			b.take_events()
+			b.end_turn()
+		if b.phase == "over":
+			ends += 1
+	check(ends == 6, "Revel against Stoa: every AI duel finishes (%d of 6)" % ends)
+
+
 func test_redesign() -> void:
 	print("-- redesign prototype: Peace and Crusade, Immortal, possession")
 	check(not CardDB.all_set_ids().has("proto_s_pilgrim") and CardDB.has_card("proto_s_pilgrim"), "prototype cards stay out of the pools")
-	check(DeckTools.proto_decks().size() == 2 and DeckTools.count(DeckTools.proto_decks()[0]["cards"]) == 40, "two 40-card prototype decks")
+	check(DeckTools.proto_decks().size() == 4 and DeckTools.count(DeckTools.proto_decks()[0]["cards"]) == 40, "four 40-card prototype decks")
 	var st := _duel()
 	_lands(st, 0, "WWWWBBBB")
 	_lands(st, 1, "WWWWBBBB")

@@ -853,3 +853,18 @@ two-for-one creatures, engines and the graveyard as a resource.
 - When the AI has no spells left in hand, it may aim the Index at its own library: it exiles
   its weakest card that has two or more copies left, takes a Testimony for each, and cashes
   them in for draws. With a spell still in hand it aims at its opponent as before.
+
+## The Revel and the Stoa prototype decks (1.70)
+
+- Two new Quick duel decks under Prototype decks: "Revel, Midnight Revel" (red) and
+  "Stoa, the Phalanx" (blue).
+- Excess: when you discard a card with Excess, you may cast it right then for its Excess
+  cost, even on your opponent's turn; if you don't, it goes to your graveyard. You are asked
+  each time; the AI casts it when it pays off. The AI discards its Excess cards first.
+- New card rules in the engine: "whenever you discard a card" triggers, "whenever you cast
+  a spell for its Excess cost", "if you discarded a card this turn", opponent's-upkeep
+  triggers, end-step triggers ("if you cast no spells this turn"), "then discard a card",
+  Flash for creatures, and targets for "target nonland permanent" (yours or his).
+- Composure (four or more cards in hand) drives the Stoa: the Ephebe's +1/+1 and the
+  Polemarch's vigilance for Hoplites.
+- tests/proto_duel.tscn takes PAIR="2,3" to pit any two prototype decks.

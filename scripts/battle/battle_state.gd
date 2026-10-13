@@ -8,7 +8,7 @@ const OPENING_HAND := 7         # everyone draws seven, whatever the stats
 const START_HAND := 7           # the most cards kept at the end of a turn; Reason lets the hero keep more
 const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
 const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "enemy_demon",
-	"enemy_creature_or_demon", "any_grave_card"]
+	"enemy_creature_or_demon", "any_grave_card", "nonland_permanent"]
 
 
 class Perm:
@@ -102,6 +102,8 @@ class BattleSide:
 	var trigger_owed: Array = []   # interactive: [{"uid", "e"}] triggers (turning over) waiting for a target
 	var hand_owed: Array = []      # interactive: [{"uid", "e"}] a card to choose from the opponent's hand
 	var edict_owed := 0            # interactive: creatures this side must sacrifice (its choice)
+	var excess_owed: Array = []    # interactive: discarded Excess cards waiting: cast for Excess, or to the graveyard
+	var discarded_turn := 0        # cards this side discarded this turn (Flaming Flagon)
 
 
 var sides: Array = []
@@ -292,10 +294,14 @@ func begin_turn() -> void:
 	for sd in sides:
 		for p in sd.creatures + sd.relics:
 			p.uses.clear()          # "once per turn" counts each turn, abilities work in both
+	for sd in sides:
+		sd.discarded_turn = 0
 	attackers.clear()
 	blocks.clear()
 	blockers.clear()
 	was_blocked.clear()
+	if not stack.is_empty():
+		_force_resolve()            # a spell cast at the very end of the turn (Excess) still resolves
 	stack.clear()
 	window_open = false
 	_passes = 0
@@ -311,6 +317,16 @@ func begin_turn() -> void:
 			if e.get("trigger") == "upkeep":
 				_with_source(p.card)
 				resolve_effect(active, e, p, null)
+				if phase == "over":
+					return
+	# "At the beginning of each opponent's upkeep" (Heckler at the Porch)
+	for p in (side(1 - active).relics + side(1 - active).creatures).duplicate():
+		if find_perm(p.uid) == null:
+			continue
+		for e in p.card.get("effects", []):
+			if e.get("trigger") == "opp_upkeep":
+				_with_source(p.card)
+				resolve_effect(1 - active, e, p, null)
 				if phase == "over":
 					return
 	check_state()
@@ -390,7 +406,8 @@ func open_main_window() -> void:
 func has_owed(i: int) -> bool:
 	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty() or side(i).martyr_owed > 0 \
 		or not side(i).leak_owed.is_empty() or not side(i).charge_owed.is_empty() or not side(i).possess_owed.is_empty() \
-		or not side(i).trigger_owed.is_empty() or not side(i).hand_owed.is_empty() or side(i).edict_owed > 0
+		or not side(i).trigger_owed.is_empty() or not side(i).hand_owed.is_empty() or side(i).edict_owed > 0 \
+		or not side(i).excess_owed.is_empty()
 
 
 ## The player discards hand card `idx` for a rummage.
@@ -398,11 +415,103 @@ func discard_owed(i: int, idx: int) -> void:
 	var s := side(i)
 	if s.owed_discards <= 0 or idx < 0 or idx >= s.hand.size():
 		return
-	var gone: String = s.hand[idx]
-	s.hand.remove_at(idx)
-	_bury(i, gone)
 	s.owed_discards -= 1
-	emit({"type": "discard", "side": i, "id": gone})
+	discard_card(i, idx)
+
+
+## Side i discards hand card `idx`: "whenever you discard" triggers (Tavern Brawler), then
+## the card goes to the graveyard, or, with Excess, waits in exile to be cast for its Excess cost.
+func discard_card(i: int, idx: int) -> void:
+	var s := side(i)
+	if idx < 0 or idx >= s.hand.size():
+		return
+	var id: String = s.hand[idx]
+	s.hand.remove_at(idx)
+	s.discarded_turn += 1
+	emit({"type": "discard", "side": i, "id": id})
+	for p in s.creatures.duplicate() + s.relics.duplicate():
+		if find_perm(p.uid) == null:
+			continue
+		for e in p.card.get("effects", []):
+			if e.get("trigger") == "discard":
+				_with_source(p.card)
+				resolve_effect(i, e, p, null)
+				if phase == "over":
+					return
+	var c := CardDB.get_card(id)
+	if c.get("excess", {}).is_empty() or phase == "over":
+		_bury(i, id)
+		return
+	s.exile.append(id)
+	emit({"type": "excess", "side": i, "id": id})
+	if s.interactive:
+		s.excess_owed.append(id)
+		return
+	var plan := BattleAI.excess_plan(self, i, id)
+	if plan.is_empty():
+		excess_decline(i, id)
+	else:
+		cast_excess(i, id, plan)
+
+
+## The card as it is cast for Excess: the same card at its Excess cost.
+static func excess_card(c: Dictionary) -> Dictionary:
+	var d := c.duplicate()
+	d["cost"] = c.get("excess", {})
+	return d
+
+
+func can_cast_excess(i: int, id: String) -> bool:
+	return side(i).exile.has(id) and phase != "over" and can_pay(i, effective_cost(i, excess_card(CardDB.get_card(id))))
+
+
+## Not cast: the discarded card goes on to the graveyard.
+func excess_decline(i: int, id: String) -> void:
+	var s := side(i)
+	if s.exile.has(id):
+		s.exile.erase(id)
+		_bury(i, id)
+		emit({"type": "excess_gone", "side": i, "id": id})
+
+
+## Cast a discarded Excess card for its Excess cost, at any time (it goes on the stack).
+func cast_excess(i: int, id: String, targets: Array = []) -> bool:
+	if not can_cast_excess(i, id):
+		excess_decline(i, id)
+		return false
+	var s := side(i)
+	var c := CardDB.get_card(id)
+	pay(i, effective_cost(i, excess_card(c)))
+	s.exile.erase(id)
+	s.cast_count += 1
+	var item := {"sid": _next_sid, "kind": "card", "side": i, "id": id, "card": c,
+		"targets": targets.duplicate(), "overclock": false}
+	_next_sid += 1
+	stack.append(item)
+	emit({"type": "cast", "side": i, "id": id, "sid": item["sid"], "targets": _event_targets(item), "overclock": false, "excess": true})
+	# "Whenever you cast a spell for its Excess cost" (Lord of Misrule)
+	for p in s.creatures.duplicate() + s.relics.duplicate():
+		for e in p.card.get("effects", []):
+			if e.get("trigger") == "excess_cast" and find_perm(p.uid) != null:
+				_with_source(p.card)
+				resolve_effect(i, e, p, null)
+				if phase == "over":
+					return true
+	_after_push(i)
+	return true
+
+
+## The player's Excess decision for the first waiting card: cast it (with its targets) or not.
+func excess_choose(i: int, cast: bool, targets: Array = []) -> void:
+	var s := side(i)
+	if s.excess_owed.is_empty():
+		return
+	var id: String = s.excess_owed.pop_front()
+	if cast:
+		cast_excess(i, id, targets)
+	else:
+		excess_decline(i, id)
+	check_state()
 
 
 ## The player's foresight decision: `top` (in the order they will be drawn) and the rest to the bottom.
@@ -445,6 +554,16 @@ func _end_step_start() -> void:
 	priority = active
 	# Idle (Revel): rewards creatures that stayed untapped and did not attack.
 	var s := side(active)
+	# "At the beginning of your end step" (Patient Strategos)
+	for p in (s.creatures + s.relics).duplicate():
+		if find_perm(p.uid) == null:
+			continue
+		for e in p.card.get("effects", []):
+			if e.get("trigger") == "end_step" and cond_ok(active, String(e.get("condition", "")), p):
+				_with_source(p.card)
+				resolve_effect(active, e, p, null)
+				if phase == "over":
+					return
 	for p in s.creatures.duplicate():
 		if find_perm(p.uid) == null or p.tapped or p.attacked:
 			continue
@@ -481,10 +600,7 @@ func end_turn() -> void:
 		var idx := BattleAI.worst_card(self, active)
 		if idx < 0:
 			break
-		var gone: String = me.hand[idx]
-		me.hand.remove_at(idx)
-		_bury(active, gone)
-		emit({"type": "discard", "side": active, "id": gone})
+		discard_card(active, idx)
 	for sd in sides:
 		for p in sd.creatures:
 			p.damage = 0
@@ -831,6 +947,12 @@ func cond_ok(i: int, cond: String, source = null) -> bool:
 			return s.life > s.start_life
 		"composure":
 			return s.hand.size() >= 4
+		"opp_composure":
+			return side(1 - i).hand.size() >= 4
+		"discarded":
+			return s.discarded_turn > 0
+		"no_casts":
+			return s.cast_count == 0
 		"rooted":
 			return s.lands.size() >= 6
 		"peace":
@@ -1154,7 +1276,7 @@ func can_play(i: int, hand_idx: int, overclock: bool = false) -> bool:
 	var c := CardDB.get_card(s.hand[hand_idx])
 	if c.get("type") == "land":
 		return sorcery_time(i) and not s.land_played
-	if not is_instant(c) and not sorcery_time(i):
+	if not is_instant(c) and not c.get("keywords", []).has("flash") and not sorcery_time(i):
 		return false
 	if overclock and c.get("overclock", {}).is_empty():
 		return false
@@ -1475,6 +1597,14 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 		"enemy_relic":
 			for r in enemy.relics:
 				out.append({"kind": "relic", "uid": r.uid})
+		"nonland_permanent":
+			# any creature or relic, his or yours (Sent Back to the Gate)
+			for k in [1 - i, i]:
+				for p in side(k).creatures:
+					if not (k != i and (_protected_from_current(p) or _unmoved(p, i, e))):
+						out.append({"kind": "creature", "uid": p.uid})
+				for r in side(k).relics:
+					out.append({"kind": "relic", "uid": r.uid})
 		"enemy_creature_or_demon":
 			# an enemy creature, or a possession on one (an Exorcism: Demons die, men take damage)
 			for p in enemy.creatures:
@@ -1865,9 +1995,7 @@ func _hand_pick(i: int, e: Dictionary, source: Perm, hi: int) -> void:
 	var id: String = sj.hand[hi]
 	match String(e.get("action", "")):
 		"covet":
-			sj.hand.remove_at(hi)
-			_bury(j, id)
-			emit({"type": "discard", "side": j, "id": id})
+			discard_card(j, hi)
 		"confess":
 			sj.hand.remove_at(hi)
 			if source and find_perm(source.uid):
@@ -2131,10 +2259,7 @@ func _pay_extra(i: int, c: Dictionary, targets: Array) -> void:
 	for n in int(x.get("discard", 0)):
 		var wi := BattleAI.worst_card(self, i)
 		if wi >= 0:
-			var gone: String = s.hand[wi]
-			s.hand.remove_at(wi)
-			_bury(i, gone)
-			emit({"type": "discard", "side": i, "id": gone})
+			discard_card(i, wi)
 	if x.get("sacrifice", false):
 		var keep := -1
 		for t in targets:
@@ -2301,10 +2426,7 @@ func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1
 	for n in int(cost.get("discard", 0)):
 		var wi := BattleAI.worst_card(self, i)
 		if wi >= 0:
-			var gone: String = side(i).hand[wi]
-			side(i).hand.remove_at(wi)
-			_bury(i, gone)
-			emit({"type": "discard", "side": i, "id": gone})
+			discard_card(i, wi)
 	var sac := String(cost.get("sacrifice", ""))
 	p.uses[idx] = int(p.uses.get(idx, 0)) + 1
 	var mana_ab := is_mana_ability(ab)
@@ -2351,6 +2473,8 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 	var me := side(i)
 	var enemy := side(1 - i)
 	var amount := int(e.get("amount", 1))
+	if e.has("amount_if") and cond_ok(i, String(e["amount_if"].get("condition", "")), source):
+		amount = int(e["amount_if"].get("amount", amount))   # "it deals 4 damage instead"
 	if e.has("amount_per"):
 		# tribal scaling: amount for each creature of the tribe you control
 		var kin := count_kin(i, String(e["amount_per"]))
@@ -2403,10 +2527,19 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				if enemy.hand.is_empty():
 					break
 				var idx := rng.randi_range(0, enemy.hand.size() - 1)
-				var gone: String = enemy.hand[idx]
-				enemy.hand.remove_at(idx)
-				_bury(1 - i, gone)
-				emit({"type": "discard", "side": 1 - i, "id": gone})
+				discard_card(1 - i, idx)
+		"discard_self":
+			# "Then discard a card": of your choice
+			for n in amount:
+				if me.hand.is_empty():
+					break
+				if me.interactive:
+					me.owed_discards += 1
+					emit({"type": "owe_discard", "side": i})
+				else:
+					discard_card(i, BattleAI.worst_card(self, i))
+					if phase == "over":
+						return
 		"rummage":
 			# draw, then discard a card of your choice
 			for n in amount:
@@ -2419,10 +2552,7 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				else:
 					var wi := BattleAI.worst_card(self, i)
 					if wi >= 0:
-						var gone: String = me.hand[wi]
-						me.hand.remove_at(wi)
-						_bury(i, gone)
-						emit({"type": "discard", "side": i, "id": gone})
+						discard_card(i, wi)
 		"buff":
 			for ref in _expand_targets(i, t, chosen, source):
 				var p: Perm = find_perm(int(ref.get("uid", -1))) if ref.get("kind") == "creature" else null
@@ -3180,6 +3310,10 @@ func auto_target(i: int, e: Dictionary):
 	var action: String = e.get("action", "")
 	var amount := int(e.get("amount", 0))
 	var enemy := side(1 - i)
+	if e.get("target", "") == "nonland_permanent":
+		# the computer sends back the enemy's best permanent, never its own
+		var theirs := opts.filter(func(r): return find_perm(int(r.get("uid", -1))) != null and find_perm(int(r.get("uid", -1))).owner != i)
+		return _highest(theirs) if not theirs.is_empty() else null
 	if action == "damage":
 		if e.get("target") == "any_enemy" and enemy.life <= amount:
 			return {"kind": "player", "side": 1 - i}
