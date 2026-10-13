@@ -53,6 +53,7 @@ var player_life: Button
 var grave_btns := [null, null]     # the tombstone graveyard buttons, yours and the enemy's
 var premed_btn: Button = null      # your premeditated cards, face down (shown when there are some)
 var pending_premed := -1           # the premeditated card whose targets we choose
+var pending_x := -1                # X chosen for the ability being used ({X} paid, or X counters removed)
 var pile_icons := [[], []]         # per side: the hand and library count icons
 var enemy_info: RichTextLabel
 var player_info: RichTextLabel
@@ -1098,7 +1099,7 @@ class _RelicTile extends Control:
 		title = String(r.name)
 		token = r.is_token
 		card = r.card
-		charge = int(r.counters.get("charge", 0))
+		charge = int(r.counters.get("charge", 0)) + int(r.counters.get("ammo", 0))
 		usable = can_use
 		demon = BattleState.is_demon(r)
 		attached = r.attached_to >= 0
@@ -2894,6 +2895,17 @@ func _begin_ability(uid: int, idx: int) -> void:
 	if busy or p == null or not st.can_activate(0, uid, idx):
 		return
 	pending_hand_idx = -1
+	pending_x = -1
+	# an {X} cost, or X counters to remove: how much
+	var ab_x: Dictionary = st.abilities_of(p)[idx]
+	var cst: Dictionary = ab_x.get("cost", {})
+	var rcx: Dictionary = cst.get("remove_counters", {})
+	if cst.get("mana_x", false) or rcx.get("x", false):
+		var hi := st.max_x(0) if cst.get("mana_x", false) else int(p.counters.get(String(rcx.get("counter", "ammo")), 0))
+		var nx = await _ask_count(_card_name(p.card_id) if not p.is_token else String(p.name), CardView.plain_text(I18n.t(String(ab_x.get("text", "")))) + "\n" + I18n.t("Choose X."), 1, mini(hi, 12))
+		if nx < 0:
+			return
+		pending_x = nx
 	pending_ability = [uid, idx]
 	st._with_source(p.card)
 	target_specs = st.ability_specs(p, idx)
@@ -3028,7 +3040,8 @@ func _advance_targeting() -> void:
 			var first = tg.pop_front()
 			if typeof(first) == TYPE_DICTIONARY:
 				sac_uid = int(first.get("uid", -1))
-		st.activate(0, ab[0], ab[1], tg, sac_uid)
+		st.activate(0, ab[0], ab[1], tg, sac_uid, pending_x)
+		pending_x = -1
 		await play_events()
 		await _after_player_action()
 		return

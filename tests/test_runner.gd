@@ -2372,6 +2372,27 @@ func test_grove_foundry() -> void:
 	st._force_resolve()
 	var servo = st.find_perm(scr.uid)
 	check(servo != null and servo.is_creature() and st.can_block(servo, raider), "the new Servo can block")
+		# the Siege Ballista: {X} to load, then fire X, or break a relic, or a land
+	st = _duel()
+	st.auto_priority = false
+	_lands(st, 0, "CCCC")
+	var bal := _perm(st, 0, "proto_te_ballista")
+	st.priority = 0
+	check(st.activate(0, bal.uid, 0, [], -1, 3), "Ballista: {3}, {T}: three ammo")
+	st._force_resolve()
+	check(int(bal.counters.get("ammo", 0)) == 3 and bal.tapped, "three ammo counters, and it is tapped")
+	check(not st.can_activate(0, bal.uid, 1), "it can't fire while tapped")
+	bal.tapped = false
+	bal.counters["ammo"] = 6
+	var alt := _perm(st, 1, "proto_p_altar")
+	check(st.activate(0, bal.uid, 2, [{"kind": "relic", "uid": alt.uid}]), "four ammo: destroy a relic")
+	st._force_resolve()
+	check(st.find_perm(alt.uid) == null and int(bal.counters["ammo"]) == 2, "the Altar is gone, two ammo left")
+	bal.tapped = false
+	var flife := st.side(1).life
+	check(st.activate(0, bal.uid, 1, [{"kind": "player", "side": 1}], -1, 2), "fire X = 2")
+	st._force_resolve()
+	check(st.side(1).life == flife - 2 and int(bal.counters["ammo"]) == 0, "two damage, no ammo left")
 		# the Furnace: charge counters, then X damage
 	st = _duel()
 	_lands(st, 0, "CCCC")

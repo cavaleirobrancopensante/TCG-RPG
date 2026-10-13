@@ -305,6 +305,19 @@ static func _ability_choice(st: BattleState, i: int, p, ab: Dictionary) -> Array
 					dmg = int(p.counters.get(String(e["amount_x"]), 0))
 					if dmg < 3 and st.side(1 - i).life > dmg:
 						return [0.0, [], -1]
+				var rcd: Dictionary = cost.get("remove_counters", {})
+				if rcd.get("x", false):
+					# the Ballista fires everything: to finish him, at a creature worth it, or once it is heavy
+					dmg = int(p.counters.get(String(rcd.get("counter", "ammo")), 0))
+					var lethal: bool = st.side(1 - i).life <= dmg
+					var kill := false
+					for q in st.side(1 - i).creatures:
+						if q.toughness() - q.damage <= dmg and q.value() >= 3.0:
+							kill = true
+					if not lethal and not kill and dmg < 6:
+						return [0.0, [], -1]
+					if lethal:
+						v += 50.0
 				var ref = st.auto_target(i, e)
 				if ref != null:
 					v += 1.5 + (2.0 if ref.get("kind") == "creature" else 0.0) + 0.6 * maxi(0, dmg - 1)
@@ -314,10 +327,25 @@ static func _ability_choice(st: BattleState, i: int, p, ab: Dictionary) -> Array
 				if st.side(1 - i).lands.size() < 2:
 					return [0.0, [], -1]
 				v += 2.6
+			"destroy":
+				var dref = st.auto_target(i, e)
+				if dref == null:
+					return [0.0, [], -1]
+				var dq = st.find_perm(int(dref.get("uid", -1)))
+				if dq == null or dq.owner == i:
+					return [0.0, [], -1]
+				v += (1.0 if dq.is_token else 3.0) + float(dq.card.get("mana_value", 0)) * 0.6
 			"make_scrap":
 				v += 0.9 * int(e.get("amount", 1))
 			"add_counter":
-				v += 0.6
+				if cost.get("mana_x", false):
+					# load the Ballista with what is left after the turn's plays (main 2), or at his end step
+					var spare: bool = (st.active == i and st.phase == "main2") or (st.active != i and st.step == "end")
+					if not spare or st.max_x(i) < 1:
+						return [0.0, [], -1]
+					v += 0.5 + 0.35 * st.max_x(i)
+				else:
+					v += 0.6
 			"become_servo":
 				# a blocker on the opponent's attack, or a body after combat on your own turn
 				var blocking: bool = st.active != i and not st.attackers.is_empty() and st.phase == "block"
@@ -1258,6 +1286,14 @@ static func respond(st: BattleState, i: int) -> bool:
 					if rv > best_v:
 						best_v = rv
 						best = ["ability", [p.uid, idx], []]
+				continue
+			var cst_x: Dictionary = ab.get("cost", {})
+			if cst_x.get("mana_x", false) or not cst_x.get("remove_counters", {}).is_empty():
+				# the Ballista: load it at his end step; fire it by the same judgement as on our turn
+				var bx := _ability_choice(st, i, p, ab)
+				if float(bx[0]) > best_v:
+					best_v = float(bx[0])
+					best = ["ability", [p.uid, idx], bx[1]]
 				continue
 			st._with_source(p.card)
 			var r := _answer_value(st, i, ab.get("effects", []), p, p.card)
