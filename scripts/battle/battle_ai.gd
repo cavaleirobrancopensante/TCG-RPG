@@ -319,9 +319,11 @@ static func _ability_choice(st: BattleState, i: int, p, ab: Dictionary) -> Array
 			"add_counter":
 				v += 0.6
 			"become_servo":
-				if st.phase != "main2":
+				# a blocker on the opponent's attack, or a body after combat on your own turn
+				var blocking: bool = st.active != i and not st.attackers.is_empty() and st.phase == "block"
+				if not blocking and st.phase != "main2":
 					return [0.0, [], -1]
-				v += 1.1
+				v += 1.6 if blocking else 1.1
 			"drain":
 				v += 1.4 * int(e.get("amount", 1))
 			"discard_enemy":

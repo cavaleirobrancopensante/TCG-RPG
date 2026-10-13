@@ -30,7 +30,7 @@ const KEYWORDS := {
 	"unmoved": "Unmoved: enemy spells and abilities can't tap it, return it to its owner's hand or shrink it.",
 	"converted": "Converted: it can't attack or block.",
 	"flash": "Flash: you may cast it any time you could cast an instant.",
-	"salvage": "Salvage: when this leaves the battlefield, create a Scrap token (a Construct relic: sacrifice it to scry 1; {2}, sacrifice it: draw a card; {1}: it becomes a 1/1 Construct creature, Servo).",
+	"salvage": "Salvage: when this leaves the battlefield, create a Scrap token (a Construct relic: sacrifice it to scry 1; {2}, sacrifice it: draw a card; {1}: it becomes a 1/1 Construct creature, Servo, at any time).",
 	"immortal": "Immortal: if it would be put into a graveyard from anywhere, it is exiled instead. Angels return to Heaven, demons are cast back into Hell; no necromancy can raise them.",
 }
 ## Mechanics named in rules text, explained under the card.
@@ -43,7 +43,7 @@ const MECHANICS := {
 	"Landfall": "Landfall: whenever a land enters the battlefield under your control.",
 	"Offering": "Offering: as you cast it, return any number of your lands to your hand; it costs {1} less for each. You may tap them for mana first.",
 	"Affinity": "Affinity for Constructs: it costs {1} less for each Construct you control.",
-	"Scrap": "Scrap: a Construct relic token. Sacrifice it: scry 1. {2}, sacrifice it: draw a card. {1}: it becomes a 1/1 Construct creature, Servo.",
+	"Scrap": "Scrap: a Construct relic token. Sacrifice it: scry 1. {2}, sacrifice it: draw a card. {1}: it becomes a 1/1 Construct creature, Servo (at any time, even to block).",
 	"Ore": "Ore: a Construct relic token. Sacrifice it: add one mana of any color.",
 	"Scry": "Scry 1: look at the top card of your library; leave it there or put it on the bottom.",
 	"Excess": "Excess: when you discard this card, you may cast it right then for its Excess cost, even on your opponent's turn. If you don't, it goes to your graveyard.",
