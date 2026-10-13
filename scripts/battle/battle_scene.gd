@@ -1517,6 +1517,18 @@ func _resolve_owed() -> void:
 	if not me.hand_owed.is_empty():
 		var t: Dictionary = me.hand_owed[0]
 		var e: Dictionary = t["e"]
+		if String(e.get("action", "")) == "index":
+			var mine: bool = await _ask_two(I18n.t("Index"), I18n.t("Look at target player's library."),
+				I18n.t("Opponent"), I18n.t("Yourself"))
+			var who := 0 if mine else 1
+			var lib := st.library_choices(who)
+			if lib.is_empty():
+				st.index_choose(0, who, "")
+				return
+			var head2 := I18n.t("Your library") if mine else I18n.t("%s's library") % st.side(1).name
+			var pick3 = await _pick_cards(head2, I18n.t("Choose the card to condemn: that player exiles it and every card with the same name from his hand, library and graveyard, then creates a Testimony for each."), lib)
+			st.index_choose(0, who, String(lib[clampi(int(pick3), 0, lib.size() - 1)]))
+			return
 		var opts := st.hand_choices(1)
 		if opts.is_empty():
 			st.hand_choose(0, -1)
@@ -3848,6 +3860,10 @@ func _force_owed() -> void:
 	while not me.trigger_owed.is_empty():
 		st.trigger_choose(0, null)
 	while not me.hand_owed.is_empty():
+		if String(me.hand_owed[0]["e"].get("action", "")) == "index":
+			var lib := st.library_choices(1)
+			st.index_choose(0, 1, String(lib[0]) if not lib.is_empty() else "")
+			continue
 		var opts := st.hand_choices(1)
 		st.hand_choose(0, int(opts[0]) if not opts.is_empty() else -1)
 	while me.edict_owed > 0 and not me.creatures.is_empty():

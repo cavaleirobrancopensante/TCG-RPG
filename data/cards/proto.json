@@ -810,11 +810,10 @@
   "effects": [
    {
     "trigger": "cast",
-    "action": "censure",
-    "index": true
+    "action": "index"
    }
   ],
-  "text": "Look at target opponent's hand. Choose a card other than a land. He exiles it and every card with the same name from his hand, library and graveyard, then creates a Testimony for each card exiled this way.",
+  "text": "Look at target player's library. Choose a card other than a land. That player exiles it and every card with the same name from his hand, library and graveyard, then shuffles and creates a Testimony for each card exiled this way.",
   "flavor": "\"Many of them who had followed curious arts, brought together their books, and burnt them before all.\" (Acts 19:19)",
   "art": "res://art/cards/sanctum_m_003.webp",
   "keywords": [],

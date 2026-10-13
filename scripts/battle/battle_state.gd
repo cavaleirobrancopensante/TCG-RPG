@@ -1892,6 +1892,59 @@ func _hand_pick(i: int, e: Dictionary, source: Perm, hi: int) -> void:
 				make_testimony(j)
 
 
+## The Index: the different cards other than lands in side j's library, sorted by name.
+func library_choices(j: int) -> Array:
+	var out: Array = []
+	for id in side(j).deck:
+		if not CardDB.is_land(id) and not out.has(id):
+			out.append(id)
+	out.sort_custom(func(a, b): return String(CardDB.get_card(a).get("name", a)) < String(CardDB.get_card(b).get("name", b)))
+	return out
+
+
+## The AI's Index pick from side j's library: the card worth most, counting its copies.
+func index_best(j: int) -> String:
+	var best := ""
+	var best_v := -1e9
+	for id in library_choices(j):
+		var c := CardDB.get_card(id)
+		var copies := side(j).deck.count(id) + side(j).hand.count(id)
+		var v := (float(c.get("mana_value", 0)) + (1.0 if c.get("rarity", "") in ["rare", "mythic"] else 0.0) + 1.0) * copies
+		if v > best_v:
+			best_v = v
+			best = id
+	return best
+
+
+## The player's Index choice: whose library (target_side), and which card in it ("" = none).
+func index_choose(i: int, target_side: int, id: String) -> void:
+	var s := side(i)
+	if s.hand_owed.is_empty():
+		return
+	s.hand_owed.pop_front()
+	if id != "" and side(target_side).deck.has(id) and not CardDB.is_land(id):
+		index_choose_now(i, target_side, id)
+	else:
+		_shuffle(side(target_side).deck)
+	check_state()
+
+
+## Exile the card and every card with its name from side j's hand, library and graveyard, then
+## shuffle; side j creates a Testimony for each card exiled.
+func index_choose_now(_i: int, j: int, id: String) -> void:
+	var sj := side(j)
+	var n := 0
+	for zone in [sj.deck, sj.graveyard, sj.hand]:
+		while zone.has(id):
+			zone.erase(id)
+			sj.exile.append(id)
+			n += 1
+	_shuffle(sj.deck)
+	emit({"type": "censured", "side": j, "id": id, "count": n, "index": true})
+	for k in n:
+		make_testimony(j)
+
+
 ## The Inquisitor: destroy the chosen Heretic; with none to judge, tap up to two of his creatures.
 func _inquire(i: int, e: Dictionary, source: Perm, chosen) -> void:
 	var heretic = null
@@ -2450,6 +2503,15 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				make_testimony(who)
 		"censure", "covet", "confess":
 			_ask_hand(i, e, source)
+		"index":
+			if side(i).interactive:
+				side(i).hand_owed.append({"uid": source.uid if source else -1, "e": e})
+				emit({"type": "owe_hand", "side": i})
+			else:
+				var j := 1 - i
+				var pick := index_best(j)
+				if pick != "":
+					index_choose_now(i, j, pick)
 		"edict":
 			var j := 1 - i
 			if side(j).creatures.is_empty():
