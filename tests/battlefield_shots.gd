@@ -84,6 +84,8 @@ func _ready() -> void:
 	await _shot("battlefield")
 	for id in ["proto_c_angel", "proto_c_confessor", "proto_rv_brawler", "proto_rv_masked", "proto_rv_host", "proto_st_ephebe", "proto_st_scholarch", "proto_st_watchman", "proto_st_lochagos", "proto_rv_lord"]:
 		_add(st, 0, id)
+	st.side(0).hand = ["proto_c_censure", "proto_c_exorcism", "proto_c_confessor", "land_sanctum", "proto_c_angel", "proto_c_index",
+		"proto_c_keeper", "proto_c_pilgrim", "proto_c_thurifer", "land_sanctum"]
 	b.refresh()
 	await _shot("crowded")
 	get_tree().quit()

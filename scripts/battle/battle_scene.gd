@@ -253,7 +253,17 @@ func _build_ui() -> void:
 	hand_box.scene = self
 	hand_box.custom_minimum_size.y = CardView.BASE.y * HAND_SCALE + 8
 	hand_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bottom.add_child(hand_box)
+	hand_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# a crowded hand scrolls sideways, with its bar showing, instead of squeezing the cards
+	hand_scroll = ScrollContainer.new()
+	hand_scroll.name = "HandScroll"
+	hand_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hand_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	hand_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	hand_scroll.add_child(hand_box)
+	bottom.add_child(hand_scroll)
+	hand_scroll.resized.connect(func(): hand_box.arrange())
+	DragScroll.attach(self, hand_scroll)
 	_strips.append(bottom)
 
 	stack_view = StackView.new()
@@ -284,6 +294,7 @@ const FIG_MIN := 0.5
 const LOG_MIN_W := 220.0         # the log keeps at least this much of the middle bar
 var fig_zoom := 1.0              # battlefield figures, fitted to the screen's height
 var hand_scale := HAND_SCALE
+var hand_scroll: ScrollContainer
 var _enemy_bar: HBoxContainer
 var _enemy_row: HBoxContainer
 var _player_row: HBoxContainer
@@ -318,9 +329,10 @@ func _relayout(rebuild: bool) -> void:
 	var hand_h := CardView.BASE.y * hand_scale + 14.0
 	var bottom_h := maxf(hand_h, _player_col.get_combined_minimum_size().y)
 	var field_h := floorf((avail - bar_h - mid_h - bottom_h) / 2.0)
-	fig_zoom = clampf((field_h - 6.0) / BattleCard.CARD.y, FIG_MIN, 1.0)
+	fig_zoom = clampf((field_h - 6.0 - SCROLL_BAR_H) / BattleCard.CARD.y, FIG_MIN, 1.0)
 	var land_zoom := clampf(field_h / LandStrip.BASE_H, FIG_MIN, 1.0)
 	hand_box.custom_minimum_size.y = hand_h
+	hand_scroll.custom_minimum_size.y = hand_h + SCROLL_BAR_H
 	for row in [_enemy_row, _player_row]:
 		row.custom_minimum_size.y = minf(field_h, BattleCard.CARD.y * fig_zoom + 8.0)
 		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -572,6 +584,7 @@ func _field_row(lands: LandStrip, field: _Field) -> HBoxContainer:
 	field.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	sc.add_child(field)
 	row.add_child(sc)
+	DragScroll.attach(self, sc)
 	sc.resized.connect(func(): if st != null: _restack(1 if field == enemy_field else 0))
 	return row
 
@@ -877,6 +890,7 @@ func refresh() -> void:
 const STACK_MAX := 4
 const TOKEN_STACK_MAX := 10
 const STACK_STEP := Vector2(24, 0)
+const SCROLL_BAR_H := 12.0        # room kept under a row that may scroll, for its bar
 const FIT_MIN := 0.62            # cards shrink to this much of their size before the row scrolls
 var side_zoom := [1.0, 1.0]
 const TOKEN_STEP := Vector2(14, 0)
@@ -926,7 +940,6 @@ func _restack(i: int) -> void:
 	if avail > 10.0 and need > avail:
 		z = maxf(fig_zoom * FIT_MIN, fig_zoom * avail / need)
 	side_zoom[i] = z
-	field.custom_minimum_size.x = need * z / fig_zoom if avail > 10.0 and need * z / fig_zoom > avail else 0.0
 	for k in range(slots.size()):
 		if k >= groups.size():
 			slots[k].queue_free()      # its live figures were moved to other stacks above
@@ -936,6 +949,11 @@ func _restack(i: int) -> void:
 		for u in uids:
 			figures[u].set_zoom(z)
 		slots[k].arrange(uids.map(func(u): return figures[u]), (TOKEN_STEP if tok else STACK_STEP) * z, z)
+	# still too many at the smallest size: the row grows past the screen and scrolls, its bar showing
+	var width := 0.0
+	for k in mini(slots.size(), groups.size()):
+		width += slots[k].custom_minimum_size.x + 6.0
+	field.custom_minimum_size.x = width + 6.0 if avail > 10.0 and width > avail else 0.0
 	field.queue_sort()
 
 
@@ -1332,8 +1350,17 @@ class _HandRow extends Control:
 		if cards.is_empty():
 			return
 		var widths: Array = cards.map(func(c): return (c as Control).size.x)
+		# more cards than fit: the row grows past the screen and scrolls, its bar showing
+		var sc := get_parent() as ScrollContainer
+		var avail: float = sc.size.x if sc else size.x
+		var total := 16.0
+		for w in widths:
+			total += float(w) + 16.0
+		var want := total if total > avail + 1.0 else 0.0
+		if not is_equal_approx(custom_minimum_size.x, want):
+			custom_minimum_size.x = want
 		var mid := scene._screen_mid_in(self) if scene else size.x * 0.5
-		var xs := BattleScene.spread(widths, size.x - 16.0, mid - 8.0, 16.0)   # room for the glow between cards
+		var xs := BattleScene.spread(widths, maxf(size.x, want) - 16.0, mid - 8.0, 16.0)   # room for the glow between cards
 		for k in cards.size():
 			var c: Control = cards[k]
 			c.position = Vector2(xs[k] + 8.0, maxf(0.0, (size.y - c.size.y) * 0.5))
