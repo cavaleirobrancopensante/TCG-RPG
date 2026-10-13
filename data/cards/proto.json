@@ -482,7 +482,8 @@
   "art": "res://art/cards/abyss_u_007.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_a_skeleton",
@@ -585,7 +586,8 @@
   "flavor": "\"Only a little sin, to begin with. They always say yes to a little.\"",
   "art": "res://art/cards/abyss_c_022.webp",
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_a_wrath",
@@ -624,7 +626,8 @@
   "flavor": "\"Give me one of your men, and I will make another of them a monster.\"",
   "art": "res://art/cards/abyss_c_024.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_a_hold",
@@ -662,7 +665,8 @@
   "flavor": "\"He prayed for strength. We gave him ours, and kept the rest of him.\"",
   "art": "res://art/cards/abyss_r_002.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_a_bargain",
@@ -745,7 +749,8 @@
   "text": "Target creature an opponent controls gets -3/-3 until end of turn.",
   "flavor": "\"Your saints bleed like any other man. I only remind them.\"",
   "art": "res://art/cards/abyss_c_014.webp",
-  "proto": true
+  "proto": true,
+  "set": 1
  },
  {
   "id": "proto_c_thurifer",
@@ -771,7 +776,8 @@
   "art": "res://art/cards/sanctum_c_009.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_c_censure",
@@ -794,7 +800,8 @@
   "art": "res://art/cards/sanctum_c_014.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_c_index",
@@ -818,7 +825,8 @@
   "art": "res://art/cards/sanctum_m_003.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_c_keeper",
@@ -855,7 +863,8 @@
   "keywords": [],
   "effects": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_c_pilgrim",
@@ -883,7 +892,8 @@
   "art": "res://art/cards/sanctum_c_005.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_c_pilgrim_b",
@@ -940,7 +950,8 @@
   "art": "res://art/cards/sanctum_c_017.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_c_confessor",
@@ -966,7 +977,8 @@
   "art": "res://art/cards/sanctum_u_019.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_c_inquisitor",
@@ -1016,7 +1028,8 @@
      }
     ]
    }
-  ]
+  ],
+  "set": 1
  },
  {
   "id": "proto_c_angel",
@@ -1041,7 +1054,8 @@
   "art": "res://art/cards/sanctum_m_001.webp",
   "effects": [],
   "proto": true,
-  "mana_value": 7
+  "mana_value": 7,
+  "set": 1
  },
  {
   "id": "proto_p_cultist",
@@ -1074,7 +1088,8 @@
   "art": "res://art/cards/abyss_c_001.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_p_covet",
@@ -1102,7 +1117,8 @@
   "art": "res://art/cards/abyss_c_017.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_p_bargain",
@@ -1130,7 +1146,8 @@
   "art": "res://art/cards/abyss_c_015.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_p_hierophant",
@@ -1157,7 +1174,8 @@
   "art": "res://art/cards/abyss_u_001.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_p_summoner",
@@ -1185,7 +1203,8 @@
   "art": "res://art/cards/abyss_c_007.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_p_azrakel",
@@ -1215,7 +1234,8 @@
   "flavor": "\"Kneel, and I will give you the world. I have done it before.\"",
   "art": "res://art/cards/abyss_m_001.webp",
   "proto": true,
-  "mana_value": 5
+  "mana_value": 5,
+  "set": 1
  },
  {
   "id": "proto_c_cleansing",
@@ -1257,7 +1277,8 @@
   "keywords": [],
   "effects": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_p_bones",
@@ -1281,7 +1302,8 @@
   "keywords": [],
   "effects": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_p_altar",
@@ -1314,7 +1336,8 @@
   "keywords": [],
   "effects": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_p_price",
@@ -1346,7 +1369,8 @@
   "art": "res://art/cards/abyss_u_008.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_p_unquiet",
@@ -1373,7 +1397,8 @@
   "art": "res://art/cards/abyss_c_018.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_p_brute",
@@ -1407,7 +1432,8 @@
   "art": "res://art/cards/abyss_c_008.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_p_desecration",
@@ -1433,7 +1459,8 @@
   "art": "res://art/cards/abyss_c_020.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_p_wings",
@@ -1472,7 +1499,8 @@
   "flavor": "\"You wanted to rise above them. Now you will.\"",
   "art": "res://art/cards/abyss_u_015.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_rv_brawler",
@@ -1500,7 +1528,8 @@
   "art": "res://art/cards/revel_c_001.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_rv_masked",
@@ -1527,7 +1556,8 @@
   "art": "res://art/cards/revel_c_009.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_rv_fireeater",
@@ -1551,7 +1581,8 @@
   "art": "res://art/cards/revel_c_007.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_rv_host",
@@ -1584,7 +1615,8 @@
   "art": "res://art/cards/revel_u_004.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_rv_heckler",
@@ -1613,7 +1645,8 @@
   "art": "res://art/cards/revel_c_021.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_rv_lord",
@@ -1651,7 +1684,8 @@
   "art": "res://art/cards/revel_u_017.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_rv_archduke",
@@ -1678,7 +1712,8 @@
    "trample"
   ],
   "proto": true,
-  "mana_value": 7
+  "mana_value": 7,
+  "set": 1
  },
  {
   "id": "proto_rv_toast",
@@ -1708,7 +1743,8 @@
   "art": "res://art/cards/revel_c_013.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_rv_brandy",
@@ -1741,7 +1777,8 @@
   "flashback": {
    "R": 1,
    "generic": 1
-  }
+  },
+  "set": 1
  },
  {
   "id": "proto_rv_flagon",
@@ -1775,7 +1812,8 @@
   "flashback": {
    "R": 1,
    "generic": 3
-  }
+  },
+  "set": 1
  },
  {
   "id": "proto_rv_cask",
@@ -1811,7 +1849,8 @@
   "art": "res://art/cards/revel_u_012.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_st_ephebe",
@@ -1840,7 +1879,8 @@
   "art": "res://art/cards/lyceum_c_002.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_st_polemarch",
@@ -1870,7 +1910,8 @@
   "art": "res://art/cards/lyceum_u_014.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_st_lamplight",
@@ -1901,7 +1942,8 @@
   "flashback": {
    "U": 1,
    "generic": 3
-  }
+  },
+  "set": 1
  },
  {
   "id": "proto_st_gate",
@@ -1927,7 +1969,8 @@
   "art": "res://art/cards/lyceum_c_018.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_st_reply",
@@ -1958,7 +2001,8 @@
   "art": "res://art/cards/lyceum_u_008.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_st_shieldwall",
@@ -1988,7 +2032,8 @@
   "art": "res://art/cards/lyceum_c_005.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_st_watchman",
@@ -2018,7 +2063,8 @@
    "flash"
   ],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_st_scholarch",
@@ -2046,7 +2092,8 @@
   "art": "res://art/cards/lyceum_u_017.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_st_lochagos",
@@ -2081,7 +2128,8 @@
   "art": "res://art/cards/lyceum_u_015.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_st_navarch",
@@ -2108,7 +2156,8 @@
    "flash"
   ],
   "proto": true,
-  "mana_value": 7
+  "mana_value": 7,
+  "set": 1
  },
  {
   "id": "proto_ow_druid",
@@ -2143,7 +2192,8 @@
   "art": "res://art/cards/wild_c_002.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_ow_boar",
@@ -2173,7 +2223,8 @@
   "art": "res://art/cards/wild_c_003.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_ow_wolf",
@@ -2202,7 +2253,8 @@
   "art": "res://art/cards/wild_c_021.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_ow_elder",
@@ -2244,7 +2296,8 @@
   "art": "res://art/cards/wild_u_005.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_ow_stag",
@@ -2272,7 +2325,8 @@
   "art": "res://art/cards/wild_c_006.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 6
+  "mana_value": 6,
+  "set": 1
  },
  {
   "id": "proto_ow_wyrm",
@@ -2303,7 +2357,8 @@
    "immortal"
   ],
   "proto": true,
-  "mana_value": 8
+  "mana_value": 8,
+  "set": 1
  },
  {
   "id": "proto_ow_hunt",
@@ -2333,7 +2388,8 @@
   "art": "res://art/cards/wild_r_007.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_ow_rites",
@@ -2374,7 +2430,8 @@
   "art": "res://art/cards/wild_r_008.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_ow_leylines",
@@ -2405,7 +2462,8 @@
   "art": "res://art/cards/wild_r_009.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_ow_spirit",
@@ -2447,7 +2505,8 @@
    "immortal"
   ],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_te_sentry",
@@ -2469,7 +2528,8 @@
    "salvage"
   ],
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_te_engine",
@@ -2495,7 +2555,8 @@
   "art": "res://art/cards/machine_u_010.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_te_foreman",
@@ -2522,7 +2583,8 @@
   "art": "res://art/cards/machine_u_015.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_te_ballista",
@@ -2606,7 +2668,8 @@
   "art": "res://art/cards/machine_u_001.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_te_lancer",
@@ -2632,7 +2695,8 @@
    "salvage"
   ],
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_te_writ",
@@ -2657,7 +2721,8 @@
   "art": "res://art/cards/machine_c_015.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_te_reclaim",
@@ -2688,7 +2753,8 @@
   "art": "res://art/cards/machine_c_014.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_te_automaton",
@@ -2719,7 +2785,8 @@
    "salvage"
   ],
   "proto": true,
-  "mana_value": 8
+  "mana_value": 8,
+  "set": 1
  },
  {
   "id": "proto_te_mule",
@@ -2748,7 +2815,8 @@
    "salvage"
   ],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_te_overseer",
@@ -2776,7 +2844,8 @@
   "art": "res://art/cards/machine_u_002.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_c_martyr",
@@ -2807,7 +2876,8 @@
   "flavor": "\"Be thou faithful until death: and I will give thee the crown of life.\" (Apocalypse 2:10)",
   "art": "res://art/cards/sanctum_c_001.webp",
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_c_sergeant",
@@ -2831,7 +2901,8 @@
   "flavor": "\"Watch ye, stand fast in the faith, do manfully, and be strengthened.\" (1 Corinthians 16:13)",
   "art": "res://art/cards/sanctum_c_030.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_c_sergeant_b",
@@ -2884,7 +2955,8 @@
   "flavor": "\"I was sick, and you visited me.\" (Matthew 25:36)",
   "art": "res://art/cards/sanctum_c_011.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_c_cherub",
@@ -2915,7 +2987,8 @@
   "flavor": "\"Praise ye him, all his angels: praise ye him, all his hosts.\" (Psalm 148:2)",
   "art": "res://art/cards/sanctum_u_016.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_c_bishop",
@@ -2945,7 +3018,8 @@
   "flavor": "\"Take heed to yourselves, and to the whole flock, wherein the Holy Ghost hath placed you bishops.\" (Acts 20:28)",
   "art": "res://art/cards/sanctum_u_004.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_c_crusader",
@@ -2969,7 +3043,8 @@
   "flavor": "\"Take unto you the armour of God.\" (Ephesians 6:13)",
   "art": "res://art/cards/sanctum_c_022.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_c_crusader_b",
@@ -3028,7 +3103,8 @@
   "flavor": "\"All that take the sword shall perish with the sword.\" (Matthew 26:52)",
   "art": "res://art/cards/sanctum_u_008.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_c_arms",
@@ -3062,7 +3138,8 @@
   "flavor": "\"Blessed be the Lord my God, who teacheth my hands to fight.\" (Psalm 143:1)",
   "art": "res://art/cards/sanctum_c_025.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_c_penance",
@@ -3091,7 +3168,8 @@
   "flavor": "\"Do penance: for the kingdom of heaven is at hand.\" (Matthew 3:2)",
   "art": "res://art/cards/sanctum_c_029.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_c_ground",
@@ -3121,7 +3199,8 @@
   "flavor": "\"Put off the shoes from thy feet: for the place whereon thou standest is holy ground.\" (Exodus 3:5)",
   "art": "res://art/cards/sanctum_c_019.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_p_scribe",
@@ -3150,7 +3229,8 @@
   "flavor": "\"Write it plainly. They always say they did not read the small print.\"",
   "art": "res://art/cards/abyss_c_003.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_p_despoiler",
@@ -3182,7 +3262,8 @@
   "flavor": "He sells the gold of the chalice and keeps the stones for himself.",
   "art": "res://art/cards/abyss_u_003.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_rv_juggler",
@@ -3216,7 +3297,8 @@
   "flavor": "Six knives in the air, and only five of them came down.",
   "art": "res://art/cards/revel_r_001.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_rv_satyr",
@@ -3244,7 +3326,8 @@
   "flavor": "Every broken cup is a song to him.",
   "art": "res://art/cards/revel_c_033.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_rv_masquerade",
@@ -3276,7 +3359,8 @@
   "flavor": "Behind the mask nobody owes anything, least of all the host.",
   "art": "res://art/cards/revel_u_014.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_rv_champion",
@@ -3303,7 +3387,8 @@
   "flavor": "Undefeated at the long table, and at the door afterwards.",
   "art": "res://art/cards/revel_c_010.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_rv_gambler",
@@ -3328,7 +3413,8 @@
   "flavor": "Everything on one throw. Then everything on the next.",
   "art": "res://art/cards/revel_c_031.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_rv_volley",
@@ -3358,7 +3444,8 @@
   "flavor": "The crowd cheered the first burst. The guards cheered rather less.",
   "art": "res://art/cards/revel_c_014.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_rv_bottle",
@@ -3389,7 +3476,8 @@
   "flavor": "The first bottle was for courage. The second was for everything after.",
   "art": "res://art/cards/revel_u_008.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_rv_masks",
@@ -3416,7 +3504,8 @@
   "flavor": "Put one on, and you are someone with nothing to lose.",
   "art": "res://art/cards/revel_u_013.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_rv_mock",
@@ -3445,7 +3534,8 @@
   "flavor": "\"Live according to nature,\" they said, and the whole tavern took them at their word.",
   "art": "res://art/cards/revel_c_016.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_st_bronze",
@@ -3472,7 +3562,8 @@
   "flavor": "\"Come back with your shield, or on it.\" (a Spartan mother)",
   "art": "res://art/cards/lyceum_c_007.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_st_questioner",
@@ -3500,7 +3591,8 @@
   "flavor": "\"The unexamined life is not worth living.\" (Socrates, in Plato's Apology)",
   "art": "res://art/cards/lyceum_c_024.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_st_owl",
@@ -3534,7 +3626,8 @@
   "flavor": "The owl of Minerva spreads its wings only with the falling of the dusk.",
   "art": "res://art/cards/lyceum_u_005.webp",
   "proto": true,
-  "mana_value": 5
+  "mana_value": 5,
+  "set": 1
  },
  {
   "id": "proto_st_rebuke",
@@ -3560,7 +3653,8 @@
   "flavor": "\"Say nothing in anger that you would not say in calm.\"",
   "art": "res://art/cards/lyceum_c_012.webp",
   "proto": true,
-  "mana_value": 1
+  "mana_value": 1,
+  "set": 1
  },
  {
   "id": "proto_st_letters",
@@ -3590,7 +3684,8 @@
   "flavor": "\"Hold every hour in your grasp.\" (Seneca, Letters to Lucilius 1)",
   "art": "res://art/cards/lyceum_u_010.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_st_apatheia",
@@ -3625,7 +3720,8 @@
   "flavor": "\"Nothing outside the will can hinder or harm the will.\" (Epictetus)",
   "art": "res://art/cards/lyceum_r_006.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_st_drill",
@@ -3664,7 +3760,8 @@
   "flavor": "Shield to shield, a thousand times, until the thousandth looks like the first.",
   "art": "res://art/cards/lyceum_c_026.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_st_calm",
@@ -3690,7 +3787,8 @@
   "flavor": "\"How easy it is to repel and wipe away every impression which is troublesome.\" (Marcus Aurelius)",
   "art": "res://art/cards/lyceum_u_011.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_st_tablet",
@@ -3721,7 +3819,8 @@
   "flavor": "Cut in bronze and set in the market: so many dishes at a feast, and no more.",
   "art": "res://art/cards/lyceum_u_013.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_ow_archdruid",
@@ -3757,7 +3856,8 @@
   "flavor": "He cuts the mistletoe with a golden sickle, and the oak forgives him.",
   "art": "res://art/cards/wild_r_001.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_ow_huntsman",
@@ -3785,7 +3885,8 @@
   "flavor": "He knows the deer paths, and the paths of men who hunt in his wood.",
   "art": "res://art/cards/wild_c_010.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_ow_greywolf",
@@ -3828,7 +3929,8 @@
   "flavor": "Where the old one runs, the young ones follow.",
   "art": "res://art/cards/wild_u_015.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_ow_bear",
@@ -3856,7 +3958,8 @@
   "flavor": "It has slept under the tor since before the stones were raised.",
   "art": "res://art/cards/wild_r_013.webp",
   "proto": true,
-  "mana_value": 5
+  "mana_value": 5,
+  "set": 1
  },
  {
   "id": "proto_ow_antler",
@@ -3889,7 +3992,8 @@
   "flavor": "The fen folk leave him the first calf of spring, and do not ask what he gives back.",
   "art": "res://art/cards/wild_r_003.webp",
   "proto": true,
-  "mana_value": 5
+  "mana_value": 5,
+  "set": 1
  },
  {
   "id": "proto_ow_greenman",
@@ -3937,7 +4041,8 @@
   "flavor": "His face looks out of every hedge, and every hedge looks back.",
   "art": "res://art/cards/wild_u_003.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_ow_trial",
@@ -3964,7 +4069,8 @@
   "flavor": "The wood settles its quarrels the old way.",
   "art": "res://art/cards/wild_u_010.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_ow_earth",
@@ -3991,7 +4097,8 @@
   "flavor": "What flies must land, and the wood is patient.",
   "art": "res://art/cards/wild_c_016.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_ow_awaken",
@@ -4024,7 +4131,8 @@
   "flavor": "The oaks remember every axe. Tonight they walk.",
   "art": "res://art/cards/wild_m_004.webp",
   "proto": true,
-  "mana_value": 7
+  "mana_value": 7,
+  "set": 1
  },
  {
   "id": "proto_ow_rust",
@@ -4055,7 +4163,8 @@
   "flavor": "Iron is young. The root is old, and has all the time it needs.",
   "art": "res://art/cards/wild_c_017.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_te_hawk",
@@ -4079,7 +4188,8 @@
   "flavor": "It sees everything, and files a report on most of it.",
   "art": "res://art/cards/machine_c_002.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_te_smelter",
@@ -4117,7 +4227,8 @@
   "flavor": "Nothing is wasted. Everything is eventually Smelter Automaton.",
   "art": "res://art/cards/machine_c_012.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_te_linemaster",
@@ -4147,7 +4258,8 @@
   "flavor": "\"A machine is only as good as the man who counts its rivets.\"",
   "art": "res://art/cards/machine_u_014.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_te_welder",
@@ -4179,7 +4291,8 @@
   "flavor": "It joins steel to steel, and enemies to the floor.",
   "art": "res://art/cards/machine_r_004.webp",
   "proto": true,
-  "mana_value": 5
+  "mana_value": 5,
+  "set": 1
  },
  {
   "id": "proto_te_ledger",
@@ -4216,7 +4329,8 @@
   "flavor": "Every part that leaves the floor is entered in the book, and the book is never wrong.",
   "art": "res://art/cards/machine_u_012.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_te_pauldron",
@@ -4251,7 +4365,8 @@
   "flavor": "Forty rivets, each one counted, each one entered in the ledger.",
   "art": "res://art/cards/machine_u_019.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_te_geartrap",
@@ -4277,7 +4392,8 @@
   "flavor": "The springs are wound by apprentices. The release is set by accountants.",
   "art": "res://art/cards/machine_c_018.webp",
   "proto": true,
-  "mana_value": 3
+  "mana_value": 3,
+  "set": 1
  },
  {
   "id": "proto_te_discharge",
@@ -4308,7 +4424,8 @@
   "flavor": "\"When you can measure what you are speaking about, you know something about it.\" (Lord Kelvin)",
   "art": "res://art/cards/machine_c_017.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_te_bulk",
@@ -4337,7 +4454,8 @@
   "flavor": "\"Order by the gross. The unit price is a sin.\" (a Foundry purchaser)",
   "art": "res://art/cards/machine_u_009.webp",
   "proto": true,
-  "mana_value": 4
+  "mana_value": 4,
+  "set": 1
  },
  {
   "id": "proto_te_felling",
@@ -4363,7 +4481,8 @@
   "flavor": "The survey shows no sacred grove. The survey is always right.",
   "art": "res://art/cards/machine_c_026.webp",
   "proto": true,
-  "mana_value": 2
+  "mana_value": 2,
+  "set": 1
  },
  {
   "id": "proto_g_penitent",
@@ -4393,7 +4512,8 @@
   "art": "res://art/cards/gold_sanctum_abyss.webp",
   "proto": true,
   "mana_value": 3,
-  "faction2": "abyss"
+  "faction2": "abyss",
+  "set": 1
  },
  {
   "id": "proto_g_boethius",
@@ -4424,7 +4544,8 @@
   "art": "res://art/cards/gold_sanctum_lyceum.webp",
   "proto": true,
   "mana_value": 4,
-  "faction2": "lyceum"
+  "faction2": "lyceum",
+  "set": 1
  },
  {
   "id": "proto_g_friar",
@@ -4465,7 +4586,8 @@
   "art": "res://art/cards/gold_sanctum_wild.webp",
   "proto": true,
   "mana_value": 3,
-  "faction2": "wild"
+  "faction2": "wild",
+  "set": 1
  },
  {
   "id": "proto_g_shrovetide",
@@ -4498,7 +4620,8 @@
   "art": "res://art/cards/gold_sanctum_revel.webp",
   "proto": true,
   "mana_value": 3,
-  "faction2": "revel"
+  "faction2": "revel",
+  "set": 1
  },
  {
   "id": "proto_g_clock",
@@ -4535,7 +4658,8 @@
   "art": "res://art/cards/gold_sanctum_machine.webp",
   "proto": true,
   "mana_value": 3,
-  "faction2": "machine"
+  "faction2": "machine",
+  "set": 1
  },
  {
   "id": "proto_g_gallows",
@@ -4568,7 +4692,8 @@
   "art": "res://art/cards/gold_abyss_wild.webp",
   "proto": true,
   "mana_value": 4,
-  "faction2": "wild"
+  "faction2": "wild",
+  "set": 1
  },
  {
   "id": "proto_g_maskedball",
@@ -4599,7 +4724,8 @@
   "art": "res://art/cards/gold_abyss_revel.webp",
   "proto": true,
   "mana_value": 3,
-  "faction2": "revel"
+  "faction2": "revel",
+  "set": 1
  },
  {
   "id": "proto_g_apostate",
@@ -4639,7 +4765,8 @@
   "art": "res://art/cards/gold_abyss_lyceum.webp",
   "proto": true,
   "mana_value": 4,
-  "faction2": "abyss"
+  "faction2": "abyss",
+  "set": 1
  },
  {
   "id": "proto_g_bonemill",
@@ -4666,7 +4793,8 @@
   "art": "res://art/cards/gold_abyss_machine.webp",
   "proto": true,
   "mana_value": 4,
-  "faction2": "machine"
+  "faction2": "machine",
+  "set": 1
  },
  {
   "id": "proto_g_satyrking",
@@ -4698,7 +4826,8 @@
   "art": "res://art/cards/gold_wild_revel.webp",
   "proto": true,
   "mana_value": 4,
-  "faction2": "wild"
+  "faction2": "wild",
+  "set": 1
  },
  {
   "id": "proto_g_planter",
@@ -4728,7 +4857,8 @@
   "art": "res://art/cards/gold_wild_lyceum.webp",
   "proto": true,
   "mana_value": 3,
-  "faction2": "lyceum"
+  "faction2": "lyceum",
+  "set": 1
  },
  {
   "id": "proto_g_millwright",
@@ -4758,7 +4888,8 @@
   "art": "res://art/cards/gold_wild_machine.webp",
   "proto": true,
   "mana_value": 3,
-  "faction2": "machine"
+  "faction2": "machine",
+  "set": 1
  },
  {
   "id": "proto_g_epicurean",
@@ -4788,7 +4919,8 @@
   "art": "res://art/cards/gold_revel_lyceum.webp",
   "proto": true,
   "mana_value": 3,
-  "faction2": "revel"
+  "faction2": "revel",
+  "set": 1
  },
  {
   "id": "proto_g_pyro",
@@ -4825,7 +4957,8 @@
   "art": "res://art/cards/gold_revel_machine.webp",
   "proto": true,
   "mana_value": 4,
-  "faction2": "machine"
+  "faction2": "machine",
+  "set": 1
  },
  {
   "id": "proto_g_rhodes",
@@ -4869,6 +5002,7 @@
   "art": "res://art/cards/gold_lyceum_machine.webp",
   "proto": true,
   "mana_value": 5,
-  "faction2": "machine"
+  "faction2": "machine",
+  "set": 1
  }
 ]

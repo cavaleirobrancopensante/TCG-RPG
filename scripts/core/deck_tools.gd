@@ -401,13 +401,19 @@ static func _curve_slot(c: Dictionary) -> int:
 ## A wanderer's deck that keeps his name's promise: on-theme cards first, then the faith's
 ## other cards by curve, the copies-by-level rule, and lands in proportion. Unknown themes fall
 ## back to a plain enemy deck of a random faith.
+## How many copies of a card a wanderer of this level runs. Twenty cards a faith: even a first
+## wanderer runs two of each (1.80).
+static func theme_copies(level: int) -> int:
+	return clampi(2 + level / 2, 2, MAX_COPIES)
+
+
 static func themed_deck(theme_id: String, level: int, rng: RandomNumberGenerator) -> Dictionary:
 	var th := theme(theme_id)
 	if th.is_empty():
 		return enemy_deck(Factions.ORDER[rng.randi_range(0, Factions.ORDER.size() - 1)], level, rng)
 	var faith: String = th["faith"]
 	var splash: String = th.get("splash", "")
-	var copies := clampi(1 + level / 2, 1, MAX_COPIES)
+	var copies := theme_copies(level)
 	var max_rares := clampi(level + 1, 1, 6)
 	var max_mythics := 0 if level < 3 else (1 if level < 5 else 2)
 	var allowed := [faith]
@@ -471,6 +477,8 @@ static func themed_deck(theme_id: String, level: int, rng: RandomNumberGenerator
 			n = mini(n, TARGET_SPELLS - MIN_CREATURES - int(st["noncreature"]))
 		if slot >= 5:
 			n = mini(n, int(CURVE[5]) + int(CURVE[6]) - int(st["slots"][5]) - int(st["slots"][6]))
+		if slot == 6:
+			n = mini(n, int(CURVE[6]) - int(st["slots"][6]))   # four copies of a big card would overrun the top
 		if slot >= 2 and slot <= 4:
 			n = mini(n, int(CURVE[slot]) + over - int(st["slots"][slot]))
 		# the tribe's own rares are what the name promises: one more is allowed for them
@@ -595,6 +603,17 @@ static func theme_look(theme_id: String, rng: RandomNumberGenerator) -> String:
 			var c := CardDB.get_card(id)
 			if c["type"] == "creature" and is_on_theme(id, theme_id) and c.get("faction2", "") == "":
 				pool.append(id)
+	if pool.is_empty():
+		# no plain on-theme man: any creature of the theme, then any common creature of the faith
+		for r in ["rare", "mythic"]:
+			for id in CardDB.pools[th["faith"]][r]:
+				if CardDB.get_card(id)["type"] == "creature" and is_on_theme(id, theme_id):
+					pool.append(id)
+	if pool.is_empty():
+		for id in CardDB.pools[th["faith"]]["common"]:
+			var c2 := CardDB.get_card(id)
+			if c2["type"] == "creature" and c2.get("faction2", "") == "":
+				pool.append(id)
 	return pool[rng.randi_range(0, pool.size() - 1)] if not pool.is_empty() else ""
 
 
@@ -690,32 +709,32 @@ static func premade_decks() -> Array:
 ## The redesign's test decks (cards in data/cards/proto.json, outside every pool): the Church's
 ## Peace and Crusade, the Pact's possessions, the Revel's Excess against the Stoa's Phalanx. Quick duel only.
 const PROTO_DECKS := {
-	"Prototype: Church, Holy Office": {"faith": "sanctum", "cards": {
+	"Church, Holy Office": {"faith": "sanctum", "cards": {
 		"proto_c_thurifer": 3, "proto_c_martyr": 3, "proto_c_censure": 3, "proto_c_sergeant": 3, "proto_c_keeper": 2,
 		"proto_c_hospitaller": 2, "proto_c_cherub": 2, "proto_c_exorcism": 3, "proto_c_confessor": 2, "proto_c_penance": 2,
 		"proto_c_arms": 1, "proto_c_bishop": 2, "proto_c_inquisitor": 2, "proto_c_crusader": 2, "proto_c_sword": 2,
 		"proto_c_index": 1, "proto_c_angel": 1}},
-	"Prototype: Pact, Possession": {"faith": "abyss", "cards": {
+	"Pact, Possession": {"faith": "abyss", "cards": {
 		"proto_p_cultist": 4, "proto_p_covet": 3, "proto_a_whisper": 3, "proto_p_bones": 2, "proto_p_scribe": 3,
 		"proto_a_robber": 2, "proto_a_curse": 1, "proto_p_price": 2, "proto_a_wrath": 2, "proto_p_hierophant": 2,
 		"proto_p_altar": 1, "proto_p_summoner": 1, "proto_a_hold": 1, "proto_p_azrakel": 1, "proto_p_bargain": 2,
 		"proto_p_unquiet": 2, "proto_p_brute": 2, "proto_p_wings": 2}},
-	"Prototype: Revel, Midnight Revel": {"faith": "revel", "cards": {
+	"Revel, Midnight Revel": {"faith": "revel", "cards": {
 		"proto_rv_brawler": 4, "proto_rv_masked": 3, "proto_rv_fireeater": 3, "proto_rv_juggler": 3, "proto_rv_satyr": 2,
 		"proto_rv_host": 2, "proto_rv_masquerade": 2, "proto_rv_champion": 2, "proto_rv_lord": 2, "proto_rv_archduke": 1,
 		"proto_rv_toast": 3, "proto_rv_brandy": 2, "proto_rv_flagon": 2, "proto_rv_volley": 2, "proto_rv_bottle": 1,
 		"proto_rv_gambler": 1, "proto_rv_masks": 1}},
-	"Prototype: Stoa, the Phalanx": {"faith": "lyceum", "cards": {
+	"Stoa, the Phalanx": {"faith": "lyceum", "cards": {
 		"proto_st_ephebe": 3, "proto_st_bronze": 4, "proto_st_shieldwall": 3, "proto_st_watchman": 3, "proto_st_questioner": 2,
 		"proto_st_polemarch": 2, "proto_st_scholarch": 2, "proto_st_lochagos": 2, "proto_st_owl": 2, "proto_st_rebuke": 2,
 		"lyceum_c_030": 1, "proto_st_letters": 2, "proto_st_apatheia": 2, "proto_st_drill": 2, "proto_st_calm": 2,
 		"proto_st_reply": 1, "proto_st_gate": 1}},
-	"Prototype: Old Ways, the Sacred Grove": {"faith": "wild", "cards": {
+	"Old Ways, the Sacred Grove": {"faith": "wild", "cards": {
 		"proto_ow_druid": 4, "proto_ow_boar": 4, "proto_ow_archdruid": 2, "proto_ow_huntsman": 3, "proto_ow_wolf": 2,
 		"proto_ow_greywolf": 2, "proto_ow_elder": 2, "proto_ow_greenman": 2, "proto_ow_bear": 2, "proto_ow_antler": 1,
 		"proto_ow_stag": 2, "proto_ow_wyrm": 1, "proto_ow_hunt": 2, "proto_ow_trial": 2, "proto_ow_rites": 2,
 		"proto_ow_leylines": 1, "proto_ow_spirit": 1, "proto_ow_awaken": 1}},
-	"Prototype: Technocracy, the Foundry": {"faith": "machine", "cards": {
+	"Technocracy, the Foundry": {"faith": "machine", "cards": {
 		"proto_te_sentry": 4, "proto_te_mule": 4, "proto_te_smelter": 2, "proto_te_engine": 2, "proto_te_foreman": 2,
 		"proto_te_overseer": 2, "proto_te_linemaster": 3, "proto_te_lancer": 3, "proto_te_welder": 2, "proto_te_ballista": 1,
 		"proto_te_automaton": 2, "proto_te_pauldron": 2, "proto_te_geartrap": 3, "proto_te_discharge": 4}},

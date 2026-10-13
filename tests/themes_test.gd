@@ -29,7 +29,7 @@ func _ready() -> void:
 			for rep in 3:
 				var deck := DeckTools.themed_deck(tid, lvl, rng)
 				var tag := "%s lv%d" % [tid, lvl]
-				var copies := clampi(1 + lvl / 2, 1, DeckTools.MAX_COPIES)
+				var copies := DeckTools.theme_copies(lvl)
 				var owned := {}
 				for id in deck:
 					owned[id] = int(deck[id])
@@ -53,7 +53,8 @@ func _ready() -> void:
 				var share := float(on) / maxf(1.0, float(spells))
 				_check(share >= 0.4, "%s only %.0f%% on theme" % [tag, share * 100.0])
 				var mv := DeckTools.average_mv(deck)
-				_check(mv <= 3.6, "%s average mana value %.2f" % [tag, mv])
+				# Offering and Affinity cards (Stag, Wyrm, Awaken, Great Automaton) cost less than printed (1.80)
+				_check(mv <= 3.75, "%s average mana value %.2f" % [tag, mv])
 				_check(creatures >= 12, "%s only %d creatures" % [tag, creatures])
 				# lands: exactly the colours the spells use, two only with a splash
 				var cols := DeckTools.deck_colours(deck)

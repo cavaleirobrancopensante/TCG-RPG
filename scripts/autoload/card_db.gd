@@ -58,8 +58,8 @@ func _load_file(path: String) -> void:
 			continue
 		_normalise(c)
 		cards[id] = c
-		if c.get("proto", false):
-			continue          # prototype cards: only in the quick duel's prototype decks
+		if not is_collectible(c):
+			continue          # the old set and the drafts stay loaded (art, tests) but out of play
 		var f: String = c["faction"]
 		var r: String = c["rarity"]
 		if pools.has(f) and pools[f].has(r):
@@ -126,11 +126,22 @@ func is_land(id: String) -> bool:
 	return cards.get(id, {}).get("type", "") == "land"
 
 
+## Is this card in the game's set? Since 1.80 the set is the first set (cards marked "set": 1,
+## twenty per faith and fifteen two-faith cards); the dual lands stay. The old set, the early
+## drafts and the back faces of two-faced cards are loaded but never dealt, sold or built with.
+static func is_collectible(c: Dictionary) -> bool:
+	if c.has("front"):
+		return false
+	if c.get("type", "") == "land":
+		return true
+	return int(c.get("set", 0)) == 1
+
+
 ## Every collectible non-land card.
 func all_set_ids() -> Array:
 	var out := []
 	for id in cards:
-		if not is_land(id) and not cards[id].get("proto", false):
+		if not is_land(id) and is_collectible(cards[id]):
 			out.append(id)
 	out.sort()
 	return out

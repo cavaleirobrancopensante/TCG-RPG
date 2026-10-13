@@ -53,10 +53,13 @@ func test_card_db() -> void:
 			line += "%s %d/%d  " % [r.substr(0, 1).to_upper(), counts[f][r], Factions.SET_TARGET[r]]
 		print(line)
 	var valid_actions := ["attach", "grant", "regrow", "regen_shield", "damage", "heal", "drain", "draw", "discard_enemy", "buff", "destroy", "bounce", "tap", "summon", "add_mana", "lose_life", "reanimate",
-		"rummage", "freeze", "pacify", "snare", "fight", "destroy_relic", "foresight", "tax", "upkeep_cost", "counter", "charge"]
-	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"]
+		"rummage", "freeze", "pacify", "snare", "fight", "destroy_relic", "foresight", "tax", "upkeep_cost", "counter", "charge",
+		"testimony", "censure", "covet", "confess", "penance", "index", "exorcise", "edict", "exile_grave", "enemy_loses_life", "make_scrap",
+		"exile_perm", "put_lands", "fetch_land", "lands_from_grave", "animate_land", "dig", "discard_self", "wheel", "silence_opponents",
+		"untap", "destroy_land", "add_counter", "become_servo"]
+	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"] + BattleState.TARGET_CHOICE_TYPES + ["host", "all_attackers", "other_attackers", "all_demons", "all_tapped_enemy_demons"]
 	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "martyr",
-		"sanctified", "dread", "regenerate", "first_strike", "unmoved"]
+		"sanctified", "dread", "regenerate", "first_strike", "unmoved", "immortal", "salvage", "flash"]
 	var fighters := ["Soldier", "Knight", "Paladin", "Warrior", "Duelist", "Assassin", "Hoplite"]
 	for id in CardDB.all_set_ids():
 		var c := CardDB.get_card(id)
@@ -104,8 +107,9 @@ func test_boosters() -> void:
 			mythics += 1
 		if pack[13]["foil"]:
 			foils += 1
-	print("mythic rate %.3f (expect ~0.125), foil rate %.3f (expect ~0.30)" % [float(mythics) / n, float(foils) / n])
-	check(abs(float(mythics) / n - 0.125) < 0.03, "mythic rate")
+	var want_m := Booster.mythic_chance()
+	print("mythic rate %.3f (expect ~%.3f), foil rate %.3f (expect ~0.30)" % [float(mythics) / n, want_m, float(foils) / n])
+	check(abs(float(mythics) / n - want_m) < 0.03, "mythic rate")
 	check(abs(float(foils) / n - 0.30) < 0.04, "foil rate")
 
 
@@ -1424,9 +1428,26 @@ func test_decks() -> void:
 	check(GameState.decks.size() == 1, "last deck can't be deleted")
 	# saves from before multiple decks become a 'Starter deck'
 	var f := FileAccess.open(GameState.slot_path(6), FileAccess.WRITE)
-	f.store_string(JSON.stringify({"version": 2, "gold": 5, "collection": {"wild_c_001": 4}, "deck": {"wild_c_001": 4, "land_wild": 36}}))
+	f.store_string(JSON.stringify({"version": 4, "gold": 5, "collection": {"proto_ow_boar": 4}, "deck": {"proto_ow_boar": 4, "land_wild": 36}}))
 	f.close()
-	check(GameState.load_game(6) and GameState.decks.size() == 1 and GameState.decks[0]["name"] == "Starter deck" and int(GameState.deck.get("wild_c_001", 0)) == 4, "old single deck migrated")
+	check(GameState.load_game(6) and GameState.decks.size() == 1 and GameState.decks[0]["name"] == "Starter deck" and int(GameState.deck.get("proto_ow_boar", 0)) == 4, "old single deck migrated")
+	# a save from before 1.80 holds the old set: progress stays, new starting cards and a new deck
+	f = FileAccess.open(GameState.slot_path(6), FileAccess.WRITE)
+	f.store_string(JSON.stringify({"version": 3, "gold": 777, "hero": "wild", "level": 4, "day": 30, "difficulty": "knight",
+		"collection": {"wild_c_001": 4, "wild_r_013": 1}, "decks": [{"name": "Old", "cards": {"wild_c_001": 4, "land_wild": 36}}],
+		"cleared_lairs": ["lair_pit"]}))
+	f.close()
+	check(GameState.load_game(6), "a 1.79 save loads")
+	var only_set := true
+	for k in GameState.collection:
+		if not CardDB.is_collectible(CardDB.get_card(k)):
+			only_set = false
+	check(only_set and GameState.collection.size() > 10 and not GameState.collection.has("wild_c_001"), "its old cards are gone, new starting cards in their place")
+	check(GameState.gold == 777 and GameState.level == 4 and GameState.day == 30 and GameState.cleared_lairs.has("lair_pit"), "its gold, level, day and lairs are kept")
+	check(DeckTools.validate(GameState.deck, GameState.owned_all()) == "" and GameState.set_changed_notice, "a legal first deck of the new set, and the player is told")
+	GameState.set_changed_notice = false
+	GameState.save_game()
+	check(GameState.load_game(6) and not GameState.set_changed_notice and GameState.collection.size() > 10, "saved again, it is a 1.80 save")
 	GameState.delete_slot(6)
 
 
@@ -2043,10 +2064,13 @@ func test_card_ui() -> void:
 	for id in CardDB.all_set_ids():
 		var c := CardDB.get_card(id)
 		var k := CardView.kind(c)
-		check(k in ["creature", "sorcery", "instant", "relic", "land"], "%s has a known kind (%s)" % [id, k])
+		check(k in ["creature", "sorcery", "instant", "land", "construct", "possession", "blessing"], "%s has a known kind (%s)" % [id, k])
 		if c.get("type") == "spell":
 			check((k == "instant") == BattleState.is_instant(c), "%s: Instant exactly when the engine casts it at instant speed" % id)
-	check(DeckBuilder.TYPES == ["Any type", "Creature", "Sorcery", "Instant", "Relic", "Land"] and CardDatabase.TYPES == DeckBuilder.TYPES, "type filters")
+	check(DeckBuilder.TYPES == ["Any type", "Creature", "Sorcery", "Instant", "Construct", "Possession", "Blessing", "Land"] and CardDatabase.TYPES == DeckBuilder.TYPES, "type filters")
+	for id in CardDB.all_set_ids():
+		var kk := CardView.kind(CardDB.get_card(id))
+		check(DraftScreen.KINDS.has(kk), "%s falls under a type filter (%s)" % [id, kk])
 	# the glossary explains every keyword of the card spec
 	var spec := FileAccess.get_file_as_string("res://docs/CARD_SPEC.md")
 	var sec := spec.substr(spec.find("## Keywords"))
@@ -2208,8 +2232,8 @@ func test_story() -> void:
 		check(GameState.gold > g0 and GameState.xp + 1000 * GameState.level > xp0, "chapter %d pays gold and experience" % steps)
 		if r.has("card") or r.has("card_rarity"):
 			check(_owned_total() > owned0 and not res["cards"].is_empty(), "chapter %d gives a card" % steps)
-		got_mythic = got_mythic or GameState.owned_count("sanctum_m_004") > 0
-	check(steps == 6 and Story.is_done("church") and got_mythic, "the storyline ends with Saint Michael the Archangel (%d chapters)" % steps)
+		got_mythic = got_mythic or GameState.owned_count("proto_c_angel") > 0
+	check(steps == 6 and Story.is_done("church") and got_mythic, "the storyline ends with the Angel of the Reliquary (%d chapters)" % steps)
 	check(GameState.pending_boosters > boosters0 and GameState.faction_packs.has("sanctum"), "chapters give boosters of the faith")
 	check(Story.marker_pos() == Vector2.INF and Story.next_event("santa_lucerna").is_empty(), "no star when the story is done")
 	check(Story.progress("church")["done"].size() == 6, "completed chapters are kept")
@@ -2672,7 +2696,15 @@ func test_revel_stoa() -> void:
 
 func test_redesign() -> void:
 	print("-- redesign prototype: Peace and Crusade, Immortal, possession")
-	check(not CardDB.all_set_ids().has("proto_s_pilgrim") and CardDB.has_card("proto_s_pilgrim"), "prototype cards stay out of the pools")
+	check(not CardDB.all_set_ids().has("proto_s_pilgrim") and CardDB.has_card("proto_s_pilgrim"), "the early drafts stay out of the pools")
+	check(CardDB.all_set_ids().has("proto_c_martyr") and not CardDB.all_set_ids().has("sanctum_c_001") and not CardDB.all_set_ids().has("proto_c_crusader_b"),
+		"the first set is the game's set; the old set and back faces are out (1.80)")
+	var n_set := 0
+	for f in Factions.ORDER:
+		var nf := CardDB.faction_ids(f).filter(func(x): return not CardDB.get_card(x).has("faction2") and not CardDB.is_land(x)).size()
+		check(nf == 20, "%s has 20 cards of its own in the set (%d)" % [f, nf])
+		n_set += nf
+	check(n_set == 120, "120 single-faith cards")
 	check(DeckTools.proto_decks().size() == 6 and DeckTools.count(DeckTools.proto_decks()[0]["cards"]) == 60, "six 60-card prototype decks")
 	var st := _duel()
 	_lands(st, 0, "WWWWBBBB")

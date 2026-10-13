@@ -16,8 +16,11 @@ const SCALE := 0.56               # desktop thumbnails; 150 px wide on a phone
 const PHONE_SCALE := 0.75
 const PICKS_MIN := 240.0          # the picks panel on a phone (four pack columns fit at 960)
 const PICKS_MIN_DESK := 320.0
-const KINDS := ["creature", "sorcery", "instant", "relic", "land"]
-const KIND_NAMES := {"creature": "Creatures", "sorcery": "Sorceries", "instant": "Instants", "relic": "Relics", "land": "Lands"}
+## The card types of the first set (1.80): every permanent that is not a creature is a
+## Construct, a Possession or a Blessing.
+const KINDS := ["creature", "sorcery", "instant", "construct", "possession", "blessing", "land"]
+const KIND_NAMES := {"creature": "Creatures", "sorcery": "Sorceries", "instant": "Instants", "construct": "Constructs",
+	"possession": "Possessions", "blessing": "Blessings", "relic": "Relics", "land": "Lands"}
 
 var draft: Draft
 var grid: GridContainer

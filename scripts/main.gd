@@ -711,6 +711,12 @@ func _continue_game(n: int = 0) -> void:
 	if GameState.load_game(n):
 		GameState.ensure_deck()
 		await start_world()
+		if GameState.set_changed_notice:
+			GameState.set_changed_notice = false
+			GameState.save_game()
+			show_dialog("A new set of cards",
+				I18n.t("The cards of the game have changed: the first set, twenty cards for each faith, has replaced the old ones. Your gold, your journey and your story are kept. Your old cards and decks are gone; you have opened new starting boosters, and your first deck was built from them."),
+				[["Set out", Callable()]])
 		_resume_tournament()
 	else:
 		show_dialog("Oops", "The save file could not be read.", [["OK", Callable()]])

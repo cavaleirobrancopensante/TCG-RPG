@@ -355,7 +355,7 @@ func _fill_info(e: Dictionary) -> void:
 	if c.has("transform"):
 		var face := I18n.t("Crusade face") if c.has("front") else I18n.t("Peace face")
 		info_box.add_child(UIKit.label(face + ". " + I18n.t("Tap the card or ⟳ to read the other face."), UIKit.FS_SECONDARY, UIKit.GOLD, true))
-	if c.get("rarity") != "token" and c.get("type") != "land" and not c.get("proto", false):
+	if c.get("rarity") != "token" and c.get("type") != "land" and CardDB.is_collectible(c):
 		info_box.add_child(UIKit.label(I18n.t("You own %d") % GameState.owned_count(e["id"]), UIKit.FS_SECONDARY, UIKit.DIM))
 	info_box.add_child(UIKit.label("%d / %d" % [index + 1, entries.size()], UIKit.FS_SECONDARY, UIKit.DIM))
 	var row := HFlowContainer.new()

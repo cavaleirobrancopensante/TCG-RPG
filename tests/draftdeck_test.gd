@@ -306,7 +306,7 @@ func _check_picks_panel(ds: DraftScreen) -> void:
 		tabs = []
 		for ix in ds.type_pick.item_count:
 			tabs.append(ds.type_pick.get_item_text(ix))
-	_check(tabs.size() == 6 and tabs[0].begins_with(I18n.t("All")) and tabs[1].begins_with(I18n.t("Creatures")), "picks panel: All, then counts by type (%s)" % str(tabs))
+	_check(tabs.size() == DraftScreen.KINDS.size() + 1 and tabs[0].begins_with(I18n.t("All")) and tabs[1].begins_with(I18n.t("Creatures")), "picks panel: All, then counts by type (%s)" % str(tabs))
 	var fsum := 0
 	for f in ds.faith_row.counts:
 		fsum += int(ds.faith_row.counts[f])

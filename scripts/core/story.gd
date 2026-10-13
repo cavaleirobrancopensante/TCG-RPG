@@ -570,8 +570,10 @@ static func validate() -> Array:
 		if a.get("kind", "") == "main":
 			var last: Dictionary = chs[chs.size() - 1] if not chs.is_empty() else {}
 			var lr: Dictionary = last.get("reward", {})
-			if String(lr.get("card", "")) == "" or CardDB.get_card(String(lr.get("card", ""))).get("rarity", "") != "mythic":
-				errs.append("%s: the last chapter gives no mythic" % aid)
+			# the finale gives one of the faith's best cards (a rare or a mythic of the set)
+			var lc := CardDB.get_card(String(lr.get("card", "")))
+			if lc.is_empty() or not (String(lc.get("rarity", "")) in ["rare", "mythic"]) or not CardDB.is_collectible(lc):
+				errs.append("%s: the last chapter gives no rare or mythic of the set" % aid)
 	return errs
 
 
