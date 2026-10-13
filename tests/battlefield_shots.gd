@@ -88,4 +88,11 @@ func _ready() -> void:
 		"proto_c_keeper", "proto_c_pilgrim", "proto_c_thurifer", "land_sanctum"]
 	b.refresh()
 	await _shot("crowded")
+	# the Index: a whole library to choose from, with search and type tabs
+	var lib := st.library_choices(1)
+	var counts := {}
+	for lid in st.side(1).deck:
+		counts[lid] = int(counts.get(lid, 0)) + 1
+	b._pick_from_list("Prototype: Pact's library", "Choose the card to condemn: that player exiles it and every card with the same name from his hand, library and graveyard, then creates a Testimony for each.", lib, counts)
+	await _shot("index")
 	get_tree().quit()

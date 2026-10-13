@@ -1520,6 +1520,115 @@ func _play_batch(evs: Array) -> void:
 
 
 signal _picked(result)
+signal _list_picked(id: String)
+
+
+## Choose one card from a long list (a whole library): miniature cards in a scrolling grid,
+## with a search by name and tabs by type, like the deck builder. Tap a card to select it,
+## hold it to read it, Choose to confirm. `counts`: copies of each, shown on the card.
+func _pick_from_list(head: String, note_text: String, ids: Array, counts: Dictionary = {}) -> String:
+	var dim := ColorRect.new()
+	dim.name = "ListPicker"
+	dim.color = Color(0, 0, 0, 0.6)
+	UIKit.full_rect(dim)
+	add_child(dim)
+	var vp := get_viewport_rect().size
+	var panel := _centered_panel(dim)
+	panel.custom_minimum_size = Vector2(minf(1100.0, vp.x - 30.0), minf(660.0, vp.y - 30.0))
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", UIKit.SP_1)
+	panel.add_child(v)
+	var t := UIKit.title(head, UIKit.FS_HEADING)
+	v.add_child(t)
+	var note := UIKit.label(note_text, UIKit.FS_SECONDARY, UIKit.TEXT, true)
+	v.add_child(note)
+	var bar := HBoxContainer.new()
+	bar.add_theme_constant_override("separation", UIKit.SP_1)
+	v.add_child(bar)
+	var search := LineEdit.new()
+	search.placeholder_text = I18n.t("Search by name")
+	search.custom_minimum_size = Vector2(260, UIKit.TARGET)
+	search.clear_button_enabled = true
+	bar.add_child(search)
+	# tabs: All, then each type present, with how many there are
+	var kinds := ["All"]
+	for id in ids:
+		var tn := CardView.type_name(CardDB.get_card(id))
+		if not kinds.has(tn):
+			kinds.append(tn)
+	var state := {"kind": "All", "sel": ""}
+	var tabs: Array = []
+	var sc := ScrollContainer.new()
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	v.add_child(sc)
+	var ds := DragScroll.attach(self, sc)
+	var grid := GridContainer.new()
+	grid.add_theme_constant_override("h_separation", UIKit.SP_1)
+	grid.add_theme_constant_override("v_separation", UIKit.SP_1)
+	sc.add_child(grid)
+	var scale := 0.62
+	grid.columns = maxi(1, int((panel.custom_minimum_size.x - 40.0) / (CardView.BASE.x * scale + UIKit.SP_1)))
+	var views := {}
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", UIKit.GAP)
+	row.alignment = BoxContainer.ALIGNMENT_END
+	var choose := UIKit.primary_button(I18n.t("Choose"), func():
+		if state["sel"] != "":
+			var picked := String(state["sel"])
+			dim.queue_free()
+			_list_picked.emit(picked), 200)
+	choose.name = "ChooseCard"
+	choose.disabled = true
+	var refill := func():
+		var q := search.text.strip_edges().to_lower()
+		for id in views:
+			var c := CardDB.get_card(id)
+			var nm := I18n.t(String(c.get("name", id))).to_lower()
+			var ok: bool = (state["kind"] == "All" or CardView.type_name(c) == state["kind"]) and (q == "" or nm.contains(q))
+			views[id].visible = ok
+	for k in kinds:
+		var kk: String = k
+		var n := ids.size() if kk == "All" else ids.filter(func(x): return CardView.type_name(CardDB.get_card(x)) == kk).size()
+		var b := _btn("%s (%d)" % [I18n.t(kk), n], func():
+			state["kind"] = kk
+			for tb in tabs:
+				tb.button_pressed = tb.get_meta("kind") == kk
+			refill.call(), 110)
+		b.toggle_mode = true
+		b.button_pressed = kk == "All"
+		b.set_meta("kind", kk)
+		tabs.append(b)
+		bar.add_child(b)
+	search.text_changed.connect(func(_t): refill.call())
+	for id in ids:
+		var box := Control.new()
+		box.custom_minimum_size = CardView.BASE * scale
+		var cv := CardView.create(id, scale)
+		box.add_child(cv)
+		var n2 := int(counts.get(id, 0))
+		if n2 > 1:
+			var lb := UIKit.label("×%d" % n2, UIKit.FS_BODY, Tapestry.WHITE)
+			lb.add_theme_color_override("font_outline_color", Tapestry.INK)
+			lb.add_theme_constant_override("outline_size", 6)
+			lb.position = Vector2(8, CardView.BASE.y * scale - 34)
+			lb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			box.add_child(lb)
+		var idd: String = id
+		cv.tapped.connect(func(_c):
+			if ds.dragged:
+				return
+			state["sel"] = idd
+			choose.disabled = false
+			choose.text = I18n.t("Choose") + ": " + CardFace.fit(_card_name(idd), Tapestry.font("book"), UIKit.FS_BODY, 240)
+			for other in views:
+				views[other].get_child(0).modulate = Color(1, 1, 1) if other == idd else Color(0.72, 0.72, 0.72))
+		cv.long_pressed.connect(func(_c): CardViewer.open(self, ids.duplicate(), ids.find(idd)))
+		views[id] = box
+		grid.add_child(box)
+	v.add_child(row)
+	row.add_child(choose)
+	return await _list_picked
 
 
 ## Ask the player to choose among cards. mode "one": returns an index. mode "foresight":
@@ -1663,8 +1772,11 @@ func _resolve_owed() -> void:
 				st.index_choose(0, who, "")
 				return
 			var head2 := I18n.t("Your library") if mine else I18n.t("%s's library") % st.side(1).name
-			var pick3 = await _pick_cards(head2, I18n.t("Choose the card to condemn: that player exiles it and every card with the same name from his hand, library and graveyard, then creates a Testimony for each."), lib)
-			st.index_choose(0, who, String(lib[clampi(int(pick3), 0, lib.size() - 1)]))
+			var counts := {}
+			for lid in st.side(who).deck:
+				counts[lid] = int(counts.get(lid, 0)) + 1
+			var pick3: String = await _pick_from_list(head2, I18n.t("Choose the card to condemn: that player exiles it and every card with the same name from his hand, library and graveyard, then creates a Testimony for each."), lib, counts)
+			st.index_choose(0, who, pick3 if pick3 != "" else String(lib[0]))
 			return
 		var opts := st.hand_choices(1)
 		if opts.is_empty():
