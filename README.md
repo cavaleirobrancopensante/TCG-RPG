@@ -1077,4 +1077,4 @@ two-for-one creatures, engines and the graveyard as a resource.
   turn.
 - Measured, ordinary AI, 200 duels each (the Stoa's share, before and after): against the Revel
   31% and 32%, the Old Ways 59% and 59%, the Pact 38.5% and 36%, the Church 53% and 52%, the
-  Technocracy 45% and 47%. That is within the noise; the AI casts it in about one game in four.
+  Technocracy 55% and 53%. That is within the noise; the AI casts it in about one game in four.
