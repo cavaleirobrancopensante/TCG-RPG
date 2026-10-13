@@ -888,3 +888,18 @@ two-for-one creatures, engines and the graveyard as a resource.
   damage to that player."
 - The AI casts flash creatures on the opponent's turn, holds the Watchman for a spell to
   counter, premeditates the Navarch and casts it at the opponent's end step.
+
+## The battlefield as cards (1.72)
+
+- Every permanent is now drawn as a small card, Magic style, instead of a figure: its art, its
+  name (cut with "…" when long), power and toughness, counters, keyword icons. Tap any card to
+  read it in full.
+- Front row: creatures, toward the middle of the screen. Back row, on the left: lands grouped
+  by kind with their count (tapped ones turned a quarter below), then relics and tokens.
+- Cards of the same kind stack to the side; tapped ones stand in their own stack. A creature
+  with something attached leaves its stack and takes its own place, with the possession or
+  aura tucked under it, up and to the right. Tap the tucked card's edge to read or target it.
+- As the field fills, the cards shrink (down to 62% of their size), then the row scrolls.
+- The earth band under the fields is gone; only the coloured backdrop remains.
+- The figures stay in the code (SummonFigure) for the world map and the city backgrounds.
+- New screenshot scene tests/battlefield_shots.tscn.
