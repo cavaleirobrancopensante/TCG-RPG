@@ -56,7 +56,7 @@ var pending_premed := -1           # the premeditated card whose targets we choo
 var pile_icons := [[], []]         # per side: the hand and library count icons
 var enemy_info: RichTextLabel
 var player_info: RichTextLabel
-var enemy_relics: HBoxContainer
+var enemy_relics: GridContainer
 var player_relics: GridContainer
 var hand_box: _HandRow
 var phase_bar: PhaseBar
@@ -151,12 +151,14 @@ func _build_ui() -> void:
 	enemy_info.custom_minimum_size = Vector2(60, UIKit.FS_SECONDARY + 10)
 	ebar.add_child(enemy_info)
 	_tap_opens_graveyard(enemy_info, 1)
-	enemy_relics = HBoxContainer.new()
-	ebar.add_child(enemy_relics)
-
 	enemy_field = _field()
+	enemy_field.enemy_side = true
 	enemy_lands = _land_strip(1)
 	_enemy_row = _field_row(enemy_lands, enemy_field)
+	# the back row, on the left: lands, then relics (his at the top of his field)
+	enemy_relics = _relic_box(true)
+	_enemy_row.add_child(enemy_relics)
+	_enemy_row.move_child(enemy_relics, 1)
 	root.add_child(_enemy_row)
 	_strips.append(ebar)
 	_grounds.append(enemy_field)
@@ -194,12 +196,9 @@ func _build_ui() -> void:
 	player_field = _field()
 	player_lands = _land_strip(0)
 	_player_row = _field_row(player_lands, player_field)
-	player_relics = GridContainer.new()
-	player_relics.columns = 1
-	player_relics.size_flags_vertical = Control.SIZE_SHRINK_END
-	player_relics.add_theme_constant_override("h_separation", 4)
-	player_relics.add_theme_constant_override("v_separation", 4)
+	player_relics = _relic_box(false)
 	_player_row.add_child(player_relics)
+	_player_row.move_child(player_relics, 1)
 	root.add_child(_player_row)
 	_strips.append(mid)
 	_grounds.append(player_field)
@@ -319,14 +318,14 @@ func _relayout(rebuild: bool) -> void:
 	var hand_h := CardView.BASE.y * hand_scale + 14.0
 	var bottom_h := maxf(hand_h, _player_col.get_combined_minimum_size().y)
 	var field_h := floorf((avail - bar_h - mid_h - bottom_h) / 2.0)
-	fig_zoom = clampf(field_h / SummonFigure.SIZE.y, FIG_MIN, 1.0)
+	fig_zoom = clampf((field_h - 6.0) / BattleCard.CARD.y, FIG_MIN, 1.0)
 	var land_zoom := clampf(field_h / LandStrip.BASE_H, FIG_MIN, 1.0)
 	hand_box.custom_minimum_size.y = hand_h
 	for row in [_enemy_row, _player_row]:
-		row.custom_minimum_size.y = minf(field_h, SummonFigure.SIZE.y * fig_zoom + 8.0)
+		row.custom_minimum_size.y = minf(field_h, BattleCard.CARD.y * fig_zoom + 8.0)
 		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	for f in [enemy_field, player_field]:
-		f.custom_minimum_size.y = SummonFigure.SIZE.y * fig_zoom
+		f.custom_minimum_size.y = BattleCard.CARD.y * fig_zoom
 	for ls in [enemy_lands, player_lands]:
 		ls.set_zoom(land_zoom)
 	for uid in figures:
@@ -343,7 +342,7 @@ func _relayout(rebuild: bool) -> void:
 
 ## A full-size figure's measurements at the current zoom.
 func _fsz() -> Vector2:
-	return SummonFigure.SIZE * fig_zoom
+	return BattleCard.CARD * fig_zoom
 
 
 ## A parchment panel kept in the middle of `over` (it stays centred if the screen changes).
@@ -484,7 +483,7 @@ func _show_stack_card(e: Dictionary) -> void:
 func _field() -> _Field:
 	var f := _Field.new()
 	f.scene = self
-	f.custom_minimum_size.y = SummonFigure.SIZE.y * fig_zoom
+	f.custom_minimum_size.y = BattleCard.CARD.y * fig_zoom
 	return f
 
 
@@ -521,6 +520,7 @@ static func spread(widths: Array, avail: float, mid: float, gap: float = 6.0) ->
 ## fit, closing up like a hand of cards when they don't (never running off the screen).
 class _Field extends Container:
 	var scene: BattleScene
+	var enemy_side := false
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_PASS
@@ -545,7 +545,8 @@ class _Field extends Container:
 		for k in list.size():
 			var c: Control = list[k]
 			var h: float = c.custom_minimum_size.y
-			fit_child_in_rect(c, Rect2(Vector2(xs[k], size.y - h), Vector2(widths[k], h)))
+			# the creatures stand toward the middle of the screen: the enemy's at the bottom of his field, yours at the top
+			fit_child_in_rect(c, Rect2(Vector2(xs[k], size.y - h if enemy_side else 0.0), Vector2(widths[k], h)))
 
 
 func _land_strip(side_i: int) -> LandStrip:
@@ -557,11 +558,32 @@ func _land_strip(side_i: int) -> LandStrip:
 
 func _field_row(lands: LandStrip, field: _Field) -> HBoxContainer:
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 4)
-	field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_theme_constant_override("separation", 6)
 	row.add_child(lands)
-	row.add_child(field)
+	# the creatures: they shrink to fit as more come, down to a limit, then the row scrolls sideways
+	var sc := ScrollContainer.new()
+	sc.name = "FieldScroll"
+	sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	sc.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	sc.mouse_filter = Control.MOUSE_FILTER_PASS
+	field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	field.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	sc.add_child(field)
+	row.add_child(sc)
+	sc.resized.connect(func(): if st != null: _restack(1 if field == enemy_field else 0))
 	return row
+
+
+## The relics of one side, in the back row beside the lands.
+func _relic_box(is_enemy: bool) -> GridContainer:
+	var g := GridContainer.new()
+	g.columns = 1
+	g.size_flags_vertical = Control.SIZE_SHRINK_BEGIN if is_enemy else Control.SIZE_SHRINK_END
+	g.add_theme_constant_override("h_separation", 6)
+	g.add_theme_constant_override("v_separation", 6)
+	return g
 
 
 func _show_lands(side_i: int) -> void:
@@ -794,10 +816,6 @@ func _draw() -> void:
 				var a := -_realm_rays * 0.22
 				draw_rect(Rect2(c + Vector2(-5, -26), Vector2(10, 52)), Color(0.8, 0.08, 0.05, a))
 				draw_rect(Rect2(c + Vector2(-20, -10), Vector2(40, 10)), Color(0.8, 0.08, 0.05, a))
-	# earth under each rank of figures
-	for g in _grounds:
-		var fr := _local(g)
-		Tapestry.draw_ground(self, Rect2(0, fr.end.y - 34, r.size.x, 30), Tapestry.EARTH)
 	# parchment strips for the bars and the hand
 	for c in _strips:
 		var cr := _local(c).grow_individual(0, 2, 0, 2)
@@ -858,12 +876,18 @@ func refresh() -> void:
 ## be tapped and selected on its own.
 const STACK_MAX := 4
 const TOKEN_STACK_MAX := 10
-const STACK_STEP := Vector2(18, -9)
-const TOKEN_STEP := Vector2(11, -6)
+const STACK_STEP := Vector2(24, 0)
+const FIT_MIN := 0.62            # cards shrink to this much of their size before the row scrolls
+var side_zoom := [1.0, 1.0]
+const TOKEN_STEP := Vector2(14, 0)
 
 
 func _stack_key(p) -> String:
-	return ("token:" + p.name) if p.is_token else p.card_id
+	# a card with something attached stands in its own place, out of its stack
+	if not st.attachments_of(p).is_empty():
+		return "own:%d" % p.uid
+	# tapped and untapped cards of the same kind stand in separate stacks
+	return (("token:" + p.name) if p.is_token else p.card_id) + (":t" if p.tapped else "")
 
 
 ## Rebuild the stacks of one side from the creatures in play (keeps the figure nodes).
@@ -889,25 +913,42 @@ func _restack(i: int) -> void:
 		var sl := _Stack.new()
 		field.add_child(sl)
 		slots.append(sl)
+	# shrink the cards to fit the row, down to FIT_MIN of their size; past that the row scrolls
+	var sc: Control = field.get_parent()
+	var avail: float = sc.size.x if sc is ScrollContainer else field.size.x
+	var need := 0.0
+	for g in groups:
+		var f0 = figures[g[1][0]]
+		var one: float = (f0.slot_size(fig_zoom).x if f0.has_method("slot_size") else BattleCard.CARD.x * fig_zoom)
+		var stp: Vector2 = TOKEN_STEP if st.find_perm(g[1][0]).is_token else STACK_STEP
+		need += one + stp.x * fig_zoom * (g[1].size() - 1) + 8.0
+	var z := fig_zoom
+	if avail > 10.0 and need > avail:
+		z = maxf(fig_zoom * FIT_MIN, fig_zoom * avail / need)
+	side_zoom[i] = z
+	field.custom_minimum_size.x = need * z / fig_zoom if avail > 10.0 and need * z / fig_zoom > avail else 0.0
 	for k in range(slots.size()):
 		if k >= groups.size():
 			slots[k].queue_free()      # its live figures were moved to other stacks above
 			continue
 		var uids: Array = groups[k][1]
 		var tok: bool = st.find_perm(uids[0]).is_token
-		slots[k].arrange(uids.map(func(u): return figures[u]), (TOKEN_STEP if tok else STACK_STEP) * fig_zoom, fig_zoom)
+		for u in uids:
+			figures[u].set_zoom(z)
+		slots[k].arrange(uids.map(func(u): return figures[u]), (TOKEN_STEP if tok else STACK_STEP) * z, z)
 	field.queue_sort()
 
 
 class _Stack extends Control:
-	## One pile of identical figures. Front figure bottom-left, the rest stepping up-right.
+	## One pile of identical cards: the front card on the left, the rest stepping out to its right.
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 		size_flags_vertical = Control.SIZE_SHRINK_END      # figures stand on the ground line
 
 	func arrange(figs: Array, step: Vector2, zoom: float = 1.0) -> void:
 		var n := figs.size()
-		custom_minimum_size = SummonFigure.SIZE * zoom + Vector2(step.x * (n - 1), 0)
+		var one: Vector2 = figs[0].slot_size(zoom) if n > 0 and figs[0].has_method("slot_size") else BattleCard.CARD * zoom
+		custom_minimum_size = one + Vector2(step.x * (n - 1), 0)
 		# back figures first so the front one is drawn (and clicked) on top
 		for k in range(n - 1, -1, -1):
 			var f: SummonFigure = figs[k]
@@ -925,7 +966,7 @@ class _Stack extends Control:
 
 
 func _spawn_figure(p, animate: bool) -> SummonFigure:
-	var fig := SummonFigure.new()
+	var fig := BattleCard.new()
 	fig.setup(p.uid, p.card, p.owner == 1)
 	fig.set_zoom(fig_zoom)
 	fig.sync(p)
@@ -943,8 +984,9 @@ var _relic_keys := ["", ""]      # the relics last drawn per side: rebuilt only 
 
 
 func _refresh_relics(i: int) -> void:
-	var box: Container = player_relics if i == 0 else enemy_relics
-	var list: Array = st.side(i).relics
+	var box: GridContainer = player_relics if i == 0 else enemy_relics
+	# a card attached to a creature is tucked under it on the field, not shown here
+	var list: Array = st.side(i).relics.filter(func(r): return r.attached_to < 0 or st.find_perm(r.attached_to) == null)
 	var parts: Array = [fig_zoom, busy, mode]
 	for r in list:
 		parts.append([r.uid, r.attached_to, r.tapped, _is_valid_target({"kind": "relic", "uid": r.uid}),
@@ -966,25 +1008,28 @@ func _refresh_relics(i: int) -> void:
 				break
 		if not placed:
 			groups.append([key, [r]])
-	var tile := float(UIKit.TARGET) if i == 1 else clampf(SummonFigure.SIZE.y * fig_zoom * 0.42, 48.0, 64.0)
-	if i == 0 and not groups.is_empty():
-		var room := minf(_player_row.custom_minimum_size.y, SummonFigure.SIZE.y * fig_zoom + 8.0)
-		var rows := maxi(1, int(room / (tile + 10.0)))
-		player_relics.columns = ceili(groups.size() / float(rows))
+	# small cards, as tall as two fit the back row; identical ones stacked to the side
+	var tile := clampf(BattleCard.CARD.y * fig_zoom * 0.56, 56.0, 76.0)
+	var tw := tile * 0.78
+	if not groups.is_empty():
+		var room := minf((_player_row if i == 0 else _enemy_row).custom_minimum_size.y, BattleCard.CARD.y * fig_zoom + 8.0)
+		var rows := maxi(1, int(room / (tile + 6.0)))
+		box.columns = ceili(groups.size() / float(rows))
 	for g in groups:
 		var stack := _RelicStack.new()
 		var n: int = g[1].size()
-		stack.custom_minimum_size = Vector2(tile + RELIC_STEP.x * (n - 1), tile + absf(RELIC_STEP.y) * (n - 1))
+		stack.size_flags_vertical = Control.SIZE_SHRINK_BEGIN if i == 1 else Control.SIZE_SHRINK_END
+		stack.custom_minimum_size = Vector2(tw + RELIC_STEP.x * (n - 1), tile)
 		for k in range(n - 1, -1, -1):
 			var r = g[1][k]
 			var t := _RelicTile.new()
 			t.set_meta("uid", r.uid)
 			t.scene = self
 			t.uid = r.uid
-			t.size = Vector2(tile, tile)
-			t.custom_minimum_size = Vector2(tile, tile)
-			# the front relic bottom-right, the rest stepping up and to the left (never off the screen's edge)
-			t.position = Vector2(RELIC_STEP.x * (n - 1 - k), absf(RELIC_STEP.y) * (n - 1) + RELIC_STEP.y * k)
+			t.size = Vector2(tw, tile)
+			t.custom_minimum_size = Vector2(tw, tile)
+			# the front relic on the left, the rest stepping out to its right
+			t.position = Vector2(RELIC_STEP.x * k, 0)
 			t.tooltip_text = I18n.t(r.name)
 			var ruid: int = r.uid
 			var rside := i
@@ -1000,7 +1045,7 @@ func _refresh_relics(i: int) -> void:
 
 
 const RELIC_STACK_MAX := 4
-const RELIC_STEP := Vector2(9, -7)
+const RELIC_STEP := Vector2(12, 0)
 
 
 class _RelicStack extends Control:
@@ -1027,11 +1072,13 @@ class _RelicTile extends Control:
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
 
+	var card: Dictionary = {}
+
 	func sync(st, r, can_use: bool, valid_target: bool) -> void:
 		faction = String(r.card.get("faction", "machine"))
 		title = String(r.name)
 		token = r.is_token
-		tex = CardView._art_texture(String(r.card.get("art", ""))) if not token else null
+		card = r.card
 		usable = can_use
 		demon = BattleState.is_demon(r)
 		attached = r.attached_to >= 0
@@ -1041,23 +1088,12 @@ class _RelicTile extends Control:
 
 	func _draw() -> void:
 		var rr := Rect2(Vector2.ZERO, size)
-		var a := 0.6 if tapped else 1.0
-		draw_rect(rr, Color(Tapestry.PARCHMENT_LIGHT, a))
-		if tex:
-			# the middle of the art, cut square
-			var ts := tex.get_size()
-			var side := minf(ts.x, ts.y * 0.8)
-			var src := Rect2((ts.x - side) * 0.5, ts.y * 0.08, side, side)
-			draw_texture_rect_region(tex, rr.grow(-3), src, Color(1, 1, 1, a))
+		var frame := Tapestry.GILT if target_ok else (SummonFigure.SELECT_COLOR if usable else Color.TRANSPARENT)
+		var opt := {"frame": frame}
+		if tapped:
+			CardFace.paint_tapped(self, rr, card, opt)
 		else:
-			# a token: a scroll with its first letter
-			var f := Tapestry.font("book")
-			var fs := int(size.y * 0.5)
-			draw_string(f, Vector2(0, size.y * 0.66), title.left(1), HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, Color(Tapestry.RUBRIC, a))
-		var frame := Color(0.5, 0.02, 0.1) if demon else UIKit.faction_ink(faction)
-		draw_rect(rr, Color(frame, a), false, 2.5)
-		if target_ok:
-			draw_rect(rr.grow(-1), Color(Tapestry.GILT, 0.9), false, 3.5)
+			CardFace.paint(self, rr, card, opt)
 		# marks along the bottom: an ability ready, a possession, attached to a creature
 		var marks := ""
 		if usable:
@@ -1068,9 +1104,9 @@ class _RelicTile extends Control:
 			marks += "→"
 		if marks != "":
 			var f2 := Tapestry.font("book")
-			var ms := maxi(14, int(size.y * 0.3))
+			var ms := 13
 			var w := f2.get_string_size(marks, HORIZONTAL_ALIGNMENT_LEFT, -1, ms).x + 6
-			var mr := Rect2(size.x - w - 2, size.y - ms - 4, w, ms + 2)
+			var mr := Rect2(size.x - w - 3, 20, w, ms + 4)
 			draw_rect(mr, Color(Tapestry.PARCHMENT_LIGHT, 0.92))
 			draw_string(f2, mr.position + Vector2(3, ms * 0.85), marks, HORIZONTAL_ALIGNMENT_LEFT, -1, ms,
 				Color(UIKit.GREEN if usable else Tapestry.RUBRIC, 1.0))
@@ -1328,6 +1364,8 @@ func _update_marks() -> void:
 			"target":
 				if _is_valid_target({"kind": "creature", "uid": uid}):
 					fig.mark = "target"
+				elif fig is BattleCard and fig.under_uids.any(func(u): return _is_valid_target({"kind": "relic", "uid": u})):
+					fig.mark = "target"      # what is tucked under it can be targeted
 			"idle":
 				if p.owner == 0 and st.has_priority(0) and not busy:
 					var abl: Array = st.abilities_of(p)
@@ -2590,7 +2628,16 @@ func _show_board(side_i: int, uid: int) -> void:
 	_close_preview()
 	var entries := []
 	var start := 0
-	for p in st.side(side_i).creatures + st.side(side_i).relics:
+	# each creature followed by what is attached to it, then the relics on their own
+	var order: Array = []
+	for p in st.side(side_i).creatures:
+		order.append(p)
+		for a in st.attachments_of(p):
+			order.append(a)
+	for r in st.side(side_i).relics:
+		if not order.has(r) and (r.attached_to < 0 or st.find_perm(r.attached_to) == null):
+			order.append(r)
+	for p in order:
 		if p.uid == uid:
 			start = entries.size()
 		var e := {"id": p.card_id, "foil": false, "uid": p.uid, "notes": _board_notes(p)}
@@ -2973,7 +3020,18 @@ func _on_figure_tapped(fig: SummonFigure) -> void:
 		return
 	match mode:
 		"target":
-			_choose_target({"kind": "creature", "uid": fig.uid})
+			# a card tucked under it (a possession) is chosen by tapping its edge, or when only it can be
+			var cref := {"kind": "creature", "uid": fig.uid}
+			var under_ok: Array = []
+			if fig is BattleCard:
+				under_ok = fig.under_uids.filter(func(u): return _is_valid_target({"kind": "relic", "uid": u}))
+			var hit: int = fig.hit_attached(fig.last_press) if fig is BattleCard else -1
+			if hit >= 0 and under_ok.has(hit):
+				_choose_target({"kind": "relic", "uid": hit})
+			elif _is_valid_target(cref):
+				_choose_target(cref)
+			elif not under_ok.is_empty():
+				_choose_target({"kind": "relic", "uid": int(under_ok[0])})
 		"attack":
 			if p.owner == 0 and st.can_attack(p):
 				if sel_attackers.has(fig.uid):
@@ -3021,7 +3079,9 @@ func _on_figure_tapped(fig: SummonFigure) -> void:
 				# an enemy creature with no blocker chosen: read it
 				_show_board(p.owner, p.uid)
 		_:
-			_show_board(p.owner, p.uid)
+			# tapping the edge of a tucked card reads that card first
+			var hit2: int = fig.hit_attached(fig.last_press) if fig is BattleCard else -1
+			_show_board(p.owner, hit2 if hit2 >= 0 else p.uid)
 
 
 ## The attacker a creature of ours is set to block (-1: none).
