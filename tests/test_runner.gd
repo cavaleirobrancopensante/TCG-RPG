@@ -2483,6 +2483,19 @@ func test_redesign() -> void:
 	check(not st.side(1).hand.has("proto_p_azrakel") and not st.side(1).deck.has("proto_p_azrakel") and st.side(1).exile.count("proto_p_azrakel") == 4,
 		"Index: every copy, in hand, library and graveyard, is exiled")
 	check(st.side(1).relics.size() == 4 and st.side(1).relics[0].name == "Testimony", "Index: he gets a Testimony for each card")
+	# the AI out of cards turns the Index on itself and exiles its weakest card for draws
+	var st_ai := _duel()
+	st_ai.side(0).hand = ["land_sanctum"]
+	st_ai.side(0).deck = ["proto_c_thurifer", "proto_c_thurifer", "proto_c_thurifer", "proto_c_angel", "proto_c_angel", "land_sanctum"]
+	st_ai.resolve_effect(0, {"action": "index"}, null, null)
+	check(st_ai.side(0).exile.count("proto_c_thurifer") == 3 and st_ai.side(0).relics.size() == 3 and st_ai.side(0).deck.count("proto_c_angel") == 2,
+		"Index: the AI with no spells in hand exiles its own weakest card and takes the Testimonies")
+	st_ai = _duel()
+	st_ai.side(0).hand = ["proto_c_angel"]
+	st_ai.side(0).deck = ["proto_c_thurifer", "proto_c_thurifer"]
+	st_ai.side(1).deck = ["proto_p_azrakel"]
+	st_ai.resolve_effect(0, {"action": "index"}, null, null)
+	check(st_ai.side(0).deck.size() == 2 and st_ai.side(1).exile.has("proto_p_azrakel"), "Index: with a spell still in hand, the AI aims at its opponent")
 	# a person chooses: the Index on his own library
 	var st_ix := _duel()
 	st_ix.side(0).interactive = true

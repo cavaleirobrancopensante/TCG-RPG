@@ -1916,6 +1916,29 @@ func index_best(j: int) -> String:
 	return best
 
 
+## The AI on its own library: only when it is out of gas (no spells in hand) and has a weak card
+## with two or more copies left in its library. It exiles that card for the Testimonies, which
+## it cashes in for draws. "" when it should aim at the opponent instead.
+func index_self_pick(i: int) -> String:
+	var s := side(i)
+	for id in s.hand:
+		if not CardDB.is_land(id):
+			return ""
+	var best := ""
+	var best_v := -1e9
+	for id in library_choices(i):
+		var copies := s.deck.count(id)
+		if copies < 2:
+			continue
+		var c := CardDB.get_card(id)
+		var weak := 6.0 - float(c.get("mana_value", 0)) - (2.0 if c.get("rarity", "") in ["rare", "mythic"] else 0.0)
+		var v := copies * 2.0 + weak
+		if v > best_v:
+			best_v = v
+			best = id
+	return best
+
+
 ## The player's Index choice: whose library (target_side), and which card in it ("" = none).
 func index_choose(i: int, target_side: int, id: String) -> void:
 	var s := side(i)
@@ -2508,10 +2531,13 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 				side(i).hand_owed.append({"uid": source.uid if source else -1, "e": e})
 				emit({"type": "owe_hand", "side": i})
 			else:
-				var j := 1 - i
-				var pick := index_best(j)
-				if pick != "":
-					index_choose_now(i, j, pick)
+				var mine := index_self_pick(i)
+				if mine != "":
+					index_choose_now(i, i, mine)
+				else:
+					var pick := index_best(1 - i)
+					if pick != "":
+						index_choose_now(i, 1 - i, pick)
 		"edict":
 			var j := 1 - i
 			if side(j).creatures.is_empty():

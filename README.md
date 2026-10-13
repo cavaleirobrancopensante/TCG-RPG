@@ -847,3 +847,9 @@ two-for-one creatures, engines and the graveyard as a resource.
 - You choose the player first (your opponent or yourself), then the card from his library. On
   yourself it thins your own deck and gives you the Testimonies.
 - The AI aims it at its opponent and takes the card worth most, counting its copies.
+
+## The AI turns the Index on itself (1.69)
+
+- When the AI has no spells left in hand, it may aim the Index at its own library: it exiles
+  its weakest card that has two or more copies left, takes a Testimony for each, and cashes
+  them in for draws. With a spell still in hand it aims at its opponent as before.

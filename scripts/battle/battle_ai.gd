@@ -822,7 +822,7 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 				else:
 					v += 2.2
 			"index":
-				if st.library_choices(1 - i).is_empty():
+				if st.library_choices(1 - i).is_empty() and st.index_self_pick(i) == "":
 					if is_spell:
 						return [0.0, []]
 				else:
