@@ -903,3 +903,10 @@ two-for-one creatures, engines and the graveyard as a resource.
 - The earth band under the fields is gone; only the coloured backdrop remains.
 - The figures stay in the code (SummonFigure) for the world map and the city backgrounds.
 - New screenshot scene tests/battlefield_shots.tscn.
+
+## Scroll bars for a crowded field and hand (1.73)
+
+- When the creatures no longer fit even at their smallest size, the row scrolls sideways and
+  its scroll bar appears under it. The hand does the same: a crowded hand keeps its cards at
+  full size and scrolls, with its bar, instead of squeezing them together. Drag with a finger
+  or the mouse, or use the bar.
