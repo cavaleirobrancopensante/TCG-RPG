@@ -1042,3 +1042,17 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Every new card is translated into Portuguese and Spanish. New terms: Bis and Recordação /
   Recuerdo (Encore, Recollection), Testemunho / Testimonio, Temperança / Templanza.
 - The Quick Duel's faith decks drop the "Prototype:" prefix.
+
+## Basic lands, at a tap (1.81)
+
+- Every deck-building screen (your decks, Quick Duel, and the draft and sealed tournaments) has a
+  Basic lands button: the last of the type tabs, or beside the type list on a phone. It is also
+  in the Deck menu.
+- The pop-up has a counter with "-" and "+" for each faith's basic land, and shows how many of
+  that faith's mana symbols the deck's spells carry.
+- Auto calculate asks how many cards the deck should have (40 and 60 at a tap, or -10, -1, +1,
+  +10), then fills the rest with basic lands by the spells' coloured mana symbols. Generic costs
+  don't count. Each colour gets its share of the symbols times the lands to add, rounded so the
+  total is exact: 18 green and 12 red symbols with 17 lands make 10 and 7.
+- Clear empties the counters. Nothing changes until Done, and one Undo takes the whole change
+  back. The old land sigils (tap to add, hold to take away) still work.

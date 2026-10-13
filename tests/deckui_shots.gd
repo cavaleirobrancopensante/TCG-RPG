@@ -70,6 +70,45 @@ func _ready() -> void:
 	_check_targets(d, "deck builder")
 	_check_inside(d, "deck builder")
 	await _shot("deck")
+	# ---------------- the Basic lands pop-up (1.81)
+	var lb: Button = d.find_child("BasicLands", true, false)
+	_check(lb != null and lb.is_visible_in_tree(), "a Basic lands button on the deck builder")
+	var before := d._deck().duplicate()
+	var others := DeckTools.count_without_basics(before)
+	lb.pressed.emit()
+	await _frames(3)
+	var pop: Control = d.find_child("BasicLandsPopup", true, false)
+	_check(pop != null, "Basic lands opens the pop-up")
+	if pop:
+		_check_targets(pop, "basic lands pop-up")
+		_check_inside(pop, "basic lands pop-up")
+		await _shot("basic_lands")
+		(pop.find_child("Clear", true, false) as Button).pressed.emit()
+		var plus_g: Button = pop.find_child("Land_wild", true, false).find_child("Plus", true, false)
+		for k in 3:
+			plus_g.pressed.emit()
+		(pop.find_child("Auto", true, false) as Button).pressed.emit()
+		await _frames(3)
+		var ask: Control = d.find_child("DeckSizePopup", true, false)
+		_check(ask != null, "Auto calculate asks how many cards")
+		if ask:
+			await _shot("basic_lands_size")
+			(ask.find_child("Preset60", true, false) as Button).pressed.emit()
+			(ask.find_child("Ok", true, false) as Button).pressed.emit()
+			await _frames(3)
+		(pop.find_child("Ok", true, false) as Button).pressed.emit()
+		await _frames(4)
+		var after := d._deck()
+		_check(DeckTools.count(after) == 60 and DeckTools.count_without_basics(after) == others, "Auto calculate to 60 cards keeps the spells and fills with basics (%d)" % DeckTools.count(after))
+		var want := DeckTools.basics_by_pips(after, 60 - others)
+		var match_all := true
+		for f in Factions.ORDER:
+			if int(after.get(Factions.land_id(f), 0)) != int(want.get(f, 0)):
+				match_all = false
+		_check(match_all, "the basics follow the mana symbols (%s)" % [want])
+		d.undo()
+		await _frames(3)
+		_check(d._deck() == before, "one Undo takes the whole change back")
 	d.faith_btns["wild"].button_pressed = true
 	d.f_type = 1
 	d.filter_opts[0].select(1)

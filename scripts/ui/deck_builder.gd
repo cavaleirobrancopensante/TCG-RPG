@@ -31,7 +31,7 @@ const UNDO_MAX := 40
 const PHONE_SCALE := 0.75             # 150 px wide thumbnails at the phone base
 const DESK_SCALE := 0.6
 const RIGHT_MIN := 404.0              # the deck column: room for six land pips (6 x 64 + gaps)
-const MENU := ["New deck", "Copy deck", "Rename deck", "Delete deck", "Auto build"]
+const MENU := ["New deck", "Copy deck", "Rename deck", "Delete deck", "Auto build", "Basic lands"]
 const MAX_LISTS := 6                  # draft mode: lists from one pool at most
 
 var editing := 0                  # index of the deck being edited
@@ -238,6 +238,9 @@ func _ready() -> void:
 	right.add_child(type_tabs)
 	if compact:
 		type_tabs.visible = false
+		var trow := HBoxContainer.new()
+		trow.add_theme_constant_override("separation", 4)
+		right.add_child(trow)
 		type_pick = OptionButton.new()
 		type_pick.name = "TypePick"
 		type_pick.custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
@@ -248,7 +251,9 @@ func _ready() -> void:
 			if not filter_opts.is_empty():
 				filter_opts[0].select(f_type)
 			_filters_changed())
-		right.add_child(type_pick)
+		type_pick.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		trow.add_child(type_pick)
+		trow.add_child(_lands_button())
 	curve = ManaCurve.new()
 	curve.custom_minimum_size = Vector2(0, 50 if compact else 64)
 	right.add_child(curve)
@@ -533,6 +538,30 @@ func undo() -> void:
 	_refresh()
 
 
+## The Basic lands button (the last cell of the type tabs; beside the type list on a phone).
+func _lands_button() -> Button:
+	var b := _button("Basic lands", open_basic_lands, 120)
+	b.name = "BasicLands"
+	b.tooltip_text = I18n.t("Choose how many basic lands of each faith, or let them be calculated")
+	if not compact:
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", UIKit.FS_MIN)
+	return b
+
+
+## The Basic lands pop-up for the deck being edited; Done replaces its basic lands (one Undo).
+func open_basic_lands() -> Control:
+	return BasicLandsPopup.open(self, _deck(), func(counts: Dictionary):
+		_push_undo()
+		var d := _deck()
+		for f in Factions.ORDER:
+			var lid := Factions.land_id(f)
+			d.erase(lid)
+			if int(counts.get(f, 0)) > 0:
+				d[lid] = int(counts[f])
+		_refresh())
+
+
 func _change(id: String, delta: int) -> void:
 	var d := _deck()
 	var had := int(d.get(id, 0))
@@ -557,6 +586,7 @@ func _on_menu(id: int) -> void:
 		2: _rename_deck()
 		3: _delete_deck()
 		4: _auto()
+		5: open_basic_lands()
 
 
 func _new_deck() -> void:
@@ -763,6 +793,7 @@ func _fill_type_tabs(d: Dictionary) -> void:
 		b.tooltip_text = "%s %d" % [nm, n]
 		UIKit.set_selected(b, ti == f_type)
 		type_tabs.add_child(b)
+	type_tabs.add_child(_lands_button())
 
 
 func _refresh() -> void:

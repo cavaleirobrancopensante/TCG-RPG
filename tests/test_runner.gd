@@ -17,6 +17,7 @@ func _ready() -> void:
 	test_revel_stoa()
 	test_grove_foundry()
 	test_first_set()
+	test_basic_lands_calc()
 	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
@@ -3277,3 +3278,28 @@ func test_first_set() -> void:
 	st.side(0).graveyard = ["proto_rv_volley"]
 	BattleAI.main_action(st, 0)
 	check(st.side(0).graveyard.is_empty(), "the AI uses Encore when it has nothing better")
+
+
+## Basic lands by mana symbols (1.81): the pop-up's Auto calculate.
+func test_basic_lands_calc() -> void:
+	print("-- basic lands by mana symbols")
+	# the worked example: 18 green and 12 red symbols, 17 lands -> 10 and 7
+	CardDB.cards["t_g3"] = {"id": "t_g3", "name": "t", "type": "creature", "faction": "wild", "cost": {"G": 3}, "mana_value": 3}
+	CardDB.cards["t_r2"] = {"id": "t_r2", "name": "t", "type": "creature", "faction": "revel", "cost": {"R": 2, "generic": 2}, "mana_value": 4}
+	var deck := {"t_g3": 6, "t_r2": 6}
+	var pips := DeckTools.deck_pips(deck)
+	check(int(pips.get("G", 0)) == 18 and int(pips.get("R", 0)) == 12 and not pips.has("generic"), "pips: 18 green, 12 red, generic not counted")
+	var got := DeckTools.basics_by_pips(deck, 17)
+	check(int(got.get("wild", 0)) == 10 and int(got.get("revel", 0)) == 7 and got.size() == 2, "17 lands: 10 Sacred Groves and 7 of the Revel (%s)" % [got])
+	got = DeckTools.basics_by_pips(deck, 24)
+	check(int(got.get("wild", 0)) + int(got.get("revel", 0)) == 24 and int(got.get("wild", 0)) == 14, "24 lands: 14.4 and 9.6, so 14 and 10 (%s)" % [got])
+	check(DeckTools.basics_by_pips(deck, 0).is_empty(), "no lands asked, none given")
+	# basics and duals already in the deck: the pips ignore lands; the basics are what is added
+	deck["land_wild"] = 5
+	check(DeckTools.count_without_basics(deck) == 12, "count without basics")
+	CardDB.cards.erase("t_g3")
+	CardDB.cards.erase("t_r2")
+	# a real deck: one faith, every land to it
+	var mono := {"proto_ow_boar": 4, "proto_ow_druid": 4}
+	got = DeckTools.basics_by_pips(mono, 17)
+	check(got == {"wild": 17}, "a mono-faith deck: all 17 to its faith")
