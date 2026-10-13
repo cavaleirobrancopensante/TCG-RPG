@@ -2475,12 +2475,24 @@ func test_redesign() -> void:
 	# Holy Office and Possession (second prototype)
 	st = _duel()
 	st.side(1).hand = ["proto_p_azrakel", "proto_p_azrakel", "proto_p_covet", "land_abyss"]
-	st.side(1).deck.append("proto_p_azrakel")
+	st.side(1).deck = ["proto_p_azrakel", "proto_p_cultist", "land_abyss", "land_abyss"]
 	st.side(1).graveyard.append("proto_p_azrakel")
-	st.resolve_effect(0, {"action": "censure", "index": true}, null, null)
+	check(st.library_choices(1) == ["proto_p_azrakel", "proto_p_cultist"] or st.library_choices(1) == ["proto_p_cultist", "proto_p_azrakel"],
+		"Index: the choices are the different cards in his library other than lands")
+	st.resolve_effect(0, {"action": "index"}, null, null)
 	check(not st.side(1).hand.has("proto_p_azrakel") and not st.side(1).deck.has("proto_p_azrakel") and st.side(1).exile.count("proto_p_azrakel") == 4,
 		"Index: every copy, in hand, library and graveyard, is exiled")
 	check(st.side(1).relics.size() == 4 and st.side(1).relics[0].name == "Testimony", "Index: he gets a Testimony for each card")
+	# a person chooses: the Index on his own library
+	var st_ix := _duel()
+	st_ix.side(0).interactive = true
+	st_ix.side(0).deck = ["proto_p_cultist", "proto_c_angel", "proto_c_angel", "land_sanctum"]
+	st_ix.side(0).hand = ["proto_c_angel"]
+	st_ix.resolve_effect(0, {"action": "index"}, null, null)
+	check(st_ix.side(0).hand_owed.size() == 1, "Index: a person chooses the player and the card")
+	st_ix.index_choose(0, 0, "proto_c_angel")
+	check(st_ix.side(0).hand_owed.is_empty() and st_ix.side(0).exile.count("proto_c_angel") == 3 and st_ix.side(0).deck.size() == 2
+		and st_ix.side(0).relics.size() == 3, "Index on yourself: your own copies are exiled and you create the Testimonies")
 	var tm: BattleState.Perm = st.side(1).relics[0]
 	var hand_n := st.side(1).hand.size()
 	st.priority = 1

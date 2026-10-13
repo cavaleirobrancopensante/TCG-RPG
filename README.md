@@ -838,3 +838,12 @@ two-for-one creatures, engines and the graveyard as a resource.
   stayed on screen (the "stuck after winning the second tournament bout" report). The end of the
   duel is now always played out, with Victoria or Clades and Continue.
 - New test tests/tour_flow_test.tscn plays tournament bouts through the real screens.
+
+## The Index reworked (1.68)
+
+- Index (prototype): "Look at target player's library. Choose a card other than a land. That
+  player exiles it and every card with the same name from his hand, library and graveyard, then
+  shuffles and creates a Testimony for each card exiled this way."
+- You choose the player first (your opponent or yourself), then the card from his library. On
+  yourself it thins your own deck and gives you the Testimonies.
+- The AI aims it at its opponent and takes the card worth most, counting its copies.

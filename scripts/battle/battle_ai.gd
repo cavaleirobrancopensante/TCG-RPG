@@ -821,6 +821,12 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 						return [0.0, []]
 				else:
 					v += 2.2
+			"index":
+				if st.library_choices(1 - i).is_empty():
+					if is_spell:
+						return [0.0, []]
+				else:
+					v += 2.6
 			"testimony":
 				v += (0.8 if e.get("who", "self") != "enemy" else -0.8) * amount
 			"inquire":
