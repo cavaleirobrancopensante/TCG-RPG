@@ -66,6 +66,10 @@ func _id(name: String) -> String:
 	var tid := "r_" + name.to_lower().replace(" ", "_")
 	if CardDB.has_card(tid):
 		return tid
+	# the rules are tested on the old set's cards, still loaded though out of play since 1.80
+	for id in CardDB.cards:
+		if not String(id).begins_with("proto_") and CardDB.get_card(id).get("name", "") == name:
+			return id
 	for id in CardDB.all_set_ids():
 		if CardDB.get_card(id)["name"] == name:
 			return id

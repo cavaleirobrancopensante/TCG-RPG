@@ -746,14 +746,14 @@
        },
        {
         "by": "cardinal_benincasa",
-        "text": "You carry Saint Lucy home. The bells of Santa Lucerna ring for an hour, and the Cardinal gives you the cathedral's gift: an image of Saint Michael, painted for his feast."
+        "text": "You carry Saint Lucy home. The bells of Santa Lucerna ring for an hour, and the Cardinal gives you the cathedral's gift: an image of the Angel of the Reliquary, painted for the feast of Saint Michael."
        }
       ]
      },
      "reward": {
       "gold": 200,
       "xp": 200,
-      "card": "sanctum_m_004"
+      "card": "proto_c_angel"
      }
     }
    ]
@@ -924,7 +924,7 @@
      "reward": {
       "gold": 200,
       "xp": 200,
-      "card": "abyss_m_001"
+      "card": "proto_p_azrakel"
      }
     }
    ]
@@ -1096,7 +1096,7 @@
      "reward": {
       "gold": 200,
       "xp": 200,
-      "card": "wild_m_002"
+      "card": "proto_ow_awaken"
      }
     }
    ]
@@ -1268,7 +1268,7 @@
      "reward": {
       "gold": 200,
       "xp": 200,
-      "card": "revel_m_004"
+      "card": "proto_rv_archduke"
      }
     }
    ]
@@ -1433,14 +1433,14 @@
        "\"You have refuted me with a deck of cards. Very well: it seems the stronger was right after all.\"",
        {
         "by": "master_theon",
-        "text": "The old sage speaks at last: \"I was silent because there was no one worth answering.\" Master Theon sends you the Porch's gift: the image of Xenophon, who brought the Ten Thousand home."
+        "text": "The old sage speaks at last: \"I was silent because there was no one worth answering.\" Master Theon sends you the Porch's gift: the image of the Navarch of the Cold Sea, who brought the fleet home through the winter storms."
        }
       ]
      },
      "reward": {
       "gold": 200,
       "xp": 200,
-      "card": "lyceum_m_004"
+      "card": "proto_st_navarch"
      }
     }
    ]
@@ -1605,14 +1605,14 @@
        "The governor drops into place and the great wheels slow, and stop. Varn climbs out of the engine black with soot, and almost grateful.",
        {
         "by": "octavian_pell",
-        "text": "\"The books balance,\" says the Grand Tabulator, as near to smiling as he comes. \"The guild gives you the image of the Archwright of Cogspire, who built the first engine. He would have liked you.\""
+        "text": "\"The books balance,\" says the Grand Tabulator, as near to smiling as he comes. \"The guild gives you the plans of the Great Automaton, the first engine the guild ever built. Its maker would have liked you.\""
        }
       ]
      },
      "reward": {
       "gold": 200,
       "xp": 200,
-      "card": "machine_m_004"
+      "card": "proto_te_automaton"
      }
     }
    ]

@@ -20,7 +20,7 @@ extends Control
 signal closed
 
 const COSTS := ["Any cost", "Cost 0-1", "Cost 2", "Cost 3", "Cost 4", "Cost 5", "Cost 6+"]
-const TYPES := ["Any type", "Creature", "Sorcery", "Instant", "Relic", "Land"]
+const TYPES := ["Any type", "Creature", "Sorcery", "Instant", "Construct", "Possession", "Blessing", "Land"]
 const RARITIES := ["Any rarity", "Common", "Uncommon", "Rare", "Mythic"]
 const KEYWORDS := ["Any ability", "Flying", "Guardian", "Lifelink", "Sanctified", "Deathtouch", "Dread",
 	"Trample", "Reach", "Regenerate", "Haste", "First strike", "Vigilance", "Defender", "Steadfast",

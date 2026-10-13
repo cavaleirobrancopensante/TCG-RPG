@@ -1015,3 +1015,30 @@ two-for-one creatures, engines and the graveyard as a resource.
   Revel 59%, Stoa 47%, Old Ways 46%, Technocracy 48% on average. With the first 60-card lists
   the Technocracy was at 33%; more Calibrated Discharge, Gear Trap and Line-Master (and a Stoa
   with more early Hoplites) closed the gap without changing a card.
+
+## The first set is the game's set (1.80)
+
+- The campaign now plays with the first set only: 135 cards, twenty for each faith and fifteen
+  two-faith cards (the Stoa's twentieth is Ask the Price). Boosters, shops, pedlars, rewards,
+  drafts, enemy decks, wanderers, the deck builder, the card database and Quick Duel all use it.
+  The old set's cards stay in the files for the art and the rules tests, but no one can get or
+  build with them. The dual lands stay.
+- Cards in the set are marked "set": 1 (CardDB.is_collectible). The early drafts of the redesign
+  (the first Pilgrim, Priest, Sentinel, Bishop, Saint Michael, and the first Pact cards) and the
+  back faces of two-faced cards are out.
+- Old saves: a save from 1.79 or before keeps its gold, map, story, level, lairs and missions.
+  Its cards and decks are replaced: the hero's starting boosters of the new set are opened at
+  once and a first deck is built from them. A message says so once. The save version is now 4.
+- The six storyline finales give the new set's best cards: the Angel of the Reliquary, Azrakel,
+  Awaken the Grove, the Archduke of the Endless Feast, the Navarch of the Cold Sea and the Great
+  Automaton. Three lines of story text that named old cards were changed to match.
+- Boosters: the set has two mythics, so the rare slot is a mythic only as often as keeps each
+  mythic half as likely as each rare (about 1 pack in 17).
+- Wanderers: each theme matches the new cards (the Performers are Revellers, the Sailors read
+  the Meditations, and so on); wanderers run at least two copies of a card even at level 1.
+- The deck builder, card database and draft filter by Creature, Sorcery, Instant, Construct,
+  Possession, Blessing and Land. Before this, Constructs, Possessions and Blessings fell outside
+  every filter, and the draft's pick list left them out.
+- Every new card is translated into Portuguese and Spanish. New terms: Bis and Recordação /
+  Recuerdo (Encore, Recollection), Testemunho / Testimonio, Temperança / Templanza.
+- The Quick Duel's faith decks drop the "Prototype:" prefix.

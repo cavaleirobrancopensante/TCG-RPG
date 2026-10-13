@@ -11,7 +11,7 @@ extends Control
 signal closed
 
 const GROUPS := ["all", "sanctum", "abyss", "wild", "revel", "lyceum", "machine", "gold", "lands"]
-const TYPES := ["Any type", "Creature", "Sorcery", "Instant", "Relic", "Land"]
+const TYPES := ["Any type", "Creature", "Sorcery", "Instant", "Construct", "Possession", "Blessing", "Land"]
 const RARITIES := ["Any rarity", "Basic", "Common", "Uncommon", "Rare", "Mythic"]
 const RARITY_ORDER := ["basic", "common", "uncommon", "rare", "mythic"]
 const FRAME_MS := 8               # time spent making thumbnails per frame
@@ -194,7 +194,7 @@ func _collect() -> void:
 		if String(id).begins_with("t_"):
 			continue          # rules-test cards registered by the test runner
 		var c := CardDB.get_card(id)
-		if c.get("rarity", "") == "token" or c.get("proto", false):
+		if c.get("rarity", "") == "token" or not CardDB.is_collectible(c):
 			continue
 		all_ids.append(id)
 		var lname := I18n.t(String(c.get("name", "")))

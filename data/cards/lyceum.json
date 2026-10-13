@@ -1799,7 +1799,8 @@
     ],
     "text": "Counter target spell unless its controller pays {3}.",
     "flavor": "\"You will be unjust, then, and insatiable, if you are unwilling to pay the price for which these things are sold.\" (Epictetus, Enchiridion)",
-    "art": "res://art/cards/lyceum_c_030.webp"
+    "art": "res://art/cards/lyceum_c_030.webp",
+    "set": 1
   },
   {
     "id": "lyceum_c_031",

@@ -249,6 +249,12 @@ func current_play_time() -> float:
 	return play_time + (Time.get_ticks_msec() - _session_start) / 1000.0
 
 
+## 4: the first set (1.80) replaced the old set of cards.
+const SAVE_VERSION := 4
+## Set when a loaded save had the old cards: the screen tells the player once, then clears it.
+var set_changed_notice := false
+
+
 ## Saves the run. With n > 0 it saves into that slot and keeps playing there.
 func save_game(n: int = 0) -> void:
 	if sandbox:
@@ -258,7 +264,7 @@ func save_game(n: int = 0) -> void:
 	play_time = current_play_time()
 	_session_start = Time.get_ticks_msec()
 	var data := {
-		"version": 3, "gold": gold, "collection": collection, "foils": foils, "deck": deck,
+		"version": SAVE_VERSION, "gold": gold, "collection": collection, "foils": foils, "deck": deck,
 		"decks": decks, "active_deck": active_deck,
 		"player_name": player_name, "player_pos": [player_pos.x, player_pos.y],
 		"cleared_lairs": cleared_lairs, "visited_cities": visited_cities,
@@ -414,7 +420,36 @@ func load_game(n: int = 0) -> bool:
 		for id in d.keys():
 			if not CardDB.has_card(id):
 				d.erase(id)
+	if int(data.get("version", 0)) < 4:
+		_move_to_first_set()
 	return true
+
+
+## A save from before 1.80 holds the old set. The run keeps its gold, map, story, level and
+## everything else; its cards and decks give way to the hero's starting boosters of the first
+## set, opened at once, and a first deck built from them.
+func _move_to_first_set() -> void:
+	collection.clear()
+	foils.clear()
+	decks = [{"name": "Starter deck", "cards": {}}]
+	active_deck = 0
+	for k in pedlars:
+		pedlars[k]["sold"] = []
+	market = {}
+	tour_save = {}
+	var packs: Array = Hero.START_PACKS.get(difficulty, [2, 1])
+	var keep := pending_boosters
+	var keep_faiths := faction_packs.duplicate()
+	pending_boosters = int(packs[0]) + int(packs[1])
+	faction_packs = []
+	for k in int(packs[1]):
+		faction_packs.append(hero)
+	while pending_boosters > 0:
+		open_booster()
+	pending_boosters = keep
+	faction_packs = keep_faiths
+	deck = DeckTools.auto_build(owned_all(), DeckTools.starter_factions(owned_all(), hero))
+	set_changed_notice = true
 
 
 func _int_dict(d: Dictionary) -> Dictionary:

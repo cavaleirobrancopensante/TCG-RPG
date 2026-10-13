@@ -19,9 +19,30 @@ static func open(rng: RandomNumberGenerator, factions: Array = []) -> Array:
 	var foil := rng.randf() < FOIL_CHANCE
 	var wild_rarity := weighted_rarity(rng, WILDCARD_WEIGHTS)
 	pack.append({"id": CardDB.random_of_rarity(wild_rarity, rng, factions), "foil": foil, "wildcard": true})
-	var top := "mythic" if rng.randf() < MYTHIC_CHANCE else "rare"
+	var top := "mythic" if rng.randf() < mythic_chance(factions) else "rare"
 	pack.append({"id": CardDB.random_of_rarity(top, rng, factions), "foil": false})
 	return pack
+
+
+## The chance that the rare slot is a mythic: 1 in 8 in a full set, less when there are few
+## mythics, so that each mythic stays half as likely as each rare (the first set has two).
+static func mythic_chance(factions: Array = []) -> float:
+	var nm := 0
+	var nr := 0
+	var fs: Array = factions if not factions.is_empty() else Factions.ORDER
+	var seen := {}
+	for f in fs:
+		for r in ["mythic", "rare"]:
+			for id in CardDB.pools.get(f, {}).get(r, []):
+				if not seen.has(id):
+					seen[id] = true
+					if r == "mythic":
+						nm += 1
+					else:
+						nr += 1
+	if nm == 0:
+		return 0.0
+	return minf(MYTHIC_CHANCE, float(nm) / float(nm + 2 * nr))
 
 
 ## Avoid duplicates inside the same rarity block when the pool allows it.
