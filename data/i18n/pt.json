@@ -5152,5 +5152,14 @@
  "Holy Relic": "Relíquia Sagrada",
  "Possession": "Possessão",
  "Possessions": "Possessões",
- "Relic Equipment": "Relíquia, Equipamento"
+ "Relic Equipment": "Relíquia, Equipamento",
+ "Basic lands": "Terrenos básicos",
+ "Choose how many basic lands of each faith, or let them be calculated": "Escolha quantos terrenos básicos de cada fé, ou deixe que sejam calculados",
+ "Other cards: %d · Basic lands: %d · Deck: %d cards": "Outras cartas: %d · Terrenos básicos: %d · Baralho: %d cartas",
+ "%d symbols": "%d símbolos",
+ "Auto calculate": "Calcular automaticamente",
+ "Calculate": "Calcular",
+ "How many cards should the deck have? Basic lands fill the rest, shared by the mana symbols of your spells. The least is 40.": "Quantas cartas o baralho deve ter? Os terrenos básicos completam o resto, divididos pelos símbolos de mana dos seus feitiços. O mínimo é 40.",
+ "%d cards": "%d cartas",
+ "The deck already has %d cards besides its basic lands: more than %d.": "O baralho já tem %d cartas além dos terrenos básicos: mais de %d."
 }

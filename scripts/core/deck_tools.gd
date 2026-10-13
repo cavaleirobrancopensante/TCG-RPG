@@ -232,6 +232,72 @@ static func add_lands(deck: Dictionary, total: int) -> void:
 		deck[land] = int(deck.get(land, 0)) + int(alloc[k])
 
 
+## The coloured mana symbols (pips) of a deck's spells, by mana symbol ({"G": 18, "R": 12});
+## generic costs do not count, lands do not count.
+static func deck_pips(deck: Dictionary) -> Dictionary:
+	var out := {}
+	for id in deck:
+		var c := CardDB.get_card(id)
+		if c.is_empty() or c.get("type") == "land":
+			continue
+		for k in c.get("cost", {}):
+			if k != "generic" and Factions.MANA_TO_FACTION.has(k):
+				out[k] = int(out.get(k, 0)) + int(c["cost"][k]) * int(deck[id])
+	return out
+
+
+## How many basic lands of each faith make `lands` lands for this deck: each colour's share of
+## the pips times the land count, rounded so the total is exact (18 green and 12 red pips with
+## 17 lands: 10.2 and 6.8, so 10 and 7). A colour with no pips gets none. A deck without a single
+## pip splits the lands evenly between the faiths of its cards. Returns {faith: n}.
+static func basics_by_pips(deck: Dictionary, lands: int) -> Dictionary:
+	var out := {}
+	if lands <= 0:
+		return out
+	var pips := deck_pips(deck)
+	var weights := {}
+	for k in pips:
+		if int(pips[k]) > 0:
+			weights[Factions.MANA_TO_FACTION[k]] = float(pips[k])
+	if weights.is_empty():
+		for id in deck:
+			var c := CardDB.get_card(id)
+			if not c.is_empty() and c.get("type") != "land" and Factions.DATA.has(String(c.get("faction", ""))):
+				weights[String(c["faction"])] = 1.0
+	if weights.is_empty():
+		return out
+	var total := 0.0
+	for f in weights:
+		total += float(weights[f])
+	var given := 0
+	var rema := {}
+	for f in weights:
+		var exact := float(lands) * float(weights[f]) / total
+		out[f] = int(floor(exact))
+		given += int(out[f])
+		rema[f] = exact - floor(exact)
+	var order: Array = rema.keys()
+	order.sort_custom(func(a, b): return float(rema[a]) > float(rema[b]) if float(rema[a]) != float(rema[b]) else float(weights[a]) > float(weights[b]))
+	var i := 0
+	while given < lands:
+		out[order[i % order.size()]] = int(out[order[i % order.size()]]) + 1
+		given += 1
+		i += 1
+	for f in out.keys():
+		if int(out[f]) <= 0:
+			out.erase(f)
+	return out
+
+
+## The deck's cards that are not basic lands (what the basic lands are added to).
+static func count_without_basics(deck: Dictionary) -> int:
+	var n := 0
+	for id in deck:
+		if not CardDB.is_basic_land(id):
+			n += int(deck[id])
+	return n
+
+
 ## Random enemy deck for a faith. Higher level = more rares/mythics.
 static func enemy_deck(faction: String, level: int, rng: RandomNumberGenerator) -> Dictionary:
 	var weights := {
