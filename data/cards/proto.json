@@ -2585,39 +2585,85 @@
   "id": "proto_te_ballista",
   "name": "Siege Ballista",
   "faction": "machine",
-  "rarity": "common",
+  "rarity": "rare",
   "type": "relic",
   "subtype": "Construct Relic",
   "cost": {
    "C": 1,
-   "generic": 2
+   "generic": 3
   },
   "effects": [],
   "abilities": [
    {
     "cost": {
-     "mana": {
-      "generic": 1
-     },
+     "mana_x": true,
+     "tap": true
+    },
+    "effects": [
+     {
+      "action": "add_counter",
+      "counter": "ammo",
+      "amount_x_paid": true
+     }
+    ],
+    "text": "{X}, {T}: Put X ammo counters on Siege Ballista."
+   },
+   {
+    "cost": {
      "tap": true,
-     "sacrifice": "construct"
+     "remove_counters": {
+      "counter": "ammo",
+      "x": true
+     }
     },
     "effects": [
      {
       "action": "damage",
-      "target": "enemy_creature",
-      "amount": 2
+      "target": "any_enemy",
+      "amount_x_paid": true
      }
     ],
-    "text": "{1}, {T}, Sacrifice another Construct: Siege Ballista deals 2 damage to target creature."
+    "text": "{T}, Remove X ammo counters from Siege Ballista: It deals X damage to any target."
+   },
+   {
+    "cost": {
+     "tap": true,
+     "remove_counters": {
+      "counter": "ammo",
+      "n": 4
+     }
+    },
+    "effects": [
+     {
+      "action": "destroy",
+      "target": "noncreature_permanent"
+     }
+    ],
+    "text": "{T}, Remove four ammo counters from Siege Ballista: Destroy target nonland, noncreature permanent."
+   },
+   {
+    "cost": {
+     "tap": true,
+     "remove_counters": {
+      "counter": "ammo",
+      "n": 6
+     }
+    },
+    "effects": [
+     {
+      "action": "destroy_land",
+      "target": "enemy_land"
+     }
+    ],
+    "text": "{T}, Remove six ammo counters from Siege Ballista: Destroy target land. Its controller creates an Ore token."
    }
   ],
-  "text": "{1}, {T}, Sacrifice another Construct: Siege Ballista deals 2 damage to target creature.",
+  "text": "{X}, {T}: Put X ammo counters on Siege Ballista. {T}, Remove X ammo counters from Siege Ballista: It deals X damage to any target. {T}, Remove four ammo counters from Siege Ballista: Destroy target nonland, noncreature permanent. {T}, Remove six ammo counters from Siege Ballista: Destroy target land. Its controller creates an Ore token.",
   "flavor": "The wall was rated for catapults. No one had rated it for patience.",
   "art": "res://art/cards/machine_u_001.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 3
+  "mana_value": 4
  },
  {
   "id": "proto_te_lancer",

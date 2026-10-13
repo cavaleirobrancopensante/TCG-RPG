@@ -9,7 +9,7 @@ const START_HAND := 7           # the most cards kept at the end of a turn; Reas
 const MAX_MULLIGANS := 5       # after five mulligans the hand must be kept (two cards left)
 const TARGET_CHOICE_TYPES := ["any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "enemy_demon",
 	"enemy_creature_or_demon", "any_grave_card", "nonland_permanent", "enemy_land", "enemy_construct", "own_construct",
-	"own_grave_construct"]
+	"own_grave_construct", "noncreature_permanent"]
 
 
 class Perm:
@@ -1467,6 +1467,14 @@ func _plan_payment(i: int, cost: Dictionary):
 	return plan
 
 
+## The most generic mana side i can pay right now (for an {X} cost).
+func max_x(i: int) -> int:
+	var n := 0
+	while n < 30 and can_pay(i, {"generic": n + 1}):
+		n += 1
+	return n
+
+
 ## [uid, colour] for each untapped creature of side i that can tap for one mana now (a mana druid).
 func mana_creatures(i: int) -> Array:
 	var out: Array = []
@@ -1895,6 +1903,12 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 			for p in who.creatures + who.relics:
 				if p.subtype_has("Construct") and _passes_filters(p, e) and not (who == enemy and _protected_from_current(p)):
 					out.append({"kind": "creature" if p.is_creature() else "relic", "uid": p.uid})
+		"noncreature_permanent":
+			# a relic, a Possession, a Blessing, a token: his first, then yours
+			for k in [1 - i, i]:
+				for r in side(k).relics:
+					if not (k != i and _protected_from_current(r)):
+						out.append({"kind": "relic", "uid": r.uid})
 		"own_grave_construct":
 			for gid in me.graveyard:
 				if String(CardDB.get_card(gid).get("subtype", "")).contains("Construct"):
@@ -2808,6 +2822,11 @@ func can_activate(i: int, uid: int, idx: int) -> bool:
 			return false
 	if cost.has("mana") and not can_pay(i, cost["mana"]):
 		return false
+	if cost.get("mana_x", false) and max_x(i) < 1:
+		return false
+	var rc: Dictionary = cost.get("remove_counters", {})
+	if not rc.is_empty() and int(p.counters.get(String(rc.get("counter", "charge")), 0)) < (1 if rc.get("x", false) else int(rc.get("n", 1))):
+		return false
 	# an ability whose only targets are missing is useless
 	for e in ab.get("effects", []):
 		if TARGET_CHOICE_TYPES.has(e.get("target", "")) and valid_targets_for(i, p, e).is_empty():
@@ -2871,19 +2890,40 @@ func _sacrifice_choice(i: int, source: Perm, kind: String):
 	return best
 
 
-func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1) -> bool:
+func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1, x: int = -1) -> bool:
 	if not can_activate(i, uid, idx):
 		return false
 	var p := find_perm(uid)
 	var ab: Dictionary = abilities_of(p)[idx]
 	var cost: Dictionary = ab.get("cost", {})
-	if Array(ab.get("effects", [])).any(func(x): return x.has("amount_x")):
+	if Array(ab.get("effects", [])).any(func(fx): return fx.has("amount_x")):
 		# "X is the number of charge counters removed": counted before the card is sacrificed
 		ab = ab.duplicate(true)
-		for x in ab["effects"]:
-			if x.has("amount_x"):
-				x["amount"] = int(p.counters.get(String(x["amount_x"]), 0))
+		for fx in ab["effects"]:
+			if fx.has("amount_x"):
+				fx["amount"] = int(p.counters.get(String(fx["amount_x"]), 0))
 		p.counters.clear()
+	# {X} in the cost, or X counters removed (the Siege Ballista): X is chosen now (the most, for the computer)
+	var xv := x
+	if cost.get("mana_x", false):
+		var most := max_x(i)
+		xv = clampi(xv if xv >= 0 else most, 1, maxi(1, most))
+		pay(i, {"generic": xv})
+	var rc: Dictionary = cost.get("remove_counters", {})
+	if not rc.is_empty():
+		var cn := String(rc.get("counter", "charge"))
+		var have := int(p.counters.get(cn, 0))
+		if rc.get("x", false):
+			xv = clampi(xv if xv >= 0 else have, 1, have)
+			p.counters[cn] = have - xv
+		else:
+			p.counters[cn] = have - int(rc.get("n", 1))
+		emit({"type": "counter_added", "uid": p.uid, "counter": cn, "n": int(p.counters[cn])})
+	if xv >= 0 and Array(ab.get("effects", [])).any(func(fx): return fx.get("amount_x_paid", false)):
+		ab = ab.duplicate(true)
+		for fx in ab["effects"]:
+			if fx.get("amount_x_paid", false):
+				fx["amount"] = xv
 	if cost.has("mana"):
 		pay(i, cost["mana"])
 	if cost.get("tap", false):
@@ -3959,6 +3999,19 @@ func auto_target(i: int, e: Dictionary):
 			if int(CardDB.get_card(String(ref["id"])).get("mana_value", 0)) > int(CardDB.get_card(String(best_g["id"])).get("mana_value", 0)):
 				best_g = ref
 		return best_g
+	if e.get("target", "") == "noncreature_permanent":
+		# the computer breaks the enemy's best relic or possession (a real card before a token), never its own
+		var best_r = null
+		var best_rv := -1.0
+		for ref in opts:
+			var r := find_perm(int(ref.get("uid", -1)))
+			if r == null or r.owner == i:
+				continue
+			var rv: float = (0.5 if r.is_token else 3.0) + float(r.card.get("mana_value", 0)) + (2.0 if r.attached_to >= 0 else 0.0)
+			if rv > best_rv:
+				best_rv = rv
+				best_r = ref
+		return best_r
 	if e.get("target", "") == "nonland_permanent":
 		# the computer sends back the enemy's best permanent, never its own
 		var theirs := opts.filter(func(r): return find_perm(int(r.get("uid", -1))) != null and find_perm(int(r.get("uid", -1))).owner != i)

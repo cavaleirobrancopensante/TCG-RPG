@@ -945,3 +945,13 @@ two-for-one creatures, engines and the graveyard as a resource.
   can make blockers on the opponent's attack ("Activate only as a sorcery" is gone). The AI
   does it too when it is attacked.
 - Clockwork Sentry is now {C}, 1/1, Salvage: the sacrifice engine starts on turn one.
+
+## The new Siege Ballista (1.77)
+
+- Siege Ballista ({3}{C}, Construct relic) no longer eats your Constructs. "{X}, {T}: Put X ammo
+  counters on it." "{T}, Remove X ammo counters: It deals X damage to any target." "{T}, Remove
+  four: Destroy target nonland, noncreature permanent." "{T}, Remove six: Destroy target land."
+  Load it at the end of the opponent's turn, fire on yours. Its ammo shows on the card.
+- Activated abilities can now have {X} in their cost, or remove X counters: a number picker asks
+  how much. The AI loads with its spare mana and fires to finish you, at a creature worth it,
+  or once it has six.
