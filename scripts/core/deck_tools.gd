@@ -688,7 +688,7 @@ static func premade_decks() -> Array:
 # ------------------------------------------------------------------ prototype decks
 
 ## The redesign's test decks (cards in data/cards/proto.json, outside every pool): the Church's
-## Peace and Crusade, the Pact's possessions. Quick duel only.
+## Peace and Crusade, the Pact's possessions, the Revel's Excess against the Stoa's Phalanx. Quick duel only.
 const PROTO_DECKS := {
 	"Prototype: Church, Holy Office": {"faith": "sanctum", "cards": {
 		"proto_c_thurifer": 3, "proto_c_censure": 4, "proto_c_index": 1, "proto_c_keeper": 2,
@@ -698,6 +698,13 @@ const PROTO_DECKS := {
 		"proto_p_cultist": 4, "proto_p_covet": 3, "proto_a_whisper": 3, "proto_p_bones": 2,
 		"proto_a_robber": 2, "proto_a_curse": 1, "proto_p_price": 1, "proto_a_wrath": 2, "proto_p_hierophant": 2,
 		"proto_p_altar": 1, "proto_p_summoner": 1, "proto_a_hold": 1, "proto_p_azrakel": 1}},
+	"Prototype: Revel, Midnight Revel": {"faith": "revel", "cards": {
+		"proto_rv_brawler": 4, "proto_rv_masked": 3, "proto_rv_fireeater": 3, "proto_rv_host": 2,
+		"proto_rv_heckler": 1, "proto_rv_lord": 2, "proto_rv_archduke": 1, "proto_rv_toast": 3,
+		"proto_rv_brandy": 2, "proto_rv_flagon": 2, "proto_rv_cask": 1}},
+	"Prototype: Stoa, the Phalanx": {"faith": "lyceum", "cards": {
+		"proto_st_ephebe": 4, "proto_st_plataea": 4, "proto_st_polemarch": 3, "proto_st_strategos": 3,
+		"lyceum_c_030": 4, "proto_st_lamplight": 2, "proto_st_gate": 2, "proto_st_reply": 1}},
 }
 
 

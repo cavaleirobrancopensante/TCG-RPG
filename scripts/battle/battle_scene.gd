@@ -21,6 +21,7 @@ var mode := "idle"              # idle | attack | block | target
 var sel_attackers: Array = []
 var pending_trigger := -1        # uid of our permanent whose "when it enters/flips" targets we choose
 var pending_mode := -1           # "choose one": the mode chosen for the card or trigger being targeted
+var pending_excess := ""         # a discarded Excess card whose targets we choose (pending_trigger is then -3)
 signal _trigger_done
 var pending_blocks := {}        # attacker uid -> Array of blocker uids (several may block one)
 var block_pick := -1
@@ -1514,6 +1515,32 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 
 func _resolve_owed() -> void:
 	var me := st.side(0)
+	if not me.excess_owed.is_empty():
+		var xid := String(me.excess_owed[0])
+		var xc := CardDB.get_card(xid)
+		if not st.can_cast_excess(0, xid):
+			_log(I18n.t("You can't pay %s's Excess cost: it goes to your graveyard.") % _card_name(xid), false)
+			st.excess_choose(0, false)
+			return
+		var cast_it: bool = await _ask_two(I18n.t("Excess"), I18n.t("You discarded %s. Cast it now for its Excess cost, %s?") % [_card_name(xid), UIKit.cost_text(xc.get("excess", {}))],
+			I18n.t("Let it go"), I18n.t("Cast it"))
+		if not cast_it:
+			st.excess_choose(0, false)
+			return
+		st._with_source(xc)
+		target_specs = st.cast_specs(BattleState.excess_card(xc))
+		chosen_targets = []
+		pending_excess = xid
+		pending_trigger = -3
+		pending_mode = -1
+		pending_hand_idx = -1
+		pending_ability = []
+		busy = false
+		_advance_targeting()
+		if pending_trigger != -1:
+			await _trigger_done
+		busy = true
+		return
 	if not me.hand_owed.is_empty():
 		var t: Dictionary = me.hand_owed[0]
 		var e: Dictionary = t["e"]
@@ -1652,6 +1679,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				line = I18n.t("%s casts %s on %s.") % [st.side(1).name, nm, tg] if tg != "" else I18n.t("%s casts %s.") % [st.side(1).name, nm]
 			if e.get("overclock", false):
 				line += " " + I18n.t("(overclocked)")
+			if e.get("excess", false):
+				line += " " + I18n.t("(for its Excess cost)")
 			_log(line)
 			_rebuild_hand()
 			_refresh_bars()
@@ -1999,6 +2028,10 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			if p and figures.has(e["uid"]):
 				figures[e["uid"]].sync(p)
 			await _wait(0.1)
+		"excess":
+			_log(I18n.t("Excess: %s waits to be cast.") % _card_name(e["id"]), false)
+		"excess_gone":
+			pass
 		"discard":
 			var dn := _card_name(e["id"])
 			_log(I18n.t("You discard %s.") % dn if int(e["side"]) == 0 else I18n.t("%s discards %s.") % [st.side(1).name, dn])
@@ -2650,6 +2683,16 @@ func _advance_targeting() -> void:
 			_advance_targeting()
 			return
 	mode = "idle"
+	if pending_excess != "":
+		var xt: Array = chosen_targets.duplicate()
+		pending_excess = ""
+		pending_trigger = -1
+		target_specs = []
+		chosen_targets = []
+		st.excess_choose(0, true, xt)
+		refresh()
+		_trigger_done.emit()
+		return
 	if pending_trigger != -1:
 		var tg2: Array = chosen_targets.duplicate()
 		var fighter := -1
@@ -2712,6 +2755,8 @@ func _confirm_targets() -> String:
 		what = I18n.t("Use %s's ability on %s?") % [_obj(int(pending_ability[0])), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_hand_idx >= 0 and pending_hand_idx < st.side(0).hand.size():
 		what = I18n.t("Cast %s on %s?") % [_card_name(st.side(0).hand[pending_hand_idx]), _refs_text(chosen_targets.filter(func(t): return t != null))]
+	elif pending_excess != "":
+		what = I18n.t("Cast %s on %s?") % [_card_name(pending_excess), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_trigger >= 0:
 		what = I18n.t("%s: target %s?") % [_obj(pending_trigger), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	var lb := UIKit.label(_cap(what), UIKit.FS_BODY, UIKit.TEXT, true)
@@ -2802,7 +2847,7 @@ func _spec_prompt(spec: Dictionary) -> String:
 		return I18n.t("your creature that will fight")
 	if a == "sacrifice":
 		return I18n.t("a creature to sacrifice")
-	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures", "enemy_relic": "an enemy relic", "enemy_demon": "an enemy Demon (a Demon creature or a possession)", "enemy_creature_or_demon": "an enemy creature or possession", "any_grave_card": "a card in a graveyard"}.get(t, t)
+	var who: String = {"any_enemy": "an enemy or their creature", "enemy_creature": "an enemy creature", "own_creature": "one of your creatures", "enemy_relic": "an enemy relic", "enemy_demon": "an enemy Demon (a Demon creature or a possession)", "enemy_creature_or_demon": "an enemy creature or possession", "any_grave_card": "a card in a graveyard", "nonland_permanent": "a creature or relic"}.get(t, t)
 	if a == "attach" and t == "own_creature":
 		return I18n.t("Possess or attach → one of your creatures")
 	if a == "attach" and t == "enemy_creature":
@@ -3851,12 +3896,14 @@ func _perm_entry(q) -> Variant:
 func _owed_key() -> String:
 	var me := st.side(0)
 	return str([me.owed_discards, me.foresight_cards.size(), me.martyr_owed, me.leak_owed.size(), me.charge_owed.size(),
-		me.possess_owed.size(), me.trigger_owed.size(), me.hand_owed.size(), me.edict_owed])
+		me.possess_owed.size(), me.trigger_owed.size(), me.hand_owed.size(), me.edict_owed, me.excess_owed.size()])
 
 
 ## Settle every owed choice of the player the way the AI would.
 func _force_owed() -> void:
 	var me := st.side(0)
+	while not me.excess_owed.is_empty():
+		st.excess_choose(0, false)
 	while not me.trigger_owed.is_empty():
 		st.trigger_choose(0, null)
 	while not me.hand_owed.is_empty():

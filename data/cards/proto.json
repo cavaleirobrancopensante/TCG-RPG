@@ -1473,5 +1473,535 @@
   "art": "res://art/cards/abyss_u_015.webp",
   "proto": true,
   "mana_value": 2
+ },
+ {
+  "id": "proto_rv_brawler",
+  "name": "Tavern Brawler",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "R": 1
+  },
+  "power": 2,
+  "toughness": 1,
+  "effects": [
+   {
+    "trigger": "discard",
+    "action": "grant",
+    "target": "self",
+    "keyword": "haste",
+    "power": 1
+   }
+  ],
+  "text": "Whenever you discard a card, Tavern Brawler gets +1/+0 and gains haste until end of turn.",
+  "flavor": "Ira furor brevis est: anger is a brief madness. (Horace, Epistles 1.2)",
+  "art": "res://art/cards/revel_c_001.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_rv_masked",
+  "name": "Masked Reveller",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "R": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "rummage",
+    "amount": 1
+   }
+  ],
+  "text": "When Masked Reveller enters, draw a card, then discard a card.",
+  "flavor": "Behind a mask, every man is braver and none of them is sober.",
+  "art": "res://art/cards/revel_c_009.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_rv_fireeater",
+  "name": "Fire-Eater of the Feast",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "R": 1,
+   "generic": 1
+  },
+  "power": 3,
+  "toughness": 1,
+  "effects": [],
+  "excess": {
+   "R": 1
+  },
+  "text": "Excess {R} (If you discard this card, you may cast it for its Excess cost instead of putting it into your graveyard.)",
+  "flavor": "The guests applaud. The guest nearest the stage stops applauding.",
+  "art": "res://art/cards/revel_c_007.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_rv_host",
+  "name": "Host of the Lantern Garden",
+  "faction": "revel",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "R": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "damage",
+    "target": "any_enemy",
+    "amount": 2
+   },
+   {
+    "trigger": "enter",
+    "action": "discard_self",
+    "amount": 1
+   }
+  ],
+  "text": "When Host of the Lantern Garden enters, he deals 2 damage to any enemy creature or the enemy player. Then discard a card.",
+  "flavor": "We call pleasure the beginning and end of the blessed life. (Epicurus, Letter to Menoeceus)",
+  "art": "res://art/cards/revel_u_004.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_rv_heckler",
+  "name": "Heckler at the Porch",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "R": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 1,
+  "effects": [
+   {
+    "trigger": "opp_upkeep",
+    "condition": "opp_composure",
+    "action": "damage",
+    "target": "enemy_player",
+    "amount": 1
+   }
+  ],
+  "text": "At the beginning of each opponent's upkeep, if that player has four or more cards in hand, Heckler at the Porch deals 1 damage to him.",
+  "flavor": "\"Tell us again, philosopher, how little you need.\"",
+  "art": "res://art/cards/revel_c_021.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_rv_lord",
+  "name": "Lord of Misrule",
+  "faction": "revel",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Reveller",
+  "cost": {
+   "R": 2,
+   "generic": 2
+  },
+  "power": 4,
+  "toughness": 3,
+  "effects": [
+   {
+    "trigger": "excess_cast",
+    "action": "damage",
+    "target": "enemy_player",
+    "amount": 1
+   }
+  ],
+  "statics": [
+   {
+    "static": "anthem",
+    "power": 1,
+    "toughness": 0,
+    "scope": "other_own_creatures",
+    "subtype": "Reveller"
+   }
+  ],
+  "text": "Other Revellers you control get +1/+0. Whenever you cast a spell for its Excess cost, Lord of Misrule deals 1 damage to each opponent.",
+  "flavor": "In all their rule there was but this one clause to be observed: Do what thou wilt. (Rabelais, Gargantua)",
+  "art": "res://art/cards/revel_u_017.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_rv_archduke",
+  "name": "Archduke of the Endless Feast",
+  "faction": "revel",
+  "rarity": "rare",
+  "type": "creature",
+  "subtype": "Human Noble",
+  "cost": {
+   "R": 2,
+   "generic": 5
+  },
+  "power": 6,
+  "toughness": 6,
+  "effects": [],
+  "excess": {
+   "R": 1,
+   "generic": 3
+  },
+  "text": "Trample. Excess {3}{R} (If you discard this card, you may cast it for its Excess cost instead of putting it into your graveyard.)",
+  "flavor": "Ah, make the most of what we yet may spend, / Before we too into the Dust descend. (Omar Khayyam, tr. FitzGerald)",
+  "art": "res://art/cards/revel_r_004.webp",
+  "keywords": [
+   "trample"
+  ],
+  "proto": true,
+  "mana_value": 7
+ },
+ {
+  "id": "proto_rv_toast",
+  "name": "Toast of Fire",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Revelry",
+  "cost": {
+   "R": 1,
+   "generic": 1
+  },
+  "speed": "instant",
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "damage",
+    "target": "any_enemy",
+    "amount": 3
+   }
+  ],
+  "excess": {
+   "R": 1
+  },
+  "text": "Toast of Fire deals 3 damage to any enemy creature or the enemy player. Excess {R}",
+  "flavor": "Come, fill the Cup, and in the fire of Spring / Your Winter-garment of Repentance fling. (Omar Khayyam, tr. FitzGerald)",
+  "art": "res://art/cards/revel_c_013.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_rv_brandy",
+  "name": "Spilled Brandy",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Revelry",
+  "cost": {
+   "R": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 2
+   },
+   {
+    "trigger": "cast",
+    "action": "discard_self",
+    "amount": 1
+   }
+  ],
+  "text": "Draw two cards, then discard a card.",
+  "flavor": "One clumsy elbow, one candle, and the evening became memorable.",
+  "art": "res://art/cards/revel_c_015.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_rv_flagon",
+  "name": "Flaming Flagon",
+  "faction": "revel",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Revelry",
+  "cost": {
+   "R": 1,
+   "generic": 1
+  },
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "damage",
+    "target": "any_enemy",
+    "amount": 2,
+    "amount_if": {
+     "condition": "discarded",
+     "amount": 4
+    }
+   }
+  ],
+  "text": "Flaming Flagon deals 2 damage to any enemy creature or the enemy player. If you discarded a card this turn, it deals 4 damage instead.",
+  "flavor": "It was poured for him. It simply arrived faster than he expected.",
+  "art": "res://art/cards/revel_c_017.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_rv_cask",
+  "name": "Bottomless Wine Cask",
+  "faction": "revel",
+  "rarity": "uncommon",
+  "type": "relic",
+  "subtype": "Relic",
+  "cost": {
+   "R": 1,
+   "generic": 1
+  },
+  "effects": [],
+  "abilities": [
+   {
+    "cost": {
+     "mana": {
+      "generic": 1
+     },
+     "tap": true
+    },
+    "effects": [
+     {
+      "action": "rummage",
+      "amount": 1
+     }
+    ],
+    "text": "{1}, {T}: Draw a card, then discard a card."
+   }
+  ],
+  "text": "{1}, {T}: Draw a card, then discard a card.",
+  "flavor": "The Wine of Life keeps oozing drop by drop, / The Leaves of Life keep falling one by one. (Omar Khayyam, tr. FitzGerald)",
+  "art": "res://art/cards/revel_u_012.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_st_ephebe",
+  "name": "Ephebe of the Phalanx",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Hoplite",
+  "cost": {
+   "U": 1
+  },
+  "power": 1,
+  "toughness": 2,
+  "effects": [],
+  "statics": [
+   {
+    "static": "anthem",
+    "power": 1,
+    "toughness": 1,
+    "scope": "self",
+    "condition": "composure"
+   }
+  ],
+  "text": "Composure: As long as you have four or more cards in hand, Ephebe of the Phalanx gets +1/+1.",
+  "flavor": "\"It is difficulties that show what men are.\" (Epictetus, Discourses)",
+  "art": "res://art/cards/lyceum_c_002.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 1
+ },
+ {
+  "id": "proto_st_plataea",
+  "name": "Hoplite of Plataea",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Human Hoplite",
+  "cost": {
+   "U": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [],
+  "text": "Flash (You may cast this spell any time you could cast an instant.)",
+  "flavor": "At Plataea the arrows fell like hail, and the line stood and waited for the omens. Then it came on.",
+  "art": "res://art/cards/lyceum_c_023.webp",
+  "keywords": [
+   "flash"
+  ],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_st_polemarch",
+  "name": "Polemarch",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Hoplite",
+  "cost": {
+   "U": 1,
+   "generic": 2
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [],
+  "statics": [
+   {
+    "static": "anthem",
+    "power": 1,
+    "toughness": 1,
+    "scope": "other_own_creatures",
+    "subtype": "Hoplite"
+   },
+   {
+    "static": "keyword",
+    "keyword": "vigilance",
+    "scope": "own_creatures",
+    "subtype": "Hoplite",
+    "condition": "composure"
+   }
+  ],
+  "text": "Other Hoplites you control get +1/+1. Composure: As long as you have four or more cards in hand, Hoplites you control have vigilance.",
+  "flavor": "He takes his place on the right of the line, where the honour is, and the danger.",
+  "art": "res://art/cards/lyceum_u_014.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_st_strategos",
+  "name": "Patient Strategos",
+  "faction": "lyceum",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Soldier",
+  "cost": {
+   "U": 2,
+   "generic": 2
+  },
+  "power": 3,
+  "toughness": 3,
+  "effects": [
+   {
+    "trigger": "end_step",
+    "condition": "no_casts",
+    "action": "draw",
+    "amount": 1
+   }
+  ],
+  "text": "At the beginning of your end step, if you cast no spells this turn, draw a card.",
+  "flavor": "\"No great thing is created suddenly.\" (Epictetus, Discourses)",
+  "art": "res://art/cards/lyceum_u_006.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
+ },
+ {
+  "id": "proto_st_lamplight",
+  "name": "Reading by Lamplight",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Discourse",
+  "cost": {
+   "U": 1,
+   "generic": 2
+  },
+  "speed": "instant",
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 2
+   }
+  ],
+  "text": "Draw two cards.",
+  "flavor": "\"Everywhere means nowhere.\" (Seneca, Letters to Lucilius, on reading too many books)",
+  "art": "res://art/cards/lyceum_c_015.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
+ },
+ {
+  "id": "proto_st_gate",
+  "name": "Sent Back to the Gate",
+  "faction": "lyceum",
+  "rarity": "common",
+  "type": "spell",
+  "subtype": "Discourse",
+  "cost": {
+   "U": 1,
+   "generic": 1
+  },
+  "speed": "instant",
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "bounce",
+    "target": "nonland_permanent"
+   }
+  ],
+  "text": "Return target nonland permanent to its owner's hand.",
+  "flavor": "\"The greatest remedy for anger is delay.\" (Seneca, On Anger)",
+  "art": "res://art/cards/lyceum_c_018.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_st_reply",
+  "name": "Considered Reply",
+  "faction": "lyceum",
+  "rarity": "rare",
+  "type": "spell",
+  "subtype": "Discourse",
+  "cost": {
+   "U": 2,
+   "generic": 2
+  },
+  "speed": "instant",
+  "effects": [
+   {
+    "trigger": "cast",
+    "action": "counter",
+    "filter": "any"
+   },
+   {
+    "trigger": "cast",
+    "action": "draw",
+    "amount": 1
+   }
+  ],
+  "text": "Counter target spell. Draw a card.",
+  "flavor": "\"Take away thy opinion, and then there is taken away the complaint, 'I have been harmed.'\" (Marcus Aurelius)",
+  "art": "res://art/cards/lyceum_u_008.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 4
  }
 ]
