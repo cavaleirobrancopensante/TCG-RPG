@@ -65,8 +65,13 @@ func _play(da: Dictionary, db: Dictionary, first: int, game_seed: int) -> int:
 
 
 func _count(evs: Array, st: BattleState) -> void:
+	var watch := OS.get_environment("CAST")
 	for e in evs:
 		var k := ""
+		if watch != "" and e["type"] == "cast" and String(e["id"]) == watch:
+			counts["cast " + watch + (" on his turn" if st.active != int(e["side"]) else " on its own turn")] = int(counts.get("cast " + watch + (" on his turn" if st.active != int(e["side"]) else " on its own turn"), 0)) + 1
+		if watch != "" and e["type"] == "bounce":
+			counts["bounces"] = int(counts.get("bounces", 0)) + 1
 		match e["type"]:
 			"realm":
 				k = "state becomes " + String(e["realm"])

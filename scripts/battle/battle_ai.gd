@@ -141,8 +141,8 @@ static func main_action(st: BattleState, i: int) -> bool:
 		var c := CardDB.get_card(s.hand[hi])
 		if c.get("type") == "land" or _is_ramp_spell(c) or BattleState.is_instant(c):
 			continue
-		if c.get("keywords", []).has("flash") and c.get("effects", []).any(func(x): return x.get("trigger") == "enter" and x.get("action") == "counter"):
-			continue                 # a Watchman waits for the opponent's spell
+		if c.get("keywords", []).has("flash") and c.get("effects", []).any(func(x): return x.get("trigger") == "enter" and x.get("action") in ["counter", "bounce"]):
+			continue                 # a Watchman waits for his spell, a Questioner for his attack
 		var mode := -1
 		var plan := _plan(st, i, c)
 		if c.has("modes") and c.get("type") == "spell":
@@ -1301,6 +1301,13 @@ static func respond(st: BattleState, i: int) -> bool:
 				var ra := _answer_value(st, i, enter, null, {"effects": enter})
 				if ra[0] > 0.0:
 					fv = ra[0] + 1.0
+			elif enter.any(func(x): return x.get("action") in ["bounce", "damage", "destroy", "tap", "freeze"]):
+				# a flash creature whose arrival answers something: an attacker sent back in combat
+				# (Questioner in the Agora), then the body blocks
+				st._with_source(c)
+				var rb := _answer_value(st, i, enter, null, {"effects": enter})
+				if rb[0] > 0.0:
+					fv = rb[0] + 0.8 + float(c.get("power", 0)) * 0.3
 			if fv <= 0.0 and st.step == "end" and st.stack.is_empty():
 				fv = 1.2 + float(c.get("power", 0)) * 0.3 + float(c.get("toughness", 0)) * 0.2
 			fv -= 0.15 * float(c.get("mana_value", 0))
@@ -2201,7 +2208,7 @@ static func held_instant(st: BattleState, i: int) -> Dictionary:
 				if foe.hand.size() >= 1:
 					v = maxf(v, 1.6 + 0.2 * mini(4, foe.hand.size()))
 				continue
-			if t in ["enemy_creature", "any_enemy", "enemy_demon", "nonland_permanent"] and a in ["destroy", "damage", "buff", "bounce"]:
+			if t in ["enemy_creature", "any_enemy", "enemy_demon", "nonland_permanent", "enemy_permanent", "attacking_or_blocking"] and a in ["destroy", "damage", "buff", "bounce"]:
 				if a == "buff" and int(e.get("toughness", 0)) >= 0:
 					continue
 				var top := 0.0

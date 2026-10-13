@@ -3569,7 +3569,7 @@
   "id": "proto_st_questioner",
   "name": "Questioner in the Agora",
   "faction": "lyceum",
-  "rarity": "common",
+  "rarity": "uncommon",
   "type": "creature",
   "subtype": "Human Philosopher",
   "cost": {
@@ -3578,7 +3578,9 @@
   },
   "power": 2,
   "toughness": 2,
-  "keywords": [],
+  "keywords": [
+   "flash"
+  ],
   "effects": [
    {
     "trigger": "enter",
@@ -3587,7 +3589,7 @@
     "max_mv": 3
    }
   ],
-  "text": "When Questioner in the Agora enters, return target nonland permanent an opponent controls with mana value 3 or less to its owner's hand.",
+  "text": "Flash. When Questioner in the Agora enters, return target nonland permanent an opponent controls with mana value 3 or less to its owner's hand.",
   "flavor": "\"The unexamined life is not worth living.\" (Socrates, in Plato's Apology)",
   "art": "res://art/cards/lyceum_c_024.webp",
   "proto": true,

@@ -1065,3 +1065,16 @@ two-for-one creatures, engines and the graveyard as a resource.
   (scripts/ui/basic_lands_popup.gd has no class_name).
 - tests/deck_open_check.tscn opens the deck builder the way the game does: a new game, a deck
   with old-set cards, and the Quick Duel sandbox.
+
+## Questioner in the Agora has Flash (1.83)
+
+- Questioner in the Agora ({2}{U} 2/2) now has Flash and is uncommon: cast it during the
+  opponent's attack to send an attacker (mana value 3 or less) back to his hand, then block
+  with the 2/2. Cast on his turn it also counts for Temperance on the opponent's turn.
+- The AI holds it for the opponent's turn, like the Watchman, keeps the mana open for it, and
+  casts it when an attacker is worth sending back (else at his end step for the body).
+- tests/proto_duel.tscn takes CAST=<card id> to count how often a card is cast, and on whose
+  turn.
+- Measured, ordinary AI, 200 duels each (the Stoa's share, before and after): against the Revel
+  31% and 32%, the Old Ways 59% and 59%, the Pact 38.5% and 36%, the Church 53% and 52%, the
+  Technocracy 45% and 47%. That is within the noise; the AI casts it in about one game in four.
