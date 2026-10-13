@@ -868,3 +868,23 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Composure (four or more cards in hand) drives the Stoa: the Ephebe's +1/+1 and the
   Polemarch's vigilance for Hoplites.
 - tests/proto_duel.tscn takes PAIR="2,3" to pit any two prototype decks.
+
+## Triggers on the stack, Temperance and the new Phalanx (1.71)
+
+- Cast triggers now go on the stack above the spell that caused them, and resolve first, as
+  in Magic. When several of yours trigger together, a popup asks which resolves first; a
+  trigger with a target asks for it on the board as it goes on the stack. The opponent can
+  only answer once all of them are on the stack. (Enter and death triggers still resolve
+  at once, as before.)
+- Temperance (Stoa): "Whenever you cast your first spell each turn", on any turn, the
+  opponent's too. Composure is gone from the Stoa prototype.
+- The Stoa prototype deck is rebuilt: Ephebe, Shieldwall Hoplite, Watchman of the Gate
+  (flash, counter unless {1}), Polemarch, Scholarch of the Porch, Lochagos of the File,
+  Navarch of the Cold Sea, Ask the Price, Sent Back to the Gate, Reading by Lamplight (now
+  look at four, keep two) and Considered Reply.
+- Premeditation: on your turn pay {2} to set a card aside face down (the ◐ button by your
+  graveyard shows them); cast it on a later turn for its Premeditation cost.
+- Heckler at the Porch: "Whenever an opponent casts a spell during your turn, he deals 1
+  damage to that player."
+- The AI casts flash creatures on the opponent's turn, holds the Watchman for a spell to
+  counter, premeditates the Navarch and casts it at the opponent's end step.

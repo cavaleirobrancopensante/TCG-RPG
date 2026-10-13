@@ -51,6 +51,8 @@ var player_lands: LandStrip
 var enemy_life: Button
 var player_life: Button
 var grave_btns := [null, null]     # the tombstone graveyard buttons, yours and the enemy's
+var premed_btn: Button = null      # your premeditated cards, face down (shown when there are some)
+var pending_premed := -1           # the premeditated card whose targets we choose
 var pile_icons := [[], []]         # per side: the hand and library count icons
 var enemy_info: RichTextLabel
 var player_info: RichTextLabel
@@ -237,6 +239,11 @@ func _build_ui() -> void:
 		pile_row.add_child(pi0)
 	grave_btns[0] = _grave_button(0)
 	pile_row.add_child(grave_btns[0])
+	premed_btn = _btn("", func(): _show_premeditated(), 60)
+	premed_btn.name = "Premeditated"
+	premed_btn.tooltip_text = I18n.t("Your premeditated cards, face down")
+	premed_btn.visible = false
+	pile_row.add_child(premed_btn)
 	player_info = _rich(UIKit.FS_BODY)
 	player_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	player_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1076,6 +1083,9 @@ func _refresh_bars() -> void:
 		if grave_btns[i]:
 			grave_btns[i].set_count(s.graveyard.size())
 			grave_btns[i].disabled = s.graveyard.is_empty()
+		if i == 0 and premed_btn:
+			premed_btn.visible = not s.premeditated.is_empty()
+			premed_btn.text = "◐ %d" % s.premeditated.size()
 		if pile_icons[i].size() == 2:
 			pile_icons[i][0].set_count(s.hand.size())
 			pile_icons[i][1].set_count(s.deck.size())
@@ -1515,6 +1525,41 @@ func _pick_cards(head: String, note_text: String, ids: Array, mode: String = "on
 
 func _resolve_owed() -> void:
 	var me := st.side(0)
+	if not me.order_owed.is_empty():
+		# triggers that happened together: you choose which resolves first
+		var list: Array = me.order_owed[0]
+		var left: Array = range(list.size())
+		var order: Array = []
+		while left.size() > 1:
+			var ents: Array = []
+			var lines: Array = []
+			for k in left:
+				var src = st.find_perm(int(list[k]["uid"]))
+				ents.append(_perm_entry(src) if src != null else "token")
+				lines.append(CardView.plain_text(I18n.t(String(list[k]["e"].get("text", "")))))
+			var pick = await _pick_cards(I18n.t("Order your triggers"),
+				I18n.t("These trigger together. Choose the one that resolves first.") + "\n" + "\n".join(lines), ents)
+			var k2: int = left[clampi(int(pick), 0, left.size() - 1)]
+			order.append(k2)
+			left.erase(k2)
+		order.append_array(left)
+		st.order_choose(0, order)
+		return
+	if not me.dig_owed.is_empty():
+		var cards: Array = me.dig_owed["cards"]
+		var keep_n := int(me.dig_owed["keep"])
+		var pool: Array = cards.duplicate()
+		var kept: Array = []
+		for n in keep_n:
+			if pool.is_empty():
+				break
+			var pick2 = await _pick_cards(I18n.t("Reading by Lamplight") if keep_n == 2 else I18n.t("Look at the top cards"),
+				I18n.t("Choose a card to put into your hand (%d of %d). The rest go to the bottom of your library.") % [n + 1, keep_n], pool)
+			var c2: String = pool[clampi(int(pick2), 0, pool.size() - 1)]
+			kept.append(c2)
+			pool.erase(c2)
+		st.dig_choose(0, kept)
+		return
 	if not me.excess_owed.is_empty():
 		var xid := String(me.excess_owed[0])
 		var xc := CardDB.get_card(xid)
@@ -1681,6 +1726,8 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				line += " " + I18n.t("(overclocked)")
 			if e.get("excess", false):
 				line += " " + I18n.t("(for its Excess cost)")
+			if e.get("premeditated", false):
+				line += " " + I18n.t("(premeditated)")
 			_log(line)
 			_rebuild_hand()
 			_refresh_bars()
@@ -2030,6 +2077,19 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			await _wait(0.1)
 		"excess":
 			_log(I18n.t("Excess: %s waits to be cast.") % _card_name(e["id"]), false)
+		"premeditate":
+			if int(e["side"]) == 0:
+				_log(I18n.t("You premeditate %s: it waits face down.") % _card_name(e["id"]))
+			else:
+				_log(I18n.t("%s premeditates a card face down.") % st.side(1).name)
+			_rebuild_hand()
+			_refresh_bars()
+		"dig":
+			if int(e["side"]) == 0:
+				_log(I18n.t("You keep %d and put %d on the bottom of your library.") % [int(e["kept"]), int(e["bottom"])])
+			else:
+				_log(I18n.t("%s keeps %d card(s) and puts the rest on the bottom.") % [st.side(1).name, int(e["kept"])])
+			_rebuild_hand()
 		"excess_gone":
 			pass
 		"discard":
@@ -2479,7 +2539,16 @@ func _show_preview(id: String, hand_idx: int) -> void:
 	if hand_idx >= 0:
 		preview = CardViewer.open(self, st.side(0).hand.duplicate(), hand_idx, func(_e, i):
 			var why := play_block_reason(i)
-			return [["Play", func(): _begin_play(i), why == "", true, why]], "Cancel")
+			var acts: Array = [["Play", func(): _begin_play(i), why == "", true, why]]
+			var hc := CardDB.get_card(st.side(0).hand[i] if i < st.side(0).hand.size() else "")
+			if not hc.get("premeditation", {}).is_empty():
+				var pok: bool = st.can_premeditate(0, i) and not busy and mode == "idle"
+				acts.append([I18n.t("Premeditate") + " {2}", func():
+					_close_preview()
+					if st.premeditate(0, i):
+						await play_events()
+						refresh(), pok, true, "" if pok else I18n.t("Premeditation: during your own turn, when you have priority, pay {2}.")])
+			return acts, "Cancel")
 	else:
 		preview = CardViewer.open(self, [id], 0)
 
@@ -2512,7 +2581,7 @@ func play_block_reason(i: int) -> String:
 	if not st.has_priority(0):
 		return I18n.t("Wait until you have priority: your main phase, or when the duel stops for you to answer.")
 	if not BattleState.is_instant(c) and not st.sorcery_time(0):
-		return I18n.t("Only in your own main phase, with the stack empty. Only an Instant can be cast at other times.")
+		return I18n.t("Only in your own main phase, with the stack empty. Only an Instant or a card with Flash can be cast at other times.")
 	return I18n.t("Not enough mana.")
 
 
@@ -2726,6 +2795,13 @@ func _advance_targeting() -> void:
 		await play_events()
 		await _after_player_action()
 		return
+	if pending_premed >= 0:
+		var pk := pending_premed
+		pending_premed = -1
+		st.cast_premeditated(0, pk, chosen_targets)
+		await play_events()
+		await _after_player_action()
+		return
 	var idx := pending_hand_idx
 	pending_hand_idx = -1
 	st.play(0, idx, chosen_targets, pending_overclock, pending_mode)
@@ -2755,6 +2831,8 @@ func _confirm_targets() -> String:
 		what = I18n.t("Use %s's ability on %s?") % [_obj(int(pending_ability[0])), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_hand_idx >= 0 and pending_hand_idx < st.side(0).hand.size():
 		what = I18n.t("Cast %s on %s?") % [_card_name(st.side(0).hand[pending_hand_idx]), _refs_text(chosen_targets.filter(func(t): return t != null))]
+	elif pending_premed >= 0 and pending_premed < st.side(0).premeditated.size():
+		what = I18n.t("Cast %s on %s?") % [_card_name(String(st.side(0).premeditated[pending_premed]["id"])), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_excess != "":
 		what = I18n.t("Cast %s on %s?") % [_card_name(pending_excess), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_trigger >= 0:
@@ -2812,6 +2890,7 @@ func _cancel_targeting() -> void:
 		what = I18n.t("Cancelled: %s's ability is not used.") % _obj(int(pending_ability[0]))
 	mode = "idle"
 	pending_hand_idx = -1
+	pending_premed = -1
 	pending_ability = []
 	pending_overclock = false
 	target_specs = []
@@ -3374,6 +3453,37 @@ func _show_graveyard(side_i: int) -> void:
 		list.add_child(row)
 
 
+## Your premeditated cards, with Cast on each when it can be cast.
+func _show_premeditated() -> void:
+	var pm: Array = st.side(0).premeditated
+	if pm.is_empty():
+		return
+	_close_preview()
+	var entries: Array = pm.map(func(x): return String(x["id"]))
+	preview = CardViewer.open(self, entries, 0, func(_e, k2):
+		var k := int(k2)
+		if k >= st.side(0).premeditated.size():
+			return []
+		var c := CardDB.get_card(String(st.side(0).premeditated[k]["id"]))
+		var ok: bool = st.can_cast_premeditated(0, k) and not busy and mode in ["idle", "priority"]
+		var why := "" if ok else I18n.t("Cast it on a later turn than you premeditated it, at its usual speed, with the mana to pay.")
+		return [[I18n.t("Cast") + " " + CardView.plain_text(CardView.cost_tokens(c.get("premeditation", {}))), func(): _begin_premeditated(k), ok, true, why]])
+
+
+func _begin_premeditated(k: int) -> void:
+	_close_preview()
+	if busy or not st.can_cast_premeditated(0, k):
+		return
+	var c := CardDB.get_card(String(st.side(0).premeditated[k]["id"]))
+	st._with_source(c)
+	target_specs = st.cast_specs(c)
+	chosen_targets = []
+	pending_hand_idx = -1
+	pending_ability = []
+	pending_premed = k
+	_advance_targeting()
+
+
 ## Read the graveyard card by card from card `gi` (Unearth on yours, when it can be).
 func _show_graveyard_card(side_i: int, start: int) -> void:
 	var g: Array = st.side(side_i).graveyard
@@ -3896,12 +4006,16 @@ func _perm_entry(q) -> Variant:
 func _owed_key() -> String:
 	var me := st.side(0)
 	return str([me.owed_discards, me.foresight_cards.size(), me.martyr_owed, me.leak_owed.size(), me.charge_owed.size(),
-		me.possess_owed.size(), me.trigger_owed.size(), me.hand_owed.size(), me.edict_owed, me.excess_owed.size()])
+		me.possess_owed.size(), me.trigger_owed.size(), me.hand_owed.size(), me.edict_owed, me.excess_owed.size(), me.order_owed.size(), me.dig_owed.size()])
 
 
 ## Settle every owed choice of the player the way the AI would.
 func _force_owed() -> void:
 	var me := st.side(0)
+	while not me.order_owed.is_empty():
+		st.order_choose(0, [])
+	if not me.dig_owed.is_empty():
+		st.dig_choose(0, me.dig_owed["cards"].slice(0, int(me.dig_owed["keep"])))
 	while not me.excess_owed.is_empty():
 		st.excess_choose(0, false)
 	while not me.trigger_owed.is_empty():

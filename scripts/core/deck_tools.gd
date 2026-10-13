@@ -703,8 +703,9 @@ const PROTO_DECKS := {
 		"proto_rv_heckler": 1, "proto_rv_lord": 2, "proto_rv_archduke": 1, "proto_rv_toast": 3,
 		"proto_rv_brandy": 2, "proto_rv_flagon": 2, "proto_rv_cask": 1}},
 	"Prototype: Stoa, the Phalanx": {"faith": "lyceum", "cards": {
-		"proto_st_ephebe": 4, "proto_st_plataea": 4, "proto_st_polemarch": 3, "proto_st_strategos": 3,
-		"lyceum_c_030": 4, "proto_st_lamplight": 2, "proto_st_gate": 2, "proto_st_reply": 1}},
+		"proto_st_ephebe": 3, "proto_st_shieldwall": 2, "proto_st_watchman": 3, "proto_st_polemarch": 2,
+		"proto_st_scholarch": 2, "proto_st_lochagos": 2, "proto_st_navarch": 1, "lyceum_c_030": 3,
+		"proto_st_gate": 2, "proto_st_lamplight": 2, "proto_st_reply": 1}},
 }
 
 

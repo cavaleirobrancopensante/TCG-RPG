@@ -104,6 +104,11 @@ class BattleSide:
 	var edict_owed := 0            # interactive: creatures this side must sacrifice (its choice)
 	var excess_owed: Array = []    # interactive: discarded Excess cards waiting: cast for Excess, or to the graveyard
 	var discarded_turn := 0        # cards this side discarded this turn (Flaming Flagon)
+	var spells_turn := 0           # spells this side cast this turn, on any turn (Temperance)
+	var order_owed: Array = []     # interactive: [[trigger, ...]] triggers that happened together, to put in order
+	var push_queue: Array = []     # triggers waiting to go on the stack, in push order (a target may be owed first)
+	var dig_owed := {}             # interactive: {"cards", "keep"} looked at from the top, some to keep
+	var premeditated: Array = []   # [{"id", "turn"}] cards exiled face down by Premeditation
 
 
 var sides: Array = []
@@ -155,6 +160,7 @@ var _passes := 0
 var _settling := false
 var _next_sid := 1
 var _resolving_cast_side := -1    # carouse: the card now resolving counts itself
+var _cast_hold := -1              # a cast whose triggers wait for the player's order or targets: priority waits too
 const MAX_WINDOW_ACTIONS := 4     # no side acts more than this in one window
 const SETTLE_GUARD := 400
 const MAX_COUNT_PER := 5          # summon with count_per makes at most this many tokens
@@ -296,6 +302,10 @@ func begin_turn() -> void:
 			p.uses.clear()          # "once per turn" counts each turn, abilities work in both
 	for sd in sides:
 		sd.discarded_turn = 0
+		sd.spells_turn = 0
+		sd.order_owed.clear()
+		sd.push_queue.clear()
+	_cast_hold = -1
 	attackers.clear()
 	blocks.clear()
 	blockers.clear()
@@ -407,7 +417,7 @@ func has_owed(i: int) -> bool:
 	return side(i).owed_discards > 0 or not side(i).foresight_cards.is_empty() or side(i).martyr_owed > 0 \
 		or not side(i).leak_owed.is_empty() or not side(i).charge_owed.is_empty() or not side(i).possess_owed.is_empty() \
 		or not side(i).trigger_owed.is_empty() or not side(i).hand_owed.is_empty() or side(i).edict_owed > 0 \
-		or not side(i).excess_owed.is_empty()
+		or not side(i).excess_owed.is_empty() or not side(i).order_owed.is_empty() or not side(i).dig_owed.is_empty()
 
 
 ## The player discards hand card `idx` for a rummage.
@@ -488,17 +498,122 @@ func cast_excess(i: int, id: String, targets: Array = []) -> bool:
 		"targets": targets.duplicate(), "overclock": false}
 	_next_sid += 1
 	stack.append(item)
+	item["excess"] = true
 	emit({"type": "cast", "side": i, "id": id, "sid": item["sid"], "targets": _event_targets(item), "overclock": false, "excess": true})
-	# "Whenever you cast a spell for its Excess cost" (Lord of Misrule)
-	for p in s.creatures.duplicate() + s.relics.duplicate():
-		for e in p.card.get("effects", []):
-			if e.get("trigger") == "excess_cast" and find_perm(p.uid) != null:
-				_with_source(p.card)
-				resolve_effect(i, e, p, null)
-				if phase == "over":
-					return true
-	_after_push(i)
+	_cast_done(i, item)
 	return true
+
+
+# ------------------------------------------------------------ cast triggers on the stack
+
+## A spell was just put on the stack: its cast triggers go on the stack above it (so they
+## resolve first), the active player's first. A person orders his own triggers that happen
+## together and chooses their targets; until then priority waits.
+func _cast_done(i: int, item: Dictionary) -> void:
+	var s := side(i)
+	s.spells_turn += 1
+	var first := s.spells_turn == 1
+	var found := [[], []]
+	for p in s.creatures + s.relics:
+		for e in p.card.get("effects", []):
+			var tr := String(e.get("trigger", ""))
+			if (tr == "temperance" and first) or (tr == "temperance_opp" and first and active != i) \
+					or (tr == "excess_cast" and item.get("excess", false)):
+				found[i].append({"uid": p.uid, "e": e})
+	for p in side(1 - i).creatures + side(1 - i).relics:
+		for e in p.card.get("effects", []):
+			if String(e.get("trigger", "")) == "opp_cast_your_turn" and active == 1 - i:
+				found[1 - i].append({"uid": p.uid, "e": e})
+	for k in [active, 1 - active]:
+		var list: Array = found[k]
+		if list.is_empty():
+			continue
+		if side(k).interactive and list.size() > 1:
+			side(k).order_owed.append(list)
+			emit({"type": "owe_order", "side": k, "n": list.size()})
+		else:
+			side(k).push_queue.append_array(list)
+			_drain_push(k)
+	if _any_push_owed():
+		_cast_hold = i
+		priority = i
+		return
+	_after_push(i)
+
+
+func _any_push_owed() -> bool:
+	for sd in sides:
+		if not sd.order_owed.is_empty() or not sd.push_queue.is_empty():
+			return true
+	return false
+
+
+static func _needs_target(e: Dictionary) -> bool:
+	return TARGET_CHOICE_TYPES.has(String(e.get("target", "")))
+
+
+## Put side k's queued triggers on the stack, stopping at one whose target the player owes.
+func _drain_push(k: int) -> void:
+	var s := side(k)
+	while not s.push_queue.is_empty():
+		var t: Dictionary = s.push_queue[0]
+		var e: Dictionary = t["e"]
+		if s.interactive and _needs_target(e) and find_perm(int(t["uid"])) != null:
+			if valid_targets(k, e).is_empty():
+				s.push_queue.pop_front()
+				continue
+			if s.trigger_owed.is_empty() or not s.trigger_owed[0].get("push", false):
+				s.trigger_owed.push_front({"uid": t["uid"], "e": e, "push": true})
+				emit({"type": "owe_trigger", "side": k})
+			return
+		s.push_queue.pop_front()
+		var tg = auto_target(k, e) if _needs_target(e) else null
+		if _needs_target(e) and tg == null:
+			continue
+		_push_trigger(k, t, [tg] if _needs_target(e) else [])
+
+
+func _push_trigger(k: int, t: Dictionary, targets: Array) -> void:
+	var p := find_perm(int(t["uid"]))
+	if p == null:
+		return                       # its source left before it could trigger
+	var e: Dictionary = t["e"]
+	var item := {"sid": _next_sid, "kind": "ability", "side": k, "id": p.card_id, "card": p.card, "uid": p.uid, "idx": -1,
+		"trigger": true, "text": String(e.get("text", "")), "effects": [e], "targets": targets.duplicate(), "name": p.name}
+	if p.is_token:
+		item["token"] = p.card
+	_next_sid += 1
+	stack.append(item)
+	emit({"type": "ability", "side": k, "uid": p.uid, "text": item["text"], "sid": item["sid"], "id": p.card_id,
+		"targets": _event_targets(item), "trigger": true})
+
+
+## The player's order for triggers that happened together: `order` = indices into them, the
+## first to resolve first.
+func order_choose(i: int, order: Array) -> void:
+	var s := side(i)
+	if s.order_owed.is_empty():
+		return
+	var list: Array = s.order_owed.pop_front()
+	var seq: Array = []
+	for k in order:
+		if int(k) >= 0 and int(k) < list.size() and not seq.has(list[int(k)]):
+			seq.append(list[int(k)])
+	for t in list:
+		if not seq.has(t):
+			seq.append(t)
+	seq.reverse()                    # the last put on the stack resolves first
+	s.push_queue.append_array(seq)
+	_drain_push(i)
+	_release_cast()
+
+
+## Every trigger is on the stack: the other side may answer now.
+func _release_cast() -> void:
+	if _cast_hold >= 0 and not _any_push_owed():
+		var h := _cast_hold
+		_cast_hold = -1
+		_after_push(h)
 
 
 ## The player's Excess decision for the first waiting card: cast it (with its targets) or not.
@@ -512,6 +627,91 @@ func excess_choose(i: int, cast: bool, targets: Array = []) -> void:
 	else:
 		excess_decline(i, id)
 	check_state()
+
+
+## The cards kept from a dig go to the hand, the rest to the bottom of the library.
+func dig_choose(i: int, keep_ids: Array, looked: Array = []) -> void:
+	var s := side(i)
+	if looked.is_empty():
+		if s.dig_owed.is_empty():
+			return
+		looked = s.dig_owed["cards"]
+		var n := int(s.dig_owed["keep"])
+		s.dig_owed = {}
+		keep_ids = keep_ids.slice(0, n)
+	var rest := looked.duplicate()
+	var kept := 0
+	for id in keep_ids:
+		if rest.has(id):
+			rest.erase(id)
+			s.hand.append(id)
+			kept += 1
+	for id in rest:
+		s.deck.insert(0, id)
+	emit({"type": "dig", "side": i, "kept": kept, "bottom": rest.size()})
+
+
+# ------------------------------------------------------------ Premeditation
+
+## During your turn, with priority, pay {2}: the card goes face down into exile.
+func can_premeditate(i: int, hand_idx: int) -> bool:
+	var s := side(i)
+	if phase == "over" or i != active or not has_priority(i) or hand_idx < 0 or hand_idx >= s.hand.size():
+		return false
+	if CardDB.get_card(s.hand[hand_idx]).get("premeditation", {}).is_empty():
+		return false
+	return can_pay(i, {"generic": 2})
+
+
+func premeditate(i: int, hand_idx: int) -> bool:
+	if not can_premeditate(i, hand_idx):
+		return false
+	var s := side(i)
+	pay(i, {"generic": 2})
+	var id: String = s.hand[hand_idx]
+	s.hand.remove_at(hand_idx)
+	s.premeditated.append({"id": id, "turn": turn})
+	emit({"type": "premeditate", "side": i, "id": id})
+	return true
+
+
+## A premeditated card is cast on a later turn for its Premeditation cost, at its usual speed.
+func can_cast_premeditated(i: int, k: int) -> bool:
+	var s := side(i)
+	if phase == "over" or k < 0 or k >= s.premeditated.size() or not has_priority(i):
+		return false
+	var pm: Dictionary = s.premeditated[k]
+	if int(pm["turn"]) >= turn:
+		return false
+	var c := CardDB.get_card(String(pm["id"]))
+	if not is_instant(c) and not c.get("keywords", []).has("flash") and not sorcery_time(i):
+		return false
+	if legend_in_play(i, c):
+		return false
+	var pc := c.duplicate()
+	pc["cost"] = c.get("premeditation", {})
+	return can_pay(i, effective_cost(i, pc))
+
+
+func cast_premeditated(i: int, k: int, targets: Array = []) -> bool:
+	if not can_cast_premeditated(i, k):
+		return false
+	var s := side(i)
+	var pm: Dictionary = s.premeditated[k]
+	var id := String(pm["id"])
+	var c := CardDB.get_card(id)
+	var pc := c.duplicate()
+	pc["cost"] = c.get("premeditation", {})
+	pay(i, effective_cost(i, pc))
+	s.tax = 0
+	s.premeditated.remove_at(k)
+	s.cast_count += 1
+	var item := {"sid": _next_sid, "kind": "card", "side": i, "id": id, "card": c, "targets": targets.duplicate(), "overclock": false}
+	_next_sid += 1
+	stack.append(item)
+	emit({"type": "cast", "side": i, "id": id, "sid": item["sid"], "targets": _event_targets(item), "overclock": false, "premeditated": true})
+	_cast_done(i, item)
+	return true
 
 
 ## The player's foresight decision: `top` (in the order they will be drawn) and the rest to the bottom.
@@ -687,6 +887,8 @@ func _settle() -> void:
 			_force_resolve()
 			window_open = false
 			break
+		if _any_push_owed():
+			break                   # the player is putting triggers on the stack first
 		var p := priority
 		if not ai_controls(p):
 			break
@@ -1690,7 +1892,7 @@ func play(i: int, hand_idx: int, targets: Array = [], overclock: bool = false, m
 	_next_sid += 1
 	stack.append(item)
 	emit({"type": "cast", "side": i, "id": id, "sid": item["sid"], "targets": _event_targets(item), "overclock": overclock})
-	_after_push(i)
+	_cast_done(i, item)
 	return true
 
 
@@ -2166,6 +2368,17 @@ func trigger_choose(i: int, ref, fighter_uid: int = -1) -> void:
 	if s.trigger_owed[0].has("modes"):
 		trigger_choose_mode(i, 0, [ref])
 		return
+	if s.trigger_owed[0].get("push", false):
+		# a cast trigger's target: it goes on the stack with it
+		var tp: Dictionary = s.trigger_owed.pop_front()
+		if not s.push_queue.is_empty():
+			var q: Dictionary = s.push_queue.pop_front()
+			var tg = ref if _ref_still_valid(i, tp["e"], ref) else auto_target(i, tp["e"])
+			if tg != null:
+				_push_trigger(i, q, [tg])
+		_drain_push(i)
+		_release_cast()
+		return
 	var t: Dictionary = s.trigger_owed.pop_front()
 	var src := find_perm(int(t["uid"]))
 	var e: Dictionary = t["e"]
@@ -2528,6 +2741,21 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 					break
 				var idx := rng.randi_range(0, enemy.hand.size() - 1)
 				discard_card(1 - i, idx)
+		"dig":
+			# "Look at the top N cards. Put K of them into your hand and the rest on the bottom."
+			var looked: Array = []
+			for n in mini(amount, me.deck.size()):
+				looked.append(me.deck.pop_back())
+			if looked.is_empty():
+				return
+			var keep_n := mini(int(e.get("keep", 1)), looked.size())
+			if me.interactive:
+				me.dig_owed = {"cards": looked, "keep": keep_n}
+				emit({"type": "owe_dig", "side": i, "n": looked.size()})
+			else:
+				var order := looked.duplicate()
+				order.sort_custom(func(a, b): return BattleAI.card_priority(self, i, a) > BattleAI.card_priority(self, i, b))
+				dig_choose(i, order.slice(0, keep_n), looked)
 		"discard_self":
 			# "Then discard a card": of your choice
 			for n in amount:
