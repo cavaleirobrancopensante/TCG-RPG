@@ -2393,19 +2393,17 @@ func test_grove_foundry() -> void:
 	check(st.activate(0, bal.uid, 1, [{"kind": "player", "side": 1}], -1, 2), "fire X = 2")
 	st._force_resolve()
 	check(st.side(1).life == flife - 2 and int(bal.counters["ammo"]) == 0, "two damage, no ammo left")
-		# the Furnace: charge counters, then X damage
+		# the Scrap engines: Rivet Mule (enters and leaves) and the Scrapyard Overseer (Construct spells)
 	st = _duel()
 	_lands(st, 0, "CCCC")
-	var fur := _perm(st, 0, "proto_te_furnace")
-	var victim := _perm(st, 0, "proto_te_sentry")
-	check(st.activate(0, fur.uid, 0, [], victim.uid), "Furnace: sacrifice another Construct")
-	st._force_resolve()
-	check(int(fur.counters.get("charge", 0)) == 1 and st.side(0).relics.filter(func(r): return r.name == "Scrap").size() == 2,
-		"a charge counter, a Scrap from the Furnace and one from the Sentry's Salvage")
-	foe_life = st.side(1).life
-	check(st.activate(0, fur.uid, 1, [{"kind": "player", "side": 1}]), "Furnace: sacrifice it for X damage")
-	st._force_resolve()
-	check(st.side(1).life == foe_life - 1 and st.find_perm(fur.uid) == null, "X = 1 damage, the Furnace is gone")
+	_perm(st, 0, "proto_te_overseer")
+	st.side(0).hand = ["proto_te_mule"]
+	st.play(0, 0, [])
+	var scrap_n := func(): return st.side(0).relics.filter(func(r): return r.name == "Scrap").size()
+	check(scrap_n.call() == 2, "a Construct cast (the Overseer) and the Mule entering: two Scrap")
+	var mule: Array = st.side(0).creatures.filter(func(q): return q.card_id == "proto_te_mule")
+	st.destroy_perm(mule[0])
+	check(scrap_n.call() == 3, "the Mule leaves: a third Scrap")
 	# land destruction and Ore
 	st = _duel()
 	_lands(st, 0, "CCC")

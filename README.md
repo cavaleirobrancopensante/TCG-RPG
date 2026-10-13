@@ -955,3 +955,18 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Activated abilities can now have {X} in their cost, or remove X counters: a number picker asks
   how much. The AI loads with its spare mana and fires to finish you, at a creature worth it,
   or once it has six.
+
+## The AI thinks ahead (1.78)
+
+- The opponent now tries its options before choosing: what to cast (or whether to hold its
+  mana), which ability to use, how to attack, how to block, and whether to answer your spell
+  now or keep the answer. Each option is played out on copies of the duel a couple of turns
+  ahead by the ordinary AI, several times, with your hidden cards dealt at random (it never
+  sees your hand). The option whose futures end best is taken. About 0.3 s per decision.
+- BattleState.clone() makes those copies; scripts/battle/ai_search.gd does the thinking.
+- Measured with tests/ai_match.tscn (the same deck on both sides, 40 games each): the thinking
+  AI beat the old one 58% to 78% of the time, the Stoa most of all (78%).
+- The Technocracy: Smelting Furnace and Quarry Engine leave the Foundry; in come Rivet Mule
+  ({1}{C} 2/2 Construct: a Scrap when it enters, Salvage when it leaves) and Scrapyard Overseer
+  ({2}{C} 1/3: whenever you cast a Construct spell, create a Scrap).
+- tests/proto_duel.tscn takes SMART=1 to let both sides think.

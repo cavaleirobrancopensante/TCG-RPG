@@ -710,8 +710,8 @@ const PROTO_DECKS := {
 		"proto_ow_druid": 4, "proto_ow_boar": 4, "proto_ow_wolf": 2, "proto_ow_elder": 3, "proto_ow_stag": 2,
 		"proto_ow_wyrm": 1, "proto_ow_hunt": 3, "proto_ow_rites": 2, "proto_ow_leylines": 1, "proto_ow_spirit": 1}},
 	"Prototype: Technocracy, the Foundry": {"faith": "machine", "cards": {
-		"proto_te_sentry": 4, "proto_te_engine": 3, "proto_te_foreman": 3, "proto_te_furnace": 2, "proto_te_ballista": 2,
-		"proto_te_lancer": 3, "proto_te_quarry": 1, "proto_te_writ": 1, "proto_te_reclaim": 2, "proto_te_automaton": 2}},
+		"proto_te_sentry": 4, "proto_te_engine": 2, "proto_te_foreman": 3, "proto_te_mule": 3, "proto_te_overseer": 2,
+		"proto_te_ballista": 2, "proto_te_lancer": 3, "proto_te_writ": 1, "proto_te_reclaim": 1, "proto_te_automaton": 2}},
 }
 
 

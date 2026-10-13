@@ -172,6 +172,128 @@ const SETTLE_GUARD := 400
 const MAX_COUNT_PER := 5          # summon with count_per makes at most this many tokens
 
 
+# ============================================================ copies for the AI's lookahead
+
+var ai_search_sides: Array = []   # the sides whose AI thinks ahead (the duel screen sets the enemy's)
+var is_sim := false               # this is an imagined copy, played out by the AI
+
+
+## A copy of this duel to play out in imagination. The cards are shared (they are never
+## changed in place); everything that changes is copied. The copy runs on its own, every side
+## decided by the AI, with nothing owed. `hide_side` (or -1): that side's hand and library are
+## shuffled together and dealt again, so the AI never plays out what it cannot know.
+func clone(hide_side: int = -1, seed_value: int = 0) -> BattleState:
+	var c := BattleState.new()
+	c.is_sim = true
+	c.auto_priority = true
+	c.active = active
+	c.turn = turn
+	c.first_player = first_player
+	c.phase = phase
+	c.step = step
+	c.attackers = attackers.duplicate()
+	c.blocks = blocks.duplicate()
+	c.blockers = blockers.duplicate(true)
+	c.was_blocked = was_blocked.duplicate()
+	c.winner = winner
+	c._next_uid = _next_uid
+	c.mulligans = mulligans.duplicate()
+	c.kept = kept.duplicate()
+	c.cur_faction = cur_faction
+	c.cur_faction2 = cur_faction2
+	c.realm = realm
+	c.side_faction = side_faction.duplicate()
+	c.priority = priority
+	c.window_open = window_open
+	c.window_actions = window_actions.duplicate()
+	c._passes = _passes
+	c._next_sid = _next_sid
+	c._resolving_cast_side = -1
+	c._cast_hold = -1
+	c.rng.seed = seed_value if seed_value != 0 else rng.randi()
+	for it in stack:
+		var ci: Dictionary = it.duplicate()
+		ci["targets"] = Array(it.get("targets", [])).duplicate(true)
+		c.stack.append(ci)
+	for k in 2:
+		var s: BattleSide = sides[k]
+		var d := BattleSide.new()
+		d.name = s.name
+		d.life = s.life
+		d.start_life = s.start_life
+		d.deck = s.deck.duplicate()
+		d.hand = s.hand.duplicate()
+		d.graveyard = s.graveyard.duplicate()
+		d.exile = s.exile.duplicate()
+		d.lands = s.lands.duplicate(true)
+		d.pool = s.pool.duplicate()
+		d.land_played = s.land_played
+		d.is_ai = true
+		d.interactive = false
+		d.tax = s.tax
+		d.cast_count = s.cast_count
+		d.max_hand = s.max_hand
+		d.discarded_turn = s.discarded_turn
+		d.spells_turn = s.spells_turn
+		d.lands_turn = s.lands_turn
+		d.premeditated = s.premeditated.duplicate(true)
+		for p in s.creatures:
+			d.creatures.append(_copy_perm(p, c))
+		for p in s.relics:
+			d.relics.append(_copy_perm(p, c))
+		c.sides.append(d)
+	if hide_side >= 0:
+		# what the AI cannot see: his hand is any cards his library could hold
+		var h: BattleSide = c.sides[hide_side]
+		var pool: Array = h.hand + h.deck
+		c._shuffle(pool)
+		var n := h.hand.size()
+		h.hand = pool.slice(0, n)
+		h.deck = pool.slice(n)
+	for k in 2:
+		if k != hide_side:
+			c._shuffle(c.sides[k].deck)       # its own draws are unknown too
+	return c
+
+
+static func _copy_perm(p: Perm, owner_state: BattleState) -> Perm:
+	var q := Perm.new()
+	q.uid = p.uid
+	q.owner = p.owner
+	q.card_id = p.card_id
+	q.card = p.card
+	q.name = p.name
+	q.st = weakref(owner_state)
+	q.base_p = p.base_p
+	q.base_t = p.base_t
+	q.bonus_p = p.bonus_p
+	q.bonus_t = p.bonus_t
+	q.temp_p = p.temp_p
+	q.temp_t = p.temp_t
+	q.temp_kw = p.temp_kw.duplicate()
+	q.damage = p.damage
+	q.tapped = p.tapped
+	q.sick = p.sick
+	q.is_token = p.is_token
+	q.deathtouched = p.deathtouched
+	q.keywords = p.keywords.duplicate()
+	q.pacified = p.pacified
+	q.snared_by = p.snared_by
+	q.frozen = p.frozen
+	q.regen_shield = p.regen_shield
+	q.unearthed = p.unearthed
+	q.attacked = p.attacked
+	q.entered_turn = p.entered_turn
+	q.uses = p.uses.duplicate()
+	q.attached_to = p.attached_to
+	q.base_owner = p.base_owner
+	q.front_id = p.front_id
+	q.held = p.held.duplicate(true)
+	q.counters = p.counters.duplicate()
+	q.land_anim = p.land_anim
+	return q
+
+
 static func is_instant(c: Dictionary) -> bool:
 	return c.get("type") == "spell" and String(c.get("speed", "")) == "instant"
 
@@ -525,7 +647,8 @@ func _cast_done(i: int, item: Dictionary) -> void:
 		for e in p.card.get("effects", []):
 			var tr := String(e.get("trigger", ""))
 			if (tr == "temperance" and first) or (tr == "temperance_opp" and first and active != i) \
-					or (tr == "excess_cast" and item.get("excess", false)):
+					or (tr == "excess_cast" and item.get("excess", false)) \
+					or (tr == "construct_cast" and String(item.get("card", {}).get("subtype", "")).contains("Construct")):
 				found[i].append({"uid": p.uid, "e": e})
 	for p in side(1 - i).creatures + side(1 - i).relics:
 		for e in p.card.get("effects", []):

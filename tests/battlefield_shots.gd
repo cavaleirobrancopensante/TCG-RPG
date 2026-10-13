@@ -101,8 +101,8 @@ func _ready() -> void:
 	_add(st, 0, "proto_ow_boar")
 	_add(st, 0, "proto_ow_druid", true)
 	_add(st, 0, "proto_ow_elder")
-	var fur := _add(st, 1, "proto_te_furnace")
-	fur.counters["charge"] = 2
+	var bal := _add(st, 1, "proto_te_ballista")
+	bal.counters["ammo"] = 3
 	_add(st, 1, "proto_te_engine")
 	st.make_token(1, BattleState.SCRAP)
 	st.make_token(1, BattleState.SCRAP)
