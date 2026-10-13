@@ -2357,9 +2357,9 @@ const SCRAP := {"id": "token", "name": "Scrap", "type": "relic", "subtype": "Con
 	"abilities": [
 		{"cost": {"sacrifice": "self"}, "effects": [{"action": "foresight", "amount": 1}], "text": "Sacrifice this: Scry 1."},
 		{"cost": {"mana": {"generic": 2}, "sacrifice": "self"}, "effects": [{"action": "draw", "amount": 1}], "text": "{2}, Sacrifice this: Draw a card."},
-		{"cost": {"mana": {"generic": 1}}, "sorcery": true, "effects": [{"action": "become_servo"}],
-			"text": "{1}: This becomes a 1/1 Construct Creature named Servo. Activate only as a sorcery."}],
-	"text": "Sacrifice this: Scry 1. {2}, Sacrifice this: Draw a card. {1}: This becomes a 1/1 Construct Creature named Servo. Activate only as a sorcery."}
+		{"cost": {"mana": {"generic": 1}}, "effects": [{"action": "become_servo"}],
+			"text": "{1}: This becomes a 1/1 Construct Creature named Servo."}],
+	"text": "Sacrifice this: Scry 1. {2}, Sacrifice this: Draw a card. {1}: This becomes a 1/1 Construct Creature named Servo."}
 
 const ORE := {"id": "token", "name": "Ore", "type": "relic", "subtype": "Construct Relic", "rarity": "token",
 	"faction": "machine", "power": 0, "toughness": 0, "keywords": [], "effects": [], "cost": {},

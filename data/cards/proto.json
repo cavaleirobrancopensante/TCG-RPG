@@ -2445,10 +2445,9 @@
   "type": "creature",
   "subtype": "Construct",
   "cost": {
-   "C": 1,
-   "generic": 1
+   "C": 1
   },
-  "power": 2,
+  "power": 1,
   "toughness": 1,
   "effects": [],
   "text": "Salvage (When this leaves the battlefield, create a Scrap token.)",
@@ -2458,7 +2457,7 @@
    "salvage"
   ],
   "proto": true,
-  "mana_value": 2
+  "mana_value": 1
  },
  {
   "id": "proto_te_engine",

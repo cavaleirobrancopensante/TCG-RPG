@@ -2356,7 +2356,23 @@ func test_grove_foundry() -> void:
 	check(st.activate(0, scraps[0].uid, 2), "{1}: Scrap becomes a Servo")
 	st._force_resolve()
 	check(st.side(0).creatures.any(func(q): return q.name == "Servo" and q.power() == 1), "a 1/1 Servo")
-	# the Furnace: charge counters, then X damage
+	# a Scrap becomes a Servo on the opponent's turn, in time to block
+	st = _duel()
+	st.auto_priority = false
+	_lands(st, 0, "C")
+	var scr := st.make_token(0, BattleState.SCRAP)
+	var raider := _perm(st, 1, "proto_rv_brawler")
+	st.active = 1
+	st.phase = "main1"
+	st.declare_attackers([raider.uid])
+	st.priority = 0
+	st.window_open = true
+	check(st.can_activate(0, scr.uid, 2), "Scrap: {1} to become a Servo at instant speed, on his attack")
+	st.activate(0, scr.uid, 2)
+	st._force_resolve()
+	var servo = st.find_perm(scr.uid)
+	check(servo != null and servo.is_creature() and st.can_block(servo, raider), "the new Servo can block")
+		# the Furnace: charge counters, then X damage
 	st = _duel()
 	_lands(st, 0, "CCCC")
 	var fur := _perm(st, 0, "proto_te_furnace")

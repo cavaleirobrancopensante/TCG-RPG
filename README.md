@@ -938,3 +938,10 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Card types on the prototype cards: Construct, Possession and Blessing (Mission of
   Conversion is a Blessing, so Exorcism never takes it for a demon); the Testimony is a
   Construct Holy Relic.
+
+## Servos at instant speed, a cheaper Sentry (1.76)
+
+- Fixed: a Scrap token can become a 1/1 Servo for {1} at any time you have priority, so you
+  can make blockers on the opponent's attack ("Activate only as a sorcery" is gone). The AI
+  does it too when it is attacked.
+- Clockwork Sentry is now {C}, 1/1, Salvage: the sacrifice engine starts on turn one.
