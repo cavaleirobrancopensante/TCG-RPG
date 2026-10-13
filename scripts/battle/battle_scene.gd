@@ -86,6 +86,7 @@ func start(p_info: Dictionary) -> void:
 	theme = UIKit.make_theme()
 	_build_ui()
 	st = BattleState.new()
+	st.ai_search_sides = [1]          # 1.78: the opponent thinks ahead before it acts
 	st.auto_priority = false        # the screen drives the priority windows
 	var my_deck: Dictionary = info.get("player_deck", GameState.deck)     # a practice duel brings its own
 	var pdeck := DeckTools.to_list(my_deck)

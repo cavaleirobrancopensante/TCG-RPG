@@ -42,6 +42,8 @@ func _ready() -> void:
 func _play(da: Dictionary, db: Dictionary, first: int, game_seed: int) -> int:
 	var st := BattleState.new()
 	st.setup(DeckTools.to_list(da), DeckTools.to_list(db), ["A", "B"], [Hero.BASE_LIFE, Hero.BASE_LIFE], first, game_seed, true)
+	if OS.get_environment("SMART") != "":
+		st.ai_search_sides = [0, 1]      # both sides think ahead (1.78)
 	BattleAI.resolve_mulligan(st, 0)
 	BattleAI.resolve_mulligan(st, 1)
 	var guard := 0

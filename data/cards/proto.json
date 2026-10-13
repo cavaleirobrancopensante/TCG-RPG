@@ -2513,75 +2513,6 @@
   "mana_value": 3
  },
  {
-  "id": "proto_te_furnace",
-  "name": "Smelting Furnace",
-  "faction": "machine",
-  "rarity": "uncommon",
-  "type": "relic",
-  "subtype": "Construct Relic",
-  "cost": {
-   "C": 1,
-   "generic": 2
-  },
-  "effects": [],
-  "abilities": [
-   {
-    "cost": {
-     "mana": {
-      "generic": 1
-     },
-     "sacrifice": "construct"
-    },
-    "effects": [
-     {
-      "action": "make_scrap",
-      "amount": 1
-     },
-     {
-      "action": "add_counter",
-      "counter": "charge",
-      "amount": 1
-     }
-    ],
-    "text": "{1}, Sacrifice another Construct: Create a Scrap token and put a charge counter on Smelting Furnace."
-   },
-   {
-    "cost": {
-     "tap": true,
-     "sacrifice": "self"
-    },
-    "effects": [
-     {
-      "action": "damage",
-      "target": "any_enemy",
-      "amount_x": "charge"
-     }
-    ],
-    "text": "{T}, Remove all charge counters and sacrifice it: It deals X damage to any target."
-   },
-   {
-    "cost": {
-     "tap": true,
-     "sacrifice": "self"
-    },
-    "effects": [
-     {
-      "action": "add_mana",
-      "color": "C",
-      "amount_x": "charge"
-     }
-    ],
-    "text": "{T}, Remove all charge counters and sacrifice it: Add X {C}."
-   }
-  ],
-  "text": "{1}, Sacrifice another Construct: Create a Scrap token and put a charge counter on Smelting Furnace. {T}, Remove all charge counters from Smelting Furnace and sacrifice it: Choose one: It deals X damage to any target; or add X {C}. X is the number of charge counters removed.",
-  "flavor": "\"Soon the forge will need no smith, and the city no citizens. We call this progress.\" (a Foundry prospectus)",
-  "art": "res://art/cards/machine_u_011.webp",
-  "keywords": [],
-  "proto": true,
-  "mana_value": 3
- },
- {
   "id": "proto_te_ballista",
   "name": "Siege Ballista",
   "faction": "machine",
@@ -2692,42 +2623,6 @@
   "mana_value": 4
  },
  {
-  "id": "proto_te_quarry",
-  "name": "Quarry Engine",
-  "faction": "machine",
-  "rarity": "rare",
-  "type": "relic",
-  "subtype": "Construct Relic",
-  "cost": {
-   "C": 1,
-   "generic": 3
-  },
-  "effects": [],
-  "abilities": [
-   {
-    "cost": {
-     "mana": {
-      "generic": 4
-     },
-     "tap": true
-    },
-    "effects": [
-     {
-      "action": "destroy_land",
-      "target": "enemy_land"
-     }
-    ],
-    "text": "{4}, {T}: Destroy target land. Its controller creates an Ore token."
-   }
-  ],
-  "text": "{4}, {T}: Destroy target land. Its controller creates an Ore token. (It is a Construct relic with \"Sacrifice this: Add one mana of any color.\")",
-  "flavor": "\"Do not ask where progress leads. To ask is to slow it.\" (a Foundry maxim)",
-  "art": "res://art/cards/machine_r_009.webp",
-  "keywords": [],
-  "proto": true,
-  "mana_value": 4
- },
- {
   "id": "proto_te_writ",
   "name": "Quarry Writ",
   "faction": "machine",
@@ -2813,5 +2708,62 @@
   ],
   "proto": true,
   "mana_value": 8
+ },
+ {
+  "id": "proto_te_mule",
+  "name": "Rivet Mule",
+  "faction": "machine",
+  "rarity": "common",
+  "type": "creature",
+  "subtype": "Construct",
+  "cost": {
+   "C": 1,
+   "generic": 1
+  },
+  "power": 2,
+  "toughness": 2,
+  "effects": [
+   {
+    "trigger": "enter",
+    "action": "make_scrap",
+    "amount": 1
+   }
+  ],
+  "text": "When Rivet Mule enters, create a Scrap token. Salvage (When this leaves the battlefield, create a Scrap token.)",
+  "flavor": "It carries the guild's tools from bench to bench, and the craftsmen it serves grow fat on the hours it saves.",
+  "art": "res://art/cards/machine_c_027.webp",
+  "keywords": [
+   "salvage"
+  ],
+  "proto": true,
+  "mana_value": 2
+ },
+ {
+  "id": "proto_te_overseer",
+  "name": "Scrapyard Overseer",
+  "faction": "machine",
+  "rarity": "uncommon",
+  "type": "creature",
+  "subtype": "Human Artificer",
+  "cost": {
+   "C": 1,
+   "generic": 2
+  },
+  "power": 1,
+  "toughness": 3,
+  "effects": [
+   {
+    "trigger": "construct_cast",
+    "action": "make_scrap",
+    "amount": 1,
+    "text": "Whenever you cast a Construct spell, create a Scrap token."
+   }
+  ],
+  "text": "Whenever you cast a Construct spell, create a Scrap token.",
+  "flavor": "\"In the past the man has been first; in the future the system must be first.\" (Frederick W. Taylor, The Principles of Scientific Management)",
+  "art": "res://art/cards/machine_u_002.webp",
+  "keywords": [],
+  "proto": true,
+  "mana_value": 3
  }
 ]

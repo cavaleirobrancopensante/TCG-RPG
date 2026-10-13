@@ -134,6 +134,7 @@ static func main_action(st: BattleState, i: int) -> bool:
 	var best_targets: Array = []
 	var best_oc := false
 	var best_mode := -1
+	var cands: Array = []         # [value, hand index, targets, overclock, mode] of every play worth making
 	for hi in s.hand.size():
 		if not st.can_play(i, hi):
 			continue
@@ -161,6 +162,8 @@ static func main_action(st: BattleState, i: int) -> bool:
 				oc = true
 				spend = oc_spend
 				v += 1.5 + float(CardDB.mana_value(c["overclock"].get("cost", {}))) * 0.5
+		if v > 0.0:
+			cands.append([v, hi, plan[1], oc, mode])
 		if not hold.is_empty() and avail - spend < int(hold["mana"]) and v < float(hold["value"]):
 			continue
 		if v > best_v:
@@ -169,6 +172,30 @@ static func main_action(st: BattleState, i: int) -> bool:
 			best_targets = plan[1]
 			best_oc = oc
 			best_mode = mode
+	if AISearch.enabled(st, i) and not cands.is_empty():
+		# think ahead: its own pick first, the other good plays, its best ability, and holding back
+		cands.sort_custom(func(a, b): return float(a[0]) > float(b[0]))
+		var opts: Array = []
+		if best >= 0:
+			opts.append({"kind": "play", "idx": best, "targets": best_targets, "oc": best_oc, "mode": best_mode})
+		for cd in cands:
+			if opts.size() >= 4:
+				break
+			if best >= 0 and int(cd[1]) == best:
+				continue
+			opts.append({"kind": "play", "idx": cd[1], "targets": cd[2], "oc": cd[3], "mode": cd[4]})
+		var ab0 := _best_ability(st, i, {})
+		if not ab0.is_empty():
+			opts.append({"kind": "ability", "uid": ab0[0], "idx": ab0[1], "targets": ab0[2], "sac": ab0[3]})
+		opts.append({"kind": "pass_main"})
+		var pick: Dictionary = opts[AISearch.choose(st, i, opts)]
+		match String(pick["kind"]):
+			"play":
+				return st.play(i, int(pick["idx"]), pick["targets"], bool(pick["oc"]), int(pick["mode"]))
+			"ability":
+				return st.activate(i, int(pick["uid"]), int(pick["idx"]), pick["targets"], int(pick["sac"]))
+			"pass_main":
+				return false
 	if best >= 0:
 		return st.play(i, best, best_targets, best_oc, best_mode)
 	# 3b. Unearth: a creature back from the graveyard for one swing, in main 1.
@@ -990,6 +1017,27 @@ static func _would_attack(st: BattleState, i: int) -> Array:
 
 ## Choose attacking creature uids.
 static func choose_attackers(st: BattleState, i: int) -> Array:
+	var h := _choose_attackers_h(st, i)
+	if not AISearch.enabled(st, i) or st.phase != "main1":
+		return h
+	# think ahead: its own choice, no attack, or everything that can
+	var all_in: Array = st.attack_candidates(i).map(func(p): return p.uid)
+	var opts: Array = [{"kind": "attack", "uids": h}]
+	if not h.is_empty():
+		opts.append({"kind": "attack", "uids": []})
+	if all_in.size() > h.size():
+		opts.append({"kind": "attack", "uids": all_in})
+	if h.size() >= 2:
+		# the same attack without its weakest attacker
+		var weakest = h[0]
+		for u in h:
+			if st.find_perm(u).value() < st.find_perm(weakest).value():
+				weakest = u
+		opts.append({"kind": "attack", "uids": h.filter(func(u): return u != weakest)})
+	return opts[AISearch.choose(st, i, opts)]["uids"]
+
+
+static func _choose_attackers_h(st: BattleState, i: int) -> Array:
 	var me := st.side(i)
 	var foe := st.side(1 - i)
 	var cands := st.attack_candidates(i)
@@ -1138,6 +1186,22 @@ static func _block_danger(life: int, incoming: int) -> bool:
 
 ## Returns attacker uid -> blocker uid.
 static func choose_blocks(st: BattleState, i: int) -> Dictionary:
+	var h := _choose_blocks_h(st, i)
+	if not AISearch.enabled(st, i) or st.phase != "block":
+		return h
+	var opts: Array = [{"kind": "block", "blocks": h}]
+	if not h.is_empty():
+		opts.append({"kind": "block", "blocks": {}})
+		if h.size() >= 2:
+			# each block taken back in turn: is any of them a bad trade?
+			for a in h.keys().slice(0, 3):
+				var less: Dictionary = h.duplicate(true)
+				less.erase(a)
+				opts.append({"kind": "block", "blocks": less})
+	return opts[AISearch.choose(st, i, opts)]["blocks"]
+
+
+static func _choose_blocks_h(st: BattleState, i: int) -> Dictionary:
 	var me := st.side(i)
 	var result := {}
 	var free := []
@@ -1321,6 +1385,12 @@ static func respond(st: BattleState, i: int) -> bool:
 				best = ["premeditated", k]
 	if best.is_empty():
 		return false
+	if AISearch.enabled(st, i) and best[0] in ["card", "ability"]:
+		# think ahead: answer now, or keep the answer (and the mana) for later
+		var act := {"kind": "play", "idx": best[1], "targets": best[2], "mode": int(best[3]) if best.size() > 3 else -1} if best[0] == "card" \
+			else {"kind": "ability", "uid": best[1][0], "idx": best[1][1], "targets": best[2]}
+		if AISearch.choose(st, i, [act, {"kind": "respond_pass"}]) == 1:
+			return false
 	if best[0] == "premeditated":
 		return st.cast_premeditated(i, int(best[1]))
 	if best[0] == "card":
