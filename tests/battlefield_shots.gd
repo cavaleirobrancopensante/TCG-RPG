@@ -10,7 +10,7 @@ var main
 func _shot(name: String) -> void:
 	for i in 8:
 		await RenderingServer.frame_post_draw
-	var path := OS.get_user_data_dir() + "/shots/cards_" + name + ".png"
+	var path := OS.get_user_data_dir() + "/shots/cards_" + name + OS.get_environment("SHOT_TAG") + ".png"
 	get_viewport().get_texture().get_image().save_png(path)
 	print("shot ", path)
 
@@ -34,8 +34,18 @@ func _ready() -> void:
 	add_child(main)
 	if not main.is_booted:
 		await main.booted
-	get_tree().root.content_scale_size = Vector2i(1280, 720)
-	get_window().size = Vector2i(1280, 720)
+	# SHOT_BASE=960x540 SHOT_WIN=1200x540: a phone's canvas (the base, stretched to the screen)
+	var base := Vector2i(1280, 720)
+	var win := Vector2i(1280, 720)
+	for pair in [["SHOT_BASE", "b"], ["SHOT_WIN", "w"]]:
+		var v := OS.get_environment(pair[0]).split("x")
+		if v.size() == 2:
+			if pair[1] == "b":
+				base = Vector2i(int(v[0]), int(v[1]))
+			else:
+				win = Vector2i(int(v[0]), int(v[1]))
+	get_tree().root.content_scale_size = base
+	get_window().size = win
 	var d := DeckTools.proto_decks()
 	main._start_practice(d[0], d[1], 15)
 	for i in 20:

@@ -58,6 +58,7 @@ var pending_x := -1                # X chosen for the ability being used ({X} pa
 var pile_icons := [[], []]         # per side: the hand and library count icons
 var enemy_info: RichTextLabel
 var player_info: RichTextLabel
+var mana_rows := [null, null]     # each side's mana: a faith's symbol and free/total (1.86)
 var enemy_relics: GridContainer
 var player_relics: GridContainer
 var hand_box: _HandRow
@@ -154,14 +155,15 @@ func _build_ui() -> void:
 	enemy_info.custom_minimum_size = Vector2(60, UIKit.FS_SECONDARY + 10)
 	ebar.add_child(enemy_info)
 	_tap_opens_graveyard(enemy_info, 1)
+	mana_rows[1] = _ManaRow.new()
+	mana_rows[1].name = "EnemyMana"
+	ebar.add_child(mana_rows[1])
 	enemy_field = _field()
 	enemy_field.enemy_side = true
 	enemy_lands = _land_strip(1)
-	_enemy_row = _field_row(enemy_lands, enemy_field)
-	# the back row, on the left: lands, then relics (his at the top of his field)
+	# the side column on the left: lands and every other permanent that is not a creature
 	enemy_relics = _relic_box(true)
-	_enemy_row.add_child(enemy_relics)
-	_enemy_row.move_child(enemy_relics, 1)
+	_enemy_row = _field_row(enemy_lands, enemy_field, enemy_relics, true)
 	root.add_child(_enemy_row)
 	_strips.append(ebar)
 	_grounds.append(enemy_field)
@@ -198,10 +200,8 @@ func _build_ui() -> void:
 
 	player_field = _field()
 	player_lands = _land_strip(0)
-	_player_row = _field_row(player_lands, player_field)
 	player_relics = _relic_box(false)
-	_player_row.add_child(player_relics)
-	_player_row.move_child(player_relics, 1)
+	_player_row = _field_row(player_lands, player_field, player_relics, false)
 	root.add_child(_player_row)
 	_strips.append(mid)
 	_grounds.append(player_field)
@@ -249,8 +249,11 @@ func _build_ui() -> void:
 	player_info = _rich(UIKit.FS_BODY)
 	player_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	player_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	player_info.visible = false        # the mana row below says it in symbols
 	col.add_child(player_info)
-	_tap_opens_graveyard(player_info, 0)
+	mana_rows[0] = _ManaRow.new()
+	mana_rows[0].name = "PlayerMana"
+	col.add_child(mana_rows[0])
 
 	hand_box = _HandRow.new()
 	hand_box.scene = self
@@ -294,6 +297,12 @@ func _build_ui() -> void:
 const ROW_SEP := 4
 const HAND_MIN := 0.44           # the smallest hand card scale (a tap shows it full size)
 const FIG_MIN := 0.5
+const FIG_MAX := 1.35            # on a tall screen the creatures may grow past their base size
+const LINE_GAP := 4.0            # between the two lines of a crowded rank
+var side_w := 160.0              # the side column (lands and other permanents)
+const SIDE_BAR := 14.0           # room in the side column for its scroll bar
+var side_tile := 60.0            # the height of a tile in the side column
+var _side_scrolls: Array = []
 const LOG_MIN_W := 220.0         # the log keeps at least this much of the middle bar
 var fig_zoom := 1.0              # battlefield figures, fitted to the screen's height
 var hand_scale := HAND_SCALE
@@ -328,12 +337,23 @@ func _relayout(rebuild: bool) -> void:
 	var avail := vp.y - UIKit.TOP - ROW_SEP * 4
 	var bar_h := maxf(UIKit.TARGET, _enemy_bar.get_combined_minimum_size().y)
 	var mid_h := maxf(UIKit.TARGET + 4, _mid_bar.get_combined_minimum_size().y)
-	hand_scale = clampf((avail * 0.28 - 14.0) / CardView.BASE.y, HAND_MIN, HAND_SCALE)
-	var hand_h := CardView.BASE.y * hand_scale + 14.0
-	var bottom_h := maxf(hand_h, _player_col.get_combined_minimum_size().y)
+	# the hand strip keeps its share of the height; its cards fill all of it (1.86)
+	var bottom_h := maxf(avail * 0.28 + SCROLL_BAR_H, _player_col.get_combined_minimum_size().y)
+	hand_scale = clampf((bottom_h - SCROLL_BAR_H - 4.0) / CardView.BASE.y, HAND_MIN, HAND_SCALE)
+	var hand_h := CardView.BASE.y * hand_scale + 4.0
+	bottom_h = maxf(hand_h + SCROLL_BAR_H, _player_col.get_combined_minimum_size().y)
 	var field_h := floorf((avail - bar_h - mid_h - bottom_h) / 2.0)
-	fig_zoom = clampf((field_h - 6.0 - SCROLL_BAR_H) / BattleCard.CARD.y, FIG_MIN, 1.0)
+	# a single line of creatures needs no room for a bar: the row scrolls only when two lines
+	# are not enough, and then the cards are made smaller to leave room for it
+	fig_zoom = clampf((field_h - 6.0) / BattleCard.CARD.y, FIG_MIN, FIG_MAX)
 	var land_zoom := clampf(field_h / LandStrip.BASE_H, FIG_MIN, 1.0)
+	side_w = clampf(vp.x * 0.15, 150.0, 230.0)
+	for sc in _side_scrolls:
+		sc.custom_minimum_size.x = side_w
+	# side tiles: two rows of them fill the rank's height (lands, and the other permanents)
+	side_tile = floorf(clampf((field_h - 6.0 - LandStrip.GAP) / 2.0 - 2.0, 44.0, 110.0))
+	for ls in [enemy_lands, player_lands]:
+		ls.set_layout(side_w - SIDE_BAR, side_tile)
 	hand_box.custom_minimum_size.y = hand_h
 	hand_scroll.custom_minimum_size.y = hand_h + SCROLL_BAR_H
 	for row in [_enemy_row, _player_row]:
@@ -536,6 +556,7 @@ static func spread(widths: Array, avail: float, mid: float, gap: float = 6.0) ->
 class _Field extends Container:
 	var scene: BattleScene
 	var enemy_side := false
+	var lines := 1           # one line of creatures, or two when crowded
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_PASS
@@ -553,15 +574,23 @@ class _Field extends Container:
 		return out
 
 	func arrange() -> void:
-		var list := stacks()
-		var widths: Array = list.map(func(c): return c.custom_minimum_size.x)
+		var all := stacks()
 		var mid := scene._screen_mid_in(self) if scene else size.x * 0.5
-		var xs := BattleScene.spread(widths, size.x, mid)
-		for k in list.size():
-			var c: Control = list[k]
-			var h: float = c.custom_minimum_size.y
-			# the creatures stand toward the middle of the screen: the enemy's at the bottom of his field, yours at the top
-			fit_child_in_rect(c, Rect2(Vector2(xs[k], size.y - h if enemy_side else 0.0), Vector2(widths[k], h)))
+		var off := 0.0
+		for ln in range(lines):
+			var list: Array = all.filter(func(c): return int(c.line) == ln) if lines > 1 else all
+			var widths: Array = list.map(func(c): return c.custom_minimum_size.x)
+			var xs := BattleScene.spread(widths, size.x, mid)
+			var lh := 0.0
+			for k in list.size():
+				var c: Control = list[k]
+				var h: float = c.custom_minimum_size.y
+				lh = maxf(lh, h)
+				# the creatures stand toward the middle of the screen: the enemy's at the bottom of
+				# his field, yours at the top; a second line stands behind the first
+				var y := (size.y - h - off) if enemy_side else off
+				fit_child_in_rect(c, Rect2(Vector2(xs[k], y), Vector2(widths[k], h)))
+			off += lh + BattleScene.LINE_GAP
 
 
 func _land_strip(side_i: int) -> LandStrip:
@@ -571,10 +600,36 @@ func _land_strip(side_i: int) -> LandStrip:
 	return ls
 
 
-func _field_row(lands: LandStrip, field: _Field) -> HBoxContainer:
+## One side's rank (1.86): on the left a column with the lands and the other permanents that
+## are not creatures (it scrolls up and down, with its bar, when they don't fit); the rest of
+## the width for the creatures.
+func _field_row(lands: LandStrip, field: _Field, relics: GridContainer, is_enemy: bool) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
-	row.add_child(lands)
+	var side := ScrollContainer.new()
+	side.name = "SideScroll"
+	side.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	side.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	side.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	side.mouse_filter = Control.MOUSE_FILTER_PASS
+	var col := VBoxContainer.new()
+	col.name = "SideColumn"
+	col.add_theme_constant_override("separation", 6)
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# his lands at the top of his field, yours at the bottom of yours; the others toward the middle
+	col.alignment = BoxContainer.ALIGNMENT_BEGIN if is_enemy else BoxContainer.ALIGNMENT_END
+	lands.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if is_enemy:
+		col.add_child(lands)
+		col.add_child(relics)
+	else:
+		col.add_child(relics)
+		col.add_child(lands)
+	side.add_child(col)
+	row.add_child(side)
+	_side_scrolls.append(side)
+	DragScroll.attach(self, side)
 	# the creatures: they shrink to fit as more come, down to a limit, then the row scrolls sideways
 	var sc := ScrollContainer.new()
 	sc.name = "FieldScroll"
@@ -592,10 +647,10 @@ func _field_row(lands: LandStrip, field: _Field) -> HBoxContainer:
 	return row
 
 
-## The relics of one side, in the back row beside the lands.
+## The relics of one side, in the side column with the lands.
 func _relic_box(is_enemy: bool) -> GridContainer:
 	var g := GridContainer.new()
-	g.columns = 1
+	g.columns = 2
 	g.size_flags_vertical = Control.SIZE_SHRINK_BEGIN if is_enemy else Control.SIZE_SHRINK_END
 	g.add_theme_constant_override("h_separation", 6)
 	g.add_theme_constant_override("v_separation", 6)
@@ -895,6 +950,7 @@ const TOKEN_STACK_MAX := 10
 const STACK_STEP := Vector2(24, 0)
 const SCROLL_BAR_H := 12.0        # room kept under a row that may scroll, for its bar
 const FIT_MIN := 0.62            # cards shrink to this much of their size before the row scrolls
+const SCROLL_Z := 0.42           # smaller than this (a 42 px card) and the rank scrolls instead
 var side_zoom := [1.0, 1.0]
 const TOKEN_STEP := Vector2(14, 0)
 
@@ -939,10 +995,55 @@ func _restack(i: int) -> void:
 		var one: float = (f0.slot_size(fig_zoom).x if f0.has_method("slot_size") else BattleCard.CARD.x * fig_zoom)
 		var stp: Vector2 = TOKEN_STEP if st.find_perm(g[1][0]).is_token else STACK_STEP
 		need += one + stp.x * fig_zoom * (g[1].size() - 1) + 8.0
+	# 1.86: one line that shrinks to FIT_MIN; then two lines (each half the height) that shrink
+	# in turn; past that the two lines scroll sideways, the cards made small enough for the bar
+	var widths: Array = []
+	for g in groups:
+		var f0 = figures[g[1][0]]
+		var one: float = (f0.slot_size(fig_zoom).x if f0.has_method("slot_size") else BattleCard.CARD.x * fig_zoom)
+		var stp: Vector2 = TOKEN_STEP if st.find_perm(g[1][0]).is_token else STACK_STEP
+		widths.append(one + stp.x * fig_zoom * (g[1].size() - 1) + 8.0)
+	var row_h: float = field.size.y if field.size.y > 10.0 else BattleCard.CARD.y * fig_zoom
+	var lines := 1
+	var line_of: Array = []
+	for g in groups:
+		line_of.append(0)
 	var z := fig_zoom
+	var scroll := false
 	if avail > 10.0 and need > avail:
-		z = maxf(fig_zoom * FIT_MIN, fig_zoom * avail / need)
+		# one line, shrunk to fit; or two lines, each at most half the rank's height: whichever
+		# leaves the cards bigger. Too small even so: the rank scrolls sideways.
+		var z1 := fig_zoom * avail / need
+		var z2 := 0.0
+		var two_of: Array = line_of.duplicate()
+		if groups.size() > 1:
+			var acc := 0.0
+			for k in groups.size():
+				two_of[k] = 0 if acc + float(widths[k]) * 0.5 <= need * 0.5 else 1
+				acc += float(widths[k])
+			var need_line := 0.0
+			for ln in 2:
+				var w := 0.0
+				for k in groups.size():
+					if two_of[k] == ln:
+						w += float(widths[k])
+				need_line = maxf(need_line, w)
+			var z_cap := (row_h - LINE_GAP) * 0.5 / BattleCard.CARD.y
+			z2 = minf(z_cap, fig_zoom * avail / need_line)
+		if z2 > z1:
+			lines = 2
+			line_of = two_of
+			z = z2
+		else:
+			z = z1
+		if z < SCROLL_Z:
+			scroll = true
+			if lines == 2:
+				z = maxf(SCROLL_Z * 0.8, (row_h - LINE_GAP - SCROLL_BAR_H) * 0.5 / BattleCard.CARD.y)
+			else:
+				z = minf(SCROLL_Z, (row_h - SCROLL_BAR_H - 4.0) / BattleCard.CARD.y)
 	side_zoom[i] = z
+	field.lines = lines
 	for k in range(slots.size()):
 		if k >= groups.size():
 			slots[k].queue_free()      # its live figures were moved to other stacks above
@@ -951,17 +1052,21 @@ func _restack(i: int) -> void:
 		var tok: bool = st.find_perm(uids[0]).is_token
 		for u in uids:
 			figures[u].set_zoom(z)
+		slots[k].line = int(line_of[k])
 		slots[k].arrange(uids.map(func(u): return figures[u]), (TOKEN_STEP if tok else STACK_STEP) * z, z)
-	# still too many at the smallest size: the row grows past the screen and scrolls, its bar showing
-	var width := 0.0
+	# too many even so: the lines grow past the screen and scroll, the bar showing
+	var lw := [0.0, 0.0]
 	for k in mini(slots.size(), groups.size()):
-		width += slots[k].custom_minimum_size.x + 6.0
-	field.custom_minimum_size.x = width + 6.0 if avail > 10.0 and width > avail else 0.0
+		lw[slots[k].line] += slots[k].custom_minimum_size.x + 6.0
+	var width: float = maxf(lw[0], lw[1])
+	field.custom_minimum_size.x = width + 6.0 if scroll and avail > 10.0 and width > avail else 0.0
 	field.queue_sort()
 
 
 class _Stack extends Control:
 	## One pile of identical cards: the front card on the left, the rest stepping out to its right.
+	var line := 0            # which line of the rank it stands in (0: nearest the middle of the screen)
+
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 		size_flags_vertical = Control.SIZE_SHRINK_END      # figures stand on the ground line
@@ -1008,7 +1113,7 @@ func _refresh_relics(i: int) -> void:
 	var box: GridContainer = player_relics if i == 0 else enemy_relics
 	# a card attached to a creature is tucked under it on the field, not shown here
 	var list: Array = st.side(i).relics.filter(func(r): return r.attached_to < 0 or st.find_perm(r.attached_to) == null)
-	var parts: Array = [fig_zoom, busy, mode]
+	var parts: Array = [fig_zoom, side_tile, side_w, busy, mode]
 	for r in list:
 		parts.append([r.uid, r.attached_to, r.tapped, r.counters.duplicate(), _is_valid_target({"kind": "relic", "uid": r.uid}),
 			i == 0 and range(st.abilities_of(r).size()).any(func(kk): return st.can_activate(0, r.uid, kk))])
@@ -1029,13 +1134,11 @@ func _refresh_relics(i: int) -> void:
 				break
 		if not placed:
 			groups.append([key, [r]])
-	# small cards, as tall as two fit the back row; identical ones stacked to the side
-	var tile := clampf(BattleCard.CARD.y * fig_zoom * 0.56, 56.0, 76.0)
-	var tw := tile * 0.78
+	# the same size as the land tiles, as many to a row; identical ones stacked to the side
+	var tile := side_tile
+	var tw := floorf(tile / LandStrip.RATIO)
 	if not groups.is_empty():
-		var room := minf((_player_row if i == 0 else _enemy_row).custom_minimum_size.y, BattleCard.CARD.y * fig_zoom + 8.0)
-		var rows := maxi(1, int(room / (tile + 6.0)))
-		box.columns = ceili(groups.size() / float(rows))
+		box.columns = maxi(1, int((side_w - SIDE_BAR + 6.0) / (tw + 6.0 + RELIC_STEP.x * 0.5)))
 	for g in groups:
 		var stack := _RelicStack.new()
 		var n: int = g[1].size()
@@ -1066,7 +1169,7 @@ func _refresh_relics(i: int) -> void:
 
 
 const RELIC_STACK_MAX := 4
-const RELIC_STEP := Vector2(12, 0)
+const RELIC_STEP := Vector2(8, 0)
 
 
 class _RelicStack extends Control:
@@ -1170,11 +1273,54 @@ func _refresh_bars() -> void:
 				free[k] = int(free.get(k, 0)) + int(s.pool[k])
 				if not tot.has(k):
 					tot[k] = 0
+		var entries: Array = []
+		var tip: Array = []
 		for m in Factions.MANA_ORDER:
 			if tot.has(m):
-				var col := UIKit.faction_ink(Factions.MANA_TO_FACTION[m])
-				t += "[color=#%s]%s %d/%d[/color]   " % [col.to_html(false), Factions.info(Factions.MANA_TO_FACTION[m])["short"], int(free.get(m, 0)), int(tot[m])]
+				entries.append([Factions.MANA_TO_FACTION[m], int(free.get(m, 0)), int(tot[m])])
+				tip.append("%s %d/%d" % [Factions.info(Factions.MANA_TO_FACTION[m])["short"], int(free.get(m, 0)), int(tot[m])])
 		(player_info if i == 0 else enemy_info).text = t
+		if mana_rows[i]:
+			mana_rows[i].set_entries(entries)
+			mana_rows[i].tooltip_text = "   ".join(tip)
+
+
+## A side's mana (1.86): for each faith's land in play, its symbol and "free/total", in the
+## faith's colour (instead of the faith's name, which took a whole line on a phone).
+class _ManaRow extends Control:
+	var entries: Array = []          # [faith, free, total]
+	const SIG := 22.0
+	const GAP := 10.0
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_PASS
+		custom_minimum_size = Vector2(0, SIG + 6)
+
+	func set_entries(e: Array) -> void:
+		if e == entries:
+			return
+		entries = e
+		var font := Tapestry.font("bold")
+		var w := 0.0
+		for en in entries:
+			w += SIG + 4 + font.get_string_size("%d/%d" % [en[1], en[2]], HORIZONTAL_ALIGNMENT_LEFT, -1, UIKit.FS_BODY).x + GAP
+		custom_minimum_size = Vector2(w, SIG + 6)
+		queue_redraw()
+
+	func _draw() -> void:
+		var font := Tapestry.font("bold")
+		var fs := UIKit.FS_BODY
+		var x := 2.0
+		var cy := size.y * 0.5
+		for en in entries:
+			var ink := UIKit.faction_ink(String(en[0]))
+			Tapestry.ink_circle(self, Vector2(x + SIG * 0.5, cy), SIG * 0.5, Color(Tapestry.PARCHMENT_LIGHT, 0.95), 1.4)
+			UIKit.draw_sigil(self, String(en[0]), Vector2(x + SIG * 0.5, cy), SIG * 0.32, ink, 1.8)
+			x += SIG + 4
+			var t := "%d/%d" % [en[1], en[2]]
+			var col := ink if int(en[1]) > 0 else Color(ink, 0.5)
+			draw_string(font, Vector2(x, cy + fs * 0.36), t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+			x += font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + GAP
 
 
 var _hand_key := ""          # the hand last built: rebuilt only when it changes

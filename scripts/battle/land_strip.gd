@@ -1,34 +1,57 @@
 class_name LandStrip
 extends Control
-## The lands a side has in play, in the back row: one small card per kind of land with its
-## count, untapped ones upright, tapped ones turned a quarter below them.
+## The lands a side has in play, in the side column (1.86): one small card per kind of land,
+## as many to a row as the column holds; two rows of tiles fit the rank's height. The badge
+## counts the untapped ones, a medal the tapped ones; a kind with every land tapped lies
+## turned a quarter. The column scrolls when lands and the other permanents don't fit.
 
 signal tapped(strip: LandStrip)
 
 const COL_W := 60.0
 const BASE_H := 150.0
+const GAP := 6.0
+const RATIO := 1.27            # a tile's height for its width
 
 var lands: Array = []          # BattleState land dicts {"id", "color", "tapped"}
 var enemy := false
-var zoom := 1.0                # the duel shrinks the strip on short screens; counts stay readable
+var zoom := 1.0                # kept for callers; the tiles follow the column's width
+var width := 140.0             # the column's inner width (set by the duel's layout)
+var tile_h := 60.0             # a tile's height: two rows of tiles fit the rank (set by the layout)
 
 
 func _init() -> void:
-	custom_minimum_size = Vector2(COL_W + 8, BASE_H)
+	custom_minimum_size = Vector2(COL_W + 8, 40)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
 
 func set_zoom(z: float) -> void:
-	if is_equal_approx(z, zoom):
-		return
 	zoom = z
+
+
+## The width to lay the tiles out in (the side column's, less its bar) and a tile's height.
+func set_layout(w: float, th: float) -> void:
+	if is_equal_approx(w, width) and is_equal_approx(th, tile_h):
+		return
+	width = w
+	tile_h = th
 	_fit()
 	queue_redraw()
 
 
+func tile_size() -> Vector2:
+	return Vector2(floorf(tile_h / RATIO), tile_h)
+
+
+## How many tiles side by side in the column.
+func columns() -> int:
+	return maxi(1, int((width + GAP) / (tile_size().x + GAP)))
+
+
 func _fit() -> void:
-	var groups := _groups().size()
-	custom_minimum_size = Vector2(COL_W * maxi(1, groups) + 8, BASE_H) * zoom
+	var n := maxi(1, _groups().size())
+	var rows := ceili(n / float(columns()))
+	var t := tile_size()
+	custom_minimum_size = Vector2(width, rows * t.y + (rows - 1) * GAP + 4)
 
 
 func set_lands(p_lands: Array) -> void:
@@ -67,47 +90,37 @@ func _gui_input(event: InputEvent) -> void:
 		tapped.emit(self)
 
 
-const TILE := Vector2(52, 66)
-
-
-## Each kind of land as a small card with its count: the untapped ones upright, the tapped
-## ones turned a quarter below them. Yours sit at the bottom of your field, his at the top.
 func _draw() -> void:
 	var groups := _groups()
 	var fs := int(UIKit.FS_MIN)
 	if groups.is_empty():
-		var t := I18n.t("No lands")
+		var t0 := I18n.t("No lands")
 		var fnt := Tapestry.font("italic")
-		draw_multiline_string(fnt, Vector2(4, size.y * 0.5 - fs * 0.4), t, HORIZONTAL_ALIGNMENT_LEFT, size.x - 6, fs, 2, Color(Tapestry.PARCHMENT_LIGHT, 0.9))
+		draw_string(fnt, Vector2(4, size.y * 0.5 + fs * 0.4), t0, HORIZONTAL_ALIGNMENT_LEFT, size.x - 6, fs, Color(Tapestry.PARCHMENT_LIGHT, 0.9))
 		return
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2(zoom, zoom))
-	var col_w := minf(COL_W, (size.x / zoom - 8) / float(groups.size()))
 	var font := Tapestry.font("bold")
-	var content_h := TILE.y * 2 + 8
-	var y0 := 2.0 if enemy else maxf(2.0, size.y / zoom - content_h - 2.0)
+	var t := tile_size()
 	for gi in groups.size():
 		var id: String = groups[gi][0]
 		var up: int = groups[gi][1]
 		var down: int = groups[gi][2]
 		var c := CardDB.get_card(id)
-		var x := 4.0 + gi * col_w + (col_w - TILE.x) * 0.5
-		var r_up := Rect2(Vector2(x, y0), TILE)
+		var cols := columns()
+		var r := Rect2(Vector2((gi % cols) * (t.x + GAP), 2 + (gi / cols) * (t.y + GAP)), t)
 		if up > 0:
-			CardFace.paint(self, r_up, c, {"badge": "×%d" % up})
+			CardFace.paint(self, r, c, {"badge": "×%d" % up})
 		else:
-			draw_rect(r_up, Color(Tapestry.PARCHMENT_LIGHT, 0.15))
-			draw_rect(r_up, Color(Tapestry.PARCHMENT_LIGHT, 0.4), false, 1.0)
+			# every land of this kind tapped: the card lies turned, inside its place
+			var rt := Rect2(r.position + Vector2(0, (t.y - t.x * 0.8) * 0.5), Vector2(t.x, t.x * 0.8))
+			CardFace.paint_tapped(self, rt, c, {})
 		if down > 0:
-			var r_down := Rect2(Vector2(x, y0 + TILE.y + 8), TILE)
-			CardFace.paint_tapped(self, r_down, c, {})
-			_count(Vector2(x + TILE.x - 4, y0 + TILE.y + 8 + TILE.y * 0.5 - 12), down, font, Tapestry.PARCHMENT_DARK)
-## A count in a small medal: placed in the strip's own (zoomed) units, drawn at a readable size.
-func _count(pos: Vector2, n: int, font: Font, fill: Color) -> void:
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			_count(Vector2(r.end.x - 12, r.end.y - 14), down, font)
+
+
+## The tapped ones: a small medal with a turning arrow and the count.
+func _count(pos: Vector2, n: int, font: Font) -> void:
 	var fs := int(UIKit.FS_MIN)
-	var at := pos * zoom
-	Tapestry.ink_circle(self, at, fs * 0.72, fill, 1.5)
-	var s := str(n)
-	var w := font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	draw_string(font, at + Vector2(-w * 0.5, fs * 0.36), s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Tapestry.INK)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2(zoom, zoom))
+	Tapestry.ink_circle(self, pos, fs * 0.8, Tapestry.PARCHMENT_DARK, 1.5)
+	var s := "↻%d" % n
+	var w := font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs - 2).x
+	draw_string(font, pos + Vector2(-w * 0.5, fs * 0.34), s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs - 2, Tapestry.INK)
