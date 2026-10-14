@@ -118,7 +118,7 @@ func _ready() -> void:
 	g.add_child(_name("Respond to every spell"))
 	var ra := _check()
 	ra.button_pressed = BattleScene.respond_to_every_spell()
-	ra.text = "Off: only at your stops and in combat"
+	ra.text = "Off: at your stops, in combat, and when the enemy aims at you or your cards"
 	ra.tooltip_text = "On: the duel stops whenever the enemy casts something you could answer."
 	ra.toggled.connect(func(on): GameState.set_setting(BattleScene.RESPOND_ALL_KEY, on))
 	g.add_child(ra)

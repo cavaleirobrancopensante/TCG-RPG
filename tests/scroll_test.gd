@@ -424,6 +424,22 @@ func _stack_option_tests() -> void:
 	_check(BattleScene.wants_response(s, "blockers", false, false), "off: a spell while blocking stops")
 	s.stack.clear()
 	_check(not BattleScene.wants_response(s, "main1", false, true), "an empty stack in an unmarked step never stops")
+	# 1.92: an enemy spell or ability aimed at us or our cards always stops
+	var cen := CardDB.get_card("proto_c_censure")
+	s.stack = [{"sid": 2, "kind": "card", "side": 1, "id": "proto_c_censure", "card": cen, "targets": []}]
+	_check(BattleScene.wants_response(s, "main1", false, false), "off: the enemy's Censure at our hand stops")
+	s.stack = [{"sid": 3, "kind": "card", "side": 0, "id": "proto_c_censure", "card": cen, "targets": []}]
+	_check(not BattleScene.wants_response(s, "main1", false, false), "off: our own Censure does not stop for us")
+	s.stack = [{"sid": 4, "kind": "ability", "side": 1, "id": "x", "card": {}, "uid": -1, "idx": 0,
+		"effects": [{"action": "exile_grave", "target": "any_grave_card"}], "targets": [{"kind": "grave", "side": 0, "id": "revel_c_001"}]}]
+	_check(BattleScene.wants_response(s, "main1", false, false), "off: an enemy ability at our graveyard stops")
+	s.stack[0]["targets"] = [{"kind": "grave", "side": 1, "id": "revel_c_001"}]
+	_check(not BattleScene.wants_response(s, "main1", false, false), "off: an enemy ability at his own graveyard does not stop")
+	var rep := CardDB.get_card("proto_st_reply")
+	s.stack = [{"sid": 5, "kind": "card", "side": 0, "id": "proto_c_censure", "card": cen, "targets": []},
+		{"sid": 6, "kind": "card", "side": 1, "id": "proto_st_reply", "card": rep, "targets": []}]
+	_check(BattleScene.wants_response(s, "main1", false, false), "off: the enemy countering our spell stops")
+	s.stack.clear()
 	# in a real duel: the enemy casts Grave Chill on our creature in its main phase,
 	# and we hold Wildsurge, an answer
 	for respond_all in [false, true]:
@@ -432,7 +448,7 @@ func _stack_option_tests() -> void:
 		if respond_all:
 			_check(waited, "on: the duel waits for an answer to the enemy's spell")
 		else:
-			_check(not waited, "off: the enemy's spell resolves without waiting")
+			_check(waited, "off: the enemy's spell aimed at our creature still waits (1.92)")
 
 
 ## Stage the enemy's main phase, let it cast at our creature and report whether the duel

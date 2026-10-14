@@ -1162,3 +1162,11 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Penance is now {W} (was {1}{W}): look at his hand, choose a card other than a land, and he
   puts it third from the top of his library (was on top), so it comes back three draws later.
   You still gain 2 life.
+
+## You may answer what is aimed at you (1.92)
+
+- With "Respond to every spell" off, the duel now also stops for you when an enemy spell or
+  ability is aimed at you or your cards and you have something to answer with: a target that
+  is you, your creature, relic, land or a card in your graveyard (Keeper of the Ossuary); an
+  attack on your hand or library (Censure, Covet, Penance, Index, Confessor, a random discard);
+  an edict; or a counter of your spell. Other enemy spells in his main phase still flow by.
