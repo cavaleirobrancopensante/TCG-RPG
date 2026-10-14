@@ -30,6 +30,7 @@ const KEYWORDS := {
 	"unmoved": "Unmoved: enemy spells and abilities can't tap it, return it to its owner's hand or shrink it.",
 	"converted": "Converted: it can't attack or block.",
 	"flash": "Flash: you may cast it any time you could cast an instant.",
+	"illusion": "Illusion: when this becomes the target of a spell or ability (yours too), sacrifice it. Effects that don't target, like \"each creature\", don't touch it.",
 	"salvage": "Salvage: when this leaves the battlefield, create a Scrap token (a Construct relic: sacrifice it to scry 1; {2}, sacrifice it: draw a card; {1}: it becomes a 1/1 Construct creature, Servo, at any time).",
 	"immortal": "Immortal: if it would be put into a graveyard from anywhere, it is exiled instead. Angels return to Heaven, demons are cast back into Hell; no necromancy can raise them.",
 }

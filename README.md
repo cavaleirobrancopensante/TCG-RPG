@@ -1078,3 +1078,19 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Measured, ordinary AI, 200 duels each (the Stoa's share, before and after): against the Revel
   31% and 32%, the Old Ways 59% and 59%, the Pact 38.5% and 36%, the Church 53% and 52%, the
   Technocracy 55% and 53%. That is within the noise; the AI casts it in about one game in four.
+
+## Illusion: the Satyrs (1.84)
+
+- New keyword, Illusion: "When this becomes the target of a spell or ability, sacrifice it." It
+  counts every spell and ability, its controller's own included. Effects that do not target
+  ("each creature", Firework Volley), combat and blocks never touch it.
+- The two Satyrs are Illusions, cheaper and stronger:
+  - Satyr of the Drunken Rout is now {1}{R} 3/3 (was {2}{R} 3/2).
+  - Satyr-King of the Vintage is now {1}{R}{G} 5/4 trample (was {2}{R}{G} 4/4).
+- The AI never aims at its own Illusion (Carnival Masks or a fight spell picks another
+  creature), and treats any targeted effect, even 1 damage or a tap, as removal for yours.
+- You may target your own Illusion; the confirmation says it will be sacrificed. The log names
+  every Illusion that vanishes. The rules glossary explains it.
+- Measured, ordinary AI, 200 duels each (the Revel's share, before and after): against the
+  Church 55.5% and 58%, the Pact 46.5% and 47.5%, the Stoa 69% and 72.5%, the Old Ways 70% and
+  72.5%, the Technocracy 55.5% and 54.5%.

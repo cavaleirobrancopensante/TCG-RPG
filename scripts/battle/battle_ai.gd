@@ -778,8 +778,8 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 				elif chosen != null:
 					if chosen.get("kind") == "creature":
 						var p := st.find_perm(chosen["uid"])
-						if p and p.toughness() - p.damage <= int(BattleState.fly_eff(e, p).get("amount", amount)):
-							v += p.value()
+						if p and (p.toughness() - p.damage <= int(BattleState.fly_eff(e, p).get("amount", amount)) or (p.owner != i and p.has_kw("illusion"))):
+							v += p.value()      # (an Illusion dies of any aim)
 						elif is_spell and t == "enemy_creature":
 							return [0.0, []]   # would not kill anything
 					elif is_spell and foe.life > amount * 3 and not foe.creatures.is_empty():
@@ -1536,7 +1536,7 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 							if ref["kind"] != "creature":
 								continue
 							var z = st.find_perm(ref["uid"])
-							if int(BattleState.fly_eff(e, z).get("amount", amount)) >= z.toughness() - z.damage or (source != null and source.has_kw("deathtouch")):
+							if int(BattleState.fly_eff(e, z).get("amount", amount)) >= z.toughness() - z.damage or (source != null and source.has_kw("deathtouch")) or z.has_kw("illusion"):
 								var g := _removal_gain(st, i, z, top)
 								if g > best_g:
 									best_g = g
@@ -1628,7 +1628,9 @@ static func _answer_value(st: BattleState, i: int, effects: Array, source, card:
 				for ref in st.valid_targets(i, e):
 					var z = st.find_perm(ref["uid"])
 					var g := 0.0
-					if st.step == "begin_combat" and not mine_turn and st.can_attack(z):
+					if z.owner != i and z.has_kw("illusion"):
+						g = _removal_gain(st, i, z, top) + 0.5     # aimed at, an Illusion is gone
+					elif st.step == "begin_combat" and not mine_turn and st.can_attack(z):
 						g = 1.5 + z.power() * 0.4
 					elif a == "freeze" and their_end:
 						g = 1.0 + z.value() * 0.3
@@ -2223,7 +2225,7 @@ static func held_instant(st: BattleState, i: int) -> Dictionary:
 						continue
 					var kills := true
 					if a == "damage":
-						kills = amount >= z.toughness() - z.damage
+						kills = amount >= z.toughness() - z.damage or z.has_kw("illusion")
 					elif a == "buff":
 						kills = z.toughness() + int(e.get("toughness", 0)) <= z.damage
 					if kills or a == "bounce":

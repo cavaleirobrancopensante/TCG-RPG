@@ -2241,6 +2241,9 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 		"held":
 			_log(_cap(I18n.t("%s holds %s until he leaves the battlefield.") % [_obj(int(e["uid"])), _card_name(String(e["id"]))]))
 			_refresh_bars()
+		"illusion":
+			_log(_cap(I18n.t("%s is an Illusion: targeted, it vanishes.") % _card_name(String(e["id"]))))
+			_refresh_bars()
 		"penance":
 			if int(e["side"]) == 0:
 				_log(I18n.t("Penance: your %s goes on top of your library.") % _card_name(String(e["id"])))
@@ -3109,6 +3112,12 @@ func _confirm_targets() -> String:
 		what = I18n.t("Cast %s on %s?") % [_card_name(pending_excess), _refs_text(chosen_targets.filter(func(t): return t != null))]
 	elif pending_trigger >= 0:
 		what = I18n.t("%s: target %s?") % [_obj(pending_trigger), _refs_text(chosen_targets.filter(func(t): return t != null))]
+	for t in chosen_targets:
+		if typeof(t) == TYPE_DICTIONARY and t.get("kind") == "creature":
+			var ip = st.find_perm(int(t.get("uid", -1)))
+			if ip != null and ip.owner == 0 and ip.has_kw("illusion"):
+				what += I18n.t(" (an Illusion: targeting it sacrifices it)")
+				break
 	var lb := UIKit.label(_cap(what), UIKit.FS_BODY, UIKit.TEXT, true)
 	lb.custom_minimum_size.x = 420
 	v.add_child(lb)
