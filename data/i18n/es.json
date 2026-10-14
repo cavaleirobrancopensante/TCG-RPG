@@ -4572,7 +4572,6 @@
  "You won't see which card it is until it lands in your picks.": "No verás qué carta es hasta que llegue a tus elecciones.",
  "None of this type.": "Ninguna de este tipo.",
  "Antlered and silent, he rides out from the old oak at midnight, and the wolves pour after him.": "Astado y silencioso, cabalga desde el viejo roble a medianoche, y los lobos se derraman tras él.",
- "+1 card you may keep in hand at the end of your turn for every point (7 + Reason). Everyone draws 7.": "+1 carta que puedes conservar en la mano al final de tu turno por cada punto (7 + Razón). Todos roban 7.",
  "Grave-Dust Skirmisher": "Escaramuzador del Polvo de Tumba",
  "Unearth {B} ({B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)": "Desenterrar {B} ({B}: Regresa esta carta de tu cementerio al campo de batalla. Gana prisa. Exíliala al comienzo del próximo paso final o si fuera a dejar el campo de batalla. Desentierra solo como un conjuro.)",
  "\"Why wait for judgment to rise? I dug him up on Tuesday, and he only has to last till supper.\" (Morvane, a Pact sexton)": "\"¿Para qué esperar al juicio para levantarse? Lo desenterré el martes, y solo tiene que durar hasta la cena.\" (Morvane, un sacristán del Pacto)",
@@ -5168,5 +5167,6 @@
  "Illusion": "Ilusión",
  "Illusion: when this becomes the target of a spell or ability (yours too), sacrifice it. Effects that don't target, like \"each creature\", don't touch it.": "Ilusión: cuando esta se convierta en objetivo de un hechizo o habilidad (tuyos también), sacrifícala. Los efectos sin objetivo, como \"cada criatura\", no la afectan.",
  " (an Illusion: targeting it sacrifices it)": " (una Ilusión: elegirla como objetivo la sacrifica)",
- "%s is an Illusion: targeted, it vanishes.": "%s es una Ilusión: al ser objetivo, desaparece."
+ "%s is an Illusion: targeted, it vanishes.": "%s es una Ilusión: al ser objetivo, desaparece.",
+ "+1 card you may keep in hand at the end of your turn for every point (5 + Reason). Everyone draws 7.": "+1 carta que puedes conservar en la mano al final de tu turno por cada punto (5 + Razón). Todos roban 7."
 }

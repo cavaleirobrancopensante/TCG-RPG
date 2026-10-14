@@ -8,7 +8,7 @@ const STAT_MAX := 5
 const BASE_LIFE := 15            # also every duel's base: 15 life (1.46; was 10)
 const ENEMY_LIFE_BASE := 13      # an enemy's life: 13 + 2 per level (was 8 + 2)
 const LIFE_BONUS_15 := 5          # what 1.46 added to every life total
-const BASE_HAND := 7            # cards kept at the end of a turn before Reason (everyone draws 7)
+const BASE_HAND := 5            # cards kept at the end of a turn before Reason (everyone still draws 7)
 const LIFE_PER_DEVOTION := 2
 
 ## Levels: experience from duels (more for stronger foes, double in a lair), missions and errands.
@@ -32,7 +32,7 @@ static func duel_xp(foe_level: int, lair: bool = false) -> int:
 ## stat -> [faith, name, what it does]
 const STATS := {
 	"devotion": ["sanctum", "Devotion", "+2 life for every point."],
-	"reason": ["lyceum", "Reason", "+1 card you may keep in hand at the end of your turn for every point (7 + Reason). Everyone draws 7."],
+	"reason": ["lyceum", "Reason", "+1 card you may keep in hand at the end of your turn for every point (5 + Reason). Everyone draws 7."],
 	"wildcraft": ["wild", "Wildcraft", "Walk faster and see further through the fog. At 3 or more, forest and marsh no longer slow you."],
 	"charm": ["revel", "Charm", "Better prices when buying and selling, cheaper tolls and inns."],
 	"industry": ["machine", "Industry", "Your deck may hold 1 + Industry copies of a card (basic lands are free)."],
