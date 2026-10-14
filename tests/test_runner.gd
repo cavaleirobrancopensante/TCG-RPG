@@ -1237,10 +1237,17 @@ func test_draft() -> void:
 	var d := Draft.new()
 	d.start("cogspire", "Me", 4242)
 	var guard := 0
+	var to_side := ""
 	while d.is_drafting() and guard < 100:
 		guard += 1
-		d.player_pick(0)
+		if guard == 2:
+			to_side = String(d.player_pick(0, true).get("id", ""))
+			check(d.side_pool().get(to_side, 0) == 1 and d.picks[0].size() - d.side.size() == 1,
+				"Take to sideboard: the second pick goes straight to the sideboard")
+		else:
+			d.player_pick(0)
 	check(guard == Draft.ROUNDS * Draft.PACK_SIZE, "45 picks (%d)" % guard)
+	check(d.side.size() == 1 and d.side_pool().get(to_side, 0) >= 1, "the sideboarded pick stays there to the end")
 	for s in Draft.SEATS:
 		check(d.picks[s].size() == 45, "seat %d drafted %d" % [s, d.picks[s].size()])
 	d.finish_draft()

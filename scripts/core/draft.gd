@@ -144,12 +144,14 @@ func direction() -> int:
 
 
 ## The player takes holding[0][idx]; the bots take theirs; the packs move on.
-func player_pick(idx: int) -> Dictionary:
+func player_pick(idx: int, to_side := false) -> Dictionary:
 	if not is_drafting() or idx < 0 or idx >= holding[0].size():
 		return {}
 	var taken: Dictionary = holding[0][idx]
 	holding[0].remove_at(idx)
 	picks[0].append(taken)
+	if to_side:
+		side.append(picks[0].size() - 1)     # Take to sideboard (1.93)
 	for s in range(1, SEATS):
 		var bi := bot_choice(s)
 		if bi >= 0:

@@ -1,7 +1,7 @@
 class_name DraftScreen
 extends Control
 ## The draft table: take one card from the booster in hand, pass the rest on.
-## Tap a card to read it up close, with Take (leaf through the pack there). Take random at the
+## Tap a card to read it up close, with Take and Take to sideboard (leaf through the pack there). Take random at the
 ## top takes a card at random from the pack, after asking.
 ## The picks panel holds two piles: the Deck (top), which becomes the first list in the deck
 ## builder when the draft ends, and the Sideboard (bottom). New picks go to the Deck. The Deck
@@ -214,7 +214,8 @@ func _read(i: int) -> CardViewer:
 	_choose(i)
 	var pack: Array = draft.holding[0]
 	var v := CardViewer.open(self, pack.duplicate(), i, func(_e, idx):
-		return [["Take", func(): _take_index(idx), true, true]])
+		return [["Take", func(): _take_index(idx), true, true],
+			["Take to sideboard", func(): _take_index(idx, true), true, true]])
 	return v
 
 
@@ -230,8 +231,8 @@ func _ask_random() -> void:
 		"You won't see which card it is until it lands in your picks.")
 
 
-func _take_index(i: int) -> void:
-	draft.player_pick(i)
+func _take_index(i: int, to_side := false) -> void:
+	draft.player_pick(i, to_side)
 	picked.emit()
 	if not draft.is_drafting():
 		finished.emit()
