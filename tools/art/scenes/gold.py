@@ -259,7 +259,7 @@ def spaniel(p, x, y, s=1.0):
 
 def gold_sanctum_lyceum(p):
     """Boethius in the Tower: the senator-philosopher in his prison cell, writing the
-    Consolation at a slanted desk by the barred window, a crucifix on the wall."""
+    Consolation at a slanted desk by the barred window, a plain cross on the wall."""
     stone = C.hex('8a7e6e')
     bg.fill_all(p, ('v', stone.dark(0.35), stone.dark(0.1), stone.dark(0.3)))
     for row in range(0, 14):
@@ -295,14 +295,9 @@ def gold_sanctum_lyceum(p):
         q = (870 - i * 3, 300 + i * 16)
         p.blob(q, 5, 8, None, ink=IRON, width=2.4)
     rect(p, 858, 288, 884, 300, IRON, width=1.4)
-    # crucifix on the wall
+    # a plain cross on the wall
     p.taper([(760, 170), (760, 300)], 5, 5, C.hex('5a3a22'), width=1.6, shade=0.6)
     p.taper([(722, 204), (798, 204)], 5, 5, C.hex('5a3a22'), width=1.6, shade=0.6)
-    p.taper([(760, 196), (760, 262)], 3, 2, SKIN, width=1.0)
-    p.taper([(734, 206), (760, 214), (786, 206)], 2, 2, SKIN, width=1.0)
-    p.blob((760, 192), 5, 6, SKIN, width=1.0)
-    p.halo((760, 190), 9, tooled=False)
-    p.blob((760, 192), 5, 6, SKIN, width=1.0)
     # a shelf with Plato's bust and scrolls
     rect(p, 560, 300, 700, 312, C.hex('5a3a22'), width=1.6)
     bust(p, 600, 300, 1.0)

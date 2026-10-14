@@ -914,10 +914,8 @@ def wayside_cross(p, x, y, s=1.0, col=STONE):
     rect(p, x - 5 * s, y - 120 * s, x + 5 * s, y - 20 * s, ('h', col.light(0.25), col, col.dark(0.3)), width=1.8)
     rect(p, x - 28 * s, y - 100 * s, x + 28 * s, y - 90 * s, ('v', col.light(0.25), col.dark(0.2)), width=1.8)
     p.shape([(x - 14 * s, y - 116 * s, 0), (x, y - 134 * s, 0), (x + 14 * s, y - 116 * s, 0)], C.hex('7a5a3a'), width=1.6, smooth=False, shade=0.5)
-    # a small corpus in gilt
-    p.taper([(x, y - 108 * s), (x, y - 80 * s)], 1.6 * s, 1.2 * s, GOLD, width=0.8)
-    p.taper([(x - 18 * s, y - 97 * s), (x, y - 94 * s), (x + 18 * s, y - 97 * s)], 1.2 * s, 1.2 * s, GOLD, width=0.8)
-    p.blob((x, y - 110 * s), 2.2 * s, 2.4 * s, GOLD, width=0.8)
+    # a gilt boss where the arms cross (no figure: 1.85)
+    p.blob((x, y - 95 * s), 4.0 * s, 4.0 * s, GOLD, width=0.8, shade=0.5)
 
 
 def chapel(p, x, y, s=1.0, wall=C.hex('e3d6b8'), roof=C.hex('8a4b34'), lit=True):

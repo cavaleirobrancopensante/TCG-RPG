@@ -705,13 +705,14 @@ def forest_tree(p, f, x, y, h):
 
 
 def shrine(p, x, y):
-    """A wayside shrine: a little gabled niche on a post with a lamp and flowers."""
+    """A wayside shrine: a little gabled niche with a gilt cross, on a post, with flowers."""
     p.shape([(x - 6, y, 0), (x - 6, y - 90, 0), (x + 6, y - 90, 0), (x + 6, y, 0)], ('h', C.hex('8a6a4a'), C.hex('4a3020')), width=1.4, smooth=False)
     p.shape([(x - 22, y - 90, 0), (x - 22, y - 140, 0), (x + 22, y - 140, 0), (x + 22, y - 90, 0)], LIMESTONE, width=1.6, smooth=False, shade=0.6)
     p.shape([(x - 28, y - 138, 0), (x, y - 162, 0), (x + 28, y - 138, 0)], VERMILION.dark(0.2), width=1.6, smooth=False, shade=0.5)
     p.shape([(x - 14, y - 94, 0), (x - 14, y - 124), (x, y - 134), (x + 14, y - 124), (x + 14, y - 94, 0)], ULTRA_DEEP, width=1.2)
-    p.halo((x, y - 120), 7)
-    p.blob((x, y - 108), 5, 12, ULTRA.light(0.2), width=1)
+    # a little gilt cross in the niche (1.85: no figure of Our Lady)
+    p.taper([(x, y - 98), (x, y - 126)], 2.4, 2.4, GOLD, width=0.9)
+    p.taper([(x - 7, y - 117), (x + 7, y - 117)], 2.4, 2.4, GOLD, width=0.9)
     p.glow((x, y - 110), 40, C.hex('ffe0a0'), 0.35)
     for k in range(5):
         p.blob((x - 10 + k * 5, y - 92), 2.5, 2.5, [VERMILION, LEAD_WHITE, GOLD_LIGHT][k % 3], ink=False)

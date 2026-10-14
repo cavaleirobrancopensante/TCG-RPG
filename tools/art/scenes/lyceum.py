@@ -1230,16 +1230,16 @@ def lyceum_m_001(p):
     for x in (40, 960):
         column(p, x, 166, H * 0.74, 50, 'ionic', MARBLE)
     marble_floor(p, H * 0.74, C.hex('ece4d2'), C.hex('2a3a7a'), rows=5)
-    # a gilt glory behind the founder
-    p.glow((470, 200), 260, GOLD_LIGHT, 0.45)
-    p.rays((470, 200), 70, 260, 32, GOLD.alpha(0.35), 4)
+    # daylight from the porch (1.85: no glory behind him, nor a blue mantle, so he cannot be
+    # taken for Our Lord teaching)
+    p.glow((470, 240), 300, C.hex('fff3d8'), 0.3)
     # pupils seated round him, listening
     pupils = [(110, 612, 300, False, C.hex('c8a870'), None), (250, 618, 330, False, C.hex('8aa0b8'), 'short'),
               (720, 618, 330, True, C.hex('b8786a'), 'short'), (870, 612, 300, True, C.hex('a8b890'), None)]
     for (x, y, hh, fl, col, beard) in pupils:
         L.SeatedGreek(pose='ly_knees', garb='tunic', main=col, hair='curly' if beard else 'short', hair_col=HAIR_DARK, beard=beard, sleeves='none',
                       trim=None, eyes='up').draw(p, x, y, hh, flip=fl)
-    philosopher(pose='ly_hand_out', himation=C.hex('1e3a8a'), main=C.hex('ece4d4'), hair='short', hair_col=C.hex('2a1a10'), beard='long',
+    philosopher(pose='ly_hand_out', himation=C.hex('8a5a2a'), main=C.hex('ece4d4'), hair='short', hair_col=C.hex('a8a49c'), beard='long', age='old',
                 skin=SKIN_OLIVE, eyes='open', trim=GOLD, width=0.92, props_back=[held_scroll('b')]).draw(p, 470, 606, 490)
 
 

@@ -493,16 +493,13 @@ def _crucifix(which='f', size=1.0, glow=True):
         p.taper([(x - 8 * s, y - 16 * s), (x + 8 * s, y - 16 * s)], 1.1 * s, 1.1 * s, GOLD, width=1.2)
         for q in ((x, y - 24 * s), (x - 8 * s, y - 16 * s), (x + 8 * s, y - 16 * s)):
             p.blob(q, 1.7 * s, 1.7 * s, GOLD, width=0.9)
-        sk = SKIN.mix(BONE, 0.3)
-        p.taper([(x - 6 * s, y - 16.5 * s), (x, y - 15 * s), (x + 6 * s, y - 16.5 * s)], 0.5 * s, 0.5 * s, sk, width=0.7)
-        p.taper([(x, y - 15 * s), (x, y - 6 * s)], 0.9 * s, 0.5 * s, sk, width=0.7)
-        p.blob((x, y - 18 * s), 0.9 * s, 1.0 * s, sk, width=0.6)
-        p.blob((x, y - 24 * s), 0.8 * s, 0.8 * s, VERMILION, ink=False)
+        # a plain cross (1.85): Our Lord is not shown in the game's pictures
+        p.blob((x, y - 16 * s), 1.6 * s, 1.6 * s, VERMILION, width=0.6)
     return fn
 
 
 def sanctum_c_014(p):
-    """Rebuke the Wicked: on the church threshold the priest lifts the crucifix and
+    """Rebuke the Wicked: on the church threshold the priest lifts the cross and
     the little fiend that crept to the door at night tumbles back down the steps."""
     # outside: night
     bg.night_sky(p, moon=False, stars=60)
@@ -639,17 +636,9 @@ def sanctum_c_017(p):
         props_front=[PR.candle('f', big=True)], eyes='down').draw(p, 860, 590, 320, flip=True)
 
 
-def _madonna_head(p, hc):
-    hx, hy = hc
-    p.shape([(hx - 6.0, hy - 5.4, 0), (hx - 6.8, hy - 12.6, 0), (hx - 4.2, hy - 9.2, 0), (hx - 1.6, hy - 14.2, 0), (hx + 1.0, hy - 9.4, 0), (hx + 3.6, hy - 14.4, 0), (hx + 6.0, hy - 9.4, 0), (hx + 7.4, hy - 12.8, 0), (hx + 6.4, hy - 5.2, 0)],
-            GOLD, width=1.2, shade=0.5, smooth=False)
-    for q in ((hx - 1.6, hy - 7.4), (hx + 3.0, hy - 7.4)):
-        p.blob(q, 0.9, 0.9, VERMILION, width=0.5)
-
-
 def sanctum_c_018(p):
-    """Votive Candles: before Our Lady's statue in a dark side chapel, a stand of
-    votive lights burns on long after the pilgrims have gone home."""
+    """Votive Candles: before the statue of Saint Nicholas in a dark side chapel, a
+    stand of votive lights burns on long after the pilgrims have gone home."""
     bg.fill_all(p, ('v', C.hex('1a1622'), C.hex('3a2a2a')))
     L.ashlar(p, (-5, -5, W + 5, 560), C.hex('4a3e3a'), 38, 80, 0.7)
     niche = L.pointed_opening(330, 670, 200, 470, 0.9, 14)
@@ -660,12 +649,9 @@ def sanctum_c_018(p):
     p.glow((500, 300), 380, C.hex('ffcf70'), 0.35)
     # pedestal and statue
     p.shape([(400, 470, 0), (600, 470, 0), (580, 430, 0), (420, 430, 0)], STONE, width=2, smooth=False, shade=0.6)
-    Fig(pose='pray', garb='gown', main=LEAD_WHITE, head='veil', hood_col=LEAD_WHITE, cloak='mantle', cloak_col=ULTRA, lining=GOLD,
-        halo=True, eyes='down', belt='gold', trim=GOLD, props_front=[]).draw(p, 500, 432, 350)
-    head_c = (500 + 1.8 * 3.5, 432 - 91 * 3.5)
-    p.push(head_c[0], head_c[1], 3.5)
-    _madonna_head(p, (0, 0))
-    p.pop()
+    Fig(pose='staff', garb='alb', main=LEAD_WHITE, head='mitre', cloak='cope', cloak_col=VERMILION, trim=GOLD, lining=GOLD,
+        hair='white', beard='long', age='old', halo=True, eyes='down', belt=None,
+        props_back=[PR.staff('f', 'crook', 120, GOLD_DARK)]).draw(p, 500, 432, 350)
     # the votive stand: three tiers of red glass lights
     p.shape([(180, 600, 0), (820, 600, 0), (800, 590, 0), (200, 590, 0)], IRON, width=1.6, smooth=False)
     for x in (200, 500, 800):
@@ -821,7 +807,7 @@ def _hut(p, x, y, s=1.0):
 
 def sanctum_u_002(p):
     """Martyr of the Far Mission: the haloed friar with the palm of martyrdom raises
-    the crucifix over a jungle village, and the chieftain lays down his spear."""
+    the cross over a jungle village, and the chieftain lays down his spear."""
     bg.sky(p, C.hex('2a6a9a'), C.hex('7ab8d0'), C.hex('f2eac8'), 0.6)
     bg.hills(p, 380, C.hex('4a7a6a'), 60, n=6)
     p.shape([(-10, 430), (300, 418), (700, 426), (W + 10, 414), (W + 10, 450), (-10, 460)], C.hex('6aa8c0'), width=1.6)
@@ -1184,12 +1170,13 @@ def sanctum_u_011(p):
     bg.abbey(p, 830, 470, 0.6)
     bg.meadow(p, 500, C.hex('5f8f3c'))
     bg.clouds(p, 330, 6, xs=[80, 260, 440, 620, 800, 980], scale=0.9)
-    # the saints: Our Lady, Michael, Peter, Paul, John the Baptist, Benedict
+    # the saints: John the Baptist, Peter, Benedict, Michael, Paul
     sy = 300
     _saint(p, 180, sy, 200, main=CRIMSON, cloak_col=C.hex('7a5a2a'), beard='long', hair='long', props_back=[PR.staff('f', 'cross', 100, OAK)], pose='staff')
     _saint(p, 320, sy, 210, main=ULTRA.light(0.2), cloak_col=VERMILION, beard='short', hair='curly', hair_col=C.hex('d8d0c0'), pose='hold',
            props_front=[_keys('f')])
-    _saint(p, 500, sy - 6, 230, garb='gown', main=VERMILION.dark(0.1), cloak_col=ULTRA, head='veil', hood_col=ULTRA, eyes='down')
+    _saint(p, 500, sy - 6, 230, garb='habit', main=BLACK_HABIT, cloak_col=BLACK_HABIT, head='cowl', hair='tonsure', hair_col=LEAD_WHITE,
+           beard='long', age='old', eyes='down', pose='staff', props_back=[PR.staff('f', 'crook', 110, GOLD_DARK)])
     Fig(pose='sword_up', garb='surcoat', main=VERMILION, mail=True, halo=True, wings='red', hair='curly', hair_col=C.hex('c8902e'),
         props_front=[PR.sword(up=True)], belt='gold').draw(p, 680, sy, 210, flip=True)
     _saint(p, 830, sy, 200, main=MALACHITE, cloak_col=VERMILION, beard='forked', hair='bald', hair_col=UMBER, pose='hold', props_front=[PR.sword(up=False)], flip=True) if False else \
@@ -1375,7 +1362,7 @@ def _chain(p, pts, col=GOLD, r=7):
 
 
 def sanctum_r_006(p):
-    """Rite of Exorcism: the priest lifts the crucifix and reads the Ritual; one
+    """Rite of Exorcism: the priest lifts the cross and reads the Ritual; one
     spirit breaks apart in the light, the other cowers bound in chains of gold."""
     gothic_choir(p, dark=True, windows=3)
     p.cx.new_path()
@@ -1628,8 +1615,9 @@ def sanctum_m_001(p):
 
 
 def sanctum_m_003(p):
-    """The Last Judgment: Christ in Majesty comes on the clouds within the mandorla,
-    angels sound the trumpets, the dead rise from their tombs, and the damned fall."""
+    """The Last Judgment: the prepared throne of judgment shines on the clouds within
+    the mandorla, the Cross upon it and the Book of Life before it; angels sound the
+    trumpets, the dead rise from their tombs, and the damned fall."""
     bg.gold_ground(p)
     p.shape([(-10, 430), (W + 10, 430), (W + 10, H + 10, 0), (-10, H + 10, 0)], ('v', C.hex('6a8a5a'), C.hex('3a4a2a')), width=2)
     # hell mouth flames at the lower right
@@ -1655,17 +1643,25 @@ def sanctum_m_003(p):
         props_front=[_trumpet_blow()], eyes='up').draw(p, 200, 400, 230)
     Fig(pose='sa_trumpet', garb='alb', main=LEAD_WHITE, halo=True, wings='rainbow', hair='curly', hair_col=C.hex('d8a850'), belt='gold',
         props_front=[_trumpet_blow()], eyes='up').draw(p, 800, 400, 230, flip=True)
-    # Christ in Majesty
+    # the prepared throne (the Hetoimasia): the Cross and the Book of Life, no figure (1.85)
     L.mandorla(p, (500, 230), 130, 200)
     p.shape([(400, 400), (440, 380), (500, 384), (560, 380), (600, 400), (560, 420), (440, 420)], LEAD_WHITE, width=1.4)
-    christ = Fig(pose='spread', garb='robe', main=LEAD_WHITE, cloak='mantle', cloak_col=VERMILION, lining=GOLD, hair='long', hair_col=C.hex('6a4422'),
-                 beard='short', eyes='open', belt=None, sway=0.0, halo=True)
-    christ.draw(p, 500, 400, 330)
-    hc = (500 + 0.8 * 3.3, 400 - 92.5 * 3.3)
-    for a in (-math.pi / 2, 0, math.pi):
-        p.taper([polar(hc, 27, a), polar(hc, 39, a)], 4, 7, VERMILION, width=1.2)
-    for q in ((500 + 24 * 3.3 + 2, 400 - 80 * 3.3 + 3), (500 - 21 * 3.3 - 2, 400 - 80 * 3.3 + 3)):
-        p.blob(q, 2.6, 2.6, CRIMSON, ink=False)
+    p.glow((500, 230), 220, C.hex('fff3c4'), 0.6)
+    # the throne: gilt seat and back, a crimson cushion
+    p.shape([(430, 384, 0), (570, 384, 0), (566, 300, 0), (434, 300, 0)], ('v', GOLD_LIGHT, GOLD, GOLD_DARK), width=2, smooth=False, shade=0.6)
+    p.shape([(444, 300, 0), (556, 300, 0), (552, 180, 0), (500, 150, 0), (448, 180, 0)], ('v', GOLD_LIGHT, GOLD_DARK), width=2, smooth=False, shade=0.5)
+    for q in ((460, 340), (500, 340), (540, 340)):
+        p.blob(q, 6, 6, VERMILION, width=1.0, shade=0.5)
+    p.shape([(424, 308, 0), (576, 308, 0), (570, 290, 0), (430, 290, 0)], CRIMSON, width=1.6, smooth=False, shade=0.6)
+    # the Book of Life on the cushion, the Cross standing behind it
+    p.taper([(500, 292), (500, 120)], 7, 7, GOLD_LIGHT, width=1.6, shade=0.5)
+    p.taper([(460, 170), (540, 170)], 7, 7, GOLD_LIGHT, width=1.6, shade=0.5)
+    for q in ((500, 120), (460, 170), (540, 170)):
+        p.blob(q, 7, 7, GOLD_LIGHT, width=1.2, shade=0.5)
+    p.blob((500, 170), 6, 6, VERMILION, width=1.0)
+    p.shape([(470, 292, 0), (530, 292, 0), (526, 270, 0), (474, 270, 0)], ULTRA, width=1.6, smooth=False, shade=0.5)
+    p.shape([(476, 288, 0), (524, 288, 0), (521, 274, 0), (479, 274, 0)], PARCH, width=1.0, smooth=False)
+    p.line([(500, 274), (500, 288)], INK.alpha(0.5), 1.0, smooth=False)
 
 
 
@@ -2802,3 +2798,96 @@ def sanctum_m_005(p):
     rider(p, 470, 604, 3.05, m)
     # light catching the lifted blade
     p.glow((560, 160), 90, C.hex('fff4d0'), 0.5)
+
+
+# ====================================================================== the Index (1.85)
+
+def _book_stack(p, x, y, n, rng, w0=70):
+    """A pile of closed books lying flat, each a little askew, the biggest at the bottom."""
+    cols = [CRIMSON, ULTRA.dark(0.2), MALACHITE.dark(0.2), OCHRE.dark(0.15), UMBER, PURPLE, C.hex('5a2a1a')]
+    yy = y
+    for k in range(n):
+        w = w0 - k * rng.uniform(2, 7)
+        h = rng.uniform(11, 17)
+        dx = rng.uniform(-6, 6)
+        col = cols[rng.randrange(len(cols))]
+        pts = [(x - w / 2 + dx, yy, 0), (x + w / 2 + dx, yy, 0), (x + w / 2 + dx + 2, yy - h, 0), (x - w / 2 + dx + 2, yy - h, 0)]
+        p.shape(pts, col, width=1.3, smooth=False, shade=0.6)
+        # the page edges and a gilt band on the spine
+        p.shape([(x + w / 2 + dx - 6, yy - 2, 0), (x + w / 2 + dx, yy - 2, 0), (x + w / 2 + dx + 1.5, yy - h + 2, 0), (x + w / 2 + dx - 4.5, yy - h + 2, 0)], PARCH, width=0.8, smooth=False)
+        p.line([(x - w / 2 + dx + 8, yy - 2), (x - w / 2 + dx + 9, yy - h + 2)], GOLD.alpha(0.8), 1.4, smooth=False)
+        yy -= h
+
+
+def sanctum_index(p):
+    """Index: the bishop in his library at night, in mitre and cope at a slanted desk,
+    writes the list of condemned books in a great volume; books crowd the shelves to
+    the ceiling, stand in piles on the floor and lie open on the lectern, a candle
+    burns on the desk, and a plain cross hangs on the wall."""
+    import gold_lib as GL
+    from gold_lib import SeatedFigure
+    wall = C.hex('4a3626')
+    bg.fill_all(p, ('v', wall.dark(0.35), wall, wall.dark(0.2)))
+    # panelled back wall
+    for x in range(300, 720, 70):
+        rect = [(x + 4, 110, 0), (x + 66, 110, 0), (x + 66, 380, 0), (x + 4, 380, 0)]
+        p.shape(rect, wall.light(0.06), ink=INK.alpha(0.4), width=1.2, smooth=False, shade=0.4)
+    # a plain wooden cross on the wall, no figure on it
+    p.taper([(612, 120), (612, 262)], 6, 6, C.hex('6a4426'), width=1.6, shade=0.6)
+    p.taper([(576, 156), (648, 156)], 6, 6, C.hex('6a4426'), width=1.6, shade=0.6)
+    # the bookcases, floor to ceiling on both sides
+    GL.bookshelf(p, -10, 40, 290, 560, rows=5)
+    GL.bookshelf(p, 730, 40, 1010, 560, rows=5)
+    # floor
+    bg.tile_floor(p, 540, C.hex('5a3a24'), C.hex('8a6a46'))
+    # the candlelight
+    p.glow((640, 330), 420, C.hex('ffd890'), 0.45)
+    # piles of books on the floor, some open, waiting to be judged
+    rng = p.rng
+    for (x, y, n) in ((110, 600, 5), (200, 612, 3), (860, 606, 6), (930, 616, 3), (330, 618, 2)):
+        _book_stack(p, x, y, n, rng)
+    GL.open_book(p, (790, 596), 1.4, rot=-0.05)
+    # the lectern at the right, a great open book on it
+    lec = C.hex('5a3a22')
+    p.shape([(812, 600, 0), (868, 600, 0), (850, 588, 0), (830, 588, 0)], lec.dark(0.2), width=1.6, smooth=False, shade=0.5)
+    p.taper([(840, 590), (840, 440)], 7, 6, lec, width=1.6, shade=0.6)
+    p.shape([(780, 446, 0), (900, 420, 0), (906, 436, 0), (786, 462, 0)], lec.light(0.1), width=1.8, smooth=False, shade=0.5)
+    GL.open_book(p, (842, 424), 1.25, rot=-0.2)
+    # the desk, slanted, with the great book of the Index open on it
+    wood = C.hex('6a4426')
+    for x in (530, 700):
+        p.shape([(x - 6, 400, 0), (x + 6, 400, 0), (x + 6, 600, 0), (x - 6, 600, 0)], wood.dark(0.2), width=1.6, smooth=False, shade=0.5)
+    p.shape([(530, 520, 0), (700, 520, 0), (700, 532, 0), (530, 532, 0)], wood.dark(0.2), width=1.4, smooth=False)
+    p.shape([(490, 404, 0), (712, 370, 0), (720, 388, 0), (498, 424, 0)], wood.light(0.1), width=2, smooth=False, shade=0.5)
+    # the great book: red binding, two wide pages ruled with lines of writing
+    p.shape([(512, 402, 0), (690, 374, 0), (696, 390, 0), (518, 418, 0)], CRIMSON.dark(0.2), width=1.6, smooth=False)
+    p.shape([(516, 398, 0), (600, 384, 0), (604, 398, 0), (520, 412, 0)], PARCH, width=1.2, smooth=False, shade=0.3)
+    p.shape([(602, 384, 0), (686, 371, 0), (690, 384, 0), (606, 398, 0)], PARCH.light(0.05), width=1.2, smooth=False, shade=0.3)
+    for i in range(4):
+        p.line([(526, 400 + i * 3), (594, 389 + i * 3)], INK.alpha(0.45), 0.8, smooth=False)
+        p.line([(612, 386 + i * 3), (676, 376 + i * 3)], INK.alpha(0.45), 0.8, smooth=False)
+    p.line([(526, 398), (560, 393)], VERMILION.alpha(0.8), 1.0, smooth=False)   # the rubric
+    # inkwell and the candle on the desk
+    p.blob((704, 368), 7, 5, INK, width=1.2, shade=0.5)
+    p.shape([(664, 376, 0), (684, 373, 0), (682, 366, 0), (666, 369, 0)], GOLD_DARK, width=1.2, smooth=False)
+    p.shape([(668, 368, 0), (680, 366, 0), (679, 330), (674, 326), (669, 331)], BONE, width=1.2)
+    PR.flame(p, (674, 318), 1.1, glow_r=34)
+    # more books stacked on the desk's end
+    _book_stack(p, 735, 380, 3, rng, w0=40)
+    # the crozier leaning against the shelf behind the bishop
+    p.taper([(300, 596), (318, 250)], 4, 4, GOLD_DARK, width=1.4, shade=0.6)
+    p.line([(318, 252), (330, 228), (346, 222), (356, 232), (352, 246), (340, 248)], GOLD, 5)
+    # the bishop, seated, writing
+    def quill(p_, j):
+        h = j['hand_f']
+        p_.taper([(h[0] + 2.4, h[1] + 2.6), (h[0] + 1.4, h[1] - 3), (h[0] - 1.5, h[1] - 9)], 0.2, 0.9, LEAD_WHITE, width=0.7)
+        for k in range(4):
+            q = (h[0] + 1.4 + (-2.9) * k / 3, h[1] - 3 + (-6) * k / 3)
+            p_.line([q, (q[0] - 1.6, q[1] + 0.6)], LEAD_WHITE.dark(0.15), 0.6)
+    # a stool
+    p.shape([(370, 470, 0), (480, 470, 0), (480, 482, 0), (370, 482, 0)], wood, width=1.6, smooth=False, shade=0.5)
+    for x in (380, 468):
+        p.shape([(x - 5, 482, 0), (x + 5, 482, 0), (x + 5, 600, 0), (x - 5, 600, 0)], wood.dark(0.2), width=1.4, smooth=False)
+    SeatedFigure(pose='g_write', main=LEAD_WHITE, cloak='cope', cloak_col=C.hex('8e1f24'), trim=GOLD, head='mitre',
+                 hair='white', beard='long', age='old', belt=None, sleeves='fitted', eyes='down',
+                 props_front=[quill], shoes=C.hex('8e1f24')).draw(p, 420, 600, 490)
