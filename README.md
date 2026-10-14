@@ -1156,3 +1156,9 @@ two-for-one creatures, engines and the graveyard as a resource.
   take it away; with none chosen every card shows. A two-faith card shows under either faith.
 - The sigils are smaller: the symbol and its count side by side, 44 px tall.
 - Basic lands are set with the Basic lands button (or the Deck menu).
+
+## Penance costs {W} (1.91)
+
+- Penance is now {W} (was {1}{W}): look at his hand, choose a card other than a land, and he
+  puts it third from the top of his library (was on top), so it comes back three draws later.
+  You still gain 2 life.

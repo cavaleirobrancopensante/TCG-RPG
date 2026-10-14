@@ -3151,8 +3151,7 @@
   "type": "spell",
   "subtype": "Judgement",
   "cost": {
-   "W": 1,
-   "generic": 1
+   "W": 1
   },
   "keywords": [],
   "effects": [
@@ -3166,11 +3165,11 @@
     "amount": 2
    }
   ],
-  "text": "Look at target opponent's hand. Choose a card other than a land. He puts it on top of his library. You gain 2 life.",
+  "text": "Look at target opponent's hand. Choose a card other than a land. He puts it third from the top of his library. You gain 2 life.",
   "flavor": "\"Do penance: for the kingdom of heaven is at hand.\" (Matthew 3:2)",
   "art": "res://art/cards/sanctum_c_029.webp",
   "proto": true,
-  "mana_value": 2,
+  "mana_value": 1,
   "set": 1
  },
  {

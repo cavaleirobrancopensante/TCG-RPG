@@ -3112,7 +3112,10 @@ func test_first_set() -> void:
 	life = st.side(0).life
 	for e in CardDB.get_card("proto_c_penance")["effects"]:
 		st.resolve_effect(0, e, null, null)
-	check(st.side(1).hand == ["land_lyceum"] and st.side(1).deck.back() == "proto_st_reply", "Penance: the card goes on top of his library")
+	var dk: Array = st.side(1).deck
+	check(st.side(1).hand == ["land_lyceum"] and dk.size() >= 3 and dk[dk.size() - 3] == "proto_st_reply" and dk.back() != "proto_st_reply",
+		"Penance: the card goes third from the top of his library")
+	check(int(CardDB.get_card("proto_c_penance")["mana_value"]) == 1, "Penance costs {W}")
 	check(st.side(0).life == life + 2, "Penance: you gain 2 life")
 	# Martyr of the Arena: gain 2 and a Testimony when he dies
 	st = _duel()
