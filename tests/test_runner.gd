@@ -3063,7 +3063,7 @@ func test_first_set() -> void:
 	_lands(st, 0, "UUUU")
 	var tab := _perm(st, 1, "proto_st_tablet")
 	st.side(0).graveyard = ["proto_st_drill"]
-	check(not st.can_flashback(0, 0), "Sumptuary Tablet: Recollection {2}{U} costs {2} more (four lands are not enough)")
+	check(not st.can_flashback(0, 0), "Sumptuary Tablet: Flashback {2}{U} costs {2} more (four lands are not enough)")
 	_lands(st, 0, "UUUUU")
 	check(st.can_flashback(0, 0), "Sumptuary Tablet: five lands pay it")
 	st.side(1).deck = ["land_lyceum", "proto_st_gate"]
