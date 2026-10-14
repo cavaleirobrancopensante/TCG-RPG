@@ -1148,3 +1148,11 @@ two-for-one creatures, engines and the graveyard as a resource.
 - The Stoa's Recollection is now Flashback too: one name for one rule (Reading by Lamplight,
   Apatheia, Phalanx Drill). Card text, the graveyard button, the glossary and the Portuguese
   and Spanish texts all say Flashback (Retrospectiva in Spanish).
+
+## The faith sigils filter the deck list (1.90)
+
+- In every deck builder, tap a faith's sigil over the deck list to see only that faith's cards
+  in the deck (and in the mana curve). Tap another to add its faith; tap a chosen one again to
+  take it away; with none chosen every card shows. A two-faith card shows under either faith.
+- The sigils are smaller: the symbol and its count side by side, 44 px tall.
+- Basic lands are set with the Basic lands button (or the Deck menu).
