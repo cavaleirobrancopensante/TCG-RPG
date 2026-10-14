@@ -1123,7 +1123,7 @@ two-for-one creatures, engines and the graveyard as a resource.
   come they shrink; when two lines would make them bigger than one squeezed line, they stand
   in two lines; when even that is too small, the lines scroll sideways.
 - Hand cards fill the hand strip's whole height.
-- Mana shows each faith's symbol and free/total ("✝ 4/6"); hold the row to read the faiths'
+- Mana shows each faith's symbol and free/total ("✝ 4/6"); on a computer, hover over it to read the faiths'
   names. The faith names no longer take a line under your portrait.
 - tests/battlefield_shots.tscn takes SHOT_BASE, SHOT_WIN and SHOT_TAG to picture a phone
   (SHOT_BASE=960x540 SHOT_WIN=1200x540).
