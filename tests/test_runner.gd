@@ -1718,6 +1718,7 @@ func test_levels() -> void:
 	var hs := GameState.hand_size()
 	GameState.raise_stat("reason")
 	check(GameState.hand_size() == hs + 1, "Reason works at once")
+	check(GameState.hand_size() == 5 + GameState.stat("reason"), "the hand you may keep is 5 + Reason (%d)" % GameState.hand_size())
 	GameState.attrs["charm"] = 7
 	check(GameState.raise_stat("charm") and GameState.stat("charm") == 8, "a level point may raise a stat to 8")
 	check(not GameState.can_raise("charm") and not GameState.raise_stat("charm"), "but not past 8")

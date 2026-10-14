@@ -4572,7 +4572,6 @@
  "You won't see which card it is until it lands in your picks.": "Você só verá qual carta é quando ela entrar nas suas escolhas.",
  "None of this type.": "Nenhuma deste tipo.",
  "Antlered and silent, he rides out from the old oak at midnight, and the wolves pour after him.": "Galhado e silencioso, sai do velho carvalho à meia-noite, e os lobos se derramam atrás dele.",
- "+1 card you may keep in hand at the end of your turn for every point (7 + Reason). Everyone draws 7.": "+1 carta que você pode manter na mão no fim do seu turno por ponto (7 + Razão). Todos compram 7.",
  "Grave-Dust Skirmisher": "Escaramuçador do Pó da Cova",
  "Unearth {B} ({B}: Return this card from your graveyard to the battlefield. It gains haste. Exile it at the beginning of the next end step or if it would leave the battlefield. Unearth only as a sorcery.)": "Desenterrar {B} ({B}: Devolva esta carta do seu cemitério ao campo de batalha. Ela ganha ímpeto. Exile-a no início da próxima etapa final ou se ela for deixar o campo de batalha. Desenterre somente como um feitiço.)",
  "\"Why wait for judgment to rise? I dug him up on Tuesday, and he only has to last till supper.\" (Morvane, a Pact sexton)": "\"Para que esperar o juízo para se levantar? Eu o desenterrei na terça, e ele só precisa durar até o jantar.\" (Morvane, um sacristão do Pacto)",
@@ -5168,5 +5167,6 @@
  "Illusion": "Ilusão",
  "Illusion: when this becomes the target of a spell or ability (yours too), sacrifice it. Effects that don't target, like \"each creature\", don't touch it.": "Ilusão: quando esta se tornar alvo de um feitiço ou habilidade (seus também), sacrifique-a. Efeitos que não escolhem alvo, como \"cada criatura\", não a afetam.",
  " (an Illusion: targeting it sacrifices it)": " (uma Ilusão: escolhê-la como alvo a sacrifica)",
- "%s is an Illusion: targeted, it vanishes.": "%s é uma Ilusão: ao ser alvo, desaparece."
+ "%s is an Illusion: targeted, it vanishes.": "%s é uma Ilusão: ao ser alvo, desaparece.",
+ "+1 card you may keep in hand at the end of your turn for every point (5 + Reason). Everyone draws 7.": "+1 carta que você pode manter na mão no fim do seu turno por ponto (5 + Razão). Todos compram 7."
 }

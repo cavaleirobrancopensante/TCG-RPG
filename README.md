@@ -1127,3 +1127,9 @@ two-for-one creatures, engines and the graveyard as a resource.
   names. The faith names no longer take a line under your portrait.
 - tests/battlefield_shots.tscn takes SHOT_BASE, SHOT_WIN and SHOT_TAG to picture a phone
   (SHOT_BASE=960x540 SHOT_WIN=1200x540).
+
+## Reason: 5 + Reason cards kept (1.87)
+
+- Fixed: the hero keeps 5 + Reason cards at the end of his turn (it was 7 + Reason). Everyone
+  still draws seven and mulligans as before; only the end-of-turn discard and other hand
+  limits use it. The stat's description says so, in every language.
