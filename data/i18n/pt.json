@@ -5162,5 +5162,11 @@
  "How many cards should the deck have? Basic lands fill the rest, shared by the mana symbols of your spells. The least is 40.": "Quantas cartas o baralho deve ter? Os terrenos básicos completam o resto, divididos pelos símbolos de mana dos seus feitiços. O mínimo é 40.",
  "%d cards": "%d cartas",
  "The deck already has %d cards besides its basic lands: more than %d.": "O baralho já tem %d cartas além dos terrenos básicos: mais de %d.",
- "Flash. When Questioner in the Agora enters, return target nonland permanent an opponent controls with mana value 3 or less to its owner's hand.": "Lampejo. Quando Inquiridor da Ágora entrar, devolva a permanente alvo que não seja terreno com valor de mana 3 ou menos que um oponente controla à mão de seu dono."
+ "Flash. When Questioner in the Agora enters, return target nonland permanent an opponent controls with mana value 3 or less to its owner's hand.": "Lampejo. Quando Inquiridor da Ágora entrar, devolva a permanente alvo que não seja terreno com valor de mana 3 ou menos que um oponente controla à mão de seu dono.",
+ "Illusion (When this becomes the target of a spell or ability, sacrifice it.) Whenever you discard a card, Satyr of the Drunken Rout deals 1 damage to each opponent.": "Ilusão (Quando esta se tornar alvo de um feitiço ou habilidade, sacrifique-a.) Sempre que você descartar uma carta, Sátiro do Bando Ébrio causa 1 de dano a cada oponente.",
+ "Trample. Illusion (When this becomes the target of a spell or ability, sacrifice it.) Landfall: Draw a card, then discard a card.": "Atropelar. Ilusão (Quando esta se tornar alvo de um feitiço ou habilidade, sacrifique-a.) Chegada de Terreno: Compre uma carta e depois descarte uma carta.",
+ "Illusion": "Ilusão",
+ "Illusion: when this becomes the target of a spell or ability (yours too), sacrifice it. Effects that don't target, like \"each creature\", don't touch it.": "Ilusão: quando esta se tornar alvo de um feitiço ou habilidade (seus também), sacrifique-a. Efeitos que não escolhem alvo, como \"cada criatura\", não a afetam.",
+ " (an Illusion: targeting it sacrifices it)": " (uma Ilusão: escolhê-la como alvo a sacrifica)",
+ "%s is an Illusion: targeted, it vanishes.": "%s é uma Ilusão: ao ser alvo, desaparece."
 }

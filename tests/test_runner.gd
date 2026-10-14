@@ -19,6 +19,7 @@ func _ready() -> void:
 	test_first_set()
 	test_basic_lands_calc()
 	test_flash_questioner()
+	test_illusion()
 	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
@@ -61,7 +62,7 @@ func test_card_db() -> void:
 		"untap", "destroy_land", "add_counter", "become_servo"]
 	var valid_targets := ["", "self_player", "enemy_player", "any_enemy", "enemy_creature", "own_creature", "enemy_relic", "own_grave_creature", "self", "all_enemy_creatures", "all_own_creatures", "other_own_creatures", "all_creatures"] + BattleState.TARGET_CHOICE_TYPES + ["host", "all_attackers", "other_attackers", "all_demons", "all_tapped_enemy_demons"]
 	var valid_kw := ["flying", "reach", "haste", "lifelink", "deathtouch", "vigilance", "trample", "defender", "martyr",
-		"sanctified", "dread", "regenerate", "first_strike", "unmoved", "immortal", "salvage", "flash"]
+		"sanctified", "dread", "regenerate", "first_strike", "unmoved", "immortal", "salvage", "flash", "illusion"]
 	var fighters := ["Soldier", "Knight", "Paladin", "Warrior", "Duelist", "Assassin", "Hoplite"]
 	for id in CardDB.all_set_ids():
 		var c := CardDB.get_card(id)
@@ -3337,3 +3338,54 @@ func test_flash_questioner() -> void:
 	st.phase = "main1"
 	BattleAI.main_action(st, 0)
 	check(st.side(0).hand.has("proto_st_questioner"), "on its own turn the AI holds it")
+
+
+## Illusion (1.84): the Satyrs vanish when a spell or ability targets them.
+func test_illusion() -> void:
+	print("-- Illusion")
+	var sat := CardDB.get_card("proto_rv_satyr")
+	var king := CardDB.get_card("proto_g_satyrking")
+	check(int(sat["mana_value"]) == 2 and sat["power"] == 3 and sat["toughness"] == 3 and sat["keywords"].has("illusion"), "Satyr of the Drunken Rout: {1}{R} 3/3 Illusion")
+	check(int(king["mana_value"]) == 3 and king["power"] == 5 and king["toughness"] == 4 and king["keywords"].has("illusion") and king["keywords"].has("trample"), "Satyr-King: {1}{R}{G} 5/4 trample Illusion")
+	# an enemy spell aimed at it: sacrificed at once, before the spell resolves
+	var st := _duel()
+	var s1 := _perm(st, 1, "proto_rv_satyr")
+	_lands(st, 0, "UUU")
+	st.side(0).hand = ["proto_st_apatheia"]
+	st.side(0).deck = ["land_lyceum"]
+	check(st.play(0, 0, [{"kind": "creature", "uid": s1.uid}]), "Apatheia aimed at the Satyr")
+	check(st.find_perm(s1.uid) == null and st.side(1).graveyard.has("proto_rv_satyr"), "the Illusion is sacrificed the moment it is targeted")
+	# effects that do not target leave it alone
+	st = _duel()
+	var s2 := _perm(st, 1, "proto_rv_satyr")
+	st.resolve_effect(0, CardDB.get_card("proto_rv_volley")["effects"][0], null, null)
+	check(st.find_perm(s2.uid) != null and s2.damage == 1, "Firework Volley (no target) only deals its 1 damage")
+	# the AI never aims at its own Illusion: Carnival Masks finds no target and the Satyr lives
+	st = _duel()
+	var s3 := _perm(st, 0, "proto_rv_satyr")
+	_perm(st, 0, "proto_rv_masks")
+	var life := st.side(1).life
+	st.side(0).hand = ["land_revel"]
+	st.discard_card(0, 0)
+	check(st.find_perm(s3.uid) != null and st.side(1).life == life - 1, "Carnival Masks skips the AI's own Illusion; the Satyr deals its 1 damage")
+	# a fight spell picks a creature that is not an Illusion
+	st = _duel()
+	_perm(st, 0, "proto_g_satyrking")
+	var boar := _perm(st, 0, "proto_ow_boar")
+	var prey := _perm(st, 1, "proto_rv_brawler")
+	st.resolve_effect(0, CardDB.get_card("proto_ow_trial")["effects"][0], null, {"kind": "creature", "uid": prey.uid})
+	check(st.side(0).creatures.size() == 2 and st.find_perm(prey.uid) == null and boar.power() == 3, "Trial by Tooth fights with the Boar, not the Satyr-King")
+	# a person may target his own Illusion: it is sacrificed
+	st = _duel()
+	st.side(0).interactive = true
+	var s4 := _perm(st, 0, "proto_rv_satyr")
+	var tg := st.valid_targets(0, {"action": "buff", "target": "own_creature"})
+	check(tg.size() == 1, "a person is offered his own Illusion as a target")
+	st._illusion_check(tg)
+	check(st.find_perm(s4.uid) == null, "and targeting it sacrifices it")
+	# the AI sees a cheap ping as removal for an enemy Illusion
+	st = _duel()
+	var s5 := _perm(st, 1, "proto_rv_satyr")
+	_perm(st, 1, "proto_rv_masked")
+	var pick = st.auto_target(0, {"action": "damage", "target": "any_enemy", "amount": 1})
+	check(typeof(pick) == TYPE_DICTIONARY and int(pick.get("uid", -1)) == s5.uid, "1 damage is aimed at the 3/3 Illusion")

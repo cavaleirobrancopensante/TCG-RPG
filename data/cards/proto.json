@@ -3309,11 +3309,13 @@
   "subtype": "Demon Satyr",
   "cost": {
    "R": 1,
-   "generic": 2
+   "generic": 1
   },
   "power": 3,
-  "toughness": 2,
-  "keywords": [],
+  "toughness": 3,
+  "keywords": [
+   "illusion"
+  ],
   "effects": [
    {
     "trigger": "discard",
@@ -3322,11 +3324,11 @@
     "amount": 1
    }
   ],
-  "text": "Whenever you discard a card, Satyr of the Drunken Rout deals 1 damage to each opponent.",
+  "text": "Illusion (When this becomes the target of a spell or ability, sacrifice it.) Whenever you discard a card, Satyr of the Drunken Rout deals 1 damage to each opponent.",
   "flavor": "Every broken cup is a song to him.",
   "art": "res://art/cards/revel_c_033.webp",
   "proto": true,
-  "mana_value": 3,
+  "mana_value": 2,
   "set": 1
  },
  {
@@ -4808,12 +4810,13 @@
   "cost": {
    "R": 1,
    "G": 1,
-   "generic": 2
+   "generic": 1
   },
-  "power": 4,
+  "power": 5,
   "toughness": 4,
   "keywords": [
-   "trample"
+   "trample",
+   "illusion"
   ],
   "effects": [
    {
@@ -4823,11 +4826,11 @@
     "text": "Landfall: Draw a card, then discard a card."
    }
   ],
-  "text": "Trample. Landfall: Draw a card, then discard a card.",
+  "text": "Trample. Illusion (When this becomes the target of a spell or ability, sacrifice it.) Landfall: Draw a card, then discard a card.",
   "flavor": "Every vine on the hill is his, and every head that aches at dawn.",
   "art": "res://art/cards/gold_wild_revel.webp",
   "proto": true,
-  "mana_value": 4,
+  "mana_value": 3,
   "faction2": "wild",
   "set": 1
  },

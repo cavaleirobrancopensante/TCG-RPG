@@ -664,7 +664,20 @@ func cast_excess(i: int, id: String, targets: Array = []) -> bool:
 ## A spell was just put on the stack: its cast triggers go on the stack above it (so they
 ## resolve first), the active player's first. A person orders his own triggers that happen
 ## together and chooses their targets; until then priority waits.
+## Illusion (1.84): "When this becomes the target of a spell or ability, sacrifice it." Any
+## spell or ability, its controller's own included; effects that do not target never trigger it.
+func _illusion_check(refs: Array) -> void:
+	for ref in refs:
+		if typeof(ref) != TYPE_DICTIONARY or ref.get("kind") != "creature":
+			continue
+		var p := find_perm(int(ref.get("uid", -1)))
+		if p != null and p.has_kw("illusion"):
+			emit({"type": "illusion", "uid": p.uid, "side": p.owner, "id": p.card_id})
+			destroy_perm(p, true)
+
+
 func _cast_done(i: int, item: Dictionary) -> void:
+	_illusion_check(item.get("targets", []))
 	var s := side(i)
 	s.spells_turn += 1
 	var first := s.spells_turn == 1
@@ -2199,6 +2212,10 @@ func valid_targets(i: int, e: Dictionary) -> Array:
 					var ref := {"kind": "grave", "id": gid}
 					if not out.has(ref):
 						out.append(ref)
+	if not me.interactive and e.get("action", "") != "sacrifice":
+		# the computer never aims at its own Illusion (a person may, and is warned)
+		out = out.filter(func(r): return not (r.get("kind") == "creature" and find_perm(int(r.get("uid", -1))) != null \
+			and find_perm(int(r.get("uid", -1))).owner == i and find_perm(int(r.get("uid", -1))).has_kw("illusion")))
 	return out
 
 
@@ -3195,6 +3212,8 @@ func activate(i: int, uid: int, idx: int, targets: Array = [], sac_uid: int = -1
 		_next_sid += 1
 	emit({"type": "ability", "side": i, "uid": uid, "text": ab.get("text", ""), "sid": item.get("sid", -1),
 		"id": p.card_id, "targets": _event_targets(item) if not mana_ab else []})
+	if not mana_ab:
+		_illusion_check(targets)
 	if sac == "self":
 		destroy_perm(p, true)
 	elif sac == "other" or sac == "servo" or sac == "construct" or sac.begins_with("tribe:"):
@@ -3258,6 +3277,13 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 			return   # nothing to target: effect fizzles
 		if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") in ["creature", "player", "relic"]:
 			emit({"type": "aim", "side": i, "source": source.uid if source else -1, "target": chosen, "action": e.get("action", "")})
+		# a target chosen only now (a trigger, or a spell's target gone): an Illusion vanishes
+		if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") == "creature":
+			var ip := find_perm(int(chosen.get("uid", -1)))
+			if ip != null and ip.has_kw("illusion") and e.get("action", "") != "sacrifice":
+				_illusion_check([chosen])
+				check_state()
+				return
 		# stronger against fliers: "vs_flying" overrides the effect when the target flies
 		if typeof(chosen) == TYPE_DICTIONARY and chosen.get("kind") == "creature" and e.has("vs_flying"):
 			var fe := fly_eff(e, find_perm(int(chosen.get("uid", -1))))
@@ -3650,12 +3676,16 @@ func resolve_effect(i: int, e: Dictionary, source: Perm, chosen) -> void:
 						emit({"type": "tap", "uid": p.uid, "freeze": false})
 					emit({"type": "snare", "uid": p.uid, "by": source.uid})
 		"fight":
-			var mine = _strongest(i)
+			var mine = _strongest(i, true)
 			var fu := int(e.get("_fighter", -1))
 			if fu >= 0 and find_perm(fu) != null and find_perm(fu).owner == i:
 				mine = find_perm(fu)
 			if e.get("fighter", "") == "self" and source and find_perm(source.uid):
 				mine = source               # it fights itself (Barrow Wolf)
+			elif mine != null and mine.has_kw("illusion"):
+				# "target creature you control": an Illusion chosen to fight vanishes instead
+				_illusion_check([{"kind": "creature", "uid": mine.uid}])
+				mine = null
 			if mine != null and int(e.get("fighter_counter", 0)) > 0:
 				# "Put a +1/+1 counter on target creature you control. Then it fights" (Trial by Tooth)
 				mine.bonus_p += int(e["fighter_counter"])
@@ -3802,8 +3832,16 @@ func _foresight(i: int, n: int) -> void:
 	emit({"type": "foresight", "side": i, "kept": keep_list.size(), "bottom": bottom.size()})
 
 
-func _strongest(i: int):
+func _strongest(i: int, spare_illusions: bool = false):
 	var best = null
+	if spare_illusions:
+		# a creature of yours to be targeted: not an Illusion while there is anything else
+		var others := side(i).creatures.filter(func(q): return not q.has_kw("illusion"))
+		if not others.is_empty():
+			for p in others:
+				if best == null or p.power() > best.power() or (p.power() == best.power() and p.toughness() > best.toughness()):
+					best = p
+			return best
 	for p in side(i).creatures:
 		if best == null or p.power() > best.power() or (p.power() == best.power() and p.toughness() > best.toughness()):
 			best = p
@@ -4385,7 +4423,7 @@ func auto_target(i: int, e: Dictionary):
 				continue
 			var p := find_perm(ref["uid"])
 			var eff := int(fly_eff(e, p).get("amount", amount))
-			if p.toughness() - p.damage <= eff and p.value() > best_v:
+			if (p.toughness() - p.damage <= eff or (p.owner != i and p.has_kw("illusion"))) and p.value() > best_v:
 				best_v = p.value()
 				best = ref
 		if best != null:
