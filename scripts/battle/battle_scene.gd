@@ -3679,8 +3679,9 @@ static func respond_to_every_spell() -> bool:
 
 ## Should side 0 be offered priority now (before asking whether it can answer at all)?
 ## `stop`: the phase bar has a stop on this step. A step with a stop always asks; otherwise
-## only something on the stack does, and then only in combat (you are attacked or blocking,
-## or your attack is being answered) unless `respond_all` is on.
+## only something on the stack does: in combat (you are attacked or blocking, or your attack
+## is being answered), or (1.92) an enemy spell or ability aimed at you or your cards (your
+## hand, creatures, relics, lands or graveyard), or anything at all when `respond_all` is on.
 static func wants_response(state: BattleState, key: String, stop: bool, respond_all: bool) -> bool:
 	if stop:
 		return true
@@ -3688,7 +3689,44 @@ static func wants_response(state: BattleState, key: String, stop: bool, respond_
 		return false
 	if respond_all:
 		return true
+	if aimed_at(state, 0):
+		return true
 	return key in COMBAT_STEPS            # combat steps exist only once attackers are declared
+
+
+## Effects that work on the opponent without naming a target on the stack: his hand (Censure,
+## Covet, Penance, Confessor, a random discard), his library (Index), his creatures (an edict).
+const AIMS_AT_OPPONENT := ["censure", "covet", "penance", "index", "confess", "discard_enemy", "edict"]
+
+
+## Is the top of the stack the other side's, aimed at side `i` or one of his cards: a target
+## that is him or his, an effect from AIMS_AT_OPPONENT, or a counter of his spell?
+static func aimed_at(state: BattleState, i: int) -> bool:
+	if state.stack.is_empty():
+		return false
+	var top: Dictionary = state.stack.back()
+	if int(top.get("side", i)) == i or not top.has("card"):
+		return false
+	for pr in state.item_effect_targets(top):
+		var ref = pr[1]
+		var act := String((pr[0] as Dictionary).get("action", ""))
+		if act in AIMS_AT_OPPONENT:
+			return true                   # looks into your hand or library, takes from them
+		if act == "counter":
+			for it in state.stack.slice(0, state.stack.size() - 1):
+				if int(it.get("side", -1)) == i:
+					return true           # your spell is the one being countered
+		if typeof(ref) != TYPE_DICTIONARY:
+			continue
+		match String(ref.get("kind", "")):
+			"player", "land", "grave":
+				if int(ref.get("side", -1)) == i:
+					return true
+			"creature", "relic":
+				var p := state.find_perm(int(ref.get("uid", -1)))
+				if p != null and p.owner == i:
+					return true
+	return false
 
 
 ## Can you cast or use anything right now (mana abilities don't count)?
