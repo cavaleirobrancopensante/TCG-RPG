@@ -3136,3 +3136,99 @@ def machine_m_006(p):
               head='cap', fur=C.hex('5a3a20'), cloak='mantle', cloak_col=C.hex('5a1e2a'), lining=GOLD.light(0.3), belt='gold',
               emblem=chain_of_office(), width=1.2, mouth='stern', props_front=[PR.book('f')]).draw(p, 400, 612, 480)
     servo(p, 560, 606, 3.0, BRASS_L, step=1.0)
+
+
+# ------------------------------------------------------------------ first set (1.93)
+
+def _cart_wheel(p, c, r, col=OAK_D, n=8, rot=0.0):
+    p.blob(c, r, r, col.dark(0.1), width=2.4)
+    p.blob(c, r * 0.8, r * 0.8, col.light(0.15), width=1.6)
+    for k in range(n):
+        a = rot + k * TAU / n
+        p.line([c, polar(c, r * 0.8, a)], col.dark(0.35), 4.5, smooth=False)
+    p.blob(c, r * 0.22, r * 0.22, IRONC, width=1.8, shade=0.6)
+    for k in range(6):
+        rivet(p, polar(c, r * 0.9, rot + k * TAU / 6), 2.6, IRONC.light(0.2))
+
+
+def _bolt(p, a, b, w=9, shaft=OAK, head=IRONC):
+    """A ballista bolt from tail a to point b, with fletching at the tail."""
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    L = math.hypot(dx, dy)
+    ux, uy = dx / L, dy / L
+    nx, ny = -uy, ux
+    p.shape([(a[0] + nx * w / 2, a[1] + ny * w / 2, 0), (b[0] - ux * 40 + nx * w / 2, b[1] - uy * 40 + ny * w / 2, 0),
+             (b[0] - ux * 40 - nx * w / 2, b[1] - uy * 40 - ny * w / 2, 0), (a[0] - nx * w / 2, a[1] - ny * w / 2, 0)],
+            ('h', shaft.light(0.15), shaft.dark(0.2)), width=1.6, smooth=False)
+    hb = (b[0] - ux * 44, b[1] - uy * 44)
+    p.shape([(hb[0] + nx * w * 1.3, hb[1] + ny * w * 1.3, 0), b, (hb[0] - nx * w * 1.3, hb[1] - ny * w * 1.3, 0)],
+            ('h', head.light(0.3), head.dark(0.2)), width=1.8, smooth=False)
+    for s in (1, -1):
+        p.shape([(a[0] + ux * 6, a[1] + uy * 6, 0), (a[0] + ux * 46 + nx * s * w * 0.6, a[1] + uy * 46 + ny * s * w * 0.6, 0),
+                 (a[0] + ux * 30 + nx * s * w * 2.2, a[1] + uy * 30 + ny * s * w * 2.2, 0), (a[0] - ux * 4 + nx * s * w * 1.8, a[1] - uy * 4 + ny * s * w * 1.8, 0)],
+                VERMILION.dark(0.15), width=1.3, smooth=False)
+
+
+def machine_s_ballista(p):
+    """Siege Ballista: on the field before the walls two iron crewmen wind the great bow
+    while a third brings up the next bolt from the rack."""
+    sky_smoky(p, 'day')
+    bg.hills(p, 360, C.hex('8a9a7a'), 30)
+    castle_wall(p, 760, 1020, 300, 470, tower_at=(900, 90, 60), merlon=22)
+    # the last bolt has struck: a crack and dust on the far wall
+    imp = (800, 360)
+    for a in (-0.7, 0.0, 0.6, 1.3, 2.2):
+        p.line([imp, polar(imp, 22, a), polar(imp, 40, a + 0.25)], INK, 2.0, smooth=False)
+    steam(p, (805, 352), (-0.3, -1), 3, 0.9, C.hex('d8ccb0'), 0.55)
+    bg.meadow(p, 500, C.hex('6a7a4a'), flowers=False)
+    # rack of bolts behind, on the right
+    for k in range(4):
+        _bolt(p, (850 + k * 6, 560 - k * 13), (1010 + k * 6, 530 - k * 13), w=7)
+    p.line([(866, 572), (874, 498)], OAK_D, 9, smooth=False)
+    p.line([(970, 552), (978, 478)], OAK_D, 9, smooth=False)
+    # the carriage
+    _cart_wheel(p, (250, 560), 62, rot=0.2)
+    p.shape([(150, 520, 0), (640, 490, 0), (648, 516, 0), (156, 548, 0)], ('v', OAK.light(0.1), OAK_D), width=2.2, smooth=False)
+    rivets(p, (170, 532), (630, 503), 9, 3, IRONC.light(0.2))
+    # trestle under the stock
+    p.shape([(420, 505, 0), (470, 420, 0), (500, 420, 0), (470, 505, 0)], ('h', OAK, OAK_D), width=2, smooth=False)
+    # the stock, raised toward the wall
+    a0, a1 = (190, 470), (690, 360)
+    p.shape([(a0[0], a0[1] - 14, 0), (a1[0], a1[1] - 14, 0), (a1[0] + 4, a1[1] + 14, 0), (a0[0] + 4, a0[1] + 14, 0)],
+            ('v', OAK.light(0.2), OAK_D.dark(0.1)), width=2.4, smooth=False)
+    plate(p, [(600, 366), (690, 346), (694, 374), (604, 394)], BRASS, rivet_r=2.4, every=2)
+    # torsion springs and the bow at the front of the stock
+    bc = (600, 382)
+    for s in (-1, 1):
+        cylinder(p, bc[0] + s * 4, bc[1] - 92, bc[1] + 70, 22, COPPER, bands=(bc[1] - 60, bc[1] - 20, bc[1] + 30), rivet_n=0)
+        break
+    tip_u, tip_d = (548, 236), (548, 528)
+    for tip, mid in ((tip_u, (604, 300)), (tip_d, (604, 462))):
+        p.line([bc, mid, tip], INK, 22)
+        p.line([bc, mid, tip], STEELC.light(0.1), 16)
+        rivet(p, tip, 5, BRASS)
+    # drawn string to the claw at the rear, and the bolt in its groove
+    nut = (330, 440)
+    p.line([tip_u, nut, tip_d], C.hex('e8dcc0'), 3, smooth=False)
+    _bolt(p, (316, 446), (720, 354), w=10)
+    # windlass at the rear with gearing
+    gear(p, (215, 468), 40, 14, BRASS, rot=0.3, width=2)
+    gear(p, (270, 440), 22, 10, COPPER, rot=0.1, width=1.8)
+    chain(p, [(230, 450), (300, 446), nut], 8, IRONC, 2)
+    gauge(p, (380, 410), 16, BRASS, 0.8)
+    # a small boiler on the carriage with its steam
+    cylinder(p, 560, 452, 500, 22, IRONC, bands=(470,), cap=True)
+    steam(p, (560, 440), (0.3, -1), 4, 0.9, STEAM, 0.7)
+    # the crew: one cranks the windlass, one sights along the stock, one brings a bolt
+    def crank(p2, j):
+        q = j['hand_f']
+        p2.line([(q[0] - 2, q[1] + 2), (q[0] + 10, q[1] + 10)], IRONC, 3.2, smooth=False)
+    Automaton(torso='barrel', head='dome', legs='jointed', col=BRASS, col2=STEELC, trim=COPPER, pose='ma_bot_grip',
+              eye_col=ARC, extra_front=[crank], stride=2).draw(p, 110, 600, 250)
+    Automaton(torso='cuirass', head='visor', legs='jointed', arm_f='hand', col=STEELC.light(0.05), col2=IRONC, trim=BRASS,
+              pose='ma_bot_reach', eye_col=FURN, porthole=False).draw(p, 395, 520, 170)
+
+    def carried_bolt(p2, j):
+        _bolt(p2, (-46, -60), (62, -68), w=5)
+    Automaton(torso='box', head='helm', legs='jointed', col=COPPER.light(0.05), col2=STEELC, trim=BRASS, pose='ma_bot_carry',
+              eye_col=ARC, extra_front=[carried_bolt], stride=3).draw(p, 790, 626, 235, flip=True)

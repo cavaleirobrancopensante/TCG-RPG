@@ -2667,7 +2667,7 @@
   ],
   "text": "{X}, {T}: Put X ammo counters on Siege Ballista. {T}, Remove X ammo counters from Siege Ballista: It deals X damage to any target. {T}, Remove four ammo counters from Siege Ballista: Destroy target nonland, noncreature permanent. {T}, Remove six ammo counters from Siege Ballista: Destroy target land. Its controller creates an Ore token.",
   "flavor": "The wall was rated for catapults. No one had rated it for patience.",
-  "art": "res://art/cards/machine_u_001.webp",
+  "art": "res://art/cards/machine_s_ballista.webp",
   "keywords": [],
   "proto": true,
   "mana_value": 4,

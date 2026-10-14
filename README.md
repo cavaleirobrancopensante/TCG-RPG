@@ -1170,3 +1170,11 @@ two-for-one creatures, engines and the graveyard as a resource.
   is you, your creature, relic, land or a card in your graveyard (Keeper of the Ossuary); an
   attack on your hand or library (Censure, Covet, Penance, Index, Confessor, a random discard);
   an edict; or a counter of your spell. Other enemy spells in his main phase still flow by.
+
+## Take to sideboard; a new Siege Ballista (1.93)
+
+- Draft: reading a card in the pack now offers Take to sideboard beside Take. The card is
+  your pick as usual but goes straight into the Sideboard pile instead of the Deck.
+- Siege Ballista has its own picture (it borrowed the Siege Automaton's): a great wheeled
+  ballista before a castle wall, one iron crewman winding the windlass, one sighting along the
+  stock, a third bringing up the next bolt from the rack.
