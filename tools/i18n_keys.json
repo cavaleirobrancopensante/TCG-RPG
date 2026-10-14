@@ -345,6 +345,18 @@
    "note": "scripts/battle/battle_ai.gd"
   },
   {
+   "key": "two cards instead",
+   "note": "scripts/battle/battle_ai.gd"
+  },
+  {
+   "key": "when it enters/flips",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "choose one",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Grave Chill",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -373,6 +385,14 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Premeditated",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Your premeditated cards, face down",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "UIScale",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -382,6 +402,10 @@
   },
   {
    "key": "Human",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "own:%d",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -433,7 +457,139 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Search by name",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Confirm",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Order your triggers",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "These trigger together. Choose the one that resolves first.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Reading by Lamplight",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Look at the top cards",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose a card to put into your hand (%d of %d). The rest go to the bottom of your library.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You can't pay %s's Madness cost: it goes to your graveyard.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Madness",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You discarded %s. Cast it now for its Madness cost, %s?",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Let it go",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cast it",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Index",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Look at target player's library.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Opponent",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Yourself",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Your library",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s's library",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the card to condemn: that player exiles it and every card with the same name from his hand, library and graveyard, then creates a Testimony for each.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the card he discards.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the card the Confessor holds until he leaves the battlefield.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the card he puts third from the top of his library.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the card to condemn: he exiles it (and, with the Index, every copy) and creates a Testimony for each.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the card to condemn: he exiles it and creates a Testimony.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s's hand",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Sacrifice",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the creature you sacrifice.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose one",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose one.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s: choose its target.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "A trigger",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Possess",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "The demon leaves the dead body. Choose the creature it possesses now.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -442,10 +598,6 @@
   },
   {
    "key": "%s is countered unless you pay %d.",
-   "note": "scripts/battle/battle_scene.gd"
-  },
-  {
-   "key": "Let it go",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -513,6 +665,18 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "(for its Madness cost)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "(premeditated)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "(from the graveyard)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Your %s is countered.",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -546,6 +710,14 @@
   },
   {
    "key": "Charge! %s gain %s until end of turn.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You return %s from your graveyard, tapped.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s returns %s from the graveyard.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -657,7 +829,111 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Demon",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "The demon leaves the dead body: %s now possesses %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "%s is attached to %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Peace begins. Two spells cast in one turn bring Crusade; a turn with none brings Peace back.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Two spells were cast last turn: Crusade! The two-faced cards flip.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Crusade",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "No spell was cast last turn: Peace returns. The two-faced cards flip back.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Peace",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s flips: %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Angel",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Immortal: %s is not destroyed. He returns to Heaven (exiled).",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Immortal: %s is cast back into Hell (exiled).",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is freed and fights for you again.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You now control %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is possessed: %s controls him now.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s goes back to %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You get a Testimony.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s gets a Testimony.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s looks at your hand.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Condemned: %s is exiled (%d card(s)); he gets as many Testimonies.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Condemned: your %s is exiled (%d card(s)); you get as many Testimonies.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s holds %s until he leaves the battlefield.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is an Illusion: targeted, it vanishes.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Penance: your %s goes third from the top of your library.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Penance: %s puts %s third from the top of his library.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is exiled from a graveyard.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Veneration: %s is laid to rest as a relic (exiled).",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -674,6 +950,42 @@
   },
   {
    "key": "%s is tapped.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Madness: %s waits to be cast.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You premeditate %s: it waits face down.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s premeditates a card face down.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "You keep %d and put %d on the bottom of your library.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s keeps %d card(s) and puts the rest on the bottom.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Offering: %s goes back to %s hand.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Landfall",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s is destroyed; its controller creates an Ore token.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Salvage: a Scrap token is left behind.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -837,6 +1149,14 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Premeditate",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Premeditation: during your own turn, when you have priority, pay {2}.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "That card has left your hand.",
    "note": "scripts/battle/battle_scene.gd"
   },
@@ -877,7 +1197,7 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Only in your own main phase, with the stack empty. Only an Instant can be cast at other times.",
+   "key": "Only in your own main phase, with the stack empty. Only an Instant or a card with Flash can be cast at other times.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -889,7 +1209,19 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Offering",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Return how many lands to your hand? Each makes it {1} cheaper. (You may tap them for mana first.)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Overclock",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Pay %s how many times? It enters with a +1/+1 counter for each.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -901,7 +1233,15 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Return a creature",
+   "key": "Choose X.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Destroy a land",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose the kind of land to destroy. Its controller creates an Ore token.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -909,7 +1249,51 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Choose a Construct card from your graveyard.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Choose a card from a graveyard (his first, then yours).",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Return a creature",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Return a Construct",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Exile from a graveyard",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
    "key": "Choose a target: %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Use %s's ability on %s?",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cast %s on %s?",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cast %s again on %s?",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s: target %s?",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": " (an Illusion: targeting it sacrifices it)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Change target",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -949,15 +1333,43 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Now tap the attacker it should block.",
+   "key": "an enemy Demon (a Demon creature or a possession)",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "That creature is tapped.",
+   "key": "an enemy creature or possession",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "a card in a graveyard",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "a creature or relic",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Possess or attach → one of your creatures",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Possess → an enemy creature",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Blocker taken back.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Now tap the attacker it should block (several may block one). Tap it again to read it.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
    "key": "Blocker assigned.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%d blockers on this attacker.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -1021,11 +1433,63 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "Unearth works in your own main phase, with the stack empty and the mana to pay.",
+   "key": "Graveyard%d",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Graveyard: tap to see its cards",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cards in hand",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cards in the library",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Your graveyard",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "%s's graveyard",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Grave_%d",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
    "key": "Unearth",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cast it on a later turn than you premeditated it, at its usual speed, with the mana to pay.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cast",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "It returns in your own main phase, with the stack empty and the mana to pay.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Return",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Cast it again at its usual speed, with the mana to pay. Afterwards it is exiled.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Flashback",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Unearth works in your own main phase, with the stack empty and the mana to pay.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -1041,7 +1505,7 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
-   "key": "You are attacked! Tap your creature, then the attacker it blocks.",
+   "key": "You are attacked! Tap your creature, then the attacker it blocks. Several may block one attacker. Hold any creature to read it.",
    "note": "scripts/battle/battle_scene.gd"
   },
   {
@@ -1113,7 +1577,59 @@
    "note": "scripts/battle/battle_scene.gd"
   },
   {
+   "key": "Peace. If a player casts two or more spells in his turn, Crusade begins at the start of the next turn.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Crusade. If a player casts no spells in his turn, Peace returns at the start of the next turn.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "controlled by %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Possessed by %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Carries %s",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "If he dies, the demon moves to another creature of its master",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Taken from %s: he goes back when the possession is gone.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Now %d/%d",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "(%d damage)",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "Possesses %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "On %s.",
+   "note": "scripts/battle/battle_scene.gd"
+  },
+  {
+   "key": "damage equal to the number of times",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
    "key": "WU",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "can't cast spells this turn",
    "note": "scripts/battle/battle_state.gd"
   },
   {
@@ -1121,15 +1637,83 @@
    "note": "scripts/battle/battle_state.gd"
   },
   {
-   "key": "control:",
-   "note": "scripts/battle/battle_state.gd"
-  },
-  {
    "key": "Construct",
    "note": "scripts/battle/battle_state.gd"
   },
   {
+   "key": "control:",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
    "key": "%s has no cards left to draw!",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "{T}: Add one mana",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "your opponents can't cast spells this turn",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Holy",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Blessing",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Testimony",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Construct Holy Relic",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "{2}, sacrifice this: draw a card.",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Land ",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "This land is also a %s creature.",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Scrap",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Construct Relic",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Sacrifice this: Scry 1.",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "{2}, Sacrifice this: Draw a card.",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "{1}: This becomes a 1/1 Construct Creature named Servo.",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Sacrifice this: Scry 1. {2}, Sacrifice this: Draw a card. {1}: This becomes a 1/1 Construct Creature named Servo.",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Ore",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Sacrifice this: Add one mana of any color.",
    "note": "scripts/battle/battle_state.gd"
   },
   {
@@ -1145,6 +1729,30 @@
    "note": "scripts/battle/battle_state.gd"
   },
   {
+   "key": "for each land you control",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "it deals 4 damage instead",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Construct Servo",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Sacrifice this: Scry 1. {2}, Sacrifice this: Draw a card.",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "Treefolk",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
+   "key": "tap target creature. It can't attack or block...",
+   "note": "scripts/battle/battle_state.gd"
+  },
+  {
    "key": "Token.",
    "note": "scripts/battle/battle_state.gd"
   },
@@ -1155,6 +1763,110 @@
   {
    "key": "No lands",
    "note": "scripts/battle/land_strip.gd"
+  },
+  {
+   "key": "Flying",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Reach",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Haste",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Deathtouch",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Defender",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Sanctified",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Dread",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Unmoved",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Immortal: exiled instead of going to the graveyard",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "converted: can't attack or block",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "two-faced: flips with Peace and Crusade",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "possessed by a demon",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "an ability you can use (tap it to see it)",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "does something when it attacks (Charge too)",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "does something when it dies",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "does something at the beginning of your upkeep",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Idle: does something if it rests at the end of your turn",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "does something when another of its kind enters or dies",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "a lord: makes other creatures stronger",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "grows with your other creatures or relics",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "Legendary",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "pacified: can't attack",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "snared: can't attack or block",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "frozen: won't untap next turn",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "unearthed: exiled at end of turn",
+   "note": "scripts/battle/summon_figure.gd"
+  },
+  {
+   "key": "a regeneration shield is up",
+   "note": "scripts/battle/summon_figure.gd"
   },
   {
    "key": "Sunday",
@@ -1621,6 +2333,30 @@
    "note": "scripts/core/deck_tools.gd"
   },
   {
+   "key": "Church, Holy Office",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "Pact, Possession",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "Revel, Midnight Revel",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "Stoa, the Phalanx",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "Old Ways, the Sacred Grove",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
+   "key": "Technocracy, the Foundry",
+   "note": "scripts/core/deck_tools.gd"
+  },
+  {
    "key": "The Holy Church",
    "note": "scripts/core/factions.gd"
   },
@@ -1701,7 +2437,7 @@
    "note": "scripts/core/hero.gd"
   },
   {
-   "key": "+1 card you may keep in hand at the end of your turn for every point (7 + Reason). Everyone draws 7.",
+   "key": "+1 card you may keep in hand at the end of your turn for every point (5 + Reason). Everyone draws 7.",
    "note": "scripts/core/hero.gd"
   },
   {
@@ -1726,10 +2462,6 @@
   },
   {
    "key": "Your deck may hold 1 + Industry copies of a card (basic lands are free).",
-   "note": "scripts/core/hero.gd"
-  },
-  {
-   "key": "Dread",
    "note": "scripts/core/hero.gd"
   },
   {
@@ -2077,7 +2809,7 @@
    "note": "scripts/core/story.gd"
   },
   {
-   "key": "%s: the last chapter gives no mythic",
+   "key": "%s: the last chapter gives no rare or mythic of the set",
    "note": "scripts/core/story.gd"
   },
   {
@@ -2421,6 +3153,18 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "A new set of cards",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "The cards of the game have changed: the first set, twenty cards for each faith, has replaced the old ones. Your gold, your journey and your story are kept. Your old cards and decks are gone; you have opened new starting boosters, and your first deck was built from them.",
+   "note": "scripts/main.gd"
+  },
+  {
+   "key": "Set out",
+   "note": "scripts/main.gd"
+  },
+  {
    "key": "Oops",
    "note": "scripts/main.gd"
   },
@@ -2558,10 +3302,6 @@
   },
   {
    "key": "Cogspire, the neutral city, lies just north of you. Visit cities to take missions, trade cards and edit your deck. Beware of wanderers who stray from the roads...",
-   "note": "scripts/main.gd"
-  },
-  {
-   "key": "Set out",
    "note": "scripts/main.gd"
   },
   {
@@ -2877,6 +3617,98 @@
    "note": "scripts/main.gd"
   },
   {
+   "key": "Basic lands",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Summary",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Lands",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Other cards: %d · Basic lands: %d · Deck: %d cards",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Land_",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "%d symbols",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Symbols",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Minus",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Count",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Plus",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Warn",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "The deck already has %d cards besides its basic lands: more than %d.",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Auto calculate",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Auto",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Clear",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Done",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "How many cards should the deck have? Basic lands fill the rest, shared by the mana symbols of your spells. The least is 40.",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Size",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Step%d",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Step+%d",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "%d cards",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Preset%d",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
+   "key": "Calculate",
+   "note": "scripts/ui/basic_lands_popup.gd"
+  },
+  {
    "key": "Tap the cards to reveal them.",
    "note": "scripts/ui/booster_screen.gd"
   },
@@ -2905,10 +3737,6 @@
    "note": "scripts/ui/booster_screen.gd"
   },
   {
-   "key": "Done",
-   "note": "scripts/ui/booster_screen.gd"
-  },
-  {
    "key": "Any type",
    "note": "scripts/ui/card_database.gd"
   },
@@ -2918,6 +3746,10 @@
   },
   {
    "key": "Instant",
+   "note": "scripts/ui/card_database.gd"
+  },
+  {
+   "key": "Possession",
    "note": "scripts/ui/card_database.gd"
   },
   {
@@ -2937,15 +3769,7 @@
    "note": "scripts/ui/card_database.gd"
   },
   {
-   "key": "Clear",
-   "note": "scripts/ui/card_database.gd"
-  },
-  {
    "key": "Clear filters",
-   "note": "scripts/ui/card_database.gd"
-  },
-  {
-   "key": "Lands",
    "note": "scripts/ui/card_database.gd"
   },
   {
@@ -2966,10 +3790,6 @@
   },
   {
    "key": "Tap: add %s.",
-   "note": "scripts/ui/card_view.gd"
-  },
-  {
-   "key": "Legendary",
    "note": "scripts/ui/card_view.gd"
   },
   {
@@ -3033,6 +3853,26 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
+   "key": "Converted: it can't attack or block.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Flash: you may cast it any time you could cast an instant.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Illusion: when this becomes the target of a spell or ability (yours too), sacrifice it. Effects that don't target, like \"each creature\", don't touch it.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Salvage: when this leaves the battlefield, create a Scrap token (a Construct relic: sacrifice it to scry 1; {2}, sacrifice it: draw a card; {1}: it becomes a 1/1 Construct creature, Servo, at any time).",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Immortal: if it would be put into a graveyard from anywhere, it is exiled instead. Angels return to Heaven, demons are cast back into Hell; no necromancy can raise them.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
    "key": "Grace",
    "note": "scripts/ui/card_viewer.gd"
   },
@@ -3070,6 +3910,46 @@
   },
   {
    "key": "Composure: you hold four or more cards.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Landfall: whenever a land enters the battlefield under your control.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Offering: as you cast it, return any number of your lands to your hand; it costs {1} less for each. You may tap them for mana first.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Affinity",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Affinity for Constructs: it costs {1} less for each Construct you control.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Scrap: a Construct relic token. Sacrifice it: scry 1. {2}, sacrifice it: draw a card. {1}: it becomes a 1/1 Construct creature, Servo (at any time, even to block).",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Ore: a Construct relic token. Sacrifice it: add one mana of any color.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Scry",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Scry 1: look at the top card of your library; leave it there or put it on the bottom.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Madness: when you discard this card, you may cast it right then for its Madness cost, even on your opponent's turn. If you don't, it goes to your graveyard.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Flashback: you may cast this card from your graveyard for its Flashback cost, at its usual speed. Then it is exiled.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -3137,6 +4017,14 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
+   "key": "Reassemble",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Reassemble: from your graveyard, pay its cost in your main phase: it returns to the battlefield tapped, and stays.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
    "key": "Unearth: from your graveyard, pay its cost: it returns with haste, and is exiled at end of turn or if it would leave.",
    "note": "scripts/ui/card_viewer.gd"
   },
@@ -3157,6 +4045,46 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
+   "key": "Peacebound",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Peacebound: this two-faced card is on its Peace face. If a player casts two or more spells during his own turn, it becomes Crusade next turn and every two-faced card flips. Tap the card to read its other face.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Crusadebound",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Crusadebound: this two-faced card is on its Crusade face. If a player casts no spells during his own turn, it becomes Peace next turn and every two-faced card flips back. Tap the card to read its other face.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Possess: when the possessed creature dies, the demon moves to another creature its master controls, or is exiled if he controls none.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Heretic",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Heretic: one who knew the faith and turned from it (the Pact's cultists). Inquisitors judge Heretics.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Pagan",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Pagan: one who never received the faith (the other faiths' people). The Church's answer is the mission: conversion.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Demon: everything fantastical that is not an angel. Exorcisms destroy Demons; a possession destroyed frees its host.",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
    "key": "Plate",
    "note": "scripts/ui/card_viewer.gd"
   },
@@ -3165,11 +4093,27 @@
    "note": "scripts/ui/card_viewer.gd"
   },
   {
+   "key": "Turn the card over to read its other face",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
    "key": "Cost %s",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
    "key": "Flavor",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Crusade face",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Peace face",
+   "note": "scripts/ui/card_viewer.gd"
+  },
+  {
+   "key": "Tap the card or ⟳ to read the other face.",
    "note": "scripts/ui/card_viewer.gd"
   },
   {
@@ -3449,31 +4393,7 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Flying",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
    "key": "Guardian",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Sanctified",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Deathtouch",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Reach",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Haste",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Defender",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3561,7 +4481,7 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "%s: tap to add one, hold to take one away",
+   "key": "Faith_",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3586,6 +4506,10 @@
   },
   {
    "key": "You can make up to %d lists from one draft.",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "Choose how many basic lands of each faith, or let them be calculated",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3657,7 +4581,15 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
+   "key": "None of these faiths.",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
    "key": "This deck is empty. Tap + on a card to add it, or tap the card to read it first. Auto build in the Deck menu makes a deck for you.",
+   "note": "scripts/ui/deck_builder.gd"
+  },
+  {
+   "key": "%s: %d cards in this deck, %d basic lands. Tap to show only its cards.",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3697,15 +4629,7 @@
    "note": "scripts/ui/deck_builder.gd"
   },
   {
-   "key": "Minus",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
    "key": "Remove one",
-   "note": "scripts/ui/deck_builder.gd"
-  },
-  {
-   "key": "Plus",
    "note": "scripts/ui/deck_builder.gd"
   },
   {
@@ -3722,6 +4646,18 @@
   },
   {
    "key": "Instants",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Constructs",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Possessions",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Blessings",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
@@ -3754,6 +4690,10 @@
   },
   {
    "key": "Take",
+   "note": "scripts/ui/draft_screen.gd"
+  },
+  {
+   "key": "Take to sideboard",
    "note": "scripts/ui/draft_screen.gd"
   },
   {
@@ -4225,15 +5165,15 @@
    "note": "scripts/ui/phase_bar.gd"
   },
   {
+   "key": "a random deck",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
    "key": "Practice only: no life, gold or cards of your game are at stake. Your practice decks may use every card in the game.",
    "note": "scripts/ui/quick_duel_screen.gd"
   },
   {
    "key": "Your deck",
-   "note": "scripts/ui/quick_duel_screen.gd"
-  },
-  {
-   "key": "Opponent",
    "note": "scripts/ui/quick_duel_screen.gd"
   },
   {
@@ -4257,7 +5197,23 @@
    "note": "scripts/ui/quick_duel_screen.gd"
   },
   {
+   "key": "Random deck",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Random%d",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "Any of the decks below, drawn when the duel starts",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
    "key": "Your practice decks",
+   "note": "scripts/ui/quick_duel_screen.gd"
+  },
+  {
+   "key": "The faith decks (60 cards)",
    "note": "scripts/ui/quick_duel_screen.gd"
   },
   {
@@ -4333,6 +5289,10 @@
    "note": "scripts/ui/rules_glossary.gd"
   },
   {
+   "key": "Icons on the battlefield",
+   "note": "scripts/ui/rules_glossary.gd"
+  },
+  {
    "key": "The stack",
    "note": "scripts/ui/rules_glossary.gd"
   },
@@ -4350,6 +5310,10 @@
   },
   {
    "key": "Music volume",
+   "note": "scripts/ui/settings_screen.gd"
+  },
+  {
+   "key": "Sound effects",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -4401,7 +5365,7 @@
    "note": "scripts/ui/settings_screen.gd"
   },
   {
-   "key": "Off: only at your stops and in combat",
+   "key": "Off: at your stops, in combat, and when the enemy aims at you or your cards",
    "note": "scripts/ui/settings_screen.gd"
   },
   {
@@ -5023,10 +5987,6 @@
    "note": "card name (sanctum, creature)"
   },
   {
-   "key": "Angel",
-   "note": "card subtype"
-  },
-  {
    "key": "'Angel' is the name of their office, not of their nature. (St. Augustine)",
    "note": "flavour text of Herald of the Morning Bell"
   },
@@ -5121,10 +6081,6 @@
   {
    "key": "Sign of Peace",
    "note": "card name (sanctum, spell)"
-  },
-  {
-   "key": "Blessing",
-   "note": "card subtype"
   },
   {
    "key": "Pacify target enemy creature. (It can't attack for the rest of the duel.)",
@@ -5965,10 +6921,6 @@
   {
    "key": "Pit-Chained Fiend",
    "note": "card name (abyss, creature)"
-  },
-  {
-   "key": "Demon",
-   "note": "card subtype"
   },
   {
    "key": "When Pit-Chained Fiend enters, you lose 2 life.",
@@ -6813,10 +7765,6 @@
   {
    "key": "Sapling",
    "note": "token creature name"
-  },
-  {
-   "key": "Treefolk",
-   "note": "token subtype"
   },
   {
    "key": "Antlered Barrow-Stag",
@@ -8689,10 +9637,6 @@
   {
    "key": "The northern sea does not hurry, and it does not let go.",
    "note": "flavour text of Grip of the Cold Sea"
-  },
-  {
-   "key": "Reading by Lamplight",
-   "note": "card name (lyceum, spell)"
   },
   {
    "key": "Meditation",

@@ -491,14 +491,14 @@ static func worst_card(st: BattleState, i: int) -> int:
 		else:
 			v = float(c.get("mana_value", 0)) - float(s.lands.size()) - DeckTools.card_score(c) * 0.2
 			if not c.get("excess", {}).is_empty() and st.can_pay(i, st.effective_cost(i, BattleState.excess_card(c))):
-				v += 20.0          # Excess: discarding it is casting it cheaply
+				v += 20.0          # Madness: discarding it is casting it cheaply
 		if v > worst_v:
 			worst_v = v
 			worst = hi
 	return worst
 
 
-## A discarded Excess card: its targets if it is worth casting now for its Excess cost, else [].
+## A discarded Madness card: its targets if it is worth casting now for its Madness cost, else [].
 ## (An empty-target cast returns [null] so that "cast it" is never confused with "don't".)
 static func excess_plan(st: BattleState, i: int, id: String) -> Array:
 	if not st.can_cast_excess(i, id):
@@ -904,7 +904,7 @@ static func _plan(st: BattleState, i: int, c: Dictionary) -> Array:
 				else:
 					v += 1.2 * mini(gl, amount) + 0.5
 			"discard_self":
-				# a cost, unless a discarded Excess card is cast or a Brawler is waiting for it
+				# a cost, unless a discarded Madness card is cast or a Brawler is waiting for it
 				var gain := -0.6 * amount
 				for h in me.hand:
 					if not CardDB.get_card(h).get("excess", {}).is_empty():

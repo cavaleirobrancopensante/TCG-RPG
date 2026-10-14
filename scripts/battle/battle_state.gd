@@ -107,7 +107,7 @@ class BattleSide:
 	var trigger_owed: Array = []   # interactive: [{"uid", "e"}] triggers (turning over) waiting for a target
 	var hand_owed: Array = []      # interactive: [{"uid", "e"}] a card to choose from the opponent's hand
 	var edict_owed := 0            # interactive: creatures this side must sacrifice (its choice)
-	var excess_owed: Array = []    # interactive: discarded Excess cards waiting: cast for Excess, or to the graveyard
+	var excess_owed: Array = []    # interactive: discarded Madness cards waiting: cast for Madness, or to the graveyard
 	var discarded_turn := 0        # cards this side discarded this turn (Flaming Flagon)
 	var spells_turn := 0           # spells this side cast this turn, on any turn (Temperance)
 	var order_owed: Array = []     # interactive: [[trigger, ...]] triggers that happened together, to put in order
@@ -446,7 +446,7 @@ func begin_turn() -> void:
 	blockers.clear()
 	was_blocked.clear()
 	if not stack.is_empty():
-		_force_resolve()            # a spell cast at the very end of the turn (Excess) still resolves
+		_force_resolve()            # a spell cast at the very end of the turn (Madness) still resolves
 	stack.clear()
 	window_open = false
 	_passes = 0
@@ -565,7 +565,7 @@ func discard_owed(i: int, idx: int) -> void:
 
 
 ## Side i discards hand card `idx`: "whenever you discard" triggers (Tavern Brawler), then
-## the card goes to the graveyard, or, with Excess, waits in exile to be cast for its Excess cost.
+## the card goes to the graveyard, or, with Madness, waits in exile to be cast for its Madness cost.
 func discard_card(i: int, idx: int) -> void:
 	var s := side(i)
 	if idx < 0 or idx >= s.hand.size():
@@ -604,7 +604,7 @@ func discard_card(i: int, idx: int) -> void:
 		cast_excess(i, id, plan)
 
 
-## The card as it is cast for Excess: the same card at its Excess cost.
+## The card as it is cast for Madness: the same card at its Madness cost.
 static func excess_card(c: Dictionary) -> Dictionary:
 	var d := c.duplicate()
 	d["cost"] = c.get("excess", {})
@@ -639,7 +639,7 @@ func excess_decline(i: int, id: String) -> void:
 		emit({"type": "excess_gone", "side": i, "id": id})
 
 
-## Cast a discarded Excess card for its Excess cost, at any time (it goes on the stack).
+## Cast a discarded Madness card for its Madness cost, at any time (it goes on the stack).
 func cast_excess(i: int, id: String, targets: Array = []) -> bool:
 	if not can_cast_excess(i, id):
 		excess_decline(i, id)
@@ -785,7 +785,7 @@ func _release_cast() -> void:
 		_after_push(h)
 
 
-## The player's Excess decision for the first waiting card: cast it (with its targets) or not.
+## The player's Madness decision for the first waiting card: cast it (with its targets) or not.
 func excess_choose(i: int, cast: bool, targets: Array = []) -> void:
 	var s := side(i)
 	if s.excess_owed.is_empty():

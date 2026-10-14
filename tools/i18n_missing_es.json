@@ -1,0 +1,778 @@
+[
+ {
+  "key": "Choose the card to condemn: that player exiles it and every card with the same name from his hand, library and graveyard, then creates a Testimony for each.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s's library",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Turn the card over to read its other face",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Sound effects",
+  "note": "scripts/ui/settings_screen.gd"
+ },
+ {
+  "key": "own:%d",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Crusade face",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "a card in a graveyard",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Scry",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "%s is freed and fights for you again.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Blocker taken back.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Madness: when you discard this card, you may cast it right then for its Madness cost, even on your opponent's turn. If you don't, it goes to your graveyard.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Immortal: if it would be put into a graveyard from anywhere, it is exiled instead. Angels return to Heaven, demons are cast back into Hell; no necromancy can raise them.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Heretic: one who knew the faith and turned from it (the Pact's cultists). Inquisitors judge Heretics.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "%s holds %s until he leaves the battlefield.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Deck%d_%d",
+  "note": "scripts/ui/quick_duel_screen.gd"
+ },
+ {
+  "key": "for each land you control",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Sacrifice this: Scry 1. {2}, Sacrifice this: Draw a card.",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Peace. If a player casts two or more spells in his turn, Crusade begins at the start of the next turn.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Step+%d",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "{2}, sacrifice this: draw a card.",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Graveyard%d",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Exile from a graveyard",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Move",
+  "note": "scripts/ui/draft_screen.gd"
+ },
+ {
+  "key": "Tap the card or ⟳ to read the other face.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Value",
+  "note": "scripts/ui/ui_kit.gd"
+ },
+ {
+  "key": "It returns in your own main phase, with the stack empty and the mana to pay.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Offering: %s goes back to %s hand.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Affinity",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "can't cast spells this turn",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Sacrifice this: Scry 1.",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Peace face",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Crusadebound: this two-faced card is on its Crusade face. If a player casts no spells during his own turn, it becomes Peace next turn and every two-faced card flips back. Tap the card to read its other face.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "%s returns %s from the graveyard.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "You can't pay %s's Madness cost: it goes to your graveyard.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "your opponents can't cast spells this turn",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Condemned: %s is exiled (%d card(s)); he gets as many Testimonies.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Choose the card to condemn: he exiles it and creates a Testimony.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "two cards instead",
+  "note": "scripts/battle/battle_ai.gd"
+ },
+ {
+  "key": "You discarded %s. Cast it now for its Madness cost, %s?",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Sacrifice this: Scry 1. {2}, Sacrifice this: Draw a card. {1}: This becomes a 1/1 Construct Creature named Servo.",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "tap target creature. It can't attack or block...",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "View%d",
+  "note": "scripts/ui/quick_duel_screen.gd"
+ },
+ {
+  "key": "Possess → an enemy creature",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Construct Servo",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Grave_%d",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "You keep %d and put %d on the bottom of your library.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Random%d",
+  "note": "scripts/ui/quick_duel_screen.gd"
+ },
+ {
+  "key": "Choose",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Immortal: exiled instead of going to the graveyard",
+  "note": "scripts/battle/summon_figure.gd"
+ },
+ {
+  "key": "Tab_%d",
+  "note": "scripts/ui/deck_builder.gd"
+ },
+ {
+  "key": "Pagan",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Choose a card from a graveyard (his first, then yours).",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s looks at your hand.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Summary",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "Choose the card he discards.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Condemned: your %s is exiled (%d card(s)); you get as many Testimonies.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Two spells were cast last turn: Crusade! The two-faced cards flip.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Reassemble",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Choose the creature you sacrifice.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Scrap",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Heretic",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Look at the top cards",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Crusade",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Destroy a land",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s: choose its target.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Immortal: %s is cast back into Hell (exiled).",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Crusade. If a player casts no spells in his turn, Peace returns at the start of the next turn.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Choose a card to put into your hand (%d of %d). The rest go to the bottom of your library.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "This land is also a %s creature.",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "%s is possessed: %s controls him now.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "a creature or relic",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Return",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Preset%d",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "Order your triggers",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s is exiled from a graveyard.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Return how many lands to your hand? Each makes it {1} cheaper. (You may tap them for mana first.)",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Ore",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Offering",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "it deals 4 damage instead",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "If he dies, the demon moves to another creature of its master",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%d blockers on this attacker.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Demon: everything fantastical that is not an angel. Exorcisms destroy Demons; a possession destroyed frees its host.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Possesses %s.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Peace",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s goes back to %s.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "A trigger",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Up",
+  "note": "scripts/ui/ui_kit.gd"
+ },
+ {
+  "key": "(for its Madness cost)",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Choose one.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Premeditate",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "damage equal to the number of times",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Pact, Possession",
+  "note": "scripts/core/deck_tools.gd"
+ },
+ {
+  "key": "Tab_",
+  "note": "scripts/ui/draft_screen.gd"
+ },
+ {
+  "key": "Symbols",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "Cast it",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "You premeditate %s: it waits face down.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "No spell was cast last turn: Peace returns. The two-faced cards flip back.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Offering: as you cast it, return any number of your lands to your hand; it costs {1} less for each. You may tap them for mana first.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Faith_",
+  "note": "scripts/ui/deck_builder.gd"
+ },
+ {
+  "key": "Landfall",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "The demon leaves the dead body. Choose the creature it possesses now.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Madness: %s waits to be cast.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Cast it on a later turn than you premeditated it, at its usual speed, with the mana to pay.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Choose a Construct card from your graveyard.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Size",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "Church, Holy Office",
+  "note": "scripts/core/deck_tools.gd"
+ },
+ {
+  "key": "Possess: when the possessed creature dies, the demon moves to another creature its master controls, or is exiled if he controls none.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "%s keeps %d card(s) and puts the rest on the bottom.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "an enemy creature or possession",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s: the last chapter gives no rare or mythic of the set",
+  "note": "scripts/core/story.gd"
+ },
+ {
+  "key": "Sacrifice this: Add one mana of any color.",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Choose one",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Return a Construct",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Possessed by %s",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s premeditates a card face down.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Your library",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "You now control %s.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "You are attacked! Tap your creature, then the attacker it blocks. Several may block one attacker. Hold any creature to read it.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Revel, Midnight Revel",
+  "note": "scripts/core/deck_tools.gd"
+ },
+ {
+  "key": "Salvage: a Scrap token is left behind.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Peacebound: this two-faced card is on its Peace face. If a player casts two or more spells during his own turn, it becomes Crusade next turn and every two-faced card flips. Tap the card to read its other face.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "These trigger together. Choose the one that resolves first.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Technocracy, the Foundry",
+  "note": "scripts/core/deck_tools.gd"
+ },
+ {
+  "key": "Now tap the attacker it should block (several may block one). Tap it again to read it.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Choose the card to condemn: he exiles it (and, with the Index, every copy) and creates a Testimony for each.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "{2}, Sacrifice this: Draw a card.",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Count",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "new URL('%s', location.href).href",
+  "note": "scripts/autoload/music.gd"
+ },
+ {
+  "key": "You return %s from your graveyard, tapped.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "two-faced: flips with Peace and Crusade",
+  "note": "scripts/battle/summon_figure.gd"
+ },
+ {
+  "key": "%s's hand",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Holy",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Yourself",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s is destroyed; its controller creates an Ore token.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s flips: %s.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Stoa, the Phalanx",
+  "note": "scripts/core/deck_tools.gd"
+ },
+ {
+  "key": "Immortal: %s is not destroyed. He returns to Heaven (exiled).",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Peace begins. Two spells cast in one turn bring Crusade; a turn with none brings Peace back.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Carries %s",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Taken from %s: he goes back when the possession is gone.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "(%d damage)",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "a random deck",
+  "note": "scripts/ui/quick_duel_screen.gd"
+ },
+ {
+  "key": "controlled by %s",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Choose the kind of land to destroy. Its controller creates an Ore token.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Only in your own main phase, with the stack empty. Only an Instant or a card with Flash can be cast at other times.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "when it enters/flips",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Your premeditated cards, face down",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "%s gets a Testimony.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Cast",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Premeditated",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Converted: it can't attack or block.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Pay %s how many times? It enters with a +1/+1 counter for each.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Madness",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Crusadebound",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Salvage: when this leaves the battlefield, create a Scrap token (a Construct relic: sacrifice it to scry 1; {2}, sacrifice it: draw a card; {1}: it becomes a 1/1 Construct creature, Servo, at any time).",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Veneration: %s is laid to rest as a relic (exiled).",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Flash: you may cast it any time you could cast an instant.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Choose X.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "{T}: Add one mana",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Land ",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Counter target",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "The demon leaves the dead body: %s now possesses %s.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Now %d/%d",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Look at target player's library.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Sacrifice",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Peacebound",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Pagan: one who never received the faith (the other faiths' people). The Church's answer is the mission: conversion.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Down",
+  "note": "scripts/ui/ui_kit.gd"
+ },
+ {
+  "key": "Possess",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Landfall: whenever a land enters the battlefield under your control.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "{1}: This becomes a 1/1 Construct Creature named Servo.",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "Choose the card the Confessor holds until he leaves the battlefield.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Scry 1: look at the top card of your library; leave it there or put it on the bottom.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "(premeditated)",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Scrap: a Construct relic token. Sacrifice it: scry 1. {2}, sacrifice it: draw a card. {1}: it becomes a 1/1 Construct creature, Servo (at any time, even to block).",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Step%d",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "possessed by a demon",
+  "note": "scripts/battle/summon_figure.gd"
+ },
+ {
+  "key": "Testimony",
+  "note": "scripts/battle/battle_state.gd"
+ },
+ {
+  "key": "On %s.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "You get a Testimony.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "choose one",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Affinity for Constructs: it costs {1} less for each Construct you control.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Warn",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "Old Ways, the Sacred Grove",
+  "note": "scripts/core/deck_tools.gd"
+ },
+ {
+  "key": "an enemy Demon (a Demon creature or a possession)",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Search by name",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Land_",
+  "note": "scripts/ui/basic_lands_popup.gd"
+ },
+ {
+  "key": "%s: target %s?",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "converted: can't attack or block",
+  "note": "scripts/battle/summon_figure.gd"
+ },
+ {
+  "key": "Premeditation: during your own turn, when you have priority, pay {2}.",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Ore: a Construct relic token. Sacrifice it: add one mana of any color.",
+  "note": "scripts/ui/card_viewer.gd"
+ },
+ {
+  "key": "Possess or attach → one of your creatures",
+  "note": "scripts/battle/battle_scene.gd"
+ },
+ {
+  "key": "Side_",
+  "note": "scripts/ui/draft_screen.gd"
+ },
+ {
+  "key": "Reassemble: from your graveyard, pay its cost in your main phase: it returns to the battlefield tapped, and stays.",
+  "note": "scripts/ui/card_viewer.gd"
+ }
+]

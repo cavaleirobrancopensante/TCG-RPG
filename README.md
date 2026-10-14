@@ -1178,3 +1178,9 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Siege Ballista has its own picture (it borrowed the Siege Automaton's): a great wheeled
   ballista before a castle wall, one iron crewman winding the windlass, one sighting along the
   stock, a third bringing up the next bolt from the rack.
+
+## Madness (1.94)
+
+- Excess is now called Madness, its name in Magic, as Encore became Flashback: the same
+  ability (discard the card and you may cast it right then for its Madness cost). Card text,
+  the keyword help, the duel's questions and log, and the translations (Loucura, Locura).
