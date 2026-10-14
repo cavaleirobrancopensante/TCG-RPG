@@ -1944,7 +1944,7 @@ func _resolve_owed() -> void:
 			"confess":
 				what = I18n.t("Choose the card the Confessor holds until he leaves the battlefield.")
 			"penance":
-				what = I18n.t("Choose the card he puts on top of his library.")
+				what = I18n.t("Choose the card he puts third from the top of his library.")
 			_:
 				what = I18n.t("Choose the card to condemn: he exiles it (and, with the Index, every copy) and creates a Testimony for each.") if e.get("index", false) \
 					else I18n.t("Choose the card to condemn: he exiles it and creates a Testimony.")
@@ -2392,9 +2392,9 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			_refresh_bars()
 		"penance":
 			if int(e["side"]) == 0:
-				_log(I18n.t("Penance: your %s goes on top of your library.") % _card_name(String(e["id"])))
+				_log(I18n.t("Penance: your %s goes third from the top of your library.") % _card_name(String(e["id"])))
 			else:
-				_log(I18n.t("Penance: %s puts %s on top of his library.") % [st.side(1).name, _card_name(String(e["id"]))])
+				_log(I18n.t("Penance: %s puts %s third from the top of his library.") % [st.side(1).name, _card_name(String(e["id"]))])
 			_rebuild_hand()
 			_refresh_bars()
 		"held_back":

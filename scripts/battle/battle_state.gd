@@ -2718,7 +2718,8 @@ func _hand_pick(i: int, e: Dictionary, source: Perm, hi: int) -> void:
 			discard_card(j, hi)
 		"penance":
 			sj.hand.remove_at(hi)
-			sj.deck.append(id)               # the top of his library
+			# third from the top of his library (1.91): he draws it again in three turns
+			sj.deck.insert(maxi(0, sj.deck.size() - 2), id)
 			emit({"type": "penance", "side": j, "id": id})
 		"confess":
 			sj.hand.remove_at(hi)

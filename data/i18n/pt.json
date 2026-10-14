@@ -4969,7 +4969,6 @@
  "Enchant creature you control. Enchanted creature gets +1/+1 and has first strike. When enchanted creature dies, return Blessing of Arms to its owner's hand.": "Encantar criatura que você controla. A criatura encantada recebe +1/+1 e tem golpe inicial. Quando a criatura encantada morrer, devolva Bênção das Armas à mão de seu dono.",
  "\"Blessed be the Lord my God, who teacheth my hands to fight.\" (Psalm 143:1)": "\"Bendito seja o Senhor, meu Deus, que adestra as minhas mãos para a peleja.\" (Salmo 143:1)",
  "Penance": "Penitência",
- "Look at target opponent's hand. Choose a card other than a land. He puts it on top of his library. You gain 2 life.": "Olhe a mão do oponente alvo. Escolha uma carta que não seja terreno. Ele a coloca no topo do grimório dele. Você ganha 2 de vida.",
  "\"Do penance: for the kingdom of heaven is at hand.\" (Matthew 3:2)": "\"Fazei penitência, porque está próximo o reino dos céus.\" (Mateus 3:2)",
  "Consecrated Ground": "Solo Consagrado",
  "Possessions your opponents control can't attach to a new host. Whenever a Demon an opponent controls dies, you gain 2 life.": "As Possessões que seus oponentes controlam não podem se anexar a um novo hospedeiro. Sempre que um Demônio que um oponente controla morrer, você ganha 2 de vida.",
@@ -5127,9 +5126,6 @@
  "Cast it again at its usual speed, with the mana to pay. Afterwards it is exiled.": "Conjure-a de novo na velocidade normal, com o mana para pagar. Depois ela é exilada.",
  "Cast %s again on %s?": "Conjurar %s de novo em %s?",
  "(from the graveyard)": "(do cemitério)",
- "Choose the card he puts on top of his library.": "Escolha a carta que ele coloca no topo do grimório dele.",
- "Penance: your %s goes on top of your library.": "Penitência: a sua carta %s vai para o topo do seu grimório.",
- "Penance: %s puts %s on top of his library.": "Penitência: %s coloca %s no topo do grimório dele.",
  "The faith decks (60 cards)": "Os baralhos das fés (60 cartas)",
  "You carry Saint Lucy home. The bells of Santa Lucerna ring for an hour, and the Cardinal gives you the cathedral's gift: an image of the Angel of the Reliquary, painted for the feast of Saint Michael.": "Você leva Santa Luzia para casa. Os sinos de Santa Lucerna tocam durante uma hora, e o Cardeal lhe dá o presente da catedral: uma imagem do Anjo do Relicário, pintada para a festa de São Miguel.",
  "The old sage speaks at last: \"I was silent because there was no one worth answering.\" Master Theon sends you the Porch's gift: the image of the Navarch of the Cold Sea, who brought the fleet home through the winter storms.": "O velho sábio enfim fala: \"Calei-me porque não havia ninguém que valesse a pena responder.\" Mestre Teão lhe envia o presente do Pórtico: a imagem do Navarca do Mar Frio, que trouxe a frota de volta para casa através das tempestades de inverno.",
@@ -5168,5 +5164,9 @@
  "Tap target creature an opponent controls. It doesn't untap during its controller's next untap step. Draw a card. Flashback {3}{U} (You may cast this card from your graveyard for its Flashback cost. Then exile it.)": "Vire a criatura alvo que um oponente controla. Ela não desvira durante a próxima etapa de desvirar de seu controlador. Compre uma carta. Flashback {3}{U} (Você pode conjurar esta carta do seu cemitério pelo seu custo de Flashback. Depois exile-a.)",
  "Hoplites you control get +1/+1 until end of turn. Untap them. Flashback {2}{U}": "Os Hoplitas que você controla recebem +1/+1 até o fim do turno. Desvire-os. Flashback {2}{U}",
  "%s: %d cards in this deck, %d basic lands. Tap to show only its cards.": "%s: %d cartas neste baralho, %d terrenos básicos. Toque para mostrar só as suas cartas.",
- "None of these faiths.": "Nenhuma destas fés."
+ "None of these faiths.": "Nenhuma destas fés.",
+ "Look at target opponent's hand. Choose a card other than a land. He puts it third from the top of his library. You gain 2 life.": "Olhe a mão do oponente alvo. Escolha uma carta que não seja um terreno. Ele a coloca em terceiro a partir do topo do seu grimório. Você ganha 2 de vida.",
+ "Choose the card he puts third from the top of his library.": "Escolha a carta que ele coloca em terceiro a partir do topo do grimório dele.",
+ "Penance: your %s goes third from the top of your library.": "Penitência: a sua carta %s vai para a terceira posição a partir do topo do seu grimório.",
+ "Penance: %s puts %s third from the top of his library.": "Penitência: %s coloca %s em terceiro a partir do topo do grimório dele."
 }
