@@ -175,26 +175,24 @@ func _deck_builder_tests() -> void:
 		await _frames(3)
 		_check(int(d._deck().get(id2, 0)) == had2, "Undo takes back the last card added")
 
-	# the land pips: a tap adds one, a hold takes one away, Undo brings it back
+	# the faith sigils (1.88): each counts the deck's cards of its faith; a tap opens Basic lands
+	var by_f := DeckTools.faith_counts(d._deck())
+	var all_ok := true
+	for f in Factions.ORDER:
+		if d.land_pips[f].count != int(by_f.get(f, 0)):
+			all_ok = false
+	_check(all_ok, "each faith sigil counts the deck's cards of that faith (%s)" % [by_f])
 	var pip: Button = d.land_pips["sanctum"]
-	var lid := Factions.land_id("sanctum")
-	var l0 := int(d._deck().get(lid, 0))
 	var lp := pip.get_global_rect().get_center()
 	_mouse_button(lp, true)
 	await _frames(2)
 	_mouse_button(lp, false)
 	await _frames(4)
-	_check(int(d._deck().get(lid, 0)) == l0 + 1, "a tap on a land pip adds a land")
-	_touch(lp, true)
-	await get_tree().create_timer(0.7).timeout
-	_touch(lp, false)
-	await _frames(4)
-	_check(int(d._deck().get(lid, 0)) == l0, "holding a land pip takes one away (and the release adds none)")
-	d.undo()
-	await _frames(3)
-	_check(int(d._deck().get(lid, 0)) == l0 + 1, "Undo brings the land back")
-	d.undo()
-	await _frames(3)
+	var pop: Control = d.find_child("BasicLandsPopup", true, false)
+	_check(pop != null, "a tap on a faith sigil opens Basic lands")
+	if pop:
+		(pop.find_child("Cancel", true, false) as Button).pressed.emit()
+		await _frames(3)
 
 	# the Filters drawer: counts its filters, covers the grid (a drag there does not scroll it)
 	d.filters_btn.pressed.emit()
@@ -264,7 +262,8 @@ func _deck_builder_tests() -> void:
 		await _frames(2)
 		_mouse_button(plus.get_global_rect().get_center(), false)
 		await _frames(4)
-		var plus_ok: bool = (plus as Button).disabled or DeckTools.count(d._deck()) == n2 + 1
+		# the row is rebuilt after a change, so the old + may be gone by now
+		var plus_ok: bool = DeckTools.count(d._deck()) == n2 + 1 or (is_instance_valid(plus) and (plus as Button).disabled)
 		_check(plus_ok, "a tap on a row's + adds one copy (unless the limit is reached)")
 		# a drag that starts on a "-" scrolls and removes nothing
 		await _frames(40)

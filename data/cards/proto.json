@@ -1754,7 +1754,8 @@
   "type": "spell",
   "subtype": "Revelry",
   "cost": {
-   "R": 1
+   "R": 1,
+   "generic": 1
   },
   "effects": [
    {
@@ -1768,17 +1769,18 @@
     "amount": 1
    }
   ],
-  "text": "Draw two cards, then discard a card. Encore {1}{R}",
+  "text": "Draw two cards, then discard a card. Flashback {2}{R} (You may cast this card from your graveyard for its Flashback cost. Then exile it.)",
   "flavor": "One clumsy elbow, one candle, and the evening became memorable.",
   "art": "res://art/cards/revel_c_015.webp",
   "keywords": [],
   "proto": true,
-  "mana_value": 1,
+  "mana_value": 2,
   "flashback": {
    "R": 1,
-   "generic": 1
+   "generic": 2
   },
-  "set": 1
+  "set": 1,
+  "speed": "instant"
  },
  {
   "id": "proto_rv_flagon",
@@ -1803,7 +1805,7 @@
     }
    }
   ],
-  "text": "Flaming Flagon deals 2 damage to any enemy creature or the enemy player. If you discarded a card this turn, it deals 4 damage instead. Encore {3}{R} (You may cast this card from your graveyard for its Encore cost. Then exile it.)",
+  "text": "Flaming Flagon deals 2 damage to any enemy creature or the enemy player. If you discarded a card this turn, it deals 4 damage instead. Flashback {3}{R} (You may cast this card from your graveyard for its Flashback cost. Then exile it.)",
   "flavor": "It was poured for him. It simply arrived faster than he expected.",
   "art": "res://art/cards/revel_c_017.webp",
   "keywords": [],
@@ -3442,7 +3444,7 @@
    "R": 1,
    "generic": 3
   },
-  "text": "Firework Volley deals 1 damage to each creature your opponents control. Encore {3}{R} (You may cast this card from your graveyard for its Encore cost. Then exile it.)",
+  "text": "Firework Volley deals 1 damage to each creature your opponents control. Flashback {3}{R} (You may cast this card from your graveyard for its Flashback cost. Then exile it.)",
   "flavor": "The crowd cheered the first burst. The guards cheered rather less.",
   "art": "res://art/cards/revel_c_014.webp",
   "proto": true,

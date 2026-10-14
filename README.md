@@ -1133,3 +1133,12 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Fixed: the hero keeps 5 + Reason cards at the end of his turn (it was 7 + Reason). Everyone
   still draws seven and mulligans as before; only the end-of-turn discard and other hand
   limits use it. The stat's description says so, in every language.
+
+## Faith counts in the deck builder; Flashback; Spilled Brandy (1.88)
+
+- The six faith sigils at the top of every deck builder (your decks, Quick Duel, draft and
+  sealed) now count the deck's cards of each faith; a two-faith card counts for both, lands not
+  at all. Before, they counted basic lands only. Tap one to open Basic lands.
+- Encore is now called Flashback, Magic's name for it: cast an instant or sorcery again from the
+  graveyard for its Flashback cost, then exile it. (The Stoa's Recollection is the same rule.)
+- Spilled Brandy is now a {1}{R} instant with Flashback {2}{R} (it was {R} with Encore {1}{R}).

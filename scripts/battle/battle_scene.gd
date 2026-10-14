@@ -53,7 +53,7 @@ var player_life: Button
 var grave_btns := [null, null]     # the tombstone graveyard buttons, yours and the enemy's
 var premed_btn: Button = null      # your premeditated cards, face down (shown when there are some)
 var pending_premed := -1           # the premeditated card whose targets we choose
-var pending_flash := -1            # the graveyard card cast for Encore or Recollection whose targets we choose
+var pending_flash := -1            # the graveyard card cast for Flashback or Recollection whose targets we choose
 var pending_x := -1                # X chosen for the ability being used ({X} paid, or X counters removed)
 var pile_icons := [[], []]         # per side: the hand and library count icons
 var enemy_info: RichTextLabel
@@ -3959,7 +3959,7 @@ func _begin_premeditated(k: int) -> void:
 	_advance_targeting()
 
 
-## Cast graveyard card gi again for its Encore or Recollection cost: choose its targets first.
+## Cast graveyard card gi again for its Flashback or Recollection cost: choose its targets first.
 func _begin_flashback(gi: int) -> void:
 	_close_preview()
 	if busy or not st.can_flashback(0, gi):
@@ -3999,7 +3999,7 @@ func _show_graveyard_card(side_i: int, start: int) -> void:
 		if not c.get("flashback", {}).is_empty():
 			var fok: bool = st.can_flashback(0, gi) and not busy and mode in ["idle", "priority"]
 			var fwhy := "" if fok else I18n.t("Cast it again at its usual speed, with the mana to pay. Afterwards it is exiled.")
-			var fname := I18n.t("Encore") if String(c.get("faction", "")) == "revel" else I18n.t("Recollection")
+			var fname := I18n.t("Flashback") if String(c.get("faction", "")) == "revel" else I18n.t("Recollection")
 			return [[fname + " " + CardView.plain_text(CardView.cost_tokens(c["flashback"])), func(): _begin_flashback(gi), fok, true, fwhy]]
 		if not c.has("unearth"):
 			return []

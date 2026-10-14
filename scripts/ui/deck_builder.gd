@@ -222,14 +222,15 @@ func _ready() -> void:
 	lands_row.name = "Lands"
 	lands_row.add_theme_constant_override("separation", 4)
 	right.add_child(lands_row)
+	# each faith's sigil with how many of the deck's cards are of that faith (1.88; a two-faith
+	# card counts for both, lands not at all); tap one to set the basic lands
 	for f in Factions.ORDER:
-		var lid := Factions.land_id(f)
 		var pip := _LandPip.new()
+		pip.name = "Faith_" + f
 		pip.faith = f
-		pip.tooltip_text = I18n.t("%s: tap to add one, hold to take one away") % I18n.t(Factions.info(f)["land_name"])
 		pip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		pip.added.connect(func(): _change(lid, 1))
-		pip.removed.connect(func(): _change(lid, -1))
+		pip.added.connect(func(): open_basic_lands())
+		pip.removed.connect(func(): open_basic_lands())
 		land_pips[f] = pip
 		lands_row.add_child(pip)
 
@@ -874,8 +875,11 @@ func _refresh_now() -> void:
 		var empty := UIKit.label(I18n.t("This deck is empty. Tap + on a card to add it, or tap the card to read it first. Auto build in the Deck menu makes a deck for you."), UIKit.FS_SECONDARY, UIKit.DIM, true)
 		empty.name = "EmptyHint"
 		deck_list.add_child(empty)
+	var by_faith := DeckTools.faith_counts(d)
 	for f in Factions.ORDER:
-		land_pips[f].count = int(d.get(Factions.land_id(f), 0))
+		land_pips[f].count = int(by_faith.get(f, 0))
+		land_pips[f].tooltip_text = I18n.t("%s: %d cards in this deck, %d basic lands. Tap to set the basic lands.") % [
+			I18n.t(Factions.info(f)["name"]), int(by_faith.get(f, 0)), int(d.get(Factions.land_id(f), 0))]
 		land_pips[f].queue_redraw()
 	count_label.text = I18n.t("%d cards · %d lands") % [DeckTools.count(d), DeckTools.land_count(d)]
 	var cd := d
@@ -1043,8 +1047,8 @@ class _PlusButton extends Button:
 		draw_line(c - Vector2(0, r * 0.5), c + Vector2(0, r * 0.5), Tapestry.INK, 3.5)
 
 
-## A basic land of one faith: its sigil and how many are in the deck. Tap to add one; hold
-## (or right click) to take one away.
+## A faith's sigil and how many of the deck's cards are of that faith (1.88). Tap it (or hold)
+## to open the Basic lands pop-up.
 class _LandPip extends Button:
 	signal added
 	signal removed

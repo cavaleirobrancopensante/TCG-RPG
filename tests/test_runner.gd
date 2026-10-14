@@ -20,6 +20,7 @@ func _ready() -> void:
 	test_basic_lands_calc()
 	test_flash_questioner()
 	test_illusion()
+	test_faith_counts()
 	test_stack()
 	test_ai_decisions()
 	test_ai_battles()
@@ -3043,20 +3044,20 @@ func test_first_set() -> void:
 				check(false, "%s: no dashes and no 'Covenant'" % id)
 			n_new += 1
 	check(n_new >= 150, "the prototype pool has %d cards" % n_new)
-	# Encore: Firework Volley from the graveyard, then exiled
+	# Flashback: Firework Volley from the graveyard, then exiled
 	var st := _duel()
 	_lands(st, 0, "RRRR")
 	var f1 := _perm(st, 1, "proto_st_ephebe")
 	var f2 := _perm(st, 1, "proto_rv_brawler")
 	st.side(0).graveyard = ["proto_rv_volley"]
-	check(st.can_flashback(0, 0) and st.cast_flashback(0, 0), "Encore: Firework Volley is cast from the graveyard")
+	check(st.can_flashback(0, 0) and st.cast_flashback(0, 0), "Flashback: Firework Volley is cast from the graveyard")
 	st._force_resolve()
 	check(st.find_perm(f2.uid) == null and f1.damage == 1, "Firework Volley: 1 damage to each enemy creature")
-	check(st.side(0).exile.has("proto_rv_volley") and not st.side(0).graveyard.has("proto_rv_volley"), "Encore: then it is exiled")
-	check(st.side(0).lands.filter(func(l): return l["tapped"]).size() == 4, "Encore: it paid {3}{R}")
-	# a card without Encore stays put
+	check(st.side(0).exile.has("proto_rv_volley") and not st.side(0).graveyard.has("proto_rv_volley"), "Flashback: then it is exiled")
+	check(st.side(0).lands.filter(func(l): return l["tapped"]).size() == 4, "Flashback: it paid {3}{R}")
+	# a card without Flashback stays put
 	st.side(0).graveyard = ["proto_rv_toast"]
-	check(not st.can_flashback(0, 0), "no Encore on a card without one")
+	check(not st.can_flashback(0, 0), "no Flashback on a card without one")
 	# Sumptuary Tablet: {2} more from the graveyard, for the opponent only
 	st = _duel()
 	_lands(st, 0, "UUUU")
@@ -3280,7 +3281,7 @@ func test_first_set() -> void:
 	_perm(st, 1, "proto_rv_brawler")
 	st.side(0).graveyard = ["proto_rv_volley"]
 	BattleAI.main_action(st, 0)
-	check(st.side(0).graveyard.is_empty(), "the AI uses Encore when it has nothing better")
+	check(st.side(0).graveyard.is_empty(), "the AI uses Flashback when it has nothing better")
 
 
 ## Basic lands by mana symbols (1.81): the pop-up's Auto calculate.
@@ -3390,3 +3391,15 @@ func test_illusion() -> void:
 	_perm(st, 1, "proto_rv_masked")
 	var pick = st.auto_target(0, {"action": "damage", "target": "any_enemy", "amount": 1})
 	check(typeof(pick) == TYPE_DICTIONARY and int(pick.get("uid", -1)) == s5.uid, "1 damage is aimed at the 3/3 Illusion")
+
+
+## The deck builder's faith sigils count cards of each faith (1.88).
+func test_faith_counts() -> void:
+	print("-- faith counts")
+	var d := {"proto_ow_boar": 4, "proto_g_satyrking": 2, "proto_rv_toast": 3, "land_wild": 10, "land_revel": 6}
+	var fc := DeckTools.faith_counts(d)
+	check(int(fc.get("wild", 0)) == 6 and int(fc.get("revel", 0)) == 5 and not fc.has("sanctum"), "two-faith cards count for both faiths, lands not at all (%s)" % [fc])
+	# Spilled Brandy (1.88): {1}{R} instant, Flashback {2}{R}
+	var sb := CardDB.get_card("proto_rv_brandy")
+	check(int(sb["mana_value"]) == 2 and BattleState.is_instant(sb) and CardDB.mana_value(sb["flashback"]) == 3 and String(sb["text"]).contains("Flashback {2}{R}"),
+		"Spilled Brandy: {1}{R} instant, Flashback {2}{R}")
