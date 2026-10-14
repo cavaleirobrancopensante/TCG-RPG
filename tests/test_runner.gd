@@ -2325,7 +2325,7 @@ func _perm(st: BattleState, i: int, id: String) -> BattleState.Perm:
 	return p
 
 
-## The Revel (Excess) and the Stoa (Composure, the Phalanx) prototypes.
+## The Revel (Madness) and the Stoa (Composure, the Phalanx) prototypes.
 func _forests(st: BattleState, i: int, n: int, land_id: String = "land_wild", col: String = "G") -> void:
 	st.side(i).lands.clear()
 	for k in n:
@@ -2499,16 +2499,16 @@ func test_revel_stoa() -> void:
 	print("-- the Revel and the Stoa")
 	for d in DeckTools.proto_decks():
 		check(DeckTools.count(d["cards"]) == 60, "%s has 60 cards" % d["name"])
-	# Excess, the computer: a discarded Toast of Fire is cast at once for {R}
+	# Madness, the computer: a discarded Toast of Fire is cast at once for {R}
 	var st := _duel()
 	_lands(st, 0, "RR")
 	var foe := _perm(st, 1, "proto_st_ephebe")
 	st.side(0).hand = ["proto_rv_toast"]
 	st.discard_card(0, 0)
 	check(st.side(0).graveyard.has("proto_rv_toast") and st.find_perm(foe.uid) == null and st.side(0).cast_count == 1,
-		"Excess: the AI casts the discarded Toast for {R} and kills the Ephebe")
-	check(st.side(0).lands.filter(func(l): return l["tapped"]).size() == 1, "Excess: it paid only the Excess cost")
-	# Excess, a person: asked; Lord of Misrule and Tavern Brawler answer it
+		"Madness: the AI casts the discarded Toast for {R} and kills the Ephebe")
+	check(st.side(0).lands.filter(func(l): return l["tapped"]).size() == 1, "Madness: it paid only the Madness cost")
+	# Madness, a person: asked; Lord of Misrule and Tavern Brawler answer it
 	st = _duel()
 	_lands(st, 0, "R")
 	st.side(0).interactive = true
@@ -2517,17 +2517,17 @@ func test_revel_stoa() -> void:
 	check(brawler.power() == 3, "Lord of Misrule: other Revellers get +1/+0")
 	st.side(0).hand = ["proto_rv_fireeater", "proto_rv_toast"]
 	st.discard_card(0, 0)
-	check(st.side(0).excess_owed == ["proto_rv_fireeater"] and st.has_owed(0), "Excess: the player is asked")
+	check(st.side(0).excess_owed == ["proto_rv_fireeater"] and st.has_owed(0), "Madness: the player is asked")
 	check(brawler.power() == 4 and brawler.has_kw("haste"), "Tavern Brawler: +1/+0 and haste when you discard")
 	var life := st.side(1).life
 	st.excess_choose(0, true, [])
 	var fe := st.side(0).creatures.filter(func(q): return q.card_id == "proto_rv_fireeater")
-	check(fe.size() == 1 and st.side(1).life == life - 1, "Excess: the Fire-Eater is cast and Lord of Misrule deals 1 damage")
+	check(fe.size() == 1 and st.side(1).life == life - 1, "Madness: the Fire-Eater is cast and Lord of Misrule deals 1 damage")
 	st.side(0).hand = ["proto_rv_toast"]
 	st.discard_card(0, 0)
-	check(not st.can_cast_excess(0, "proto_rv_toast"), "Excess: no mana left to pay it")
+	check(not st.can_cast_excess(0, "proto_rv_toast"), "Madness: no mana left to pay it")
 	st.excess_choose(0, true, [])
-	check(st.side(0).graveyard.has("proto_rv_toast") and not st.side(0).exile.has("proto_rv_toast"), "Excess: unpaid, it goes to the graveyard")
+	check(st.side(0).graveyard.has("proto_rv_toast") and not st.side(0).exile.has("proto_rv_toast"), "Madness: unpaid, it goes to the graveyard")
 	check(lord.power() == 4, "the Lord does not pump himself")
 	# Flaming Flagon: 4 damage after a discard
 	st = _duel()

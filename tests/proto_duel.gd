@@ -94,7 +94,7 @@ func _count(evs: Array, st: BattleState) -> void:
 			"edict":
 				k = "edict sacrifice"
 			"excess":
-				k = "Excess card discarded"
+				k = "Madness card discarded"
 			"premeditate":
 				k = "card premeditated"
 			"offering":
@@ -122,7 +122,7 @@ func _count(evs: Array, st: BattleState) -> void:
 			"cast":
 				var nm := String(CardDB.get_card(String(e["id"])).get("name", ""))
 				if e.get("excess", false):
-					counts["cast for Excess"] = int(counts.get("cast for Excess", 0)) + 1
+					counts["cast for Madness"] = int(counts.get("cast for Madness", 0)) + 1
 				if nm in ["Ancient Stag", "Wyrm of the Barrow", "Spirit of the Old Oak", "Rites of Return", "Hunt Under the Moon", "Great Automaton", "Quarry Writ", "Quarry Engine", "Smelting Furnace", "Siege Ballista", "Watchman of the Gate", "Navarch of the Cold Sea", "Scholarch of the Porch", "Lochagos of the File", "Sent Back to the Gate", "Considered Reply", "Ask the Price", "Polemarch", "Lord of Misrule", "Reading by Lamplight", "Exorcism", "Censure", "Index", "Covet", "Confessor of the Holy Office", "Inquisitor of the Holy Office", "Angel of the Reliquary", "Whisper of the Imp", "Demon of Wrath", "Legion's Hold", "Bargain in Blood", "Withering Curse", "Azrakel, Prince of Wrath"]:
 					k = "cast " + nm
 		if k != "":

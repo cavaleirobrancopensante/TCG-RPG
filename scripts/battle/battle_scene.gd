@@ -21,7 +21,7 @@ var mode := "idle"              # idle | attack | block | target
 var sel_attackers: Array = []
 var pending_trigger := -1        # uid of our permanent whose "when it enters/flips" targets we choose
 var pending_mode := -1           # "choose one": the mode chosen for the card or trigger being targeted
-var pending_excess := ""         # a discarded Excess card whose targets we choose (pending_trigger is then -3)
+var pending_excess := ""         # a discarded Madness card whose targets we choose (pending_trigger is then -3)
 signal _trigger_done
 var pending_blocks := {}        # attacker uid -> Array of blocker uids (several may block one)
 var block_pick := -1
@@ -1892,10 +1892,10 @@ func _resolve_owed() -> void:
 		var xid := String(me.excess_owed[0])
 		var xc := CardDB.get_card(xid)
 		if not st.can_cast_excess(0, xid):
-			_log(I18n.t("You can't pay %s's Excess cost: it goes to your graveyard.") % _card_name(xid), false)
+			_log(I18n.t("You can't pay %s's Madness cost: it goes to your graveyard.") % _card_name(xid), false)
 			st.excess_choose(0, false)
 			return
-		var cast_it: bool = await _ask_two(I18n.t("Excess"), I18n.t("You discarded %s. Cast it now for its Excess cost, %s?") % [_card_name(xid), UIKit.cost_text(xc.get("excess", {}))],
+		var cast_it: bool = await _ask_two(I18n.t("Madness"), I18n.t("You discarded %s. Cast it now for its Madness cost, %s?") % [_card_name(xid), UIKit.cost_text(xc.get("excess", {}))],
 			I18n.t("Let it go"), I18n.t("Cast it"))
 		if not cast_it:
 			st.excess_choose(0, false)
@@ -2058,7 +2058,7 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 			if e.get("overclock", false):
 				line += " " + I18n.t("(overclocked)")
 			if e.get("excess", false):
-				line += " " + I18n.t("(for its Excess cost)")
+				line += " " + I18n.t("(for its Madness cost)")
 			if e.get("premeditated", false):
 				line += " " + I18n.t("(premeditated)")
 			if e.get("flashback", false):
@@ -2421,7 +2421,7 @@ func _animate(e: Dictionary, prev: Dictionary = {}, nxt: Dictionary = {}) -> voi
 				figures[e["uid"]].sync(p)
 			await _wait(0.1)
 		"excess":
-			_log(I18n.t("Excess: %s waits to be cast.") % _card_name(e["id"]), false)
+			_log(I18n.t("Madness: %s waits to be cast.") % _card_name(e["id"]), false)
 		"premeditate":
 			if int(e["side"]) == 0:
 				_log(I18n.t("You premeditate %s: it waits face down.") % _card_name(e["id"]))

@@ -1576,7 +1576,7 @@
   "excess": {
    "R": 1
   },
-  "text": "Excess {R} (If you discard this card, you may cast it for its Excess cost instead of putting it into your graveyard.)",
+  "text": "Madness {R} (If you discard this card, you may cast it for its Madness cost instead of putting it into your graveyard.)",
   "flavor": "The guests applaud. The guest nearest the stage stops applauding.",
   "art": "res://art/cards/revel_c_007.webp",
   "keywords": [],
@@ -1667,7 +1667,7 @@
     "action": "damage",
     "target": "enemy_player",
     "amount": 1,
-    "text": "Whenever you cast a spell for its Excess cost, Lord of Misrule deals 1 damage to each opponent."
+    "text": "Whenever you cast a spell for its Madness cost, Lord of Misrule deals 1 damage to each opponent."
    }
   ],
   "statics": [
@@ -1679,7 +1679,7 @@
     "subtype": "Reveller"
    }
   ],
-  "text": "Other Revellers you control get +1/+0. Whenever you cast a spell for its Excess cost, Lord of Misrule deals 1 damage to each opponent.",
+  "text": "Other Revellers you control get +1/+0. Whenever you cast a spell for its Madness cost, Lord of Misrule deals 1 damage to each opponent.",
   "flavor": "In all their rule there was but this one clause to be observed: Do what thou wilt. (Rabelais, Gargantua)",
   "art": "res://art/cards/revel_u_017.webp",
   "keywords": [],
@@ -1705,7 +1705,7 @@
    "R": 1,
    "generic": 3
   },
-  "text": "Trample. Excess {3}{R} (If you discard this card, you may cast it for its Excess cost instead of putting it into your graveyard.)",
+  "text": "Trample. Madness {3}{R} (If you discard this card, you may cast it for its Madness cost instead of putting it into your graveyard.)",
   "flavor": "Ah, make the most of what we yet may spend, / Before we too into the Dust descend. (Omar Khayyam, tr. FitzGerald)",
   "art": "res://art/cards/revel_r_004.webp",
   "keywords": [
@@ -1738,7 +1738,7 @@
   "excess": {
    "R": 1
   },
-  "text": "Toast of Fire deals 3 damage to any enemy creature or the enemy player. Excess {R}",
+  "text": "Toast of Fire deals 3 damage to any enemy creature or the enemy player. Madness {R}",
   "flavor": "Come, fill the Cup, and in the fire of Spring / Your Winter-garment of Repentance fling. (Omar Khayyam, tr. FitzGerald)",
   "art": "res://art/cards/revel_c_013.webp",
   "keywords": [],
@@ -3294,7 +3294,7 @@
    "R": 1,
    "generic": 1
   },
-  "text": "Haste. When Juggler of Knives enters, he deals 1 damage to any enemy creature or the enemy player. Excess {1}{R}",
+  "text": "Haste. When Juggler of Knives enters, he deals 1 damage to any enemy creature or the enemy player. Madness {1}{R}",
   "flavor": "Six knives in the air, and only five of them came down.",
   "art": "res://art/cards/revel_r_001.webp",
   "proto": true,
@@ -3386,7 +3386,7 @@
    "R": 1,
    "generic": 2
   },
-  "text": "Haste. Excess {2}{R} (If you discard this card, you may cast it for its Excess cost instead of putting it into your graveyard.)",
+  "text": "Haste. Madness {2}{R} (If you discard this card, you may cast it for its Madness cost instead of putting it into your graveyard.)",
   "flavor": "Undefeated at the long table, and at the door afterwards.",
   "art": "res://art/cards/revel_c_010.webp",
   "proto": true,
@@ -3475,7 +3475,7 @@
   "excess": {
    "R": 1
   },
-  "text": "Creatures you control get +2/+0 and gain trample until end of turn. Excess {R}",
+  "text": "Creatures you control get +2/+0 and gain trample until end of turn. Madness {R}",
   "flavor": "The first bottle was for courage. The second was for everything after.",
   "art": "res://art/cards/revel_u_008.webp",
   "proto": true,
@@ -4620,7 +4620,7 @@
    "W": 1,
    "R": 1
   },
-  "text": "When Shrovetide Reveller enters, create a Testimony. Excess {W}{R}",
+  "text": "When Shrovetide Reveller enters, create a Testimony. Madness {W}{R}",
   "flavor": "\"Rend your hearts, and not your garments, and turn to the Lord your God.\" (Joel 2:13)",
   "art": "res://art/cards/gold_sanctum_revel.webp",
   "proto": true,

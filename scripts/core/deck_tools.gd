@@ -787,7 +787,7 @@ static func premade_decks() -> Array:
 # ------------------------------------------------------------------ prototype decks
 
 ## The redesign's test decks (cards in data/cards/proto.json, outside every pool): the Church's
-## Peace and Crusade, the Pact's possessions, the Revel's Excess against the Stoa's Phalanx. Quick duel only.
+## Peace and Crusade, the Pact's possessions, the Revel's Madness against the Stoa's Phalanx. Quick duel only.
 const PROTO_DECKS := {
 	"Church, Holy Office": {"faith": "sanctum", "cards": {
 		"proto_c_thurifer": 3, "proto_c_martyr": 3, "proto_c_censure": 3, "proto_c_sergeant": 3, "proto_c_keeper": 2,
