@@ -130,19 +130,14 @@ def votive(p, x, y, s=1.0, lit=True, glass=VERMILION):
 
 
 def altar_cross(p, x, y, h=90, col=GOLD):
-    """A gilt altar crucifix with a small corpus, standing on y."""
+    """A gilt altar cross, standing on y (no figure on it: 1.85)."""
     p.shape([(x - 16, y, 0), (x + 16, y, 0), (x + 9, y - 10, 0), (x - 9, y - 10, 0)], col, width=1.6, smooth=False, shade=0.7)
     p.taper([(x, y - 8), (x, y - h)], 3.4, 3.4, col, width=1.4, shade=0.6)
     ay = y - h * 0.75
     p.taper([(x - h * 0.28, ay), (x + h * 0.28, ay)], 3.2, 3.2, col, width=1.4, shade=0.6)
     for q in ((x, y - h), (x - h * 0.28, ay), (x + h * 0.28, ay)):
         p.blob(q, 4.6, 4.6, col, width=1.2, shade=0.5)
-    # corpus
-    sk = SKIN.mix(BONE, 0.3)
-    p.taper([(x - h * 0.22, ay - 1), (x, ay + 3), (x + h * 0.22, ay - 1)], 1.6, 1.6, sk, width=1.0)
-    p.taper([(x, ay + 2), (x, ay + h * 0.32)], 2.6, 1.5, sk, width=1.0)
-    p.shape([(x - 3.4, ay + h * 0.17), (x + 3.4, ay + h * 0.17), (x + 2.6, ay + h * 0.23), (x - 2.6, ay + h * 0.23)], LEAD_WHITE, width=0.9)
-    p.blob((x + 0.5, ay - 3), 2.6, 2.8, sk, width=1.0)
+    p.blob((x, ay), 3.4, 3.4, VERMILION, width=1.0, shade=0.5)
 
 
 def altar(p, x, y, w=320, h=110, frontal=CRIMSON, cloth=LEAD_WHITE):
@@ -199,9 +194,14 @@ def retable(p, x, y, w=300, h=200, scenes=None):
         # a little saint in each panel
         fh = hh * 0.62
         col = [ULTRA.light(0.3), LEAD_WHITE, CRIMSON][i] if i != 1 else LEAD_WHITE
-        Fig(pose='pray' if i != 1 else 'bless', garb='robe', main=[VERMILION, ULTRA.light(0.25), MALACHITE][i],
-               cloak='mantle', cloak_col=[ULTRA, VERMILION, CRIMSON][i], halo=True, hair='long' if i == 1 else 'short',
-               beard='short' if i == 1 else None, hair_col=UMBER).draw(p, cx0, y - 14, fh)
+        # (1.85) three saints, all bearded men: a mitred bishop between two others, none in
+        # the colours or the blessing pose of an image of Our Lord or Our Lady
+        if i == 1:
+            Fig(pose='staff', garb='alb', main=LEAD_WHITE, cloak='cope', cloak_col=CRIMSON, trim=GOLD, head='mitre', halo=True,
+                hair='white', beard='long', age='old').draw(p, cx0, y - 14, fh)
+        else:
+            Fig(pose='pray', garb='robe', main=[VERMILION, None, MALACHITE][i], cloak='mantle', cloak_col=[MALACHITE, None, CRIMSON][i],
+                halo=True, hair='short', beard='long', hair_col=UMBER).draw(p, cx0, y - 14, fh)
         # crockets on the gables
         for t in (0.25, 0.5, 0.75):
             q = v_lerp(pts[1], pts[2], t)
@@ -314,10 +314,13 @@ def lancet(p, cx0, top, w, h, scheme=None, saint=None, frame=STONE):
 
 
 def glass_saint(col=VERMILION):
+    """A bearded saint in a window (1.85: always a man, never in a blue mantle, so no
+    window can be read as Our Lady)."""
+    mantle = {VERMILION: MALACHITE, MALACHITE: CRIMSON}.get(col, VERMILION)
     def fn(p, x, y, h):
         p.cx.save()
-        Fig(pose='pray', garb='robe', main=col, cloak='mantle', cloak_col=ULTRA.light(0.1), halo=True, hair='short',
-               hair_col=UMBER).draw(p, x, y, h)
+        Fig(pose='pray', garb='robe', main=col, cloak='mantle', cloak_col=mantle, halo=True, hair='short',
+               hair_col=UMBER, beard='long').draw(p, x, y, h)
         p.cx.restore()
     return fn
 
@@ -568,13 +571,15 @@ def cathedral_facade(p, x, y, s=1.0, col=LIMESTONE, lit=0.0):
             p.shape(pts, col.dark(0.06 * (4 - ring)), width=1.4)
         pts = pointed_opening(S(a0, 0)[0], S(a1, 0)[0], S(0, -ph * 0.55)[1], S(0, 0)[1], 0.85, 10)
         p.shape(pts, ('v', C.hex('5a3a24'), C.hex('3a2416')), width=1.6)
-        # tympanum with a gilt Majesty
+        # tympanum with a gilt cross
         ty = S(0, -ph * 0.55)[1]
         p.clip_shape(pts)
         p.cx.new_path()
         p.cx.rectangle(S(a0, 0)[0], S(0, -ph - 20)[1], pw * s, ty - S(0, -ph - 20)[1] + 4 * s)
         p.fill(col.light(0.05))
-        p.blob(S(px, -ph * 0.72), 9 * s, 13 * s, GOLD, width=1.0)
+        cq = S(px, -ph * 0.72)
+        p.taper([(cq[0], cq[1] - 12 * s), (cq[0], cq[1] + 12 * s)], 2.6 * s, 2.6 * s, GOLD, width=1.0)
+        p.taper([(cq[0] - 7 * s, cq[1] - 4 * s), (cq[0] + 7 * s, cq[1] - 4 * s)], 2.6 * s, 2.6 * s, GOLD, width=1.0)
         p.unclip()
         p.line([(S(a0, 0)[0], ty), (S(a1, 0)[0], ty)], col.dark(0.3), 2, smooth=False)
         # door leaves

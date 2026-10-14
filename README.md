@@ -1094,3 +1094,20 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Measured, ordinary AI, 200 duels each (the Revel's share, before and after): against the
   Church 55.5% and 58%, the Pact 46.5% and 47.5%, the Stoa 69% and 72.5%, the Old Ways 70% and
   72.5%, the Technocracy 55.5% and 54.5%.
+
+## No pictures of Our Lord or Our Lady (1.85)
+
+- The game is violent, so neither Our Lord nor Our Lady appears in any picture.
+- The Index has its own painting: a bishop in mitre and cope at a slanted desk in his library
+  at night, writing in a great book, with books on the shelves to the ceiling, in piles on the
+  floor and open on a lectern, and a plain cross on the wall (art/cards/sanctum_index.webp).
+- Every crucifix is now a plain cross: the cross the priest raises in exorcisms and missions,
+  the altar cross, the wayside cross, the cross on Boethius's wall, and the cathedral doors.
+- The Last Judgment shows the prepared throne with the Cross and the Book of Life in place of
+  Christ in Majesty.
+- Votive Candles burn before a statue of Saint Nicholas. In the Litany of the Saints, Saint
+  Benedict stands in the centre. The forest shrine holds a gilt cross.
+- Stained-glass saints and the retable's saints are bearded men or a mitred bishop, never in
+  a blue mantle. Zeno teaches in a brown mantle without a golden glory behind him.
+- Every card and place picture (514) was checked by eye for anything else; tools/art/ART_GUIDE.md
+  now states the rule for future art.

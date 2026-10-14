@@ -108,6 +108,11 @@ time); copy and adapt instead. You may subclass Figure.
 
 - A traditional Catholic game. The Church and her sacraments, saints and angels are shown
   with reverence and beauty. Angels are male.
+- Never paint Our Lord or Our Lady: the game is too violent for it to be prudent. No
+  crucifix with a corpus (crosses are plain), no Christ in Majesty, no Christ Child, no
+  Madonna, no statue, icon, retable or window that could be read as either. Saints in
+  windows and retables are bearded men or mitred bishops, not in a blue mantle. The
+  Eucharist in a monstrance or raised at Mass may be shown.
 - No women in warrior roles. Women appear as nuns, abbesses, noblewomen, mothers, maids,
   never armed for battle.
 - No modern ideological content.
