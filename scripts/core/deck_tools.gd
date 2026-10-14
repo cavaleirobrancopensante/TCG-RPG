@@ -289,6 +289,20 @@ static func basics_by_pips(deck: Dictionary, lands: int) -> Dictionary:
 	return out
 
 
+## How many of a deck's cards are of each faith: {faith: n}. A two-faith card counts for both
+## faiths; lands are not counted (they show as lands).
+static func faith_counts(deck: Dictionary) -> Dictionary:
+	var out := {}
+	for id in deck:
+		var c := CardDB.get_card(id)
+		if c.is_empty() or c.get("type") == "land":
+			continue
+		for f in [String(c.get("faction", "")), String(c.get("faction2", ""))]:
+			if f != "":
+				out[f] = int(out.get(f, 0)) + int(deck[id])
+	return out
+
+
 ## The deck's cards that are not basic lands (what the basic lands are added to).
 static func count_without_basics(deck: Dictionary) -> int:
 	var n := 0
