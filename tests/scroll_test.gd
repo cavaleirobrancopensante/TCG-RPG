@@ -182,17 +182,36 @@ func _deck_builder_tests() -> void:
 		if d.land_pips[f].count != int(by_f.get(f, 0)):
 			all_ok = false
 	_check(all_ok, "each faith sigil counts the deck's cards of that faith (%s)" % [by_f])
-	var pip: Button = d.land_pips["sanctum"]
+	# a tap on a faith in the deck narrows the list to it; a second faith widens it; again: all
+	var fa := ""
+	var fb := ""
+	for f in Factions.ORDER:
+		if int(by_f.get(f, 0)) > 0:
+			if fa == "":
+				fa = f
+			elif fb == "":
+				fb = f
+	var pip: Button = d.land_pips[fa]
 	var lp := pip.get_global_rect().get_center()
+	var rows0 := d.deck_list.get_child_count()
 	_mouse_button(lp, true)
 	await _frames(2)
 	_mouse_button(lp, false)
 	await _frames(4)
-	var pop: Control = d.find_child("BasicLandsPopup", true, false)
-	_check(pop != null, "a tap on a faith sigil opens Basic lands")
-	if pop:
-		(pop.find_child("Cancel", true, false) as Button).pressed.emit()
-		await _frames(3)
+	var only_fa := true
+	for r in d.deck_list.get_children():
+		if r.has_meta("id") and not d._in_deck_faiths(String(r.get_meta("id"))):
+			only_fa = false
+	_check(d.deck_faiths.has(fa) and d.deck_list.get_child_count() < rows0 and only_fa, "a tap on a faith sigil shows only that faith's cards (%d of %d rows)" % [d.deck_list.get_child_count(), rows0])
+	if fb != "":
+		d.land_pips[fb].pressed.emit()
+		await _frames(4)
+		_check(d.deck_faiths.size() == 2, "a second faith sigil adds its cards")
+		d.land_pips[fb].pressed.emit()
+		await _frames(4)
+	pip.pressed.emit()
+	await _frames(4)
+	_check(d.deck_faiths.is_empty() and d.deck_list.get_child_count() == rows0, "tapping the chosen faith again shows every card")
 
 	# the Filters drawer: counts its filters, covers the grid (a drag there does not scroll it)
 	d.filters_btn.pressed.emit()

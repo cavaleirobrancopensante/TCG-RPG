@@ -72,7 +72,8 @@ var search: LineEdit
 var in_deck_toggle: CheckButton
 var filter_opts: Array = []       # the four filter OptionButtons (type, cost, rarity, ability)
 var sort_opt: OptionButton
-var land_pips := {}               # faith -> _LandPip
+var land_pips := {}               # faith -> _LandPip (the faith sigils over the deck list)
+var deck_faiths := {}             # the faiths the deck list is narrowed to (none: every card)
 var faith_btns := {}
 var options: Array = []           # every OptionButton / MenuButton (their popups pause drag scrolling)
 var grid_scroll: ScrollContainer
@@ -222,15 +223,17 @@ func _ready() -> void:
 	lands_row.name = "Lands"
 	lands_row.add_theme_constant_override("separation", 4)
 	right.add_child(lands_row)
-	# each faith's sigil with how many of the deck's cards are of that faith (1.88; a two-faith
-	# card counts for both, lands not at all); tap one to set the basic lands
+	# each faith's sigil with how many of the deck's cards are of that faith (a two-faith card
+	# counts for both, lands not at all). 1.90: a tap shows only that faith's cards in the deck
+	# list; tap more to add their faiths, tap a chosen one again to take it away
 	for f in Factions.ORDER:
 		var pip := _LandPip.new()
 		pip.name = "Faith_" + f
+		pip.set_meta("small_target", true)     # 44 px, smaller than other buttons on purpose
 		pip.faith = f
 		pip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		pip.added.connect(func(): open_basic_lands())
-		pip.removed.connect(func(): open_basic_lands())
+		var ff: String = f
+		pip.added.connect(func(): toggle_deck_faith(ff))
 		land_pips[f] = pip
 		lands_row.add_child(pip)
 
@@ -540,6 +543,23 @@ func undo() -> void:
 		editing = i
 		break
 	_refresh()
+
+
+## Narrow the deck list to a faith, or widen it back (the faith sigils over the list).
+func toggle_deck_faith(f: String) -> void:
+	if deck_faiths.has(f):
+		deck_faiths.erase(f)
+	else:
+		deck_faiths[f] = true
+	_refresh()
+
+
+## Is this card of one of the chosen faiths (or are none chosen)?
+func _in_deck_faiths(id: String) -> bool:
+	if deck_faiths.is_empty():
+		return true
+	var c := CardDB.get_card(id)
+	return deck_faiths.has(String(c.get("faction", ""))) or deck_faiths.has(String(c.get("faction2", "")))
 
 
 ## The Basic lands button (the last cell of the type tabs; beside the type list on a phone).
@@ -865,10 +885,12 @@ func _refresh_now() -> void:
 	# the type tab narrows the deck list and the curve too
 	if f_type > 0:
 		row_ids = row_ids.filter(func(x): return CardView.kind(CardDB.get_card(x)) == TYPES[f_type].to_lower())
+	# and so do the chosen faith sigils
+	row_ids = row_ids.filter(func(x): return _in_deck_faiths(x))
 	for id in row_ids:
 		deck_list.add_child(_deck_row(id, int(d[id]), row_ids))
-	if row_ids.is_empty() and f_type > 0 and not d.is_empty():
-		var none := UIKit.label(I18n.t("None of this type."), UIKit.FS_SECONDARY, UIKit.DIM, true)
+	if row_ids.is_empty() and (f_type > 0 or not deck_faiths.is_empty()) and not d.is_empty():
+		var none := UIKit.label(I18n.t("None of this type.") if deck_faiths.is_empty() else I18n.t("None of these faiths."), UIKit.FS_SECONDARY, UIKit.DIM, true)
 		none.name = "EmptyHint"
 		deck_list.add_child(none)
 	elif row_ids.is_empty():
@@ -878,15 +900,17 @@ func _refresh_now() -> void:
 	var by_faith := DeckTools.faith_counts(d)
 	for f in Factions.ORDER:
 		land_pips[f].count = int(by_faith.get(f, 0))
-		land_pips[f].tooltip_text = I18n.t("%s: %d cards in this deck, %d basic lands. Tap to set the basic lands.") % [
+		land_pips[f].tooltip_text = I18n.t("%s: %d cards in this deck, %d basic lands. Tap to show only its cards.") % [
 			I18n.t(Factions.info(f)["name"]), int(by_faith.get(f, 0)), int(d.get(Factions.land_id(f), 0))]
+		land_pips[f].on = deck_faiths.has(f)
+		UIKit.set_selected(land_pips[f], deck_faiths.has(f))
 		land_pips[f].queue_redraw()
 	count_label.text = I18n.t("%d cards · %d lands") % [DeckTools.count(d), DeckTools.land_count(d)]
 	var cd := d
-	if f_type > 0:
+	if f_type > 0 or not deck_faiths.is_empty():
 		cd = {}
 		for id in d:
-			if CardView.kind(CardDB.get_card(id)) == TYPES[f_type].to_lower():
+			if (f_type <= 0 or CardView.kind(CardDB.get_card(id)) == TYPES[f_type].to_lower()) and (CardDB.is_basic_land(id) or _in_deck_faiths(id)):
 				cd[id] = d[id]
 	curve.set_deck(cd)
 	_fill_type_tabs(d)
@@ -1047,52 +1071,33 @@ class _PlusButton extends Button:
 		draw_line(c - Vector2(0, r * 0.5), c + Vector2(0, r * 0.5), Tapestry.INK, 3.5)
 
 
-## A faith's sigil and how many of the deck's cards are of that faith (1.88). Tap it (or hold)
-## to open the Basic lands pop-up.
+## A faith's sigil and how many of the deck's cards are of that faith; a tap narrows the
+## deck list to it (1.90). Small: the sigil and the count side by side.
 class _LandPip extends Button:
 	signal added
-	signal removed
-	const HOLD := 0.45
+	signal removed          # kept for callers; nothing removes now
+	const H := 44.0
 	var faith := ""
 	var count := 0
-	var _held := 0.0
-	var _down := false
-	var _long := false
+	var on := false
 
 	func _init() -> void:
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(UIKit.TARGET_W, UIKit.TARGET)
-		button_down.connect(func():
-			_down = true
-			_long = false
-			_held = 0.0)
-		button_up.connect(func(): _down = false)
-
-	func _process(delta: float) -> void:
-		if _down and not _long:
-			_held += delta
-			if _held >= HOLD:
-				_long = true
-				removed.emit()
-
-	func _pressed() -> void:
-		if _long:
-			_long = false          # the hold already took one away: this release adds nothing
-			return
-		added.emit()
-
-	func _gui_input(event: InputEvent) -> void:
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			accept_event()
-			removed.emit()
+		custom_minimum_size = Vector2(48, H)
+		pressed.connect(func(): added.emit())
 
 	func _draw() -> void:
 		var ink := UIKit.faction_ink(faith)
 		var h := size.y
-		UIKit.draw_sigil(self, faith, Vector2(size.x * 0.5, h * 0.36), minf(14.0, size.x * 0.2), ink, 2.2)
 		var font := Tapestry.font("bold")
-		var fs := UIKit.FS_BODY
-		draw_string(font, Vector2(0, h - 9), str(count), HORIZONTAL_ALIGNMENT_CENTER, size.x, fs,
+		var fs := UIKit.FS_SECONDARY
+		var t := str(count)
+		var tw := font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		var r := minf(11.0, h * 0.28)
+		var total := r * 2.0 + 5.0 + tw
+		var x0 := (size.x - total) * 0.5
+		UIKit.draw_sigil(self, faith, Vector2(x0 + r, h * 0.5), r, ink, 2.0)
+		draw_string(font, Vector2(x0 + r * 2.0 + 5.0, h * 0.5 + fs * 0.36), t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs,
 			Tapestry.INK if count > 0 else Color(Tapestry.INK, 0.45))
 
 

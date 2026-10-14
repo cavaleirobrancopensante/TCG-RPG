@@ -253,6 +253,9 @@ func _check_targets(root: Node, what: String) -> void:
 	for b in root.find_children("*", "BaseButton", true, false):
 		if not b.is_visible_in_tree() or b is CardView:
 			continue
+		# the faith sigils over the deck list are small on purpose (the owner asked, 1.90): 44 px
+		if b.has_meta("small_target") and minf(b.size.x, b.size.y) >= 44.0 - 0.5:
+			continue
 		if minf(b.size.x, b.size.y) < UIKit.TARGET - 0.5:
 			small.append("%s %s" % [b.name if b.text == "" else b.text, b.size])
 	_check(small.is_empty(), "%s: every button at least %d px (%s)" % [what, UIKit.TARGET, ", ".join(small)])
