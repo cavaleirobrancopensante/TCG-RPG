@@ -1142,3 +1142,9 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Encore is now called Flashback, Magic's name for it: cast an instant or sorcery again from the
   graveyard for its Flashback cost, then exile it. (The Stoa's Recollection is the same rule.)
 - Spilled Brandy is now a {1}{R} instant with Flashback {2}{R} (it was {R} with Encore {1}{R}).
+
+## Flashback everywhere (1.89)
+
+- The Stoa's Recollection is now Flashback too: one name for one rule (Reading by Lamplight,
+  Apatheia, Phalanx Drill). Card text, the graveyard button, the glossary and the Portuguese
+  and Spanish texts all say Flashback (Retrospectiva in Spanish).

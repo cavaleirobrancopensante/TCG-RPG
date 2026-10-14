@@ -889,9 +889,9 @@ func cast_premeditated(i: int, k: int, targets: Array = []) -> bool:
 	return true
 
 
-# ------------------------------------------------------------ Flashback and Recollection (flashback)
+# ------------------------------------------------------------ Flashback
 
-## May side i cast graveyard card gi for its Flashback or Recollection cost now?
+## May side i cast graveyard card gi for its Flashback cost now?
 func can_flashback(i: int, gi: int) -> bool:
 	var s := side(i)
 	if phase == "over" or gi < 0 or gi >= s.graveyard.size() or not has_priority(i) or s.silenced_turn == turn:
@@ -1322,7 +1322,7 @@ func _resolve_card(it: Dictionary) -> void:
 					_run_list(i, oc_list, null, oc_targets, true)
 			_resolving_oc = 0
 			if it.get("flashback", false):
-				side(i).exile.append(id)          # Flashback, Recollection: once from the graveyard, then gone
+				side(i).exile.append(id)          # Flashback: once from the graveyard, then gone
 				emit({"type": "exile_card", "side": i, "id": id})
 			else:
 				_bury(i, id)

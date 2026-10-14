@@ -49,7 +49,6 @@ const MECHANICS := {
 	"Scry": "Scry 1: look at the top card of your library; leave it there or put it on the bottom.",
 	"Excess": "Excess: when you discard this card, you may cast it right then for its Excess cost, even on your opponent's turn. If you don't, it goes to your graveyard.",
 	"Flashback": "Flashback: you may cast this card from your graveyard for its Flashback cost, at its usual speed. Then it is exiled.",
-	"Recollection": "Recollection: you may cast this card from your graveyard for its Recollection cost, at its usual speed. Then it is exiled.",
 	"Idle": "Idle: at the end of your turn, if this creature is untapped and didn't attack this turn.",
 	"Overclock": "Overclock: you may pay more as you play it for the bonus.",
 	"Assembly": "Assembly: this creature gets +1/+1 for each other Construct you control.",

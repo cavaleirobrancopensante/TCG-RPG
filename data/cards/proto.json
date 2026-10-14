@@ -1935,7 +1935,7 @@
     "keep": 2
    }
   ],
-  "text": "Look at the top four cards of your library. Put two of them into your hand and the rest on the bottom of your library in any order. Recollection {3}{U} (You may cast this card from your graveyard for its Recollection cost. Then exile it.)",
+  "text": "Look at the top four cards of your library. Put two of them into your hand and the rest on the bottom of your library in any order. Flashback {3}{U} (You may cast this card from your graveyard for its Flashback cost. Then exile it.)",
   "flavor": "\"Everywhere means nowhere.\" (Seneca, Letters to Lucilius, on reading too many books)",
   "art": "res://art/cards/lyceum_c_015.webp",
   "keywords": [],
@@ -3722,7 +3722,7 @@
    "U": 1,
    "generic": 3
   },
-  "text": "Tap target creature an opponent controls. It doesn't untap during its controller's next untap step. Draw a card. Recollection {3}{U} (You may cast this card from your graveyard for its Recollection cost. Then exile it.)",
+  "text": "Tap target creature an opponent controls. It doesn't untap during its controller's next untap step. Draw a card. Flashback {3}{U} (You may cast this card from your graveyard for its Flashback cost. Then exile it.)",
   "flavor": "\"Nothing outside the will can hinder or harm the will.\" (Epictetus)",
   "art": "res://art/cards/lyceum_r_006.webp",
   "proto": true,
@@ -3762,7 +3762,7 @@
    "U": 1,
    "generic": 2
   },
-  "text": "Hoplites you control get +1/+1 until end of turn. Untap them. Recollection {2}{U}",
+  "text": "Hoplites you control get +1/+1 until end of turn. Untap them. Flashback {2}{U}",
   "flavor": "Shield to shield, a thousand times, until the thousandth looks like the first.",
   "art": "res://art/cards/lyceum_c_026.webp",
   "proto": true,

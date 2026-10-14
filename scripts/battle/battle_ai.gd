@@ -203,7 +203,7 @@ static func main_action(st: BattleState, i: int) -> bool:
 				return false
 	if best >= 0:
 		return st.play(i, best, best_targets, best_oc, best_mode)
-	# 3a. Flashback and Recollection: a spell cast again from the graveyard, once the hand is spent.
+	# 3a. Flashback: a spell cast again from the graveyard, once the hand is spent.
 	var fb := best_flashback(st, i, hold)
 	if not fb.is_empty():
 		return st.cast_flashback(i, int(fb[0]), fb[1], int(fb[2]))
@@ -1348,7 +1348,7 @@ static func respond(st: BattleState, i: int) -> bool:
 		if v > best_v:
 			best_v = v
 			best = ["card", hi, r[1], r_mode]
-	# an instant cast again from the graveyard (Recollection, Flashback)
+	# an instant cast again from the graveyard (Flashback)
 	for gi in s.graveyard.size():
 		var gc := CardDB.get_card(String(s.graveyard[gi]))
 		if gc.get("flashback", {}).is_empty() or not BattleState.is_instant(gc) or not st.can_flashback(i, gi):
@@ -2360,7 +2360,7 @@ static func spell_threat(st: BattleState, i: int, it: Dictionary) -> float:
 	return v
 
 
-## The graveyard spell worth casting again for its Flashback or Recollection cost now:
+## The graveyard spell worth casting again for its Flashback cost now:
 ## [graveyard index, targets, mode], or []. It keeps the mana an answer in hand needs.
 static func best_flashback(st: BattleState, i: int, hold: Dictionary = {}) -> Array:
 	var g: Array = st.side(i).graveyard
