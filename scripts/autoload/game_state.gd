@@ -240,6 +240,42 @@ func delete_slot(n: int) -> void:
 		DirAccess.remove_absolute(slot_path(n))
 
 
+## The saved journey in slot n as text for a download (1.95); "" if the slot is empty.
+func export_slot(n: int) -> String:
+	if not slot_exists(n):
+		return ""
+	return FileAccess.get_file_as_string(slot_path(n))
+
+
+## Is this text a saved journey this version can load? "" if so, else why not.
+func check_save_text(text: String) -> String:
+	var data = JSON.parse_string(text)
+	if typeof(data) != TYPE_DICTIONARY:
+		return I18n.t("That file is not a saved journey.")
+	for k in ["collection", "player_pos", "meta"]:
+		if not data.has(k):
+			return I18n.t("That file is not a saved journey.")
+	if int(data.get("version", 0)) > SAVE_VERSION:
+		return I18n.t("That journey was saved by a newer version of the game. Update the game first.")
+	return ""
+
+
+## Put an uploaded journey into slot n (it replaces what was there). "" on success, else why not.
+## The slot is written only once the file has been checked, so a bad file changes nothing.
+func import_slot(n: int, text: String) -> String:
+	if n < 1 or n > SLOTS:
+		return I18n.t("There is no such slot.")
+	var err := check_save_text(text)
+	if err != "":
+		return err
+	var f := FileAccess.open(slot_path(n), FileAccess.WRITE)
+	if f == null:
+		return I18n.t("Could not write the slot.")
+	f.store_string(text)
+	f.close()
+	return ""
+
+
 func _migrate_legacy() -> void:
 	if FileAccess.file_exists(LEGACY_SAVE) and not slot_exists(1):
 		DirAccess.rename_absolute(LEGACY_SAVE, slot_path(1))

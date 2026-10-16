@@ -507,8 +507,7 @@ func show_menu() -> void:
 		b.add_theme_stylebox_override("hover", Tapestry.stylebox("hover", 8))
 		b.add_theme_stylebox_override("pressed", Tapestry.stylebox("pressed", 8))
 		b.add_theme_stylebox_override("disabled", Tapestry.stylebox("disabled", 8))
-		if it[0] == "Load game":
-			b.disabled = not GameState.has_save()
+		# Load game stays open with no saves: its slots are where a downloaded save is uploaded (1.95)
 		grid.add_child(b)
 	# the language flags, top right: the first thing anyone who needs them sees
 	var flags := UIKit.flag_row(set_language)

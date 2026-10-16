@@ -37,6 +37,7 @@ func _ready() -> void:
 	test_card_ui()
 	test_journal_goals()
 	test_story()
+	test_save_transfer()
 	print("\n==== %s (%d failure(s)) ====" % ["PASSED" if failures == 0 else "FAILED", failures])
 	get_tree().quit(1 if failures > 0 else 0)
 
@@ -3413,3 +3414,46 @@ func test_faith_counts() -> void:
 	var sb := CardDB.get_card("proto_rv_brandy")
 	check(int(sb["mana_value"]) == 2 and BattleState.is_instant(sb) and CardDB.mana_value(sb["flashback"]) == 3 and String(sb["text"]).contains("Flashback {2}{R}"),
 		"Spilled Brandy: {1}{R} instant, Flashback {2}{R}")
+
+
+func test_save_transfer() -> void:
+	print("-- download and upload a save")
+	GameState.new_game(4, "lyceum")
+	GameState.gold = 777
+	GameState.save_game()
+	var text := GameState.export_slot(4)
+	check(text != "" and GameState.check_save_text(text) == "", "a saved slot exports as a valid journey")
+	GameState.delete_slot(5)
+	check(GameState.export_slot(5) == "", "an empty slot exports nothing")
+	check(GameState.import_slot(5, text) == "", "the file uploads into an empty slot")
+	check(int(GameState.slot_info(5).get("gold", 0)) == 777, "the uploaded slot shows the same journey")
+	check(GameState.load_game(5) and GameState.gold == 777, "the uploaded journey loads")
+	var before := GameState.export_slot(5)
+	check(GameState.import_slot(5, "not a save") != "", "a file that is not JSON is refused")
+	check(GameState.import_slot(5, JSON.stringify({"gold": 5})) != "", "JSON that is not a journey is refused")
+	var newer: Dictionary = JSON.parse_string(text)
+	newer["version"] = GameState.SAVE_VERSION + 1
+	check(GameState.import_slot(5, JSON.stringify(newer)).contains("newer"), "a save from a newer version is refused")
+	check(GameState.export_slot(5) == before, "a refused file leaves the slot as it was")
+	check(GameState.import_slot(9, text) != "", "there is no slot 9")
+	var ST = load("res://scripts/core/save_transfer.gd")
+	check(String(ST.file_name(4)).begins_with("TCG-RPG_") and String(ST.file_name(4)).ends_with(".json"), "the file is named %s" % ST.file_name(4))
+	# the Load screen offers Download on filled slots and Upload on every slot
+	var scr := SlotScreen.create("load")
+	add_child(scr)
+	var downs := 0
+	var ups := 0
+	for b in scr.find_children("*", "Button", true, false):
+		if b.name == "Download":
+			downs += 1
+		elif b.name == "Upload":
+			ups += 1
+	var filled := 0
+	for n in range(1, GameState.SLOTS + 1):
+		if not GameState.slot_info(n).is_empty():
+			filled += 1
+	check(ups == GameState.SLOTS, "Upload on every slot (%d)" % ups)
+	check(downs == filled, "Download on each filled slot (%d of %d)" % [downs, filled])
+	scr.queue_free()
+	GameState.delete_slot(4)
+	GameState.delete_slot(5)
