@@ -4,12 +4,17 @@ extends Control
 ##   "new"  – choose where to begin a new game (confirms before overwriting)
 ##   "load" – load or delete a saved game
 ##   "save" – save the current run into any slot (confirms before overwriting)
+## Load and Save also offer Download (the slot as a file) and, in Load, Upload (a file into the
+## slot, confirming before it replaces a journey) (1.95).
+
+const SaveTransfer := preload("res://scripts/core/save_transfer.gd")
 
 signal chosen(slot: int)
 signal closed
 
 var mode := "load"
 var grid: GridContainer
+var hint_label: Label
 
 
 static func create(p_mode: String) -> SlotScreen:
@@ -37,9 +42,11 @@ func _ready() -> void:
 	var back := UIKit.button("Back", _back, 140)
 	back.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(back)
-	var hint: String = {"new": "Choose a slot for your new journey.", "load": "Choose a journey to continue.",
+	var hint: String = {"new": "Choose a slot for your new journey.",
+		"load": _load_hint(),
 		"save": "Choose a slot. You keep playing in the slot you save to; the game auto-saves there."}[mode]
-	v.add_child(UIKit.label(hint, UIKit.FS_SECONDARY + 1, UIKit.DIM, true))
+	hint_label = UIKit.label(hint, UIKit.FS_SECONDARY + 1, UIKit.DIM, true)
+	v.add_child(hint_label)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -59,7 +66,15 @@ func _back() -> void:
 	queue_free()
 
 
+static func _load_hint() -> String:
+	if GameState.has_save():
+		return "Choose a journey to continue."
+	return "No journey is saved here yet. Upload a save file into a slot to bring a journey from another device."
+
+
 func _fill() -> void:
+	if mode == "load" and hint_label:
+		hint_label.text = I18n.t(_load_hint())
 	UIKit.clear(grid)
 	for n in range(1, GameState.SLOTS + 1):
 		grid.add_child(_plate(n))
@@ -97,9 +112,11 @@ func _plate(n: int) -> Control:
 			int(info.get("gold", 0)), int(info.get("cards", 0)), int(info.get("wins", 0)), int(info.get("lairs", 0)),
 			("  ·  " + " & ".join(faiths)) if not faiths.is_empty() else ""], UIKit.FS_MIN + 1, UIKit.DIM, true))
 		col.add_child(UIKit.label(I18n.t("Saved %s  ·  played %s") % [info.get("saved_at", "?"), _hms(float(info.get("play_time", 0)))], UIKit.FS_MIN, UIKit.DIM, true))
-	var btns := VBoxContainer.new()
-	btns.alignment = BoxContainer.ALIGNMENT_CENTER
-	btns.add_theme_constant_override("separation", UIKit.SP_1)
+	var btns := GridContainer.new()
+	btns.columns = 1
+	btns.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	btns.add_theme_constant_override("v_separation", UIKit.SP_1)
+	btns.add_theme_constant_override("h_separation", UIKit.SP_1)
 	row.add_child(btns)
 	var filled := not info.is_empty()
 	match mode:
@@ -108,7 +125,15 @@ func _plate(n: int) -> Control:
 			b.disabled = not filled or info.get("broken", false)
 			btns.add_child(b)
 			if filled:
+				btns.columns = 2
 				btns.add_child(UIKit.button("Delete", func(): _confirm_delete(n), 130))
+				var dl := UIKit.button("Download", func(): _download(n), 130)
+				dl.name = "Download"
+				dl.disabled = info.get("broken", false)
+				btns.add_child(dl)
+			var up := UIKit.button("Upload", func(): _ask_upload(n, filled), 130)
+			up.name = "Upload"
+			btns.add_child(up)
 		"new":
 			btns.add_child(UIKit.button("Begin here", func():
 				if filled:
@@ -121,6 +146,10 @@ func _plate(n: int) -> Control:
 					UIKit.confirm(self, I18n.t("Overwrite slot %s?") % _roman(n), "The journey saved here will be replaced by this one.", "Overwrite", func(): _pick(n))
 				else:
 					_pick(n), 140))
+			if filled and not info.get("broken", false):
+				var dl2 := UIKit.button("Download", func(): _download(n), 140)
+				dl2.name = "Download"
+				btns.add_child(dl2)
 	return plate
 
 
@@ -130,6 +159,39 @@ func _pick(n: int) -> void:
 		_fill()       # stay open and show the new summary
 	else:
 		queue_free()
+
+
+func _download(n: int) -> void:
+	SaveTransfer.download(self, n, _tell)
+
+
+func _ask_upload(n: int, filled: bool) -> void:
+	if filled:
+		UIKit.confirm(self, I18n.t("Upload into slot %s?") % _roman(n), "The journey you upload will replace the one saved here.", "Upload",
+			func(): _do_upload(n))
+	else:
+		_do_upload(n)
+
+
+func _do_upload(n: int) -> void:
+	SaveTransfer.upload(self, n, func(ok: bool, msg: String):
+		_tell(ok, msg)
+		if ok:
+			_fill())
+
+
+## The outcome of a download or upload, with an Ok to close it.
+func _tell(ok: bool, msg: String) -> void:
+	var overlay := UIKit._modal(self)
+	overlay.name = "TransferNotice"
+	var v: VBoxContainer = overlay.get_meta("body")
+	v.add_child(UIKit.title(I18n.t("Done") if ok else I18n.t("Could not do that"), UIKit.FS_HEADING))
+	var l := UIKit.label(msg, UIKit.FS_BODY, UIKit.TEXT if ok else UIKit.RED, true)
+	l.custom_minimum_size.x = UIKit._modal_width(self)
+	v.add_child(l)
+	var b := UIKit.primary_button("Ok", overlay.queue_free, 180)
+	b.name = "Ok"
+	v.add_child(b)
 
 
 func _confirm_delete(n: int) -> void:

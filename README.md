@@ -1184,3 +1184,15 @@ two-for-one creatures, engines and the graveyard as a resource.
 - Excess is now called Madness, its name in Magic, as Encore became Flashback: the same
   ability (discard the card and you may cast it right then for its Madness cost). Card text,
   the keyword help, the duel's questions and log, and the translations (Loucura, Locura).
+
+## Download and upload your save (1.95)
+
+- Load Game: every saved slot has Download, which gives the journey as a file
+  (TCG-RPG_<name>_slot<n>_<date>.json), and every slot has Upload, which puts such a file into
+  that slot (asking first if it would replace a journey). Save Game has Download too.
+- In the browser it uses the browser's download and file picker; in the app, the system's file
+  dialog (or Godot's own where there is none). Keep a copy safe, or carry a journey between the
+  browser and the phone.
+- A file is checked before it is written: one that is not a saved journey, or one saved by a
+  newer version of the game, is refused and the slot stays as it was.
+- Load Game is open even with no saves, so a new device can take a journey in.
